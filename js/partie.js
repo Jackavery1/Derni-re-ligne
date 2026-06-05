@@ -37,7 +37,7 @@ import {
     definirRefsCanvas,
     definirTouchDepart,
     ajouterNiveauGlobal,
-} from './contexte-jeu.js';
+} from './store-jeu.js';
 import {
     creerPlateau,
     genererProchainePiece,
@@ -62,7 +62,7 @@ import {
     formaterTemps,
     obtenirTempsEcoule,
 } from './ecrans-ui.js';
-import { ECRANS } from './contexte-jeu.js';
+import { ECRANS } from './store-jeu.js';
 import { planifierBoucle } from './boucle-jeu.js';
 import { arreterAnimationMenu } from './menu-fond.js';
 import {

@@ -1,6 +1,6 @@
 import { CONFIG, TETROMINOS } from './config.js';
 import { estPositionValidePlateau } from './logique-pure.js';
-import { etat, obtenirCtx } from './contexte-jeu.js';
+import { etat, obtenirCtx } from './store-jeu.js';
 import { estPositionValide } from './piece-jeu.js';
 
 export const oracle = {

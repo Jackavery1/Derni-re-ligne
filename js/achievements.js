@@ -1,6 +1,6 @@
 import { logger } from './logger.js';
 import { lireStockageJson, ecrireStockageJson } from './progression.js';
-import { obtenirBiomeActif } from './contexte-jeu.js';
+import { obtenirBiomeActif } from './store-jeu.js';
 import { melodie } from './melodie.js';
 
 export const ACHIEVEMENTS = {

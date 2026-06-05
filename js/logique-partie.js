@@ -3,6 +3,7 @@ import {
     calculerPointsLignes,
     calculerNiveauDepuisLignes,
     obtenirEssaisKick,
+    supprimerLignesDuPlateau,
 } from './logique-pure.js';
 import { meteo, ETATS_METEO } from './meteo.js';
 import { appliquerEffetRelique } from './reliques.js';
@@ -27,7 +28,7 @@ import {
     definirLockDelayRestant,
     definirNbLockResets,
     definirPieceAuSol,
-} from './contexte-jeu.js';
+} from './store-jeu.js';
 import {
     obtenirForme,
     obtenirCouleurPiece,
@@ -139,24 +140,15 @@ export function verrouillerPiece() {
 }
 
 function supprimerLignesCompletes() {
-    const lignesCompletes = [];
-    for (let l = CONFIG.lignes - 1; l >= 0; l--) {
-        if (etat.plateau[l].every((c) => c !== 0)) lignesCompletes.push(l);
-    }
+    const { plateau, nbSupprimees, lignesEffacees } = supprimerLignesDuPlateau(etat.plateau);
+    if (nbSupprimees === 0) return 0;
 
-    if (lignesCompletes.length === 0) return 0;
-
-    flashLignes.lignes = [...lignesCompletes];
+    etat.plateau = plateau;
+    flashLignes.lignes = [...lignesEffacees];
     flashLignes.timer = flashLignes.duree;
 
-    for (const l of lignesCompletes) creerParticulesLigne(l);
+    for (const l of lignesEffacees) creerParticulesLigne(l);
 
-    for (const l of lignesCompletes.sort((a, b) => b - a)) {
-        etat.plateau.splice(l, 1);
-        etat.plateau.unshift(Array(CONFIG.colonnes).fill(0));
-    }
-
-    const nbSupprimees = lignesCompletes.length;
     const intensitesSecousse = { 1: 2, 2: 3.5, 3: 5, 4: 8 };
     declencherSecousse(intensitesSecousse[nbSupprimees] ?? 8);
     changerHumeur(nbSupprimees >= 4 ? 'excite' : 'content');
@@ -167,28 +159,59 @@ function supprimerLignesCompletes() {
     return nbSupprimees;
 }
 
-export function calculerScore(nbLignes) {
-    const points = calculerPointsLignes(nbLignes, etat.niveau);
+/**
+ * Met à jour score, combo et niveau sans effets DOM (testable).
+ * @param {{ score: number, lignes: number, niveau: number, combo: number, dernierEtaitTetris: boolean }} etatPartie
+ * @param {number} nbLignes
+ */
+export function appliquerScoreLignes(etatPartie, nbLignes) {
+    const points = calculerPointsLignes(nbLignes, etatPartie.niveau);
+    let levelUp = false;
+    let tetris = false;
+    let backToBack = false;
 
     if (nbLignes === 0) {
-        etat.combo = 0;
+        etatPartie.combo = 0;
     } else {
-        etat.combo++;
+        etatPartie.combo++;
+        if (nbLignes === 4) {
+            tetris = true;
+            backToBack = etatPartie.dernierEtaitTetris;
+            etatPartie.dernierEtaitTetris = true;
+        } else {
+            etatPartie.dernierEtaitTetris = false;
+        }
+    }
+
+    etatPartie.score += points;
+    etatPartie.lignes += nbLignes;
+
+    const nouveauNiveau = calculerNiveauDepuisLignes(etatPartie.lignes);
+    if (nouveauNiveau > etatPartie.niveau) {
+        etatPartie.niveau = nouveauNiveau;
+        levelUp = true;
+    }
+
+    return { points, combo: etatPartie.combo, tetris, backToBack, levelUp };
+}
+
+export function calculerScore(nbLignes) {
+    const result = appliquerScoreLignes(etat, nbLignes);
+
+    if (nbLignes > 0) {
         majStatsScorePartie(nbLignes, etat.combo);
         enregistrerLignesParNiveau(nbLignes);
 
-        if (nbLignes === 4) {
+        if (result.tetris) {
             afficherTexteFlottant('TETRIS !', '#ffe600', 16);
             annoncer('Tetris ! Quatre lignes effacées');
-            if (etat.dernierEtaitTetris) {
+            if (result.backToBack) {
                 afficherTexteFlottant('BACK-TO-BACK !', '#ff006e', 13);
                 annoncer('Back-to-back Tetris');
             }
-            etat.dernierEtaitTetris = true;
         } else {
             if (nbLignes === 3) afficherTexteFlottant('TRIPLE !', '#b400ff', 14);
             if (nbLignes === 2) afficherTexteFlottant('DOUBLE !', '#00f5ff', 12);
-            etat.dernierEtaitTetris = false;
         }
 
         if (etat.combo >= 2) {
@@ -196,24 +219,25 @@ export function calculerScore(nbLignes) {
             annoncer(`Combo ${etat.combo}`);
         }
 
-        if (points > 0) {
-            const estGros = nbLignes >= 4 || points >= 500;
-            afficherTexteFlottant(`+${points}`, estGros ? null : '#ffe600', estGros ? 12 : 10, {
-                y: obtenirYHautTas() - 10,
-                arcEnCiel: estGros,
-            });
+        if (result.points > 0) {
+            const estGros = nbLignes >= 4 || result.points >= 500;
+            afficherTexteFlottant(
+                `+${result.points}`,
+                estGros ? null : '#ffe600',
+                estGros ? 12 : 10,
+                {
+                    y: obtenirYHautTas() - 10,
+                    arcEnCiel: estGros,
+                }
+            );
             annoncer(
-                `${nbLignes} ligne${nbLignes > 1 ? 's' : ''} effacée${nbLignes > 1 ? 's' : ''}, plus ${points} points`
+                `${nbLignes} ligne${nbLignes > 1 ? 's' : ''} effacée${nbLignes > 1 ? 's' : ''}, plus ${result.points} points`
             );
         }
     }
 
-    etat.score += points;
-    etat.lignes += nbLignes;
     evaluerDecisionOracle(nbLignes);
-    const nouveauNiveau = calculerNiveauDepuisLignes(etat.lignes);
-    if (nouveauNiveau > etat.niveau) {
-        etat.niveau = nouveauNiveau;
+    if (result.levelUp) {
         afficherNotifNiveau();
         AudioMoteur.son('niveau');
         AudioMoteur.relancerIntervalleMusique();

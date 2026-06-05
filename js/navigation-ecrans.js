@@ -1,6 +1,6 @@
 import { demarrerConstellation, arreterConstellation } from './constellation.js';
 import { AudioMoteur } from './audio.js';
-import { ECRANS, etat, definirEcranActuel } from './contexte-jeu.js';
+import { ECRANS, etat, definirEcranActuel } from './store-jeu.js';
 import { demarrerAnimationMenu, arreterAnimationMenu } from './menu-fond.js';
 import { genererGalerieAchievements } from './achievements.js';
 import { genererCodexComplet } from './codex.js';

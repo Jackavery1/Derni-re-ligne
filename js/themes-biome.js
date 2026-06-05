@@ -1,5 +1,5 @@
 import { BIOMES } from './config.js';
-import { obtenirBiomeActif, etat } from './contexte-jeu.js';
+import { obtenirBiomeActif, etat } from './store-jeu.js';
 import { majStatsReactionRobo } from './achievements.js';
 
 export function changerHumeur(humeur) {

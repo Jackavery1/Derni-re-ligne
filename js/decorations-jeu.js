@@ -6,7 +6,7 @@ import {
     obtenirCanvasPlateau,
     obtenirCtx,
     obtenirEffetsReduits,
-} from './contexte-jeu.js';
+} from './store-jeu.js';
 import { obtenirForme, obtenirCouleurPiece } from './piece-jeu.js';
 import { oracle } from './oracle-jeu.js';
 

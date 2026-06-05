@@ -34,6 +34,8 @@ npm start              # http://localhost:3000
 npm test               # tests unitaires
 npm run prepare:e2e    # installer Chromium (première fois)
 npm run test:e2e       # tests navigateur + accessibilité
+npm run build          # bundle prod → dist/
+npm run typecheck      # vérification types (checkJs)
 ```
 
 Node 18+ (voir `.nvmrc`). Logs détaillés : `?debug=1` dans l'URL. Après mise à jour SW : **Ctrl+Shift+R** ou bannière « Nouvelle version ».
@@ -46,7 +48,7 @@ Documentation détaillée : [docs/architecture.md](docs/architecture.md).
 
 ```
 moteur.js
-├── contexte-jeu.js    état partagé
+├── store-jeu.js       état partagé
 ├── piece-jeu.js       pièces, DAS, lock delay
 ├── logique-partie.js  score, actions joueur
 ├── boucle-jeu.js      boucle RAF

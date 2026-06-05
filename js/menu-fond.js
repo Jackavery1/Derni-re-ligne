@@ -1,5 +1,5 @@
 import { TETROMINOS } from './config.js';
-import { obtenirEffetsReduits } from './contexte-jeu.js';
+import { obtenirEffetsReduits } from './store-jeu.js';
 import { getCouleurPiece } from './piece-jeu.js';
 import { obtenirActions } from './actions-jeu.js';
 

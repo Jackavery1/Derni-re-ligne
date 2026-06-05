@@ -4,6 +4,7 @@ import {
     verifierSacValide,
     obtenirEssaisKick,
     compterLignesCompletes,
+    supprimerLignesDuPlateau,
     estPositionValidePlateau,
     estPositionValideAvecForme,
     calculerPointsLignes,
@@ -42,6 +43,14 @@ describe('logique-pure', () => {
 
     it('verifierSacValide rejette un sac incomplet', () => {
         expect(verifierSacValide(['I', 'O'])).toBe(false);
+    });
+
+    it('supprimerLignesDuPlateau ne modifie pas sans ligne complète', () => {
+        const plateau = Array.from({ length: CONFIG.lignes }, () => Array(CONFIG.colonnes).fill(0));
+        plateau[5][3] = '#fff';
+        const { nbSupprimees, plateau: sortie } = supprimerLignesDuPlateau(plateau);
+        expect(nbSupprimees).toBe(0);
+        expect(sortie).toBe(plateau);
     });
 
     it('Ligne complète détectée', () => {

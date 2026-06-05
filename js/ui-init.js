@@ -1,6 +1,6 @@
 import { lancerBiomeSelectionne } from './constellation.js';
 import { AudioMoteur } from './audio.js';
-import { etat, ECRANS } from './contexte-jeu.js';
+import { etat, ECRANS } from './store-jeu.js';
 import { afficherEcran } from './ecrans-ui.js';
 import { afficherOngletOptions } from './options-ui.js';
 import { obtenirActions } from './actions-jeu.js';

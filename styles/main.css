@@ -47,7 +47,7 @@
     --orange: #ff8800;
     --bleu: #4488ff;
     --texte: #e0e0ff;
-    --texte-dim: rgba(224, 224, 255, 0.45);
+    --texte-dim: rgba(224, 224, 255, 0.68);
     --police: 'Press Start 2P', monospace;
     --theme-primaire: var(--cyan);
     --theme-score: var(--jaune);
@@ -172,14 +172,14 @@ body::before {
     color: #fff;
 }
 .bouton.discret {
-    border-color: var(--texte-dim);
-    color: var(--texte-dim);
+    border-color: #9a9ac8;
+    color: #b8b8e0;
     text-shadow: none;
     box-shadow: none;
     font-size: 0.5rem;
 }
 .bouton.discret:hover {
-    background: var(--texte-dim);
+    background: #b8b8e0;
     color: var(--fond);
 }
 

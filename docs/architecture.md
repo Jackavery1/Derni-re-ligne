@@ -28,17 +28,17 @@ flowchart TD
 
 ## Couches
 
-| Couche       | Rôle                         | Fichiers clés                                                      |
-| ------------ | ---------------------------- | ------------------------------------------------------------------ |
-| Données      | Constantes, biomes, pièces   | `config-jeu.js`, `biomes.js`, `contenu-jeu.js`, `ecrans-config.js` |
-| Logique pure | Fonctions sans DOM           | `logique-pure.js`, `progression.js`, `moteur-piece.js`             |
-| État         | Variables partagées          | `store-jeu.js` (façade : `contexte-jeu.js`)                        |
-| Gameplay     | Actions joueur, verrouillage | `logique-partie.js`, `piece-jeu.js`, `boucle-jeu.js`               |
-| Coop         | 2 joueurs, plateau partagé   | `coop-logique.js`, `coop-jeu.js`, `coop-rendu.js`, `coop-input.js` |
-| Oracle       | Assistant de placement       | `oracle-jeu.js`                                                    |
-| Rendu        | Canvas 2D                    | `rendu-jeu.js`, `rendu-blocs.js`                                   |
-| UI           | Écrans, HUD, thèmes          | `navigation-ecrans.js`, `hud-jeu.js`, `themes-biome.js`            |
-| Persistance  | localStorage validé          | `progression.js`                                                   |
+| Couche       | Rôle                         | Fichiers clés                                                                                                   |
+| ------------ | ---------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Données      | Constantes, biomes, pièces   | `config-jeu.js`, `biomes.js`, `contenu-jeu.js`, `ecrans-config.js`                                              |
+| Logique pure | Fonctions sans DOM           | `logique-pure.js`, `progression.js`, `moteur-piece.js`                                                          |
+| État         | Variables partagées          | `store-jeu.js`                                                                                                  |
+| Gameplay     | Actions joueur, verrouillage | `logique-partie.js`, `piece-jeu.js`, `boucle-jeu.js`                                                            |
+| Coop         | 2 joueurs, plateau partagé   | `coop-logique.js`, `coop-jeu.js`, `coop-rendu.js`, `coop-input.js`                                              |
+| Oracle       | Assistant de placement       | `oracle-jeu.js`                                                                                                 |
+| Rendu        | Canvas 2D                    | `rendu-jeu.js`, `rendu-plateau.js`, `rendu-fx.js`, `rendu-ambiance.js`, `rendu-previews.js`, `rendu-cellule.js` |
+| UI           | Écrans, HUD, thèmes          | `navigation-ecrans.js`, `hud-jeu.js`, `themes-biome.js`                                                         |
+| Persistance  | localStorage validé          | `progression.js`                                                                                                |
 
 ## Cycle d'une partie
 
@@ -51,7 +51,6 @@ flowchart TD
 ## État et actions
 
 - `store-jeu.js` : état centralisé avec getters/setters
-- `contexte-jeu.js` : façade de réexport pour compatibilité
 - `actions-jeu.js` : injection explicite des callbacks gameplay via `configurerActionsJeu()` dans `moteur.js`
 - `ecrans-config.js` : source unique pour les identifiants d'écrans et l'ordre de chargement HTML
 
@@ -78,9 +77,11 @@ Toutes les clés `localStorage` passent par `progression.js` avec whitelist stri
 
 ## Outillage
 
-| Script             | Rôle                                      |
-| ------------------ | ----------------------------------------- |
-| `npm test`         | Vitest (unitaires)                        |
-| `npm run test:e2e` | Playwright + Axe                          |
-| `npm run sync:sw`  | Synchronise le cache SW avec les fichiers |
-| `npm run release`  | Bump version + cache-bust + sync SW       |
+| Script              | Rôle                                          |
+| ------------------- | --------------------------------------------- |
+| `npm test`          | Vitest (unitaires)                            |
+| `npm run test:e2e`  | Playwright + Axe                              |
+| `npm run sync:sw`   | Synchronise le cache SW dev (modules ES)      |
+| `npm run build`     | Bundle esbuild prod → `dist/` (1 fichier JS)  |
+| `npm run typecheck` | Vérification TypeScript (`checkJs`) sur `js/` |
+| `npm run release`   | Bump version + cache-bust + sync SW           |

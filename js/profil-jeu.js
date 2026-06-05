@@ -1,5 +1,5 @@
 import { CONFIG, BIOMES } from './config.js';
-import { etat } from './contexte-jeu.js';
+import { etat } from './store-jeu.js';
 import { obtenirForme } from './piece-jeu.js';
 import { logger } from './logger.js';
 import { lireStockageJson, ecrireStockageJson } from './progression.js';

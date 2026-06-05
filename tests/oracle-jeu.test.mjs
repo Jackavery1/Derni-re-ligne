@@ -9,7 +9,7 @@ import {
     obtenirScoreAffiche,
     obtenirScoreFinalOracle,
 } from '../js/oracle-jeu.js';
-import { etat } from '../js/contexte-jeu.js';
+import { etat } from '../js/store-jeu.js';
 import { creerPlateau } from '../js/piece-jeu.js';
 
 describe('oracle-jeu', () => {

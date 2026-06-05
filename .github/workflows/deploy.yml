@@ -24,6 +24,7 @@ jobs:
           node-version-file: '.nvmrc'
       - run: npm ci
       - run: npm run lint
+      - run: npm run typecheck
       - run: npm run format:check
       - run: npm test
       - run: npm audit --audit-level=high
@@ -41,13 +42,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-      - run: npm run sync:sw
-      - name: Préparer artefact statique
+      - run: npm ci
+      - run: npm run build
+      - name: Préparer artefact statique (bundle prod)
         run: |
           mkdir -p _site
-          cp index.html manifest.json sw.js _site/
-          cp -r styles js fonts html _site/
-          cp icon.svg icon-192.png icon-512.png icon-maskable.png _site/ 2>/dev/null || true
+          cp -r dist/* _site/
           cp LICENSE README.md _site/ 2>/dev/null || true
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

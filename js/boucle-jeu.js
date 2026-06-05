@@ -28,7 +28,7 @@ import {
     definirLockDelayRestant,
     definirNbLockResets,
     definirAccumulateur,
-} from './contexte-jeu.js';
+} from './store-jeu.js';
 import { mettreAJourDas, mettreAJourIndicateurRelique, estPositionValide } from './piece-jeu.js';
 import {
     dessinerPlateau,

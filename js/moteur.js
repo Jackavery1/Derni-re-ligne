@@ -19,7 +19,7 @@ import {
     obtenirBiomeActif,
     obtenirNiveauGlobal,
     obtenirEcranActuel,
-} from './contexte-jeu.js';
+} from './store-jeu.js';
 import { obtenirForme, lierCouleursTetrominos } from './piece-jeu.js';
 import { creerParticulesExplosion } from './particules-jeu.js';
 import { planifierBoucle } from './boucle-jeu.js';

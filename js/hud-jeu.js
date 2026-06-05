@@ -11,7 +11,7 @@ import {
     definirBiomeActif,
     definirNiveauGlobal,
     definirDerniereSecondeTemps,
-} from './contexte-jeu.js';
+} from './store-jeu.js';
 import { obtenirScoreAffiche } from './oracle-jeu.js';
 import { annoncer } from './annonces.js';
 import { changerHumeur } from './themes-biome.js';

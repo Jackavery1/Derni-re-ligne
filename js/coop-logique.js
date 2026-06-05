@@ -1,7 +1,7 @@
 import { CONFIG, TETROMINOS } from './config.js';
 import { calculerPointsLignes } from './logique-pure.js';
 import { extraireForme, estPositionValideAvecBornes } from './moteur-piece.js';
-import { etat } from './contexte-jeu.js';
+import { etat } from './store-jeu.js';
 import { creerPlateau, getCouleurPiece } from './piece-jeu.js';
 import { creerParticulesLigne } from './particules-jeu.js';
 import { statsGlobales, verifierAchievements, sauvegarderStats } from './achievements.js';

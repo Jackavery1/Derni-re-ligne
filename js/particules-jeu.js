@@ -1,11 +1,5 @@
 import { CONFIG } from './config.js';
-import {
-    particules,
-    MAX_PARTICULES,
-    obtenirBiomeActif,
-    etat,
-    VERTS_FORET,
-} from './contexte-jeu.js';
+import { particules, MAX_PARTICULES, obtenirBiomeActif, etat, VERTS_FORET } from './store-jeu.js';
 
 export function pousserParticuleJeu(config) {
     if (particules.length >= MAX_PARTICULES) return;

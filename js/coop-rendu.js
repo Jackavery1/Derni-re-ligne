@@ -1,6 +1,6 @@
 import { CONFIG, TETROMINOS } from './config.js';
-import { obtenirCanvasPlateau, obtenirCtx } from './contexte-jeu.js';
-import { etat } from './contexte-jeu.js';
+import { obtenirCanvasPlateau, obtenirCtx } from './store-jeu.js';
+import { etat } from './store-jeu.js';
 import { getCouleurPiece } from './piece-jeu.js';
 import { dessinerCellule, dessinerPreview, dessinerParticules } from './rendu-jeu.js';
 import { coop, DEMI_LARGEUR, coop_estPositionValide } from './coop-logique.js';

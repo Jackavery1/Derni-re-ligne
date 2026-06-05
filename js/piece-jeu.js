@@ -15,7 +15,7 @@ import {
     definirReliqueActive,
     definirLockDelayRestant,
     definirNbLockResets,
-} from './contexte-jeu.js';
+} from './store-jeu.js';
 
 const INDEX_COULEUR_PIECE = { I: 0, O: 1, T: 2, S: 3, Z: 4, J: 5, L: 6 };
 

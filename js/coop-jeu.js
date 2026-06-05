@@ -10,7 +10,7 @@ import {
     definirBoucleActive,
     definirCouleurAmbRgb,
     ECRANS,
-} from './contexte-jeu.js';
+} from './store-jeu.js';
 import { hexVersRgb, lierCouleursTetrominos } from './piece-jeu.js';
 import {
     appliquerThemeBiome,

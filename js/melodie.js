@@ -1,6 +1,6 @@
 import { CONFIG } from './config.js';
 import { AudioMoteur } from './audio.js';
-import { etat, obtenirBiomeActif } from './contexte-jeu.js';
+import { etat, obtenirBiomeActif } from './store-jeu.js';
 
 const GAMME_PENTA = [1, 9 / 8, 5 / 4, 3 / 2, 5 / 3];
 const OCTAVES = 2;

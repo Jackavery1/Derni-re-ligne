@@ -44,9 +44,18 @@ test('pause puis quitter retourne au menu', async ({ page }) => {
 
 test('écran titre sans violations accessibilité critiques', async ({ page }) => {
     await page.goto('/');
-    const result = await new AxeBuilder({ page }).disableRules(['color-contrast']).analyze();
-    const critiques = result.violations.filter((v) => v.impact === 'critical');
-    expect(critiques).toEqual([]);
+    const result = await new AxeBuilder({ page }).analyze();
+    const bloquantes = result.violations.filter(
+        (v) => v.impact === 'critical' || (v.impact === 'serious' && v.id !== 'color-contrast')
+    );
+    expect(bloquantes).toEqual([]);
+});
+
+test('écran titre respecte le contraste des couleurs', async ({ page }) => {
+    await page.goto('/');
+    const result = await new AxeBuilder({ page }).analyze();
+    const contrast = result.violations.filter((v) => v.id === 'color-contrast');
+    expect(contrast).toEqual([]);
 });
 
 test('options affiche l’onglet contrôles', async ({ page }) => {

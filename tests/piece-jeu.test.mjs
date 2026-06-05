@@ -11,7 +11,7 @@ import {
     touchesActives,
     dasEtat,
     definirBiomeActif,
-} from '../js/contexte-jeu.js';
+} from '../js/store-jeu.js';
 import {
     creerPlateau,
     reinitialiserLockDelay,

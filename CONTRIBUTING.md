@@ -43,7 +43,7 @@ Fonctions sensibles (ne pas modifier sans raison) : `estPositionValide()`, `tour
 
 | Zone          | Fichiers                                                                |
 | ------------- | ----------------------------------------------------------------------- |
-| Orchestration | `moteur.js`, `store-jeu.js`, `actions-jeu.js`, `contexte-jeu.js`        |
+| Orchestration | `moteur.js`, `store-jeu.js`, `actions-jeu.js`                           |
 | Gameplay      | `piece-jeu.js`, `logique-partie.js`, `boucle-jeu.js`, `partie.js`       |
 | Rendu         | `rendu-jeu.js`, `rendu-blocs.js`                                        |
 | UI            | `ecrans-ui.js`, `ui-init.js`, `options-ui.js`, `input-jeu.js`           |

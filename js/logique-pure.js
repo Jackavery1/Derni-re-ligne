@@ -46,6 +46,27 @@ export function compterLignesCompletes(plateau) {
     return n;
 }
 
+/**
+ * Supprime les lignes complètes et retourne un nouveau plateau.
+ * @param {number[][]} plateau
+ * @returns {{ plateau: number[][], nbSupprimees: number, lignesEffacees: number[] }}
+ */
+export function supprimerLignesDuPlateau(plateau) {
+    const lignesEffacees = [];
+    for (let l = CONFIG.lignes - 1; l >= 0; l--) {
+        if (plateau[l].every((c) => c !== 0)) lignesEffacees.push(l);
+    }
+    if (lignesEffacees.length === 0) {
+        return { plateau, nbSupprimees: 0, lignesEffacees: [] };
+    }
+    const copie = plateau.map((ligne) => [...ligne]);
+    for (const l of [...lignesEffacees].sort((a, b) => b - a)) {
+        copie.splice(l, 1);
+        copie.unshift(Array(CONFIG.colonnes).fill(0));
+    }
+    return { plateau: copie, nbSupprimees: lignesEffacees.length, lignesEffacees };
+}
+
 const POINTS_PAR_LIGNES = [0, 100, 300, 500, 800];
 
 /** @param {number} nbLignes @param {number} niveau @returns {number} */

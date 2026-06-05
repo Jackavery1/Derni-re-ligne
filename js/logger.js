@@ -1,5 +1,6 @@
 function modeDebugActif() {
-    if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) return true;
+    const meta = /** @type {ImportMeta & { env?: { DEV?: boolean } }} */ (import.meta);
+    if (typeof import.meta !== 'undefined' && meta.env?.DEV) return true;
     if (typeof window === 'undefined') return false;
     return new URLSearchParams(window.location.search).has('debug');
 }

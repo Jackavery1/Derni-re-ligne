@@ -1,5 +1,5 @@
 import { TOUCHES_DEFAUT } from './config.js';
-import { etat, touchesActives } from './contexte-jeu.js';
+import { etat, touchesActives } from './store-jeu.js';
 import { reinitialiserDas } from './piece-jeu.js';
 import { obtenirActions } from './actions-jeu.js';
 import { coop } from './coop-logique.js';
