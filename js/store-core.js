@@ -84,6 +84,19 @@ export const store = {
     flashVerrou: { cellules: [], timer: 0, duree: 75 },
     flashLignes: { lignes: [], timer: 0, duree: 160 },
     touchesActives: {},
+    modeHistoireActif: false,
+    etatHistoire: null,
+    bossActif: null,
+    pvBossActuels: 0,
+    bossPhaseActuelle: 0,
+    timerAttaqueBoss: 0,
+    mechaniquesBiomeActif: {
+        colonnesGelees: [],
+        blocksRouilles: [],
+        pieceInvisibleDepuis: null,
+    },
+    tetrisConsecutifsCyber: 0,
+    dernierJournalTrouve: null,
 };
 
 export const etat = store.etat;

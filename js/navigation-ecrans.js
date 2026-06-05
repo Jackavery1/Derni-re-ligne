@@ -38,7 +38,7 @@ export function afficherEcran(idEcran) {
     mettreAJourVisibilitePartie(idEcran);
 
     if (idEcran === ECRANS.TITRE) {
-        AudioMoteur.arreterMusique();
+        AudioMoteur.arreterMusique(500);
         mettreAJourAffichageRecord();
         demarrerAnimationMenu();
     } else {

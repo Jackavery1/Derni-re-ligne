@@ -106,6 +106,7 @@ export function planifierBoucle() {
 }
 
 function dessinerFrameSolo(ctx, enPartie) {
+    const canvasPlateau = obtenirCanvasPlateau();
     ctx.save();
     const dec = getDecalageSecousse();
     ctx.translate(dec.x, dec.y);
@@ -121,6 +122,15 @@ function dessinerFrameSolo(ctx, enPartie) {
     dessinerFlashVerrou();
     dessinerParticules();
     if (enPartie) dessinerDecorations();
+
+    if (obtenirTransitionAlpha() < 1 && canvasPlateau) {
+        ctx.save();
+        ctx.globalAlpha = 1 - obtenirTransitionAlpha();
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, canvasPlateau.width, canvasPlateau.height);
+        ctx.restore();
+    }
+
     ctx.restore();
     ctx.save();
     dessinerTextesFlottants();

@@ -1,10 +1,15 @@
-import { BIOMES } from './config.js';
 import { logger } from './logger.js';
+import { creerContexteAudio } from './dom-utils.js';
+
+// ════════════════════════════════════════════════════════════
+//  MOTEUR AUDIO — Tetris Néo
+// ════════════════════════════════════════════════════════════
 
 const GAMMES = {
     dorien: [0, 2, 3, 5, 7, 9, 10, 12],
     phrygien: [0, 1, 3, 5, 7, 8, 10, 12],
     majeur: [0, 2, 4, 5, 7, 9, 11, 12],
+    mineur: [0, 2, 3, 5, 7, 8, 10, 12],
     pentatonique: [0, 2, 4, 7, 9, 12],
     lydien: [0, 2, 4, 6, 7, 9, 11, 12],
     arabian: [0, 1, 4, 5, 7, 8, 11, 12],
@@ -12,21 +17,173 @@ const GAMMES = {
     whole_tone: [0, 2, 4, 6, 8, 10, 12],
 };
 
-export function noteVersFreq(demiTon, octave = 0) {
-    return 220 * Math.pow(2, (demiTon + octave * 12) / 12);
-}
+const TONIQUES_BIOMES = {
+    classique: 220,
+    lave: 233,
+    ocean: 196,
+    foret: 246,
+    glace: 262,
+    desert: 220,
+    cyber: 277,
+    fuochi: 294,
+    cosmos: 185,
+};
 
-import { creerContexteAudio } from './dom-utils.js';
+const MUSIQUE_BIOMES = {
+    classique: {
+        tempo: 130,
+        gamme: 'dorien',
+        timbre: 'square',
+        basse: true,
+        melodie: [0, 4, 3, 4, null, 7, 5, 4, 3, 0, 2, 3, null, 2, 0, null],
+        basseLine: [0, null, 7, null, 0, null, 5, null, 0, null, 7, null, 0, null, 5, null],
+        adsr: { a: 0.01, d: 0.05, s: 0.6, r: 0.12 },
+        volumeMelodie: 0.35,
+        volumeBasse: 0.3,
+    },
+    lave: {
+        tempo: 98,
+        gamme: 'phrygien',
+        timbre: 'sawtooth',
+        basse: true,
+        melodie: [0, null, 1, null, 3, null, 1, 0, null, 1, 0, null, 3, 1, 0, null],
+        basseLine: [0, null, null, 0, null, 0, null, null, 0, null, 0, null, null, 0, null, 0],
+        adsr: { a: 0.02, d: 0.08, s: 0.5, r: 0.15 },
+        volumeMelodie: 0.3,
+        volumeBasse: 0.4,
+        filtreFreq: 800,
+    },
+    ocean: {
+        tempo: 88,
+        gamme: 'pentatonique',
+        timbre: 'sine',
+        basse: false,
+        melodie: [4, 7, 9, 7, 4, 2, 0, 2, 4, 7, 9, 12, 9, 7, 4, null],
+        basseLine: null,
+        adsr: { a: 0.04, d: 0.1, s: 0.7, r: 0.3 },
+        volumeMelodie: 0.25,
+        echoActif: true,
+        echoDelai: 0.18,
+        echoVolume: 0.15,
+    },
+    foret: {
+        tempo: 108,
+        gamme: 'majeur',
+        timbre: 'triangle',
+        basse: false,
+        melodie: [0, 2, 4, 5, 7, 5, 4, 2, 0, 4, 7, 9, 7, 4, 2, 0],
+        basseLine: null,
+        adsr: { a: 0.02, d: 0.06, s: 0.65, r: 0.2 },
+        volumeMelodie: 0.28,
+        harmonique: true,
+        volHarmonique: 0.1,
+    },
+    glace: {
+        tempo: 76,
+        gamme: 'lydien',
+        timbre: 'sine',
+        basse: false,
+        melodie: [0, null, 4, null, 7, null, 11, null, 9, null, 7, null, 4, null, 2, null],
+        basseLine: null,
+        adsr: { a: 0.06, d: 0.15, s: 0.5, r: 0.5 },
+        volumeMelodie: 0.22,
+        tenueNote: true,
+    },
+    desert: {
+        tempo: 118,
+        gamme: 'arabian',
+        timbre: 'sawtooth',
+        basse: true,
+        melodie: [0, 1, 4, 1, 0, null, 5, 4, 1, 0, null, 4, 1, 4, 5, 4],
+        basseLine: [0, null, 0, null, 5, null, 5, null, 0, null, 0, null, 4, null, 4, null],
+        adsr: { a: 0.01, d: 0.04, s: 0.55, r: 0.1 },
+        volumeMelodie: 0.32,
+        volumeBasse: 0.35,
+        filtreFreq: 1200,
+    },
+    cyber: {
+        tempo: 158,
+        gamme: 'chromatique',
+        timbre: 'square',
+        basse: true,
+        melodie: [0, 3, 5, 3, 0, null, 7, null, 5, 3, 0, 3, null, 5, 3, 0],
+        basseLine: [0, null, 0, 7, null, 0, null, 5, 0, null, 0, 7, null, 5, null, 0],
+        adsr: { a: 0.005, d: 0.03, s: 0.7, r: 0.05 },
+        volumeMelodie: 0.28,
+        volumeBasse: 0.32,
+        arpege: true,
+    },
+    fuochi: {
+        tempo: 148,
+        gamme: 'majeur',
+        timbre: 'triangle',
+        basse: true,
+        melodie: [0, 4, 7, 4, 0, 5, 9, 5, 4, 7, 12, 7, 4, 9, 7, 4],
+        basseLine: [0, null, 7, null, 0, null, 5, null, 4, null, 7, null, 0, null, 0, null],
+        adsr: { a: 0.01, d: 0.05, s: 0.65, r: 0.15 },
+        volumeMelodie: 0.3,
+        volumeBasse: 0.28,
+    },
+    cosmos: {
+        tempo: 103,
+        gamme: 'whole_tone',
+        timbre: 'sine',
+        basse: false,
+        melodie: [0, null, 4, null, 6, 4, null, 2, 0, null, 6, null, 4, null, 2, null],
+        basseLine: null,
+        adsr: { a: 0.08, d: 0.2, s: 0.6, r: 0.6 },
+        volumeMelodie: 0.2,
+        echoActif: true,
+        echoDelai: 0.3,
+        echoVolume: 0.12,
+    },
+};
 
-let obtenirTempoActuel = () => 120;
+let obtenirBiomeActifFn = () => 'classique';
+let obtenirNiveauFn = () => 1;
 /** @type {(cle: string, valeur: string) => void} */
 let ecrireStockageFn = () => {};
 let onMuteChangeFn = () => {};
 
-export function configurerAudioMoteur({ obtenirTempo, ecrireStockage, onMuteChange }) {
-    if (obtenirTempo) obtenirTempoActuel = obtenirTempo;
+export function configurerAudioMoteur({
+    obtenirBiomeActif,
+    obtenirNiveau,
+    ecrireStockage,
+    onMuteChange,
+}) {
+    if (obtenirBiomeActif) obtenirBiomeActifFn = obtenirBiomeActif;
+    if (obtenirNiveau) obtenirNiveauFn = obtenirNiveau;
     if (ecrireStockage) ecrireStockageFn = ecrireStockage;
     if (onMuteChange) onMuteChangeFn = onMuteChange;
+}
+
+export function calculerTempoActuel(tempoBase) {
+    const niv = obtenirNiveauFn() || 1;
+    return Math.round(tempoBase * (1 + Math.min(niv - 1, 10) * 0.02));
+}
+
+export function noteVersFreq(demiTon, octave = 0, biomeId) {
+    const tonique = TONIQUES_BIOMES[biomeId ?? obtenirBiomeActifFn()] ?? 220;
+    return tonique * Math.pow(2, (demiTon + octave * 12) / 12);
+}
+
+function genererSequence(config, biomeId) {
+    const gamme = GAMMES[config.gamme] ?? GAMMES.dorien;
+    return config.melodie.map((idx) => {
+        if (idx === null) return null;
+        const demiTon = gamme[idx % gamme.length];
+        return noteVersFreq(demiTon, idx >= gamme.length ? 1 : 0, biomeId);
+    });
+}
+
+function genererSequenceBasse(config, biomeId) {
+    if (!config.basseLine || !config.basse) return null;
+    const gamme = GAMMES[config.gamme] ?? GAMMES.dorien;
+    return config.basseLine.map((idx) => {
+        if (idx === null) return null;
+        const demiTon = gamme[idx % gamme.length];
+        return noteVersFreq(demiTon, -1, biomeId);
+    });
 }
 
 export const AudioMoteur = {
@@ -35,44 +192,56 @@ export const AudioMoteur = {
     gainMusique: null,
     gainEffets: null,
     actif: false,
+    initialise: false,
     muet: false,
     intervalMusique: null,
-    sequenceStep: 0,
-    noteActuelle: null,
+    stepActuel: 0,
+    sequenceActuelle: [],
+    seqBasse: null,
+    musiqueActive: false,
     biomeMusique: null,
-    sequence: [],
-    volumeEffets: 0.4,
-    volumeMusique: 0.25,
-    mesuresCompteur: 0,
+    configMusique: null,
+    volumeEffets: 1.0,
+    volumeMusique: 1.0,
+    gainMusiqueNormal: 0.7,
 
     init() {
-        if (this.ctx) {
+        if (this.initialise) {
             this.actif = true;
-            if (this.ctx.state === 'suspended') this.ctx.resume();
+            if (this.ctx?.state === 'suspended') this.ctx.resume();
             return;
         }
         try {
             this.ctx = creerContexteAudio();
-            if (!this.ctx) throw new Error('AudioContext indisponible');
+            if (!this.ctx) return;
+
             this.gainMaitre = this.ctx.createGain();
-            this.gainMusique = this.ctx.createGain();
-            this.gainEffets = this.ctx.createGain();
-            this.gainMusique.connect(this.gainMaitre);
-            this.gainEffets.connect(this.gainMaitre);
+            this.gainMaitre.gain.value = 0.5;
             this.gainMaitre.connect(this.ctx.destination);
-            this.appliquerVolumes();
+
+            this.gainMusique = this.ctx.createGain();
+            this.gainMusique.gain.value = this.gainMusiqueNormal;
+            this.gainMusique.connect(this.gainMaitre);
+
+            this.gainEffets = this.ctx.createGain();
+            this.gainEffets.gain.value = 1.0;
+            this.gainEffets.connect(this.gainMaitre);
+
+            this.initialise = true;
             this.actif = true;
+            this.appliquerVolumes();
         } catch (err) {
-            logger.warn('Initialisation Web Audio impossible :', err);
-            this.muet = true;
+            logger.warn('Web Audio API non disponible :', err);
         }
     },
 
     appliquerVolumes() {
         if (!this.gainMaitre) return;
-        this.gainMaitre.gain.value = this.muet ? 0 : 1;
-        if (this.gainMusique) {
-            this.gainMusique.gain.value = this.muet ? 0 : this.volumeMusique;
+        this.gainMaitre.gain.value = this.muet ? 0 : 0.5;
+        if (this.gainMusique && !this._enPauseMusique) {
+            this.gainMusique.gain.value = this.muet
+                ? 0
+                : this.gainMusiqueNormal * this.volumeMusique;
         }
         if (this.gainEffets) {
             this.gainEffets.gain.value = this.muet ? 0 : this.volumeEffets;
@@ -90,136 +259,193 @@ export const AudioMoteur = {
     },
 
     basculerMute() {
+        if (!this.ctx) return;
         this.muet = !this.muet;
         ecrireStockageFn('tetrisNeo_muet', this.muet.toString());
-        this.appliquerVolumes();
+        const t = this.ctx.currentTime;
+        this.gainMaitre.gain.cancelScheduledValues(t);
+        this.gainMaitre.gain.setValueAtTime(this.gainMaitre.gain.value, t);
+        this.gainMaitre.gain.linearRampToValueAtTime(this.muet ? 0 : 0.5, t + 0.1);
         onMuteChangeFn();
         if (!this.muet) this.son('deplacement');
     },
 
-    genererSequence(gamme) {
-        const seq = [];
-        for (let i = 0; i < 16; i++) {
-            if (Math.random() < 0.14) {
-                seq.push(-1);
-            } else if (i > 0 && Math.random() < 0.22) {
-                seq.push(seq[i - 1]);
-            } else {
-                seq.push(Math.floor(Math.random() * gamme.length));
-            }
-        }
-        return seq;
-    },
-
-    regenererSequence(biomeId) {
-        const config = BIOMES[biomeId]?.musique;
-        const gamme = GAMMES[config?.gamme] ?? GAMMES.dorien;
-        this.sequence = this.genererSequence(gamme);
-        this.mesuresCompteur = 0;
-    },
-
-    jouerNote(freq, timbre, duree, volume) {
-        if (this.muet || !this.ctx || !freq) return;
+    jouerNoteMusique(freq, config, volume) {
+        if (!this.ctx || !this.gainMusique || this.muet) return;
         if (this.ctx.state === 'suspended') this.ctx.resume();
 
-        const t0 = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const env = this.ctx.createGain();
-        osc.type = timbre || 'square';
-        osc.frequency.setValueAtTime(freq, t0);
+        const ctx = this.ctx;
+        const t = ctx.currentTime;
+        const adsr = config.adsr;
+        const tempo = calculerTempoActuel(config.tempo);
+        const dur = config.tenueNote ? (60 / tempo) * 1.8 : (60 / tempo) * 0.85;
 
-        const vol = Math.min(0.35, volume);
-        env.gain.setValueAtTime(0.001, t0);
-        env.gain.linearRampToValueAtTime(vol, t0 + 0.01);
-        env.gain.linearRampToValueAtTime(vol * 0.7, t0 + 0.01 + 0.05);
-        env.gain.setValueAtTime(vol * 0.7, t0 + duree - 0.1);
-        env.gain.linearRampToValueAtTime(0.001, t0 + duree);
+        const osc = ctx.createOscillator();
+        osc.type = config.timbre;
+        osc.frequency.value = freq;
+
+        let noeudSource = osc;
+        if (config.filtreFreq) {
+            const filtre = ctx.createBiquadFilter();
+            filtre.type = 'lowpass';
+            filtre.frequency.value = config.filtreFreq;
+            filtre.Q.value = 1.5;
+            osc.connect(filtre);
+            noeudSource = filtre;
+        }
+
+        const env = ctx.createGain();
+        env.gain.setValueAtTime(0, t);
+        env.gain.linearRampToValueAtTime(volume, t + adsr.a);
+        env.gain.linearRampToValueAtTime(volume * adsr.s, t + adsr.a + adsr.d);
+        env.gain.setValueAtTime(volume * adsr.s, t + dur - adsr.r);
+        env.gain.linearRampToValueAtTime(0, t + dur);
+
+        noeudSource.connect(env);
+        env.connect(this.gainMusique);
+        osc.start(t);
+        osc.stop(t + dur + 0.01);
+
+        if (config.harmonique) {
+            this.jouerNoteSimple(freq * 2, config.timbre, config.volHarmonique, dur);
+        }
+
+        if (config.echoActif) {
+            setTimeout(() => {
+                if (this.musiqueActive) {
+                    this.jouerNoteSimple(freq, config.timbre, config.echoVolume, dur * 0.7);
+                }
+            }, config.echoDelai * 1000);
+        }
+    },
+
+    jouerBasse(freq, config, volume) {
+        if (!this.ctx || !this.gainMusique || this.muet) return;
+        const ctx = this.ctx;
+        const t = ctx.currentTime;
+        const tempo = calculerTempoActuel(config.tempo);
+        const dur = (60 / tempo) * 1.6;
+        const adsr = config.adsr;
+
+        const osc = ctx.createOscillator();
+        osc.type = 'sawtooth';
+        osc.frequency.value = freq;
+
+        const filtre = ctx.createBiquadFilter();
+        filtre.type = 'lowpass';
+        filtre.frequency.value = 400;
+        filtre.Q.value = 0.8;
+        osc.connect(filtre);
+
+        const env = ctx.createGain();
+        env.gain.setValueAtTime(0, t);
+        env.gain.linearRampToValueAtTime(volume, t + 0.01);
+        env.gain.linearRampToValueAtTime(volume * 0.6, t + 0.08);
+        env.gain.setValueAtTime(volume * 0.6, t + dur - 0.1);
+        env.gain.linearRampToValueAtTime(0, t + dur);
+
+        filtre.connect(env);
+        env.connect(this.gainMusique);
+        osc.start(t);
+        osc.stop(t + dur + 0.01);
+    },
+
+    jouerNoteSimple(freq, timbre, volume, duree) {
+        if (!this.ctx || !this.gainMusique || this.muet) return;
+        const ctx = this.ctx;
+        const t = ctx.currentTime;
+
+        const osc = ctx.createOscillator();
+        osc.type = timbre;
+        osc.frequency.value = freq;
+
+        const env = ctx.createGain();
+        env.gain.setValueAtTime(0, t);
+        env.gain.linearRampToValueAtTime(volume, t + 0.02);
+        env.gain.linearRampToValueAtTime(0, t + duree);
 
         osc.connect(env);
         env.connect(this.gainMusique);
-        osc.start(t0);
-        osc.stop(t0 + duree + 0.02);
-        this.noteActuelle = osc;
-    },
-
-    jouerBasse(freq, duree) {
-        if (this.muet || !this.ctx) return;
-        const t0 = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const filtre = this.ctx.createBiquadFilter();
-        const env = this.ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(freq, t0);
-        filtre.type = 'lowpass';
-        filtre.frequency.value = 300;
-        const vol = 0.12;
-        env.gain.setValueAtTime(0.001, t0);
-        env.gain.linearRampToValueAtTime(vol, t0 + 0.02);
-        env.gain.exponentialRampToValueAtTime(0.001, t0 + duree);
-        osc.connect(filtre);
-        filtre.connect(env);
-        env.connect(this.gainMusique);
-        osc.start(t0);
-        osc.stop(t0 + duree + 0.02);
+        osc.start(t);
+        osc.stop(t + duree + 0.01);
     },
 
     tickerMusique() {
-        if (!this.ctx || !this.biomeMusique) return;
-        const config = BIOMES[this.biomeMusique]?.musique;
-        if (!config) return;
+        if (!this.musiqueActive || this.muet || !this.configMusique) return;
+        const config = this.configMusique;
+        const step = this.stepActuel;
+        const freq = this.sequenceActuelle[step];
+        const freqB = this.seqBasse?.[step];
 
-        const gamme = GAMMES[config.gamme] ?? GAMMES.dorien;
-        const idxNote = this.sequence[this.sequenceStep % 16];
-
-        if (idxNote >= 0) {
-            const demiTon = gamme[idxNote % gamme.length];
-            const duree = (60 / obtenirTempoActuel() / 4) * 0.85;
-            this.jouerNote(noteVersFreq(demiTon), config.timbre, duree, 0.14);
+        if (freq !== null && freq !== undefined) {
+            this.jouerNoteMusique(freq, config, config.volumeMelodie);
+        }
+        if (freqB !== null && freqB !== undefined) {
+            this.jouerBasse(freqB, config, config.volumeBasse ?? 0.3);
         }
 
-        if (config.basse && this.sequenceStep % 2 === 0) {
-            const demiTonBasse = gamme[0];
-            this.jouerBasse(noteVersFreq(demiTonBasse, -1), 60 / obtenirTempoActuel() / 2);
-        }
+        this.stepActuel = (step + 1) % this.sequenceActuelle.length;
 
-        this.sequenceStep++;
-        if (this.sequenceStep % 16 === 0) {
-            this.mesuresCompteur++;
-            if (this.mesuresCompteur >= 4) {
-                this.regenererSequence(this.biomeMusique);
-            }
+        if (this.stepActuel === 0) {
+            const biomeId = this.biomeMusique;
+            clearInterval(this.intervalMusique);
+            this.intervalMusique = null;
+            setTimeout(() => {
+                if (this.musiqueActive && biomeId) this.demarrerMusique(biomeId, true);
+            }, 0);
         }
     },
 
-    demarrerMusique(biomeId) {
-        if (!this.ctx || this.muet) return;
-        this.arreterMusique();
-        this.biomeMusique = biomeId;
-        this.sequenceStep = 0;
-        this.regenererSequence(biomeId);
+    demarrerMusique(biomeId, conserverPosition = false) {
+        if (!this.initialise || !this.ctx) return;
+        if (this.ctx.state === 'suspended') this.ctx.resume();
 
-        const msParStep = (60 / obtenirTempoActuel()) * 250;
-        this.tickerMusique();
-        this.intervalMusique = setInterval(() => this.tickerMusique(), msParStep);
+        const config = MUSIQUE_BIOMES[biomeId];
+        if (!config) return;
+
+        if (!conserverPosition) {
+            clearInterval(this.intervalMusique);
+            this.intervalMusique = null;
+            this.stepActuel = 0;
+        }
+
+        this.biomeMusique = biomeId;
+        this.configMusique = config;
+        this.sequenceActuelle = genererSequence(config, biomeId);
+        this.seqBasse = genererSequenceBasse(config, biomeId);
+        this.musiqueActive = true;
+
+        if (this.gainMusique) {
+            this.gainMusique.gain.cancelScheduledValues(this.ctx.currentTime);
+            this.gainMusique.gain.value = this.muet
+                ? 0
+                : this.gainMusiqueNormal * this.volumeMusique;
+        }
+
+        const msParStep = 60000 / calculerTempoActuel(config.tempo) / 4;
+        if (!this.intervalMusique) {
+            this.tickerMusique();
+            this.intervalMusique = setInterval(() => this.tickerMusique(), msParStep);
+        }
     },
 
     relancerIntervalleMusique() {
-        if (!this.biomeMusique || !this.ctx) return;
+        if (!this.musiqueActive || !this.biomeMusique || !this.configMusique) return;
         clearInterval(this.intervalMusique);
-        const msParStep = (60 / obtenirTempoActuel()) * 250;
+        const msParStep = 60000 / calculerTempoActuel(this.configMusique.tempo) / 4;
         this.intervalMusique = setInterval(() => this.tickerMusique(), msParStep);
     },
 
-    fadeGainMusique(cible, dureeMs, puis) {
-        if (!this.gainMusique || !this.ctx) {
-            if (puis) puis();
-            return;
+    definirVolumePauseMusique(enPause) {
+        if (!this.gainMusique || !this.ctx) return;
+        this._enPauseMusique = enPause;
+        if (enPause) {
+            this.gainMusique.gain.value = 0.2;
+        } else {
+            this.gainMusique.gain.value = this.muet
+                ? 0
+                : this.gainMusiqueNormal * this.volumeMusique;
         }
-        const t0 = this.ctx.currentTime;
-        this.gainMusique.gain.cancelScheduledValues(t0);
-        this.gainMusique.gain.setValueAtTime(this.gainMusique.gain.value, t0);
-        this.gainMusique.gain.linearRampToValueAtTime(cible, t0 + dureeMs / 1000);
-        if (puis) setTimeout(puis, dureeMs);
     },
 
     transitionMusique(biomeId) {
@@ -227,144 +453,270 @@ export const AudioMoteur = {
             this.demarrerMusique(biomeId);
             return;
         }
-        this.fadeGainMusique(0, 300, () => {
-            this.demarrerMusique(biomeId);
-            if (this.gainMusique) {
-                this.gainMusique.gain.value = 0;
-            }
-            this.fadeGainMusique(this.muet ? 0 : this.volumeMusique, 400);
-        });
+        this.arreterMusique(300);
+        setTimeout(() => this.demarrerMusique(biomeId), 350);
     },
 
-    arreterMusique() {
+    arreterMusique(fadeDuree = 0) {
+        this.musiqueActive = false;
         clearInterval(this.intervalMusique);
         this.intervalMusique = null;
+
+        if (!this.gainMusique || !this.ctx) {
+            this.biomeMusique = null;
+            this.configMusique = null;
+            return;
+        }
+
+        if (fadeDuree > 0) {
+            const t = this.ctx.currentTime;
+            this.gainMusique.gain.cancelScheduledValues(t);
+            this.gainMusique.gain.setValueAtTime(this.gainMusique.gain.value, t);
+            this.gainMusique.gain.linearRampToValueAtTime(0, t + fadeDuree / 1000);
+            setTimeout(() => {
+                if (this.gainMusique) {
+                    this.gainMusique.gain.value = this.muet
+                        ? 0
+                        : this.gainMusiqueNormal * this.volumeMusique;
+                }
+            }, fadeDuree + 50);
+        }
+
         this.biomeMusique = null;
-        this.sequenceStep = 0;
-        if (this.gainMusique && this.ctx) {
-            this.gainMusique.gain.cancelScheduledValues(this.ctx.currentTime);
-            this.gainMusique.gain.value = this.muet ? 0 : this.volumeMusique;
-        }
-    },
-
-    jouerOscEffet(opts) {
-        if (this.muet || !this.ctx) return;
-        if (this.ctx.state === 'suspended') this.ctx.resume();
-
-        const t0 = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = opts.timbre || 'square';
-        const f0 = opts.freq ?? 440;
-        const f1 = opts.freqFin ?? f0;
-        osc.frequency.setValueAtTime(f0, t0);
-        if (f1 !== f0) {
-            osc.frequency.linearRampToValueAtTime(f1, t0 + opts.duree);
-        }
-        const vol = Math.min(0.4, (opts.volume ?? 0.1) * this.volumeEffets);
-        gain.gain.setValueAtTime(vol, t0);
-        gain.gain.exponentialRampToValueAtTime(0.001, t0 + opts.duree);
-        osc.connect(gain);
-        gain.connect(this.gainEffets);
-        osc.start(t0);
-        osc.stop(t0 + opts.duree + 0.02);
-    },
-
-    jouerAccord(freqs, timbre, duree, volume) {
-        for (const f of freqs) {
-            this.jouerOscEffet({ freq: f, timbre, duree, volume: volume / freqs.length });
-        }
+        this.configMusique = null;
+        this.stepActuel = 0;
     },
 
     son(type) {
-        if (this.muet || !this.ctx) return;
+        if (!this.ctx || !this.gainEffets || this.muet) return;
         if (this.ctx.state === 'suspended') this.ctx.resume();
 
+        const ctx = this.ctx;
+        const t = ctx.currentTime;
+        const biomeId = obtenirBiomeActifFn();
+
         switch (type) {
-            case 'deplacement':
-                this.jouerOscEffet({ freq: 440, duree: 0.04, timbre: 'square', volume: 0.08 });
+            case 'deplacement': {
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.type = 'sine';
+                o.frequency.value = 440;
+                g.gain.setValueAtTime(0.06 * this.volumeEffets, t);
+                g.gain.linearRampToValueAtTime(0, t + 0.04);
+                o.connect(g);
+                g.connect(this.gainEffets);
+                o.start(t);
+                o.stop(t + 0.05);
                 break;
-            case 'rotation':
-                this.jouerOscEffet({
-                    freq: 330,
-                    freqFin: 550,
-                    duree: 0.06,
-                    timbre: 'square',
-                    volume: 0.1,
+            }
+            case 'rotation': {
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.type = 'sine';
+                o.frequency.setValueAtTime(330, t);
+                o.frequency.linearRampToValueAtTime(550, t + 0.06);
+                g.gain.setValueAtTime(0.08 * this.volumeEffets, t);
+                g.gain.linearRampToValueAtTime(0, t + 0.07);
+                o.connect(g);
+                g.connect(this.gainEffets);
+                o.start(t);
+                o.stop(t + 0.08);
+                break;
+            }
+            case 'verrou': {
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                const f = ctx.createBiquadFilter();
+                o.type = 'sawtooth';
+                o.frequency.value = 100;
+                f.type = 'lowpass';
+                f.frequency.value = 300;
+                g.gain.setValueAtTime(0.18 * this.volumeEffets, t);
+                g.gain.linearRampToValueAtTime(0, t + 0.09);
+                o.connect(f);
+                f.connect(g);
+                g.connect(this.gainEffets);
+                o.start(t);
+                o.stop(t + 0.1);
+                break;
+            }
+            case 'ligne_1':
+                [261, 329, 392].forEach((freq, i) => {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.type = 'triangle';
+                    o.frequency.value = freq;
+                    g.gain.setValueAtTime(0, t + i * 0.02);
+                    g.gain.linearRampToValueAtTime(0.14 * this.volumeEffets, t + i * 0.02 + 0.02);
+                    g.gain.linearRampToValueAtTime(0, t + 0.3);
+                    o.connect(g);
+                    g.connect(this.gainEffets);
+                    o.start(t + i * 0.02);
+                    o.stop(t + 0.35);
                 });
                 break;
-            case 'verrou':
-                this.jouerOscEffet({ freq: 120, duree: 0.08, timbre: 'sawtooth', volume: 0.18 });
-                break;
-            case 'ligne_1':
-                this.jouerAccord([440, 554], 'square', 0.12, 0.2);
-                break;
             case 'ligne_2':
-                this.jouerAccord([440, 554, 659], 'square', 0.14, 0.25);
+                [261, 329, 392, 523].forEach((freq, i) => {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.type = 'triangle';
+                    o.frequency.value = freq;
+                    g.gain.setValueAtTime(0, t + i * 0.02);
+                    g.gain.linearRampToValueAtTime(0.16 * this.volumeEffets, t + i * 0.02 + 0.02);
+                    g.gain.linearRampToValueAtTime(0, t + 0.4);
+                    o.connect(g);
+                    g.connect(this.gainEffets);
+                    o.start(t + i * 0.02);
+                    o.stop(t + 0.45);
+                });
                 break;
             case 'ligne_3':
-                this.jouerAccord([440, 554, 659, 880], 'square', 0.16, 0.28);
+                [261, 329, 392, 523, 659].forEach((freq, i) => {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.type = 'triangle';
+                    o.frequency.value = freq;
+                    g.gain.setValueAtTime(0, t + i * 0.025);
+                    g.gain.linearRampToValueAtTime(0.18 * this.volumeEffets, t + i * 0.025 + 0.02);
+                    g.gain.linearRampToValueAtTime(0, t + 0.5);
+                    o.connect(g);
+                    g.connect(this.gainEffets);
+                    o.start(t + i * 0.025);
+                    o.stop(t + 0.55);
+                });
                 break;
             case 'tetris': {
-                [523, 659, 784, 1047].forEach((f, i) => {
-                    setTimeout(() => {
-                        this.jouerOscEffet({
-                            freq: f,
-                            duree: 0.18,
-                            timbre: 'square',
-                            volume: 0.22,
-                        });
-                        this.jouerOscEffet({
-                            freq: f * 0.5,
-                            duree: 0.25,
-                            timbre: 'triangle',
-                            volume: 0.08,
-                        });
-                    }, i * 55);
+                const freqsTetris = [
+                    noteVersFreq(0, 0, biomeId),
+                    noteVersFreq(4, 0, biomeId),
+                    noteVersFreq(7, 0, biomeId),
+                    noteVersFreq(12, 0, biomeId),
+                ];
+                freqsTetris.forEach((freq, i) => {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.type = 'triangle';
+                    o.frequency.value = freq;
+                    const ti = t + i * 0.06;
+                    g.gain.setValueAtTime(0, ti);
+                    g.gain.linearRampToValueAtTime(0.22 * this.volumeEffets, ti + 0.03);
+                    g.gain.linearRampToValueAtTime(
+                        i === 3 ? 0.15 * this.volumeEffets : 0,
+                        ti + 0.22
+                    );
+                    if (i === 3) g.gain.linearRampToValueAtTime(0, ti + 0.6);
+                    o.connect(g);
+                    g.connect(this.gainEffets);
+                    o.start(ti);
+                    o.stop(ti + 0.65);
                 });
                 break;
             }
             case 'niveau':
-                [660, 880, 1108].forEach((f, i) => {
-                    setTimeout(() => {
-                        this.jouerOscEffet({
-                            freq: f,
-                            duree: 0.14,
-                            timbre: 'triangle',
-                            volume: 0.18,
-                        });
-                    }, i * 70);
+                [
+                    noteVersFreq(0, 0, biomeId),
+                    noteVersFreq(5, 0, biomeId),
+                    noteVersFreq(12, 0, biomeId),
+                ].forEach((freq, i) => {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.type = 'square';
+                    o.frequency.value = freq;
+                    const ti = t + i * 0.1;
+                    g.gain.setValueAtTime(0, ti);
+                    g.gain.linearRampToValueAtTime(0.2 * this.volumeEffets, ti + 0.02);
+                    g.gain.linearRampToValueAtTime(0, ti + 0.18);
+                    o.connect(g);
+                    g.connect(this.gainEffets);
+                    o.start(ti);
+                    o.stop(ti + 0.2);
                 });
                 break;
-            case 'game_over': {
-                const notes = [392, 370, 349, 330, 311];
-                notes.forEach((f, i) => {
-                    setTimeout(() => {
-                        this.jouerOscEffet({
-                            freq: f,
-                            duree: 0.12,
-                            timbre: 'sawtooth',
-                            volume: 0.14,
-                        });
-                    }, i * 90);
+            case 'game_over':
+                [
+                    noteVersFreq(7, 0, biomeId),
+                    noteVersFreq(5, 0, biomeId),
+                    noteVersFreq(3, 0, biomeId),
+                    noteVersFreq(1, 0, biomeId),
+                    noteVersFreq(-1, 0, biomeId),
+                ].forEach((freq, i) => {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.type = 'sawtooth';
+                    o.frequency.value = freq;
+                    const ti = t + i * 0.15;
+                    g.gain.setValueAtTime(0, ti);
+                    g.gain.linearRampToValueAtTime(0.18 * this.volumeEffets, ti + 0.02);
+                    g.gain.linearRampToValueAtTime(0, ti + 0.28);
+                    o.connect(g);
+                    g.connect(this.gainEffets);
+                    o.start(ti);
+                    o.stop(ti + 0.3);
                 });
+                break;
+            case 'hold': {
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.type = 'sine';
+                o.frequency.setValueAtTime(800, t);
+                o.frequency.linearRampToValueAtTime(300, t + 0.1);
+                g.gain.setValueAtTime(0.1 * this.volumeEffets, t);
+                g.gain.linearRampToValueAtTime(0, t + 0.12);
+                o.connect(g);
+                g.connect(this.gainEffets);
+                o.start(t);
+                o.stop(t + 0.13);
                 break;
             }
-            case 'hold':
-                this.jouerOscEffet({
-                    freq: 800,
-                    freqFin: 300,
-                    duree: 0.1,
-                    timbre: 'triangle',
-                    volume: 0.12,
+            case 'relique':
+                [
+                    noteVersFreq(0, 0, biomeId),
+                    noteVersFreq(7, 0, biomeId),
+                    noteVersFreq(12, 0, biomeId),
+                ].forEach((freq, i) => {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.type = 'sine';
+                    o.frequency.value = freq;
+                    const ti = t + i * 0.12;
+                    g.gain.setValueAtTime(0, ti);
+                    g.gain.linearRampToValueAtTime(0.15 * this.volumeEffets, ti + 0.03);
+                    g.gain.linearRampToValueAtTime(0, ti + 0.25);
+                    o.connect(g);
+                    g.connect(this.gainEffets);
+                    o.start(ti);
+                    o.stop(ti + 0.28);
                 });
                 break;
             case 'menu_hover':
-                this.jouerOscEffet({ freq: 880, duree: 0.02, timbre: 'square', volume: 0.06 });
+            case 'menu_select': {
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.type = 'sine';
+                o.frequency.value = 880;
+                g.gain.setValueAtTime(0.06 * this.volumeEffets, t);
+                g.gain.linearRampToValueAtTime(0, t + 0.03);
+                o.connect(g);
+                g.connect(this.gainEffets);
+                o.start(t);
+                o.stop(t + 0.04);
                 break;
-            case 'chute':
-                this.jouerOscEffet({ freq: 160, duree: 0.06, timbre: 'triangle', volume: 0.12 });
+            }
+            case 'chute': {
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.type = 'sine';
+                o.frequency.value = 160;
+                g.gain.setValueAtTime(0.08 * this.volumeEffets, t);
+                g.gain.linearRampToValueAtTime(0, t + 0.06);
+                o.connect(g);
+                g.connect(this.gainEffets);
+                o.start(t);
+                o.stop(t + 0.07);
                 break;
+            }
         }
     },
 };
+
+export { GAMMES, TONIQUES_BIOMES, MUSIQUE_BIOMES };

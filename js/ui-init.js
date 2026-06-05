@@ -28,6 +28,9 @@ export function initialiserBoutons() {
         ?.addEventListener('click', () => afficherEcran(ECRANS.SELECTION));
     document.getElementById('btn-architecte')?.addEventListener('click', archi_afficherSelection);
     document
+        .getElementById('btn-histoire')
+        ?.addEventListener('click', () => afficherEcran(ECRANS.HISTOIRE_MAP));
+    document
         .getElementById('btn-achievements')
         ?.addEventListener('click', () => afficherEcran(ECRANS.ACHIEVEMENTS));
     document

@@ -376,3 +376,7 @@ export const ORDRE_BIOMES = [
     'fuochi',
     'cosmos',
 ];
+
+import { BIOMES_HISTOIRE } from './biomes-histoire.js';
+
+Object.assign(BIOMES, BIOMES_HISTOIRE);

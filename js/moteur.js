@@ -1,4 +1,3 @@
-import { BIOMES } from './config.js';
 import { configurerConstellation } from './constellation.js';
 import { configurerMeteo } from './meteo.js';
 import { configurerReliques } from './reliques.js';
@@ -95,10 +94,8 @@ export function initialiserApplication() {
     });
 
     configurerAudioMoteur({
-        obtenirTempo: () => {
-            const base = BIOMES[obtenirBiomeActif()]?.musique?.tempo ?? 120;
-            return base + (etat.niveau - 1) * 4;
-        },
+        obtenirBiomeActif,
+        obtenirNiveau: () => etat.niveau,
         ecrireStockage,
         onMuteChange: mettreAJourBoutonsMute,
     });

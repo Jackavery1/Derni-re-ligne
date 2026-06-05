@@ -213,8 +213,8 @@ export function terminerCooperatif(joueurFautif) {
     coop.estEnCours = false;
     arreterBoucleCoop();
     changerHumeur('triste');
-    AudioMoteur.arreterMusique();
-    if (!AudioMoteur.muet) AudioMoteur.son('game_over');
+    AudioMoteur.arreterMusique(200);
+    if (!AudioMoteur.muet) setTimeout(() => AudioMoteur.son('game_over'), 250);
 
     const elScore = document.getElementById('coop-go-score');
     const elLignes = document.getElementById('coop-go-lignes');

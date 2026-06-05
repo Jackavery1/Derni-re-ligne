@@ -13,6 +13,11 @@ export const ECRANS = {
     GAME_OVER_COOP: 'ecran-game-over-coop',
     ARCHI_SELECTION: 'ecran-archi-selection',
     ARCHI_RESULTAT: 'ecran-archi-resultat',
+    HISTOIRE_MAP: 'ecran-histoire-map',
+    HISTOIRE_CUTSCENE: 'ecran-histoire-cutscene',
+    HISTOIRE_JOURNAL: 'ecran-histoire-journal',
+    HISTOIRE_BOSS_DEFAITE: 'ecran-histoire-boss-defaite',
+    HISTOIRE_FIN: 'ecran-histoire-fin',
 };
 
 /** Ordre de chargement des fragments HTML (source unique pour charger-ecrans et SW). */
@@ -34,4 +39,5 @@ export const LISTE_ECRANS_CHARGEMENT = [
     ECRANS.ARCHI_SELECTION,
     ECRANS.ARCHI_RESULTAT,
     'interface-jeu-archi',
+    ECRANS.HISTOIRE_MAP,
 ];

@@ -1,4 +1,5 @@
-import { BIOMES } from './config.js';
+﻿import { BIOMES } from './config.js';
+import { ETAT_HISTOIRE_VIDE } from './histoire-donnees.js';
 import { logger } from './logger.js';
 
 export const SEUIL_ETOILE_2 = 5000;
@@ -15,12 +16,17 @@ const CLES_STOCKAGE = new Set([
     'tetrisNeo_codexVus',
     'tetrisNeo_statsGlobales',
     'tetrisNeo_profilDernier',
+    'tetrisNeo_histoire',
+    'tetrisNeo_histoireJournaux',
+    'tetrisNeo_histoireBoss',
+    'tetrisNeo_histoireFin',
 ]);
 
 /** @param {string} cle */
 function estCleValide(cle) {
     if (CLES_STOCKAGE.has(cle)) return true;
     if (/^tetrisNeo_record_[a-z]+$/.test(cle)) return true;
+    if (/^tetrisNeo_monde_histoire_[a-z_]+$/.test(cle)) return true;
     return /^tetrisNeo_archi_[a-z_]+$/.test(cle);
 }
 
@@ -59,7 +65,7 @@ export function ecrireStockageJson(cle, valeur) {
     try {
         return ecrireStockage(cle, JSON.stringify(valeur));
     } catch (err) {
-        logger.warn('Sérialisation localStorage impossible:', cle, err);
+        logger.warn('S├®rialisation localStorage impossible:', cle, err);
         return false;
     }
 }
@@ -67,7 +73,7 @@ export function ecrireStockageJson(cle, valeur) {
 /** @param {string} cle @param {string} defaut @returns {string} */
 export function lireStockage(cle, defaut) {
     if (!estCleValide(cle)) {
-        logger.warn('Clé localStorage inconnue:', cle);
+        logger.warn('Cl├® localStorage inconnue:', cle);
         return defaut;
     }
     try {
@@ -81,14 +87,14 @@ export function lireStockage(cle, defaut) {
 /** @param {string} cle @param {string} valeur @returns {boolean} */
 export function ecrireStockage(cle, valeur) {
     if (!estCleValide(cle)) {
-        logger.warn('Écriture localStorage refusée, clé inconnue:', cle);
+        logger.warn('├ëcriture localStorage refus├®e, cl├® inconnue:', cle);
         return false;
     }
     try {
         localStorage.setItem(cle, valeur);
         return true;
     } catch (err) {
-        logger.warn('Écriture localStorage impossible:', err);
+        logger.warn('├ëcriture localStorage impossible:', err);
         return false;
     }
 }
@@ -117,7 +123,7 @@ export function calculerEtoiles(record) {
 /** @param {number} nbEtoiles @returns {string} */
 export function formaterEtoiles(nbEtoiles) {
     const n = Math.max(0, Math.min(3, nbEtoiles));
-    return '★'.repeat(n) + '☆'.repeat(3 - n);
+    return '\u2605'.repeat(n) + '\u2606'.repeat(3 - n);
 }
 
 /** @returns {number} */
@@ -159,4 +165,33 @@ export function sauvegarderRecordBiome(idBiome, score) {
         return true;
     }
     return false;
+}
+
+/** @returns {typeof ETAT_HISTOIRE_VIDE} */
+export function chargerEtatHistoire() {
+    const parsed = /** @type {Partial<typeof ETAT_HISTOIRE_VIDE> | null} */ (
+        lireStockageJson('tetrisNeo_histoire', null)
+    );
+    if (!parsed || typeof parsed !== 'object') return { ...ETAT_HISTOIRE_VIDE };
+    return {
+        ...ETAT_HISTOIRE_VIDE,
+        ...parsed,
+        conditionsMiroir: {
+            ...ETAT_HISTOIRE_VIDE.conditionsMiroir,
+            ...(parsed.conditionsMiroir ?? {}),
+        },
+        conditionsTrame: {
+            ...ETAT_HISTOIRE_VIDE.conditionsTrame,
+            ...(parsed.conditionsTrame ?? {}),
+        },
+        conditionsParadoxe: {
+            ...ETAT_HISTOIRE_VIDE.conditionsParadoxe,
+            ...(parsed.conditionsParadoxe ?? {}),
+        },
+    };
+}
+
+/** @param {typeof ETAT_HISTOIRE_VIDE} etat */
+export function sauvegarderEtatHistoire(etat) {
+    ecrireStockageJson('tetrisNeo_histoire', etat);
 }

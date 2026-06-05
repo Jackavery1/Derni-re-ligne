@@ -33,7 +33,6 @@ import {
     definirPieceAuSol,
     definirLockDelayRestant,
     definirNbLockResets,
-    definirTransitionAlpha,
     definirAccumulateur,
     definirDernierTimestamp,
     definirRefsCanvas,
@@ -49,7 +48,12 @@ import {
     hexVersRgb,
     mettreAJourIndicateurRelique,
 } from './piece-jeu.js';
-import { initParticulesAmbiance, dessinerFileNext, rendreFrameJeu } from './rendu-jeu.js';
+import {
+    initParticulesAmbiance,
+    dessinerFileNext,
+    rendreFrameJeu,
+    demarrerTransition,
+} from './rendu-jeu.js';
 import {
     appliquerThemeBiome,
     appliquerTextesBiome,
@@ -200,7 +204,6 @@ function initialiserEtatPartie() {
     etat.tempsPauseDebut = null;
     particules.length = 0;
     textesFlottants.length = 0;
-    initParticulesAmbiance();
     definirCouleurAmbRgb(hexVersRgb(BIOMES[obtenirBiomeActif()].lueurCoul));
     secousse.timer = 0;
     flashVerrou.timer = 0;
@@ -235,11 +238,10 @@ function initialiserAudioPartie() {
     AudioMoteur.init();
     if (AudioMoteur.ctx && AudioMoteur.actif) {
         const biomeActif = obtenirBiomeActif();
-        if (AudioMoteur.intervalMusique && AudioMoteur.biomeMusique !== biomeActif) {
-            AudioMoteur.transitionMusique(biomeActif);
-        } else {
-            AudioMoteur.demarrerMusique(biomeActif);
-        }
+        const biomePrecedent = AudioMoteur.biomeMusique;
+        AudioMoteur.arreterMusique(0);
+        const delai = biomePrecedent && biomePrecedent !== biomeActif ? 350 : 50;
+        setTimeout(() => AudioMoteur.demarrerMusique(biomeActif), delai);
     }
     arreterAnimationMenu();
 }
@@ -255,18 +257,19 @@ function initialiserUIPartie() {
     const elTemps = document.getElementById('affichage-temps');
     if (elTemps) elTemps.textContent = '00:00';
     cacherEcrans();
+    initParticulesAmbiance();
     document.body.classList.add('partie-active');
     changerHumeur('neutre');
 
     document.getElementById('btn-pause').textContent = '⏸ PAUSE';
 
     definirAccumulateur(0);
-    definirTransitionAlpha(1);
     rendreFrameJeu();
     declencherCalculOracle();
 }
 
 export function demarrerJeu() {
+    demarrerTransition();
     initialiserFeaturesPartie();
     initialiserAudioPartie();
     initialiserEtatPartie();
@@ -282,12 +285,14 @@ export function basculerPause() {
     if (etat.estEnPause) {
         annulerTimersVivant();
         etat.tempsPauseDebut = Date.now();
+        AudioMoteur.definirVolumePauseMusique(true);
         afficherEcran(ECRANS.PAUSE);
     } else {
         if (etat.tempsPauseDebut) {
             etat.tempsPauseAccumule += Date.now() - etat.tempsPauseDebut;
             etat.tempsPauseDebut = null;
         }
+        AudioMoteur.definirVolumePauseMusique(false);
         cacherEcrans();
         definirAccumulateur(0);
         definirDernierTimestamp(performance.now());
@@ -300,9 +305,9 @@ export function basculerPause() {
 export function terminerPartie(victoire = false) {
     etat.estEnCours = false;
     annulerMeteo();
-    AudioMoteur.arreterMusique();
+    AudioMoteur.arreterMusique(200);
     changerHumeur(victoire ? 'excite' : 'triste');
-    if (!victoire) AudioMoteur.son('game_over');
+    if (!victoire) setTimeout(() => AudioMoteur.son('game_over'), 250);
     annoncer(victoire ? 'Sprint terminé ! Victoire' : 'Partie terminée');
 
     const textes = BIOMES[obtenirBiomeActif()]?.textes ?? BIOMES.classique.textes;
