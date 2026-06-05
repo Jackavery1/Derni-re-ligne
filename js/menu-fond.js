@@ -1,6 +1,6 @@
 import { TETROMINOS } from './config.js';
 import { obtenirEffetsReduits } from './store-jeu.js';
-import { getCouleurPiece } from './piece-jeu.js';
+import { obtenirCouleurPieceParType } from './piece-jeu.js';
 import { obtenirActions } from './actions-jeu.js';
 
 let canvasMenuFond = null;
@@ -33,7 +33,7 @@ function creerPieceFond(posYAleatoire = false) {
         x: Math.random() * (w - taille * 4),
         y: posYAleatoire ? Math.random() * h - h * 0.3 : -taille * 5,
         vy: Math.random() * 0.5 + 0.15,
-        couleur: getCouleurPiece(type),
+        couleur: obtenirCouleurPieceParType(type),
         opacite: Math.random() * 0.18 + 0.06,
     };
 }

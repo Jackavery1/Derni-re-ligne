@@ -1,9 +1,24 @@
-import { CODEX } from './codex-donnees.js';
 import { statsGlobales } from './achievements.js';
 import { lireStockageJson, ecrireStockageJson, estTableauIds } from './progression.js';
 
 const CLE_CODEX = 'tetrisNeo_codex';
 const CLE_CODEX_VUS = 'tetrisNeo_codexVus';
+
+/** @type {import('./codex-donnees.js').CODEX | null} */
+let codexDonnees = null;
+/** @type {Promise<import('./codex-donnees.js').CODEX> | null} */
+let promesseCodex = null;
+
+export async function chargerDonneesCodex() {
+    if (codexDonnees) return codexDonnees;
+    if (!promesseCodex) {
+        promesseCodex = import('./codex-donnees.js').then((module) => {
+            codexDonnees = module.CODEX;
+            return codexDonnees;
+        });
+    }
+    return promesseCodex;
+}
 
 export let codexDebloque = chargerCodex();
 export let codexVus = chargerCodexVus();
@@ -38,7 +53,8 @@ function sauvegarderCodexVus() {
     ecrireStockageJson(CLE_CODEX_VUS, [...codexVus]);
 }
 
-export function verifierCodex() {
+export async function verifierCodex() {
+    const CODEX = await chargerDonneesCodex();
     let nouveaux = 0;
     for (const [, entree] of Object.entries(CODEX)) {
         if (codexDebloque.has(entree.id)) continue;
@@ -81,15 +97,16 @@ function afficherProchaineNotifCodex() {
     }, 3800);
 }
 
-export function changerChapitreCodex(chapitre, btn) {
+export async function changerChapitreCodex(chapitre, btn) {
     chapitreCodexActif = chapitre;
     document.querySelectorAll('.codex-onglet').forEach((b) => b.classList.remove('actif'));
     btn?.classList.add('actif');
     fermerLecteurCodex();
-    genererListeCodex(chapitre);
+    await genererListeCodex(chapitre);
 }
 
-export function genererListeCodex(chapitre) {
+export async function genererListeCodex(chapitre) {
+    const CODEX = await chargerDonneesCodex();
     const liste = document.getElementById('codex-liste');
     if (!liste) return;
     liste.textContent = '';
@@ -176,12 +193,13 @@ export function fermerLecteurCodex() {
     if (lecteur) lecteur.style.display = 'none';
 }
 
-export function genererCodexComplet() {
+export async function genererCodexComplet() {
+    const CODEX = await chargerDonneesCodex();
     const total = Object.keys(CODEX).length;
     const debloques = codexDebloque.size;
     const elProg = document.getElementById('codex-progression');
     if (elProg) elProg.textContent = `${debloques} / ${total} ENTRÉES`;
-    genererListeCodex(chapitreCodexActif);
+    await genererListeCodex(chapitreCodexActif);
 }
 
 export function initialiserCodexUI() {
@@ -193,4 +211,4 @@ export function initialiserCodexUI() {
     document.getElementById('btn-codex-fermer')?.addEventListener('click', fermerLecteurCodex);
 }
 
-export { CODEX };
+export { chargerDonneesCodex as obtenirCodex };

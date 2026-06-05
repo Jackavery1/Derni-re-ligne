@@ -9,6 +9,7 @@ import { meteo, ETATS_METEO } from './meteo.js';
 import { appliquerEffetRelique } from './reliques.js';
 import { AudioMoteur } from './audio.js';
 import { obtenirActions } from './actions-jeu.js';
+import { emettre } from './bus-jeu.js';
 import {
     etat,
     flashVerrou,
@@ -18,11 +19,9 @@ import {
     obtenirReliqueActive,
     obtenirCompteurPieces,
     obtenirSeuilProchRelique,
-    obtenirCtxReserve,
-    obtenirCanvasReserve,
+    incrementerCompteurPieces,
     definirReliqueEnAttente,
     definirReliqueActive,
-    incrementerCompteurPieces,
     definirCompteurPieces,
     definirSeuilProchRelique,
     definirLockDelayRestant,
@@ -38,17 +37,7 @@ import {
     genererProchainePiece,
     activerReliqueSurPiece,
     reinitialiserLockDelay,
-    mettreAJourIndicateurRelique,
 } from './piece-jeu.js';
-import { creerParticulesLigne } from './particules-jeu.js';
-import {
-    dessinerFileNext,
-    dessinerPreview,
-    afficherTexteFlottant,
-    obtenirYHautTas,
-    declencherSecousse,
-} from './rendu-jeu.js';
-import { changerHumeur, annoncer, rafraichirStats, afficherNotifNiveau } from './ecrans-ui.js';
 import { enregistrerNotesLignesCompletes } from './melodie.js';
 import { majStatsLignesEffacees, majStatsScorePartie } from './achievements.js';
 import {
@@ -60,11 +49,8 @@ import {
     compterHold,
     enregistrerLignesParNiveau,
 } from './profil-jeu.js';
-import {
-    sauvegarderPlacementOracle,
-    evaluerDecisionOracle,
-    declencherCalculOracle,
-} from './oracle-jeu.js';
+import { sauvegarderPlacementOracle, declencherCalculOracle } from './oracle-jeu.js';
+import { annoncer } from './annonces.js';
 
 export function verrouillerPiece() {
     if (meteo.decalageForce !== 0) {
@@ -130,9 +116,7 @@ export function verrouillerPiece() {
     definirLockDelayRestant(0);
     definirNbLockResets(0);
 
-    dessinerFileNext();
-    mettreAJourIndicateurRelique();
-
+    emettre('partie:nouvelle-piece');
     signalerApparitionPiece();
     declencherCalculOracle();
 
@@ -146,16 +130,7 @@ function supprimerLignesCompletes() {
     etat.plateau = plateau;
     flashLignes.lignes = [...lignesEffacees];
     flashLignes.timer = flashLignes.duree;
-
-    for (const l of lignesEffacees) creerParticulesLigne(l);
-
-    const intensitesSecousse = { 1: 2, 2: 3.5, 3: 5, 4: 8 };
-    declencherSecousse(intensitesSecousse[nbSupprimees] ?? 8);
-    changerHumeur(nbSupprimees >= 4 ? 'excite' : 'content');
-    if (nbSupprimees >= 4) AudioMoteur.son('tetris');
-    else if (nbSupprimees === 3) AudioMoteur.son('ligne_3');
-    else if (nbSupprimees === 2) AudioMoteur.son('ligne_2');
-    else if (nbSupprimees === 1) AudioMoteur.son('ligne_1');
+    emettre('lignes:effacees', { nbSupprimees, lignesEffacees });
     return nbSupprimees;
 }
 
@@ -201,54 +176,9 @@ export function calculerScore(nbLignes) {
     if (nbLignes > 0) {
         majStatsScorePartie(nbLignes, etat.combo);
         enregistrerLignesParNiveau(nbLignes);
-
-        if (result.tetris) {
-            afficherTexteFlottant('TETRIS !', '#ffe600', 16);
-            annoncer('Tetris ! Quatre lignes effacées');
-            if (result.backToBack) {
-                afficherTexteFlottant('BACK-TO-BACK !', '#ff006e', 13);
-                annoncer('Back-to-back Tetris');
-            }
-        } else {
-            if (nbLignes === 3) afficherTexteFlottant('TRIPLE !', '#b400ff', 14);
-            if (nbLignes === 2) afficherTexteFlottant('DOUBLE !', '#00f5ff', 12);
-        }
-
-        if (etat.combo >= 2) {
-            afficherTexteFlottant(`COMBO x${etat.combo}`, '#00ff88', 11);
-            annoncer(`Combo ${etat.combo}`);
-        }
-
-        if (result.points > 0) {
-            const estGros = nbLignes >= 4 || result.points >= 500;
-            afficherTexteFlottant(
-                `+${result.points}`,
-                estGros ? null : '#ffe600',
-                estGros ? 12 : 10,
-                {
-                    y: obtenirYHautTas() - 10,
-                    arcEnCiel: estGros,
-                }
-            );
-            annoncer(
-                `${nbLignes} ligne${nbLignes > 1 ? 's' : ''} effacée${nbLignes > 1 ? 's' : ''}, plus ${result.points} points`
-            );
-        }
     }
 
-    evaluerDecisionOracle(nbLignes);
-    if (result.levelUp) {
-        afficherNotifNiveau();
-        AudioMoteur.son('niveau');
-        AudioMoteur.relancerIntervalleMusique();
-        annoncer(`Niveau ${etat.niveau} atteint`);
-    }
-    rafraichirStats();
-
-    if (etat.modeJeu === 'sprint' && etat.lignes >= CONFIG.sprintLignes) {
-        etat.victoireSprint = true;
-        setTimeout(() => obtenirActions().terminerPartie?.(true), 400);
-    }
+    emettre('score:maj', { nbLignes, result });
 }
 
 export function jouable() {
@@ -298,7 +228,7 @@ export function deplacerBas() {
         etat.score++;
         definirPieceAuSol(false);
         definirLockDelayRestant(0);
-        rafraichirStats();
+        emettre('partie:stats');
     }
 }
 
@@ -310,7 +240,7 @@ export function chuteRapide() {
     etat.pieceActuelle.y += dist;
     etat.score += dist * 2;
     AudioMoteur.son('chute');
-    rafraichirStats();
+    emettre('partie:stats');
     verrouillerPiece();
 }
 
@@ -329,6 +259,7 @@ export function tourner(sens) {
             AudioMoteur.son('rotation');
             reinitialiserLockDelay();
             compterRotation();
+            annoncer('Pièce tournée');
             return;
         }
     }
@@ -357,8 +288,7 @@ export function utiliserReserve() {
             etat.filePieces.push(genererProchainePiece());
         }
         definirReliqueActive(null);
-        dessinerFileNext();
-        mettreAJourIndicateurRelique();
+        emettre('partie:nouvelle-piece');
     } else {
         const reserve = etat.pieceEnReserve;
         etat.pieceEnReserve = {
@@ -384,16 +314,16 @@ export function utiliserReserve() {
     etat.reserveUtilisee = true;
     compterHold();
     AudioMoteur.son('hold');
+    annoncer('Réserve utilisée');
     reinitialiserLockDelay();
     signalerApparitionPiece();
     declencherCalculOracle();
-
-    dessinerPreview(obtenirCtxReserve(), obtenirCanvasReserve(), etat.pieceEnReserve);
+    emettre('partie:reserve-preview', { reserve: etat.pieceEnReserve });
 }
 
 export function vitesseChute() {
     return Math.max(
-        CONFIG.vitesseMin,
-        CONFIG.vitesseBase - (etat.niveau - 1) * CONFIG.reductionParNiveau
+        CONFIG.vitesseBase - (etat.niveau - 1) * CONFIG.reductionParNiveau,
+        CONFIG.vitesseMin
     );
 }

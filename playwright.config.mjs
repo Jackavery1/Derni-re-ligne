@@ -1,3 +1,5 @@
+const serveDist = process.env.E2E_DIST === '1';
+
 export default {
     testDir: './e2e',
     timeout: 30000,
@@ -6,8 +8,8 @@ export default {
         headless: true,
     },
     webServer: {
-        command: 'npx --yes serve . -p 3000',
+        command: serveDist ? 'npx --yes serve dist -p 3000' : 'npx --yes serve . -p 3000',
         url: 'http://127.0.0.1:3000',
-        reuseExistingServer: true,
+        reuseExistingServer: !process.env.CI,
     },
 };

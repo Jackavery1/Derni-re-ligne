@@ -1,7 +1,7 @@
 import { CONFIG, TETROMINOS } from './config.js';
 import { obtenirCanvasPlateau, obtenirCtx } from './store-jeu.js';
 import { etat } from './store-jeu.js';
-import { getCouleurPiece } from './piece-jeu.js';
+import { obtenirCouleurPieceParType } from './piece-jeu.js';
 import { dessinerCellule, dessinerPreview, dessinerParticules } from './rendu-jeu.js';
 import { coop, DEMI_LARGEUR, coop_estPositionValide } from './coop-logique.js';
 
@@ -89,7 +89,7 @@ export function coop_dessinerPiecesActives() {
         const piece = coop[j].pieceActuelle;
         if (!piece) continue;
         const forme = obtenirFormeCoop(piece);
-        const couleur = getCouleurPiece(piece.type);
+        const couleur = obtenirCouleurPieceParType(piece.type);
         forme.forEach((ligne, li) => {
             ligne.forEach((cellule, ci) => {
                 if (!cellule) return;
@@ -110,7 +110,7 @@ export function coop_dessinerPiecesFantomes() {
         let dist = 0;
         while (coop_estPositionValide(piece, 0, dist + 1)) dist++;
         const forme = obtenirFormeCoop(piece);
-        const couleur = getCouleurPiece(piece.type);
+        const couleur = obtenirCouleurPieceParType(piece.type);
         forme.forEach((ligne, li) => {
             ligne.forEach((cellule, ci) => {
                 if (!cellule) return;

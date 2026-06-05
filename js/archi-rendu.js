@@ -1,5 +1,5 @@
 import { CONFIG, BIOMES } from './config.js';
-import { obtenirForme, getCouleurPiece } from './piece-jeu.js';
+import { obtenirForme, obtenirCouleurPieceParType } from './piece-jeu.js';
 import { obtenirCtx, obtenirCanvasPlateau } from './store-jeu.js';
 import { dessinerCellule } from './rendu-cellule.js';
 import { dessinerParticules } from './rendu-jeu.js';
@@ -103,7 +103,7 @@ export function archi_dessinerFantome() {
     let dist = 0;
     while (archi_estPositionValide(archi.pieceActuelle, 0, dist + 1)) dist++;
     const forme = obtenirForme(archi.pieceActuelle);
-    const couleur = getCouleurPiece(archi.pieceActuelle.type);
+    const couleur = obtenirCouleurPieceParType(archi.pieceActuelle.type);
     forme.forEach((l, li) =>
         l.forEach((c, ci) => {
             if (!c) return;
@@ -126,7 +126,7 @@ export function archi_dessinerPieceActive() {
     if (!archi.pieceActuelle) return;
     const ctx2d = obtenirCtx();
     const forme = obtenirForme(archi.pieceActuelle);
-    const couleur = getCouleurPiece(archi.pieceActuelle.type);
+    const couleur = obtenirCouleurPieceParType(archi.pieceActuelle.type);
     forme.forEach((l, li) =>
         l.forEach((c, ci) => {
             if (!c) return;

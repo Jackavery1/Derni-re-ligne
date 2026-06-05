@@ -129,14 +129,20 @@ function boucleArchi() {
 export function archi_mettreAJourInventaireUI() {
     const el = document.getElementById('archi-inventaire');
     if (!el) return;
-    el.innerHTML = '';
+    el.textContent = '';
 
     archi.inventaire.forEach((item) => {
         const div = document.createElement('div');
         div.className = `archi-inv-item${
             item.type === archi.pieceActuelle?.type ? ' selectionne' : ''
         }${item.qteDispo === 0 ? ' epuise' : ''}`;
-        div.innerHTML = `<span>${item.type}-pièce</span><span class="archi-inv-qte">${item.qteDispo}</span>`;
+
+        const label = document.createElement('span');
+        label.textContent = `${item.type}-pièce`;
+        const qte = document.createElement('span');
+        qte.className = 'archi-inv-qte';
+        qte.textContent = String(item.qteDispo);
+        div.append(label, qte);
         el.appendChild(div);
     });
 
@@ -249,7 +255,7 @@ export function archi_afficherResultat(score, etoiles) {
 export function archi_afficherSelection() {
     const grille = document.getElementById('archi-sel-grille');
     if (!grille) return;
-    grille.innerHTML = '';
+    grille.textContent = '';
 
     const total = NIVEAUX_ARCHI.length;
     const completes = statsGlobales.archiNiveauxCompletes?.size ?? 0;
@@ -263,27 +269,47 @@ export function archi_afficherSelection() {
         const debloque = (statsGlobales.archiScoreTotal || 0) >= niv.deblocage;
         const biome = BIOMES[niv.biome];
         const diffStr = '●'.repeat(niv.difficulte) + '○'.repeat(3 - niv.difficulte);
+        const couleurDiff =
+            niv.difficulte === 3
+                ? 'var(--rose)'
+                : niv.difficulte === 2
+                  ? 'var(--jaune)'
+                  : 'var(--vert)';
 
         const carte = document.createElement('div');
         carte.className = `carte-niveau-archi${debloque ? '' : ' verrouillee'}`;
-        carte.innerHTML = `
-            <div class="cna-biome">${biome?.icone ?? ''} ${biome?.nom ?? ''}</div>
-            <div class="cna-nom">${niv.nom}</div>
-            <div class="cna-difficulte" style="color:${
-                niv.difficulte === 3
-                    ? 'var(--rose)'
-                    : niv.difficulte === 2
-                      ? 'var(--jaune)'
-                      : 'var(--vert)'
-            }">${diffStr}</div>
-            ${
-                meilleur > 0
-                    ? `<div class="cna-etoiles">${'★'.repeat(etoiles)}${'☆'.repeat(3 - etoiles)}</div>
-                       <div class="cna-score">${meilleur} pts</div>`
-                    : `<div class="cna-score" style="color:var(--texte-dim)">
-                         ${debloque ? 'À FAIRE' : `🔒 ${niv.deblocage} pts`}
-                       </div>`
-            }`;
+
+        const biomeEl = document.createElement('div');
+        biomeEl.className = 'cna-biome';
+        biomeEl.textContent = `${biome?.icone ?? ''} ${biome?.nom ?? ''}`.trim();
+
+        const nomEl = document.createElement('div');
+        nomEl.className = 'cna-nom';
+        nomEl.textContent = niv.nom;
+
+        const diffEl = document.createElement('div');
+        diffEl.className = 'cna-difficulte';
+        diffEl.style.color = couleurDiff;
+        diffEl.textContent = diffStr;
+
+        carte.append(biomeEl, nomEl, diffEl);
+
+        if (meilleur > 0) {
+            const etoilesEl = document.createElement('div');
+            etoilesEl.className = 'cna-etoiles';
+            etoilesEl.textContent = '★'.repeat(etoiles) + '☆'.repeat(3 - etoiles);
+            const scoreEl = document.createElement('div');
+            scoreEl.className = 'cna-score';
+            scoreEl.textContent = `${meilleur} pts`;
+            carte.append(etoilesEl, scoreEl);
+        } else {
+            const scoreEl = document.createElement('div');
+            scoreEl.className = 'cna-score';
+            scoreEl.style.color = 'var(--texte-dim)';
+            scoreEl.textContent = debloque ? 'À FAIRE' : `🔒 ${niv.deblocage} pts`;
+            carte.appendChild(scoreEl);
+        }
+
         if (debloque) {
             carte.onclick = () => demarrerArchi(niv.id);
         }

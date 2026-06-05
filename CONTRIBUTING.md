@@ -53,6 +53,15 @@ Fonctions sensibles (ne pas modifier sans raison) : `estPositionValide()`, `tour
 
 Architecture : [docs/architecture.md](docs/architecture.md).
 
+## Vérification statique (checkJs)
+
+Le typecheck TypeScript (`npm run typecheck`) couvre progressivement les modules critiques via `jsconfig.json` :
+
+- `types.js`, `logique-pure.js`, `moteur-piece.js`, `progression.js`
+- `ecrans-config.js`, `actions-jeu.js`, `archi-logique.js`, `bus-jeu.js`, `store-core.js`
+
+Étendre la liste `include` lors de modifications sur d'autres modules.
+
 ## Release
 
 ```bash

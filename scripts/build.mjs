@@ -1,5 +1,5 @@
 import * as esbuild from 'esbuild';
-import { cpSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'fs';
+import { cpSync, mkdirSync, readFileSync, writeFileSync, rmSync, readdirSync } from 'fs';
 
 const dist = 'dist';
 const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
@@ -10,8 +10,11 @@ mkdirSync(`${dist}/js`, { recursive: true });
 await esbuild.build({
     entryPoints: ['js/main.js'],
     bundle: true,
-    outfile: `${dist}/js/bundle.js`,
+    splitting: true,
     format: 'esm',
+    outdir: `${dist}/js`,
+    entryNames: 'bundle',
+    chunkNames: 'chunk-[hash]',
     minify: true,
     sourcemap: true,
     target: ['es2022'],
@@ -34,6 +37,10 @@ for (const ic of ['icon-192.png', 'icon-512.png', 'icon-maskable.png']) {
 const html = readFileSync('index.html', 'utf8');
 writeFileSync(`${dist}/index.html`, html.replace(/js\/main\.js\?v=[^"']+/, 'js/bundle.js'));
 
+const jsFiles = readdirSync(`${dist}/js`)
+    .filter((f) => f.endsWith('.js') && !f.endsWith('.map'))
+    .map((f) => `./js/${f}`);
+
 const swDev = readFileSync('sw.js', 'utf8');
 const htmlFiles = [...swDev.matchAll(/\.\/html\/[^']+\.html/g)].map((m) => m[0]);
 const staticFiles = [
@@ -41,8 +48,8 @@ const staticFiles = [
     './index.html',
     './manifest.json',
     './styles/main.css',
-    './js/bundle.js',
-    './js/bundle.js.map',
+    ...jsFiles,
+    ...jsFiles.map((f) => `${f}.map`),
     './icon.svg',
     './icon-192.png',
     './icon-512.png',
@@ -105,4 +112,6 @@ self.addEventListener('fetch', (evenement) => {
 `
 );
 
-console.log(`Build prod → ${dist}/ (bundle + ${staticFiles.length} entrées SW)`);
+console.log(
+    `Build prod → ${dist}/ (bundle + ${jsFiles.length - 1} chunks, ${staticFiles.length} entrées SW)`
+);

@@ -1,6 +1,6 @@
 {
     "name": "tetris-neo",
-    "version": "2.4.2",
+    "version": "2.5.0",
     "type": "module",
     "description": "Tetris moderne en Vanilla JS — PWA hors-ligne",
     "private": true,
@@ -19,6 +19,7 @@
         "release": "node scripts/release.mjs",
         "sync:sw": "node scripts/generate-sw-cache.mjs",
         "build": "node scripts/build.mjs",
+        "analyze": "node scripts/analyze.mjs",
         "typecheck": "tsc --noEmit -p jsconfig.json",
         "prepare:e2e": "playwright install chromium",
         "prepare": "husky"

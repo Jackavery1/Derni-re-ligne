@@ -16,6 +16,12 @@ globalThis.localStorage = {
 };
 
 globalThis.window = globalThis.window ?? globalThis;
+globalThis.document = globalThis.document ?? {
+    getElementById: () => null,
+    querySelector: () => null,
+    querySelectorAll: () => [],
+    createElement: () => ({ style: {}, appendChild: () => {}, setAttribute: () => {} }),
+};
 globalThis.window.matchMedia =
     globalThis.window.matchMedia ??
     (() => ({

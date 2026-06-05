@@ -176,7 +176,7 @@ export function demarrerJeu() {
     reinitialiserDonneesPartie();
     donneesPartie.biomeId = obtenirBiomeActif();
     initStatsPartie();
-    verifierCodex();
+    void verifierCodex();
     arreterConstellation();
     appliquerThemeBiome(obtenirBiomeActif());
     appliquerTextesBiome(obtenirBiomeActif());
@@ -331,7 +331,7 @@ export function terminerPartie(victoire = false) {
     const tempsPartie = Math.floor(obtenirTempsEcoule() / 1000);
     sauvegarderSnapshotProfil(etat.lignes, obtenirBiomeActif());
     finaliserStatsPartie(scoreFinal, tempsPartie);
-    verifierCodex();
+    void verifierCodex();
 
     setTimeout(() => {
         afficherEcran(ECRANS.GAME_OVER);

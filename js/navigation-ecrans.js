@@ -60,7 +60,7 @@ export function afficherEcran(idEcran) {
     }
 
     if (idEcran === ECRANS.CODEX) {
-        genererCodexComplet();
+        void genererCodexComplet();
     }
 
     if (idEcran === ECRANS.PAUSE) {

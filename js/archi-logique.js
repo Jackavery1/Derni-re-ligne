@@ -1,5 +1,6 @@
 import { CONFIG, TETROMINOS } from './config.js';
-import { creerPlateau, getCouleurPiece, obtenirForme } from './piece-jeu.js';
+import { creerPlateau, obtenirCouleurPieceParType, obtenirForme } from './piece-jeu.js';
+import { estPositionValidePiece } from './moteur-piece.js';
 import { creerParticulesExplosion } from './particules-jeu.js';
 
 export const archi = {
@@ -63,25 +64,7 @@ export function archi_prochainePiece() {
 }
 
 export function archi_estPositionValide(piece, dx = 0, dy = 0, rotation = null) {
-    if (!piece) return false;
-    const rotations = TETROMINOS[piece.type].rotations;
-    const nbRot = rotations.length;
-    const forme =
-        rotation !== null
-            ? rotations[((rotation % nbRot) + nbRot) % nbRot]
-            : rotations[piece.rotation % nbRot];
-
-    for (let l = 0; l < forme.length; l++) {
-        for (let c = 0; c < forme[l].length; c++) {
-            if (!forme[l][c]) continue;
-            const nx = piece.x + c + dx;
-            const ny = piece.y + l + dy;
-            if (nx < 0 || nx >= CONFIG.colonnes) return false;
-            if (ny >= CONFIG.lignes) return false;
-            if (ny >= 0 && archi.plateau[ny][nx] !== 0) return false;
-        }
-    }
-    return true;
+    return estPositionValidePiece(piece, archi.plateau, dx, dy, rotation);
 }
 
 export function archi_calculerScoreTempsReel() {
@@ -129,7 +112,7 @@ export function archi_verrouillerPiece() {
 
     const piece = archi.pieceActuelle;
     const forme = obtenirForme(piece);
-    const couleur = getCouleurPiece(piece.type);
+    const couleur = obtenirCouleurPieceParType(piece.type);
 
     forme.forEach((l, li) =>
         l.forEach((c, ci) => {

@@ -16,16 +16,20 @@ jobs:
               with:
                   node-version-file: '.nvmrc'
             - run: npm ci
-      - run: npm run lint
-      - run: npm run typecheck
-      - run: npm run format:check
+            - run: npm run lint
+            - run: npm run typecheck
+            - run: npm run format:check
             - run: npm test
-            - name: Préparer artefact statique
+            - run: npm audit --audit-level=moderate
+            - run: npm run build
+            - run: npx playwright install --with-deps chromium
+            - run: npm run test:e2e
+              env:
+                  E2E_DIST: '1'
+            - name: Préparer artefact statique (bundle prod)
               run: |
                   mkdir -p _site
-                  cp index.html manifest.json sw.js _site/
-                  cp -r styles js fonts html _site/
-                  cp icon.svg icon-192.png icon-512.png icon-maskable.png _site/ 2>/dev/null || true
+                  cp -r dist/* _site/
             - uses: actions/upload-artifact@v4
               with:
                   name: site-preview

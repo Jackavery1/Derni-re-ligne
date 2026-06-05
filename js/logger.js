@@ -7,18 +7,29 @@ function modeDebugActif() {
 
 const DEBUG = modeDebugActif();
 
+function obtenirContexteLog() {
+    if (typeof document === 'undefined') return '';
+    const ecran = document.querySelector('.ecran.actif')?.id;
+    return ecran ? `[${ecran}]` : '';
+}
+
+function formaterArgs(args) {
+    const ctx = obtenirContexteLog();
+    return ctx ? [ctx, ...args] : args;
+}
+
 export const logger = {
     debug(...args) {
-        if (DEBUG) console.debug('[TetrisNeo]', ...args);
+        if (DEBUG) console.debug('[TetrisNeo]', ...formaterArgs(args));
     },
     info(...args) {
-        if (DEBUG) console.info('[TetrisNeo]', ...args);
+        if (DEBUG) console.info('[TetrisNeo]', ...formaterArgs(args));
     },
     warn(...args) {
-        console.warn('[TetrisNeo]', ...args);
+        console.warn('[TetrisNeo]', ...formaterArgs(args));
     },
     error(...args) {
-        console.error('[TetrisNeo]', ...args);
+        console.error('[TetrisNeo]', ...formaterArgs(args));
     },
 };
 

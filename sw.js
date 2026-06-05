@@ -1,4 +1,4 @@
-const VERSION_CACHE = 'tetris-neo-2.4.2';
+const VERSION_CACHE = 'tetris-neo-2.5.0';
 
 const FICHIERS_A_CACHER = [
     './',

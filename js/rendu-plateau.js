@@ -1,6 +1,6 @@
 import { CONFIG } from './config.js';
 import { meteo } from './meteo.js';
-import { logger } from './logger.js';
+import { logger, afficherErreurUtilisateur } from './logger.js';
 import {
     etat,
     particules,
@@ -113,6 +113,7 @@ export function rendreFrameJeu() {
         obtenirCtx().restore();
     } catch (err) {
         logger.error('Erreur rendu plateau:', err);
+        afficherErreurUtilisateur('Erreur d’affichage du jeu. Rechargez la page (Ctrl+Shift+R).');
     }
 }
 

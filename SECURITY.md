@@ -4,6 +4,7 @@
 
 | Version | Supportée |
 | ------- | --------- |
+| 2.5.x   | Oui       |
 | 2.4.x   | Oui       |
 | < 2.4   | Non       |
 
@@ -24,7 +25,8 @@ Délai de réponse visé : **7 jours ouvrés**.
 - Content-Security-Policy stricte (`index.html`)
 - Whitelist `localStorage` (`js/progression.js`)
 - Aucune dépendance runtime npm
-- `npm audit --audit-level=high` en CI
+- Pas d'`innerHTML` sur des données utilisateur (DOM via `createElement` / `textContent`)
+- `npm audit --audit-level=high` en CI (deploy)
 - Analyse CodeQL sur le dépôt
 
 ## Périmètre hors scope

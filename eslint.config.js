@@ -19,6 +19,8 @@ export default [
         rules: {
             'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
             'no-console': 'off',
+            complexity: ['warn', 25],
+            'max-lines': ['warn', { max: 450, skipBlankLines: true, skipComments: true }],
         },
     },
 ];

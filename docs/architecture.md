@@ -2,7 +2,7 @@
 
 ## Vue d'ensemble
 
-Vanilla ES modules, sans bundler. Point d'entrée : `index.html` → `js/main.js` → `js/moteur.js`.
+Vanilla ES modules en développement ; bundle esbuild en production. Point d'entrée : `index.html` → `js/main.js` → `js/moteur.js`.
 
 ```mermaid
 flowchart TD
@@ -11,6 +11,7 @@ flowchart TD
     moteur --> partie[partie.js]
     moteur --> boucle[boucle-jeu.js]
     moteur --> coop[coop-jeu.js]
+    moteur --> archi[archi-jeu.js]
     partie --> logiquePartie[logique-partie.js]
     boucle --> logiquePartie
     logiquePartie --> piece[piece-jeu.js]
@@ -19,6 +20,8 @@ flowchart TD
     piece --> logiquePure[logique-pure.js]
     coop --> coopLogique[coop-logique.js]
     coopLogique --> moteurPiece
+    archi --> archiLogique[archi-logique.js]
+    archiLogique --> moteurPiece
     partie --> rendu[rendu-jeu.js]
     moteur --> navigation[navigation-ecrans.js]
     navigation --> hud[hud-jeu.js]
@@ -28,17 +31,18 @@ flowchart TD
 
 ## Couches
 
-| Couche       | Rôle                         | Fichiers clés                                                                                                   |
-| ------------ | ---------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Données      | Constantes, biomes, pièces   | `config-jeu.js`, `biomes.js`, `contenu-jeu.js`, `ecrans-config.js`                                              |
-| Logique pure | Fonctions sans DOM           | `logique-pure.js`, `progression.js`, `moteur-piece.js`                                                          |
-| État         | Variables partagées          | `store-jeu.js`                                                                                                  |
-| Gameplay     | Actions joueur, verrouillage | `logique-partie.js`, `piece-jeu.js`, `boucle-jeu.js`                                                            |
-| Coop         | 2 joueurs, plateau partagé   | `coop-logique.js`, `coop-jeu.js`, `coop-rendu.js`, `coop-input.js`                                              |
-| Oracle       | Assistant de placement       | `oracle-jeu.js`                                                                                                 |
-| Rendu        | Canvas 2D                    | `rendu-jeu.js`, `rendu-plateau.js`, `rendu-fx.js`, `rendu-ambiance.js`, `rendu-previews.js`, `rendu-cellule.js` |
-| UI           | Écrans, HUD, thèmes          | `navigation-ecrans.js`, `hud-jeu.js`, `themes-biome.js`                                                         |
-| Persistance  | localStorage validé          | `progression.js`                                                                                                |
+| Couche       | Rôle                           | Fichiers clés                                                                                                   |
+| ------------ | ------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| Données      | Constantes, biomes, pièces     | `config-jeu.js`, `biomes.js`, `contenu-jeu.js`, `ecrans-config.js`                                              |
+| Logique pure | Fonctions sans DOM             | `logique-pure.js`, `progression.js`, `moteur-piece.js`                                                          |
+| État         | Variables partagées            | `store-jeu.js`                                                                                                  |
+| Gameplay     | Actions joueur, verrouillage   | `logique-partie.js`, `piece-jeu.js`, `boucle-jeu.js`                                                            |
+| Coop         | 2 joueurs, plateau partagé     | `coop-logique.js`, `coop-jeu.js`, `coop-rendu.js`, `coop-input.js`                                              |
+| Architecte   | Puzzles placement sans gravité | `archi-donnees.js`, `archi-logique.js`, `archi-jeu.js`, `archi-rendu.js`, `archi-input.js`                      |
+| Oracle       | Assistant de placement         | `oracle-jeu.js`                                                                                                 |
+| Rendu        | Canvas 2D                      | `rendu-jeu.js`, `rendu-plateau.js`, `rendu-fx.js`, `rendu-ambiance.js`, `rendu-previews.js`, `rendu-cellule.js` |
+| UI           | Écrans, HUD, thèmes            | `navigation-ecrans.js`, `hud-jeu.js`, `themes-biome.js`                                                         |
+| Persistance  | localStorage validé            | `progression.js`                                                                                                |
 
 ## Cycle d'une partie
 
@@ -50,7 +54,9 @@ flowchart TD
 
 ## État et actions
 
-- `store-jeu.js` : état centralisé avec getters/setters
+- `store-core.js`, `store-etat-partie.js`, `store-refs-canvas.js` : état centralisé (barrel `store-jeu.js`)
+- `bus-jeu.js` : bus d'événements léger (`partie:stats`, `lignes:effacees`, `score:maj`, etc.)
+- `effets-partie.js` : écouteurs rendu/UI découplés de `logique-partie.js`
 - `actions-jeu.js` : injection explicite des callbacks gameplay via `configurerActionsJeu()` dans `moteur.js`
 - `ecrans-config.js` : source unique pour les identifiants d'écrans et l'ordre de chargement HTML
 
@@ -83,5 +89,6 @@ Toutes les clés `localStorage` passent par `progression.js` avec whitelist stri
 | `npm run test:e2e`  | Playwright + Axe                              |
 | `npm run sync:sw`   | Synchronise le cache SW dev (modules ES)      |
 | `npm run build`     | Bundle esbuild prod → `dist/` (1 fichier JS)  |
+| `npm run analyze`   | Analyse taille modules (metafile esbuild)     |
 | `npm run typecheck` | Vérification TypeScript (`checkJs`) sur `js/` |
 | `npm run release`   | Bump version + cache-bust + sync SW           |

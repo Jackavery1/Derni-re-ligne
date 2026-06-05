@@ -43,15 +43,15 @@ describe('codex', () => {
         }
     });
 
-    it('verifierCodex débloque monde_classique après partie classique', () => {
+    it('verifierCodex débloque monde_classique après partie classique', async () => {
         statsGlobales.biomesJoues.add('classique');
-        verifierCodex();
+        await verifierCodex();
         expect(codexDebloque.has('monde_classique')).toBe(true);
     });
 
-    it('sauvegarde et recharge les entrées débloquées', () => {
+    it('sauvegarde et recharge les entrées débloquées', async () => {
         statsGlobales.biomesJoues.add('lave');
-        verifierCodex();
+        await verifierCodex();
         sauvegarderCodex();
         codexDebloque.clear();
         const rechargé = chargerCodex();

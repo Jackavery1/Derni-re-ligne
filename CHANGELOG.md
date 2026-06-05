@@ -6,6 +6,7 @@ Historique des versions de Tetris Néo. Format [semver](https://semver.org/) : `
 
 | Version   | Date       | En bref                                                                                |
 | --------- | ---------- | -------------------------------------------------------------------------------------- |
+| **2.5.0** | 2026-06-05 | Mode Architecte, coop, bundle prod, rendu découpé, CI renforcée, couverture étendue    |
 | **2.4.2** | 2026-06-05 | Docs minimalistes + tableau d'évolution, tests, debug `?debug=1`, versions SW alignées |
 | **2.4.1** | 2026-06-05 | `moteur.js` découpé en 14 modules, E2E pause/options, ESLint propre                    |
 | **2.4.0** | 2026-06-05 | CSS externalisé, CSP, Vitest/ESLint/Prettier, CI deploy, modules météo/reliques        |
@@ -16,19 +17,31 @@ Historique des versions de Tetris Néo. Format [semver](https://semver.org/) : `
 
 ---
 
+## [2.5.0] — 2026-06-05
+
+- **Mode Architecte** : 17 niveaux puzzles, boucle dédiée (`archi-jeu.js`, `archi-logique.js`, `archi-rendu.js`)
+- **Mode Coop** : deux joueurs, plateau partagé (`coop-jeu.js`, `coop-logique.js`)
+- Bundle production esbuild (`npm run build`, `npm run analyze`, budget taille CI)
+- Découpage rendu canvas (`rendu-plateau.js`, `rendu-fx.js`, etc.)
+- Tests `logique-partie` (rotation, hold), E2E architecte + Axe sur sélection/options
+- Typecheck étendu à `archi-logique.js` ; tests unitaires rotation/hold
+- Annonces a11y rotation/hold ; bannière utilisateur en cas d'erreur rendu
+- CI : preview.yml corrigé (bundle prod), audit npm moderate, Playwright épinglé
+- Docs README/architecture mises à jour ; semver 2.5.0 alignée (SW, HTML)
+
 ## [2.4.2] — 2026-06-05
 
 - Documentation épurée (README, CONTRIBUTING, CHANGELOG avec tableau d'évolution)
 - Tests `piece-jeu` (lock delay, collision) et progression localStorage
 - E2E bannière erreur ; mode debug `?debug=1`
-- `ECRANS` unifié dans `contexte-jeu.js` ; suppression code mort `Registre`
+- `ECRANS` unifié dans `ecrans-config.js` ; suppression code mort `Registre`
 - Versions alignées : SW `tetris-neo-{semver}`, cache-bust HTML
 - CI : lint, format:check, npm audit
 
 ## [2.4.1] — 2026-06-05
 
-- Découpage `moteur.js` → 14 modules (`contexte-jeu`, `piece-jeu`, `rendu-jeu`, `partie`, etc.)
-- Orchestrateur ~90 lignes ; `registre-jeu.js` pour les deps circulaires
+- Découpage `moteur.js` → modules dédiés (`piece-jeu`, `rendu-jeu`, `partie`, `logique-partie`, etc.)
+- Orchestrateur centralisé dans `moteur.js` ; injection via `actions-jeu.js` et `bus-jeu.js`
 - E2E pause/quitter et onglet contrôles ; mock localStorage Vitest
 - Deploy avec gate tests + E2E
 

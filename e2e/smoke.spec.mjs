@@ -1,19 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-
-async function demarrerPartie(page) {
-    await page.goto('/');
-    await page.locator('#btn-jouer').click();
-    const canvas = page.locator('#canvas-constellation');
-    await expect(canvas).toBeVisible();
-    const box = await canvas.boundingBox();
-    await canvas.click({
-        position: { x: box.width * 0.5, y: box.height * 0.5 },
-    });
-    await page.locator('#sel-btn-jouer').click();
-    await expect(page.locator('#interface-jeu')).toBeVisible();
-    await expect(page.locator('#canvas-plateau')).toBeVisible();
-}
+import { demarrerPartie, filtrerViolationsCritiques } from './helpers.mjs';
 
 test('aucune bannière erreur au démarrage', async ({ page }) => {
     await page.goto('/');
@@ -45,10 +32,7 @@ test('pause puis quitter retourne au menu', async ({ page }) => {
 test('écran titre sans violations accessibilité critiques', async ({ page }) => {
     await page.goto('/');
     const result = await new AxeBuilder({ page }).analyze();
-    const bloquantes = result.violations.filter(
-        (v) => v.impact === 'critical' || (v.impact === 'serious' && v.id !== 'color-contrast')
-    );
-    expect(bloquantes).toEqual([]);
+    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
 });
 
 test('écran titre respecte le contraste des couleurs', async ({ page }) => {

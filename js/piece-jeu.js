@@ -19,16 +19,19 @@ import {
 
 const INDEX_COULEUR_PIECE = { I: 0, O: 1, T: 2, S: 3, Z: 4, J: 5, L: 6 };
 
-export function getCouleurPiece(type) {
+export function obtenirCouleurPieceParType(type) {
     const biome = BIOMES[obtenirBiomeActif()] ?? BIOMES.classique;
     const index = INDEX_COULEUR_PIECE[type];
     return biome.couleursBlocs[index] ?? biome.couleursBlocs[0];
 }
 
+/** @deprecated Utiliser obtenirCouleurPieceParType — alias conservé pour compatibilité tests */
+export const getCouleurPiece = obtenirCouleurPieceParType;
+
 export function lierCouleursTetrominos() {
     for (const type of Object.keys(TETROMINOS)) {
         Object.defineProperty(TETROMINOS[type], 'couleur', {
-            get: () => getCouleurPiece(type),
+            get: () => obtenirCouleurPieceParType(type),
             enumerable: true,
             configurable: true,
         });
@@ -141,7 +144,7 @@ export function obtenirForme(piece) {
 
 export function obtenirCouleurPiece(piece) {
     if (piece?.reliqueData) return piece.reliqueData.couleur;
-    return getCouleurPiece(piece.type);
+    return obtenirCouleurPieceParType(piece.type);
 }
 
 export function estPositionValide(piece, dx = 0, dy = 0, rotation = null) {

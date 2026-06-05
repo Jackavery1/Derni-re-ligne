@@ -23,6 +23,7 @@ import {
     hexVersRgb,
     reinitialiserDas,
     getCouleurPiece,
+    obtenirCouleurPieceParType,
     obtenirCouleurPiece,
     creerPieceRelique,
     mettreAJourDas,
@@ -116,9 +117,9 @@ describe('piece-jeu', () => {
         expect(dasEtat[TOUCHES_DEFAUT.gauche]).toEqual({ moment: 0, repete: false });
     });
 
-    it('getCouleurPiece retourne une couleur hex du biome actif', () => {
+    it('obtenirCouleurPieceParType retourne une couleur hex du biome actif', () => {
         definirBiomeActif('classique');
-        const couleur = getCouleurPiece('I');
+        const couleur = obtenirCouleurPieceParType('I');
         expect(couleur).toMatch(/^#[0-9a-f]{6}$/i);
     });
 

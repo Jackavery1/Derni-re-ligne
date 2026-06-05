@@ -54,6 +54,38 @@ export function estPositionValideSurPlateau(plateau, piece, forme, dx = 0, dy = 
 }
 
 /**
+ * Valide une pièce sur un plateau (solo, architecte, etc.).
+ * @param {{ type: string, rotation: number, x: number, y: number, reliqueForme?: number[][] }} piece
+ * @param {number[][]} plateau
+ * @param {number} [dx]
+ * @param {number} [dy]
+ * @param {number | null} [rotation]
+ * @param {number} [colonnes]
+ */
+export function estPositionValidePiece(
+    piece,
+    plateau,
+    dx = 0,
+    dy = 0,
+    rotation = null,
+    colonnes = CONFIG.colonnes
+) {
+    if (!piece) return false;
+    const forme = extraireForme(piece, rotation);
+    for (let l = 0; l < forme.length; l++) {
+        for (let c = 0; c < forme[l].length; c++) {
+            if (!forme[l][c]) continue;
+            const nx = piece.x + c + dx;
+            const ny = piece.y + l + dy;
+            if (nx < 0 || nx >= colonnes) return false;
+            if (ny >= CONFIG.lignes) return false;
+            if (ny >= 0 && plateau[ny][nx] !== 0) return false;
+        }
+    }
+    return true;
+}
+
+/**
  * @param {number[][]} plateau
  * @param {{ x: number, y: number }} piece
  * @param {(piece: object, dx: number, dy: number) => boolean} estValide

@@ -56,6 +56,7 @@ import { demarrerCooperatif, modeCoopActif } from './coop-jeu.js';
 import { initialiserInputCoop } from './coop-input.js';
 import { initialiserInputArchi } from './archi-input.js';
 import { rechargerCodex, initialiserCodexUI } from './codex.js';
+import { initialiserEffetsPartie } from './effets-partie.js';
 
 export { obtenirEcranActuel as ecranActuel };
 
@@ -76,6 +77,7 @@ configurerActionsJeu({
 
 /** Initialise le jeu : canvas, audio, constellation, UI et boucle principale. */
 export function initialiserApplication() {
+    initialiserEffetsPartie();
     configurerMeteo({
         obtenirEtat: () => etat,
         obtenirBiomeActif,

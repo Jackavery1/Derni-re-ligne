@@ -1,20 +1,123 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { jouable, appliquerScoreLignes, vitesseChute } from '../js/logique-partie.js';
-import { etat } from '../js/store-jeu.js';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+vi.mock('../js/audio.js', () => ({
+    AudioMoteur: { son: vi.fn() },
+}));
+
+vi.mock('../js/meteo.js', () => ({
+    meteo: { decalageForce: 0, controleInverse: false, etat: 'inactif', evenementActuel: null },
+    ETATS_METEO: { ACTIF: 'actif' },
+}));
+
+vi.mock('../js/reliques.js', () => ({
+    appliquerEffetRelique: vi.fn(),
+}));
+
+vi.mock('../js/melodie.js', () => ({
+    enregistrerNotesLignesCompletes: vi.fn(),
+}));
+
+vi.mock('../js/achievements.js', () => ({
+    majStatsLignesEffacees: vi.fn(),
+    majStatsScorePartie: vi.fn(),
+}));
+
+vi.mock('../js/profil-jeu.js', () => ({
+    enregistrerDonneesVerrouillage: vi.fn(),
+    signalerApparitionPiece: vi.fn(),
+    compterRotation: vi.fn(),
+    compterMouvementLateral: vi.fn(),
+    compterHardDrop: vi.fn(),
+    compterHold: vi.fn(),
+    enregistrerLignesParNiveau: vi.fn(),
+}));
+
+vi.mock('../js/oracle-jeu.js', () => ({
+    sauvegarderPlacementOracle: vi.fn(),
+    declencherCalculOracle: vi.fn(),
+}));
+
+import {
+    jouable,
+    appliquerScoreLignes,
+    vitesseChute,
+    tourner,
+    utiliserReserve,
+    deplacerGauche,
+    deplacerBas,
+    verrouillerPiece,
+} from '../js/logique-partie.js';
+import { reinitialiserBusJeu } from '../js/bus-jeu.js';
+import { etat, definirRefsCanvas } from '../js/store-jeu.js';
 import { CONFIG } from '../js/config.js';
 import { supprimerLignesDuPlateau } from '../js/logique-pure.js';
-import { creerPlateau } from '../js/piece-jeu.js';
+import { creerPlateau, remplirSac } from '../js/piece-jeu.js';
+
+function creerCtxMock() {
+    const gradient = { addColorStop: vi.fn() };
+    return {
+        clearRect: vi.fn(),
+        fillRect: vi.fn(),
+        save: vi.fn(),
+        restore: vi.fn(),
+        translate: vi.fn(),
+        scale: vi.fn(),
+        beginPath: vi.fn(),
+        fill: vi.fn(),
+        stroke: vi.fn(),
+        moveTo: vi.fn(),
+        lineTo: vi.fn(),
+        closePath: vi.fn(),
+        arc: vi.fn(),
+        rect: vi.fn(),
+        clip: vi.fn(),
+        setTransform: vi.fn(),
+        createLinearGradient: vi.fn(() => gradient),
+        createRadialGradient: vi.fn(() => gradient),
+        measureText: vi.fn(() => ({ width: 10 })),
+        fillStyle: '',
+        strokeStyle: '',
+        globalAlpha: 1,
+        shadowBlur: 0,
+        shadowColor: '',
+        font: '',
+        textAlign: 'left',
+    };
+}
+
+function creerCanvasMock(largeur = 120, hauteur = 120) {
+    return {
+        width: largeur,
+        height: hauteur,
+        classList: { toggle: vi.fn() },
+        getContext: () => creerCtxMock(),
+    };
+}
 
 describe('logique-partie', () => {
     beforeEach(() => {
+        reinitialiserBusJeu();
         etat.estEnCours = false;
         etat.estEnPause = false;
         etat.pieceActuelle = null;
+        etat.pieceEnReserve = null;
+        etat.reserveUtilisee = false;
+        etat.filePieces = [];
         etat.score = 0;
         etat.lignes = 0;
         etat.niveau = 1;
         etat.combo = 0;
         etat.dernierEtaitTetris = false;
+        etat.plateau = creerPlateau();
+        remplirSac();
+        definirRefsCanvas({
+            canvasPlateau: creerCanvasMock(300, 600),
+            ctx: creerCtxMock(),
+            canvasPreview: creerCanvasMock(120, 360),
+            ctxPreview: creerCtxMock(),
+            canvasReserve: creerCanvasMock(80, 80),
+            ctxReserve: creerCtxMock(),
+        });
     });
 
     it('jouable exige une partie en cours', () => {
@@ -34,6 +137,43 @@ describe('logique-partie', () => {
     it('jouable exige une pièce active', () => {
         etat.estEnCours = true;
         expect(jouable()).toBe(false);
+    });
+
+    it('tourner incrémente la rotation quand la position est valide', () => {
+        etat.estEnCours = true;
+        etat.pieceActuelle = { type: 'T', rotation: 0, x: 3, y: 0 };
+        tourner(1);
+        expect(etat.pieceActuelle.rotation).toBe(1);
+    });
+
+    it('utiliserReserve stocke la pièce courante et en sort une nouvelle', () => {
+        etat.estEnCours = true;
+        etat.pieceActuelle = { type: 'O', rotation: 0, x: 4, y: 0 };
+        etat.filePieces = [{ type: 'T', rotation: 0, x: 3, y: 0 }];
+        utiliserReserve();
+        expect(etat.pieceEnReserve.type).toBe('O');
+        expect(etat.pieceActuelle.type).toBe('T');
+        expect(etat.reserveUtilisee).toBe(true);
+    });
+
+    it('utiliserReserve échange avec la réserve existante', () => {
+        etat.estEnCours = true;
+        etat.pieceActuelle = { type: 'O', rotation: 0, x: 4, y: 0 };
+        etat.pieceEnReserve = { type: 'I', rotation: 0 };
+        etat.filePieces = [{ type: 'T', rotation: 0, x: 3, y: 0 }];
+        utiliserReserve();
+        expect(etat.pieceActuelle.type).toBe('I');
+        expect(etat.pieceEnReserve.type).toBe('O');
+    });
+
+    it('utiliserReserve ignore un second hold dans la même pièce', () => {
+        etat.estEnCours = true;
+        etat.pieceActuelle = { type: 'O', rotation: 0, x: 4, y: 0 };
+        etat.filePieces = [{ type: 'T', rotation: 0, x: 3, y: 0 }];
+        utiliserReserve();
+        etat.pieceActuelle = { type: 'T', rotation: 0, x: 3, y: 0 };
+        utiliserReserve();
+        expect(etat.pieceEnReserve.type).toBe('O');
     });
 
     it('vitesseChute diminue avec le niveau', () => {
@@ -87,5 +227,32 @@ describe('logique-partie', () => {
         expect(lignesEffacees).toEqual([CONFIG.lignes - 1]);
         expect(nouveau[0].every((c) => c === 0)).toBe(true);
         expect(nouveau[CONFIG.lignes - 1].every((c) => c === 0)).toBe(true);
+    });
+
+    it('deplacerGauche déplace la pièce quand la position est valide', () => {
+        etat.estEnCours = true;
+        etat.pieceActuelle = { type: 'O', rotation: 0, x: 4, y: 0 };
+        deplacerGauche();
+        expect(etat.pieceActuelle.x).toBe(3);
+    });
+
+    it('deplacerBas incrémente le score', () => {
+        etat.estEnCours = true;
+        etat.pieceActuelle = { type: 'O', rotation: 0, x: 4, y: 0 };
+        etat.score = 0;
+        deplacerBas();
+        expect(etat.score).toBe(1);
+        expect(etat.pieceActuelle.y).toBe(1);
+    });
+
+    it('verrouillerPiece pose la pièce et charge la suivante', () => {
+        etat.estEnCours = true;
+        etat.pieceActuelle = { type: 'O', rotation: 0, x: 4, y: 18 };
+        etat.filePieces = [{ type: 'T', rotation: 0, x: 3, y: 0 }];
+        remplirSac();
+        verrouillerPiece();
+        expect(etat.pieceActuelle.type).toBe('T');
+        expect(etat.plateau[18][4]).not.toBe(0);
+        expect(etat.plateau[18][5]).not.toBe(0);
     });
 });

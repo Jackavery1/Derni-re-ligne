@@ -1,0 +1,91 @@
+import { AudioMoteur } from './audio.js';
+import { CONFIG } from './config.js';
+import { obtenirActions } from './actions-jeu.js';
+import { ecouter } from './bus-jeu.js';
+import { creerParticulesLigne } from './particules-jeu.js';
+import { obtenirCtxReserve, obtenirCanvasReserve, etat } from './store-jeu.js';
+import {
+    dessinerFileNext,
+    dessinerPreview,
+    afficherTexteFlottant,
+    obtenirYHautTas,
+    declencherSecousse,
+} from './rendu-jeu.js';
+import { changerHumeur, annoncer, rafraichirStats, afficherNotifNiveau } from './ecrans-ui.js';
+import { evaluerDecisionOracle } from './oracle-jeu.js';
+import { mettreAJourIndicateurRelique } from './piece-jeu.js';
+
+export function initialiserEffetsPartie() {
+    ecouter('partie:stats', () => rafraichirStats());
+
+    ecouter('partie:nouvelle-piece', () => {
+        dessinerFileNext();
+        mettreAJourIndicateurRelique();
+    });
+
+    ecouter('partie:reserve-preview', ({ reserve }) => {
+        dessinerPreview(obtenirCtxReserve(), obtenirCanvasReserve(), reserve);
+    });
+
+    ecouter('lignes:effacees', ({ nbSupprimees, lignesEffacees }) => {
+        for (const l of lignesEffacees) creerParticulesLigne(l);
+        const intensitesSecousse = { 1: 2, 2: 3.5, 3: 5, 4: 8 };
+        declencherSecousse(intensitesSecousse[nbSupprimees] ?? 8);
+        changerHumeur(nbSupprimees >= 4 ? 'excite' : 'content');
+        if (nbSupprimees >= 4) AudioMoteur.son('tetris');
+        else if (nbSupprimees === 3) AudioMoteur.son('ligne_3');
+        else if (nbSupprimees === 2) AudioMoteur.son('ligne_2');
+        else if (nbSupprimees === 1) AudioMoteur.son('ligne_1');
+    });
+
+    ecouter('score:maj', ({ nbLignes, result }) => {
+        if (nbLignes > 0) {
+            if (result.tetris) {
+                afficherTexteFlottant('TETRIS !', '#ffe600', 16);
+                annoncer('Tetris ! Quatre lignes effacées');
+                if (result.backToBack) {
+                    afficherTexteFlottant('BACK-TO-BACK !', '#ff006e', 13);
+                    annoncer('Back-to-back Tetris');
+                }
+            } else {
+                if (nbLignes === 3) afficherTexteFlottant('TRIPLE !', '#b400ff', 14);
+                if (nbLignes === 2) afficherTexteFlottant('DOUBLE !', '#00f5ff', 12);
+            }
+
+            if (result.combo >= 2) {
+                afficherTexteFlottant(`COMBO x${result.combo}`, '#00ff88', 11);
+                annoncer(`Combo ${result.combo}`);
+            }
+
+            if (result.points > 0) {
+                const estGros = nbLignes >= 4 || result.points >= 500;
+                afficherTexteFlottant(
+                    `+${result.points}`,
+                    estGros ? null : '#ffe600',
+                    estGros ? 12 : 10,
+                    {
+                        y: obtenirYHautTas() - 10,
+                        arcEnCiel: estGros,
+                    }
+                );
+                annoncer(
+                    `${nbLignes} ligne${nbLignes > 1 ? 's' : ''} effacée${nbLignes > 1 ? 's' : ''}, plus ${result.points} points`
+                );
+            }
+        }
+
+        evaluerDecisionOracle(nbLignes);
+        if (result.levelUp) {
+            afficherNotifNiveau();
+            AudioMoteur.son('niveau');
+            AudioMoteur.relancerIntervalleMusique();
+            annoncer(`Niveau ${etat.niveau} atteint`);
+        }
+        rafraichirStats();
+
+        if (etat.modeJeu === 'sprint' && etat.lignes >= CONFIG.sprintLignes) {
+            etat.victoireSprint = true;
+            setTimeout(() => obtenirActions().terminerPartie?.(true), 400);
+        }
+    });
+}

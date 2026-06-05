@@ -2,7 +2,7 @@ import { CONFIG, TETROMINOS } from './config.js';
 import { calculerPointsLignes } from './logique-pure.js';
 import { extraireForme, estPositionValideAvecBornes } from './moteur-piece.js';
 import { etat } from './store-jeu.js';
-import { creerPlateau, getCouleurPiece } from './piece-jeu.js';
+import { creerPlateau, obtenirCouleurPieceParType } from './piece-jeu.js';
 import { creerParticulesLigne } from './particules-jeu.js';
 import { statsGlobales, verifierAchievements, sauvegarderStats } from './achievements.js';
 import { changerHumeur } from './ecrans-ui.js';
@@ -216,7 +216,7 @@ export function coop_verrouillerPiece(joueur) {
 
     const rotations = TETROMINOS[piece.type].rotations;
     const forme = rotations[piece.rotation % rotations.length];
-    const couleur = getCouleurPiece(piece.type);
+    const couleur = obtenirCouleurPieceParType(piece.type);
 
     for (let l = 0; l < forme.length; l++) {
         for (let c = 0; c < forme[l].length; c++) {

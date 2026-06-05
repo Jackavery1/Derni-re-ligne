@@ -7,7 +7,7 @@ import {
     obtenirEffetsReduits,
     obtenirPrefererMoinsAnimations,
 } from './store-jeu.js';
-import { getCouleurPiece, hexVersRgb } from './piece-jeu.js';
+import { obtenirCouleurPieceParType, hexVersRgb } from './piece-jeu.js';
 
 export function dessinerCellule(ctx2d, x, y, couleur, taille = CONFIG.taille, opacite = 1) {
     dessinerCelluleStyle(ctx2d, x, y, couleur, taille, opacite, obtenirBiomeActif(), {
@@ -18,7 +18,7 @@ export function dessinerCellule(ctx2d, x, y, couleur, taille = CONFIG.taille, op
 
 export function mettreAJourAmbiante(dt) {
     if (!etat.pieceActuelle) return;
-    const cible = hexVersRgb(getCouleurPiece(etat.pieceActuelle.type));
+    const cible = hexVersRgb(obtenirCouleurPieceParType(etat.pieceActuelle.type));
     const t = Math.min(1, dt / 200);
     for (let i = 0; i < 3; i++) {
         couleurAmbRgb[i] += (cible[i] - couleurAmbRgb[i]) * t;
