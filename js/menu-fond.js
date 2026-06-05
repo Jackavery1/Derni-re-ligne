@@ -1,21 +1,31 @@
 import { TETROMINOS } from './config.js';
-import { effetsReduits } from './contexte-jeu.js';
+import { obtenirEffetsReduits } from './contexte-jeu.js';
 import { getCouleurPiece } from './piece-jeu.js';
-import { Registre } from './registre-jeu.js';
+import { obtenirActions } from './actions-jeu.js';
 
-const canvasMenuFond = document.getElementById('canvas-menu-fond');
-const ctxMenuFond = canvasMenuFond ? canvasMenuFond.getContext('2d') : null;
+let canvasMenuFond = null;
+let ctxMenuFond = null;
 const piecesFond = [];
 export let menuAnimActif = false;
 
+function obtenirCanvasMenuFond() {
+    if (typeof document === 'undefined') return null;
+    if (!canvasMenuFond) {
+        canvasMenuFond = document.getElementById('canvas-menu-fond');
+        ctxMenuFond = canvasMenuFond ? canvasMenuFond.getContext('2d') : null;
+    }
+    return canvasMenuFond;
+}
+
 function creerPieceFond(posYAleatoire = false) {
+    const canvas = obtenirCanvasMenuFond();
     const types = Object.keys(TETROMINOS);
     const type = types[Math.floor(Math.random() * types.length)];
     const nbRots = TETROMINOS[type].rotations.length;
     const rot = Math.floor(Math.random() * nbRots);
     const taille = Math.random() * 18 + 12;
-    const w = canvasMenuFond.width || window.innerWidth;
-    const h = canvasMenuFond.height || window.innerHeight;
+    const w = canvas?.width || window.innerWidth;
+    const h = canvas?.height || window.innerHeight;
     return {
         type,
         rot,
@@ -29,32 +39,31 @@ function creerPieceFond(posYAleatoire = false) {
 }
 
 export function initPiecesFond() {
-    if (!canvasMenuFond) return;
-    canvasMenuFond.width = window.innerWidth;
-    canvasMenuFond.height = window.innerHeight;
+    const canvas = obtenirCanvasMenuFond();
+    if (!canvas) return;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     piecesFond.length = 0;
     for (let i = 0; i < 20; i++) piecesFond.push(creerPieceFond(true));
 }
 
 export function mettreAJourMenuFond(deltaTemps) {
-    if (!ctxMenuFond || !menuAnimActif) return;
+    const canvas = obtenirCanvasMenuFond();
+    if (!ctxMenuFond || !menuAnimActif || !canvas) return;
 
-    if (
-        canvasMenuFond.width !== window.innerWidth ||
-        canvasMenuFond.height !== window.innerHeight
-    ) {
-        canvasMenuFond.width = window.innerWidth;
-        canvasMenuFond.height = window.innerHeight;
+    if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
 
-    ctxMenuFond.clearRect(0, 0, canvasMenuFond.width, canvasMenuFond.height);
+    ctxMenuFond.clearRect(0, 0, canvas.width, canvas.height);
 
     const facteur = Math.max(0.5, deltaTemps / 16);
     for (let i = piecesFond.length - 1; i >= 0; i--) {
         const pf = piecesFond[i];
         pf.y += pf.vy * facteur;
 
-        if (pf.y > canvasMenuFond.height + pf.taille * 5) {
+        if (pf.y > canvas.height + pf.taille * 5) {
             piecesFond[i] = creerPieceFond(false);
             continue;
         }
@@ -63,7 +72,7 @@ export function mettreAJourMenuFond(deltaTemps) {
         ctxMenuFond.save();
         ctxMenuFond.globalAlpha = pf.opacite;
         ctxMenuFond.fillStyle = pf.couleur;
-        if (!effetsReduits) {
+        if (!obtenirEffetsReduits()) {
             ctxMenuFond.shadowColor = pf.couleur;
             ctxMenuFond.shadowBlur = 8;
         }
@@ -84,11 +93,11 @@ export function demarrerAnimationMenu() {
     if (menuAnimActif) return;
     menuAnimActif = true;
     if (piecesFond.length === 0) initPiecesFond();
-    Registre.planifierBoucle?.();
+    obtenirActions().planifierBoucle?.();
 }
 
 export function arreterAnimationMenu() {
     menuAnimActif = false;
 }
 
-export { canvasMenuFond };
+export { obtenirCanvasMenuFond };

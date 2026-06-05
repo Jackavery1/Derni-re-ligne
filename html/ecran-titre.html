@@ -1,0 +1,96 @@
+<div id="ecran-titre" class="ecran actif">
+    <!-- Canvas d'animation : tétrominos qui tombent -->
+    <canvas id="canvas-menu-fond"></canvas>
+
+    <!-- Contenu centré -->
+    <div class="menu-contenu">
+        <!-- Logo animé -->
+        <div class="menu-logo">
+            <div class="menu-etoiles">✦ ✦ ✦</div>
+            <div class="menu-titre-1" aria-label="Tetris">
+                <span class="lettre-titre lettre-t">T</span>
+                <span class="lettre-titre lettre-e">E</span>
+                <span class="lettre-titre lettre-t2">T</span>
+                <span class="lettre-titre lettre-r">R</span>
+                <span class="lettre-titre lettre-i">I</span>
+                <span class="lettre-titre lettre-s">S</span>
+            </div>
+            <div class="menu-titre-2">NÉO</div>
+            <div class="menu-titre-sous">— ÉDITION COLORÉE —</div>
+        </div>
+
+        <img
+            class="menu-robot"
+            src="icon-192.png"
+            width="80"
+            height="80"
+            alt=""
+            aria-hidden="true"
+        />
+
+        <!-- Affichage du meilleur score -->
+        <div class="menu-record">
+            <span class="menu-record-label" data-label="record">★ RECORD</span>
+            <span id="menu-record-val" class="menu-record-valeur">0</span>
+        </div>
+
+        <div class="menu-modes" role="group" aria-label="Mode de jeu">
+            <button
+                class="bouton bouton-mode actif"
+                type="button"
+                data-mode="marathon"
+                id="btn-mode-marathon"
+            >
+                MARATHON
+            </button>
+            <button
+                class="bouton bouton-mode"
+                type="button"
+                data-mode="sprint"
+                id="btn-mode-sprint"
+            >
+                SPRINT 40
+            </button>
+        </div>
+
+        <button
+            class="bouton bouton-jouer"
+            type="button"
+            id="btn-jouer"
+            aria-label="Démarrer une nouvelle partie"
+        >
+            ▶ JOUER
+        </button>
+        <button
+            class="bouton bouton-achievements"
+            type="button"
+            id="btn-achievements"
+            aria-label="Voir les achievements"
+        >
+            🏆 ACHIEVEMENTS
+        </button>
+        <button
+            class="bouton discret bouton-profil"
+            type="button"
+            id="btn-profil"
+            aria-label="Voir le profil de jeu"
+        >
+            📊 PROFIL
+        </button>
+        <button class="bouton discret" type="button" id="btn-codex" aria-label="Ouvrir le Codex">
+            📖 CODEX
+        </button>
+        <button
+            class="bouton discret"
+            type="button"
+            id="btn-options"
+            aria-label="Ouvrir les options"
+        >
+            ⚙ OPTIONS
+        </button>
+    </div>
+</div>
+
+<!-- ========================================================
+     ÉCRAN ACHIEVEMENTS
+======================================================== -->

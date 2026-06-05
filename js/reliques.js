@@ -1,4 +1,5 @@
 import { CONFIG, RELIQUES } from './config.js';
+import { majStatsRelique } from './achievements.js';
 
 let deps = {};
 
@@ -200,5 +201,6 @@ export function appliquerEffetRelique(relique, piece) {
         gravite: () => appliquerGravite(plateau),
     };
     effets[relique.effet]?.();
+    majStatsRelique(relique.effet);
     afficherAnnonceRelique(relique);
 }

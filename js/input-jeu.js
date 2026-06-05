@@ -1,7 +1,7 @@
 import { TOUCHES_DEFAUT } from './config.js';
 import { etat, touchesActives } from './contexte-jeu.js';
 import { reinitialiserDas } from './piece-jeu.js';
-import { Registre } from './registre-jeu.js';
+import { obtenirActions } from './actions-jeu.js';
 
 function attacher(idBouton, action, avecRepetition = false) {
     const btn = document.getElementById(idBouton);
@@ -32,6 +32,8 @@ function attacher(idBouton, action, avecRepetition = false) {
 }
 
 export function initialiserInput() {
+    const actions = () => obtenirActions();
+
     document.addEventListener('keydown', (e) => {
         if (touchesActives[e.code]) return;
         touchesActives[e.code] = true;
@@ -42,33 +44,33 @@ export function initialiserInput() {
 
         switch (e.code) {
             case TOUCHES_DEFAUT.gauche:
-                Registre.deplacerGauche?.();
+                actions().deplacerGauche?.();
                 break;
             case TOUCHES_DEFAUT.droite:
-                Registre.deplacerDroite?.();
+                actions().deplacerDroite?.();
                 break;
             case TOUCHES_DEFAUT.bas:
-                Registre.deplacerBas?.();
+                actions().deplacerBas?.();
                 break;
             case TOUCHES_DEFAUT.tournerH:
             case 'KeyZ':
-                if (!etat.pieceActuelle?.reliqueForme) Registre.tourner?.(1);
+                if (!etat.pieceActuelle?.reliqueForme) actions().tourner?.(1);
                 break;
             case TOUCHES_DEFAUT.tournerAH:
-                if (!etat.pieceActuelle?.reliqueForme) Registre.tourner?.(-1);
+                if (!etat.pieceActuelle?.reliqueForme) actions().tourner?.(-1);
                 break;
             case TOUCHES_DEFAUT.chute:
-                Registre.chuteRapide?.();
+                actions().chuteRapide?.();
                 e.preventDefault();
                 break;
             case TOUCHES_DEFAUT.hold:
             case 'ShiftLeft':
             case 'ShiftRight':
-                Registre.utiliserReserve?.();
+                actions().utiliserReserve?.();
                 break;
             case TOUCHES_DEFAUT.pause:
             case 'Escape':
-                Registre.basculerPause?.();
+                actions().basculerPause?.();
                 break;
         }
     });
@@ -80,21 +82,21 @@ export function initialiserInput() {
         }
     });
 
-    attacher('btn-gauche', () => Registre.deplacerGauche?.(), true);
-    attacher('btn-droite', () => Registre.deplacerDroite?.(), true);
-    attacher('btn-bas', () => Registre.deplacerBas?.(), true);
+    attacher('btn-gauche', () => actions().deplacerGauche?.(), true);
+    attacher('btn-droite', () => actions().deplacerDroite?.(), true);
+    attacher('btn-bas', () => actions().deplacerBas?.(), true);
     attacher('btn-rotation', () => {
-        if (!etat.pieceActuelle?.reliqueForme) Registre.tourner?.(1);
+        if (!etat.pieceActuelle?.reliqueForme) actions().tourner?.(1);
     });
-    attacher('btn-chute', () => Registre.chuteRapide?.());
-    attacher('btn-reserve', () => Registre.utiliserReserve?.());
+    attacher('btn-chute', () => actions().chuteRapide?.());
+    attacher('btn-reserve', () => actions().utiliserReserve?.());
 
-    attacher('btn-gauche-p', () => Registre.deplacerGauche?.(), true);
-    attacher('btn-droite-p', () => Registre.deplacerDroite?.(), true);
-    attacher('btn-bas-p', () => Registre.deplacerBas?.(), true);
+    attacher('btn-gauche-p', () => actions().deplacerGauche?.(), true);
+    attacher('btn-droite-p', () => actions().deplacerDroite?.(), true);
+    attacher('btn-bas-p', () => actions().deplacerBas?.(), true);
     attacher('btn-rotation-p', () => {
-        if (!etat.pieceActuelle?.reliqueForme) Registre.tourner?.(1);
+        if (!etat.pieceActuelle?.reliqueForme) actions().tourner?.(1);
     });
-    attacher('btn-chute-p', () => Registre.chuteRapide?.());
-    attacher('btn-reserve-p', () => Registre.utiliserReserve?.());
+    attacher('btn-chute-p', () => actions().chuteRapide?.());
+    attacher('btn-reserve-p', () => actions().utiliserReserve?.());
 }

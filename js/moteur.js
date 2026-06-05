@@ -11,14 +11,14 @@ import {
     formaterEtoiles,
     biomeEstDebloque,
 } from './progression.js';
-import { Registre } from './registre-jeu.js';
+import { configurerActionsJeu } from './actions-jeu.js';
 import {
     etat,
-    biomeActif,
-    niveauGlobal,
     definirBiomeActif,
     ECRANS,
-    ecranActuel,
+    obtenirBiomeActif,
+    obtenirNiveauGlobal,
+    obtenirEcranActuel,
 } from './contexte-jeu.js';
 import { obtenirForme, lierCouleursTetrominos } from './piece-jeu.js';
 import { creerParticulesExplosion } from './particules-jeu.js';
@@ -51,32 +51,36 @@ import { initialiserOptions, mettreAJourBoutonsMute } from './options-ui.js';
 import { initialiserBoutons } from './ui-init.js';
 import { initialiserInput } from './input-jeu.js';
 import { adapterInterface, initialiserLayout } from './layout-jeu.js';
+import { chargerStats } from './achievements.js';
+import { rechargerCodex, initialiserCodexUI } from './codex.js';
 
-export { ecranActuel };
+export { obtenirEcranActuel as ecranActuel };
 
-Registre.planifierBoucle = planifierBoucle;
-Registre.terminerPartie = terminerPartie;
-Registre.demarrerJeu = demarrerJeu;
-Registre.basculerPause = basculerPause;
-Registre.confirmerRecommencer = confirmerRecommencer;
-Registre.quitterVersMenu = quitterVersMenu;
-Registre.deplacerGauche = deplacerGauche;
-Registre.deplacerDroite = deplacerDroite;
-Registre.deplacerBas = deplacerBas;
-Registre.chuteRapide = chuteRapide;
-Registre.tourner = tourner;
-Registre.utiliserReserve = utiliserReserve;
+configurerActionsJeu({
+    planifierBoucle,
+    terminerPartie,
+    demarrerJeu,
+    basculerPause,
+    confirmerRecommencer,
+    quitterVersMenu,
+    deplacerGauche,
+    deplacerDroite,
+    deplacerBas,
+    chuteRapide,
+    tourner,
+    utiliserReserve,
+});
 
 /** Initialise le jeu : canvas, audio, constellation, UI et boucle principale. */
 export function initialiserApplication() {
     configurerMeteo({
         obtenirEtat: () => etat,
-        obtenirBiomeActif: () => biomeActif,
+        obtenirBiomeActif,
         creerParticulesExplosion,
     });
     configurerReliques({
         obtenirEtat: () => etat,
-        obtenirBiomeActif: () => biomeActif,
+        obtenirBiomeActif,
         obtenirForme,
         creerParticulesExplosion,
     });
@@ -87,23 +91,23 @@ export function initialiserApplication() {
 
     configurerAudioMoteur({
         obtenirTempo: () => {
-            const base = BIOMES[biomeActif]?.musique?.tempo ?? 120;
+            const base = BIOMES[obtenirBiomeActif()]?.musique?.tempo ?? 120;
             return base + (etat.niveau - 1) * 4;
         },
         ecrireStockage,
         onMuteChange: mettreAJourBoutonsMute,
     });
     if (!initialiserCanvas()) return;
+    chargerStats();
+    rechargerCodex();
     adapterInterface();
     initialiserLayout();
     lierCouleursTetrominos();
     chargerProgression();
     configurerConstellation({
-        obtenirNiveauGlobal: () => niveauGlobal,
-        obtenirBiomeActif: () => biomeActif,
-        definirBiomeActif: (id) => {
-            definirBiomeActif(id);
-        },
+        obtenirNiveauGlobal,
+        obtenirBiomeActif,
+        definirBiomeActif,
         sauvegarderBiomeActif,
         obtenirRecordBiome,
         calculerEtoiles,
@@ -113,13 +117,14 @@ export function initialiserApplication() {
         demarrerJeu,
         sonMenu: (type) => AudioMoteur.son(type),
     });
-    appliquerThemeBiome(biomeActif);
+    appliquerThemeBiome(obtenirBiomeActif());
     appliquerThemeMascotte();
     mettreAJourAffichageRecord();
     initPiecesFond();
     initialiserOptions();
     initialiserInput();
     initialiserBoutons();
+    initialiserCodexUI();
     afficherEcran(ECRANS.TITRE);
     planifierBoucle();
 }

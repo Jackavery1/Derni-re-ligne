@@ -1,4 +1,4 @@
-export const Registre = {
+const actions = {
     planifierBoucle: null,
     terminerPartie: null,
     demarrerJeu: null,
@@ -12,3 +12,12 @@ export const Registre = {
     tourner: null,
     utiliserReserve: null,
 };
+
+/** @param {Partial<typeof actions>} deps */
+export function configurerActionsJeu(deps) {
+    Object.assign(actions, deps);
+}
+
+export function obtenirActions() {
+    return actions;
+}

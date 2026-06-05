@@ -10,18 +10,18 @@ import {
 } from './progression.js';
 import {
     etat,
-    biomeActif,
-    niveauGlobal,
     particules,
     textesFlottants,
-    sacPieces,
     secousse,
     flashVerrou,
     flashLignes,
     dasEtat,
-    canvasReserve,
-    ctxReserve,
-    touchDepart,
+    obtenirBiomeActif,
+    obtenirNiveauGlobal,
+    obtenirSacPieces,
+    obtenirTouchDepart,
+    obtenirCtxReserve,
+    obtenirCanvasReserve,
     definirReliqueEnAttente,
     definirReliqueActive,
     definirCompteurPieces,
@@ -72,6 +72,16 @@ import {
     chuteRapide,
     tourner,
 } from './logique-partie.js';
+import { reinitialiserMelodie, afficherMelodieGameOver, arreterLectureMelodie } from './melodie.js';
+import { initStatsPartie, finaliserStatsPartie } from './achievements.js';
+import { verifierCodex } from './codex.js';
+import { reinitialiserHistoriquePositions } from './decorations-jeu.js';
+import {
+    donneesPartie,
+    reinitialiserDonneesPartie,
+    signalerApparitionPiece,
+    sauvegarderSnapshotProfil,
+} from './profil-jeu.js';
 
 export function initialiserCanvas() {
     const cp = document.getElementById('canvas-plateau');
@@ -105,6 +115,7 @@ export function initialiserCanvas() {
         cp.addEventListener(
             'touchend',
             (e) => {
+                const touchDepart = obtenirTouchDepart();
                 if (!touchDepart) return;
                 const dx = e.changedTouches[0].clientX - touchDepart.x;
                 const dy = e.changedTouches[0].clientY - touchDepart.y;
@@ -132,6 +143,7 @@ export function confirmerRecommencer() {
 }
 
 export function quitterVersMenu() {
+    arreterLectureMelodie();
     etat.estEnCours = false;
     etat.estEnPause = false;
     particules.length = 0;
@@ -145,12 +157,19 @@ export function quitterVersMenu() {
 }
 
 export function demarrerJeu() {
+    reinitialiserMelodie();
+    reinitialiserHistoriquePositions();
+    reinitialiserDonneesPartie();
+    donneesPartie.biomeId = obtenirBiomeActif();
+    initStatsPartie();
+    verifierCodex();
     arreterConstellation();
-    appliquerThemeBiome(biomeActif);
-    appliquerTextesBiome(biomeActif);
+    appliquerThemeBiome(obtenirBiomeActif());
+    appliquerTextesBiome(obtenirBiomeActif());
     appliquerThemeMascotte();
     AudioMoteur.init();
     if (AudioMoteur.ctx && AudioMoteur.actif) {
+        const biomeActif = obtenirBiomeActif();
         if (AudioMoteur.intervalMusique && AudioMoteur.biomeMusique !== biomeActif) {
             AudioMoteur.transitionMusique(biomeActif);
         } else {
@@ -176,14 +195,14 @@ export function demarrerJeu() {
     particules.length = 0;
     textesFlottants.length = 0;
     initParticulesAmbiance();
-    definirCouleurAmbRgb(hexVersRgb(BIOMES[biomeActif].lueurCoul));
+    definirCouleurAmbRgb(hexVersRgb(BIOMES[obtenirBiomeActif()].lueurCoul));
     secousse.timer = 0;
     flashVerrou.timer = 0;
     flashVerrou.cellules = [];
     flashLignes.timer = 0;
     flashLignes.lignes = [];
     definirDerniereSecondeTemps(-1);
-    sacPieces.length = 0;
+    obtenirSacPieces().length = 0;
     remplirSac();
     definirPieceAuSol(false);
     definirLockDelayRestant(0);
@@ -199,7 +218,10 @@ export function demarrerJeu() {
     etat.pieceActuelle = genererProchainePiece();
     activerReliqueSurPiece(etat.pieceActuelle);
     etat.filePieces = [genererProchainePiece(), genererProchainePiece(), genererProchainePiece()];
+    signalerApparitionPiece();
 
+    const ctxReserve = obtenirCtxReserve();
+    const canvasReserve = obtenirCanvasReserve();
     ctxReserve.clearRect(0, 0, canvasReserve.width, canvasReserve.height);
     dessinerFileNext();
     mettreAJourIndicateurRelique();
@@ -249,7 +271,7 @@ export function terminerPartie(victoire = false) {
     if (!victoire) AudioMoteur.son('game_over');
     annoncer(victoire ? 'Sprint terminé ! Victoire' : 'Partie terminée');
 
-    const textes = BIOMES[biomeActif]?.textes ?? BIOMES.classique.textes;
+    const textes = BIOMES[obtenirBiomeActif()]?.textes ?? BIOMES.classique.textes;
     const titreGo = document.querySelector('.go-titre');
     if (titreGo) titreGo.textContent = victoire ? 'VICTOIRE !' : textes.gameOver;
 
@@ -258,7 +280,7 @@ export function terminerPartie(victoire = false) {
     const points = calculerPointsProgression(etat.score, etat.lignes);
     if (points > 0) {
         ajouterNiveauGlobal(points);
-        sauvegarderNiveauGlobal(niveauGlobal);
+        sauvegarderNiveauGlobal(obtenirNiveauGlobal());
     }
 
     mettreAJourAffichageRecord();
@@ -267,14 +289,21 @@ export function terminerPartie(victoire = false) {
     document.getElementById('lignes-finales').textContent = etat.lignes;
     document.getElementById('niveau-final').textContent = etat.niveau;
     document.getElementById('record-final').textContent =
-        obtenirRecordBiome(biomeActif).toLocaleString('fr-FR');
+        obtenirRecordBiome(obtenirBiomeActif()).toLocaleString('fr-FR');
     document.getElementById('temps-final').textContent = formaterTemps(obtenirTempsEcoule());
 
     const badge = document.getElementById('badge-record');
     if (badge) badge.style.display = nouveauRecord ? 'block' : 'none';
 
+    const tempsPartie = Math.floor(obtenirTempsEcoule() / 1000);
+    sauvegarderSnapshotProfil(etat.lignes, obtenirBiomeActif());
+    finaliserStatsPartie(etat.score, tempsPartie);
+    verifierCodex();
+
     setTimeout(() => {
         afficherEcran(ECRANS.GAME_OVER);
         planifierBoucle();
     }, 350);
+
+    setTimeout(() => afficherMelodieGameOver(), 400);
 }

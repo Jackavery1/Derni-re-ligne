@@ -4,15 +4,15 @@ Historique des versions de Tetris Néo. Format [semver](https://semver.org/) : `
 
 ## Résumé par version
 
-| Version   | Date       | En bref                                                                           |
-| --------- | ---------- | --------------------------------------------------------------------------------- |
+| Version   | Date       | En bref                                                                                |
+| --------- | ---------- | -------------------------------------------------------------------------------------- |
 | **2.4.2** | 2026-06-05 | Docs minimalistes + tableau d'évolution, tests, debug `?debug=1`, versions SW alignées |
-| **2.4.1** | 2026-06-05 | `moteur.js` découpé en 14 modules, E2E pause/options, ESLint propre               |
-| **2.4.0** | 2026-06-05 | CSS externalisé, CSP, Vitest/ESLint/Prettier, CI deploy, modules météo/reliques   |
-| **2.3.0** | 2026-06-04 | Audio, progression, étoiles par biome, E2E Playwright                             |
-| **2.2.0** | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                        |
-| **2.1.0** | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                        |
-| **2.0.0** | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                     |
+| **2.4.1** | 2026-06-05 | `moteur.js` découpé en 14 modules, E2E pause/options, ESLint propre                    |
+| **2.4.0** | 2026-06-05 | CSS externalisé, CSP, Vitest/ESLint/Prettier, CI deploy, modules météo/reliques        |
+| **2.3.0** | 2026-06-04 | Audio, progression, étoiles par biome, E2E Playwright                                  |
+| **2.2.0** | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                             |
+| **2.1.0** | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                             |
+| **2.0.0** | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                          |
 
 ---
 

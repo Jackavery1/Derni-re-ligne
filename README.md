@@ -9,6 +9,9 @@ Tetris moderne en Vanilla JS + Canvas 2D. PWA jouable hors-ligne.
 - Mécaniques : hold, ghost, NEXT×3, 7-bag, SRS, DAS/ARR, lock delay
 - Modes Marathon et Sprint (40 lignes)
 - 9 biomes (couleurs, musique, reliques, météo), progression et records par biome
+- **Achievements** : défis débloquables avec décorations visuelles
+- **Profil de jeu** : analyse de style (APM, réactions, colonnes préférées)
+- **Codex** : encyclopédie des mondes, reliques et mécaniques
 - PWA installable, contraste élevé, contrôles clavier et tactile
 
 | Touche    | Action                 |
@@ -27,16 +30,19 @@ Guide détaillé : **Options → Contrôles**.
 
 ```bash
 npm install
-npm start          # http://localhost:3000
-npm test           # tests unitaires
-npm run test:e2e   # tests navigateur (npx playwright install chromium si besoin)
+npm start              # http://localhost:3000
+npm test               # tests unitaires
+npm run prepare:e2e    # installer Chromium (première fois)
+npm run test:e2e       # tests navigateur + accessibilité
 ```
 
-Logs détaillés : `?debug=1` dans l'URL. Après mise à jour SW : **Ctrl+Shift+R** ou bannière « Nouvelle version ».
+Node 18+ (voir `.nvmrc`). Logs détaillés : `?debug=1` dans l'URL. Après mise à jour SW : **Ctrl+Shift+R** ou bannière « Nouvelle version ».
 
 ## Architecture
 
 Vanilla ES modules, sans bundler. Point d'entrée : `index.html` → `js/main.js` → `js/moteur.js` (orchestrateur).
+
+Documentation détaillée : [docs/architecture.md](docs/architecture.md).
 
 ```
 moteur.js
@@ -48,9 +54,12 @@ moteur.js
 ├── partie.js          cycle de partie
 ├── ecrans-ui.js       menus et HUD
 ├── constellation.js   sélection biome
+├── achievements.js    défis et stats globales
+├── profil-jeu.js      analyse de style
+├── codex.js           encyclopédie
 ├── meteo.js / reliques.js / audio.js
 ├── logique-pure.js    logique testable (7-bag, SRS)
-└── config.js          données (biomes, constantes)
+└── config.js          réexporte config-jeu, biomes, contenu-jeu
 ```
 
 Styles : `styles/main.css`. Cache offline : `sw.js`.
@@ -71,7 +80,7 @@ Détails par version : [CHANGELOG.md](CHANGELOG.md).
 
 ## Déploiement
 
-Statique — GitHub Pages via `deploy.yml` (tests requis avant publish). Release : `npm run release`.
+Statique — GitHub Pages via `deploy.yml` (tests requis avant publish). Preview PR : artefact `site-preview` via `preview.yml`. Release : `npm run release`.
 
 ## Licence
 

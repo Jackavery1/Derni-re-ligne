@@ -1,5 +1,11 @@
 import { CONFIG } from './config.js';
-import { particules, MAX_PARTICULES, biomeActif, etat, VERTS_FORET } from './contexte-jeu.js';
+import {
+    particules,
+    MAX_PARTICULES,
+    obtenirBiomeActif,
+    etat,
+    VERTS_FORET,
+} from './contexte-jeu.js';
 
 export function pousserParticuleJeu(config) {
     if (particules.length >= MAX_PARTICULES) return;
@@ -18,7 +24,7 @@ export function creerParticuleJeuStandard(c, numeroLigne, couleur, tailleMax) {
         couleur,
         rotation: Math.random() * Math.PI * 2,
         vRot: (Math.random() - 0.5) * 0.25,
-        trainee: biomeActif === 'ocean',
+        trainee: obtenirBiomeActif() === 'ocean',
     });
 }
 
@@ -40,13 +46,13 @@ export function creerParticulesExplosion(colonneCell, ligneCell, couleur) {
 }
 
 export function creerParticulesLigne(numeroLigne) {
-    const nbBase = biomeActif === 'fuochi' ? 14 : 7;
-    const tailleMax = biomeActif === 'fuochi' ? 10 : 3;
+    const nbBase = obtenirBiomeActif() === 'fuochi' ? 14 : 7;
+    const tailleMax = obtenirBiomeActif() === 'fuochi' ? 10 : 3;
 
     for (let c = 0; c < CONFIG.colonnes; c++) {
         if (particules.length >= MAX_PARTICULES) return;
         let couleur = etat.plateau[numeroLigne][c] || '#ffffff';
-        if (biomeActif === 'foret' && Math.random() < 0.35) {
+        if (obtenirBiomeActif() === 'foret' && Math.random() < 0.35) {
             couleur = VERTS_FORET[Math.floor(Math.random() * VERTS_FORET.length)];
         }
 
@@ -55,7 +61,7 @@ export function creerParticulesLigne(numeroLigne) {
             creerParticuleJeuStandard(c, numeroLigne, couleur, tailleMax);
         }
 
-        if (biomeActif === 'lave') {
+        if (obtenirBiomeActif() === 'lave') {
             for (let e = 0; e < 3; e++) {
                 if (particules.length >= MAX_PARTICULES) return;
                 pousserParticuleJeu({
@@ -73,7 +79,7 @@ export function creerParticulesLigne(numeroLigne) {
             }
         }
 
-        if (biomeActif === 'cosmos') {
+        if (obtenirBiomeActif() === 'cosmos') {
             for (let e = 0; e < 2; e++) {
                 if (particules.length >= MAX_PARTICULES) return;
                 const angle = Math.random() * Math.PI * 2;

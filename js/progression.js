@@ -11,11 +11,56 @@ const CLES_STOCKAGE = new Set([
     'tetrisNeo_contraste',
     'tetrisNeo_niveauGlobal',
     'tetrisNeo_biomeActif',
+    'tetrisNeo_codex',
+    'tetrisNeo_codexVus',
+    'tetrisNeo_statsGlobales',
+    'tetrisNeo_profilDernier',
 ]);
 
+/** @param {string} cle */
 function estCleValide(cle) {
     if (CLES_STOCKAGE.has(cle)) return true;
     return /^tetrisNeo_record_[a-z]+$/.test(cle);
+}
+
+/** @param {unknown} valeur @returns {value is string[]} */
+export function estTableauIds(valeur) {
+    return (
+        Array.isArray(valeur) && valeur.every((item) => typeof item === 'string' && item.length > 0)
+    );
+}
+
+/** @param {string} brut @returns {Set<string>} */
+export function parserIdsStockage(brut) {
+    if (!brut) return new Set();
+    try {
+        const parsed = JSON.parse(brut);
+        return estTableauIds(parsed) ? new Set(parsed) : new Set();
+    } catch {
+        return new Set();
+    }
+}
+
+/** @param {string} cle @param {unknown} defaut @returns {unknown} */
+export function lireStockageJson(cle, defaut) {
+    const brut = lireStockage(cle, '');
+    if (!brut) return defaut;
+    try {
+        return JSON.parse(brut);
+    } catch (err) {
+        logger.warn('JSON localStorage invalide:', cle, err);
+        return defaut;
+    }
+}
+
+/** @param {string} cle @param {unknown} valeur @returns {boolean} */
+export function ecrireStockageJson(cle, valeur) {
+    try {
+        return ecrireStockage(cle, JSON.stringify(valeur));
+    } catch (err) {
+        logger.warn('Sérialisation localStorage impossible:', cle, err);
+        return false;
+    }
 }
 
 /** @param {string} cle @param {string} defaut @returns {string} */

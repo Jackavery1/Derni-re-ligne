@@ -10,14 +10,16 @@ import { AudioMoteur } from './audio.js';
 import {
     ECRANS,
     etat,
-    biomeActif,
-    derniereSecondeTemps,
+    obtenirBiomeActif,
+    obtenirDerniereSecondeTemps,
     definirBiomeActif,
     definirNiveauGlobal,
     definirEcranActuel,
     definirDerniereSecondeTemps,
 } from './contexte-jeu.js';
 import { demarrerAnimationMenu, arreterAnimationMenu } from './menu-fond.js';
+import { majStatsReactionRobo, genererGalerieAchievements } from './achievements.js';
+import { genererCodexComplet } from './codex.js';
 
 export function annoncer(texte) {
     const el = document.getElementById('annonce-jeu');
@@ -30,15 +32,16 @@ export function chargerProgression() {
 }
 
 export function sauvegarderRecord(score) {
-    return sauvegarderRecordBiome(biomeActif, score);
+    return sauvegarderRecordBiome(obtenirBiomeActif(), score);
 }
 
 export function mettreAJourAffichageRecord() {
     const el = document.getElementById('menu-record-val');
-    if (el) el.textContent = obtenirRecordBiome(biomeActif).toLocaleString('fr-FR');
+    if (el) el.textContent = obtenirRecordBiome(obtenirBiomeActif()).toLocaleString('fr-FR');
 }
 
 export function changerHumeur(humeur) {
+    majStatsReactionRobo(humeur);
     etat.humeur = humeur;
     document.querySelectorAll('.expression').forEach((el) => el.classList.remove('active'));
     const expr = document.getElementById(`expr-${humeur}`);
@@ -96,7 +99,7 @@ export function appliquerTextesBiome(biomeId) {
 }
 
 export function appliquerThemeMascotte() {
-    const biome = BIOMES[biomeActif] ?? BIOMES.classique;
+    const biome = BIOMES[obtenirBiomeActif()] ?? BIOMES.classique;
     const lueur = biome.lueurCoul;
     const section = document.getElementById('section-mascotte');
     const mascotte = document.getElementById('mascotte');
@@ -113,7 +116,14 @@ export function appliquerThemeMascotte() {
 }
 
 export function mettreAJourVisibilitePartie(idEcran) {
-    const ecransHorsPartie = [ECRANS.TITRE, ECRANS.SELECTION, ECRANS.OPTIONS];
+    const ecransHorsPartie = [
+        ECRANS.TITRE,
+        ECRANS.SELECTION,
+        ECRANS.OPTIONS,
+        ECRANS.ACHIEVEMENTS,
+        ECRANS.PROFIL,
+        ECRANS.CODEX,
+    ];
     if (ecransHorsPartie.includes(idEcran)) {
         document.body.classList.remove('partie-active');
     }
@@ -140,6 +150,21 @@ export function afficherEcran(idEcran) {
         demarrerConstellation();
     } else {
         arreterConstellation();
+    }
+
+    if (idEcran === ECRANS.ACHIEVEMENTS) {
+        genererGalerieAchievements();
+    }
+
+    if (idEcran === ECRANS.PROFIL) {
+        import('./profil-jeu.js').then(({ chargerProfilDernier, afficherProfil }) => {
+            chargerProfilDernier();
+            afficherProfil();
+        });
+    }
+
+    if (idEcran === ECRANS.CODEX) {
+        genererCodexComplet();
     }
 
     if (idEcran === ECRANS.PAUSE) {
@@ -174,7 +199,7 @@ export function obtenirTempsEcoule() {
 
 export function mettreAJourAffichageTemps() {
     const sec = Math.floor(obtenirTempsEcoule() / 1000);
-    if (sec === derniereSecondeTemps) return;
+    if (sec === obtenirDerniereSecondeTemps()) return;
     definirDerniereSecondeTemps(sec);
     const el = document.getElementById('affichage-temps');
     if (el) el.textContent = formaterTemps(obtenirTempsEcoule());

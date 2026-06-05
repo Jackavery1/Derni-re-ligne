@@ -1,0 +1,81 @@
+<div id="ecran-profil" class="ecran">
+    <div class="profil-contenu">
+        <div class="profil-header">
+            <div class="profil-titre">PROFIL VIVANT</div>
+            <div id="profil-titre-style" class="profil-titre-style"></div>
+            <div id="profil-biome-badge" class="profil-biome-badge"></div>
+        </div>
+
+        <div class="profil-section">
+            <div class="profil-section-label">STYLE DE JEU</div>
+            <canvas
+                id="canvas-radar"
+                width="260"
+                height="220"
+                class="profil-canvas"
+                aria-label="Radar du style de jeu"
+            ></canvas>
+        </div>
+
+        <div class="profil-section">
+            <div class="profil-section-label">ZONES D'ATTERRISSAGE</div>
+            <canvas
+                id="canvas-heatmap"
+                width="260"
+                height="100"
+                class="profil-canvas"
+                aria-label="Heatmap des atterrissages"
+            ></canvas>
+        </div>
+
+        <div class="profil-section">
+            <div class="profil-section-label">RYTHME DE JEU</div>
+            <canvas
+                id="canvas-rythme"
+                width="260"
+                height="80"
+                class="profil-canvas"
+                aria-label="Graphe de rythme de jeu"
+            ></canvas>
+        </div>
+
+        <div class="profil-stats-chiffrees">
+            <div class="profil-stat-item">
+                <span class="psi-label">PIÈCES</span>
+                <span class="psi-val" id="pstat-pieces">0</span>
+            </div>
+            <div class="profil-stat-item">
+                <span class="psi-label">ROTATIONS</span>
+                <span class="psi-val" id="pstat-rotations">0</span>
+            </div>
+            <div class="profil-stat-item">
+                <span class="psi-label">HARD DROPS</span>
+                <span class="psi-val" id="pstat-drops">0</span>
+            </div>
+            <div class="profil-stat-item">
+                <span class="psi-label">HOLDS</span>
+                <span class="psi-val" id="pstat-holds">0</span>
+            </div>
+            <div class="profil-stat-item">
+                <span class="psi-label">RÉACTION MOY.</span>
+                <span class="psi-val" id="pstat-reaction">0ms</span>
+            </div>
+            <div class="profil-stat-item">
+                <span class="psi-label">MOUVEMENTS</span>
+                <span class="psi-val" id="pstat-mouvements">0</span>
+            </div>
+        </div>
+
+        <div class="profil-boutons">
+            <button class="bouton discret" type="button" id="btn-profil-menu">← MENU</button>
+            <button class="bouton discret" type="button" id="btn-profil-achievements">
+                🏆 ACHIEVEMENTS
+            </button>
+            <button class="bouton discret" type="button" id="btn-profil-codex">📖 CODEX</button>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================
+     ÉCRAN CODEX
+======================================================== -->

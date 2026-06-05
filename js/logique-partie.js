@@ -7,18 +7,18 @@ import {
 import { meteo, ETATS_METEO } from './meteo.js';
 import { appliquerEffetRelique } from './reliques.js';
 import { AudioMoteur } from './audio.js';
-import { Registre } from './registre-jeu.js';
+import { obtenirActions } from './actions-jeu.js';
 import {
     etat,
-    biomeActif,
     flashVerrou,
     flashLignes,
-    reliqueEnAttente,
-    reliqueActive,
-    compteurPieces,
-    seuilProchRelique,
-    ctxReserve,
-    canvasReserve,
+    obtenirBiomeActif,
+    obtenirReliqueEnAttente,
+    obtenirReliqueActive,
+    obtenirCompteurPieces,
+    obtenirSeuilProchRelique,
+    obtenirCtxReserve,
+    obtenirCanvasReserve,
     definirReliqueEnAttente,
     definirReliqueActive,
     incrementerCompteurPieces,
@@ -48,6 +48,17 @@ import {
     declencherSecousse,
 } from './rendu-jeu.js';
 import { changerHumeur, annoncer, rafraichirStats, afficherNotifNiveau } from './ecrans-ui.js';
+import { enregistrerNotesLignesCompletes } from './melodie.js';
+import { majStatsLignesEffacees, majStatsScorePartie } from './achievements.js';
+import {
+    enregistrerDonneesVerrouillage,
+    signalerApparitionPiece,
+    compterRotation,
+    compterMouvementLateral,
+    compterHardDrop,
+    compterHold,
+    enregistrerLignesParNiveau,
+} from './profil-jeu.js';
 
 export function verrouillerPiece() {
     if (meteo.decalageForce !== 0) {
@@ -66,7 +77,7 @@ export function verrouillerPiece() {
             const y = etat.pieceActuelle.y + l;
             const x = etat.pieceActuelle.x + c;
             if (y < 0) {
-                Registre.terminerPartie();
+                obtenirActions().terminerPartie?.();
                 return;
             }
             etat.plateau[y][x] = couleur;
@@ -77,26 +88,31 @@ export function verrouillerPiece() {
     flashVerrou.cellules = cellulesPosees;
     flashVerrou.timer = flashVerrou.duree;
 
+    enregistrerDonneesVerrouillage();
+
     incrementerCompteurPieces();
-    if (compteurPieces >= seuilProchRelique && !reliqueEnAttente) {
+    if (obtenirCompteurPieces() >= obtenirSeuilProchRelique() && !obtenirReliqueEnAttente()) {
         definirReliqueEnAttente(true);
         definirCompteurPieces(0);
         definirSeuilProchRelique(Math.floor(Math.random() * 6) + 15);
     }
+    const reliqueActive = obtenirReliqueActive();
     if (reliqueActive) {
         appliquerEffetRelique(reliqueActive, etat.pieceActuelle);
         definirReliqueActive(null);
     }
 
+    enregistrerNotesLignesCompletes();
     const nbLignesEffacees = supprimerLignesCompletes();
+    majStatsLignesEffacees(nbLignesEffacees);
     calculerScore(nbLignesEffacees);
     AudioMoteur.son('verrou');
 
     etat.pieceActuelle = etat.filePieces.shift();
     activerReliqueSurPiece(etat.pieceActuelle);
-    if (reliqueEnAttente) {
+    if (obtenirReliqueEnAttente()) {
         definirReliqueEnAttente(false);
-        const relique = RELIQUES[biomeActif] ?? RELIQUES.classique;
+        const relique = RELIQUES[obtenirBiomeActif()] ?? RELIQUES.classique;
         etat.filePieces.unshift(creerPieceRelique(relique));
     } else {
         etat.filePieces.push(genererProchainePiece());
@@ -109,7 +125,9 @@ export function verrouillerPiece() {
     dessinerFileNext();
     mettreAJourIndicateurRelique();
 
-    if (!estPositionValide(etat.pieceActuelle)) Registre.terminerPartie();
+    signalerApparitionPiece();
+
+    if (!estPositionValide(etat.pieceActuelle)) obtenirActions().terminerPartie?.();
 }
 
 function supprimerLignesCompletes() {
@@ -148,6 +166,8 @@ export function calculerScore(nbLignes) {
         etat.combo = 0;
     } else {
         etat.combo++;
+        majStatsScorePartie(nbLignes, etat.combo);
+        enregistrerLignesParNiveau(nbLignes);
 
         if (nbLignes === 4) {
             afficherTexteFlottant('TETRIS !', '#ffe600', 16);
@@ -194,7 +214,7 @@ export function calculerScore(nbLignes) {
 
     if (etat.modeJeu === 'sprint' && etat.lignes >= CONFIG.sprintLignes) {
         etat.victoireSprint = true;
-        setTimeout(() => Registre.terminerPartie(true), 400);
+        setTimeout(() => obtenirActions().terminerPartie?.(true), 400);
     }
 }
 
@@ -208,6 +228,7 @@ function deplacerGaucheReel() {
         etat.pieceActuelle.x--;
         AudioMoteur.son('deplacement');
         reinitialiserLockDelay();
+        compterMouvementLateral();
     }
 }
 
@@ -217,6 +238,7 @@ function deplacerDroiteReel() {
         etat.pieceActuelle.x++;
         AudioMoteur.son('deplacement');
         reinitialiserLockDelay();
+        compterMouvementLateral();
     }
 }
 
@@ -250,6 +272,7 @@ export function deplacerBas() {
 export function chuteRapide() {
     if (!jouable()) return;
     if (meteo.etat === ETATS_METEO.ACTIF && meteo.evenementActuel?.effet === 'microgravite') return;
+    compterHardDrop();
     const dist = calculerDistanceChute(etat.pieceActuelle);
     etat.pieceActuelle.y += dist;
     etat.score += dist * 2;
@@ -272,6 +295,7 @@ export function tourner(sens) {
             piece.y += dy;
             AudioMoteur.son('rotation');
             reinitialiserLockDelay();
+            compterRotation();
             return;
         }
     }
@@ -292,9 +316,9 @@ export function utiliserReserve() {
         };
         etat.pieceActuelle = etat.filePieces.shift();
         activerReliqueSurPiece(etat.pieceActuelle);
-        if (reliqueEnAttente) {
+        if (obtenirReliqueEnAttente()) {
             definirReliqueEnAttente(false);
-            const relique = RELIQUES[biomeActif] ?? RELIQUES.classique;
+            const relique = RELIQUES[obtenirBiomeActif()] ?? RELIQUES.classique;
             etat.filePieces.unshift(creerPieceRelique(relique));
         } else {
             etat.filePieces.push(genererProchainePiece());
@@ -325,10 +349,12 @@ export function utiliserReserve() {
     etat.pieceActuelle.x = Math.floor(CONFIG.colonnes / 2) - Math.floor(forme[0].length / 2);
     etat.pieceActuelle.y = 0;
     etat.reserveUtilisee = true;
+    compterHold();
     AudioMoteur.son('hold');
     reinitialiserLockDelay();
+    signalerApparitionPiece();
 
-    dessinerPreview(ctxReserve, canvasReserve, etat.pieceEnReserve);
+    dessinerPreview(obtenirCtxReserve(), obtenirCanvasReserve(), etat.pieceEnReserve);
 }
 
 export function vitesseChute() {

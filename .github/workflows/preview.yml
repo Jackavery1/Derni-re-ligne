@@ -1,0 +1,32 @@
+name: Preview
+
+on:
+    pull_request:
+        branches: [main, master]
+
+permissions:
+    contents: read
+
+jobs:
+    preview:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+            - run: npm ci
+            - run: npm run lint
+            - run: npm run format:check
+            - run: npm test
+            - name: Préparer artefact statique
+              run: |
+                  mkdir -p _site
+                  cp index.html manifest.json sw.js _site/
+                  cp -r styles js fonts html _site/
+                  cp icon.svg icon-192.png icon-512.png icon-maskable.png _site/ 2>/dev/null || true
+            - uses: actions/upload-artifact@v4
+              with:
+                  name: site-preview
+                  path: _site
+                  retention-days: 7

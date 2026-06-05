@@ -1,4 +1,5 @@
 import { CONFIG, METEO_BIOMES } from './config.js';
+import { majStatsMeteo } from './achievements.js';
 
 export const ETATS_METEO = { REPOS: 'repos', ALERTE: 'alerte', ACTIF: 'actif' };
 
@@ -175,6 +176,7 @@ function declencherEffetMeteo(evenement) {
 
 function terminerEffetMeteo(evenement) {
     if (!evenement) return;
+    majStatsMeteo(evenement.effet);
     switch (evenement.effet) {
         case 'acceleration':
         case 'microgravite':

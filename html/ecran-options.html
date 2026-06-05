@@ -1,0 +1,109 @@
+<div id="ecran-options" class="ecran">
+    <div class="options-contenu">
+        <div class="options-titre">⚙ OPTIONS</div>
+
+        <div class="options-onglets" role="tablist" aria-label="Sections des options">
+            <button
+                class="options-onglet actif"
+                type="button"
+                role="tab"
+                id="tab-reglages"
+                aria-selected="true"
+                aria-controls="panneau-reglages"
+            >
+                RÉGLAGES
+            </button>
+            <button
+                class="options-onglet"
+                type="button"
+                role="tab"
+                id="tab-controles"
+                aria-selected="false"
+                aria-controls="panneau-controles"
+            >
+                CONTRÔLES
+            </button>
+        </div>
+
+        <div
+            id="panneau-reglages"
+            class="options-panneau actif"
+            role="tabpanel"
+            aria-labelledby="tab-reglages"
+        >
+            <div class="option-ligne">
+                <label class="option-label" for="slider-volume">VOLUME EFFETS</label>
+                <input
+                    class="option-slider"
+                    type="range"
+                    id="slider-volume"
+                    min="0"
+                    max="100"
+                    value="40"
+                    aria-label="Volume des effets sonores"
+                />
+            </div>
+            <div class="option-ligne">
+                <label class="option-label" for="slider-musique">VOLUME MUSIQUE</label>
+                <input
+                    class="option-slider"
+                    type="range"
+                    id="slider-musique"
+                    min="0"
+                    max="100"
+                    value="25"
+                    aria-label="Volume de la musique"
+                />
+            </div>
+            <div class="option-boutons">
+                <button class="bouton" type="button" id="btn-toggle-mute" aria-pressed="false">
+                    🔊 SON ON
+                </button>
+                <button
+                    class="bouton discret"
+                    type="button"
+                    id="btn-toggle-contraste"
+                    aria-pressed="false"
+                >
+                    ◐ CONTRASTE
+                </button>
+            </div>
+        </div>
+
+        <div
+            id="panneau-controles"
+            class="options-panneau"
+            role="tabpanel"
+            aria-labelledby="tab-controles"
+            hidden
+        >
+            <p class="options-controles-intro">Clavier et manette tactile</p>
+            <dl class="guide guide-options">
+                <dt>← →</dt>
+                <dd>Déplacer</dd>
+                <dt>↑ / Z</dt>
+                <dd>Tourner (horaire)</dd>
+                <dt>X</dt>
+                <dd>Tourner (anti-horaire)</dd>
+                <dt>↓</dt>
+                <dd>Chute lente</dd>
+                <dt>ESPACE</dt>
+                <dd>Chute rapide</dd>
+                <dt>C / ⇧</dt>
+                <dd>Réserve (hold)</dd>
+                <dt>P / Échap</dt>
+                <dd>Pause</dd>
+            </dl>
+            <p class="options-controles-mobile">
+                Sur mobile : boutons tactiles en bas de l'écran et swipe sur le plateau (glisser
+                pour déplacer, swipe haut = drop, tap = rotation).
+            </p>
+        </div>
+
+        <button class="bouton discret" type="button" id="btn-options-retour">← RETOUR</button>
+    </div>
+</div>
+
+<!-- ========================================================
+     ÉCRAN PAUSE
+======================================================== -->

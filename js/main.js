@@ -1,5 +1,26 @@
+import { chargerEcrans } from './charger-ecrans.js';
 import { initialiserApplication } from './moteur.js';
-import { logger } from './logger.js';
+import { logger, afficherErreurUtilisateur } from './logger.js';
+
+window.addEventListener('error', (ev) => {
+    logger.error(ev.message, ev.filename, ev.lineno);
+    afficherErreurUtilisateur('Une erreur est survenue. Rechargez la page.');
+});
+
+window.addEventListener('unhandledrejection', (ev) => {
+    logger.error('Promesse rejetée:', ev.reason);
+    afficherErreurUtilisateur('Une erreur est survenue. Rechargez la page.');
+});
+
+async function demarrer() {
+    try {
+        await chargerEcrans();
+        initialiserApplication();
+    } catch (err) {
+        logger.error('Échec initialisation:', err);
+        afficherErreurUtilisateur('Impossible de charger le jeu. Rechargez la page.');
+    }
+}
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -31,4 +52,4 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-initialiserApplication();
+demarrer();

@@ -5,20 +5,20 @@ import {
     etat,
     particules,
     textesFlottants,
-    transitionAlpha,
     flashVerrou,
     flashLignes,
     secousse,
-    lockDelayRestant,
-    pieceAuSol,
-    prefererMoinsAnimations,
-    fpsMoyen,
-    idFrame,
-    boucleActive,
-    dernierTimestamp,
-    accumulateur,
-    canvasPlateau,
-    ctx,
+    obtenirTransitionAlpha,
+    obtenirLockDelayRestant,
+    obtenirPieceAuSol,
+    obtenirPrefererMoinsAnimations,
+    obtenirFpsMoyen,
+    obtenirIdFrame,
+    obtenirBoucleActive,
+    obtenirDernierTimestamp,
+    obtenirAccumulateur,
+    obtenirCanvasPlateau,
+    obtenirCtx,
     definirFpsMoyen,
     definirEffetsReduits,
     definirBoucleActive,
@@ -49,20 +49,21 @@ import { mettreAJourParticules } from './particules-jeu.js';
 import { mettreAJourAffichageTemps } from './ecrans-ui.js';
 import { verrouillerPiece, vitesseChute } from './logique-partie.js';
 import { menuAnimActif, mettreAJourMenuFond } from './menu-fond.js';
+import { mettreAJourHistoriquePositions, dessinerDecorations } from './decorations-jeu.js';
 
 export function mettreAJourFps(deltaTemps) {
     if (deltaTemps <= 0) return;
     const fps = 1000 / deltaTemps;
-    const nouveau = fpsMoyen * 0.92 + fps * 0.08;
+    const nouveau = obtenirFpsMoyen() * 0.92 + fps * 0.08;
     definirFpsMoyen(nouveau);
-    definirEffetsReduits(prefererMoinsAnimations || nouveau < 45);
+    definirEffetsReduits(obtenirPrefererMoinsAnimations() || nouveau < 45);
 }
 
 function aBesoinDeBoucle() {
     return (
         etat.estEnCours ||
         menuAnimActif ||
-        transitionAlpha < 1 ||
+        obtenirTransitionAlpha() < 1 ||
         particules.length > 0 ||
         textesFlottants.length > 0 ||
         flashVerrou.timer > 0 ||
@@ -72,27 +73,33 @@ function aBesoinDeBoucle() {
 }
 
 export function planifierBoucle() {
+    const ctx = obtenirCtx();
+    const canvasPlateau = obtenirCanvasPlateau();
     if (!ctx || !canvasPlateau) return;
     if (!aBesoinDeBoucle()) {
         definirBoucleActive(false);
+        const idFrame = obtenirIdFrame();
         if (idFrame) cancelAnimationFrame(idFrame);
         definirIdFrame(null);
         definirDernierTimestamp(0);
         return;
     }
-    if (!boucleActive) definirDernierTimestamp(0);
+    if (!obtenirBoucleActive()) definirDernierTimestamp(0);
     definirBoucleActive(true);
-    cancelAnimationFrame(idFrame);
+    cancelAnimationFrame(obtenirIdFrame());
     definirIdFrame(requestAnimationFrame(boucleJeu));
 }
 
 function boucleJeu(timestamp) {
+    const ctx = obtenirCtx();
+    const canvasPlateau = obtenirCanvasPlateau();
     if (!ctx || !canvasPlateau) {
         planifierBoucle();
         return;
     }
 
     try {
+        const dernierTimestamp = obtenirDernierTimestamp();
         const deltaTemps = dernierTimestamp ? timestamp - dernierTimestamp : 0;
         definirDernierTimestamp(timestamp);
         mettreAJourFps(deltaTemps);
@@ -111,19 +118,20 @@ function boucleJeu(timestamp) {
                 if (peutDescendre) {
                     definirPieceAuSol(false);
                     definirLockDelayRestant(0);
-                    definirAccumulateur(accumulateur + deltaTemps);
-                    if (accumulateur >= vitesseChute()) {
+                    definirAccumulateur(obtenirAccumulateur() + deltaTemps);
+                    if (obtenirAccumulateur() >= vitesseChute()) {
                         definirAccumulateur(0);
                         etat.pieceActuelle.y++;
+                        mettreAJourHistoriquePositions();
                     }
                 } else {
-                    if (!pieceAuSol) {
+                    if (!obtenirPieceAuSol()) {
                         definirPieceAuSol(true);
                         definirLockDelayRestant(CONFIG.lockDelay);
                         definirNbLockResets(0);
                     } else {
-                        definirLockDelayRestant(lockDelayRestant - deltaTemps);
-                        if (lockDelayRestant <= 0) verrouillerPiece();
+                        definirLockDelayRestant(obtenirLockDelayRestant() - deltaTemps);
+                        if (obtenirLockDelayRestant() <= 0) verrouillerPiece();
                     }
                 }
             }
@@ -136,7 +144,7 @@ function boucleJeu(timestamp) {
             mettreAJourIndicateurRelique();
         }
 
-        if (transitionAlpha < 1) mettreAJourTransition();
+        if (obtenirTransitionAlpha() < 1) mettreAJourTransition();
 
         if (flashVerrou.timer > 0) flashVerrou.timer -= deltaTemps;
         if (flashLignes.timer > 0) flashLignes.timer -= deltaTemps;
@@ -144,7 +152,7 @@ function boucleJeu(timestamp) {
 
         const doitDessiner =
             enPartie ||
-            transitionAlpha < 1 ||
+            obtenirTransitionAlpha() < 1 ||
             particules.length > 0 ||
             textesFlottants.length > 0 ||
             flashVerrou.timer > 0 ||
@@ -166,6 +174,7 @@ function boucleJeu(timestamp) {
             }
             dessinerFlashVerrou();
             dessinerParticules();
+            if (enPartie) dessinerDecorations();
             ctx.restore();
             ctx.save();
             ctx.globalAlpha = alpha;

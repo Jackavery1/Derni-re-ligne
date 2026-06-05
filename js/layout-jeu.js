@@ -1,6 +1,6 @@
 import { LAYOUT } from './config.js';
 import { redimensionnerConstellation } from './constellation.js';
-import { canvasMenuFond, menuAnimActif } from './menu-fond.js';
+import { obtenirCanvasMenuFond, menuAnimActif } from './menu-fond.js';
 
 export function obtenirHauteurInterface() {
     const estPaysageMobile = window.innerHeight < 500 && window.innerWidth > window.innerHeight;
@@ -38,6 +38,7 @@ export function adapterInterface() {
     iface.style.transform = `scale(${scale})`;
     iface.style.transformOrigin = 'top left';
 
+    const canvasMenuFond = obtenirCanvasMenuFond();
     if (canvasMenuFond && menuAnimActif) {
         canvasMenuFond.width = window.innerWidth;
         canvasMenuFond.height = window.innerHeight;

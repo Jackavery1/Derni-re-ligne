@@ -4,10 +4,10 @@ import {
     definirPieceAuSol,
     definirNbLockResets,
     definirLockDelayRestant,
-    nbLockResets,
-    lockDelayRestant,
+    obtenirNbLockResets,
+    obtenirLockDelayRestant,
     etat,
-    sacPieces,
+    obtenirSacPieces,
 } from '../js/contexte-jeu.js';
 import {
     creerPlateau,
@@ -16,16 +16,27 @@ import {
     calculerDistanceChute,
     remplirSac,
     genererProchainePiece,
+    obtenirForme,
+    hexVersRgb,
+    reinitialiserDas,
 } from '../js/piece-jeu.js';
+import { dasEtat } from '../js/contexte-jeu.js';
+import { TOUCHES_DEFAUT } from '../js/config.js';
+import { configurerActionsJeu } from '../js/actions-jeu.js';
 
 describe('piece-jeu', () => {
     beforeEach(() => {
+        configurerActionsJeu({
+            deplacerGauche: () => {},
+            deplacerDroite: () => {},
+            deplacerBas: () => {},
+        });
         definirPieceAuSol(false);
         definirNbLockResets(0);
         definirLockDelayRestant(0);
         etat.plateau = creerPlateau();
         etat.pieceActuelle = null;
-        sacPieces.length = 0;
+        obtenirSacPieces().length = 0;
     });
 
     it('creerPlateau a les bonnes dimensions', () => {
@@ -37,23 +48,23 @@ describe('piece-jeu', () => {
     it('lock delay réinitialisé quand la pièce est au sol', () => {
         definirPieceAuSol(true);
         reinitialiserLockDelay();
-        expect(lockDelayRestant).toBe(CONFIG.lockDelay);
-        expect(nbLockResets).toBe(1);
+        expect(obtenirLockDelayRestant()).toBe(CONFIG.lockDelay);
+        expect(obtenirNbLockResets()).toBe(1);
     });
 
     it('lock delay ignoré si max resets atteint', () => {
         definirPieceAuSol(true);
         definirNbLockResets(CONFIG.maxLockResets);
         reinitialiserLockDelay();
-        expect(nbLockResets).toBe(CONFIG.maxLockResets);
-        expect(lockDelayRestant).toBe(0);
+        expect(obtenirNbLockResets()).toBe(CONFIG.maxLockResets);
+        expect(obtenirLockDelayRestant()).toBe(0);
     });
 
     it('lock delay ignoré si la pièce n’est pas au sol', () => {
         definirPieceAuSol(false);
         reinitialiserLockDelay();
-        expect(lockDelayRestant).toBe(0);
-        expect(nbLockResets).toBe(0);
+        expect(obtenirLockDelayRestant()).toBe(0);
+        expect(obtenirNbLockResets()).toBe(0);
     });
 
     it('calculerDistanceChute sur plateau vide', () => {
@@ -70,11 +81,31 @@ describe('piece-jeu', () => {
     it('genererProchainePiece remplit le sac si vide', () => {
         const piece = genererProchainePiece();
         expect(piece.type).toBeTruthy();
-        expect(sacPieces.length).toBeGreaterThanOrEqual(0);
+        expect(obtenirSacPieces().length).toBeGreaterThanOrEqual(0);
     });
 
     it('remplirSac produit 7 pièces', () => {
         remplirSac();
-        expect(sacPieces).toHaveLength(7);
+        expect(obtenirSacPieces()).toHaveLength(7);
+    });
+
+    it('hexVersRgb convertit une couleur hex', () => {
+        expect(hexVersRgb('#ff0000')).toEqual([255, 0, 0]);
+        expect(hexVersRgb('#00ff88')).toEqual([0, 255, 136]);
+    });
+
+    it('obtenirForme utilise reliqueForme si présente', () => {
+        const forme = [
+            [1, 1],
+            [1, 1],
+        ];
+        const piece = { type: 'O', rotation: 0, reliqueForme: forme };
+        expect(obtenirForme(piece)).toBe(forme);
+    });
+
+    it('reinitialiserDas remet à zéro le DAS', () => {
+        dasEtat[TOUCHES_DEFAUT.gauche] = { moment: 100, repete: true };
+        reinitialiserDas(TOUCHES_DEFAUT.gauche);
+        expect(dasEtat[TOUCHES_DEFAUT.gauche]).toEqual({ moment: 0, repete: false });
     });
 });

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 async function demarrerPartie(page) {
     await page.goto('/');
@@ -39,6 +40,13 @@ test('pause puis quitter retourne au menu', async ({ page }) => {
     await page.locator('#btn-pause-quitter').click();
     await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
     await expect(page.locator('#interface-jeu')).not.toBeVisible();
+});
+
+test('écran titre sans violations accessibilité critiques', async ({ page }) => {
+    await page.goto('/');
+    const result = await new AxeBuilder({ page }).disableRules(['color-contrast']).analyze();
+    const critiques = result.violations.filter((v) => v.impact === 'critical');
+    expect(critiques).toEqual([]);
 });
 
 test('options affiche l’onglet contrôles', async ({ page }) => {

@@ -3,15 +3,47 @@ import { AudioMoteur } from './audio.js';
 import { etat, ECRANS } from './contexte-jeu.js';
 import { afficherEcran } from './ecrans-ui.js';
 import { afficherOngletOptions } from './options-ui.js';
-import { Registre } from './registre-jeu.js';
+import { obtenirActions } from './actions-jeu.js';
+import { jouerMelodie } from './melodie.js';
 
 export function initialiserBoutons() {
     document
         .getElementById('btn-jouer')
         ?.addEventListener('click', () => afficherEcran(ECRANS.SELECTION));
     document
+        .getElementById('btn-achievements')
+        ?.addEventListener('click', () => afficherEcran(ECRANS.ACHIEVEMENTS));
+    document
+        .getElementById('btn-codex')
+        ?.addEventListener('click', () => afficherEcran(ECRANS.CODEX));
+    document
+        .getElementById('btn-codex-retour')
+        ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
+    document
+        .getElementById('btn-achievements-codex')
+        ?.addEventListener('click', () => afficherEcran(ECRANS.CODEX));
+    document
+        .getElementById('btn-profil-codex')
+        ?.addEventListener('click', () => afficherEcran(ECRANS.CODEX));
+    document
+        .getElementById('btn-achievements-retour')
+        ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
+    document
+        .getElementById('btn-profil')
+        ?.addEventListener('click', () => afficherEcran(ECRANS.PROFIL));
+    document
+        .getElementById('btn-profil-gameover')
+        ?.addEventListener('click', () => afficherEcran(ECRANS.PROFIL));
+    document
+        .getElementById('btn-profil-menu')
+        ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
+    document
+        .getElementById('btn-profil-achievements')
+        ?.addEventListener('click', () => afficherEcran(ECRANS.ACHIEVEMENTS));
+    document
         .getElementById('btn-rejouer')
-        ?.addEventListener('click', () => Registre.demarrerJeu?.());
+        ?.addEventListener('click', () => obtenirActions().demarrerJeu?.());
+    document.getElementById('btn-reecouter')?.addEventListener('click', () => jouerMelodie());
     document
         .getElementById('btn-selection-retour')
         ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
@@ -34,16 +66,16 @@ export function initialiserBoutons() {
         ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
     document
         .getElementById('btn-pause')
-        ?.addEventListener('click', () => Registre.basculerPause?.());
+        ?.addEventListener('click', () => obtenirActions().basculerPause?.());
     document
         .getElementById('btn-reprendre')
-        ?.addEventListener('click', () => Registre.basculerPause?.());
+        ?.addEventListener('click', () => obtenirActions().basculerPause?.());
     document
         .getElementById('btn-recommencer')
-        ?.addEventListener('click', () => Registre.confirmerRecommencer?.());
+        ?.addEventListener('click', () => obtenirActions().confirmerRecommencer?.());
     document
         .getElementById('btn-pause-quitter')
-        ?.addEventListener('click', () => Registre.quitterVersMenu?.());
+        ?.addEventListener('click', () => obtenirActions().quitterVersMenu?.());
     document
         .getElementById('btn-mute')
         ?.addEventListener('click', () => AudioMoteur.basculerMute());

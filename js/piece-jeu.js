@@ -1,16 +1,16 @@
 import { CONFIG, TETROMINOS, TOUCHES_DEFAUT, BIOMES, RELIQUES } from './config.js';
 import { remplirSac as genererSac, estPositionValideAvecForme } from './logique-pure.js';
-import { Registre } from './registre-jeu.js';
+import { obtenirActions } from './actions-jeu.js';
 import {
     etat,
-    biomeActif,
-    sacPieces,
-    reliqueEnAttente,
-    nbLockResets,
-    pieceAuSol,
     dasEtat,
-    canvasPreview,
     touchesActives,
+    obtenirBiomeActif,
+    obtenirSacPieces,
+    obtenirReliqueEnAttente,
+    obtenirNbLockResets,
+    obtenirPieceAuSol,
+    obtenirCanvasPreview,
     definirReliqueActive,
     definirLockDelayRestant,
     definirNbLockResets,
@@ -19,7 +19,7 @@ import {
 const INDEX_COULEUR_PIECE = { I: 0, O: 1, T: 2, S: 3, Z: 4, J: 5, L: 6 };
 
 export function getCouleurPiece(type) {
-    const biome = BIOMES[biomeActif] ?? BIOMES.classique;
+    const biome = BIOMES[obtenirBiomeActif()] ?? BIOMES.classique;
     const index = INDEX_COULEUR_PIECE[type];
     return biome.couleursBlocs[index] ?? biome.couleursBlocs[0];
 }
@@ -39,6 +39,7 @@ export function creerPlateau() {
 }
 
 export function remplirSac() {
+    const sacPieces = obtenirSacPieces();
     sacPieces.length = 0;
     sacPieces.push(...genererSac());
 }
@@ -56,6 +57,7 @@ export function creerPieceRelique(relique) {
 }
 
 export function genererProchainePiece() {
+    const sacPieces = obtenirSacPieces();
     if (sacPieces.length === 0) remplirSac();
     const type = sacPieces.pop();
     const forme = TETROMINOS[type].rotations[0];
@@ -75,9 +77,11 @@ export function activerReliqueSurPiece(piece) {
 
 export function mettreAJourIndicateurRelique() {
     const indic = document.getElementById('indicateur-relique');
+    const reliqueEnAttente = obtenirReliqueEnAttente();
     const prochaineRelique = reliqueEnAttente
-        ? (RELIQUES[biomeActif] ?? RELIQUES.classique)
+        ? (RELIQUES[obtenirBiomeActif()] ?? RELIQUES.classique)
         : etat.filePieces[0]?.reliqueData;
+    const canvasPreview = obtenirCanvasPreview();
     if (canvasPreview) {
         canvasPreview.classList.toggle('relique-imminente', !!prochaineRelique);
     }
@@ -95,9 +99,9 @@ export function mettreAJourIndicateurRelique() {
 }
 
 export function reinitialiserLockDelay() {
-    if (pieceAuSol && nbLockResets < CONFIG.maxLockResets) {
+    if (obtenirPieceAuSol() && obtenirNbLockResets() < CONFIG.maxLockResets) {
         definirLockDelayRestant(CONFIG.lockDelay);
-        definirNbLockResets(nbLockResets + 1);
+        definirNbLockResets(obtenirNbLockResets() + 1);
     }
 }
 
@@ -109,12 +113,13 @@ export function reinitialiserDas(code) {
 }
 
 export function mettreAJourDas(deltaTemps) {
-    const actions = {
-        [TOUCHES_DEFAUT.gauche]: Registre.deplacerGauche,
-        [TOUCHES_DEFAUT.droite]: Registre.deplacerDroite,
-        [TOUCHES_DEFAUT.bas]: Registre.deplacerBas,
+    const actions = obtenirActions();
+    const actionMap = {
+        [TOUCHES_DEFAUT.gauche]: actions.deplacerGauche,
+        [TOUCHES_DEFAUT.droite]: actions.deplacerDroite,
+        [TOUCHES_DEFAUT.bas]: actions.deplacerBas,
     };
-    for (const [code, action] of Object.entries(actions)) {
+    for (const [code, action] of Object.entries(actionMap)) {
         if (!touchesActives[code] || !action) continue;
         const das = dasEtat[code];
         das.moment += deltaTemps;

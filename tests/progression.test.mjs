@@ -12,6 +12,10 @@ import {
     sauvegarderRecordBiome,
     ecrireStockage,
     lireStockage,
+    lireStockageJson,
+    ecrireStockageJson,
+    estTableauIds,
+    parserIdsStockage,
 } from '../js/progression.js';
 
 describe('progression', () => {
@@ -94,5 +98,26 @@ describe('progression', () => {
         sauvegarderRecordBiome('classique', 1000);
         expect(sauvegarderRecordBiome('classique', 500)).toBe(false);
         expect(obtenirRecordBiome('classique')).toBe(1000);
+    });
+
+    it('estTableauIds valide un tableau de chaînes', () => {
+        expect(estTableauIds(['a', 'b'])).toBe(true);
+        expect(estTableauIds(['a', 1])).toBe(false);
+        expect(estTableauIds({})).toBe(false);
+    });
+
+    it('parserIdsStockage refuse un JSON invalide', () => {
+        expect(parserIdsStockage('')).toEqual(new Set());
+        expect(parserIdsStockage('[1,2]')).toEqual(new Set());
+        expect(parserIdsStockage('["a","b"]')).toEqual(new Set(['a', 'b']));
+    });
+
+    it('lireStockageJson et ecrireStockageJson pour le codex', () => {
+        expect(ecrireStockageJson('tetrisNeo_codex', ['monde_1'])).toBe(true);
+        expect(lireStockageJson('tetrisNeo_codex', [])).toEqual(['monde_1']);
+    });
+
+    it('ecrireStockageJson refuse une clé invalide', () => {
+        expect(ecrireStockageJson('cle_invalide', {})).toBe(false);
     });
 });

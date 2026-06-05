@@ -1,0 +1,49 @@
+<div id="ecran-pause" class="ecran">
+    <div class="pause-contenu">
+        <div class="pause-titre" data-label="pause">⏸ PAUSE</div>
+        <div class="pause-stats-jeu">
+            <div>
+                <span class="stat-label" data-label="score">SCORE</span>
+                <span class="val" id="pause-score">0</span>
+            </div>
+            <div>
+                <span class="stat-label" data-label="lignes">LIGNES</span>
+                <span class="val" id="pause-lignes">0</span>
+            </div>
+            <div>
+                <span class="stat-label" data-label="niveau">NIVEAU</span>
+                <span class="val" id="pause-niveau">1</span>
+            </div>
+        </div>
+        <div class="pause-boutons">
+            <button
+                class="bouton"
+                type="button"
+                id="btn-reprendre"
+                aria-label="Reprendre la partie"
+            >
+                ▶ REPRENDRE
+            </button>
+            <button
+                class="bouton rose"
+                type="button"
+                id="btn-recommencer"
+                aria-label="Recommencer la partie"
+            >
+                ↺ RECOMMENCER
+            </button>
+            <button
+                class="bouton bouton-pause-quitter"
+                type="button"
+                id="btn-pause-quitter"
+                aria-label="Quitter vers le menu"
+            >
+                ✕ QUITTER
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================
+     ÉCRAN GAME OVER — Redesigné
+======================================================== -->
