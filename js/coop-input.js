@@ -1,4 +1,5 @@
 import { coop } from './coop-logique.js';
+import { modeArchiActif } from './archi-logique.js';
 import {
     coop_deplacerGauche,
     coop_deplacerDroite,
@@ -63,7 +64,7 @@ function attacherCoop(idBouton, action, avecRepetition = false) {
 
 export function initialiserInputCoop() {
     document.addEventListener('keydown', (e) => {
-        if (!coop.actif || !coop.estEnCours || coop.estEnPause) return;
+        if (modeArchiActif() || !coop.actif || !coop.estEnCours || coop.estEnPause) return;
 
         for (const joueur of ['j1', 'j2']) {
             const t = TOUCHES_COOP[joueur];

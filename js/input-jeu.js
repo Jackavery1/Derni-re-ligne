@@ -3,6 +3,7 @@ import { etat, touchesActives } from './store-jeu.js';
 import { reinitialiserDas } from './piece-jeu.js';
 import { obtenirActions } from './actions-jeu.js';
 import { coop } from './coop-logique.js';
+import { modeArchiActif } from './archi-logique.js';
 
 function attacher(idBouton, action, avecRepetition = false) {
     const btn = document.getElementById(idBouton);
@@ -36,7 +37,7 @@ export function initialiserInput() {
     const actions = () => obtenirActions();
 
     document.addEventListener('keydown', (e) => {
-        if (coop.actif) return;
+        if (coop.actif || modeArchiActif()) return;
         if (touchesActives[e.code]) return;
         touchesActives[e.code] = true;
 

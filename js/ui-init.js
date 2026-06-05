@@ -13,12 +13,20 @@ import {
     quitterModeCoop,
     utiliserPasserelle,
 } from './coop-jeu.js';
+import {
+    archi_afficherSelection,
+    archi_basculerPause,
+    archi_reinitialiserNiveau,
+    quitterModeArchi,
+} from './archi-jeu.js';
+import { modeArchiActif } from './archi-logique.js';
 import { coop_dessinerPreview } from './coop-rendu.js';
 
 export function initialiserBoutons() {
     document
         .getElementById('btn-jouer')
         ?.addEventListener('click', () => afficherEcran(ECRANS.SELECTION));
+    document.getElementById('btn-architecte')?.addEventListener('click', archi_afficherSelection);
     document
         .getElementById('btn-achievements')
         ?.addEventListener('click', () => afficherEcran(ECRANS.ACHIEVEMENTS));
@@ -69,6 +77,17 @@ export function initialiserBoutons() {
         .getElementById('btn-coop-go-rejouer')
         ?.addEventListener('click', () => demarrerCooperatif());
     document.getElementById('btn-coop-go-menu')?.addEventListener('click', quitterModeCoop);
+    document.getElementById('btn-pause-archi')?.addEventListener('click', archi_basculerPause);
+    document
+        .getElementById('btn-reinit-archi')
+        ?.addEventListener('click', archi_reinitialiserNiveau);
+    document
+        .getElementById('archi-sel-retour')
+        ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
+    document
+        .getElementById('archi-res-niveaux')
+        ?.addEventListener('click', archi_afficherSelection);
+    document.getElementById('archi-res-menu')?.addEventListener('click', quitterModeArchi);
     document.getElementById('btn-passerelle-j1')?.addEventListener('click', () => {
         utiliserPasserelle('j1');
         coop_dessinerPreview('j1');
@@ -95,18 +114,22 @@ export function initialiserBoutons() {
     document
         .getElementById('btn-menu')
         ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
-    document
-        .getElementById('btn-pause')
-        ?.addEventListener('click', () => obtenirActions().basculerPause?.());
-    document
-        .getElementById('btn-reprendre')
-        ?.addEventListener('click', () => obtenirActions().basculerPause?.());
-    document
-        .getElementById('btn-recommencer')
-        ?.addEventListener('click', () => obtenirActions().confirmerRecommencer?.());
-    document
-        .getElementById('btn-pause-quitter')
-        ?.addEventListener('click', () => obtenirActions().quitterVersMenu?.());
+    document.getElementById('btn-pause')?.addEventListener('click', () => {
+        if (modeArchiActif()) archi_basculerPause();
+        else obtenirActions().basculerPause?.();
+    });
+    document.getElementById('btn-reprendre')?.addEventListener('click', () => {
+        if (modeArchiActif()) archi_basculerPause();
+        else obtenirActions().basculerPause?.();
+    });
+    document.getElementById('btn-recommencer')?.addEventListener('click', () => {
+        if (modeArchiActif()) archi_reinitialiserNiveau();
+        else obtenirActions().confirmerRecommencer?.();
+    });
+    document.getElementById('btn-pause-quitter')?.addEventListener('click', () => {
+        if (modeArchiActif()) quitterModeArchi();
+        else obtenirActions().quitterVersMenu?.();
+    });
     document
         .getElementById('btn-mute')
         ?.addEventListener('click', () => AudioMoteur.basculerMute());

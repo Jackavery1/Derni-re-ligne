@@ -1,6 +1,17 @@
 import { LAYOUT } from './config.js';
 import { redimensionnerConstellation } from './constellation.js';
 import { obtenirCanvasMenuFond, menuAnimActif } from './menu-fond.js';
+import { archi } from './archi-logique.js';
+
+const LAYOUT_ARCHI = {
+    panneauLargeur: 120,
+    gap: 10,
+    plateauLargeur: LAYOUT.plateauLargeur,
+    plateauHauteur: LAYOUT.plateauHauteur,
+    paddingVertical: 16,
+    margeScale: 20,
+    hauteurControles: 0,
+};
 
 export function obtenirHauteurInterface() {
     const estPaysageMobile = window.innerHeight < 500 && window.innerWidth > window.innerHeight;
@@ -45,9 +56,30 @@ export function adapterInterface() {
     }
 }
 
+export function adapterInterfaceArchi() {
+    const echelle = document.getElementById('interface-echelle-archi');
+    const iface = document.getElementById('interface-jeu-archi');
+    if (!echelle || !iface) return;
+
+    const largeurTotale =
+        LAYOUT_ARCHI.panneauLargeur * 2 + LAYOUT_ARCHI.gap * 2 + LAYOUT_ARCHI.plateauLargeur;
+    const hauteurTotale = LAYOUT_ARCHI.plateauHauteur + LAYOUT_ARCHI.paddingVertical;
+
+    const scaleW = (window.innerWidth - LAYOUT_ARCHI.margeScale) / largeurTotale;
+    const scaleH = (window.innerHeight - LAYOUT_ARCHI.margeScale) / hauteurTotale;
+    const scale = Math.min(scaleW, scaleH, 2.2);
+
+    echelle.style.width = `${largeurTotale * scale}px`;
+    echelle.style.height = `${hauteurTotale * scale}px`;
+    iface.style.width = `${largeurTotale}px`;
+    iface.style.transform = `scale(${scale})`;
+    iface.style.transformOrigin = 'top left';
+}
+
 export function initialiserLayout() {
     window.addEventListener('resize', () => {
         adapterInterface();
+        if (archi.actif) adapterInterfaceArchi();
         redimensionnerConstellation();
     });
 }

@@ -450,4 +450,21 @@ export const CODEX = {
             '« Je veux être raisonnable. Mais pas à 100%. Ce serait trop ennuyeux. »',
         ],
     },
+
+    chronique_architecte: {
+        id: 'chronique_architecte',
+        chapitre: 'chroniques',
+        titre: "L'ART DU SILENCE",
+        sousTitre: 'Carnet de Robo, Session Architecte',
+        icone: '🏛',
+        condition: (s) => (s.archiNiveauxCompletes?.size || 0) >= 1,
+        conditionTexte: 'Compléter un niveau Architecte',
+        illustration: 'dessinerIllustArchi',
+        texte: [
+            "« La première chose que j'ai remarquée, c'est le silence. Pas de musique qui s'accélère. Pas de pression temporelle. Juste moi, les pièces, et la silhouette. »",
+            "« J'ai passé quatre minutes sur le Cœur. Non pas parce que c'était difficile — parce que je voulais que ce soit parfait. Chaque cellule de la silhouette couverte, pas une seule en dehors. »",
+            "« Le score final était 923. Trois étoiles. J'ai rejoué immédiatement pour obtenir 1000. »",
+            "« L'Architecte m'a appris quelque chose que le Tetris classique ne peut pas enseigner : la différence entre une solution correcte et une solution élégante. »",
+        ],
+    },
 };

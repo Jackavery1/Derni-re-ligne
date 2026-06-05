@@ -54,6 +54,7 @@ import { adapterInterface, initialiserLayout } from './layout-jeu.js';
 import { chargerStats } from './achievements.js';
 import { demarrerCooperatif, modeCoopActif } from './coop-jeu.js';
 import { initialiserInputCoop } from './coop-input.js';
+import { initialiserInputArchi } from './archi-input.js';
 import { rechargerCodex, initialiserCodexUI } from './codex.js';
 
 export { obtenirEcranActuel as ecranActuel };
@@ -128,6 +129,7 @@ export function initialiserApplication() {
     initialiserOptions();
     initialiserInput();
     initialiserInputCoop();
+    initialiserInputArchi();
     initialiserBoutons();
     initialiserCodexUI();
     afficherEcran(ECRANS.TITRE);

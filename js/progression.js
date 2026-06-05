@@ -20,7 +20,8 @@ const CLES_STOCKAGE = new Set([
 /** @param {string} cle */
 function estCleValide(cle) {
     if (CLES_STOCKAGE.has(cle)) return true;
-    return /^tetrisNeo_record_[a-z]+$/.test(cle);
+    if (/^tetrisNeo_record_[a-z]+$/.test(cle)) return true;
+    return /^tetrisNeo_archi_[a-z_]+$/.test(cle);
 }
 
 /** @param {unknown} valeur @returns {value is string[]} */

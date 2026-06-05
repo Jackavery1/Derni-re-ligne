@@ -30,6 +30,8 @@ import {
     definirAccumulateur,
 } from './store-jeu.js';
 import { mettreAJourDas, mettreAJourIndicateurRelique, estPositionValide } from './piece-jeu.js';
+import { archi } from './archi-logique.js';
+import { coop } from './coop-logique.js';
 import {
     dessinerPlateau,
     dessinerPieceFantome,
@@ -61,6 +63,7 @@ export function mettreAJourFps(deltaTemps) {
 }
 
 function aBesoinDeBoucle() {
+    if (archi.actif || coop.actif) return false;
     return (
         etat.estEnCours ||
         menuAnimActif ||
@@ -71,6 +74,15 @@ function aBesoinDeBoucle() {
         flashLignes.timer > 0 ||
         secousse.timer > 0
     );
+}
+
+export function suspendreBoucleSolo() {
+    etat.estEnCours = false;
+    definirBoucleActive(false);
+    const id = obtenirIdFrame();
+    if (id) cancelAnimationFrame(id);
+    definirIdFrame(null);
+    definirDernierTimestamp(0);
 }
 
 export function planifierBoucle() {
@@ -92,6 +104,10 @@ export function planifierBoucle() {
 }
 
 function boucleJeu(timestamp) {
+    if (archi.actif || coop.actif) {
+        suspendreBoucleSolo();
+        return;
+    }
     const ctx = obtenirCtx();
     const canvasPlateau = obtenirCanvasPlateau();
     if (!ctx || !canvasPlateau) {

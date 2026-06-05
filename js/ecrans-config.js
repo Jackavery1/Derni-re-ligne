@@ -11,6 +11,8 @@ export const ECRANS = {
     CODEX: 'ecran-codex',
     PAUSE_COOP: 'ecran-pause-coop',
     GAME_OVER_COOP: 'ecran-game-over-coop',
+    ARCHI_SELECTION: 'ecran-archi-selection',
+    ARCHI_RESULTAT: 'ecran-archi-resultat',
 };
 
 /** Ordre de chargement des fragments HTML (source unique pour charger-ecrans et SW). */
@@ -29,4 +31,7 @@ export const LISTE_ECRANS_CHARGEMENT = [
     'interface-jeu-coop',
     ECRANS.PAUSE_COOP,
     ECRANS.GAME_OVER_COOP,
+    ECRANS.ARCHI_SELECTION,
+    ECRANS.ARCHI_RESULTAT,
+    'interface-jeu-archi',
 ];

@@ -480,6 +480,64 @@ export function dessinerIllustOracle(ctx2d, w, h) {
     ctx2d.fill();
 }
 
+export function dessinerIllustArchi(ctx2d, w, h) {
+    ctx2d.fillStyle = '#08081a';
+    ctx2d.fillRect(0, 0, w, h);
+    const coeur = [
+        [2, 1],
+        [3, 1],
+        [6, 1],
+        [7, 1],
+        [1, 2],
+        [2, 2],
+        [3, 2],
+        [4, 2],
+        [5, 2],
+        [6, 2],
+        [7, 2],
+        [8, 2],
+        [1, 3],
+        [2, 3],
+        [3, 3],
+        [4, 3],
+        [5, 3],
+        [6, 3],
+        [7, 3],
+        [8, 3],
+        [2, 4],
+        [3, 4],
+        [4, 4],
+        [5, 4],
+        [6, 4],
+        [7, 4],
+        [3, 5],
+        [4, 5],
+        [5, 5],
+        [6, 5],
+        [4, 6],
+        [5, 6],
+    ];
+    const s = 10;
+    ctx2d.fillStyle = '#00f5ff22';
+    ctx2d.strokeStyle = '#00f5ff55';
+    ctx2d.lineWidth = 0.5;
+    coeur.forEach(([c, l]) => {
+        ctx2d.fillRect(c * s + 10, l * s + 5, s - 1, s - 1);
+        ctx2d.strokeRect(c * s + 10, l * s + 5, s - 1, s - 1);
+    });
+    ctx2d.fillStyle = '#ffe60099';
+    ctx2d.shadowColor = '#ffe600';
+    ctx2d.shadowBlur = 6;
+    [
+        [2, 1],
+        [3, 1],
+        [2, 2],
+        [3, 2],
+    ].forEach(([c, l]) => {
+        ctx2d.fillRect(c * s + 10, l * s + 5, s - 1, s - 1);
+    });
+}
+
 export const ILLUSTRATIONS_CODEX = {
     dessinerIllustCircuits,
     dessinerIllustLave,
@@ -508,4 +566,5 @@ export const ILLUSTRATIONS_CODEX = {
     dessinerIllustChroniqueVoyage,
     dessinerIllustChroniqueGrandMaitre,
     dessinerIllustOracle,
+    dessinerIllustArchi,
 };

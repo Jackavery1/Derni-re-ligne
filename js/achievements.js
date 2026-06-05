@@ -222,6 +222,42 @@ export const ACHIEVEMENTS = {
         decoration: 'eclairs_bords',
         categorie: 'coop',
     },
+    archi_premier: {
+        id: 'archi_premier',
+        nom: 'APPRENTI ARCHITECTE',
+        description: 'Compléter un niveau Architecte',
+        icone: '🏛',
+        condition: (s) => (s.archiNiveauxCompletes?.size || 0) >= 1,
+        decoration: 'bordure_pulse',
+        categorie: 'architecte',
+    },
+    archi_etoiles: {
+        id: 'archi_etoiles',
+        nom: 'MAÎTRE BÂTISSEUR',
+        description: 'Obtenir ★★★ sur 5 niveaux',
+        icone: '⭐',
+        condition: (s) => (s.archiEtoilesMax || 0) >= 15,
+        decoration: 'aura_dorée',
+        categorie: 'architecte',
+    },
+    archi_parfait: {
+        id: 'archi_parfait',
+        nom: 'PERFECTION',
+        description: 'Terminer un niveau avec 100% de précision',
+        icone: '💎',
+        condition: (s) => (s.archiPrecisionMax || 0) >= 100,
+        decoration: 'gemmes_orbitales',
+        categorie: 'architecte',
+    },
+    archi_econome: {
+        id: 'archi_econome',
+        nom: 'ÉCONOME',
+        description: 'Terminer un niveau avec le nombre minimal de pièces',
+        icone: '✂',
+        condition: (s) => (s.archiParAtteint || 0) >= 1,
+        decoration: 'trainee_simple',
+        categorie: 'architecte',
+    },
 };
 
 function creerStatsVides() {
@@ -249,6 +285,11 @@ function creerStatsVides() {
         oracleDeviationsPartieActuelle: 0,
         lignesCoopTotal: 0,
         coopMaxLignesUnCoup: 0,
+        archiScoreTotal: 0,
+        archiNiveauxCompletes: new Set(),
+        archiEtoilesMax: 0,
+        archiPrecisionMax: 0,
+        archiParAtteint: 0,
     };
 }
 
@@ -286,6 +327,11 @@ export function chargerStats() {
         statsGlobales.oracleDeviationsPartieActuelle = 0;
         statsGlobales.lignesCoopTotal = parsed.lignesCoopTotal ?? 0;
         statsGlobales.coopMaxLignesUnCoup = parsed.coopMaxLignesUnCoup ?? 0;
+        statsGlobales.archiScoreTotal = parsed.archiScoreTotal ?? base.archiScoreTotal;
+        statsGlobales.archiNiveauxCompletes = new Set(parsed.archiNiveauxCompletes || []);
+        statsGlobales.archiEtoilesMax = parsed.archiEtoilesMax ?? base.archiEtoilesMax;
+        statsGlobales.archiPrecisionMax = parsed.archiPrecisionMax ?? base.archiPrecisionMax;
+        statsGlobales.archiParAtteint = parsed.archiParAtteint ?? base.archiParAtteint;
         statsGlobales.meteosPartieActuelle = new Set();
     } catch (err) {
         logger.warn('Erreur chargement stats achievements:', err);
@@ -316,6 +362,11 @@ export function sauvegarderStats() {
             oracleTotalDeviations: statsGlobales.oracleTotalDeviations,
             lignesCoopTotal: statsGlobales.lignesCoopTotal,
             coopMaxLignesUnCoup: statsGlobales.coopMaxLignesUnCoup,
+            archiScoreTotal: statsGlobales.archiScoreTotal,
+            archiNiveauxCompletes: [...statsGlobales.archiNiveauxCompletes],
+            archiEtoilesMax: statsGlobales.archiEtoilesMax,
+            archiPrecisionMax: statsGlobales.archiPrecisionMax,
+            archiParAtteint: statsGlobales.archiParAtteint,
         };
         ecrireStockageJson(CLE_STATS, toSave);
     } catch (err) {

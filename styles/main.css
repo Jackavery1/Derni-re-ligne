@@ -2269,3 +2269,149 @@ body.coop-active #conteneur-principal {
         justify-content: center;
     }
 }
+
+/* ================================================
+           MODE ARCHITECTE
+        ================================================ */
+#conteneur-principal-archi {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    overflow: visible;
+}
+
+#conteneur-principal-archi.element-masque {
+    display: none;
+}
+
+body.archi-active #conteneur-principal {
+    display: none !important;
+}
+
+body.archi-active #conteneur-principal-archi {
+    display: flex;
+}
+
+#interface-echelle-archi {
+    flex-shrink: 0;
+    overflow: visible;
+}
+
+#interface-jeu-archi {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    transform-origin: top left;
+}
+
+.panneau-archi {
+    width: 120px;
+}
+
+.archi-inventaire {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.archi-inv-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 6px;
+    border: 1px solid var(--bordure);
+    background: rgba(255, 255, 255, 0.03);
+    font-size: 0.32rem;
+    letter-spacing: 1px;
+}
+
+.archi-inv-item.selectionne {
+    border-color: var(--jaune);
+    background: rgba(255, 230, 0, 0.08);
+    color: var(--jaune);
+    box-shadow: 0 0 8px rgba(255, 230, 0, 0.2);
+}
+
+.archi-inv-item.epuise {
+    opacity: 0.3;
+}
+
+.archi-inv-qte {
+    font-size: 0.45rem;
+    color: var(--cyan);
+    text-shadow: 0 0 6px var(--cyan);
+}
+
+.archi-guide {
+    font-size: 0.28rem;
+    color: var(--texte-dim);
+    line-height: 2.2;
+    letter-spacing: 0.5px;
+    width: 100%;
+}
+
+.archi-selection-grille {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    width: 100%;
+    max-width: 640px;
+    margin: 16px 0;
+}
+
+.carte-niveau-archi {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    position: relative;
+}
+
+.carte-niveau-archi:hover:not(.verrouillee) {
+    transform: scale(1.04);
+    border-color: var(--jaune);
+    box-shadow: 0 0 12px rgba(255, 230, 0, 0.2);
+}
+
+.carte-niveau-archi.verrouillee {
+    opacity: 0.35;
+    cursor: not-allowed;
+    filter: grayscale(0.7);
+}
+
+.cna-difficulte {
+    font-size: 0.55rem;
+    letter-spacing: 1px;
+}
+
+.cna-nom {
+    font-size: 0.28rem;
+    color: var(--texte);
+    letter-spacing: 1px;
+}
+
+.cna-biome {
+    font-size: 0.24rem;
+    color: var(--texte-dim);
+}
+
+.cna-score {
+    font-size: 0.3rem;
+    color: var(--jaune);
+    text-shadow: 0 0 6px var(--jaune);
+}
+
+.cna-etoiles {
+    font-size: 0.55rem;
+}

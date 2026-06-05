@@ -17,6 +17,8 @@ export function mettreAJourVisibilitePartie(idEcran) {
         ECRANS.ACHIEVEMENTS,
         ECRANS.PROFIL,
         ECRANS.CODEX,
+        ECRANS.ARCHI_SELECTION,
+        ECRANS.ARCHI_RESULTAT,
     ];
     if (ecransHorsPartie.includes(idEcran)) {
         document.body.classList.remove('partie-active');

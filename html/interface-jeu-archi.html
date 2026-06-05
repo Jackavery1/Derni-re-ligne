@@ -1,0 +1,106 @@
+<div id="conteneur-principal-archi" class="element-masque">
+    <div id="interface-echelle-archi">
+        <div id="interface-jeu-archi">
+            <aside class="panneau panneau-archi">
+                <div class="section">
+                    <div class="section-titre">PIÈCES</div>
+                    <div id="archi-inventaire" class="archi-inventaire"></div>
+                </div>
+                <div class="section">
+                    <div class="stat">
+                        <span class="stat-label">PRÉCISION</span>
+                        <span class="stat-valeur" id="archi-precision" style="color: var(--vert)"
+                            >0%</span
+                        >
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">UTILISÉES</span>
+                        <span class="stat-valeur" id="archi-pieces-used" style="color: var(--jaune)"
+                            >0</span
+                        >
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section-titre">CONTRÔLES</div>
+                    <div class="archi-guide">
+                        <div>← → Déplacer</div>
+                        <div>↑/Z Tourner</div>
+                        <div>↓ Descendre</div>
+                        <div>ESPACE En bas</div>
+                        <div>ENTRÉE Valider</div>
+                        <div>C Changer</div>
+                        <div>RETOUR Annuler</div>
+                    </div>
+                </div>
+            </aside>
+            <main id="zone-jeu-archi"></main>
+            <aside class="panneau panneau-archi">
+                <div class="section">
+                    <div class="section-titre" id="archi-niveau-titre">NIVEAU</div>
+                    <div
+                        id="archi-niveau-nom"
+                        style="
+                            font-size: 0.35rem;
+                            color: var(--texte);
+                            letter-spacing: 1px;
+                            text-align: center;
+                            margin-top: 4px;
+                        "
+                    ></div>
+                    <div
+                        id="archi-difficulte-etoiles"
+                        style="
+                            font-size: 0.6rem;
+                            text-align: center;
+                            margin-top: 4px;
+                            color: var(--jaune);
+                        "
+                    ></div>
+                </div>
+                <div class="section">
+                    <div class="stat">
+                        <span class="stat-label">OBJECTIF</span>
+                        <span class="stat-valeur" id="archi-par" style="color: var(--cyan)"
+                            >0 pièces</span
+                        >
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">SCORE</span>
+                        <span class="stat-valeur" id="archi-score">0</span>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section-titre">ACTIVE</div>
+                    <canvas
+                        id="canvas-archi-preview"
+                        class="canvas-preview"
+                        width="104"
+                        height="72"
+                    ></canvas>
+                </div>
+                <div class="section">
+                    <button id="btn-pause-archi" class="btn-pause-style" type="button">
+                        ⏸ PAUSE
+                    </button>
+                    <button
+                        id="btn-reinit-archi"
+                        type="button"
+                        style="
+                            margin-top: 6px;
+                            font-size: 0.3rem;
+                            background: transparent;
+                            border: 1px solid var(--texte-dim);
+                            color: var(--texte-dim);
+                            font-family: var(--police);
+                            padding: 5px;
+                            cursor: pointer;
+                            width: 100%;
+                        "
+                    >
+                        ↺ RÉINITIALISER
+                    </button>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
