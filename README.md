@@ -59,7 +59,7 @@ Node 18+ (voir `.nvmrc`). Logs détaillés : `?debug=1` dans l'URL. Après mise 
 
 Vanilla ES modules en dev ; bundle esbuild en prod. Point d'entrée : `index.html` → `js/main.js` → `js/moteur.js` (orchestrateur).
 
-Documentation détaillée : [docs/architecture.md](docs/architecture.md).
+Documentation détaillée : [docs/architecture.md](docs/architecture.md). Guide extension biomes : [docs/ajouter-un-biome.md](docs/ajouter-un-biome.md).
 
 ```
 moteur.js

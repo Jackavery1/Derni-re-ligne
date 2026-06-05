@@ -4,6 +4,7 @@ import { etat } from './store-jeu.js';
 import { obtenirCouleurPieceParType } from './piece-jeu.js';
 import { dessinerCellule, dessinerPreview, dessinerParticules } from './rendu-jeu.js';
 import { coop, DEMI_LARGEUR, coop_estPositionValide } from './coop-logique.js';
+import { obtenirCanvas } from './dom-utils.js';
 
 function obtenirFormeCoop(piece) {
     const rotations = TETROMINOS[piece.type].rotations;
@@ -13,8 +14,8 @@ function obtenirFormeCoop(piece) {
 export function coop_dessinerPreview(joueur) {
     const jData = coop[joueur];
     if (joueur === 'j1') {
-        const canvas = document.getElementById('canvas-coop-preview-j1');
-        const hold = document.getElementById('canvas-coop-hold-j1');
+        const canvas = obtenirCanvas('canvas-coop-preview-j1');
+        const hold = obtenirCanvas('canvas-coop-hold-j1');
         if (canvas) {
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -26,8 +27,8 @@ export function coop_dessinerPreview(joueur) {
             if (jData.pieceEnReserve) dessinerPreview(ctxH, hold, jData.pieceEnReserve);
         }
     } else {
-        const canvas = document.getElementById('canvas-coop-preview-j2');
-        const hold = document.getElementById('canvas-coop-hold-j2');
+        const canvas = obtenirCanvas('canvas-coop-preview-j2');
+        const hold = obtenirCanvas('canvas-coop-hold-j2');
         if (canvas) {
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);

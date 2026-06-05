@@ -6,6 +6,7 @@ import { lireStockage, ecrireStockage } from './progression.js';
 import { planifierBoucle, suspendreBoucleSolo } from './boucle-jeu.js';
 import { mettreAJourParticules } from './particules-jeu.js';
 import { dessinerPreview } from './rendu-jeu.js';
+import { obtenirCanvas } from './dom-utils.js';
 import { cacherEcrans, afficherEcran, appliquerThemeBiome } from './ecrans-ui.js';
 import { arreterConstellation } from './constellation.js';
 import { arreterAnimationMenu } from './menu-fond.js';
@@ -147,7 +148,7 @@ export function archi_mettreAJourInventaireUI() {
     });
 
     if (archi.pieceActuelle) {
-        const cvs = document.getElementById('canvas-archi-preview');
+        const cvs = obtenirCanvas('canvas-archi-preview');
         if (cvs) dessinerPreview(cvs.getContext('2d'), cvs, archi.pieceActuelle);
     }
 }

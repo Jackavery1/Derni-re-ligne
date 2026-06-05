@@ -158,6 +158,7 @@ export function calculerDistanceChute(piece) {
     return distance;
 }
 
+/** @returns {[number, number, number]} */
 export function hexVersRgb(hex) {
     const n = parseInt(hex.slice(1), 16);
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255];

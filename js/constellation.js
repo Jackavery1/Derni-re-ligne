@@ -1,5 +1,6 @@
 import { BIOMES, ORDRE_BIOMES } from './config.js';
 import { eclaircir, assombrir } from './rendu-blocs-utils.js';
+import { obtenirCanvas } from './dom-utils.js';
 
 let deps = {};
 
@@ -82,7 +83,7 @@ function noeudSousCurseur(cx, cy) {
 }
 
 function initConstellation() {
-    canvasConst = document.getElementById('canvas-constellation');
+    canvasConst = obtenirCanvas('canvas-constellation');
     if (!canvasConst) return;
     ctxConst = canvasConst.getContext('2d');
 

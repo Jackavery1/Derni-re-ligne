@@ -14,6 +14,7 @@ import {
 import { obtenirForme, obtenirCouleurPiece, calculerDistanceChute } from './piece-jeu.js';
 import { dessinerCellule } from './rendu-cellule.js';
 import { dessinerFondBiome } from './rendu-ambiance.js';
+import { dessinerSignesVie } from './rendu-vivant.js';
 
 function dessinerAmbianceJeu() {
     if (obtenirEffetsReduits()) return;
@@ -66,6 +67,7 @@ export function dessinerPlateau() {
     obtenirCtx().clearRect(0, 0, obtenirCanvasPlateau().width, obtenirCanvasPlateau().height);
     dessinerFondBiome();
     dessinerBlocsVerrouilles();
+    dessinerSignesVie();
     dessinerAmbianceJeu();
     dessinerVignette();
 

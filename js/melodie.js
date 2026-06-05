@@ -1,6 +1,8 @@
 import { CONFIG } from './config.js';
 import { AudioMoteur } from './audio.js';
 import { etat, obtenirBiomeActif } from './store-jeu.js';
+import { creerContexteAudio } from './dom-utils.js';
+import { obtenirCanvas } from './dom-utils.js';
 
 const GAMME_PENTA = [1, 9 / 8, 5 / 4, 3 / 2, 5 / 3];
 const OCTAVES = 2;
@@ -148,17 +150,12 @@ export function genererTitreMelodie() {
 
 export function audioMelodieDisponible() {
     if (typeof window === 'undefined') return false;
-    return !!(window.AudioContext || window.webkitAudioContext);
+    return !!(window.AudioContext || /** @type {any} */ (window).webkitAudioContext);
 }
 
 function obtenirContexteMelodie() {
     if (AudioMoteur.ctx) return AudioMoteur.ctx;
-    if (!audioMelodieDisponible()) return null;
-    try {
-        return new (window.AudioContext || window.webkitAudioContext)();
-    } catch {
-        return null;
-    }
+    return creerContexteAudio();
 }
 
 export function arreterLectureMelodie() {
@@ -244,7 +241,7 @@ export function surlignerNoteVisualisation(index) {
 
 export function dessinerPianoRoll() {
     if (typeof document === 'undefined') return;
-    const canvas = document.getElementById('canvas-melodie');
+    const canvas = obtenirCanvas('canvas-melodie');
     if (!canvas || melodie.notes.length === 0) return;
 
     const ctx2 = canvas.getContext('2d');

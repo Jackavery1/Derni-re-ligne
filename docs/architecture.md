@@ -36,7 +36,8 @@ flowchart TD
 | Données      | Constantes, biomes, pièces     | `config-jeu.js`, `biomes.js`, `contenu-jeu.js`, `ecrans-config.js`                                              |
 | Logique pure | Fonctions sans DOM             | `logique-pure.js`, `progression.js`, `moteur-piece.js`                                                          |
 | État         | Variables partagées            | `store-jeu.js`                                                                                                  |
-| Gameplay     | Actions joueur, verrouillage   | `logique-partie.js`, `piece-jeu.js`, `boucle-jeu.js`                                                            |
+| Gameplay     | Actions joueur, verrouillage   | `logique-partie.js`, `piece-jeu.js`, `boucle-jeu.js`, `actions-piece-communes.js`                               |
+| Vivant       | Comportements biome plateau    | `vivant.js`, `vivant-strategies.js`                                                                             |
 | Coop         | 2 joueurs, plateau partagé     | `coop-logique.js`, `coop-jeu.js`, `coop-rendu.js`, `coop-input.js`                                              |
 | Architecte   | Puzzles placement sans gravité | `archi-donnees.js`, `archi-logique.js`, `archi-jeu.js`, `archi-rendu.js`, `archi-input.js`                      |
 | Oracle       | Assistant de placement         | `oracle-jeu.js`                                                                                                 |

@@ -16,7 +16,10 @@ export function noteVersFreq(demiTon, octave = 0) {
     return 220 * Math.pow(2, (demiTon + octave * 12) / 12);
 }
 
+import { creerContexteAudio } from './dom-utils.js';
+
 let obtenirTempoActuel = () => 120;
+/** @type {(cle: string, valeur: string) => void} */
 let ecrireStockageFn = () => {};
 let onMuteChangeFn = () => {};
 
@@ -49,7 +52,8 @@ export const AudioMoteur = {
             return;
         }
         try {
-            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            this.ctx = creerContexteAudio();
+            if (!this.ctx) throw new Error('AudioContext indisponible');
             this.gainMaitre = this.ctx.createGain();
             this.gainMusique = this.ctx.createGain();
             this.gainEffets = this.ctx.createGain();
@@ -189,7 +193,7 @@ export const AudioMoteur = {
 
     demarrerMusique(biomeId) {
         if (!this.ctx || this.muet) return;
-        this.arreterMusique(false);
+        this.arreterMusique();
         this.biomeMusique = biomeId;
         this.sequenceStep = 0;
         this.regenererSequence(biomeId);

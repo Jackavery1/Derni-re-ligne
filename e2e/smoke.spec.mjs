@@ -42,6 +42,12 @@ test('écran titre respecte le contraste des couleurs', async ({ page }) => {
     expect(contrast).toEqual([]);
 });
 
+test('interface jeu sans violations accessibilité critiques', async ({ page }) => {
+    await demarrerPartie(page);
+    const result = await new AxeBuilder({ page }).include('#interface-jeu').analyze();
+    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
+});
+
 test('options affiche l’onglet contrôles', async ({ page }) => {
     await page.goto('/');
     await page.locator('#btn-options').click();

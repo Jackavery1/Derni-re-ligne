@@ -2,6 +2,7 @@ import { CONFIG, BIOMES } from './config.js';
 import { etat } from './store-jeu.js';
 import { obtenirForme } from './piece-jeu.js';
 import { logger } from './logger.js';
+import { obtenirCanvas } from './dom-utils.js';
 import { lireStockageJson, ecrireStockageJson } from './progression.js';
 import { statsGlobales } from './achievements.js';
 import { oracle } from './oracle-jeu.js';
@@ -455,6 +456,7 @@ export function sauvegarderSnapshotProfil(lignesPartie, biomeId) {
 
 export function chargerProfilDernier() {
     try {
+        /** @type {Record<string, any> | null} */
         const parsed = lireStockageJson(CLE_PROFIL, null);
         if (!parsed || typeof parsed !== 'object') return;
         dernierProfil = {
@@ -531,9 +533,9 @@ export function afficherProfil() {
     }
 
     requestAnimationFrame(() => {
-        const cHeat = document.getElementById('canvas-heatmap');
-        const cRythm = document.getElementById('canvas-rythme');
-        const cRad = document.getElementById('canvas-radar');
+        const cHeat = obtenirCanvas('canvas-heatmap');
+        const cRythm = obtenirCanvas('canvas-rythme');
+        const cRad = obtenirCanvas('canvas-radar');
         const ctxHeat = cHeat?.getContext('2d');
         const ctxRythm = cRythm?.getContext('2d');
         const ctxRad = cRad?.getContext('2d');

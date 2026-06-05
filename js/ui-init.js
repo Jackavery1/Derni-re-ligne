@@ -136,6 +136,7 @@ export function initialiserBoutons() {
 
     document.querySelectorAll('.bouton-mode').forEach((btn) => {
         btn.addEventListener('click', () => {
+            if (!(btn instanceof HTMLElement)) return;
             etat.modeJeu = btn.dataset.mode;
             document.querySelectorAll('.bouton-mode').forEach((b) => b.classList.remove('actif'));
             btn.classList.add('actif');

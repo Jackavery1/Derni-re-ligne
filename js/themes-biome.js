@@ -47,6 +47,7 @@ export function appliquerTextesBiome(biomeId) {
     const textes = biome.textes ?? BIOMES.classique.textes;
 
     for (const el of document.querySelectorAll('[data-label]')) {
+        if (!(el instanceof HTMLElement)) continue;
         const cle = el.dataset.label;
         const valeur = textes[cle];
         if (!valeur) continue;

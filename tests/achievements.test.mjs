@@ -25,8 +25,8 @@ describe('achievements', () => {
         statsGlobales.meteosPartieActuelle = new Set();
     });
 
-    it('contient 28 achievements', () => {
-        expect(Object.keys(ACHIEVEMENTS)).toHaveLength(28);
+    it('contient 32 achievements', () => {
+        expect(Object.keys(ACHIEVEMENTS)).toHaveLength(32);
     });
 
     it('majStatsScorePartie met à jour maxLignesUnCoup et maxCombo', () => {

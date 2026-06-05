@@ -23,6 +23,7 @@ import {
     mettreAJourAffichageRecord,
 } from './ecrans-ui.js';
 import { obtenirRecordBiome } from './progression.js';
+import { obtenirBouton } from './dom-utils.js';
 import { planifierBoucle } from './boucle-jeu.js';
 import { arreterAnimationMenu } from './menu-fond.js';
 import { mettreAJourParticules } from './particules-jeu.js';
@@ -141,7 +142,7 @@ export function demarrerCooperatif() {
     coop_rafraichirStats();
 
     for (const j of ['j1', 'j2']) {
-        const btn = document.getElementById(`btn-passerelle-${j}`);
+        const btn = obtenirBouton(`btn-passerelle-${j}`);
         if (btn) btn.disabled = !coop[j].passerelleDisponible;
     }
 

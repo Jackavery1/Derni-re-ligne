@@ -5,6 +5,8 @@ import {
     archi_parserSilhouette,
     archi_calculerScoreTempsReel,
     archi_calculerEtoiles,
+    archi_prochainePiece,
+    archi_estPositionValide,
 } from '../js/archi-logique.js';
 import { creerPlateau } from '../js/piece-jeu.js';
 
@@ -66,5 +68,36 @@ describe('archi_calculerEtoiles', () => {
         expect(archi_calculerEtoiles(650)).toBe(2);
         expect(archi_calculerEtoiles(400)).toBe(1);
         expect(archi_calculerEtoiles(399)).toBe(0);
+    });
+});
+
+describe('archi_prochainePiece', () => {
+    beforeEach(() => {
+        archi.inventaire = [
+            { type: 'I', qteDispo: 1 },
+            { type: 'O', qteDispo: 1 },
+        ];
+    });
+
+    it('retourne la première pièce disponible de l’inventaire', () => {
+        const piece = archi_prochainePiece();
+        expect(piece?.type).toBe('I');
+        expect(piece?.rotation).toBe(0);
+    });
+
+    it('retourne null si inventaire épuisé', () => {
+        archi.inventaire = [{ type: 'I', qteDispo: 0 }];
+        expect(archi_prochainePiece()).toBeNull();
+    });
+});
+
+describe('archi_estPositionValide', () => {
+    beforeEach(() => {
+        archi.plateau = creerPlateau();
+    });
+
+    it('rejette une pièce hors plateau', () => {
+        const piece = { type: 'I', rotation: 0, x: -5, y: 0 };
+        expect(archi_estPositionValide(piece)).toBe(false);
     });
 });

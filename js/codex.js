@@ -1,5 +1,7 @@
 import { statsGlobales } from './achievements.js';
 import { lireStockageJson, ecrireStockageJson, estTableauIds } from './progression.js';
+import { creerFileNotifications } from './notifications-file.js';
+import { obtenirCanvas } from './dom-utils.js';
 
 const CLE_CODEX = 'tetrisNeo_codex';
 const CLE_CODEX_VUS = 'tetrisNeo_codexVus';
@@ -22,13 +24,29 @@ export async function chargerDonneesCodex() {
 
 export let codexDebloque = chargerCodex();
 export let codexVus = chargerCodexVus();
-const fileCodex = [];
-let notifCodexEnCours = false;
+const fileCodexNotifs = creerFileNotifications({
+    /** @param {{ icone: string, titre: string, chapitre: string }} entree @param {() => void} terminer */
+    afficher(entree, terminer) {
+        const notif = document.getElementById('notif-codex');
+        if (!notif) return false;
+        const icone = document.getElementById('codex-notif-icone');
+        const titre = document.getElementById('codex-notif-titre');
+        const chapitre = document.getElementById('codex-notif-chapitre');
+        if (icone) icone.textContent = entree.icone;
+        if (titre) titre.textContent = entree.titre;
+        if (chapitre) chapitre.textContent = entree.chapitre.toUpperCase();
+        notif.classList.add('visible');
+        setTimeout(() => {
+            notif.classList.remove('visible');
+            setTimeout(terminer, 500);
+        }, 3800);
+    },
+});
 let chapitreCodexActif = 'mondes';
 
 export function chargerCodex() {
-    const brut = lireStockageJson(CLE_CODEX, []);
-    return estTableauIds(brut) ? new Set(brut) : new Set();
+    const brut = /** @type {unknown} */ (lireStockageJson(CLE_CODEX, []));
+    return estTableauIds(brut) ? new Set(/** @type {string[]} */ (brut)) : new Set();
 }
 
 export function rechargerCodex() {
@@ -41,8 +59,8 @@ export function rechargerCodex() {
 }
 
 function chargerCodexVus() {
-    const brut = lireStockageJson(CLE_CODEX_VUS, []);
-    return estTableauIds(brut) ? new Set(brut) : new Set();
+    const brut = /** @type {unknown} */ (lireStockageJson(CLE_CODEX_VUS, []));
+    return estTableauIds(brut) ? new Set(/** @type {string[]} */ (brut)) : new Set();
 }
 
 export function sauvegarderCodex() {
@@ -60,41 +78,12 @@ export async function verifierCodex() {
         if (codexDebloque.has(entree.id)) continue;
         if (!entree.condition(statsGlobales)) continue;
         codexDebloque.add(entree.id);
-        fileCodex.push(entree);
+        fileCodexNotifs.ajouter(entree);
         nouveaux++;
     }
     if (nouveaux > 0) {
         sauvegarderCodex();
-        afficherProchaineNotifCodex();
     }
-}
-
-function afficherProchaineNotifCodex() {
-    if (typeof document === 'undefined') return;
-    if (notifCodexEnCours || fileCodex.length === 0) return;
-    notifCodexEnCours = true;
-    const entree = fileCodex.shift();
-
-    const notif = document.getElementById('notif-codex');
-    if (!notif) {
-        notifCodexEnCours = false;
-        return;
-    }
-    const icone = document.getElementById('codex-notif-icone');
-    const titre = document.getElementById('codex-notif-titre');
-    const chapitre = document.getElementById('codex-notif-chapitre');
-    if (icone) icone.textContent = entree.icone;
-    if (titre) titre.textContent = entree.titre;
-    if (chapitre) chapitre.textContent = entree.chapitre.toUpperCase();
-
-    notif.classList.add('visible');
-    setTimeout(() => {
-        notif.classList.remove('visible');
-        setTimeout(() => {
-            notifCodexEnCours = false;
-            afficherProchaineNotifCodex();
-        }, 500);
-    }, 3800);
 }
 
 export async function changerChapitreCodex(chapitre, btn) {
@@ -173,7 +162,7 @@ export function ouvrirEntreeCodex(entree) {
         });
     }
 
-    const canvas = document.getElementById('canvas-illust-codex');
+    const canvas = obtenirCanvas('canvas-illust-codex');
     if (canvas && entree.illustration) {
         const ctx2d = canvas.getContext('2d');
         ctx2d.clearRect(0, 0, canvas.width, canvas.height);
@@ -204,6 +193,7 @@ export async function genererCodexComplet() {
 
 export function initialiserCodexUI() {
     document.querySelectorAll('.codex-onglet').forEach((btn) => {
+        if (!(btn instanceof HTMLElement)) return;
         btn.addEventListener('click', () => {
             changerChapitreCodex(btn.dataset.chapitre, btn);
         });

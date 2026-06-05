@@ -52,6 +52,8 @@ import { mettreAJourAffichageTemps } from './ecrans-ui.js';
 import { verrouillerPiece, vitesseChute } from './logique-partie.js';
 import { menuAnimActif, mettreAJourMenuFond } from './menu-fond.js';
 import { mettreAJourHistoriquePositions, dessinerDecorations } from './decorations-jeu.js';
+import { mettreAJourVivant } from './vivant.js';
+import { dessinerAvertissementsVivant } from './rendu-vivant.js';
 import { dessinerSuggestionOracle } from './oracle-jeu.js';
 
 export function mettreAJourFps(deltaTemps) {
@@ -103,6 +105,28 @@ export function planifierBoucle() {
     definirIdFrame(requestAnimationFrame(boucleJeu));
 }
 
+function dessinerFrameSolo(ctx, enPartie) {
+    ctx.save();
+    const dec = getDecalageSecousse();
+    ctx.translate(dec.x, dec.y);
+    ctx.globalCompositeOperation = 'source-over';
+    dessinerPlateau();
+    dessinerAvertissementsVivant();
+    dessinerFlashLignes();
+    if (etat.pieceActuelle) {
+        dessinerPieceFantome();
+        dessinerSuggestionOracle();
+        dessinerPieceActive();
+    }
+    dessinerFlashVerrou();
+    dessinerParticules();
+    if (enPartie) dessinerDecorations();
+    ctx.restore();
+    ctx.save();
+    dessinerTextesFlottants();
+    ctx.restore();
+}
+
 function boucleJeu(timestamp) {
     if (archi.actif || coop.actif) {
         suspendreBoucleSolo();
@@ -127,6 +151,7 @@ function boucleJeu(timestamp) {
 
         if (enPartie) {
             mettreAJourMeteo(deltaTemps);
+            mettreAJourVivant(deltaTemps);
             mettreAJourDas(deltaTemps);
 
             if (etat.pieceActuelle) {
@@ -177,27 +202,7 @@ function boucleJeu(timestamp) {
             secousse.timer > 0;
 
         if (doitDessiner) {
-            const alpha = 1;
-            ctx.save();
-            const dec = getDecalageSecousse();
-            ctx.translate(dec.x, dec.y);
-            ctx.globalAlpha = alpha;
-            ctx.globalCompositeOperation = 'source-over';
-            dessinerPlateau();
-            dessinerFlashLignes();
-            if (etat.pieceActuelle) {
-                dessinerPieceFantome();
-                dessinerSuggestionOracle();
-                dessinerPieceActive();
-            }
-            dessinerFlashVerrou();
-            dessinerParticules();
-            if (enPartie) dessinerDecorations();
-            ctx.restore();
-            ctx.save();
-            ctx.globalAlpha = alpha;
-            dessinerTextesFlottants();
-            ctx.restore();
+            dessinerFrameSolo(ctx, enPartie);
         }
     } catch (err) {
         logger.error('Erreur boucle jeu:', err);

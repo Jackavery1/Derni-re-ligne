@@ -4,6 +4,7 @@ import { ECRANS, etat, definirEcranActuel } from './store-jeu.js';
 import { demarrerAnimationMenu, arreterAnimationMenu } from './menu-fond.js';
 import { genererGalerieAchievements } from './achievements.js';
 import { genererCodexComplet } from './codex.js';
+import { cacherBanniereVivant } from './vivant.js';
 import { mettreAJourAffichageRecord } from './hud-jeu.js';
 import { annoncer } from './annonces.js';
 
@@ -22,6 +23,7 @@ export function mettreAJourVisibilitePartie(idEcran) {
     ];
     if (ecransHorsPartie.includes(idEcran)) {
         document.body.classList.remove('partie-active');
+        cacherBanniereVivant();
     }
 }
 
@@ -30,7 +32,8 @@ export function afficherEcran(idEcran) {
     document.querySelectorAll('.ecran').forEach((el) => el.classList.remove('actif'));
     const ecran = document.getElementById(idEcran);
     ecran?.classList.add('actif');
-    ecran?.querySelector('button, [href], input')?.focus({ preventScroll: true });
+    const focusable = ecran?.querySelector('button, [href], input');
+    if (focusable instanceof HTMLElement) focusable.focus({ preventScroll: true });
 
     mettreAJourVisibilitePartie(idEcran);
 
@@ -68,8 +71,8 @@ export function afficherEcran(idEcran) {
         const elL = document.getElementById('pause-lignes');
         const elN = document.getElementById('pause-niveau');
         if (elS) elS.textContent = etat.score.toLocaleString('fr-FR');
-        if (elL) elL.textContent = etat.lignes;
-        if (elN) elN.textContent = etat.niveau;
+        if (elL) elL.textContent = String(etat.lignes);
+        if (elN) elN.textContent = String(etat.niveau);
     }
 }
 

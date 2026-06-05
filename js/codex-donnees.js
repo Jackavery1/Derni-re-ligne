@@ -467,4 +467,21 @@ export const CODEX = {
             "« L'Architecte m'a appris quelque chose que le Tetris classique ne peut pas enseigner : la différence entre une solution correcte et une solution élégante. »",
         ],
     },
+
+    chronique_vivant: {
+        id: 'chronique_vivant',
+        chapitre: 'chroniques',
+        titre: 'CE QUI POUSSE SANS PERMISSION',
+        sousTitre: 'Carnet de Robo, Observations de terrain',
+        icone: '🌱',
+        condition: (s) => (s.evenementsVivantSubis || 0) >= 1,
+        conditionTexte: 'Subir un premier événement du Vivant',
+        illustration: 'dessinerIllustVivant',
+        texte: [
+            "« J'ai fait une pause de 23 secondes. Pas longtemps. Juste le temps de recalibrer mes capteurs. Et quand j'ai regardé le plateau à nouveau, deux blocs avaient disparu et un nouveau avait poussé à gauche. »",
+            "« La Forêt ne demande pas la permission. La Lave n'attend pas qu'on ait fini de réfléchir. Ces mondes ont leur propre agenda, et notre jeu n'est qu'une activité parmi d'autres dans leur existence. »",
+            "« J'ai essayé de jouer AVEC le Vivant plutôt que contre lui. En Forêt, j'ai laissé des espaces stratégiques pour que la croissance se fasse là où je le voulais. En Cosmos, j'ai exploité les blocs qui montaient pour créer des gaps utiles. »",
+            '« Ça ne marche pas toujours. Mais quand ça marche, on ne joue plus seul. »',
+        ],
+    },
 };

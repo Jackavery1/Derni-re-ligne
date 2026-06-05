@@ -6,6 +6,15 @@ import { creerPlateau, obtenirCouleurPieceParType } from './piece-jeu.js';
 import { creerParticulesLigne } from './particules-jeu.js';
 import { statsGlobales, verifierAchievements, sauvegarderStats } from './achievements.js';
 import { changerHumeur } from './ecrans-ui.js';
+import { obtenirBouton, obtenirElement } from './dom-utils.js';
+import {
+    poserPieceSurPlateau,
+    vitesseChuteDepuisNiveau,
+    deplacerPieceSiValide,
+    tenterRotationSimple,
+    calculerSpawnXCoop,
+    executerChuteRapide,
+} from './actions-piece-communes.js';
 
 export const DEMI_LARGEUR = 5;
 export const COLONNES_J1 = [0, 1, 2, 3, 4];
@@ -17,9 +26,9 @@ export function basculerModeCoop() {
     modeCoopActif = !modeCoopActif;
     if (typeof document === 'undefined') return;
 
-    const btn = document.getElementById('toggle-coop');
-    const label = document.getElementById('coop-toggle-label');
-    const oracleBtn = document.getElementById('toggle-oracle');
+    const btn = obtenirBouton('toggle-coop');
+    const label = obtenirElement('coop-toggle-label');
+    const oracleBtn = obtenirBouton('toggle-oracle');
 
     if (modeCoopActif) {
         btn?.classList.add('actif');
@@ -77,11 +86,10 @@ export function coop_nouvellePiece(joueur) {
     const types = Object.keys(TETROMINOS);
     const type = types[Math.floor(Math.random() * types.length)];
     const forme = TETROMINOS[type].rotations[0];
-    const offset = joueur === 'j1' ? 0 : DEMI_LARGEUR;
     return {
         type,
         rotation: 0,
-        x: offset + Math.floor(DEMI_LARGEUR / 2) - Math.floor(forme[0].length / 2),
+        x: calculerSpawnXCoop(joueur, forme[0].length, DEMI_LARGEUR),
         y: 0,
         joueur,
     };
@@ -95,10 +103,7 @@ export function coop_estPositionValide(piece, dx = 0, dy = 0, rotation = null) {
 }
 
 export function coop_vitesseChute() {
-    return Math.max(
-        CONFIG.vitesseMin,
-        CONFIG.vitesseBase - (coop.niveau - 1) * CONFIG.reductionParNiveau
-    );
+    return vitesseChuteDepuisNiveau(coop.niveau);
 }
 
 export function coop_rafraichirStats() {
@@ -156,7 +161,7 @@ export function coop_calculerScore(nbLignes) {
         coop.j1.passerelleDisponible = true;
         coop.j2.passerelleDisponible = true;
         for (const j of ['j1', 'j2']) {
-            const btn = document.getElementById(`btn-passerelle-${j}`);
+            const btn = obtenirBouton(`btn-passerelle-${j}`);
             if (btn) btn.disabled = false;
         }
         afficherNotifNiveauCoop();
@@ -214,21 +219,12 @@ export function coop_verrouillerPiece(joueur) {
     const piece = jData.pieceActuelle;
     if (!piece) return;
 
-    const rotations = TETROMINOS[piece.type].rotations;
-    const forme = rotations[piece.rotation % rotations.length];
     const couleur = obtenirCouleurPieceParType(piece.type);
+    const { gameOver } = poserPieceSurPlateau(etat.plateau, piece, couleur);
 
-    for (let l = 0; l < forme.length; l++) {
-        for (let c = 0; c < forme[l].length; c++) {
-            if (!forme[l][c]) continue;
-            const y = piece.y + l;
-            const x = piece.x + c;
-            if (y < 0) {
-                terminerCoopCallback?.(joueur);
-                return;
-            }
-            etat.plateau[y][x] = couleur;
-        }
+    if (gameOver) {
+        terminerCoopCallback?.(joueur);
+        return;
     }
 
     coop_verifierLignes();
@@ -245,41 +241,33 @@ export function coop_verrouillerPiece(joueur) {
 export function coop_deplacerGauche(joueur) {
     const p = coop[joueur].pieceActuelle;
     if (!p || coop.estEnPause) return;
-    if (coop_estPositionValide(p, -1, 0)) p.x--;
+    deplacerPieceSiValide(p, -1, 0, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy));
 }
 
 export function coop_deplacerDroite(joueur) {
     const p = coop[joueur].pieceActuelle;
     if (!p || coop.estEnPause) return;
-    if (coop_estPositionValide(p, 1, 0)) p.x++;
+    deplacerPieceSiValide(p, 1, 0, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy));
 }
 
 export function coop_deplacerBas(joueur) {
     const p = coop[joueur].pieceActuelle;
     if (!p || coop.estEnPause) return;
-    if (coop_estPositionValide(p, 0, 1)) p.y++;
+    deplacerPieceSiValide(p, 0, 1, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy));
 }
 
 export function coop_tourner(joueur, sens) {
     const p = coop[joueur].pieceActuelle;
     if (!p || coop.estEnPause) return;
-    const nbRots = TETROMINOS[p.type].rotations.length;
-    const newRot = (((p.rotation + sens) % nbRots) + nbRots) % nbRots;
-    for (const off of [0, 1, -1, 2, -2]) {
-        if (coop_estPositionValide(p, off, 0, newRot)) {
-            p.rotation = newRot;
-            p.x += off;
-            return;
-        }
-    }
+    tenterRotationSimple(p, sens, (piece, dx, dy, rotation) =>
+        coop_estPositionValide(piece, dx, dy, rotation)
+    );
 }
 
 export function coop_chuteRapide(joueur) {
     const p = coop[joueur].pieceActuelle;
     if (!p || coop.estEnPause) return;
-    let dist = 0;
-    while (coop_estPositionValide(p, 0, dist + 1)) dist++;
-    p.y += dist;
+    const dist = executerChuteRapide(p, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy));
     coop.score += dist * 2;
     coop_rafraichirStats();
     coop_verrouillerPiece(joueur);
@@ -302,8 +290,7 @@ export function coop_utiliserReserve(joueur) {
     }
 
     const forme = TETROMINOS[jData.pieceActuelle.type].rotations[0];
-    const offset = joueur === 'j1' ? 0 : DEMI_LARGEUR;
-    jData.pieceActuelle.x = offset + Math.floor(DEMI_LARGEUR / 2) - Math.floor(forme[0].length / 2);
+    jData.pieceActuelle.x = calculerSpawnXCoop(joueur, forme[0].length, DEMI_LARGEUR);
     jData.pieceActuelle.y = 0;
     jData.pieceActuelle.joueur = joueur;
     jData.reserveUtilisee = true;
@@ -319,8 +306,7 @@ export function utiliserPasserelle(joueur) {
     const pieceAEnvoyer = jData.prochainePiece;
     pieceAEnvoyer.joueur = cible;
     const forme = TETROMINOS[pieceAEnvoyer.type].rotations[0];
-    const offset = cible === 'j1' ? 0 : DEMI_LARGEUR;
-    pieceAEnvoyer.x = offset + Math.floor(DEMI_LARGEUR / 2) - Math.floor(forme[0].length / 2);
+    pieceAEnvoyer.x = calculerSpawnXCoop(cible, forme[0].length, DEMI_LARGEUR);
     pieceAEnvoyer.y = 0;
 
     const ancienneProchaine = cibleD.prochainePiece;
@@ -328,12 +314,10 @@ export function utiliserPasserelle(joueur) {
     jData.prochainePiece = ancienneProchaine;
     jData.prochainePiece.joueur = joueur;
     const formeR = TETROMINOS[jData.prochainePiece.type].rotations[0];
-    const offsetJ = joueur === 'j1' ? 0 : DEMI_LARGEUR;
-    jData.prochainePiece.x =
-        offsetJ + Math.floor(DEMI_LARGEUR / 2) - Math.floor(formeR[0].length / 2);
+    jData.prochainePiece.x = calculerSpawnXCoop(joueur, formeR[0].length, DEMI_LARGEUR);
 
     jData.passerelleDisponible = false;
-    const btn = document.getElementById(`btn-passerelle-${joueur}`);
+    const btn = obtenirBouton(`btn-passerelle-${joueur}`);
     if (btn) btn.disabled = true;
 
     if (typeof document !== 'undefined') {

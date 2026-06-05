@@ -2,6 +2,7 @@ import { logger } from './logger.js';
 import { lireStockageJson, ecrireStockageJson } from './progression.js';
 import { obtenirBiomeActif } from './store-jeu.js';
 import { melodie } from './melodie.js';
+import { creerFileNotifications } from './notifications-file.js';
 
 export const ACHIEVEMENTS = {
     premier_tetris: {
@@ -258,6 +259,42 @@ export const ACHIEVEMENTS = {
         decoration: 'trainee_simple',
         categorie: 'architecte',
     },
+    vivant_premier: {
+        id: 'vivant_premier',
+        nom: 'LE MONDE RESPIRE',
+        description: 'Subir un premier événement du Vivant',
+        icone: '🌱',
+        condition: (s) => (s.evenementsVivantSubis || 0) >= 1,
+        decoration: 'notes_flottantes',
+        categorie: 'vivant',
+    },
+    vivant_survivant: {
+        id: 'vivant_survivant',
+        nom: 'COEXISTENCE',
+        description: 'Survivre à 10 événements du Vivant en une partie',
+        icone: '🌿',
+        condition: (s) => (s.maxEvenementsUnePartie || 0) >= 10,
+        decoration: 'halo_relique',
+        categorie: 'vivant',
+    },
+    vivant_tous_biomes: {
+        id: 'vivant_tous_biomes',
+        nom: 'NATURALISTE',
+        description: 'Subir un événement du Vivant dans 7 biomes différents',
+        icone: '🌍',
+        condition: (s) => (s.biomesVivantSubis?.size || 0) >= 7,
+        decoration: 'aura_cosmos',
+        categorie: 'vivant',
+    },
+    vivant_maitre: {
+        id: 'vivant_maitre',
+        nom: 'MAÎTRE DU CHAOS NATUREL',
+        description: 'Effacer 50 lignes pendant un événement actif du Vivant',
+        icone: '⚗',
+        condition: (s) => (s.lignesPendantVivant || 0) >= 50,
+        decoration: 'flammes_intenses',
+        categorie: 'vivant',
+    },
 };
 
 function creerStatsVides() {
@@ -290,18 +327,39 @@ function creerStatsVides() {
         archiEtoilesMax: 0,
         archiPrecisionMax: 0,
         archiParAtteint: 0,
+        evenementsVivantSubis: 0,
+        maxEvenementsUnePartie: 0,
+        biomesVivantSubis: new Set(),
+        lignesPendantVivant: 0,
     };
 }
 
 export const statsGlobales = creerStatsVides();
 
-const fileNotifications = [];
-let notificationEnCours = false;
+const fileAchievements = creerFileNotifications({
+    /** @param {{ icone: string, nom: string, description: string }} ach @param {() => void} terminer */
+    afficher(ach, terminer) {
+        const notif = document.getElementById('notif-achievement');
+        if (!notif) return false;
+        const icone = document.getElementById('ach-icone');
+        const nom = document.getElementById('ach-nom');
+        const desc = document.getElementById('ach-description');
+        if (icone) icone.textContent = ach.icone;
+        if (nom) nom.textContent = ach.nom;
+        if (desc) desc.textContent = ach.description;
+        notif.classList.add('visible');
+        setTimeout(() => {
+            notif.classList.remove('visible');
+            setTimeout(terminer, 600);
+        }, 3500);
+    },
+});
 
 const CLE_STATS = 'tetrisNeo_statsGlobales';
 
 export function chargerStats() {
     try {
+        /** @type {Record<string, any> | null} */
         const parsed = lireStockageJson(CLE_STATS, null);
         if (!parsed || typeof parsed !== 'object') return;
         const base = creerStatsVides();
@@ -332,6 +390,12 @@ export function chargerStats() {
         statsGlobales.archiEtoilesMax = parsed.archiEtoilesMax ?? base.archiEtoilesMax;
         statsGlobales.archiPrecisionMax = parsed.archiPrecisionMax ?? base.archiPrecisionMax;
         statsGlobales.archiParAtteint = parsed.archiParAtteint ?? base.archiParAtteint;
+        statsGlobales.evenementsVivantSubis =
+            parsed.evenementsVivantSubis ?? base.evenementsVivantSubis;
+        statsGlobales.maxEvenementsUnePartie =
+            parsed.maxEvenementsUnePartie ?? base.maxEvenementsUnePartie;
+        statsGlobales.biomesVivantSubis = new Set(parsed.biomesVivantSubis || []);
+        statsGlobales.lignesPendantVivant = parsed.lignesPendantVivant ?? base.lignesPendantVivant;
         statsGlobales.meteosPartieActuelle = new Set();
     } catch (err) {
         logger.warn('Erreur chargement stats achievements:', err);
@@ -367,6 +431,10 @@ export function sauvegarderStats() {
             archiEtoilesMax: statsGlobales.archiEtoilesMax,
             archiPrecisionMax: statsGlobales.archiPrecisionMax,
             archiParAtteint: statsGlobales.archiParAtteint,
+            evenementsVivantSubis: statsGlobales.evenementsVivantSubis,
+            maxEvenementsUnePartie: statsGlobales.maxEvenementsUnePartie,
+            biomesVivantSubis: [...statsGlobales.biomesVivantSubis],
+            lignesPendantVivant: statsGlobales.lignesPendantVivant,
         };
         ecrireStockageJson(CLE_STATS, toSave);
     } catch (err) {
@@ -439,36 +507,10 @@ export function verifierAchievements() {
         if (!statsGlobales.decorationsActives.includes(ach.decoration)) {
             statsGlobales.decorationsActives.push(ach.decoration);
         }
-        fileNotifications.push(ach);
+        fileAchievements.ajouter(ach);
         nouveaux++;
     }
-    if (nouveaux > 0) afficherProchaineNotification();
-}
-
-function afficherProchaineNotification() {
-    if (typeof document === 'undefined') return;
-    if (notificationEnCours || fileNotifications.length === 0) return;
-    notificationEnCours = true;
-    const ach = fileNotifications.shift();
-    const notif = document.getElementById('notif-achievement');
-    if (!notif) {
-        notificationEnCours = false;
-        return;
-    }
-    const icone = document.getElementById('ach-icone');
-    const nom = document.getElementById('ach-nom');
-    const desc = document.getElementById('ach-description');
-    if (icone) icone.textContent = ach.icone;
-    if (nom) nom.textContent = ach.nom;
-    if (desc) desc.textContent = ach.description;
-    notif.classList.add('visible');
-    setTimeout(() => {
-        notif.classList.remove('visible');
-        setTimeout(() => {
-            notificationEnCours = false;
-            afficherProchaineNotification();
-        }, 600);
-    }, 3500);
+    if (nouveaux > 0) sauvegarderStats();
 }
 
 export function genererGalerieAchievements() {

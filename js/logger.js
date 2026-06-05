@@ -1,3 +1,6 @@
+const JOURNAL_ERREURS_CLE = 'tetrisNeo_journalErreurs';
+const JOURNAL_ERREURS_MAX = 10;
+
 function modeDebugActif() {
     const meta = /** @type {ImportMeta & { env?: { DEV?: boolean } }} */ (import.meta);
     if (typeof import.meta !== 'undefined' && meta.env?.DEV) return true;
@@ -18,6 +21,54 @@ function formaterArgs(args) {
     return ctx ? [ctx, ...args] : args;
 }
 
+function serialiserErreur(valeur) {
+    if (valeur instanceof Error) {
+        return {
+            message: valeur.message,
+            stack: valeur.stack,
+            name: valeur.name,
+        };
+    }
+    if (typeof valeur === 'object' && valeur !== null) {
+        try {
+            return JSON.parse(JSON.stringify(valeur));
+        } catch {
+            return String(valeur);
+        }
+    }
+    return valeur;
+}
+
+function enregistrerErreurJournal(niveau, args) {
+    if (typeof sessionStorage === 'undefined') return;
+    try {
+        const brut = sessionStorage.getItem(JOURNAL_ERREURS_CLE);
+        const journal = brut ? JSON.parse(brut) : [];
+        journal.push({
+            niveau,
+            horodatage: new Date().toISOString(),
+            ecran: obtenirContexteLog(),
+            details: args.map(serialiserErreur),
+        });
+        sessionStorage.setItem(
+            JOURNAL_ERREURS_CLE,
+            JSON.stringify(journal.slice(-JOURNAL_ERREURS_MAX))
+        );
+    } catch {
+        /* sessionStorage indisponible */
+    }
+}
+
+export function obtenirJournalErreurs() {
+    if (typeof sessionStorage === 'undefined') return [];
+    try {
+        const brut = sessionStorage.getItem(JOURNAL_ERREURS_CLE);
+        return brut ? JSON.parse(brut) : [];
+    } catch {
+        return [];
+    }
+}
+
 export const logger = {
     debug(...args) {
         if (DEBUG) console.debug('[TetrisNeo]', ...formaterArgs(args));
@@ -27,9 +78,15 @@ export const logger = {
     },
     warn(...args) {
         console.warn('[TetrisNeo]', ...formaterArgs(args));
+        enregistrerErreurJournal('warn', args);
     },
     error(...args) {
         console.error('[TetrisNeo]', ...formaterArgs(args));
+        if (DEBUG) {
+            const err = args.find((a) => a instanceof Error);
+            if (err?.stack) console.error(err.stack);
+        }
+        enregistrerErreurJournal('error', args);
     },
 };
 

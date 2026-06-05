@@ -28,13 +28,13 @@ describe('codex', () => {
     });
 
     it('contient 28 entrées réparties en 3 chapitres', () => {
-        expect(Object.keys(CODEX)).toHaveLength(28);
+        expect(Object.keys(CODEX)).toHaveLength(29);
         const mondes = Object.values(CODEX).filter((e) => e.chapitre === 'mondes');
         const reliques = Object.values(CODEX).filter((e) => e.chapitre === 'reliques');
         const chroniques = Object.values(CODEX).filter((e) => e.chapitre === 'chroniques');
         expect(mondes).toHaveLength(9);
         expect(reliques).toHaveLength(9);
-        expect(chroniques).toHaveLength(10);
+        expect(chroniques).toHaveLength(11);
     });
 
     it('chaque illustration référencée existe', () => {

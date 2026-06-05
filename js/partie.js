@@ -1,8 +1,10 @@
 import { BIOMES } from './config.js';
 import { arreterConstellation } from './constellation.js';
 import { initialiserMeteo, annulerMeteo } from './meteo.js';
+import { initialiserVivant, annulerTimersVivant } from './vivant.js';
 import { AudioMoteur } from './audio.js';
 import { logger, afficherErreurUtilisateur } from './logger.js';
+import { obtenirCanvas } from './dom-utils.js';
 import {
     sauvegarderNiveauGlobal,
     obtenirRecordBiome,
@@ -93,9 +95,9 @@ import {
 import { statsGlobales } from './achievements.js';
 
 export function initialiserCanvas() {
-    const cp = document.getElementById('canvas-plateau');
-    const cprev = document.getElementById('canvas-preview');
-    const cres = document.getElementById('canvas-reserve');
+    const cp = obtenirCanvas('canvas-plateau');
+    const cprev = obtenirCanvas('canvas-preview');
+    const cres = obtenirCanvas('canvas-reserve');
     if (!cp || !cprev || !cres) {
         logger.error('Canvas introuvable dans le DOM');
         afficherErreurUtilisateur(
@@ -153,6 +155,7 @@ export function confirmerRecommencer() {
 
 export function quitterVersMenu() {
     arreterLectureMelodie();
+    annulerTimersVivant();
     etat.estEnCours = false;
     etat.estEnPause = false;
     particules.length = 0;
@@ -165,7 +168,7 @@ export function quitterVersMenu() {
     if (btnPause) btnPause.textContent = '⏸ PAUSE';
 }
 
-export function demarrerJeu() {
+function initialiserFeaturesPartie() {
     reinitialiserOraclePartie();
     afficherSectionOracle(oracle.actif);
     mettreAJourStatsOracleUI();
@@ -178,20 +181,9 @@ export function demarrerJeu() {
     initStatsPartie();
     void verifierCodex();
     arreterConstellation();
-    appliquerThemeBiome(obtenirBiomeActif());
-    appliquerTextesBiome(obtenirBiomeActif());
-    appliquerThemeMascotte();
-    AudioMoteur.init();
-    if (AudioMoteur.ctx && AudioMoteur.actif) {
-        const biomeActif = obtenirBiomeActif();
-        if (AudioMoteur.intervalMusique && AudioMoteur.biomeMusique !== biomeActif) {
-            AudioMoteur.transitionMusique(biomeActif);
-        } else {
-            AudioMoteur.demarrerMusique(biomeActif);
-        }
-    }
-    arreterAnimationMenu();
+}
 
+function initialiserEtatPartie() {
     etat.plateau = creerPlateau();
     etat.victoireSprint = false;
     etat.score = 0;
@@ -228,12 +220,31 @@ export function demarrerJeu() {
     definirReliqueEnAttente(false);
     definirReliqueActive(null);
     initialiserMeteo();
+    initialiserVivant();
 
     etat.pieceActuelle = genererProchainePiece();
     activerReliqueSurPiece(etat.pieceActuelle);
     etat.filePieces = [genererProchainePiece(), genererProchainePiece(), genererProchainePiece()];
     signalerApparitionPiece();
+}
 
+function initialiserAudioPartie() {
+    appliquerThemeBiome(obtenirBiomeActif());
+    appliquerTextesBiome(obtenirBiomeActif());
+    appliquerThemeMascotte();
+    AudioMoteur.init();
+    if (AudioMoteur.ctx && AudioMoteur.actif) {
+        const biomeActif = obtenirBiomeActif();
+        if (AudioMoteur.intervalMusique && AudioMoteur.biomeMusique !== biomeActif) {
+            AudioMoteur.transitionMusique(biomeActif);
+        } else {
+            AudioMoteur.demarrerMusique(biomeActif);
+        }
+    }
+    arreterAnimationMenu();
+}
+
+function initialiserUIPartie() {
     const ctxReserve = obtenirCtxReserve();
     const canvasReserve = obtenirCanvasReserve();
     ctxReserve.clearRect(0, 0, canvasReserve.width, canvasReserve.height);
@@ -253,6 +264,13 @@ export function demarrerJeu() {
     definirTransitionAlpha(1);
     rendreFrameJeu();
     declencherCalculOracle();
+}
+
+export function demarrerJeu() {
+    initialiserFeaturesPartie();
+    initialiserAudioPartie();
+    initialiserEtatPartie();
+    initialiserUIPartie();
     planifierBoucle();
 }
 
@@ -262,6 +280,7 @@ export function basculerPause() {
     etat.estEnPause = !etat.estEnPause;
 
     if (etat.estEnPause) {
+        annulerTimersVivant();
         etat.tempsPauseDebut = Date.now();
         afficherEcran(ECRANS.PAUSE);
     } else {
@@ -319,8 +338,8 @@ export function terminerPartie(victoire = false) {
     mettreAJourAffichageRecord();
 
     document.getElementById('score-final').textContent = scoreFinal.toLocaleString('fr-FR');
-    document.getElementById('lignes-finales').textContent = etat.lignes;
-    document.getElementById('niveau-final').textContent = etat.niveau;
+    document.getElementById('lignes-finales').textContent = String(etat.lignes);
+    document.getElementById('niveau-final').textContent = String(etat.niveau);
     document.getElementById('record-final').textContent =
         obtenirRecordBiome(obtenirBiomeActif()).toLocaleString('fr-FR');
     document.getElementById('temps-final').textContent = formaterTemps(obtenirTempsEcoule());

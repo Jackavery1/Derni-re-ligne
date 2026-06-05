@@ -7,7 +7,6 @@ import {
 } from './logique-pure.js';
 import { meteo, ETATS_METEO } from './meteo.js';
 import { appliquerEffetRelique } from './reliques.js';
-import { AudioMoteur } from './audio.js';
 import { obtenirActions } from './actions-jeu.js';
 import { emettre } from './bus-jeu.js';
 import {
@@ -51,6 +50,23 @@ import {
 } from './profil-jeu.js';
 import { sauvegarderPlacementOracle, declencherCalculOracle } from './oracle-jeu.js';
 import { annoncer } from './annonces.js';
+import {
+    vivant_enregistrerDepot,
+    vivant_recompenserActivite,
+    vivant_synchroniserApresLignes,
+    vivant_enregistrerLignesScore,
+} from './vivant.js';
+import { poserPieceSurPlateau, vitesseChuteDepuisNiveau } from './actions-piece-communes.js';
+
+function produireProchainePieceApresShift() {
+    if (obtenirReliqueEnAttente()) {
+        definirReliqueEnAttente(false);
+        const relique = RELIQUES[obtenirBiomeActif()] ?? RELIQUES.classique;
+        etat.filePieces.unshift(creerPieceRelique(relique));
+    } else {
+        etat.filePieces.push(genererProchainePiece());
+    }
+}
 
 export function verrouillerPiece() {
     if (meteo.decalageForce !== 0) {
@@ -61,23 +77,20 @@ export function verrouillerPiece() {
 
     sauvegarderPlacementOracle();
 
-    const forme = obtenirForme(etat.pieceActuelle);
     const couleur = obtenirCouleurPiece(etat.pieceActuelle);
-    const cellulesPosees = [];
+    const { gameOver, cellulesPosees } = poserPieceSurPlateau(
+        etat.plateau,
+        etat.pieceActuelle,
+        couleur,
+        { onCellule: (x, y) => vivant_enregistrerDepot(x, y) }
+    );
 
-    for (let l = 0; l < forme.length; l++) {
-        for (let c = 0; c < forme[l].length; c++) {
-            if (!forme[l][c]) continue;
-            const y = etat.pieceActuelle.y + l;
-            const x = etat.pieceActuelle.x + c;
-            if (y < 0) {
-                obtenirActions().terminerPartie?.();
-                return;
-            }
-            etat.plateau[y][x] = couleur;
-            cellulesPosees.push({ x, y });
-        }
+    if (gameOver) {
+        obtenirActions().terminerPartie?.();
+        return;
     }
+
+    vivant_recompenserActivite();
 
     flashVerrou.cellules = cellulesPosees;
     flashVerrou.timer = flashVerrou.duree;
@@ -100,17 +113,11 @@ export function verrouillerPiece() {
     const nbLignesEffacees = supprimerLignesCompletes();
     majStatsLignesEffacees(nbLignesEffacees);
     calculerScore(nbLignesEffacees);
-    AudioMoteur.son('verrou');
+    emettre('piece:son', { type: 'verrou' });
 
     etat.pieceActuelle = etat.filePieces.shift();
     activerReliqueSurPiece(etat.pieceActuelle);
-    if (obtenirReliqueEnAttente()) {
-        definirReliqueEnAttente(false);
-        const relique = RELIQUES[obtenirBiomeActif()] ?? RELIQUES.classique;
-        etat.filePieces.unshift(creerPieceRelique(relique));
-    } else {
-        etat.filePieces.push(genererProchainePiece());
-    }
+    produireProchainePieceApresShift();
     etat.reserveUtilisee = false;
     definirPieceAuSol(false);
     definirLockDelayRestant(0);
@@ -128,6 +135,7 @@ function supprimerLignesCompletes() {
     if (nbSupprimees === 0) return 0;
 
     etat.plateau = plateau;
+    vivant_synchroniserApresLignes(lignesEffacees);
     flashLignes.lignes = [...lignesEffacees];
     flashLignes.timer = flashLignes.duree;
     emettre('lignes:effacees', { nbSupprimees, lignesEffacees });
@@ -171,6 +179,7 @@ export function appliquerScoreLignes(etatPartie, nbLignes) {
 }
 
 export function calculerScore(nbLignes) {
+    vivant_enregistrerLignesScore(nbLignes);
     const result = appliquerScoreLignes(etat, nbLignes);
 
     if (nbLignes > 0) {
@@ -189,7 +198,7 @@ function deplacerGaucheReel() {
     if (!jouable()) return;
     if (estPositionValide(etat.pieceActuelle, -1, 0)) {
         etat.pieceActuelle.x--;
-        AudioMoteur.son('deplacement');
+        emettre('piece:son', { type: 'deplacement' });
         reinitialiserLockDelay();
         compterMouvementLateral();
     }
@@ -199,7 +208,7 @@ function deplacerDroiteReel() {
     if (!jouable()) return;
     if (estPositionValide(etat.pieceActuelle, 1, 0)) {
         etat.pieceActuelle.x++;
-        AudioMoteur.son('deplacement');
+        emettre('piece:son', { type: 'deplacement' });
         reinitialiserLockDelay();
         compterMouvementLateral();
     }
@@ -239,7 +248,7 @@ export function chuteRapide() {
     const dist = calculerDistanceChute(etat.pieceActuelle);
     etat.pieceActuelle.y += dist;
     etat.score += dist * 2;
-    AudioMoteur.son('chute');
+    emettre('piece:son', { type: 'chute' });
     emettre('partie:stats');
     verrouillerPiece();
 }
@@ -256,7 +265,7 @@ export function tourner(sens) {
             piece.rotation = rotationCible;
             piece.x += dx;
             piece.y += dy;
-            AudioMoteur.son('rotation');
+            emettre('piece:son', { type: 'rotation' });
             reinitialiserLockDelay();
             compterRotation();
             annoncer('Pièce tournée');
@@ -280,13 +289,7 @@ export function utiliserReserve() {
         };
         etat.pieceActuelle = etat.filePieces.shift();
         activerReliqueSurPiece(etat.pieceActuelle);
-        if (obtenirReliqueEnAttente()) {
-            definirReliqueEnAttente(false);
-            const relique = RELIQUES[obtenirBiomeActif()] ?? RELIQUES.classique;
-            etat.filePieces.unshift(creerPieceRelique(relique));
-        } else {
-            etat.filePieces.push(genererProchainePiece());
-        }
+        produireProchainePieceApresShift();
         definirReliqueActive(null);
         emettre('partie:nouvelle-piece');
     } else {
@@ -313,7 +316,7 @@ export function utiliserReserve() {
     etat.pieceActuelle.y = 0;
     etat.reserveUtilisee = true;
     compterHold();
-    AudioMoteur.son('hold');
+    emettre('piece:son', { type: 'hold' });
     annoncer('Réserve utilisée');
     reinitialiserLockDelay();
     signalerApparitionPiece();
@@ -322,8 +325,5 @@ export function utiliserReserve() {
 }
 
 export function vitesseChute() {
-    return Math.max(
-        CONFIG.vitesseBase - (etat.niveau - 1) * CONFIG.reductionParNiveau,
-        CONFIG.vitesseMin
-    );
+    return vitesseChuteDepuisNiveau(etat.niveau);
 }

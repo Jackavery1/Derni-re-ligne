@@ -2,6 +2,7 @@ import { TETROMINOS } from './config.js';
 import { obtenirEffetsReduits } from './store-jeu.js';
 import { obtenirCouleurPieceParType } from './piece-jeu.js';
 import { obtenirActions } from './actions-jeu.js';
+import { obtenirCanvas } from './dom-utils.js';
 
 let canvasMenuFond = null;
 let ctxMenuFond = null;
@@ -11,7 +12,7 @@ export let menuAnimActif = false;
 function obtenirCanvasMenuFond() {
     if (typeof document === 'undefined') return null;
     if (!canvasMenuFond) {
-        canvasMenuFond = document.getElementById('canvas-menu-fond');
+        canvasMenuFond = obtenirCanvas('canvas-menu-fond');
         ctxMenuFond = canvasMenuFond ? canvasMenuFond.getContext('2d') : null;
     }
     return canvasMenuFond;

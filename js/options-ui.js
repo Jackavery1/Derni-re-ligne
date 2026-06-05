@@ -1,5 +1,6 @@
 import { lireStockage, ecrireStockage } from './progression.js';
 import { AudioMoteur } from './audio.js';
+import { obtenirInput, obtenirBouton } from './dom-utils.js';
 
 export function mettreAJourBoutonContraste(btn) {
     const actif = document.body.classList.contains('contraste-eleve');
@@ -49,23 +50,25 @@ export function initialiserOptions() {
     AudioMoteur.muet = muet;
     document.body.classList.toggle('contraste-eleve', contraste);
 
-    const slider = document.getElementById('slider-volume');
-    const sliderMus = document.getElementById('slider-musique');
-    const btnMute = document.getElementById('btn-toggle-mute');
-    const btnContraste = document.getElementById('btn-toggle-contraste');
-    if (slider) slider.value = Math.round(AudioMoteur.volumeEffets * 100);
-    if (sliderMus) sliderMus.value = Math.round(AudioMoteur.volumeMusique * 100);
+    const slider = obtenirInput('slider-volume');
+    const sliderMus = obtenirInput('slider-musique');
+    const btnMute = obtenirBouton('btn-toggle-mute');
+    const btnContraste = obtenirBouton('btn-toggle-contraste');
+    if (slider) slider.value = String(Math.round(AudioMoteur.volumeEffets * 100));
+    if (sliderMus) sliderMus.value = String(Math.round(AudioMoteur.volumeMusique * 100));
     mettreAJourBoutonsMute();
     if (btnContraste) mettreAJourBoutonContraste(btnContraste);
 
     slider?.addEventListener('input', (e) => {
-        AudioMoteur.reglerVolumeEffets(parseInt(e.target.value, 10) / 100);
+        const cible = /** @type {HTMLInputElement} */ (e.target);
+        AudioMoteur.reglerVolumeEffets(parseInt(cible.value, 10) / 100);
         ecrireStockage('tetrisNeo_volume', AudioMoteur.volumeEffets.toString());
         AudioMoteur.son('deplacement');
     });
 
     sliderMus?.addEventListener('input', (e) => {
-        AudioMoteur.reglerVolumeMusique(parseInt(e.target.value, 10) / 100);
+        const cible = /** @type {HTMLInputElement} */ (e.target);
+        AudioMoteur.reglerVolumeMusique(parseInt(cible.value, 10) / 100);
         ecrireStockage('tetrisNeo_volumeMusique', AudioMoteur.volumeMusique.toString());
     });
 

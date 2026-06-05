@@ -6,6 +6,7 @@
  * @property {number} y
  * @property {number[][]} [reliqueForme]
  * @property {object} [reliqueData]
+ * @property {'j1' | 'j2'} [joueur]
  */
 
 /**
@@ -22,6 +23,10 @@
  * @property {boolean} estEnPause
  * @property {number} combo
  * @property {boolean} dernierEtaitTetris
+ */
+
+/**
+ * @typedef {Window & typeof globalThis & { webkitAudioContext?: typeof AudioContext }} WindowEtendu
  */
 
 export {};

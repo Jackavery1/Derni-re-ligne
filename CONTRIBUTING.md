@@ -28,6 +28,30 @@ Format [Conventional Commits](https://www.conventionalcommits.org/) :
 
 Branche `main` protégée : PR avec CI verte (lint, format, tests, E2E).
 
+### Workflow Git
+
+1. Créer une branche depuis `main` : `feat/nom-court` ou `fix/nom-court`
+2. Commits Conventional Commits
+3. Ouvrir une PR — la CI doit passer (lint, typecheck, tests, build, E2E prod)
+4. Merge squash recommandé
+5. Release : `npm run release` puis tag `vX.Y.Z`
+
+## Exemple de test Vitest
+
+```javascript
+import { describe, it, expect } from 'vitest';
+import { appliquerScoreLignes } from '../js/logique-partie.js';
+
+describe('appliquerScoreLignes', () => {
+    it('incrémente le score sur une ligne simple', () => {
+        const etatPartie = { score: 0, lignes: 0, niveau: 1, combo: 0, dernierEtaitTetris: false };
+        const result = appliquerScoreLignes(etatPartie, 1);
+        expect(result.points).toBeGreaterThan(0);
+        expect(etatPartie.lignes).toBe(1);
+    });
+});
+```
+
 ## Règles
 
 - Noms en **français** (`demarrerJeu`, `estPositionValide`)
@@ -51,16 +75,13 @@ Fonctions sensibles (ne pas modifier sans raison) : `estPositionValide()`, `tour
 | Méta-jeu      | `achievements.js`, `profil-jeu.js`, `codex.js`, `progression.js`        |
 | Testable      | `logique-pure.js`                                                       |
 
-Architecture : [docs/architecture.md](docs/architecture.md).
+Architecture : [docs/architecture.md](docs/architecture.md). Ajouter un biome : [docs/ajouter-un-biome.md](docs/ajouter-un-biome.md).
 
 ## Vérification statique (checkJs)
 
-Le typecheck TypeScript (`npm run typecheck`) couvre progressivement les modules critiques via `jsconfig.json` :
+Le typecheck TypeScript (`npm run typecheck`) couvre **tout** `js/**/*.js` via `jsconfig.json`.
 
-- `types.js`, `logique-pure.js`, `moteur-piece.js`, `progression.js`
-- `ecrans-config.js`, `actions-jeu.js`, `archi-logique.js`, `bus-jeu.js`, `store-core.js`
-
-Étendre la liste `include` lors de modifications sur d'autres modules.
+Modules utilitaires typés : `dom-utils.js`, `actions-piece-communes.js`, `notifications-file.js`, `vivant-strategies.js`.
 
 ## Release
 

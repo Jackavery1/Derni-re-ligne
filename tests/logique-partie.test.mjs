@@ -48,6 +48,7 @@ import {
     verrouillerPiece,
 } from '../js/logique-partie.js';
 import { reinitialiserBusJeu } from '../js/bus-jeu.js';
+import { initialiserVivant } from '../js/vivant.js';
 import { etat, definirRefsCanvas } from '../js/store-jeu.js';
 import { CONFIG } from '../js/config.js';
 import { supprimerLignesDuPlateau } from '../js/logique-pure.js';
@@ -97,6 +98,7 @@ function creerCanvasMock(largeur = 120, hauteur = 120) {
 describe('logique-partie', () => {
     beforeEach(() => {
         reinitialiserBusJeu();
+        initialiserVivant();
         etat.estEnCours = false;
         etat.estEnPause = false;
         etat.pieceActuelle = null;

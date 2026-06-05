@@ -8,6 +8,8 @@ import {
     coop_nouvellePiece,
     coop_estPositionValide,
     coop_verifierLignes,
+    coop_calculerScore,
+    coop_vitesseChute,
     reinitialiserEtatCoop,
 } from '../js/coop-logique.js';
 
@@ -63,5 +65,19 @@ describe('coop-logique', () => {
         etat.plateau = creerPlateau();
         const piece = coop_nouvellePiece('j1');
         expect(coop_estPositionValide(piece)).toBe(true);
+    });
+
+    it('coop_calculerScore incrémente le score coop', () => {
+        const scoreAvant = coop.score;
+        coop_calculerScore(2);
+        expect(coop.score).toBeGreaterThan(scoreAvant);
+    });
+
+    it('coop_vitesseChute diminue avec le niveau coop', () => {
+        coop.niveau = 1;
+        const v1 = coop_vitesseChute();
+        coop.niveau = 5;
+        const v5 = coop_vitesseChute();
+        expect(v5).toBeLessThan(v1);
     });
 });

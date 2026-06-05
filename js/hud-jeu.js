@@ -58,8 +58,8 @@ export function rafraichirStats() {
     const score = obtenirScoreAffiche();
     const ids = {
         'affichage-score': score.toLocaleString('fr-FR'),
-        'affichage-lignes': etat.lignes,
-        'affichage-niveau': etat.niveau,
+        'affichage-lignes': String(etat.lignes),
+        'affichage-niveau': String(etat.niveau),
     };
     for (const [id, valeur] of Object.entries(ids)) {
         const el = document.getElementById(id);

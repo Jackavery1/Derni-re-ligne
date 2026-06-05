@@ -16,6 +16,8 @@ import { evaluerDecisionOracle } from './oracle-jeu.js';
 import { mettreAJourIndicateurRelique } from './piece-jeu.js';
 
 export function initialiserEffetsPartie() {
+    ecouter('piece:son', ({ type }) => AudioMoteur.son(type));
+
     ecouter('partie:stats', () => rafraichirStats());
 
     ecouter('partie:nouvelle-piece', () => {

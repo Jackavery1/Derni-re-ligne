@@ -538,6 +538,40 @@ export function dessinerIllustArchi(ctx2d, w, h) {
     });
 }
 
+export function dessinerIllustVivant(ctx2d, w, h) {
+    ctx2d.fillStyle = '#020f02';
+    ctx2d.fillRect(0, 0, w, h);
+    /** @type {[number, number, string][]} */
+    const positions = [
+        [2, 3, '#00cc44'],
+        [3, 3, '#00aa22'],
+        [4, 3, '#00ee55'],
+        [2, 4, '#008833'],
+        [3, 4, '#00cc44'],
+        [5, 4, '#00ff88'],
+        [3, 5, '#00aa22'],
+        [4, 5, '#00cc44'],
+        [5, 5, '#006622'],
+    ];
+    const s = 16;
+    positions.forEach(([c, l, coul]) => {
+        ctx2d.fillStyle = coul + '88';
+        ctx2d.shadowColor = coul;
+        ctx2d.shadowBlur = 6;
+        ctx2d.fillRect(c * s + 20, l * s + 10, s - 2, s - 2);
+    });
+    ctx2d.fillStyle = '#00ff88aa';
+    ctx2d.shadowColor = '#00ff88';
+    ctx2d.shadowBlur = 15;
+    ctx2d.fillRect(6 * s + 20, 3 * s + 10, s - 2, s - 2);
+    ctx2d.strokeStyle = '#00ff8855';
+    ctx2d.lineWidth = 1;
+    ctx2d.beginPath();
+    ctx2d.moveTo(5 * s + 20 + s / 2, 3 * s + 10 + s / 2);
+    ctx2d.lineTo(6 * s + 20, 3 * s + 10 + s / 2);
+    ctx2d.stroke();
+}
+
 export const ILLUSTRATIONS_CODEX = {
     dessinerIllustCircuits,
     dessinerIllustLave,
@@ -567,4 +601,5 @@ export const ILLUSTRATIONS_CODEX = {
     dessinerIllustChroniqueGrandMaitre,
     dessinerIllustOracle,
     dessinerIllustArchi,
+    dessinerIllustVivant,
 };

@@ -10,18 +10,6 @@
         "skipLibCheck": true,
         "lib": ["ES2022", "DOM", "DOM.Iterable"]
     },
-    "include": [
-        "js/types.js",
-        "js/logique-pure.js",
-        "js/moteur-piece.js",
-        "js/progression.js",
-        "js/ecrans-config.js",
-        "js/actions-jeu.js",
-        "js/archi-logique.js",
-        "js/bus-jeu.js",
-        "js/store-core.js",
-        "js/store-etat-partie.js",
-        "js/store-refs-canvas.js"
-    ],
+    "include": ["js/**/*.js"],
     "exclude": ["node_modules", "dist", "coverage"]
 }
