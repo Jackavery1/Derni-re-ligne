@@ -4,21 +4,32 @@ import { logger, afficherErreurUtilisateur } from './logger.js';
 
 window.addEventListener('error', (ev) => {
     logger.error(ev.message, ev.filename, ev.lineno);
-    afficherErreurUtilisateur('Une erreur est survenue. Rechargez la page.');
+    afficherErreurUtilisateur('Erreur JavaScript. Rechargez la page (F5 ou Ctrl+Shift+R).');
 });
 
 window.addEventListener('unhandledrejection', (ev) => {
     logger.error('Promesse rejetée:', ev.reason);
-    afficherErreurUtilisateur('Une erreur est survenue. Rechargez la page.');
+    afficherErreurUtilisateur('Erreur de chargement asynchrone. Rechargez la page.');
 });
 
 async function demarrer() {
     try {
         await chargerEcrans();
+    } catch (err) {
+        logger.error('Échec chargement écrans:', err);
+        afficherErreurUtilisateur(
+            'Impossible de charger les écrans du jeu. Vérifiez votre connexion et rechargez.'
+        );
+        return;
+    }
+
+    try {
         initialiserApplication();
     } catch (err) {
-        logger.error('Échec initialisation:', err);
-        afficherErreurUtilisateur('Impossible de charger le jeu. Rechargez la page.');
+        logger.error('Échec initialisation moteur:', err);
+        afficherErreurUtilisateur(
+            "Impossible d'initialiser le jeu. Rechargez la page ou videz le cache (Ctrl+Shift+R)."
+        );
     }
 }
 
@@ -37,7 +48,7 @@ if ('serviceWorker' in navigator) {
                     });
                 });
             })
-            .catch((err) => logger.warn('SW non disponible :', err));
+            .catch((err) => logger.warn('SW non disponible (jeu en ligne uniquement) :', err));
 
         document.getElementById('btn-maj-sw')?.addEventListener('click', () => {
             navigator.serviceWorker.getRegistration().then((reg) => {

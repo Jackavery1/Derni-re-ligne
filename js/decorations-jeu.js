@@ -8,6 +8,7 @@ import {
     obtenirEffetsReduits,
 } from './contexte-jeu.js';
 import { obtenirForme, obtenirCouleurPiece } from './piece-jeu.js';
+import { oracle } from './oracle-jeu.js';
 
 const MAX_HISTORIQUE = 10;
 export const historiquePositions = [];
@@ -322,6 +323,45 @@ function dessinerRoboArcEnCiel() {
     mascotte.style.filter = `drop-shadow(0 0 6px hsl(${hue}, 100%, 60%)) hue-rotate(${hue}deg)`;
 }
 
+function dessinerBordureBicolore() {
+    const w = obtenirCanvasPlateau().width;
+    const h = obtenirCanvasPlateau().height;
+    const xSep = 5 * CONFIG.taille;
+    const ctx = obtenirCtx();
+    ctx.save();
+    ctx.strokeStyle = 'rgba(0,245,255,0.35)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(1, 1, xSep - 2, h - 2);
+    ctx.strokeStyle = 'rgba(255,0,110,0.35)';
+    ctx.strokeRect(xSep + 1, 1, w - xSep - 2, h - 2);
+    ctx.restore();
+}
+
+function dessinerHaloOracle() {
+    if (!etat.pieceActuelle || !oracle.actif) return;
+    const forme = obtenirForme(etat.pieceActuelle);
+    const t = performance.now() / 800;
+    const ctx = obtenirCtx();
+    ctx.save();
+    ctx.shadowColor = '#aa44ff';
+    ctx.shadowBlur = 15 + Math.sin(t) * 5;
+    ctx.globalAlpha = 0.2;
+    ctx.strokeStyle = '#cc66ff';
+    ctx.lineWidth = 1;
+    forme.forEach((ligne, li) => {
+        ligne.forEach((cellule, ci) => {
+            if (!cellule) return;
+            ctx.strokeRect(
+                (etat.pieceActuelle.x + ci) * CONFIG.taille + 1,
+                (etat.pieceActuelle.y + li) * CONFIG.taille + 1,
+                CONFIG.taille - 2,
+                CONFIG.taille - 2
+            );
+        });
+    });
+    ctx.restore();
+}
+
 function reinitialiserEffetsHorsCanvas() {
     const couronne = document.getElementById('couronne');
     if (couronne && !statsGlobales.decorationsActives.includes('couronne_lumineuse')) {
@@ -398,6 +438,12 @@ export function dessinerDecorations() {
                 break;
             case 'halo_relique':
                 dessinerHaloRelique();
+                break;
+            case 'halo_oracle':
+                dessinerHaloOracle();
+                break;
+            case 'bordure_bicolore':
+                dessinerBordureBicolore();
                 break;
             case 'couronne_lumineuse':
                 couronneDemandee = true;

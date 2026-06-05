@@ -433,4 +433,21 @@ export const CODEX = {
             "« Ce n'est pas la victoire que je cherche. C'est la lisibilité. Quelques minutes par jour où je comprends exactement ce que je fais et pourquoi ça compte. »",
         ],
     },
+
+    chronique_oracle: {
+        id: 'chronique_oracle',
+        chapitre: 'chroniques',
+        titre: "L'ALGORITHME ET MOI",
+        sousTitre: "Carnet de Robo, Réflexions sur l'Oracle",
+        icone: '🔮',
+        condition: (s) => (s.oraclePartiesJouees || 0) >= 1,
+        conditionTexte: "Jouer une partie avec l'Oracle activé",
+        illustration: 'dessinerIllustOracle',
+        texte: [
+            "« L'Oracle a raison 73% du temps. J'ai vérifié. C'est une statistique honnête pour un algorithme qui ne connaît que les quatre prochaines secondes. »",
+            "« La première fois que je l'ai ignoré et que ça a marché, j'ai ressenti quelque chose d'inattendu. Pas de la fierté. De la curiosité. Qu'est-ce que j'avais vu que l'algorithme n'avait pas vu ? »",
+            "« L'Oracle optimise pour éviter les trous et effacer des lignes. Il ne joue pas pour le plaisir. Il ne prend pas de risques inutiles. Il est raisonnable. »",
+            '« Je veux être raisonnable. Mais pas à 100%. Ce serait trop ennuyeux. »',
+        ],
+    },
 };

@@ -2008,3 +2008,264 @@ body.contraste-eleve .bouton {
 #banniere-erreur.visible {
     display: flex;
 }
+
+.toggle-oracle-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+}
+.toggle-oracle {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--texte-dim);
+    font-family: var(--police);
+    font-size: 0.38rem;
+    padding: 10px 20px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.toggle-oracle.actif {
+    border-color: #aa44ff;
+    color: #cc66ff;
+    box-shadow: 0 0 14px rgba(170, 68, 255, 0.35);
+    text-shadow: 0 0 8px #aa44ff;
+}
+.oracle-toggle-desc {
+    font-size: 0.26rem;
+    color: var(--texte-dim);
+    letter-spacing: 1px;
+    text-align: center;
+    line-height: 1.8;
+    max-width: 260px;
+}
+
+#notif-oracle {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-family: var(--police);
+    font-size: clamp(0.55rem, 2vw, 0.75rem);
+    padding: 10px 24px;
+    z-index: 250;
+    pointer-events: none;
+    letter-spacing: 3px;
+    text-align: center;
+    border: 2px solid;
+    background: rgba(8, 8, 26, 0.9);
+    transition: none;
+}
+#notif-oracle.visible {
+    animation: feedbackOracle 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+#notif-oracle.oracle-feedback-succes {
+    color: #ffe600;
+    border-color: #ffe600;
+    box-shadow: 0 0 20px rgba(255, 230, 0, 0.5);
+}
+#notif-oracle.oracle-feedback-reset {
+    color: #ff006e;
+    border-color: #ff006e;
+    box-shadow: 0 0 20px rgba(255, 0, 110, 0.4);
+}
+@keyframes feedbackOracle {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+    15% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 1;
+    }
+    75% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+}
+
+.oracle-mult-vert {
+    color: var(--vert);
+}
+.oracle-mult-jaune {
+    color: var(--jaune);
+}
+.oracle-mult-rose {
+    color: var(--rose);
+}
+.oracle-dev-val {
+    color: var(--jaune);
+    font-size: 0.6rem;
+}
+
+.go-stat-oracle {
+    grid-column: 1 / -1;
+}
+.oracle-bonus-val {
+    color: #cc66ff;
+    text-shadow: 0 0 8px #aa44ff;
+}
+
+#conteneur-principal-coop {
+    position: relative;
+    z-index: 1;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    overflow: visible;
+}
+
+body.coop-active #conteneur-principal-coop {
+    display: flex;
+}
+
+body.coop-active #conteneur-principal {
+    display: none !important;
+}
+
+#interface-jeu-coop {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    transform-origin: top left;
+}
+
+.coop-joueur-badge {
+    font-size: 0.45rem;
+    letter-spacing: 3px;
+    text-align: center;
+    padding: 6px;
+}
+.j1-badge {
+    color: var(--cyan);
+    text-shadow: 0 0 8px var(--cyan);
+}
+.j2-badge {
+    color: var(--rose);
+    text-shadow: 0 0 8px var(--rose);
+}
+
+.bouton-passerelle {
+    background: transparent;
+    border: 1px solid var(--vert);
+    color: var(--vert);
+    font-family: var(--police);
+    font-size: 0.32rem;
+    padding: 6px 8px;
+    cursor: pointer;
+    width: 100%;
+    letter-spacing: 1px;
+    transition: all 0.15s;
+    text-shadow: 0 0 6px var(--vert);
+}
+.bouton-passerelle:hover {
+    background: var(--vert);
+    color: var(--fond);
+}
+.bouton-passerelle:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: var(--texte-dim);
+    color: var(--texte-dim);
+    text-shadow: none;
+}
+
+.controles-coop {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    z-index: 50;
+}
+#controles-coop-j1 {
+    left: 0;
+}
+#controles-coop-j2 {
+    right: 0;
+}
+
+.btn-coop-tactile {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid var(--bordure);
+    color: var(--texte);
+    font-family: var(--police);
+    font-size: 0.6rem;
+    width: 44px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.btn-coop-tactile.j1 {
+    border-color: rgba(0, 245, 255, 0.4);
+    color: var(--cyan);
+}
+.btn-coop-tactile.j2 {
+    border-color: rgba(255, 0, 110, 0.4);
+    color: var(--rose);
+}
+.btn-coop-tactile:active {
+    background: rgba(255, 255, 255, 0.2);
+}
+.btn-coop-petit {
+    font-size: 0.3rem;
+}
+
+#notif-niveau.notif-synchro,
+#notif-niveau.notif-niveau-vert {
+    color: #00ff88;
+    border-color: #00ff88;
+    box-shadow: 0 0 16px rgba(0, 255, 136, 0.4);
+}
+
+.go-deco-coop {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    font-size: 0.5rem;
+    letter-spacing: 2px;
+}
+.go-deco-sep {
+    color: var(--texte-dim);
+}
+.go-titre-coop {
+    font-size: 1.2rem;
+}
+.coop-go-fautif {
+    font-size: 0.35rem;
+    color: var(--texte-dim);
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    body.coop-active #controles-coop-j1,
+    body.coop-active #controles-coop-j2 {
+        display: flex;
+    }
+    body.coop-active #interface-jeu-coop .panneau-coop {
+        display: none;
+    }
+    body.coop-active #interface-jeu-coop {
+        justify-content: center;
+    }
+}

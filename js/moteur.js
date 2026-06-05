@@ -52,6 +52,8 @@ import { initialiserBoutons } from './ui-init.js';
 import { initialiserInput } from './input-jeu.js';
 import { adapterInterface, initialiserLayout } from './layout-jeu.js';
 import { chargerStats } from './achievements.js';
+import { demarrerCooperatif, modeCoopActif } from './coop-jeu.js';
+import { initialiserInputCoop } from './coop-input.js';
 import { rechargerCodex, initialiserCodexUI } from './codex.js';
 
 export { obtenirEcranActuel as ecranActuel };
@@ -115,6 +117,8 @@ export function initialiserApplication() {
         biomeEstDebloque,
         appliquerThemeBiome,
         demarrerJeu,
+        demarrerCooperatif,
+        modeCoopEstActif: () => modeCoopActif,
         sonMenu: (type) => AudioMoteur.son(type),
     });
     appliquerThemeBiome(obtenirBiomeActif());
@@ -123,6 +127,7 @@ export function initialiserApplication() {
     initPiecesFond();
     initialiserOptions();
     initialiserInput();
+    initialiserInputCoop();
     initialiserBoutons();
     initialiserCodexUI();
     afficherEcran(ECRANS.TITRE);

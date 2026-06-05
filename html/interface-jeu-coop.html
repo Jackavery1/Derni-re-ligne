@@ -1,0 +1,99 @@
+<div id="conteneur-principal-coop" class="element-masque">
+    <div id="interface-echelle-coop">
+        <div id="interface-jeu-coop">
+            <aside class="panneau panneau-coop panneau-j1">
+                <div class="section coop-joueur-badge j1-badge">
+                    <span>◀ J1</span>
+                </div>
+                <div class="section">
+                    <div class="section-titre">HOLD</div>
+                    <canvas
+                        id="canvas-coop-hold-j1"
+                        class="canvas-preview"
+                        width="104"
+                        height="72"
+                    ></canvas>
+                </div>
+                <div class="section">
+                    <div class="section-titre">NEXT</div>
+                    <canvas
+                        id="canvas-coop-preview-j1"
+                        class="canvas-preview"
+                        width="104"
+                        height="72"
+                    ></canvas>
+                </div>
+                <div class="section">
+                    <div class="stat">
+                        <span class="stat-label">SCORE</span>
+                        <span class="stat-valeur" id="coop-score">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">LIGNES</span>
+                        <span class="stat-valeur" id="coop-lignes">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">NIVEAU</span>
+                        <span class="stat-valeur" id="coop-niveau">1</span>
+                    </div>
+                </div>
+                <div class="section">
+                    <button id="btn-passerelle-j1" class="bouton-passerelle" type="button">
+                        ⇒ PASSEUR
+                    </button>
+                </div>
+            </aside>
+
+            <main id="zone-jeu-coop"></main>
+
+            <aside class="panneau panneau-coop panneau-j2">
+                <div class="section coop-joueur-badge j2-badge">
+                    <span>J2 ▶</span>
+                </div>
+                <div class="section">
+                    <div class="section-titre">HOLD</div>
+                    <canvas
+                        id="canvas-coop-hold-j2"
+                        class="canvas-preview"
+                        width="104"
+                        height="72"
+                    ></canvas>
+                </div>
+                <div class="section">
+                    <div class="section-titre">NEXT</div>
+                    <canvas
+                        id="canvas-coop-preview-j2"
+                        class="canvas-preview"
+                        width="104"
+                        height="72"
+                    ></canvas>
+                </div>
+                <div class="section">
+                    <button id="btn-pause-coop" class="bouton" type="button">⏸ PAUSE</button>
+                </div>
+                <div class="section">
+                    <button id="btn-passerelle-j2" class="bouton-passerelle" type="button">
+                        PASSEUR ⇐
+                    </button>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+<div id="controles-coop-j1" class="controles-coop element-masque">
+    <button class="btn-coop-tactile j1" id="ccj1-gauche" type="button">◀</button>
+    <button class="btn-coop-tactile j1" id="ccj1-rot" type="button">↻</button>
+    <button class="btn-coop-tactile j1" id="ccj1-droite" type="button">▶</button>
+    <button class="btn-coop-tactile j1" id="ccj1-bas" type="button">▼</button>
+    <button class="btn-coop-tactile j1 btn-coop-petit" id="ccj1-drop" type="button">DROP</button>
+    <button class="btn-coop-tactile j1 btn-coop-petit" id="ccj1-pass" type="button">⇒</button>
+</div>
+<div id="controles-coop-j2" class="controles-coop element-masque">
+    <button class="btn-coop-tactile j2" id="ccj2-gauche" type="button">◀</button>
+    <button class="btn-coop-tactile j2" id="ccj2-rot" type="button">↻</button>
+    <button class="btn-coop-tactile j2" id="ccj2-droite" type="button">▶</button>
+    <button class="btn-coop-tactile j2" id="ccj2-bas" type="button">▼</button>
+    <button class="btn-coop-tactile j2 btn-coop-petit" id="ccj2-drop" type="button">DROP</button>
+    <button class="btn-coop-tactile j2 btn-coop-petit" id="ccj2-pass" type="button">⇐</button>
+</div>

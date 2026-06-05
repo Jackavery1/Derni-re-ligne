@@ -5,6 +5,7 @@ import {
     obtenirEssaisKick,
     compterLignesCompletes,
     estPositionValidePlateau,
+    estPositionValideAvecForme,
     calculerPointsLignes,
     calculerNiveauDepuisLignes,
 } from '../js/logique-pure.js';
@@ -31,6 +32,16 @@ describe('logique-pure', () => {
             [1, 1],
         ];
         expect(estPositionValidePlateau(plateau, { x: 4, y: 0 }, forme)).toBe(true);
+    });
+
+    it('estPositionValideAvecForme refuse hors limites', () => {
+        const plateau = Array.from({ length: CONFIG.lignes }, () => Array(CONFIG.colonnes).fill(0));
+        const forme = [[1, 1, 1, 1]];
+        expect(estPositionValideAvecForme(plateau, { x: -1, y: 0 }, forme)).toBe(false);
+    });
+
+    it('verifierSacValide rejette un sac incomplet', () => {
+        expect(verifierSacValide(['I', 'O'])).toBe(false);
     });
 
     it('Ligne complète détectée', () => {

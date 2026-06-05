@@ -1,5 +1,6 @@
 import { CONFIG, TETROMINOS, TOUCHES_DEFAUT, BIOMES, RELIQUES } from './config.js';
-import { remplirSac as genererSac, estPositionValideAvecForme } from './logique-pure.js';
+import { remplirSac as genererSac } from './logique-pure.js';
+import { extraireForme, estPositionValideSurPlateau } from './moteur-piece.js';
 import { obtenirActions } from './actions-jeu.js';
 import {
     etat,
@@ -135,9 +136,7 @@ export function mettreAJourDas(deltaTemps) {
 }
 
 export function obtenirForme(piece) {
-    if (piece.reliqueForme) return piece.reliqueForme;
-    const rotations = TETROMINOS[piece.type].rotations;
-    return rotations[piece.rotation % rotations.length];
+    return extraireForme(piece);
 }
 
 export function obtenirCouleurPiece(piece) {
@@ -146,11 +145,8 @@ export function obtenirCouleurPiece(piece) {
 }
 
 export function estPositionValide(piece, dx = 0, dy = 0, rotation = null) {
-    const rotations = TETROMINOS[piece.type].rotations;
-    const nbRot = rotations.length;
-    const forme =
-        rotation !== null ? rotations[((rotation % nbRot) + nbRot) % nbRot] : obtenirForme(piece);
-    return estPositionValideAvecForme(etat.plateau, piece, forme, dx, dy);
+    const forme = extraireForme(piece, rotation);
+    return estPositionValideSurPlateau(etat.plateau, piece, forme, dx, dy);
 }
 
 export function calculerDistanceChute(piece) {

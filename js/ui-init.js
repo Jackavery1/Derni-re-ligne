@@ -5,6 +5,15 @@ import { afficherEcran } from './ecrans-ui.js';
 import { afficherOngletOptions } from './options-ui.js';
 import { obtenirActions } from './actions-jeu.js';
 import { jouerMelodie } from './melodie.js';
+import { basculerOracle } from './oracle-jeu.js';
+import {
+    basculerModeCoop,
+    demarrerCooperatif,
+    basculerPauseCoop,
+    quitterModeCoop,
+    utiliserPasserelle,
+} from './coop-jeu.js';
+import { coop_dessinerPreview } from './coop-rendu.js';
 
 export function initialiserBoutons() {
     document
@@ -48,6 +57,28 @@ export function initialiserBoutons() {
         .getElementById('btn-selection-retour')
         ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
     document.getElementById('sel-btn-jouer')?.addEventListener('click', lancerBiomeSelectionne);
+    document.getElementById('toggle-oracle')?.addEventListener('click', basculerOracle);
+    document.getElementById('toggle-coop')?.addEventListener('click', basculerModeCoop);
+    document.getElementById('btn-pause-coop')?.addEventListener('click', basculerPauseCoop);
+    document.getElementById('btn-coop-reprendre')?.addEventListener('click', basculerPauseCoop);
+    document
+        .getElementById('btn-coop-rejouer')
+        ?.addEventListener('click', () => demarrerCooperatif());
+    document.getElementById('btn-coop-quitter')?.addEventListener('click', quitterModeCoop);
+    document
+        .getElementById('btn-coop-go-rejouer')
+        ?.addEventListener('click', () => demarrerCooperatif());
+    document.getElementById('btn-coop-go-menu')?.addEventListener('click', quitterModeCoop);
+    document.getElementById('btn-passerelle-j1')?.addEventListener('click', () => {
+        utiliserPasserelle('j1');
+        coop_dessinerPreview('j1');
+        coop_dessinerPreview('j2');
+    });
+    document.getElementById('btn-passerelle-j2')?.addEventListener('click', () => {
+        utiliserPasserelle('j2');
+        coop_dessinerPreview('j1');
+        coop_dessinerPreview('j2');
+    });
     document.getElementById('btn-options')?.addEventListener('click', () => {
         afficherOngletOptions('reglages');
         afficherEcran(ECRANS.OPTIONS);

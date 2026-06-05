@@ -82,6 +82,15 @@ import {
     signalerApparitionPiece,
     sauvegarderSnapshotProfil,
 } from './profil-jeu.js';
+import {
+    oracle,
+    reinitialiserOraclePartie,
+    declencherCalculOracle,
+    afficherSectionOracle,
+    mettreAJourStatsOracleUI,
+    obtenirScoreFinalOracle,
+} from './oracle-jeu.js';
+import { statsGlobales } from './achievements.js';
 
 export function initialiserCanvas() {
     const cp = document.getElementById('canvas-plateau');
@@ -157,6 +166,11 @@ export function quitterVersMenu() {
 }
 
 export function demarrerJeu() {
+    reinitialiserOraclePartie();
+    afficherSectionOracle(oracle.actif);
+    mettreAJourStatsOracleUI();
+    document.getElementById('oracle-bonus-go-wrap')?.classList.add('element-masque');
+
     reinitialiserMelodie();
     reinitialiserHistoriquePositions();
     reinitialiserDonneesPartie();
@@ -238,6 +252,7 @@ export function demarrerJeu() {
     definirAccumulateur(0);
     definirTransitionAlpha(1);
     rendreFrameJeu();
+    declencherCalculOracle();
     planifierBoucle();
 }
 
@@ -275,9 +290,27 @@ export function terminerPartie(victoire = false) {
     const titreGo = document.querySelector('.go-titre');
     if (titreGo) titreGo.textContent = victoire ? 'VICTOIRE !' : textes.gameOver;
 
-    const nouveauRecord = sauvegarderRecord(etat.score);
+    const scoreFinal = obtenirScoreFinalOracle();
 
-    const points = calculerPointsProgression(etat.score, etat.lignes);
+    if (oracle.actif) {
+        statsGlobales.oraclePartiesJouees++;
+        statsGlobales.oracleTotalDeviations += oracle.piecesIgnorees;
+        statsGlobales.oracleDeviationsPartieActuelle = oracle.piecesIgnorees;
+        if (oracle.multiplicateur > statsGlobales.oracleMeilleuresMult) {
+            statsGlobales.oracleMeilleuresMult = oracle.multiplicateur;
+        }
+        if (oracle.scoreBonus > 0) {
+            const elBonus = document.getElementById('oracle-bonus-go');
+            if (elBonus) {
+                elBonus.textContent = `+${oracle.scoreBonus.toLocaleString('fr-FR')}`;
+                document.getElementById('oracle-bonus-go-wrap')?.classList.remove('element-masque');
+            }
+        }
+    }
+
+    const nouveauRecord = sauvegarderRecord(scoreFinal);
+
+    const points = calculerPointsProgression(scoreFinal, etat.lignes);
     if (points > 0) {
         ajouterNiveauGlobal(points);
         sauvegarderNiveauGlobal(obtenirNiveauGlobal());
@@ -285,7 +318,7 @@ export function terminerPartie(victoire = false) {
 
     mettreAJourAffichageRecord();
 
-    document.getElementById('score-final').textContent = etat.score.toLocaleString('fr-FR');
+    document.getElementById('score-final').textContent = scoreFinal.toLocaleString('fr-FR');
     document.getElementById('lignes-finales').textContent = etat.lignes;
     document.getElementById('niveau-final').textContent = etat.niveau;
     document.getElementById('record-final').textContent =
@@ -297,7 +330,7 @@ export function terminerPartie(victoire = false) {
 
     const tempsPartie = Math.floor(obtenirTempsEcoule() / 1000);
     sauvegarderSnapshotProfil(etat.lignes, obtenirBiomeActif());
-    finaliserStatsPartie(etat.score, tempsPartie);
+    finaliserStatsPartie(scoreFinal, tempsPartie);
     verifierCodex();
 
     setTimeout(() => {

@@ -1,15 +1,7 @@
 import { TOUCHES_DEFAUT } from './config.js';
+import { ECRANS } from './ecrans-config.js';
 
-export const ECRANS = {
-    TITRE: 'ecran-titre',
-    SELECTION: 'ecran-selection',
-    OPTIONS: 'ecran-options',
-    PAUSE: 'ecran-pause',
-    GAME_OVER: 'ecran-game-over',
-    ACHIEVEMENTS: 'ecran-achievements',
-    PROFIL: 'ecran-profil',
-    CODEX: 'ecran-codex',
-};
+export { ECRANS };
 
 export const MAX_PARTICULES = 280;
 export const DUREE_TRANSITION = 400;

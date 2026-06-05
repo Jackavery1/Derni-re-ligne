@@ -80,7 +80,7 @@ Détails par version : [CHANGELOG.md](CHANGELOG.md).
 
 ## Déploiement
 
-Statique — GitHub Pages via `deploy.yml` (tests requis avant publish). Preview PR : artefact `site-preview` via `preview.yml`. Release : `npm run release`.
+Statique — GitHub Pages via `deploy.yml` (tests requis avant publish). Preview PR : artefact `site-preview` via `preview.yml`. Release : `npm run release`. Cache PWA : `npm run sync:sw` (automatique en release et deploy).
 
 ## Licence
 

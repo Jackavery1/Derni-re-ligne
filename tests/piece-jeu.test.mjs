@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { CONFIG } from '../js/config.js';
+import { CONFIG, TETROMINOS } from '../js/config.js';
 import {
     definirPieceAuSol,
     definirNbLockResets,
@@ -8,6 +8,9 @@ import {
     obtenirLockDelayRestant,
     etat,
     obtenirSacPieces,
+    touchesActives,
+    dasEtat,
+    definirBiomeActif,
 } from '../js/contexte-jeu.js';
 import {
     creerPlateau,
@@ -19,8 +22,12 @@ import {
     obtenirForme,
     hexVersRgb,
     reinitialiserDas,
+    getCouleurPiece,
+    obtenirCouleurPiece,
+    creerPieceRelique,
+    mettreAJourDas,
+    lierCouleursTetrominos,
 } from '../js/piece-jeu.js';
-import { dasEtat } from '../js/contexte-jeu.js';
 import { TOUCHES_DEFAUT } from '../js/config.js';
 import { configurerActionsJeu } from '../js/actions-jeu.js';
 
@@ -107,5 +114,48 @@ describe('piece-jeu', () => {
         dasEtat[TOUCHES_DEFAUT.gauche] = { moment: 100, repete: true };
         reinitialiserDas(TOUCHES_DEFAUT.gauche);
         expect(dasEtat[TOUCHES_DEFAUT.gauche]).toEqual({ moment: 0, repete: false });
+    });
+
+    it('getCouleurPiece retourne une couleur hex du biome actif', () => {
+        definirBiomeActif('classique');
+        const couleur = getCouleurPiece('I');
+        expect(couleur).toMatch(/^#[0-9a-f]{6}$/i);
+    });
+
+    it('obtenirCouleurPiece utilise la couleur relique', () => {
+        const piece = { type: 'O', reliqueData: { couleur: '#aabbcc' } };
+        expect(obtenirCouleurPiece(piece)).toBe('#aabbcc');
+    });
+
+    it('creerPieceRelique positionne au centre', () => {
+        const relique = {
+            forme: [
+                [1, 1],
+                [1, 1],
+            ],
+            couleur: '#ff0000',
+            nom: 'Test',
+            icone: '★',
+        };
+        const piece = creerPieceRelique(relique);
+        expect(piece.reliqueForme).toEqual(relique.forme);
+        expect(piece.reliqueData).toBe(relique);
+        expect(piece.x).toBeGreaterThanOrEqual(0);
+    });
+
+    it('lierCouleursTetrominos expose couleur sur TETROMINOS', () => {
+        definirBiomeActif('classique');
+        lierCouleursTetrominos();
+        expect(TETROMINOS.I.couleur).toMatch(/^#/);
+    });
+
+    it('mettreAJourDas déclenche action après délai DAS', () => {
+        let appels = 0;
+        configurerActionsJeu({ deplacerGauche: () => appels++ });
+        dasEtat[TOUCHES_DEFAUT.gauche] = { moment: 0, repete: false };
+        touchesActives[TOUCHES_DEFAUT.gauche] = true;
+        mettreAJourDas(CONFIG.dasDelai + 1);
+        expect(appels).toBe(1);
+        touchesActives[TOUCHES_DEFAUT.gauche] = false;
     });
 });

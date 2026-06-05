@@ -50,6 +50,7 @@ import { mettreAJourAffichageTemps } from './ecrans-ui.js';
 import { verrouillerPiece, vitesseChute } from './logique-partie.js';
 import { menuAnimActif, mettreAJourMenuFond } from './menu-fond.js';
 import { mettreAJourHistoriquePositions, dessinerDecorations } from './decorations-jeu.js';
+import { dessinerSuggestionOracle } from './oracle-jeu.js';
 
 export function mettreAJourFps(deltaTemps) {
     if (deltaTemps <= 0) return;
@@ -170,6 +171,7 @@ function boucleJeu(timestamp) {
             dessinerFlashLignes();
             if (etat.pieceActuelle) {
                 dessinerPieceFantome();
+                dessinerSuggestionOracle();
                 dessinerPieceActive();
             }
             dessinerFlashVerrou();

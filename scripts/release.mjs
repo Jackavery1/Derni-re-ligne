@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync } from 'fs';
+import { execSync } from 'child_process';
 
 const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
 const [major, minor, patch] = pkg.version.split('.').map(Number);
@@ -16,6 +17,8 @@ writeFileSync(
 
 const html = readFileSync('index.html', 'utf8');
 writeFileSync('index.html', html.replace(/js\/main\.js\?v=[^"']+/, `js/main.js?v=${next}`));
+
+execSync('node scripts/generate-sw-cache.mjs', { stdio: 'inherit' });
 
 console.log(`Release ${next} — cache SW : ${cacheVersion}`);
 console.log('Pensez à mettre à jour CHANGELOG.md');

@@ -1,4 +1,5 @@
 import { BIOMES, ORDRE_BIOMES } from './config.js';
+import { eclaircir, assombrir } from './rendu-blocs-utils.js';
 
 let deps = {};
 
@@ -16,22 +17,6 @@ let ctxConst = null;
 let evenementsOk = false;
 let dernierTapBiome = null;
 let dernierTapTemps = 0;
-
-function eclaircirHex(hex, facteur) {
-    const n = parseInt(hex.slice(1), 16);
-    const r = Math.min(255, Math.floor(((n >> 16) & 255) * facteur));
-    const g = Math.min(255, Math.floor(((n >> 8) & 255) * facteur));
-    const b = Math.min(255, Math.floor((n & 255) * facteur));
-    return `rgb(${r},${g},${b})`;
-}
-
-function assombrirHex(hex, facteur) {
-    const n = parseInt(hex.slice(1), 16);
-    const r = Math.floor(((n >> 16) & 255) * facteur);
-    const g = Math.floor(((n >> 8) & 255) * facteur);
-    const b = Math.floor((n & 255) * facteur);
-    return `rgb(${r},${g},${b})`;
-}
 
 function compterBiomesDebloques() {
     let n = 0;
@@ -259,9 +244,9 @@ function dessinerNoeudBiome(noeud, timestamp) {
         noeud.y,
         rayon
     );
-    grad.addColorStop(0, eclaircirHex(couleur, 1.35));
+    grad.addColorStop(0, eclaircir(couleur, 1.35));
     grad.addColorStop(0.55, couleur);
-    grad.addColorStop(1, assombrirHex(couleur, 0.45));
+    grad.addColorStop(1, assombrir(couleur, 0.45));
     ctxConst.fillStyle = grad;
     ctxConst.shadowColor = couleur;
     ctxConst.shadowBlur = estHover || estChoisi ? 0 : 12;
@@ -459,5 +444,9 @@ export function lancerBiomeSelectionne() {
     if (!deps.biomeEstDebloque(deps.obtenirNiveauGlobal(), biome.niveauDeblocage)) return;
     deps.definirBiomeActif(biomeChoisi);
     deps.sauvegarderBiomeActif(biomeChoisi);
-    deps.demarrerJeu();
+    if (deps.modeCoopEstActif?.()) {
+        deps.demarrerCooperatif?.();
+    } else {
+        deps.demarrerJeu();
+    }
 }

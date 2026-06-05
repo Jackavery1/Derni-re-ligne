@@ -56,6 +56,7 @@ Architecture : [docs/architecture.md](docs/architecture.md).
 ## Release
 
 ```bash
+npm run sync:sw    # synchroniser la liste de cache SW avec js/ et html/
 npm run release    # bump version, SW, cache-bust HTML
 ```
 

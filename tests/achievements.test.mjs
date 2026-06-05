@@ -25,8 +25,8 @@ describe('achievements', () => {
         statsGlobales.meteosPartieActuelle = new Set();
     });
 
-    it('contient 20 achievements', () => {
-        expect(Object.keys(ACHIEVEMENTS)).toHaveLength(20);
+    it('contient 24 achievements', () => {
+        expect(Object.keys(ACHIEVEMENTS)).toHaveLength(24);
     });
 
     it('majStatsScorePartie met à jour maxLignesUnCoup et maxCombo', () => {
@@ -63,6 +63,24 @@ describe('achievements', () => {
         effets.forEach((e) => majStatsRelique(e));
         verifierAchievements();
         expect(statsGlobales.debloqués.collectionneur).toBeTruthy();
+    });
+
+    it('verifierAchievements débloque centenaire', () => {
+        statsGlobales.lignesTotal = 100;
+        verifierAchievements();
+        expect(statsGlobales.debloqués.centenaire).toBeTruthy();
+    });
+
+    it('verifierAchievements débloque score_10k', () => {
+        statsGlobales.meilleurScore = 10000;
+        verifierAchievements();
+        expect(statsGlobales.debloqués.score_10k).toBeTruthy();
+    });
+
+    it('verifierAchievements débloque explorateur', () => {
+        statsGlobales.biomesJoues = new Set(['classique', 'lave', 'ocean']);
+        verifierAchievements();
+        expect(statsGlobales.debloqués.explorateur).toBeTruthy();
     });
 
     it('sauvegarde et recharge les stats', () => {

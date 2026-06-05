@@ -452,6 +452,34 @@ export function dessinerIllustChroniqueGrandMaitre(ctx2d, w, h) {
     ctx2d.shadowBlur = 0;
 }
 
+export function dessinerIllustOracle(ctx2d, w, h) {
+    ctx2d.fillStyle = '#08081a';
+    ctx2d.fillRect(0, 0, w, h);
+    ctx2d.strokeStyle = '#aa44ff';
+    ctx2d.shadowColor = '#cc66ff';
+    ctx2d.shadowBlur = 12;
+    ctx2d.lineWidth = 2;
+    ctx2d.beginPath();
+    ctx2d.ellipse(w / 2, h / 2, w * 0.38, h * 0.32, 0, 0, Math.PI * 2);
+    ctx2d.stroke();
+    ctx2d.fillStyle = '#cc66ff44';
+    ctx2d.beginPath();
+    ctx2d.arc(w / 2, h / 2, h * 0.2, 0, Math.PI * 2);
+    ctx2d.fill();
+    ctx2d.strokeStyle = '#cc66ff';
+    ctx2d.stroke();
+    ctx2d.fillStyle = '#ffffff';
+    ctx2d.shadowBlur = 8;
+    ctx2d.beginPath();
+    ctx2d.arc(w / 2, h / 2, h * 0.07, 0, Math.PI * 2);
+    ctx2d.fill();
+    ctx2d.fillStyle = 'rgba(255,255,255,0.8)';
+    ctx2d.shadowBlur = 0;
+    ctx2d.beginPath();
+    ctx2d.arc(w / 2 + 4, h / 2 - 4, 2, 0, Math.PI * 2);
+    ctx2d.fill();
+}
+
 export const ILLUSTRATIONS_CODEX = {
     dessinerIllustCircuits,
     dessinerIllustLave,
@@ -479,4 +507,5 @@ export const ILLUSTRATIONS_CODEX = {
     dessinerIllustChroniqueMille,
     dessinerIllustChroniqueVoyage,
     dessinerIllustChroniqueGrandMaitre,
+    dessinerIllustOracle,
 };

@@ -121,7 +121,12 @@ export function dessinerFlashVerrou() {
     obtenirCtx().globalAlpha = opacite;
     obtenirCtx().fillStyle = '#ffffff';
     for (const cell of flashVerrou.cellules) {
-        obtenirCtx().fillRect(cell.x * CONFIG.taille, cell.y * CONFIG.taille, CONFIG.taille, CONFIG.taille);
+        obtenirCtx().fillRect(
+            cell.x * CONFIG.taille,
+            cell.y * CONFIG.taille,
+            CONFIG.taille,
+            CONFIG.taille
+        );
     }
     obtenirCtx().restore();
 }
@@ -352,7 +357,12 @@ function dessinerParticulesAmbiance() {
             obtenirCtx().translate(p.x + p.taille / 2, p.y + p.taille / 2);
             obtenirCtx().rotate(p.rotation);
             obtenirCtx().fillStyle = p.couleur;
-            obtenirCtx().fillRect(-p.taille * 0.6, -p.taille * 0.25, p.taille * 1.2, p.taille * 0.5);
+            obtenirCtx().fillRect(
+                -p.taille * 0.6,
+                -p.taille * 0.25,
+                p.taille * 1.2,
+                p.taille * 0.5
+            );
         } else if (obtenirBiomeActif() === 'lave' || obtenirBiomeActif() === 'ocean') {
             obtenirCtx().fillStyle = p.couleur;
             obtenirCtx().beginPath();
@@ -413,8 +423,7 @@ function mettreAJourTransition() {
 function dessinerBlocsVerrouilles() {
     for (let l = 0; l < CONFIG.lignes; l++) {
         for (let c = 0; c < CONFIG.colonnes; c++) {
-            if (etat.plateau[l][c])
-                dessinerCellule(obtenirCtx(), c, l, etat.plateau[l][c]);
+            if (etat.plateau[l][c]) dessinerCellule(obtenirCtx(), c, l, etat.plateau[l][c]);
         }
     }
 }
@@ -431,18 +440,29 @@ export function dessinerPlateau() {
 
     if (meteo.masquerPlateau) {
         const yMasque = (CONFIG.lignes - 4) * CONFIG.taille;
-        const grad = obtenirCtx().createLinearGradient(0, yMasque, 0, obtenirCanvasPlateau().height);
+        const grad = obtenirCtx().createLinearGradient(
+            0,
+            yMasque,
+            0,
+            obtenirCanvasPlateau().height
+        );
         grad.addColorStop(0, 'rgba(180,230,255,0)');
         grad.addColorStop(0.4, 'rgba(180,230,255,0.55)');
         grad.addColorStop(1, 'rgba(180,230,255,0.85)');
         obtenirCtx().fillStyle = grad;
-        obtenirCtx().fillRect(0, yMasque, obtenirCanvasPlateau().width, obtenirCanvasPlateau().height - yMasque);
+        obtenirCtx().fillRect(
+            0,
+            yMasque,
+            obtenirCanvasPlateau().width,
+            obtenirCanvasPlateau().height - yMasque
+        );
         obtenirCtx().fillStyle = 'rgba(255,255,255,0.7)';
         for (let i = 0; i < 15; i++) {
             const bx = ((performance.now() * 0.02 + i * 73) % 1) * obtenirCanvasPlateau().width;
             const by =
                 yMasque +
-                ((performance.now() * 0.04 + i * 37) % 1) * (obtenirCanvasPlateau().height - yMasque);
+                ((performance.now() * 0.04 + i * 37) % 1) *
+                    (obtenirCanvasPlateau().height - yMasque);
             obtenirCtx().fillRect(bx, by, 2, 2);
         }
     }
@@ -644,7 +664,12 @@ function dessinerPieceDansPreview(ctx2d, canvasEl, piece, slotY, slotHauteur, ta
 export function dessinerFileNext() {
     const tailleCell = 18;
     const espacement = 68;
-    obtenirCtxPreview().clearRect(0, 0, obtenirCanvasPreview().width, obtenirCanvasPreview().height);
+    obtenirCtxPreview().clearRect(
+        0,
+        0,
+        obtenirCanvasPreview().width,
+        obtenirCanvasPreview().height
+    );
 
     if (!etat.filePieces || etat.filePieces.length === 0) return;
 

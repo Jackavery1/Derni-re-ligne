@@ -186,6 +186,42 @@ export const ACHIEVEMENTS = {
         decoration: 'couronne_lumineuse',
         categorie: 'maitrise',
     },
+    oracle_debutant: {
+        id: 'oracle_debutant',
+        nom: 'APPRENTI',
+        description: "Ignorer l'Oracle 5 fois avec succès en une partie",
+        icone: '🔮',
+        condition: (s) => (s.oracleDeviationsPartieActuelle || 0) >= 5,
+        decoration: 'halo_oracle',
+        categorie: 'oracle',
+    },
+    oracle_maitre: {
+        id: 'oracle_maitre',
+        nom: "MAÎTRE DE L'ORACLE",
+        description: 'Atteindre un multiplicateur de ×4.0 ou plus',
+        icone: '✦',
+        condition: (s) => (s.oracleMeilleuresMult || 1) >= 4.0,
+        decoration: 'halo_oracle',
+        categorie: 'oracle',
+    },
+    premiers_pas_coop: {
+        id: 'premiers_pas_coop',
+        nom: 'PARTENAIRES',
+        description: 'Effacer 10 lignes en mode coopératif',
+        icone: '👥',
+        condition: (s) => (s.lignesCoopTotal || 0) >= 10,
+        decoration: 'bordure_bicolore',
+        categorie: 'coop',
+    },
+    synchro_parfaite: {
+        id: 'synchro_parfaite',
+        nom: 'SYMBIOSE',
+        description: 'Effacer 4 lignes simultanées en coop (Tetris Coop)',
+        icone: '🔗',
+        condition: (s) => (s.coopMaxLignesUnCoup || 0) >= 4,
+        decoration: 'eclairs_bords',
+        categorie: 'coop',
+    },
 };
 
 function creerStatsVides() {
@@ -207,6 +243,12 @@ function creerStatsVides() {
         nbAchievementsDebloques: 0,
         debloqués: {},
         decorationsActives: [],
+        oraclePartiesJouees: 0,
+        oracleMeilleuresMult: 1.0,
+        oracleTotalDeviations: 0,
+        oracleDeviationsPartieActuelle: 0,
+        lignesCoopTotal: 0,
+        coopMaxLignesUnCoup: 0,
     };
 }
 
@@ -238,6 +280,12 @@ export function chargerStats() {
         statsGlobales.nbAchievementsDebloques = parsed.nbAchievementsDebloques ?? 0;
         statsGlobales.debloqués = parsed.debloqués ?? {};
         statsGlobales.decorationsActives = parsed.decorationsActives ?? [];
+        statsGlobales.oraclePartiesJouees = parsed.oraclePartiesJouees ?? 0;
+        statsGlobales.oracleMeilleuresMult = parsed.oracleMeilleuresMult ?? 1.0;
+        statsGlobales.oracleTotalDeviations = parsed.oracleTotalDeviations ?? 0;
+        statsGlobales.oracleDeviationsPartieActuelle = 0;
+        statsGlobales.lignesCoopTotal = parsed.lignesCoopTotal ?? 0;
+        statsGlobales.coopMaxLignesUnCoup = parsed.coopMaxLignesUnCoup ?? 0;
         statsGlobales.meteosPartieActuelle = new Set();
     } catch (err) {
         logger.warn('Erreur chargement stats achievements:', err);
@@ -263,6 +311,11 @@ export function sauvegarderStats() {
             nbAchievementsDebloques: statsGlobales.nbAchievementsDebloques,
             debloqués: statsGlobales.debloqués,
             decorationsActives: statsGlobales.decorationsActives,
+            oraclePartiesJouees: statsGlobales.oraclePartiesJouees,
+            oracleMeilleuresMult: statsGlobales.oracleMeilleuresMult,
+            oracleTotalDeviations: statsGlobales.oracleTotalDeviations,
+            lignesCoopTotal: statsGlobales.lignesCoopTotal,
+            coopMaxLignesUnCoup: statsGlobales.coopMaxLignesUnCoup,
         };
         ecrireStockageJson(CLE_STATS, toSave);
     } catch (err) {
@@ -273,6 +326,7 @@ export function sauvegarderStats() {
 export function initStatsPartie() {
     statsGlobales.biomesJoues.add(obtenirBiomeActif());
     statsGlobales.meteosPartieActuelle = new Set();
+    statsGlobales.oracleDeviationsPartieActuelle = 0;
 }
 
 export function majStatsLignesEffacees(nbSupprimees) {

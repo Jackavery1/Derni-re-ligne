@@ -59,6 +59,11 @@ import {
     compterHold,
     enregistrerLignesParNiveau,
 } from './profil-jeu.js';
+import {
+    sauvegarderPlacementOracle,
+    evaluerDecisionOracle,
+    declencherCalculOracle,
+} from './oracle-jeu.js';
 
 export function verrouillerPiece() {
     if (meteo.decalageForce !== 0) {
@@ -66,6 +71,8 @@ export function verrouillerPiece() {
             etat.pieceActuelle.x += meteo.decalageForce;
         }
     }
+
+    sauvegarderPlacementOracle();
 
     const forme = obtenirForme(etat.pieceActuelle);
     const couleur = obtenirCouleurPiece(etat.pieceActuelle);
@@ -126,6 +133,7 @@ export function verrouillerPiece() {
     mettreAJourIndicateurRelique();
 
     signalerApparitionPiece();
+    declencherCalculOracle();
 
     if (!estPositionValide(etat.pieceActuelle)) obtenirActions().terminerPartie?.();
 }
@@ -202,6 +210,7 @@ export function calculerScore(nbLignes) {
 
     etat.score += points;
     etat.lignes += nbLignes;
+    evaluerDecisionOracle(nbLignes);
     const nouveauNiveau = calculerNiveauDepuisLignes(etat.lignes);
     if (nouveauNiveau > etat.niveau) {
         etat.niveau = nouveauNiveau;
@@ -353,6 +362,7 @@ export function utiliserReserve() {
     AudioMoteur.son('hold');
     reinitialiserLockDelay();
     signalerApparitionPiece();
+    declencherCalculOracle();
 
     dessinerPreview(obtenirCtxReserve(), obtenirCanvasReserve(), etat.pieceEnReserve);
 }

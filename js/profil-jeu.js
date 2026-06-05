@@ -3,6 +3,8 @@ import { etat } from './contexte-jeu.js';
 import { obtenirForme } from './piece-jeu.js';
 import { logger } from './logger.js';
 import { lireStockageJson, ecrireStockageJson } from './progression.js';
+import { statsGlobales } from './achievements.js';
+import { oracle } from './oracle-jeu.js';
 
 const MAX_VERROUS = 200;
 const MAX_REACTIONS = 200;
@@ -514,6 +516,19 @@ export function afficherProfil() {
             ? Math.round(reactions.reduce((a, b) => a + b, 0) / reactions.length)
             : 0;
     set('pstat-reaction', `${moyReact}ms`);
+
+    const wrapOracle = document.getElementById('pstat-oracle-wrap');
+    const multOracle = oracle.actif
+        ? oracle.multiplicateur
+        : statsGlobales.oracleMeilleuresMult || 1;
+    if (wrapOracle) {
+        if (oracle.actif || statsGlobales.oraclePartiesJouees > 0) {
+            wrapOracle.classList.remove('element-masque');
+            set('pstat-oracle-mult', `×${multOracle.toFixed(1)}`);
+        } else {
+            wrapOracle.classList.add('element-masque');
+        }
+    }
 
     requestAnimationFrame(() => {
         const cHeat = document.getElementById('canvas-heatmap');
