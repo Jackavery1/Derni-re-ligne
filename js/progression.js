@@ -327,6 +327,44 @@ export function chargerEtatHistoire() {
     return etat;
 }
 
+/**
+ * Retourne l'état de déblocage des fonctionnalités selon l'avancement histoire.
+ * Les IDs de boss correspondent à ceux définis dans js/histoire-donnees.js.
+ * @returns {{ codex: boolean, mondeLibre: boolean, profil: boolean, achievements: boolean, oracleCoop: boolean, architecte: boolean }}
+ */
+export function obtenirEtatDeblocage() {
+    let etat = null;
+    try {
+        etat = chargerEtatHistoire();
+    } catch {
+        // Pas encore d'historique → tout verrouillé sauf MODE HISTOIRE
+    }
+    if (!etat) {
+        return {
+            codex: false,
+            mondeLibre: false,
+            profil: false,
+            achievements: false,
+            oracleCoop: false,
+            architecte: false,
+        };
+    }
+
+    const bossVaincus = Array.isArray(etat.bossVaincus) ? etat.bossVaincus : [];
+    const mondesCompletes = Array.isArray(etat.mondesCompletes) ? etat.mondesCompletes : [];
+
+    return {
+        codex: mondesCompletes.includes('classique') || mondesCompletes.includes('monde_prologue'),
+        mondeLibre: bossVaincus.includes('brasier'),
+        profil: bossVaincus.includes('sentinelle'),
+        achievements: bossVaincus.includes('archiviste'),
+        oracleCoop: bossVaincus.includes('avantgarde'),
+        architecte:
+            bossVaincus.includes('distorsion') ||
+            (etat.finObtenue !== null && etat.finObtenue !== undefined),
+    };
+}
+
 /** @param {typeof ETAT_HISTOIRE_VIDE} etat */
 export function sauvegarderEtatHistoire(etat) {
     ecrireStockageJson('derniereLigne_histoire', etat);

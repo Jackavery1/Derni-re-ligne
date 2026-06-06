@@ -1,8 +1,13 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { filtrerViolationsCritiques } from './helpers.mjs';
+import {
+    filtrerViolationsCritiques,
+    preparerPageSansSw,
+    ETAT_DEBLOCAGE_COMPLET,
+} from './helpers.mjs';
 
 test('écran sélection constellation sans violations critiques', async ({ page }) => {
+    await preparerPageSansSw(page);
     await page.goto('/');
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
@@ -11,6 +16,7 @@ test('écran sélection constellation sans violations critiques', async ({ page 
 });
 
 test('écran options sans violations critiques', async ({ page }) => {
+    await preparerPageSansSw(page);
     await page.goto('/');
     await page.locator('#btn-options').click();
     await expect(page.locator('#ecran-options')).toHaveClass(/actif/);
@@ -19,6 +25,7 @@ test('écran options sans violations critiques', async ({ page }) => {
 });
 
 test('navigation vers la sélection architecte', async ({ page }) => {
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
     await page.goto('/');
     await page.locator('#btn-architecte').click();
     await expect(page.locator('#ecran-archi-selection')).toHaveClass(/actif/);
@@ -26,6 +33,7 @@ test('navigation vers la sélection architecte', async ({ page }) => {
 });
 
 test('sélection architecte sans violations critiques', async ({ page }) => {
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
     await page.goto('/');
     await page.locator('#btn-architecte').click();
     await expect(page.locator('#ecran-archi-selection')).toHaveClass(/actif/);
@@ -34,6 +42,7 @@ test('sélection architecte sans violations critiques', async ({ page }) => {
 });
 
 test('lancement niveau architecte affiche le plateau', async ({ page }) => {
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
     await page.goto('/');
     await page.locator('#btn-architecte').click();
     await expect(page.locator('#ecran-archi-selection')).toHaveClass(/actif/);
@@ -43,6 +52,7 @@ test('lancement niveau architecte affiche le plateau', async ({ page }) => {
 });
 
 test('retour menu depuis sélection architecte', async ({ page }) => {
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
     await page.goto('/');
     await page.locator('#btn-architecte').click();
     await page.locator('#archi-sel-retour').click();
@@ -50,6 +60,7 @@ test('retour menu depuis sélection architecte', async ({ page }) => {
 });
 
 test('undo architecte restaure un placement', async ({ page }) => {
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
     await page.goto('/');
     await page.locator('#btn-architecte').click();
     await page.locator('.carte-niveau-archi').first().click();

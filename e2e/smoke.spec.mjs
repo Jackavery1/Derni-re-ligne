@@ -3,7 +3,9 @@ import AxeBuilder from '@axe-core/playwright';
 import {
     demarrerPartie,
     demarrerPartieViaClavier,
+    terminerPartieCourante,
     filtrerViolationsCritiques,
+    preparerPageSansSw,
 } from './helpers.mjs';
 
 test('aucune bannière erreur au démarrage', async ({ page }) => {
@@ -12,7 +14,11 @@ test('aucune bannière erreur au démarrage', async ({ page }) => {
 });
 
 test('écran titre et navigation vers la sélection', async ({ page }) => {
+    await preparerPageSansSw(page);
     await page.goto('/');
+    await expect(page.locator('body')).toHaveAttribute('data-neo-test-ready', '1', {
+        timeout: 15000,
+    });
     await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
@@ -53,6 +59,7 @@ test('interface jeu sans violations accessibilité critiques', async ({ page }) 
 });
 
 test('options affiche l’onglet contrôles', async ({ page }) => {
+    await preparerPageSansSw(page);
     await page.goto('/');
     await page.locator('#btn-options').click();
     await expect(page.locator('#ecran-options')).toHaveClass(/actif/);
@@ -66,24 +73,31 @@ test('sélection biome au clavier démarre une partie', async ({ page }) => {
     await expect(page.locator('#affichage-temps')).not.toHaveText('00:00', { timeout: 5000 });
 });
 
-test('mode sprint sélectionnable', async ({ page }) => {
+test('toggle marathon sprint retiré de l écran titre', async ({ page }) => {
     await page.goto('/');
-    await page.locator('#btn-mode-sprint').click();
-    await expect(page.locator('#btn-mode-sprint')).toHaveClass(/actif/);
+    await expect(page.locator('#btn-mode-sprint')).toHaveCount(0);
+    await expect(page.locator('#btn-mode-marathon')).toHaveCount(0);
 });
 
 test('game over affiche l écran dédié', async ({ page }) => {
     await demarrerPartieViaClavier(page);
-    await page.evaluate(async () => {
-        const { terminerPartie } = await import('/js/partie.js');
-        terminerPartie(false);
-    });
-    await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/);
+    await terminerPartieCourante(page);
+    await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/, { timeout: 10000 });
 });
 
 test('options respecte le contraste des couleurs', async ({ page }) => {
+    await preparerPageSansSw(page);
     await page.goto('/');
     await page.locator('#btn-options').click();
     const result = await new AxeBuilder({ page }).include('#ecran-options').analyze();
     expect(filtrerViolationsCritiques(result.violations, { inclureContraste: true })).toEqual([]);
+});
+
+test('écran titre utilisable sur viewport mobile', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+    await expect(page.locator('#btn-jouer')).toBeVisible();
+    await page.locator('#btn-jouer').click();
+    await expect(page.locator('#sel-biome-clavier')).toBeVisible();
 });

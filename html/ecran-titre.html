@@ -31,74 +31,89 @@
             aria-hidden="true"
         />
 
-        <!-- Affichage du meilleur score -->
-        <div class="menu-record">
-            <span class="menu-record-label" data-label="record">★ RECORD</span>
-            <span id="menu-record-val" class="menu-record-valeur">0</span>
-        </div>
-
-        <div class="menu-modes" role="group" aria-label="Mode de jeu">
+        <!-- ========== BOUTON PRINCIPAL ========== -->
+        <div class="menu-bloc-principal">
             <button
-                class="bouton bouton-mode actif"
+                id="btn-mode-histoire"
+                class="btn-menu btn-histoire"
                 type="button"
-                data-mode="marathon"
-                id="btn-mode-marathon"
+                aria-label="Ouvrir le mode Histoire"
             >
-                MARATHON
-            </button>
-            <button
-                class="bouton bouton-mode"
-                type="button"
-                data-mode="sprint"
-                id="btn-mode-sprint"
-            >
-                SPRINT 40
+                <span class="btn-icone">⚡</span>
+                <span class="btn-texte">MODE HISTOIRE</span>
+                <span class="btn-sous-titre">La Fragmentation</span>
             </button>
         </div>
 
-        <button
-            class="bouton bouton-jouer"
-            type="button"
-            id="btn-jouer"
-            aria-label="Démarrer une nouvelle partie"
-        >
-            ▶ JOUER
-        </button>
-        <button
-            class="bouton bouton-architecte-titre"
-            type="button"
-            id="btn-architecte"
-            aria-label="Ouvrir le mode Architecte"
-        >
-            🏛 ARCHITECTE
-        </button>
-        <button
-            class="bouton bouton-histoire bouton-histoire-titre"
-            type="button"
-            id="btn-histoire"
-            aria-label="Ouvrir le mode Histoire"
-        >
-            ⚡ MODE HISTOIRE
-        </button>
-        <button
-            class="bouton bouton-achievements"
-            type="button"
-            id="btn-achievements"
-            aria-label="Voir les achievements"
-        >
-            🏆 ACHIEVEMENTS
-        </button>
-        <button
-            class="bouton discret bouton-profil"
-            type="button"
-            id="btn-profil"
-            aria-label="Voir le profil de jeu"
-        >
-            📊 PROFIL
-        </button>
-        <button class="bouton discret" type="button" id="btn-codex" aria-label="Ouvrir le Codex">
-            📖 CODEX
-        </button>
+        <!-- ========== MODE LIBRE ========== -->
+        <div class="menu-separateur">
+            <span>— MODE LIBRE —</span>
+        </div>
+
+        <div class="menu-bloc-libre">
+            <button
+                id="btn-jouer"
+                class="btn-menu btn-jouer"
+                type="button"
+                data-condition="Complétez le Chapitre I"
+                aria-label="Ouvrir le Monde Libre"
+            >
+                <span class="btn-icone">★</span>
+                <span class="btn-texte">MONDE LIBRE</span>
+            </button>
+
+            <button
+                id="btn-architecte"
+                class="btn-menu btn-architecte"
+                type="button"
+                data-condition="Battez la Distorsion"
+                aria-label="Ouvrir le mode Architecte"
+            >
+                <span class="btn-icone">▦</span>
+                <span class="btn-texte">ARCHITECTE</span>
+            </button>
+        </div>
+
+        <!-- ========== COLLECTION ========== -->
+        <div class="menu-separateur">
+            <span>— COLLECTION —</span>
+        </div>
+
+        <div class="menu-bloc-collection">
+            <button
+                id="btn-codex"
+                class="btn-menu btn-codex"
+                type="button"
+                data-condition="Complétez le Prologue"
+                aria-label="Ouvrir le Codex"
+            >
+                <span class="btn-icone">📖</span>
+                <span class="btn-texte">CODEX</span>
+            </button>
+
+            <button
+                id="btn-profil"
+                class="btn-menu btn-profil"
+                type="button"
+                data-condition="Complétez le Chapitre II"
+                aria-label="Voir le profil de jeu"
+            >
+                <span class="btn-icone">◈</span>
+                <span class="btn-texte">PROFIL</span>
+            </button>
+
+            <button
+                id="btn-achievements"
+                class="btn-menu btn-achievements"
+                type="button"
+                data-condition="Complétez le Chapitre III"
+                aria-label="Voir les achievements"
+            >
+                <span class="btn-icone">🏆</span>
+                <span class="btn-texte">ACHIEVEMENTS</span>
+            </button>
+        </div>
+
         <button
             class="bouton discret"
             type="button"

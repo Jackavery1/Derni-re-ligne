@@ -1,8 +1,14 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { filtrerViolationsCritiques } from './helpers.mjs';
+import {
+    filtrerViolationsCritiques,
+    terminerPartieCourante,
+    preparerPageSansSw,
+    ETAT_DEBLOCAGE_COMPLET,
+} from './helpers.mjs';
 
 test('achievements sans violations accessibilité critiques', async ({ page }) => {
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
     await page.goto('/');
     await page.locator('#btn-achievements').click();
     await expect(page.locator('#ecran-achievements')).toHaveClass(/actif/);
@@ -11,9 +17,43 @@ test('achievements sans violations accessibilité critiques', async ({ page }) =
 });
 
 test('profil sans violations accessibilité critiques', async ({ page }) => {
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
     await page.goto('/');
     await page.locator('#btn-profil').click();
     await expect(page.locator('#ecran-profil')).toHaveClass(/actif/);
     const result = await new AxeBuilder({ page }).include('#ecran-profil').analyze();
+    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
+});
+
+test('sélection biome sans violations accessibilité critiques', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/');
+    await page.locator('#btn-jouer').click();
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    const result = await new AxeBuilder({ page }).include('#ecran-selection').analyze();
+    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
+});
+
+test('pause sans violations accessibilité critiques', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/');
+    await page.locator('#btn-jouer').click();
+    await page.locator('#sel-biome-clavier').selectOption({ index: 1 });
+    await page.locator('#sel-btn-jouer').click();
+    await page.locator('#btn-pause').click();
+    await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
+    const result = await new AxeBuilder({ page }).include('#ecran-pause').analyze();
+    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
+});
+
+test('game over sans violations accessibilité critiques', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/');
+    await page.locator('#btn-jouer').click();
+    await page.locator('#sel-biome-clavier').selectOption({ index: 1 });
+    await page.locator('#sel-btn-jouer').click();
+    await terminerPartieCourante(page);
+    await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/, { timeout: 10000 });
+    const result = await new AxeBuilder({ page }).include('#ecran-game-over').analyze();
     expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
 });

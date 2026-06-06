@@ -2201,6 +2201,10 @@ body.contraste-eleve .bouton {
     }
 }
 
+.overlay-tutoriel.element-masque {
+    display: none !important;
+}
+
 .overlay-tutoriel {
     position: fixed;
     inset: 0;
@@ -3340,4 +3344,206 @@ body.histoire-active #indicateur-vide-actif {
     border: 1px solid rgba(255, 230, 0, 0.3);
     background: rgba(255, 230, 0, 0.04);
     animation: clignoteBoss 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   MENU TITRE — HIÉRARCHIE NARRATIVE
+   ============================================ */
+
+.btn-menu {
+    font-family: inherit;
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    padding: 10px 14px;
+    border: 2px solid;
+    border-radius: 4px;
+    cursor: pointer;
+    transition:
+        filter 0.15s ease,
+        transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-menu:hover:not(.btn-verrouille) {
+    filter: brightness(1.15);
+}
+
+.menu-bloc-principal {
+    margin-bottom: 12px;
+}
+
+.btn-histoire {
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #1a0030 0%, #3d0060 50%, #1a0030 100%);
+    border: 2px solid #dd00ff;
+    color: #ff88ff;
+    box-shadow:
+        0 0 12px rgba(221, 0, 255, 0.5),
+        0 0 28px rgba(221, 0, 255, 0.2),
+        inset 0 0 16px rgba(221, 0, 255, 0.08);
+    animation: histoire-pulse 2s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.btn-histoire::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 80%;
+    height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255, 136, 255, 0.08), transparent);
+    animation: histoire-shimmer 3s linear infinite;
+    pointer-events: none;
+}
+
+.btn-sous-titre {
+    display: block;
+    font-size: 0.45em;
+    color: #cc88ff;
+    letter-spacing: 3px;
+    font-style: italic;
+    opacity: 0.85;
+}
+
+.btn-icone {
+    margin-right: 6px;
+}
+
+@keyframes histoire-pulse {
+    0%,
+    100% {
+        box-shadow:
+            0 0 12px rgba(221, 0, 255, 0.5),
+            0 0 28px rgba(221, 0, 255, 0.2);
+    }
+    50% {
+        box-shadow:
+            0 0 22px rgba(221, 0, 255, 0.8),
+            0 0 45px rgba(221, 0, 255, 0.35),
+            0 0 70px rgba(221, 0, 255, 0.1);
+    }
+}
+
+@keyframes histoire-shimmer {
+    0% {
+        left: -150%;
+    }
+    100% {
+        left: 150%;
+    }
+}
+
+.menu-separateur {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 0.42em;
+    letter-spacing: 4px;
+    margin: 10px 0 6px;
+}
+
+.menu-separateur::before,
+.menu-separateur::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.menu-bloc-libre {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.menu-bloc-collection {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+}
+
+.btn-jouer {
+    background: linear-gradient(135deg, #001a2e, #003355);
+    border-color: #00ccff;
+    color: #88eeff;
+}
+
+.btn-architecte {
+    background: linear-gradient(135deg, #0a1020, #1a2840);
+    border-color: #8899cc;
+    color: #aabbdd;
+}
+
+.btn-codex {
+    background: linear-gradient(135deg, #1a1200, #3d2e00);
+    border-color: #ddaa00;
+    color: #ffcc44;
+}
+
+.btn-profil {
+    background: linear-gradient(135deg, #001020, #002244);
+    border-color: #0066ff;
+    color: #88aaff;
+}
+
+.btn-achievements {
+    background: linear-gradient(135deg, #1a1000, #3d2800);
+    border-color: #ff9900;
+    color: #ffbb44;
+}
+
+/* ============================================
+   BOUTONS VERROUILLÉS
+   ============================================ */
+
+.btn-verrouille {
+    opacity: 0.3 !important;
+    filter: grayscale(80%) brightness(0.6) !important;
+    cursor: not-allowed !important;
+    position: relative;
+}
+
+.btn-verrouille .btn-texte::after {
+    content: '🔒';
+    margin-left: 6px;
+    font-size: 0.8em;
+}
+
+.btn-verrouille--actif::before {
+    content: '🔒 ' attr(data-condition);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.95);
+    color: #aaaaaa;
+    font-size: 0.35em;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #444;
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
+    animation: fadeInUp 0.2s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
 }

@@ -1,6 +1,7 @@
 import { BIOMES, ORDRE_BIOMES } from './config.js';
 import { eclaircir, assombrir } from './rendu-blocs-utils.js';
 import { obtenirCanvas } from './dom-utils.js';
+import { obtenirEtatDeblocage } from './progression.js';
 
 let deps = {};
 
@@ -456,9 +457,27 @@ export function configurerConstellation(configuration) {
     deps = configuration;
 }
 
+function verrouillerOracleCoopSiNecessaire() {
+    const deblocage = obtenirEtatDeblocage();
+    ['toggle-oracle', 'toggle-coop'].forEach((id) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        if (!deblocage.oracleCoop) {
+            btn.classList.add('btn-verrouille');
+            btn.setAttribute('data-condition', 'Complétez le Chapitre IV');
+            btn.setAttribute('aria-disabled', 'true');
+        } else {
+            btn.classList.remove('btn-verrouille');
+            btn.removeAttribute('data-condition');
+            btn.removeAttribute('aria-disabled');
+        }
+    });
+}
+
 export function demarrerConstellation() {
     arreterConstellation();
     initConstellation();
+    verrouillerOracleCoopSiNecessaire();
     idFrameConst = requestAnimationFrame(boucleConstellation);
 }
 
