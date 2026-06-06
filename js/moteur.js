@@ -9,6 +9,7 @@ import {
     calculerEtoiles,
     formaterEtoiles,
     biomeEstDebloque,
+    migrerClesLocalStorage,
 } from './progression.js';
 import { configurerActionsJeu } from './actions-jeu.js';
 import {
@@ -56,6 +57,7 @@ import { initialiserInputCoop } from './coop-input.js';
 import { initialiserInputArchi } from './archi-input.js';
 import { rechargerCodex, initialiserCodexUI } from './codex.js';
 import { initialiserEffetsPartie } from './effets-partie.js';
+import { rafraichirEtatHistoire } from './histoire-manager.js';
 
 export { obtenirEcranActuel as ecranActuel };
 
@@ -76,6 +78,7 @@ configurerActionsJeu({
 
 /** Initialise le jeu : canvas, audio, constellation, UI et boucle principale. */
 export function initialiserApplication() {
+    migrerClesLocalStorage();
     initialiserEffetsPartie();
     configurerMeteo({
         obtenirEtat: () => etat,
@@ -101,6 +104,7 @@ export function initialiserApplication() {
     });
     if (!initialiserCanvas()) return;
     chargerStats();
+    rafraichirEtatHistoire();
     rechargerCodex();
     adapterInterface();
     initialiserLayout();

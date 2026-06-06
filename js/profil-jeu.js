@@ -9,7 +9,7 @@ import { oracle } from './oracle-jeu.js';
 
 const MAX_VERROUS = 200;
 const MAX_REACTIONS = 200;
-const CLE_PROFIL = 'tetrisNeo_profilDernier';
+const CLE_PROFIL = 'derniereLigne_profilDernier';
 
 function creerDonneesVides() {
     return {

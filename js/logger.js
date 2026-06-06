@@ -1,4 +1,4 @@
-const JOURNAL_ERREURS_CLE = 'tetrisNeo_journalErreurs';
+const JOURNAL_ERREURS_CLE = 'derniereLigne_journalErreurs';
 const JOURNAL_ERREURS_MAX = 10;
 
 function modeDebugActif() {

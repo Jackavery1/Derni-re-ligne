@@ -88,6 +88,16 @@ import {
     signalerApparitionPiece,
     sauvegarderSnapshotProfil,
 } from './profil-jeu.js';
+import { store } from './store-core.js';
+import { surFinDeMondeHistoire } from './histoire-manager.js';
+import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
+import { demarrerBoss, arreterBoss, bossEstActif } from './boss-jeu.js';
+import {
+    initialiserMecaniquesHistoire,
+    arreterMecaniquesHistoire,
+    onGameOverHistoire,
+} from './mecaniques-histoire.js';
+import { reinitialiserConditionsRuntime } from './conditions-secrets.js';
 import {
     oracle,
     reinitialiserOraclePartie,
@@ -164,6 +174,8 @@ export function quitterVersMenu() {
     etat.estEnPause = false;
     particules.length = 0;
     annulerMeteo();
+    arreterBoss();
+    arreterMecaniquesHistoire();
     AudioMoteur.arreterMusique();
     changerHumeur('neutre');
     cacherEcrans();
@@ -174,6 +186,9 @@ export function quitterVersMenu() {
 
 function initialiserFeaturesPartie() {
     reinitialiserOraclePartie();
+    if (store.modeHistoireActif) {
+        reinitialiserConditionsRuntime();
+    }
     afficherSectionOracle(oracle.actif);
     mettreAJourStatsOracleUI();
     document.getElementById('oracle-bonus-go-wrap')?.classList.add('element-masque');
@@ -258,6 +273,8 @@ function initialiserUIPartie() {
     if (elTemps) elTemps.textContent = '00:00';
     cacherEcrans();
     initParticulesAmbiance();
+    arreterMecaniquesHistoire();
+    initialiserMecaniquesHistoire();
     document.body.classList.add('partie-active');
     changerHumeur('neutre');
 
@@ -273,6 +290,18 @@ export function demarrerJeu() {
     initialiserFeaturesPartie();
     initialiserAudioPartie();
     initialiserEtatPartie();
+
+    if (store.modeHistoireActif && store.mondeHistoireActuel) {
+        const monde = SEQUENCE_HISTOIRE.find((m) => m.id === store.mondeHistoireActuel);
+        if (monde?.estBoss && monde?.bossId) {
+            demarrerBoss(monde.bossId);
+        } else {
+            arreterBoss();
+        }
+    } else {
+        arreterBoss();
+    }
+
     initialiserUIPartie();
     planifierBoucle();
 }
@@ -303,7 +332,13 @@ export function basculerPause() {
 }
 
 export function terminerPartie(victoire = false) {
+    if (bossEstActif() && !victoire) {
+        arreterBoss();
+    }
     etat.estEnCours = false;
+    if (store.modeHistoireActif && !victoire) {
+        onGameOverHistoire(etat.lignes, store.mondeHistoireActuel ?? '');
+    }
     annulerMeteo();
     AudioMoteur.arreterMusique(200);
     changerHumeur(victoire ? 'excite' : 'triste');
@@ -356,6 +391,13 @@ export function terminerPartie(victoire = false) {
     sauvegarderSnapshotProfil(etat.lignes, obtenirBiomeActif());
     finaliserStatsPartie(scoreFinal, tempsPartie);
     void verifierCodex();
+
+    if (!store.modeHistoireActif) {
+        const btnCarte = document.getElementById('btn-histoire-carte');
+        if (btnCarte) btnCarte.style.display = 'none';
+    } else {
+        surFinDeMondeHistoire(etat.lignes, scoreFinal);
+    }
 
     setTimeout(() => {
         afficherEcran(ECRANS.GAME_OVER);

@@ -1,6 +1,7 @@
-# Tetris Néo ✦
+# Dernière Ligne ✦
 
-Tetris moderne en Vanilla JS + Canvas 2D. PWA jouable hors-ligne.
+Jeu de Tetris narratif en Vanilla JS + Canvas 2D. PWA jouable hors-ligne.
+Mode Arcade et Mode Histoire « La Fragmentation ».
 
 **Version actuelle : 2.5.0** — voir [CHANGELOG.md](CHANGELOG.md) pour l'historique complet.
 
@@ -14,6 +15,7 @@ Tetris moderne en Vanilla JS + Canvas 2D. PWA jouable hors-ligne.
 - **Achievements** : défis débloquables avec décorations visuelles
 - **Profil de jeu** : analyse de style (APM, réactions, colonnes préférées)
 - **Codex** : encyclopédie des mondes, reliques et mécaniques
+- **Mode Histoire** : campagne narrative « La Fragmentation », boss, journaux VERA
 - PWA installable, contraste élevé, contrôles clavier et tactile
 
 | Touche    | Action                 |

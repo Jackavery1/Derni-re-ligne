@@ -2,7 +2,7 @@ import { logger } from './logger.js';
 import { creerContexteAudio } from './dom-utils.js';
 
 // ════════════════════════════════════════════════════════════
-//  MOTEUR AUDIO — Tetris Néo
+//  MOTEUR AUDIO — Dernière Ligne
 // ════════════════════════════════════════════════════════════
 
 const GAMMES = {
@@ -261,7 +261,7 @@ export const AudioMoteur = {
     basculerMute() {
         if (!this.ctx) return;
         this.muet = !this.muet;
-        ecrireStockageFn('tetrisNeo_muet', this.muet.toString());
+        ecrireStockageFn('derniereLigne_muet', this.muet.toString());
         const t = this.ctx.currentTime;
         this.gainMaitre.gain.cancelScheduledValues(t);
         this.gainMaitre.gain.setValueAtTime(this.gainMaitre.gain.value, t);

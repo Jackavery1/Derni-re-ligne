@@ -25,6 +25,7 @@ export {
     dessinerPieceFantome,
     dessinerPieceActive,
     dessinerParticules,
+    dessinerOverlayBraise,
     obtenirYHautTas,
 } from './rendu-plateau.js';
 

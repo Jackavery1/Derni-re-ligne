@@ -10,7 +10,7 @@
 
 ## Signaler une vulnérabilité
 
-Tetris Néo est une application **100 % client** (Vanilla JS, PWA). Il n'y a pas de backend ni de collecte de données personnelles côté serveur.
+Dernière Ligne est une application **100 % client** (Vanilla JS, PWA). Il n'y a pas de backend ni de collecte de données personnelles côté serveur.
 
 Si vous découvrez une faille de sécurité (XSS, contournement CSP, corruption localStorage, etc.) :
 
@@ -26,7 +26,7 @@ Délai de réponse visé : **7 jours ouvrés**.
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
 | **XSS**                    | CSP stricte (`script-src 'self'`), pas de `innerHTML` sur contenu dynamique, fragments HTML chargés via `DOMParser` | Faible — contenu statique contrôlé       |
 | **Injection localStorage** | Whitelist de clés dans `progression.js`, validation regex                                                           | Faible — impact local uniquement         |
-| **Cache poisoning SW**     | SW versionné (`tetris-neo-{semver}`), notification MAJ, purge anciens caches                                        | Moyen — utilisateur peut retarder la MAJ |
+| **Cache poisoning SW**     | SW versionné (`derniere-ligne-{semver}`), notification MAJ, purge anciens caches                                    | Moyen — utilisateur peut retarder la MAJ |
 | **Supply chain npm**       | 0 dépendance runtime, `npm audit` + Dependabot + CodeQL en CI                                                       | Faible                                   |
 | **CSRF / SQLi**            | Non applicable (pas de backend)                                                                                     | N/A                                      |
 

@@ -1,8 +1,18 @@
 import { logger } from './logger.js';
-import { lireStockageJson, ecrireStockageJson } from './progression.js';
+import {
+    lireStockageJson,
+    ecrireStockageJson,
+    chargerEtatHistoire,
+    sauvegarderEtatHistoire,
+} from './progression.js';
+import { store } from './store-core.js';
 import { obtenirBiomeActif } from './store-jeu.js';
 import { melodie } from './melodie.js';
 import { creerFileNotifications } from './notifications-file.js';
+import {
+    ACHIEVEMENTS_HISTOIRE,
+    reinitialiserStatsAchievementsHistoire,
+} from './achievements-histoire.js';
 
 export const ACHIEVEMENTS = {
     premier_tetris: {
@@ -297,6 +307,8 @@ export const ACHIEVEMENTS = {
     },
 };
 
+Object.assign(ACHIEVEMENTS, ACHIEVEMENTS_HISTOIRE);
+
 function creerStatsVides() {
     return {
         lignesTotal: 0,
@@ -331,6 +343,11 @@ function creerStatsVides() {
         maxEvenementsUnePartie: 0,
         biomesVivantSubis: new Set(),
         lignesPendantVivant: 0,
+        bossHistoireVaincus: [],
+        journauxHistoire: [],
+        toutesFinHistoire: [],
+        mondesHistoireCompletes: [],
+        mondesCachesDebloques: [],
     };
 }
 
@@ -355,7 +372,7 @@ const fileAchievements = creerFileNotifications({
     },
 });
 
-const CLE_STATS = 'tetrisNeo_statsGlobales';
+const CLE_STATS = 'derniereLigne_statsGlobales';
 
 export function chargerStats() {
     try {
@@ -396,7 +413,26 @@ export function chargerStats() {
             parsed.maxEvenementsUnePartie ?? base.maxEvenementsUnePartie;
         statsGlobales.biomesVivantSubis = new Set(parsed.biomesVivantSubis || []);
         statsGlobales.lignesPendantVivant = parsed.lignesPendantVivant ?? base.lignesPendantVivant;
+        statsGlobales.bossHistoireVaincus = parsed.bossHistoireVaincus ?? [];
+        statsGlobales.journauxHistoire = parsed.journauxHistoire ?? [];
+        statsGlobales.toutesFinHistoire = parsed.toutesFinHistoire ?? [];
+        statsGlobales.mondesHistoireCompletes = parsed.mondesHistoireCompletes ?? [];
+        statsGlobales.mondesCachesDebloques = parsed.mondesCachesDebloques ?? [];
         statsGlobales.meteosPartieActuelle = new Set();
+
+        const etatHist = chargerEtatHistoire();
+        statsGlobales.mondesHistoireCompletes = [
+            ...new Set([
+                ...statsGlobales.mondesHistoireCompletes,
+                ...(etatHist.mondesCompletes ?? []),
+            ]),
+        ];
+        statsGlobales.mondesCachesDebloques = [
+            ...new Set([
+                ...statsGlobales.mondesCachesDebloques,
+                ...(etatHist.mondesCachesDebloques ?? []),
+            ]),
+        ];
     } catch (err) {
         logger.warn('Erreur chargement stats achievements:', err);
     }
@@ -435,6 +471,11 @@ export function sauvegarderStats() {
             maxEvenementsUnePartie: statsGlobales.maxEvenementsUnePartie,
             biomesVivantSubis: [...statsGlobales.biomesVivantSubis],
             lignesPendantVivant: statsGlobales.lignesPendantVivant,
+            bossHistoireVaincus: statsGlobales.bossHistoireVaincus,
+            journauxHistoire: statsGlobales.journauxHistoire,
+            toutesFinHistoire: statsGlobales.toutesFinHistoire,
+            mondesHistoireCompletes: statsGlobales.mondesHistoireCompletes,
+            mondesCachesDebloques: statsGlobales.mondesCachesDebloques,
         };
         ecrireStockageJson(CLE_STATS, toSave);
     } catch (err) {
@@ -446,6 +487,9 @@ export function initStatsPartie() {
     statsGlobales.biomesJoues.add(obtenirBiomeActif());
     statsGlobales.meteosPartieActuelle = new Set();
     statsGlobales.oracleDeviationsPartieActuelle = 0;
+    if (store.modeHistoireActif) {
+        reinitialiserStatsAchievementsHistoire();
+    }
 }
 
 export function majStatsLignesEffacees(nbSupprimees) {
@@ -493,6 +537,18 @@ export function finaliserStatsPartie(score, tempsSecondes) {
     if (melodie.notes.length > statsGlobales.maxNotesComposition) {
         statsGlobales.maxNotesComposition = melodie.notes.length;
     }
+    if (store.modeHistoireActif) {
+        const etatHist = store.etatHistoire ?? chargerEtatHistoire();
+        if (etatHist?.finObtenue) {
+            if (!etatHist.toutesFinObtenues) etatHist.toutesFinObtenues = [];
+            if (!etatHist.toutesFinObtenues.includes(etatHist.finObtenue)) {
+                etatHist.toutesFinObtenues.push(etatHist.finObtenue);
+                sauvegarderEtatHistoire(etatHist);
+                store.etatHistoire = etatHist;
+                statsGlobales.toutesFinHistoire = [...etatHist.toutesFinObtenues];
+            }
+        }
+    }
     verifierAchievements();
     sauvegarderStats();
 }
@@ -528,6 +584,7 @@ export function genererGalerieAchievements() {
         const debloque = !!statsGlobales.debloqués[ach.id];
         const carte = document.createElement('div');
         carte.className = `ach-carte ${debloque ? 'debloque' : 'verrouille'}`;
+        carte.dataset.categorie = ach.categorie ?? 'general';
 
         const iconeEl = document.createElement('div');
         iconeEl.className = 'ach-carte-icone';
@@ -555,4 +612,24 @@ export function genererGalerieAchievements() {
 
         grille.appendChild(carte);
     }
+
+    const btnsFiltres = document.querySelectorAll('.ach-filtre-btn');
+    btnsFiltres.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            btnsFiltres.forEach((b) => b.classList.remove('actif'));
+            btn.classList.add('actif');
+            const filtre = /** @type {HTMLButtonElement} */ (btn).dataset.filtre;
+            document.querySelectorAll('.ach-carte').forEach((el) => {
+                const carte = /** @type {HTMLElement} */ (el);
+                const cat = carte.dataset.categorie ?? '';
+                if (filtre === 'tous') {
+                    carte.style.display = '';
+                } else if (filtre === 'histoire') {
+                    carte.style.display = cat.startsWith('histoire') ? '' : 'none';
+                } else {
+                    carte.style.display = cat === filtre ? '' : 'none';
+                }
+            });
+        });
+    });
 }

@@ -73,6 +73,19 @@
                         <span class="stat-valeur oracle-dev-val" id="oracle-dev">0</span>
                     </div>
                 </div>
+                <div class="section" id="indicateur-vide-actif" style="display: none">
+                    <div class="section-titre" style="color: rgba(255, 255, 255, 0.2)">LE VIDE</div>
+                    <div
+                        style="
+                            font-size: 0.26rem;
+                            color: rgba(255, 255, 255, 0.15);
+                            letter-spacing: 1px;
+                            text-align: center;
+                        "
+                    >
+                        SIGNAL PERDU
+                    </div>
+                </div>
             </aside>
 
             <!-- Zone centrale : canvas du jeu -->
@@ -83,7 +96,7 @@
                     width="320"
                     height="640"
                     role="application"
-                    aria-label="Plateau de jeu Tetris, 10 colonnes sur 20 lignes. Utilisez le clavier ou les contrôles tactiles."
+                    aria-label="Plateau de jeu Dernière Ligne, 10 colonnes sur 20 lignes. Utilisez le clavier ou les contrôles tactiles."
                 ></canvas>
             </main>
 
@@ -101,6 +114,22 @@
                         <span id="relique-icone"></span>
                         <span id="relique-nom"></span>
                     </div>
+                </div>
+
+                <div class="section" id="section-boss" style="display: none">
+                    <div class="section-titre boss-nom" id="boss-nom-affiche">BOSS</div>
+                    <div id="boss-hp-wrapper">
+                        <div id="boss-hp-fill" style="width: 100%"></div>
+                    </div>
+                    <div id="boss-hp-label" class="boss-hp-label">0 / 0</div>
+                    <canvas
+                        id="canvas-boss-portrait"
+                        width="108"
+                        height="90"
+                        aria-label="Portrait du boss"
+                    ></canvas>
+                    <div id="boss-attaque-label" class="boss-attaque-label"></div>
+                    <div id="boss-timer-label" class="boss-timer-label"></div>
                 </div>
 
                 <div class="section" id="section-mascotte">

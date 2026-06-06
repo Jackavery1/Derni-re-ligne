@@ -16,7 +16,6 @@ export const ECRANS = {
     HISTOIRE_MAP: 'ecran-histoire-map',
     HISTOIRE_CUTSCENE: 'ecran-histoire-cutscene',
     HISTOIRE_JOURNAL: 'ecran-histoire-journal',
-    HISTOIRE_BOSS_DEFAITE: 'ecran-histoire-boss-defaite',
     HISTOIRE_FIN: 'ecran-histoire-fin',
 };
 

@@ -44,7 +44,7 @@ export const BIOMES_HISTOIRE = {
         },
         musique: { tempo: 95, gamme: 'phrygien', timbre: 'sawtooth', basse: true },
         mecaniqueSpeciale: 'rouille',
-        secondesAvantRouille: 15,
+        secondesAvantRouille: 18,
     },
 
     eclipse: {
@@ -91,6 +91,8 @@ export const BIOMES_HISTOIRE = {
         musique: { tempo: 115, gamme: 'lydien', timbre: 'triangle', basse: false },
         mecaniqueSpeciale: 'eclipse',
         ligneEclipseBase: 10,
+        ligneEclipseMin: 6,
+        monteeIntervalleMs: 30000,
     },
 
     vide: {
@@ -136,7 +138,7 @@ export const BIOMES_HISTOIRE = {
         },
         musique: { tempo: 70, gamme: 'whole_tone', timbre: 'sine', basse: false },
         mecaniqueSpeciale: 'vide',
-        secondesAvantInvisibilite: 2.5,
+        secondesAvantInvisibilite: 3,
         pieceFantomeActive: false,
     },
 
@@ -235,6 +237,8 @@ export const BIOMES_HISTOIRE = {
         mecaniqueSpeciale: 'trame',
         largeurMorphMin: 9,
         largeurMorphMax: 11,
+        intervalleMorphMs: 35000,
+        dureeFadeMs: 1200,
     },
 };
 

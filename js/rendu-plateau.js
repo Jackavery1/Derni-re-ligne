@@ -12,9 +12,11 @@ import {
     obtenirCtx,
 } from './store-jeu.js';
 import { obtenirForme, obtenirCouleurPiece, calculerDistanceChute } from './piece-jeu.js';
+import { obtenirFauxFantomeActif, COULEUR_BRAISE } from './boss-jeu.js';
 import { dessinerCellule } from './rendu-cellule.js';
 import { dessinerFondBiome } from './rendu-ambiance.js';
 import { dessinerSignesVie } from './rendu-vivant.js';
+import { celluleEstRouillee, pieceEstInvisible, ghostEstDesactive } from './mecaniques-histoire.js';
 
 function dessinerAmbianceJeu() {
     if (obtenirEffetsReduits()) return;
@@ -55,9 +57,35 @@ function dessinerVignette() {
 function dessinerBlocsVerrouilles() {
     for (let l = 0; l < CONFIG.lignes; l++) {
         for (let c = 0; c < CONFIG.colonnes; c++) {
-            if (etat.plateau[l][c]) dessinerCellule(obtenirCtx(), c, l, etat.plateau[l][c]);
+            if (!etat.plateau[l][c]) continue;
+            dessinerCellule(obtenirCtx(), c, l, etat.plateau[l][c]);
+            if (celluleEstRouillee(c, l)) {
+                _dessinerOverlayRouille(c, l);
+            }
         }
     }
+}
+
+function _dessinerOverlayRouille(c, l) {
+    const ctx = obtenirCtx();
+    ctx.save();
+    ctx.globalAlpha = 0.38;
+    ctx.fillStyle = '#5c2a00';
+    ctx.fillRect(
+        c * CONFIG.taille + 2,
+        l * CONFIG.taille + 2,
+        CONFIG.taille - 4,
+        CONFIG.taille - 4
+    );
+    ctx.globalAlpha = 0.22;
+    ctx.fillStyle = '#8b3a00';
+    const graine = c * 31 + l * 17;
+    for (let i = 0; i < 4; i++) {
+        const rx = (((graine + i * 13) % 7) / 7) * (CONFIG.taille - 6) + 1;
+        const ry = (((graine + i * 19) % 7) / 7) * (CONFIG.taille - 6) + 1;
+        ctx.fillRect(c * CONFIG.taille + rx, l * CONFIG.taille + ry, 3, 3);
+    }
+    ctx.restore();
 }
 
 export function dessinerPlateau() {
@@ -67,6 +95,7 @@ export function dessinerPlateau() {
     obtenirCtx().clearRect(0, 0, obtenirCanvasPlateau().width, obtenirCanvasPlateau().height);
     dessinerFondBiome();
     dessinerBlocsVerrouilles();
+    dessinerOverlayBraise();
     dessinerSignesVie();
     dessinerAmbianceJeu();
     dessinerVignette();
@@ -121,21 +150,56 @@ export function rendreFrameJeu() {
 
 export function dessinerPieceFantome() {
     if (!etat.pieceActuelle) return;
+    if (ghostEstDesactive()) return;
     const distance = calculerDistanceChute(etat.pieceActuelle);
     const forme = obtenirForme(etat.pieceActuelle);
     const couleur = obtenirCouleurPiece(etat.pieceActuelle);
+
+    let offsetFaux = 0;
+    if (obtenirFauxFantomeActif()) {
+        const tick = Math.floor(performance.now() / 800);
+        offsetFaux = ((tick * 7 + 3) % 7) - 3;
+    }
+
+    const distAffichee = distance;
+    const xAffiche = etat.pieceActuelle.x + offsetFaux;
+
     for (let l = 0; l < forme.length; l++) {
         for (let c = 0; c < forme[l].length; c++) {
             if (!forme[l][c]) continue;
-            const x = etat.pieceActuelle.x + c;
-            const y = etat.pieceActuelle.y + l + distance;
-            if (y >= 0) dessinerCellule(obtenirCtx(), x, y, couleur, CONFIG.taille, 0.12);
+            const x = xAffiche + c;
+            const y = etat.pieceActuelle.y + l + distAffichee;
+            if (y >= 0 && x >= 0 && x < CONFIG.colonnes) {
+                dessinerCellule(obtenirCtx(), x, y, couleur, CONFIG.taille, 0.12);
+            }
+        }
+    }
+}
+
+export function dessinerOverlayBraise() {
+    if (!obtenirCtx() || !obtenirCanvasPlateau()) return;
+    const pulse = 0.12 + 0.1 * Math.sin(performance.now() / 220);
+    for (let l = 0; l < CONFIG.lignes; l++) {
+        for (let c = 0; c < CONFIG.colonnes; c++) {
+            if (etat.plateau[l][c] === COULEUR_BRAISE) {
+                obtenirCtx().save();
+                obtenirCtx().globalAlpha = pulse;
+                obtenirCtx().fillStyle = '#ff8800';
+                obtenirCtx().fillRect(
+                    c * CONFIG.taille,
+                    l * CONFIG.taille,
+                    CONFIG.taille,
+                    CONFIG.taille
+                );
+                obtenirCtx().restore();
+            }
         }
     }
 }
 
 export function dessinerPieceActive() {
     if (!etat.pieceActuelle) return;
+    if (pieceEstInvisible()) return;
     const forme = obtenirForme(etat.pieceActuelle);
     const couleur = obtenirCouleurPiece(etat.pieceActuelle);
     const relique = obtenirReliqueActive() ?? etat.pieceActuelle.reliqueData;

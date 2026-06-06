@@ -1,4 +1,5 @@
 import { CONFIG, TETROMINOS, RELIQUES } from './config.js';
+import { AudioMoteur } from './audio.js';
 import {
     calculerPointsLignes,
     calculerNiveauDepuisLignes,
@@ -56,7 +57,13 @@ import {
     vivant_synchroniserApresLignes,
     vivant_enregistrerLignesScore,
 } from './vivant.js';
-import { poserPieceSurPlateau, vitesseChuteDepuisNiveau } from './actions-piece-communes.js';
+import { poserPieceSurPlateau } from './actions-piece-communes.js';
+import { obtenirControlesInversesBoss, obtenirDecalageDistorsionBoss } from './boss-jeu.js';
+import {
+    obtenirVitesseChuteModifiee,
+    enregistrerTimestampCellules,
+    actionMiroir,
+} from './mecaniques-histoire.js';
 
 function produireProchainePieceApresShift() {
     if (obtenirReliqueEnAttente()) {
@@ -77,6 +84,15 @@ export function verrouillerPiece() {
 
     sauvegarderPlacementOracle();
 
+    const _decalageBoss = obtenirDecalageDistorsionBoss();
+    if (
+        _decalageBoss !== 0 &&
+        etat.pieceActuelle &&
+        estPositionValide(etat.pieceActuelle, _decalageBoss, 0)
+    ) {
+        etat.pieceActuelle.x += _decalageBoss;
+    }
+
     const couleur = obtenirCouleurPiece(etat.pieceActuelle);
     const { gameOver, cellulesPosees } = poserPieceSurPlateau(
         etat.plateau,
@@ -93,6 +109,7 @@ export function verrouillerPiece() {
     vivant_recompenserActivite();
 
     flashVerrou.cellules = cellulesPosees;
+    enregistrerTimestampCellules(cellulesPosees);
     flashVerrou.timer = flashVerrou.duree;
 
     enregistrerDonneesVerrouillage();
@@ -215,7 +232,7 @@ function deplacerDroiteReel() {
 }
 
 export function deplacerGauche() {
-    if (meteo.controleInverse) {
+    if (meteo.controleInverse || obtenirControlesInversesBoss()) {
         deplacerDroiteReel();
         return;
     }
@@ -223,7 +240,7 @@ export function deplacerGauche() {
 }
 
 export function deplacerDroite() {
-    if (meteo.controleInverse) {
+    if (meteo.controleInverse || obtenirControlesInversesBoss()) {
         deplacerGaucheReel();
         return;
     }
@@ -231,6 +248,10 @@ export function deplacerDroite() {
 }
 
 export function deplacerBas() {
+    if (actionMiroir('bas') === 'chute') {
+        chuteRapide();
+        return;
+    }
     if (!jouable()) return;
     if (estPositionValide(etat.pieceActuelle, 0, 1)) {
         etat.pieceActuelle.y++;
@@ -242,13 +263,24 @@ export function deplacerBas() {
 }
 
 export function chuteRapide() {
+    if (actionMiroir('chute') === 'bas') {
+        if (!jouable()) return;
+        if (estPositionValide(etat.pieceActuelle, 0, 1)) {
+            etat.pieceActuelle.y++;
+            etat.score++;
+            definirPieceAuSol(false);
+            definirLockDelayRestant(0);
+            emettre('partie:stats');
+        }
+        return;
+    }
     if (!jouable()) return;
     if (meteo.etat === ETATS_METEO.ACTIF && meteo.evenementActuel?.effet === 'microgravite') return;
     compterHardDrop();
     const dist = calculerDistanceChute(etat.pieceActuelle);
     etat.pieceActuelle.y += dist;
     etat.score += dist * 2;
-    emettre('piece:son', { type: 'chute' });
+    AudioMoteur.son('chute');
     emettre('partie:stats');
     verrouillerPiece();
 }
@@ -325,5 +357,9 @@ export function utiliserReserve() {
 }
 
 export function vitesseChute() {
-    return vitesseChuteDepuisNiveau(etat.niveau);
+    const base = Math.max(
+        CONFIG.vitesseBase - (etat.niveau - 1) * CONFIG.reductionParNiveau,
+        CONFIG.vitesseMin
+    );
+    return obtenirVitesseChuteModifiee(base);
 }

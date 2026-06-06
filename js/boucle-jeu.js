@@ -55,6 +55,9 @@ import { mettreAJourHistoriquePositions, dessinerDecorations } from './decoratio
 import { mettreAJourVivant } from './vivant.js';
 import { dessinerAvertissementsVivant } from './rendu-vivant.js';
 import { dessinerSuggestionOracle } from './oracle-jeu.js';
+import { mettreAJourBoss, bossEstActif, bossEstVaincu } from './boss-jeu.js';
+import { rendrePortraitBoss } from './boss-rendu.js';
+import { mettreAJourMecaniquesHistoire } from './mecaniques-histoire.js';
 
 export function mettreAJourFps(deltaTemps) {
     if (deltaTemps <= 0) return;
@@ -161,6 +164,7 @@ function boucleJeu(timestamp) {
 
         if (enPartie) {
             mettreAJourMeteo(deltaTemps);
+            mettreAJourMecaniquesHistoire(deltaTemps, timestamp);
             mettreAJourVivant(deltaTemps);
             mettreAJourDas(deltaTemps);
 
@@ -192,6 +196,10 @@ function boucleJeu(timestamp) {
             mettreAJourParticulesAmbiance(deltaTemps);
             mettreAJourTextesFlottants(deltaTemps);
             mettreAJourAffichageTemps();
+            if (bossEstActif()) {
+                if (!bossEstVaincu()) mettreAJourBoss(deltaTemps);
+                rendrePortraitBoss(timestamp);
+            }
             mettreAJourAmbiante(deltaTemps);
             mettreAJourIndicateurRelique();
         }

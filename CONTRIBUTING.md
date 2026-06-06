@@ -1,6 +1,6 @@
 # Contribuer
 
-Guide minimal pour développer sur Tetris Néo. Historique des versions : [CHANGELOG.md](CHANGELOG.md).
+Guide minimal pour développer sur Dernière Ligne. Historique des versions : [CHANGELOG.md](CHANGELOG.md).
 
 ## Setup
 

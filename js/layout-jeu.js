@@ -1,5 +1,6 @@
 import { LAYOUT } from './config.js';
 import { redimensionnerConstellation } from './constellation.js';
+import { redimensionnerCarteHistoire } from './histoire-map.js';
 import { obtenirCanvasMenuFond, menuAnimActif } from './menu-fond.js';
 import { archi } from './archi-logique.js';
 
@@ -81,5 +82,6 @@ export function initialiserLayout() {
         adapterInterface();
         if (archi.actif) adapterInterfaceArchi();
         redimensionnerConstellation();
+        redimensionnerCarteHistoire();
     });
 }

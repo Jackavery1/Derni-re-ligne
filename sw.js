@@ -1,4 +1,4 @@
-const VERSION_CACHE = 'tetris-neo-2.5.0';
+const VERSION_CACHE = 'derniere-ligne-2.5.0';
 
 const FICHIERS_A_CACHER = [
     './',
@@ -17,6 +17,7 @@ const FICHIERS_A_CACHER = [
     './html/ecran-codex.html',
     './html/ecran-game-over-coop.html',
     './html/ecran-game-over.html',
+    './html/ecran-histoire-map.html',
     './html/ecran-options.html',
     './html/ecran-pause-coop.html',
     './html/ecran-pause.html',
@@ -27,6 +28,7 @@ const FICHIERS_A_CACHER = [
     './html/interface-jeu-coop.html',
     './html/interface-jeu.html',
     './html/overlays.html',
+    './js/achievements-histoire.js',
     './js/achievements.js',
     './js/actions-jeu.js',
     './js/actions-piece-communes.js',
@@ -37,13 +39,19 @@ const FICHIERS_A_CACHER = [
     './js/archi-logique.js',
     './js/archi-rendu.js',
     './js/audio.js',
+    './js/biomes-histoire.js',
     './js/biomes.js',
+    './js/boss-jeu.js',
+    './js/boss-rendu.js',
     './js/boucle-jeu.js',
     './js/bus-jeu.js',
     './js/charger-ecrans.js',
     './js/codex-donnees.js',
+    './js/codex-histoire.js',
+    './js/codex-illustrations-histoire.js',
     './js/codex-illustrations.js',
     './js/codex.js',
+    './js/conditions-secrets.js',
     './js/config-jeu.js',
     './js/config.js',
     './js/constellation.js',
@@ -57,6 +65,14 @@ const FICHIERS_A_CACHER = [
     './js/ecrans-config.js',
     './js/ecrans-ui.js',
     './js/effets-partie.js',
+    './js/fin-bg-rendu.js',
+    './js/fins-histoire.js',
+    './js/histoire-donnees.js',
+    './js/histoire-illustrations.js',
+    './js/histoire-manager.js',
+    './js/histoire-map.js',
+    './js/histoire-narratif.js',
+    './js/histoire-textes.js',
     './js/hud-jeu.js',
     './js/input-jeu.js',
     './js/layout-jeu.js',
@@ -64,9 +80,11 @@ const FICHIERS_A_CACHER = [
     './js/logique-partie.js',
     './js/logique-pure.js',
     './js/main.js',
+    './js/mecaniques-histoire.js',
     './js/melodie.js',
     './js/menu-fond.js',
     './js/meteo.js',
+    './js/monde-paradoxe.js',
     './js/moteur-piece.js',
     './js/moteur.js',
     './js/navigation-ecrans.js',
@@ -100,6 +118,21 @@ const FICHIERS_A_CACHER = [
     './js/vivant.js',
 ];
 
+/** @param {Request} requete */
+async function chercherDansCache(requete) {
+    const cache = await caches.open(VERSION_CACHE);
+    const direct = await cache.match(requete);
+    if (direct) return direct;
+
+    const url = new URL(requete.url);
+    const chemins = [url.pathname, `.${url.pathname}`];
+    for (const chemin of chemins) {
+        const hit = await cache.match(chemin);
+        if (hit) return hit;
+    }
+    return null;
+}
+
 self.addEventListener('install', (evenement) => {
     evenement.waitUntil(
         caches
@@ -130,11 +163,13 @@ self.addEventListener('fetch', (evenement) => {
     if (evenement.request.method !== 'GET') return;
 
     const url = new URL(evenement.request.url);
-    const estModuleJeu = url.pathname.startsWith('/js/') && /\.js$/.test(url.pathname);
+    const estModuleJeu = url.pathname.includes('/js/') && /\.js$/.test(url.pathname);
 
     evenement.respondWith(
-        caches.match(evenement.request).then((reponseCache) => {
-            if (reponseCache && !estModuleJeu) return reponseCache;
+        chercherDansCache(evenement.request).then((reponseCache) => {
+            if (reponseCache && (!estModuleJeu || !navigator.onLine)) {
+                return reponseCache;
+            }
 
             return fetch(evenement.request)
                 .then((reponseReseau) => {
@@ -143,7 +178,7 @@ self.addEventListener('fetch', (evenement) => {
                         reponseReseau.status !== 200 ||
                         reponseReseau.type === 'error'
                     ) {
-                        return reponseReseau ?? reponseCache;
+                        return reponseCache ?? reponseReseau;
                     }
 
                     if (evenement.request.url.startsWith(self.location.origin)) {

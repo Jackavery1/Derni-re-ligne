@@ -1,9 +1,12 @@
 import { AudioMoteur } from './audio.js';
 import { CONFIG } from './config.js';
+import { store } from './store-core.js';
 import { obtenirActions } from './actions-jeu.js';
 import { ecouter } from './bus-jeu.js';
 import { creerParticulesLigne } from './particules-jeu.js';
 import { obtenirCtxReserve, obtenirCanvasReserve, etat } from './store-jeu.js';
+import { ajouterLignesEclipseBasse, ajouterLignesVide } from './achievements-histoire.js';
+import { obtenirLigneEclipse, biomeActuelMecanique } from './mecaniques-histoire.js';
 import {
     dessinerFileNext,
     dessinerPreview,
@@ -13,6 +16,7 @@ import {
 } from './rendu-jeu.js';
 import { changerHumeur, annoncer, rafraichirStats, afficherNotifNiveau } from './ecrans-ui.js';
 import { evaluerDecisionOracle } from './oracle-jeu.js';
+import { endommagerBoss, bossEstActif, bossEstVaincu } from './boss-jeu.js';
 import { mettreAJourIndicateurRelique } from './piece-jeu.js';
 
 export function initialiserEffetsPartie() {
@@ -30,10 +34,29 @@ export function initialiserEffetsPartie() {
     });
 
     ecouter('lignes:effacees', ({ nbSupprimees, lignesEffacees }) => {
+        if (bossEstActif() && !bossEstVaincu() && nbSupprimees > 0) {
+            endommagerBoss(nbSupprimees);
+        }
+        // Condition Miroir (suivi tetris consécutifs CYBER) :
+        // centralisée dans mecaniques-histoire.js via le bus — pas de duplication ici.
         for (const l of lignesEffacees) creerParticulesLigne(l);
         const intensitesSecousse = { 1: 2, 2: 3.5, 3: 5, 4: 8 };
         declencherSecousse(intensitesSecousse[nbSupprimees] ?? 8);
         changerHumeur(nbSupprimees >= 4 ? 'excite' : 'content');
+        if (store.modeHistoireActif && nbSupprimees > 0) {
+            const mec = biomeActuelMecanique();
+            if (mec === 'eclipse') {
+                const lignesBasseCount = lignesEffacees.filter(
+                    (l) => l > obtenirLigneEclipse()
+                ).length;
+                if (lignesBasseCount > 0) {
+                    ajouterLignesEclipseBasse(lignesBasseCount);
+                }
+            }
+            if (mec === 'vide') {
+                ajouterLignesVide(nbSupprimees);
+            }
+        }
         if (nbSupprimees >= 4) AudioMoteur.son('tetris');
         else if (nbSupprimees === 3) AudioMoteur.son('ligne_3');
         else if (nbSupprimees === 2) AudioMoteur.son('ligne_2');

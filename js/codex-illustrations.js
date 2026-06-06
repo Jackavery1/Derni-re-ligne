@@ -1,3 +1,5 @@
+import { ILLUSTRATIONS_CODEX_HISTOIRE } from './codex-illustrations-histoire.js';
+
 export function dessinerIllustCircuits(ctx2d, w, h) {
     ctx2d.fillStyle = '#08081a';
     ctx2d.fillRect(0, 0, w, h);
@@ -603,3 +605,5 @@ export const ILLUSTRATIONS_CODEX = {
     dessinerIllustArchi,
     dessinerIllustVivant,
 };
+
+Object.assign(ILLUSTRATIONS_CODEX, ILLUSTRATIONS_CODEX_HISTOIRE);

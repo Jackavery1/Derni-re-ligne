@@ -30,6 +30,8 @@ export function appliquerThemeBiome(biomeId) {
     root.setProperty('--theme-bordure', ui.bordurePanneau);
     root.setProperty('--theme-canvas', ui.bordureCanvas);
 
+    document.body.dataset.biome = biomeId;
+
     const canvas = document.getElementById('canvas-plateau');
     if (canvas) {
         canvas.style.boxShadow = `0 0 15px ${ui.bordureCanvas}, 0 0 40px ${ui.bordureCanvas}44, inset 0 0 20px ${ui.bordureCanvas}0a`;

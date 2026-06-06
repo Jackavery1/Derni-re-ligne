@@ -41,10 +41,10 @@ export function afficherOngletOptions(onglet) {
 }
 
 export function initialiserOptions() {
-    const vol = lireStockage('tetrisNeo_volume', '0.4');
-    const volMus = lireStockage('tetrisNeo_volumeMusique', '0.25');
-    const muet = lireStockage('tetrisNeo_muet', 'false') === 'true';
-    const contraste = lireStockage('tetrisNeo_contraste', 'false') === 'true';
+    const vol = lireStockage('derniereLigne_volume', '0.4');
+    const volMus = lireStockage('derniereLigne_volumeMusique', '0.25');
+    const muet = lireStockage('derniereLigne_muet', 'false') === 'true';
+    const contraste = lireStockage('derniereLigne_contraste', 'false') === 'true';
     AudioMoteur.volumeEffets = parseFloat(vol) || 0.4;
     AudioMoteur.volumeMusique = parseFloat(volMus) || 0.25;
     AudioMoteur.muet = muet;
@@ -62,21 +62,21 @@ export function initialiserOptions() {
     slider?.addEventListener('input', (e) => {
         const cible = /** @type {HTMLInputElement} */ (e.target);
         AudioMoteur.reglerVolumeEffets(parseInt(cible.value, 10) / 100);
-        ecrireStockage('tetrisNeo_volume', AudioMoteur.volumeEffets.toString());
+        ecrireStockage('derniereLigne_volume', AudioMoteur.volumeEffets.toString());
         AudioMoteur.son('deplacement');
     });
 
     sliderMus?.addEventListener('input', (e) => {
         const cible = /** @type {HTMLInputElement} */ (e.target);
         AudioMoteur.reglerVolumeMusique(parseInt(cible.value, 10) / 100);
-        ecrireStockage('tetrisNeo_volumeMusique', AudioMoteur.volumeMusique.toString());
+        ecrireStockage('derniereLigne_volumeMusique', AudioMoteur.volumeMusique.toString());
     });
 
     btnMute?.addEventListener('click', () => AudioMoteur.basculerMute());
 
     btnContraste?.addEventListener('click', () => {
         const actif = document.body.classList.toggle('contraste-eleve');
-        ecrireStockage('tetrisNeo_contraste', actif.toString());
+        ecrireStockage('derniereLigne_contraste', actif.toString());
         mettreAJourBoutonContraste(btnContraste);
     });
 }

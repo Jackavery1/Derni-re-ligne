@@ -1,8 +1,8 @@
 {
-    "name": "tetris-neo",
+    "name": "derniere-ligne",
     "version": "2.5.0",
     "type": "module",
-    "description": "Tetris moderne en Vanilla JS — PWA hors-ligne",
+    "description": "Dernière Ligne — Tetris narratif, PWA hors-ligne",
     "private": true,
     "engines": {
         "node": ">=18"

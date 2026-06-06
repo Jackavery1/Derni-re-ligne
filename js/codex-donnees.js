@@ -1,3 +1,5 @@
+import { CODEX_HISTOIRE } from './codex-histoire.js';
+
 export const CODEX = {
     monde_classique: {
         id: 'monde_classique',
@@ -485,3 +487,5 @@ export const CODEX = {
         ],
     },
 };
+
+Object.assign(CODEX, CODEX_HISTOIRE);

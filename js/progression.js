@@ -5,7 +5,28 @@ import { logger } from './logger.js';
 export const SEUIL_ETOILE_2 = 5000;
 export const SEUIL_ETOILE_3 = 15000;
 
+const PREFIXE_STOCKAGE = 'derniereLigne_';
+const PREFIXE_LEGACY = 'tetrisNeo_';
+
 const CLES_STOCKAGE = new Set([
+    'derniereLigne_volume',
+    'derniereLigne_volumeMusique',
+    'derniereLigne_muet',
+    'derniereLigne_contraste',
+    'derniereLigne_niveauGlobal',
+    'derniereLigne_biomeActif',
+    'derniereLigne_codex',
+    'derniereLigne_codexVus',
+    'derniereLigne_statsGlobales',
+    'derniereLigne_profilDernier',
+    'derniereLigne_histoire',
+    'derniereLigne_histoireJournaux',
+    'derniereLigne_histoireBoss',
+    'derniereLigne_histoireFin',
+    'derniereLigne_journalErreurs',
+]);
+
+const CLES_LEGACY = new Set([
     'tetrisNeo_volume',
     'tetrisNeo_volumeMusique',
     'tetrisNeo_muet',
@@ -20,14 +41,57 @@ const CLES_STOCKAGE = new Set([
     'tetrisNeo_histoireJournaux',
     'tetrisNeo_histoireBoss',
     'tetrisNeo_histoireFin',
+    'tetrisNeo_journalErreurs',
 ]);
+
+/** @param {string} cle */
+function cleCanonique(cle) {
+    return cle.startsWith(PREFIXE_LEGACY) ? cle.replace(PREFIXE_LEGACY, PREFIXE_STOCKAGE) : cle;
+}
+
+/** @param {string} cle */
+function cleLegacy(cle) {
+    return cle.startsWith(PREFIXE_STOCKAGE) ? cle.replace(PREFIXE_STOCKAGE, PREFIXE_LEGACY) : cle;
+}
+
+/**
+ * Migration des clés localStorage tetrisNeo_* → derniereLigne_*
+ * Exécutée une seule fois au premier lancement post-renommage.
+ * Conserve les sauvegardes existantes.
+ */
+export function migrerClesLocalStorage() {
+    const MIGRATION_KEY = 'dl_migration_v1';
+    if (localStorage.getItem(MIGRATION_KEY)) return;
+
+    const keysToMigrate = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key?.startsWith(PREFIXE_LEGACY)) keysToMigrate.push(key);
+    }
+
+    for (const oldKey of keysToMigrate) {
+        const newKey = oldKey.replace(PREFIXE_LEGACY, PREFIXE_STOCKAGE);
+        const value = localStorage.getItem(oldKey);
+        if (value !== null && localStorage.getItem(newKey) === null) {
+            localStorage.setItem(newKey, value);
+        }
+    }
+
+    localStorage.setItem(MIGRATION_KEY, '1');
+    console.info('[DernièreLigne] migration localStorage effectuée');
+}
 
 /** @param {string} cle */
 function estCleValide(cle) {
     if (CLES_STOCKAGE.has(cle)) return true;
+    if (CLES_LEGACY.has(cle)) return true;
+    if (cle.startsWith(PREFIXE_STOCKAGE)) return true;
     if (/^tetrisNeo_record_[a-z]+$/.test(cle)) return true;
+    if (/^derniereLigne_record_[a-z]+$/.test(cle)) return true;
     if (/^tetrisNeo_monde_histoire_[a-z_]+$/.test(cle)) return true;
-    return /^tetrisNeo_archi_[a-z_]+$/.test(cle);
+    if (/^derniereLigne_monde_histoire_[a-z_]+$/.test(cle)) return true;
+    if (/^tetrisNeo_archi_[a-z_]+$/.test(cle)) return true;
+    return /^derniereLigne_archi_[a-z_]+$/.test(cle);
 }
 
 /** @param {unknown} valeur @returns {value is string[]} */
@@ -76,8 +140,16 @@ export function lireStockage(cle, defaut) {
         logger.warn('Cl├® localStorage inconnue:', cle);
         return defaut;
     }
+    const cleN = cleCanonique(cle);
+    const cleA = cleLegacy(cleN);
     try {
-        return localStorage.getItem(cle) ?? defaut;
+        const valeur = localStorage.getItem(cleN);
+        if (valeur !== null) return valeur;
+        if (cleA !== cleN) {
+            const legacy = localStorage.getItem(cleA);
+            if (legacy !== null) return legacy;
+        }
+        return defaut;
     } catch (err) {
         logger.warn('Lecture localStorage impossible:', err);
         return defaut;
@@ -91,7 +163,7 @@ export function ecrireStockage(cle, valeur) {
         return false;
     }
     try {
-        localStorage.setItem(cle, valeur);
+        localStorage.setItem(cleCanonique(cle), valeur);
         return true;
     } catch (err) {
         logger.warn('├ëcriture localStorage impossible:', err);
@@ -128,31 +200,31 @@ export function formaterEtoiles(nbEtoiles) {
 
 /** @returns {number} */
 export function chargerNiveauGlobal() {
-    const brut = parseInt(lireStockage('tetrisNeo_niveauGlobal', '0'), 10);
+    const brut = parseInt(lireStockage('derniereLigne_niveauGlobal', '0'), 10);
     return Number.isFinite(brut) && brut >= 0 ? brut : 0;
 }
 
 /** @param {number} niveauGlobal */
 export function sauvegarderNiveauGlobal(niveauGlobal) {
-    ecrireStockage('tetrisNeo_niveauGlobal', Math.max(0, Math.floor(niveauGlobal)).toString());
+    ecrireStockage('derniereLigne_niveauGlobal', Math.max(0, Math.floor(niveauGlobal)).toString());
 }
 
 /** @returns {string} */
 export function chargerBiomeActif() {
-    const biomeSauve = lireStockage('tetrisNeo_biomeActif', 'classique');
+    const biomeSauve = lireStockage('derniereLigne_biomeActif', 'classique');
     return BIOMES[biomeSauve] ? biomeSauve : 'classique';
 }
 
 /** @param {string} biomeId */
 export function sauvegarderBiomeActif(biomeId) {
     if (!BIOMES[biomeId]) return;
-    ecrireStockage('tetrisNeo_biomeActif', biomeId);
+    ecrireStockage('derniereLigne_biomeActif', biomeId);
 }
 
 /** @param {string} idBiome @returns {number} */
 export function obtenirRecordBiome(idBiome) {
     if (!BIOMES[idBiome]) return 0;
-    const brut = parseInt(lireStockage(`tetrisNeo_record_${idBiome}`, '0'), 10);
+    const brut = parseInt(lireStockage(`derniereLigne_record_${idBiome}`, '0'), 10);
     return Number.isFinite(brut) && brut >= 0 ? brut : 0;
 }
 
@@ -161,19 +233,77 @@ export function sauvegarderRecordBiome(idBiome, score) {
     if (!BIOMES[idBiome] || !Number.isFinite(score) || score < 0) return false;
     const recordActuel = obtenirRecordBiome(idBiome);
     if (score > recordActuel) {
-        ecrireStockage(`tetrisNeo_record_${idBiome}`, Math.floor(score).toString());
+        ecrireStockage(`derniereLigne_record_${idBiome}`, Math.floor(score).toString());
         return true;
     }
     return false;
 }
 
+/** @param {typeof ETAT_HISTOIRE_VIDE} etat */
+function _fusionnerLegacyHistoire(etat) {
+    const clesLegacy = [
+        'derniereLigne_histoireJournaux',
+        'derniereLigne_histoireBoss',
+        'derniereLigne_histoireFin',
+        'tetrisNeo_histoireJournaux',
+        'tetrisNeo_histoireBoss',
+        'tetrisNeo_histoireFin',
+    ];
+    let fusionEffectuee = false;
+
+    const journaux = lireStockageJson('derniereLigne_histoireJournaux', null);
+    if (Array.isArray(journaux)) {
+        for (const id of journaux) {
+            if (typeof id === 'string' && !etat.journauxTrouves.includes(id)) {
+                etat.journauxTrouves.push(id);
+                fusionEffectuee = true;
+            }
+        }
+    }
+
+    const boss = lireStockageJson('derniereLigne_histoireBoss', null);
+    if (Array.isArray(boss)) {
+        for (const id of boss) {
+            if (typeof id === 'string' && !etat.bossVaincus.includes(id)) {
+                etat.bossVaincus.push(id);
+                fusionEffectuee = true;
+            }
+        }
+    }
+
+    const fins = lireStockageJson('derniereLigne_histoireFin', null);
+    if (Array.isArray(fins)) {
+        for (const id of fins) {
+            if (typeof id === 'string' && !etat.toutesFinObtenues.includes(id)) {
+                etat.toutesFinObtenues.push(id);
+                fusionEffectuee = true;
+            }
+        }
+    }
+
+    if (fusionEffectuee) {
+        sauvegarderEtatHistoire(etat);
+        for (const cle of clesLegacy) {
+            try {
+                localStorage.removeItem(cle);
+            } catch {
+                /* ignore */
+            }
+        }
+    }
+}
+
 /** @returns {typeof ETAT_HISTOIRE_VIDE} */
 export function chargerEtatHistoire() {
     const parsed = /** @type {Partial<typeof ETAT_HISTOIRE_VIDE> | null} */ (
-        lireStockageJson('tetrisNeo_histoire', null)
+        lireStockageJson('derniereLigne_histoire', null)
     );
-    if (!parsed || typeof parsed !== 'object') return { ...ETAT_HISTOIRE_VIDE };
-    return {
+    if (!parsed || typeof parsed !== 'object') {
+        const etatVide = { ...ETAT_HISTOIRE_VIDE };
+        _fusionnerLegacyHistoire(etatVide);
+        return etatVide;
+    }
+    const etat = {
         ...ETAT_HISTOIRE_VIDE,
         ...parsed,
         conditionsMiroir: {
@@ -188,10 +318,16 @@ export function chargerEtatHistoire() {
             ...ETAT_HISTOIRE_VIDE.conditionsParadoxe,
             ...(parsed.conditionsParadoxe ?? {}),
         },
+        prouessesHistoire: {
+            ...ETAT_HISTOIRE_VIDE.prouessesHistoire,
+            ...(parsed.prouessesHistoire ?? {}),
+        },
     };
+    _fusionnerLegacyHistoire(etat);
+    return etat;
 }
 
 /** @param {typeof ETAT_HISTOIRE_VIDE} etat */
 export function sauvegarderEtatHistoire(etat) {
-    ecrireStockageJson('tetrisNeo_histoire', etat);
+    ecrireStockageJson('derniereLigne_histoire', etat);
 }

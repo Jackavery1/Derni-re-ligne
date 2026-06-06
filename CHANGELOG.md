@@ -1,6 +1,6 @@
 # Changelog
 
-Historique des versions de Tetris Néo. Format [semver](https://semver.org/) : `MAJEUR.MINEUR.PATCH`.
+Historique des versions de Dernière Ligne. Format [semver](https://semver.org/) : `MAJEUR.MINEUR.PATCH`.
 
 ## Résumé par version
 
@@ -35,7 +35,7 @@ Historique des versions de Tetris Néo. Format [semver](https://semver.org/) : `
 - Tests `piece-jeu` (lock delay, collision) et progression localStorage
 - E2E bannière erreur ; mode debug `?debug=1`
 - `ECRANS` unifié dans `ecrans-config.js` ; suppression code mort `Registre`
-- Versions alignées : SW `tetris-neo-{semver}`, cache-bust HTML
+- Versions alignées : SW `derniere-ligne-{semver}`, cache-bust HTML
 - CI : lint, format:check, npm audit
 
 ## [2.4.1] — 2026-06-05

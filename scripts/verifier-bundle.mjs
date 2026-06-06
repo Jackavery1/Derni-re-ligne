@@ -1,6 +1,7 @@
 import { readdirSync, statSync } from 'fs';
 
-const MAX_KO = 220;
+// v2.5 : mode Histoire + codex narratif (~350 Ko minifié, 14 chunks esbuild)
+const MAX_KO = 400;
 const dossier = 'dist/js';
 const octets = readdirSync(dossier)
     .filter((f) => f.endsWith('.js') && !f.endsWith('.map'))

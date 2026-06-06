@@ -3,8 +3,8 @@ import { lireStockageJson, ecrireStockageJson, estTableauIds } from './progressi
 import { creerFileNotifications } from './notifications-file.js';
 import { obtenirCanvas } from './dom-utils.js';
 
-const CLE_CODEX = 'tetrisNeo_codex';
-const CLE_CODEX_VUS = 'tetrisNeo_codexVus';
+const CLE_CODEX = 'derniereLigne_codex';
+const CLE_CODEX_VUS = 'derniereLigne_codexVus';
 
 /** @type {import('./codex-donnees.js').CODEX | null} */
 let codexDonnees = null;

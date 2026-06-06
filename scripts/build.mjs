@@ -60,11 +60,26 @@ const staticFiles = [
 const bloc = staticFiles.map((f) => `    '${f}',`).join('\n');
 writeFileSync(
     `${dist}/sw.js`,
-    `const VERSION_CACHE = 'tetris-neo-${pkg.version}-prod';
+    `const VERSION_CACHE = 'derniere-ligne-${pkg.version}-prod';
 
 const FICHIERS_A_CACHER = [
 ${bloc}
 ];
+
+/** @param {Request} requete */
+async function chercherDansCache(requete) {
+    const cache = await caches.open(VERSION_CACHE);
+    const direct = await cache.match(requete);
+    if (direct) return direct;
+
+    const url = new URL(requete.url);
+    const chemins = [url.pathname, '.' + url.pathname];
+    for (const chemin of chemins) {
+        const hit = await cache.match(chemin);
+        if (hit) return hit;
+    }
+    return null;
+}
 
 self.addEventListener('install', (evenement) => {
     evenement.waitUntil(
@@ -90,7 +105,7 @@ self.addEventListener('message', (evenement) => {
 self.addEventListener('fetch', (evenement) => {
     if (evenement.request.method !== 'GET') return;
     evenement.respondWith(
-        caches.match(evenement.request).then((reponseCache) => {
+        chercherDansCache(evenement.request).then((reponseCache) => {
             if (reponseCache) return reponseCache;
             return fetch(evenement.request)
                 .then((reponseReseau) => {

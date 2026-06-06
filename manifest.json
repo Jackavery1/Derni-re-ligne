@@ -1,7 +1,7 @@
 {
-    "name": "Tetris Néo",
-    "short_name": "TetrisNéo",
-    "description": "Un Tetris moderne, coloré et jouable hors-ligne",
+    "name": "Dernière Ligne",
+    "short_name": "DernièreLigne",
+    "description": "Tetris narratif — La Fragmentation",
     "start_url": "./index.html",
     "display": "fullscreen",
     "orientation": "any",
@@ -41,7 +41,7 @@
             "sizes": "512x512",
             "type": "image/png",
             "form_factor": "wide",
-            "label": "Tetris Néo — plateau de jeu"
+            "label": "Dernière Ligne — plateau de jeu"
         }
     ],
     "related_applications": [],

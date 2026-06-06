@@ -25,8 +25,8 @@ describe('achievements', () => {
         statsGlobales.meteosPartieActuelle = new Set();
     });
 
-    it('contient 32 achievements', () => {
-        expect(Object.keys(ACHIEVEMENTS)).toHaveLength(32);
+    it('contient 56 achievements (32 arcade + 24 histoire)', () => {
+        expect(Object.keys(ACHIEVEMENTS)).toHaveLength(56);
     });
 
     it('majStatsScorePartie met à jour maxLignesUnCoup et maxCombo', () => {

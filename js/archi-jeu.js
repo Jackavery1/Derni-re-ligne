@@ -195,7 +195,7 @@ export function archi_terminerNiveau() {
     const score = archi.scorePartie;
     const etoiles = archi_calculerEtoiles(score);
 
-    const cle = `tetrisNeo_archi_${archi.niveauActuel.id}`;
+    const cle = `derniereLigne_archi_${archi.niveauActuel.id}`;
     const ancien = parseInt(lireStockage(cle, '0'), 10);
     if (score > ancien) ecrireStockage(cle, score.toString());
 
@@ -264,7 +264,7 @@ export function archi_afficherSelection() {
     if (elProg) elProg.textContent = `${completes} / ${total} NIVEAUX`;
 
     NIVEAUX_ARCHI.forEach((niv) => {
-        const cle = `tetrisNeo_archi_${niv.id}`;
+        const cle = `derniereLigne_archi_${niv.id}`;
         const meilleur = parseInt(lireStockage(cle, '0'), 10);
         const etoiles = archi_calculerEtoiles(meilleur);
         const debloque = (statsGlobales.archiScoreTotal || 0) >= niv.deblocage;

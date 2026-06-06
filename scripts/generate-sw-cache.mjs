@@ -1,5 +1,8 @@
 import { readdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
 
+const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
+const versionCache = `derniere-ligne-${pkg.version}`;
+
 const STATIQUES = [
     './',
     './index.html',
@@ -27,8 +30,9 @@ const fichiers = [...STATIQUES, ...html, ...js];
 const lignes = fichiers.map((f) => `    '${f}',`).join('\n');
 const bloc = `const FICHIERS_A_CACHER = [\n${lignes}\n];`;
 
-const sw = readFileSync('sw.js', 'utf8');
-const misAJour = sw.replace(/const FICHIERS_A_CACHER = \[[\s\S]*?\];/, bloc);
-writeFileSync('sw.js', misAJour);
+let sw = readFileSync('sw.js', 'utf8');
+sw = sw.replace(/const VERSION_CACHE = '[^']+';/, `const VERSION_CACHE = '${versionCache}';`);
+sw = sw.replace(/const FICHIERS_A_CACHER = \[[\s\S]*?\];/, bloc);
+writeFileSync('sw.js', sw);
 
-console.log(`Cache SW synchronisé : ${fichiers.length} fichiers`);
+console.log(`Cache SW synchronisé : ${fichiers.length} fichiers (${versionCache})`);

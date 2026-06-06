@@ -1,4 +1,4 @@
-# Architecture Tetris Néo
+# Architecture Dernière Ligne
 
 ## Vue d'ensemble
 
@@ -80,7 +80,7 @@ Toutes les clés `localStorage` passent par `progression.js` avec whitelist stri
 
 ## PWA
 
-`sw.js` met en cache les assets statiques. La liste est générée par `npm run sync:sw`. Version du cache : `tetris-neo-{semver}`.
+`sw.js` met en cache les assets statiques. La liste est générée par `npm run sync:sw`. Version du cache : `derniere-ligne-{semver}`.
 
 ## Outillage
 

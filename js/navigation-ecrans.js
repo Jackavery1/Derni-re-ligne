@@ -7,6 +7,7 @@ import { genererCodexComplet } from './codex.js';
 import { cacherBanniereVivant } from './vivant.js';
 import { mettreAJourAffichageRecord } from './hud-jeu.js';
 import { annoncer } from './annonces.js';
+import { demarrerCarteHistoire, arreterCarteHistoire } from './histoire-map.js';
 
 export { annoncer };
 
@@ -20,6 +21,10 @@ export function mettreAJourVisibilitePartie(idEcran) {
         ECRANS.CODEX,
         ECRANS.ARCHI_SELECTION,
         ECRANS.ARCHI_RESULTAT,
+        ECRANS.HISTOIRE_MAP,
+        ECRANS.HISTOIRE_CUTSCENE,
+        ECRANS.HISTOIRE_JOURNAL,
+        ECRANS.HISTOIRE_FIN,
     ];
     if (ecransHorsPartie.includes(idEcran)) {
         document.body.classList.remove('partie-active');
@@ -64,6 +69,12 @@ export function afficherEcran(idEcran) {
 
     if (idEcran === ECRANS.CODEX) {
         void genererCodexComplet();
+    }
+
+    if (idEcran === ECRANS.HISTOIRE_MAP) {
+        demarrerCarteHistoire();
+    } else {
+        arreterCarteHistoire();
     }
 
     if (idEcran === ECRANS.PAUSE) {

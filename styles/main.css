@@ -300,6 +300,12 @@ body::before {
 .menu-titre-1 .lettre-titre:nth-child(6) {
     animation-delay: 0.75s;
 }
+.menu-titre-1 .lettre-titre:nth-child(7) {
+    animation-delay: 0.9s;
+}
+.menu-titre-1 .lettre-titre:nth-child(8) {
+    animation-delay: 1.05s;
+}
 
 @keyframes flotterLettre {
     0%,
@@ -319,11 +325,28 @@ body::before {
     animation: pulseLueur 2.5s ease-in-out infinite 0.6s;
 }
 
-.menu-titre-sous {
-    font-size: clamp(0.28rem, 1.1vw, 0.42rem);
-    color: var(--texte-dim);
+.menu-titre-dl {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    line-height: 1;
+}
+.dl-mot-1 {
+    letter-spacing: 6px;
+}
+.dl-mot-2 {
+    font-size: clamp(2rem, 10vw, 4rem);
     letter-spacing: 4px;
-    margin-top: 6px;
+    color: var(--cyan);
+    text-shadow:
+        0 0 14px var(--cyan),
+        0 0 35px rgba(0, 245, 255, 0.4);
+    animation: pulseLueur 2.5s ease-in-out infinite 0.4s;
+}
+
+.menu-titre-sous {
+    display: none;
 }
 
 /* Mascotte menu */
@@ -1034,6 +1057,68 @@ body::before {
     font-size: 0.24rem;
     color: var(--jaune);
     margin-top: 2px;
+}
+
+.ach-carte[data-categorie^='histoire'] {
+    border-color: rgba(255, 0, 110, 0.2);
+}
+.ach-carte.debloque[data-categorie^='histoire'] {
+    border-color: var(--rose);
+    background: rgba(255, 0, 110, 0.06);
+    box-shadow: 0 0 12px rgba(255, 0, 110, 0.12);
+}
+.ach-carte[data-categorie='histoire_secrets'].debloque {
+    border-color: var(--jaune);
+    background: rgba(255, 230, 0, 0.05);
+    box-shadow: 0 0 14px rgba(255, 230, 0, 0.18);
+}
+.ach-carte[data-categorie='histoire_fins'].debloque {
+    border-color: var(--vert);
+    background: rgba(0, 255, 136, 0.04);
+}
+.ach-carte[data-categorie^='histoire'] .ach-carte-nom::before {
+    content: '▸ ';
+    color: var(--rose);
+    opacity: 0.6;
+}
+.codex-item[data-id^='monde_rouille'],
+.codex-item[data-id^='monde_eclipse'],
+.codex-item[data-id^='monde_vide'] {
+    border-color: rgba(255, 0, 110, 0.15);
+}
+.codex-item[data-id^='monde_miroir_codex'],
+.codex-item[data-id^='monde_trame_codex'] {
+    border-color: rgba(255, 230, 0, 0.15);
+}
+.codex-item[data-id^='chronique_vera'],
+.codex-item[data-id^='chronique_distorsion'] {
+    border-color: rgba(180, 0, 255, 0.2);
+}
+.ach-filtre-histoire {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+.ach-filtre-btn {
+    background: transparent;
+    border: 1px solid var(--bordure);
+    color: var(--texte-dim);
+    font-family: var(--police);
+    font-size: 0.28rem;
+    padding: 5px 10px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.15s;
+}
+.ach-filtre-btn.actif {
+    border-color: var(--rose);
+    color: var(--rose);
+    text-shadow: 0 0 6px var(--rose);
+}
+.ach-filtre-btn:hover:not(.actif) {
+    border-color: var(--texte-dim);
 }
 
 #couronne {
@@ -2478,4 +2563,673 @@ body.archi-active #conteneur-principal-archi {
 
 .cna-etoiles {
     font-size: 0.55rem;
+}
+
+/* ================================================
+   MODE HISTOIRE — Carte et Écrans
+================================================ */
+
+#ecran-histoire-map {
+    background: transparent;
+    backdrop-filter: none;
+    overflow: hidden;
+}
+#ecran-histoire-map.ecran {
+    background: transparent;
+}
+
+#canvas-histoire-map {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    cursor: default;
+}
+
+#histoire-map-overlay {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+}
+#histoire-map-overlay > * {
+    pointer-events: auto;
+}
+
+#histoire-map-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 22px;
+    background: rgba(8, 8, 26, 0.72);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(255, 0, 110, 0.2);
+}
+.histoire-titre-principale {
+    font-size: clamp(0.5rem, 2vw, 0.72rem);
+    letter-spacing: 5px;
+    color: var(--rose);
+    text-shadow: 0 0 10px var(--rose);
+}
+.histoire-sous-titre {
+    font-size: 0.3rem;
+    color: var(--texte-dim);
+    letter-spacing: 4px;
+    margin-top: 3px;
+}
+.histoire-progression {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    font-size: 0.3rem;
+    color: var(--texte-dim);
+    letter-spacing: 2px;
+}
+.histoire-prog-item {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+#histoire-monde-details {
+    position: absolute;
+    bottom: 64px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(6, 6, 22, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 14px 22px;
+    min-width: 220px;
+    max-width: min(90vw, 340px);
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    text-align: center;
+    animation: apparitionDetail 0.2s ease-out;
+    pointer-events: auto;
+}
+@keyframes apparitionDetail {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+.histoire-detail-nom {
+    font-size: clamp(0.45rem, 1.8vw, 0.62rem);
+    letter-spacing: 3px;
+    color: var(--cyan);
+    text-shadow: 0 0 8px var(--cyan);
+}
+.histoire-detail-type {
+    font-size: 0.3rem;
+    letter-spacing: 2px;
+    color: var(--texte-dim);
+}
+.histoire-detail-statut {
+    font-size: 0.3rem;
+    color: var(--texte-dim);
+    letter-spacing: 2px;
+}
+.histoire-detail-journal {
+    font-size: 0.28rem;
+    color: var(--violet);
+    letter-spacing: 1px;
+    min-height: 1em;
+}
+.bouton-jouer-monde {
+    font-size: 0.48rem !important;
+    padding: 10px 28px !important;
+    margin-top: 4px;
+}
+
+#histoire-map-footer {
+    position: absolute;
+    bottom: 16px;
+    left: 18px;
+}
+
+.bouton-histoire-carte {
+    border-color: var(--rose) !important;
+    color: var(--rose) !important;
+    text-shadow: 0 0 8px var(--rose) !important;
+}
+
+#ecran-histoire-journal {
+    background: rgba(5, 5, 20, 0.97);
+}
+#histoire-journal-contenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 22px 20px;
+    max-width: min(90vw, 400px);
+    border: 2px solid var(--rose);
+    background: rgba(8, 8, 26, 0.99);
+    box-shadow: 0 0 40px rgba(255, 0, 110, 0.12);
+    animation: apparitionJournal 0.3s ease-out;
+    max-height: 90vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+@keyframes apparitionJournal {
+    from {
+        opacity: 0;
+        transform: scale(0.93);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+.histoire-journal-numero {
+    font-size: 0.27rem;
+    color: rgba(255, 0, 110, 0.6);
+    letter-spacing: 4px;
+}
+#canvas-journal-illust {
+    width: 100%;
+    border: 1px solid rgba(255, 0, 110, 0.2);
+    image-rendering: pixelated;
+}
+.histoire-journal-titre {
+    font-size: clamp(0.48rem, 1.8vw, 0.65rem);
+    color: var(--rose);
+    letter-spacing: 3px;
+    text-shadow: 0 0 8px var(--rose);
+    text-align: center;
+}
+.histoire-journal-ss-titre {
+    font-size: 0.28rem;
+    color: var(--texte-dim);
+    letter-spacing: 2px;
+    text-align: center;
+}
+.histoire-journal-texte-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+.histoire-journal-para {
+    font-size: 0.3rem;
+    color: var(--texte);
+    line-height: 2;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-left: 2px solid rgba(255, 0, 110, 0.3);
+    text-align: left;
+}
+
+#ecran-histoire-fin {
+    background: rgba(0, 0, 0, 0.98);
+}
+#canvas-fin-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+#histoire-fin-contenu {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 32px 24px;
+    max-width: min(90vw, 580px);
+    width: 100%;
+    text-align: center;
+    max-height: 90vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+.histoire-fin-embleme {
+    font-size: 2.4rem;
+    animation: pulseLueur 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 12px currentColor);
+    margin-bottom: 4px;
+}
+#ecran-histoire-fin[data-fin='fin_normale'] .histoire-fin-embleme {
+    color: var(--cyan);
+}
+#ecran-histoire-fin[data-fin='fin_vraie'] .histoire-fin-embleme {
+    color: var(--vert);
+}
+#ecran-histoire-fin[data-fin='fin_secrete'] .histoire-fin-embleme {
+    color: var(--jaune);
+}
+.histoire-fin-titre {
+    font-size: clamp(0.65rem, 2.5vw, 0.95rem);
+    color: var(--jaune);
+    letter-spacing: 4px;
+    text-shadow: 0 0 14px var(--jaune);
+    animation: pulseLueur 2s ease-in-out infinite;
+}
+.histoire-fin-corps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    text-align: left;
+}
+.histoire-fin-para {
+    font-size: clamp(0.33rem, 1.3vw, 0.46rem);
+    color: var(--texte);
+    line-height: 2.2;
+    letter-spacing: 1px;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    padding-left: 12px;
+    opacity: 0;
+    animation: apparitionParaFin 0.6s ease forwards;
+}
+.histoire-fin-para:nth-child(1) {
+    animation-delay: 0.1s;
+}
+.histoire-fin-para:nth-child(2) {
+    animation-delay: 0.3s;
+}
+.histoire-fin-para:nth-child(3) {
+    animation-delay: 0.5s;
+}
+.histoire-fin-para:nth-child(4) {
+    animation-delay: 0.7s;
+}
+.histoire-fin-para:nth-child(5) {
+    animation-delay: 0.9s;
+}
+.histoire-fin-para:nth-child(6) {
+    animation-delay: 1.1s;
+}
+.histoire-fin-para:nth-child(7) {
+    animation-delay: 1.3s;
+}
+@keyframes apparitionParaFin {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.histoire-fin-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    margin-top: 4px;
+}
+.histoire-fin-stat-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+.histoire-fin-stat-label {
+    font-size: 0.26rem;
+    color: var(--texte-dim);
+    letter-spacing: 2px;
+    text-align: center;
+}
+.histoire-fin-stat-valeur {
+    font-size: 0.4rem;
+    letter-spacing: 1px;
+    text-align: center;
+}
+.histoire-fin-boutons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+}
+.histoire-fin-hint {
+    font-size: 0.26rem;
+    color: rgba(255, 255, 255, 0.18);
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: 4px;
+    font-style: italic;
+}
+#ecran-histoire-fin[data-fin='fin_normale'] {
+    background: rgba(0, 0, 20, 0.97);
+}
+#ecran-histoire-fin[data-fin='fin_vraie'] {
+    background: rgba(0, 8, 8, 0.97);
+}
+#ecran-histoire-fin[data-fin='fin_secrete'] {
+    background: rgba(10, 8, 0, 0.97);
+}
+#ecran-histoire-fin[data-fin='fin_normale'] #histoire-fin-hint {
+    display: block;
+}
+@keyframes apparitionSecret {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+    15% {
+        transform: translate(-50%, -50%) scale(1.08);
+        opacity: 1;
+    }
+    75% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+}
+.noeud-cache-debloque-label {
+    font-size: 0.26rem;
+    color: rgba(255, 230, 0, 0.55);
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: 3px;
+}
+
+/* ================================================
+   BOSS — Interface en jeu
+================================================ */
+
+#section-boss {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 6px;
+    background: var(--theme-fond, rgba(255, 0, 110, 0.04));
+    border: 1px solid rgba(255, 0, 110, 0.3);
+    box-shadow: 0 0 12px rgba(255, 0, 110, 0.08);
+    animation: apparitionBoss 0.4s ease-out;
+}
+@keyframes apparitionBoss {
+    from {
+        opacity: 0;
+        transform: scaleY(0.6);
+    }
+    to {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}
+
+.boss-nom {
+    font-size: 0.3rem;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+#boss-hp-wrapper {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 0, 110, 0.35);
+    overflow: hidden;
+}
+#boss-hp-fill {
+    height: 100%;
+    background: var(--rose);
+    transition:
+        width 0.25s ease,
+        background 0.4s ease;
+    box-shadow: 0 0 6px var(--rose);
+}
+.boss-hp-label {
+    font-size: 0.28rem;
+    color: var(--texte-dim);
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+#canvas-boss-portrait {
+    width: 100%;
+    max-width: 108px;
+    image-rendering: pixelated;
+    border: 1px solid rgba(255, 0, 110, 0.2);
+    background: #000;
+}
+
+.boss-attaque-label {
+    font-size: 0.26rem;
+    color: var(--rose);
+    text-align: center;
+    letter-spacing: 1px;
+    min-height: 1em;
+    text-shadow: 0 0 6px var(--rose);
+    animation: clignoteBoss 0.8s ease-in-out infinite;
+}
+@keyframes clignoteBoss {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.boss-timer-label {
+    font-size: 0.24rem;
+    color: var(--texte-dim);
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+#indicateur-boss-attaque {
+    padding: 5px 3px;
+    text-align: center;
+    border: 1px solid rgba(255, 0, 110, 0.3);
+    font-size: 0.28rem;
+    letter-spacing: 1px;
+    color: var(--rose);
+    background: rgba(255, 0, 110, 0.04);
+}
+
+/* ================================================
+   MÉCANIQUES BIOMES HISTOIRE
+================================================ */
+
+#canvas-plateau.biome-miroir {
+    transition: transform 0.4s ease;
+    transform: scaleY(-1);
+    transform-origin: 50% 50%;
+}
+
+body.histoire-active [data-biome='miroir'] #canvas-plateau {
+    border-color: #ff8800 !important;
+    box-shadow:
+        0 0 10px #ff8800,
+        0 0 25px rgba(255, 136, 0, 0.35) !important;
+}
+
+body.histoire-active [data-biome='vide'] #affichage-score::after {
+    content: ' [?]';
+    color: rgba(255, 255, 255, 0.18);
+    font-size: 0.3em;
+}
+
+body.histoire-active [data-biome='eclipse'] .section {
+    background: linear-gradient(180deg, rgba(255, 200, 0, 0.04) 0%, rgba(50, 30, 120, 0.06) 100%);
+}
+
+body.histoire-active [data-biome='rouille'] #canvas-plateau {
+    border-color: #cd6839 !important;
+    box-shadow:
+        0 0 10px #cd6839,
+        0 0 25px rgba(180, 80, 20, 0.3),
+        inset 0 0 15px rgba(120, 50, 10, 0.08) !important;
+}
+
+body.histoire-active [data-biome='trame'] #canvas-plateau {
+    border-color: #7700ff !important;
+    animation: tramePulse 2.5s ease-in-out infinite;
+}
+@keyframes tramePulse {
+    0%,
+    100% {
+        box-shadow:
+            0 0 15px #7700ff,
+            0 0 40px rgba(119, 0, 255, 0.3);
+    }
+    33% {
+        box-shadow:
+            0 0 15px #ff006e,
+            0 0 40px rgba(255, 0, 110, 0.3);
+    }
+    66% {
+        box-shadow:
+            0 0 15px #00f5ff,
+            0 0 40px rgba(0, 245, 255, 0.3);
+    }
+}
+
+#indicateur-vide-actif {
+    font-size: 0.28rem;
+    color: rgba(255, 255, 255, 0.15);
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 3px 0;
+    display: none;
+}
+body.histoire-active #indicateur-vide-actif {
+    display: block;
+}
+
+#ecran-histoire-cutscene {
+    background: rgba(0, 0, 0, 0.96);
+}
+
+#histoire-cutscene-contenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 28px 20px;
+    max-width: min(92vw, 560px);
+    width: 100%;
+}
+
+#histoire-cutscene-portrait-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.histoire-cs-portrait-icon {
+    width: 60px;
+    height: 60px;
+    border: 2px solid var(--rose);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    background: rgba(255, 0, 110, 0.06);
+    box-shadow: 0 0 16px rgba(255, 0, 110, 0.2);
+    transition:
+        border-color 0.3s,
+        box-shadow 0.3s;
+    flex-shrink: 0;
+}
+.histoire-cs-nom {
+    font-size: 0.3rem;
+    letter-spacing: 3px;
+    color: var(--rose);
+    text-shadow: 0 0 8px var(--rose);
+    transition:
+        color 0.3s,
+        text-shadow 0.3s;
+    text-align: center;
+    min-height: 1.2em;
+}
+
+#histoire-cutscene-lignes {
+    min-height: 90px;
+    max-height: 220px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+#histoire-cutscene-lignes::-webkit-scrollbar {
+    display: none;
+}
+.histoire-cutscene-ligne {
+    font-size: clamp(0.36rem, 1.3vw, 0.48rem);
+    color: var(--texte);
+    letter-spacing: 1.5px;
+    line-height: 1.9;
+    opacity: 0;
+    animation: apparitionLigneCutscene 0.45s ease forwards;
+    padding-left: 10px;
+    border-left: 2px solid rgba(255, 255, 255, 0.08);
+}
+.histoire-cutscene-ligne:last-child {
+    border-left-color: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+}
+@keyframes apparitionLigneCutscene {
+    from {
+        opacity: 0;
+        transform: translateX(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+#btn-cutscene-passer {
+    font-size: 0.28rem;
+    padding: 4px 12px;
+    opacity: 0.45;
+    margin-top: -8px;
+}
+#btn-cutscene-passer:hover {
+    opacity: 0.8;
+}
+
+.histoire-cs-progress {
+    font-size: 0.25rem;
+    color: rgba(255, 255, 255, 0.2);
+    letter-spacing: 2px;
+    text-align: center;
+    min-height: 1em;
+}
+
+.histoire-journal-dommage {
+    font-size: 0.28rem;
+    color: var(--jaune);
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 4px 8px;
+    border: 1px solid rgba(255, 230, 0, 0.3);
+    background: rgba(255, 230, 0, 0.04);
+    animation: clignoteBoss 1.5s ease-in-out infinite;
 }

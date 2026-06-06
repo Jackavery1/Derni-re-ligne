@@ -7,7 +7,7 @@ const next = `${major}.${minor}.${patch + 1}`;
 pkg.version = next;
 writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
 
-const cacheVersion = `tetris-neo-${next}`;
+const cacheVersion = `derniere-ligne-${next}`;
 
 const sw = readFileSync('sw.js', 'utf8');
 writeFileSync(

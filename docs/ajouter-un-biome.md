@@ -1,6 +1,6 @@
 # Ajouter un biome
 
-Checklist pour étendre Tetris Néo avec un nouveau monde jouable.
+Checklist pour étendre Dernière Ligne avec un nouveau monde jouable.
 
 ## 1. Données et textes
 
@@ -39,10 +39,10 @@ Si le biome a un comportement de plateau vivant :
 
 ## 5. Progression
 
-| Fichier               | Action                                               |
-| --------------------- | ---------------------------------------------------- |
-| `js/progression.js`   | Regex `tetrisNeo_record_[a-z]+` couvre les ids biome |
-| `js/codex-donnees.js` | Entrée encyclopédie                                  |
+| Fichier               | Action                                                   |
+| --------------------- | -------------------------------------------------------- |
+| `js/progression.js`   | Regex `derniereLigne_record_[a-z]+` couvre les ids biome |
+| `js/codex-donnees.js` | Entrée encyclopédie                                      |
 
 ## 6. Validation
 

@@ -1,11 +1,21 @@
 import { lancerBiomeSelectionne } from './constellation.js';
 import { AudioMoteur } from './audio.js';
 import { etat, ECRANS } from './store-jeu.js';
+import { store } from './store-core.js';
 import { afficherEcran } from './ecrans-ui.js';
 import { afficherOngletOptions } from './options-ui.js';
 import { obtenirActions } from './actions-jeu.js';
 import { jouerMelodie } from './melodie.js';
 import { basculerOracle } from './oracle-jeu.js';
+import {
+    retournerACarte,
+    retournerAuMondeActuel,
+    avancerCutscene,
+    passerCutscene,
+    fermerJournalHistoire,
+} from './histoire-manager.js';
+import { reinitialiserHistoirePourReplay } from './fins-histoire.js';
+import { arreterFondFin } from './fin-bg-rendu.js';
 import {
     basculerModeCoop,
     demarrerCooperatif,
@@ -60,9 +70,13 @@ export function initialiserBoutons() {
     document
         .getElementById('btn-profil-achievements')
         ?.addEventListener('click', () => afficherEcran(ECRANS.ACHIEVEMENTS));
-    document
-        .getElementById('btn-rejouer')
-        ?.addEventListener('click', () => obtenirActions().demarrerJeu?.());
+    document.getElementById('btn-rejouer')?.addEventListener('click', () => {
+        if (store.modeHistoireActif) {
+            retournerAuMondeActuel();
+        } else {
+            obtenirActions().demarrerJeu?.();
+        }
+    });
     document.getElementById('btn-reecouter')?.addEventListener('click', () => jouerMelodie());
     document
         .getElementById('btn-selection-retour')
@@ -144,5 +158,26 @@ export function initialiserBoutons() {
             document.querySelectorAll('.bouton-mode').forEach((b) => b.classList.remove('actif'));
             btn.classList.add('actif');
         });
+    });
+
+    document
+        .getElementById('btn-histoire-retour')
+        ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
+    document.getElementById('btn-histoire-carte')?.addEventListener('click', retournerACarte);
+    document.getElementById('btn-cutscene-suivant')?.addEventListener('click', avancerCutscene);
+    document.getElementById('btn-cutscene-passer')?.addEventListener('click', passerCutscene);
+    document.getElementById('btn-journal-fermer')?.addEventListener('click', fermerJournalHistoire);
+    document.getElementById('btn-fin-menu')?.addEventListener('click', () => {
+        arreterFondFin();
+        store.modeHistoireActif = false;
+        document.body.classList.remove('histoire-active');
+        afficherEcran(ECRANS.TITRE);
+    });
+    document.getElementById('btn-fin-rejouer')?.addEventListener('click', () => {
+        arreterFondFin();
+        reinitialiserHistoirePourReplay();
+        store.modeHistoireActif = false;
+        document.body.classList.remove('histoire-active');
+        afficherEcran(ECRANS.HISTOIRE_MAP);
     });
 }
