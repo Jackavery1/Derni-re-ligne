@@ -38,6 +38,7 @@ const FICHIERS_A_CACHER = [
     './js/archi-jeu.js',
     './js/archi-logique.js',
     './js/archi-rendu.js',
+    './js/audio-donnees.js',
     './js/audio.js',
     './js/biomes-histoire.js',
     './js/biomes.js',
@@ -68,6 +69,7 @@ const FICHIERS_A_CACHER = [
     './js/fin-bg-rendu.js',
     './js/fins-histoire.js',
     './js/histoire-donnees.js',
+    './js/histoire-etat.js',
     './js/histoire-illustrations.js',
     './js/histoire-manager.js',
     './js/histoire-map.js',
@@ -97,6 +99,8 @@ const FICHIERS_A_CACHER = [
     './js/profil-jeu.js',
     './js/progression.js',
     './js/reliques.js',
+    './js/rendu-ambiance-fonds.js',
+    './js/rendu-ambiance-histoire.js',
     './js/rendu-ambiance.js',
     './js/rendu-blocs-styles.js',
     './js/rendu-blocs-utils.js',
@@ -109,6 +113,7 @@ const FICHIERS_A_CACHER = [
     './js/rendu-vivant.js',
     './js/store-core.js',
     './js/store-etat-partie.js',
+    './js/store-histoire.js',
     './js/store-jeu.js',
     './js/store-refs-canvas.js',
     './js/themes-biome.js',
@@ -178,7 +183,7 @@ self.addEventListener('fetch', (evenement) => {
                         reponseReseau.status !== 200 ||
                         reponseReseau.type === 'error'
                     ) {
-                        return reponseCache ?? reponseReseau;
+                        return reponseCache ?? reponseReseau ?? reponseHorsLigne(evenement.request);
                     }
 
                     if (evenement.request.url.startsWith(self.location.origin)) {
@@ -195,7 +200,16 @@ self.addEventListener('fetch', (evenement) => {
                     if (evenement.request.destination === 'document') {
                         return caches.match('./index.html');
                     }
+                    return reponseHorsLigne(evenement.request);
                 });
         })
     );
 });
+
+function reponseHorsLigne(_requete) {
+    return new Response('Ressource indisponible hors ligne', {
+        status: 503,
+        statusText: 'Service Unavailable',
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    });
+}

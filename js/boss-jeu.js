@@ -24,15 +24,15 @@ export function demarrerBoss(bossId) {
         logger.warn('[boss] bossId inconnu :', bossId);
         return;
     }
-    store.bossActif = boss;
-    store.pvBossActuels = boss.pvMax;
-    store.bossPhaseActuelle = 0;
-    store.timerAttaqueBoss = boss.attaqueIntervalleMs ?? 15000;
-    store.timerAttaqueActive = 0;
-    store.bossVaincu = false;
-    store.timerBossVaincu = 0;
-    store.timerBossDebut = performance.now();
-    store.timerPortraitBoss = 0;
+    store.histoire.boss.actif = boss;
+    store.histoire.boss.pv = boss.pvMax;
+    store.histoire.boss.phase = 0;
+    store.histoire.boss.timerAttaque = boss.attaqueIntervalleMs ?? 15000;
+    store.histoire.boss.timerAttaqueActive = 0;
+    store.histoire.boss.vaincu = false;
+    store.histoire.boss.timerVaincu = 0;
+    store.histoire.boss.timerDebut = performance.now();
+    store.histoire.boss.timerPortrait = 0;
     _reinitialiserMecaniques();
 
     _afficherSectionBoss(true);
@@ -43,21 +43,21 @@ export function demarrerBoss(bossId) {
 }
 
 export function arreterBoss() {
-    if (!store.bossActif) return;
+    if (!store.histoire.boss.actif) return;
     _reinitialiserMecaniques();
-    store.bossActif = null;
-    store.pvBossActuels = 0;
-    store.bossPhaseActuelle = 0;
-    store.timerAttaqueBoss = 0;
-    store.timerAttaqueActive = 0;
-    store.bossVaincu = false;
-    store.timerBossVaincu = 0;
-    store.timerPortraitBoss = 0;
+    store.histoire.boss.actif = null;
+    store.histoire.boss.pv = 0;
+    store.histoire.boss.phase = 0;
+    store.histoire.boss.timerAttaque = 0;
+    store.histoire.boss.timerAttaqueActive = 0;
+    store.histoire.boss.vaincu = false;
+    store.histoire.boss.timerVaincu = 0;
+    store.histoire.boss.timerPortrait = 0;
     _afficherSectionBoss(false);
 }
 
 function _reinitialiserMecaniques() {
-    const m = store.mechaniquesBiomeActif;
+    const m = store.histoire.boss.effets;
     m.colonnesGelees = [];
     m.timerDegelMs = 0;
     m.bossControlesInverses = false;
@@ -70,10 +70,10 @@ function _reinitialiserMecaniques() {
 
 /** @param {number} dt */
 export function mettreAJourBoss(dt) {
-    if (!store.bossActif || store.bossVaincu || etat.estEnPause) return;
+    if (!store.histoire.boss.actif || store.histoire.boss.vaincu || etat.estEnPause) return;
 
-    const boss = store.bossActif;
-    const m = store.mechaniquesBiomeActif;
+    const boss = store.histoire.boss.actif;
+    const m = store.histoire.boss.effets;
 
     if (m.timerControlesInverses > 0) {
         m.timerControlesInverses -= dt;
@@ -104,46 +104,46 @@ export function mettreAJourBoss(dt) {
         }
     }
 
-    store.timerAttaqueBoss -= dt;
-    if (store.timerAttaqueBoss <= 0) {
+    store.histoire.boss.timerAttaque -= dt;
+    if (store.histoire.boss.timerAttaque <= 0) {
         _exectuterAttaque();
-        store.timerAttaqueBoss = boss.attaqueIntervalleMs ?? 15000;
+        store.histoire.boss.timerAttaque = boss.attaqueIntervalleMs ?? 15000;
     }
 
     _verifierPhase();
-    store.timerPortraitBoss += dt;
+    store.histoire.boss.timerPortrait += dt;
 
-    if (store.bossVaincu) {
-        store.timerBossVaincu -= dt;
+    if (store.histoire.boss.vaincu) {
+        store.histoire.boss.timerVaincu -= dt;
     }
 
     _mettreAJourTimerUI();
 
-    if (store.bossActif.id === 'distorsion') {
+    if (store.histoire.boss.actif.id === 'distorsion') {
         tickConditionTrame(dt);
     }
 }
 
 /** @param {number} nbLignes */
 export function endommagerBoss(nbLignes) {
-    if (!store.bossActif || store.bossVaincu) return;
-    store.pvBossActuels = Math.max(0, store.pvBossActuels - nbLignes);
+    if (!store.histoire.boss.actif || store.histoire.boss.vaincu) return;
+    store.histoire.boss.pv = Math.max(0, store.histoire.boss.pv - nbLignes);
     _mettreAJourHPBar();
 
-    if (store.pvBossActuels <= 0) {
+    if (store.histoire.boss.pv <= 0) {
         _declencherVictoireBoss();
     }
 }
 
 function _declencherVictoireBoss() {
-    if (store.bossVaincu) return;
-    store.bossVaincu = true;
-    store.timerBossVaincu = DUREE_VICTOIRE_BOSS_MS;
-    if (store.timerBossDebut) {
-        enregistrerVictoireBossTimer(store.timerBossDebut);
+    if (store.histoire.boss.vaincu) return;
+    store.histoire.boss.vaincu = true;
+    store.histoire.boss.timerVaincu = DUREE_VICTOIRE_BOSS_MS;
+    if (store.histoire.boss.timerDebut) {
+        enregistrerVictoireBossTimer(store.histoire.boss.timerDebut);
     }
 
-    const boss = store.bossActif;
+    const boss = store.histoire.boss.actif;
     const texte = boss?.texteDefaite ?? boss?.texteDefaite_normal ?? 'Défaite...';
     _afficherTexteBoss(texte);
 
@@ -162,15 +162,15 @@ function _declencherVictoireBoss() {
 }
 
 function _exectuterAttaque() {
-    if (!store.bossActif || store.bossVaincu) return;
-    const boss = store.bossActif;
+    if (!store.histoire.boss.actif || store.histoire.boss.vaincu) return;
+    const boss = store.histoire.boss.actif;
     const phase = _obtenirPhaseActuelle();
     const typeAttaque = phase?.attaqueType ?? boss.attaqueType;
 
     if (!typeAttaque) return;
 
     if (typeAttaque === 'multi_phase') {
-        const phaseData = boss.phases?.[store.bossPhaseActuelle];
+        const phaseData = boss.phases?.[store.histoire.boss.phase];
         if (phaseData) _appliquerAttaque(phaseData.type, phaseData.dureeMs);
     } else if (typeAttaque === 'combinaison' || typeAttaque === 'combinaison_glace_glitch') {
         const disponibles = boss.attaquesDisponibles ?? [
@@ -187,15 +187,15 @@ function _exectuterAttaque() {
 
 /** @param {string} type @param {number} dureeMs */
 function _appliquerAttaque(type, dureeMs) {
-    const m = store.mechaniquesBiomeActif;
+    const m = store.histoire.boss.effets;
     switch (type) {
         case 'rangee_braise':
             _attaqueRangeeBraise();
             break;
         case 'colonne_gelee':
             _attaqueColonneGelee(
-                store.bossActif?.nbColonnesGelees ?? 2,
-                dureeMs || store.bossActif?.dureeGelee || 8000
+                store.histoire.boss.actif?.nbColonnesGelees ?? 2,
+                dureeMs || store.histoire.boss.actif?.dureeGelee || 8000
             );
             break;
         case 'inverser_controles':
@@ -232,7 +232,7 @@ function _attaqueRangeeBraise() {
 function _attaqueColonneGelee(nb, dureeMs) {
     const colonnesDispos = Array.from({ length: CONFIG.colonnes }, (_, i) => i);
     const colonnesChoisies = _melangerTableau(colonnesDispos).slice(0, nb);
-    const m = store.mechaniquesBiomeActif;
+    const m = store.histoire.boss.effets;
     m.colonnesGelees = colonnesChoisies;
     m.timerDegelMs = dureeMs;
 
@@ -254,7 +254,7 @@ function _attaqueColonneGelee(nb, dureeMs) {
 }
 
 function _degelColonnes() {
-    const m = store.mechaniquesBiomeActif;
+    const m = store.histoire.boss.effets;
     for (let lig = 0; lig < CONFIG.lignes; lig++) {
         for (let col = 0; col < CONFIG.colonnes; col++) {
             if (etat.plateau[lig]?.[col] === COULEUR_GLACE_B) {
@@ -269,7 +269,7 @@ function _degelColonnes() {
 
 /** @param {number} dureeMs */
 function _attaqueDistorsionPlateau(dureeMs) {
-    const m = store.mechaniquesBiomeActif;
+    const m = store.histoire.boss.effets;
     m.decalageDistorsion = Math.random() < 0.5 ? 1 : -1;
     m.timerDistorsion = dureeMs;
     _afficherTexteBoss('∞ DISTORSION ACTIVE');
@@ -277,28 +277,28 @@ function _attaqueDistorsionPlateau(dureeMs) {
 }
 
 export function obtenirDecalageDistorsionBoss() {
-    if (!store.bossActif) return 0;
-    return store.mechaniquesBiomeActif.decalageDistorsion ?? 0;
+    if (!store.histoire.boss.actif) return 0;
+    return store.histoire.boss.effets.decalageDistorsion ?? 0;
 }
 
 export function obtenirControlesInversesBoss() {
-    if (!store.bossActif) return false;
-    return store.mechaniquesBiomeActif.bossControlesInverses ?? false;
+    if (!store.histoire.boss.actif) return false;
+    return store.histoire.boss.effets.bossControlesInverses ?? false;
 }
 
 export function obtenirFauxFantomeActif() {
-    if (!store.bossActif) return false;
-    return store.mechaniquesBiomeActif.bossFauxFantome ?? false;
+    if (!store.histoire.boss.actif) return false;
+    return store.histoire.boss.effets.bossFauxFantome ?? false;
 }
 
 function _verifierPhase() {
-    const boss = store.bossActif;
+    const boss = store.histoire.boss.actif;
     if (!boss?.phases) return;
     for (let i = boss.phases.length - 1; i >= 0; i--) {
         const phase = boss.phases[i];
         const seuil = phase.pvSeuil ?? boss.pvMax;
-        if (store.pvBossActuels <= seuil && store.bossPhaseActuelle < i) {
-            store.bossPhaseActuelle = i;
+        if (store.histoire.boss.pv <= seuil && store.histoire.boss.phase < i) {
+            store.histoire.boss.phase = i;
             _afficherTexteBoss('⚠ NOUVELLE PHASE');
             if (!AudioMoteur.muet) AudioMoteur.son('niveau');
             setTimeout(_exectuterAttaque, 800);
@@ -308,9 +308,9 @@ function _verifierPhase() {
 }
 
 function _obtenirPhaseActuelle() {
-    const boss = store.bossActif;
+    const boss = store.histoire.boss.actif;
     if (!boss?.phases) return null;
-    return boss.phases[store.bossPhaseActuelle] ?? null;
+    return boss.phases[store.histoire.boss.phase] ?? null;
 }
 
 /** @param {boolean} visible */
@@ -318,29 +318,29 @@ function _afficherSectionBoss(visible) {
     if (typeof document === 'undefined') return;
     const sectionBoss = document.getElementById('section-boss');
     const sectionMascotte = document.getElementById('section-mascotte');
-    if (sectionBoss) sectionBoss.style.display = visible ? 'flex' : 'none';
-    if (sectionMascotte) sectionMascotte.style.display = visible ? 'none' : '';
+    if (sectionBoss) sectionBoss.classList.toggle('element-masque', !visible);
+    if (sectionMascotte) sectionMascotte.classList.toggle('element-masque', visible);
 
-    if (visible && store.bossActif) {
+    if (visible && store.histoire.boss.actif) {
         const elNom = document.getElementById('boss-nom-affiche');
         if (elNom) {
-            elNom.textContent = store.bossActif.nom ?? 'BOSS';
-            elNom.style.color = store.bossActif.couleur ?? 'var(--rose)';
+            elNom.textContent = store.histoire.boss.actif.nom ?? 'BOSS';
+            elNom.style.color = store.histoire.boss.actif.couleur ?? 'var(--rose)';
         }
     }
 }
 
 function _mettreAJourHPBar() {
     if (typeof document === 'undefined') return;
-    const boss = store.bossActif;
+    const boss = store.histoire.boss.actif;
     if (!boss) return;
-    const pct = Math.max(0, (store.pvBossActuels / boss.pvMax) * 100);
+    const pct = Math.max(0, (store.histoire.boss.pv / boss.pvMax) * 100);
     const fill = document.getElementById('boss-hp-fill');
     const label = document.getElementById('boss-hp-label');
     if (fill) fill.style.width = `${pct}%`;
-    if (label) label.textContent = `${store.pvBossActuels} / ${boss.pvMax}`;
+    if (label) label.textContent = `${store.histoire.boss.pv} / ${boss.pvMax}`;
     if (fill) {
-        if (pct > 60) fill.style.background = store.bossActif?.couleur ?? 'var(--vert)';
+        if (pct > 60) fill.style.background = store.histoire.boss.actif?.couleur ?? 'var(--vert)';
         else if (pct > 30) fill.style.background = 'var(--jaune)';
         else fill.style.background = 'var(--rose)';
     }
@@ -358,7 +358,7 @@ function _mettreAJourTimerUI() {
     const el = document.getElementById('boss-timer-label');
     const attaqueEl = document.getElementById('boss-attaque-label');
 
-    if (store.bossActif?.id === 'distorsion' && conditionsRuntime.trameAttenteActive) {
+    if (store.histoire.boss.actif?.id === 'distorsion' && conditionsRuntime.trameAttenteActive) {
         const secRestantes = obtenirSecondesRestantesAttenteTrame();
         if (el) {
             el.textContent = secRestantes > 0 ? `ATTENTE : ${secRestantes}s` : 'CONDITION VALIDÉE';
@@ -367,8 +367,8 @@ function _mettreAJourTimerUI() {
         return;
     }
 
-    if (el && store.bossActif) {
-        const sec = Math.ceil(store.timerAttaqueBoss / 1000);
+    if (el && store.histoire.boss.actif) {
+        const sec = Math.ceil(store.histoire.boss.timerAttaque / 1000);
         el.textContent = sec > 0 ? `PROCHAINE : ${sec}s` : 'ATTAQUE !';
     }
 }
@@ -384,9 +384,9 @@ function _melangerTableau(arr) {
 }
 
 export function bossEstActif() {
-    return !!store.bossActif;
+    return !!store.histoire.boss.actif;
 }
 
 export function bossEstVaincu() {
-    return store.bossVaincu;
+    return store.histoire.boss.vaincu;
 }

@@ -487,7 +487,7 @@ export function initStatsPartie() {
     statsGlobales.biomesJoues.add(obtenirBiomeActif());
     statsGlobales.meteosPartieActuelle = new Set();
     statsGlobales.oracleDeviationsPartieActuelle = 0;
-    if (store.modeHistoireActif) {
+    if (store.histoire.actif) {
         reinitialiserStatsAchievementsHistoire();
     }
 }
@@ -537,14 +537,14 @@ export function finaliserStatsPartie(score, tempsSecondes) {
     if (melodie.notes.length > statsGlobales.maxNotesComposition) {
         statsGlobales.maxNotesComposition = melodie.notes.length;
     }
-    if (store.modeHistoireActif) {
-        const etatHist = store.etatHistoire ?? chargerEtatHistoire();
+    if (store.histoire.actif) {
+        const etatHist = store.histoire.etat ?? chargerEtatHistoire();
         if (etatHist?.finObtenue) {
             if (!etatHist.toutesFinObtenues) etatHist.toutesFinObtenues = [];
             if (!etatHist.toutesFinObtenues.includes(etatHist.finObtenue)) {
                 etatHist.toutesFinObtenues.push(etatHist.finObtenue);
                 sauvegarderEtatHistoire(etatHist);
-                store.etatHistoire = etatHist;
+                store.histoire.etat = etatHist;
                 statsGlobales.toutesFinHistoire = [...etatHist.toutesFinObtenues];
             }
         }

@@ -6,7 +6,7 @@ import { COULEUR_BRAISE, COULEUR_GLACE_B } from './boss-jeu.js';
 export function rendrePortraitBoss(timestamp) {
     if (typeof document === 'undefined') return;
     const canvas = obtenirCanvas('canvas-boss-portrait');
-    if (!canvas || !store.bossActif) return;
+    if (!canvas || !store.histoire.boss.actif) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     const w = canvas.width;
@@ -15,7 +15,7 @@ export function rendrePortraitBoss(timestamp) {
 
     const t = timestamp / 1000;
 
-    switch (store.bossActif.id) {
+    switch (store.histoire.boss.actif.id) {
         case 'brasier':
             _portraitBrasier(ctx, w, h, t);
             break;
@@ -36,7 +36,7 @@ export function rendrePortraitBoss(timestamp) {
             break;
     }
 
-    if (store.bossVaincu) {
+    if (store.histoire.boss.vaincu) {
         const alpha = 0.5 + 0.5 * Math.sin(t * 20);
         ctx.save();
         ctx.globalAlpha = alpha * 0.6;

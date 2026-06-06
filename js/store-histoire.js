@@ -1,0 +1,50 @@
+/** État runtime du mode Histoire (boss, mécaniques spéciales, cutscenes). */
+export function creerEtatHistoireRuntime() {
+    return {
+        actif: false,
+        etat: null,
+        mondeActuel: null,
+        dernierJournal: null,
+        prologueTopsVolontaires: 0,
+        cutscene: {
+            enCours: false,
+            onFin: null,
+        },
+        boss: {
+            actif: null,
+            pv: 0,
+            phase: 0,
+            timerAttaque: 0,
+            timerAttaqueActive: 0,
+            vaincu: false,
+            timerVaincu: 0,
+            timerDebut: 0,
+            timerPortrait: 0,
+            effets: {
+                colonnesGelees: [],
+                timerDegelMs: 0,
+                blocksRouilles: [],
+                pieceInvisibleDepuis: null,
+                bossControlesInverses: false,
+                timerControlesInverses: 0,
+                bossFauxFantome: false,
+                timerFauxFantome: 0,
+                decalageDistorsion: 0,
+                timerDistorsion: 0,
+            },
+        },
+        mecaniques: {
+            plateauTimestamps: null,
+            plateauRouille: null,
+            eclipseLigne: 10,
+            eclipseDerniereMaj: 0,
+            videTimestamp: 0,
+            videInvisible: false,
+            cyberTetrisConsecutifs: 0,
+            trameBiomeIndex: 0,
+            trameTimerMorph: 0,
+            trameAlphaMorph: 1.0,
+            trameEnTransition: false,
+        },
+    };
+}

@@ -2,7 +2,7 @@ import { store } from './store-core.js';
 import { etat } from './store-jeu.js';
 import { CONFIG } from './config.js';
 import { logger } from './logger.js';
-import { chargerEtatHistoire, sauvegarderEtatHistoire } from './progression.js';
+import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
 
 const SEUIL_PLATEAU_TRAME = 0.5;
 export const DUREE_ATTENTE_TRAME_MS = 30000;
@@ -15,15 +15,11 @@ export const conditionsRuntime = {
 };
 
 function _obtenirEtatHistoire() {
-    if (!store.etatHistoire) {
-        store.etatHistoire = chargerEtatHistoire();
-    }
-    return store.etatHistoire;
+    return obtenirEtatHistoirePersiste();
 }
 
 function _sauvegarderEtat(etatHist) {
-    sauvegarderEtatHistoire(etatHist);
-    store.etatHistoire = etatHist;
+    persisterEtatHistoire(etatHist);
 }
 
 /** @param {string} mondeId @param {typeof import('./histoire-donnees.js').ETAT_HISTOIRE_VIDE} etatHist */
@@ -37,18 +33,25 @@ function _ajouterMondeCacheDebloque(mondeId, etatHist) {
 }
 
 export function verifierConditionMiroir(nbLignes, etatHist) {
-    if (!store.modeHistoireActif) return;
-    if (store.mondeHistoireActuel !== 'monde_cyber') return;
+    if (!store.histoire.actif) return;
+    if (store.histoire.mondeActuel !== 'monde_cyber') return;
     if (etatHist.mondesCompletes.includes('monde_miroir')) return;
 
     if (nbLignes === 4) {
-        store.cyberTetrisConsecutifs = (store.cyberTetrisConsecutifs ?? 0) + 1;
-        logger.info('[secrets] tetris CYBER consécutifs :', store.cyberTetrisConsecutifs);
+        store.histoire.mecaniques.cyberTetrisConsecutifs =
+            (store.histoire.mecaniques.cyberTetrisConsecutifs ?? 0) + 1;
+        logger.info(
+            '[secrets] tetris CYBER consécutifs :',
+            store.histoire.mecaniques.cyberTetrisConsecutifs
+        );
     } else if (nbLignes > 0) {
-        store.cyberTetrisConsecutifs = 0;
+        store.histoire.mecaniques.cyberTetrisConsecutifs = 0;
     }
 
-    if (store.cyberTetrisConsecutifs >= 3 && etatHist.conditionsMiroir.bossArchivisteVaincu) {
+    if (
+        store.histoire.mecaniques.cyberTetrisConsecutifs >= 3 &&
+        etatHist.conditionsMiroir.bossArchivisteVaincu
+    ) {
         _debloquerMiroir(etatHist);
     }
 }
@@ -56,7 +59,7 @@ export function verifierConditionMiroir(nbLignes, etatHist) {
 function _debloquerMiroir(etatHist) {
     if (conditionsRuntime.notificationsMontrées.has('miroir')) return;
 
-    etatHist.conditionsMiroir.tetrisTriplesCyber = store.cyberTetrisConsecutifs;
+    etatHist.conditionsMiroir.tetrisTriplesCyber = store.histoire.mecaniques.cyberTetrisConsecutifs;
     _ajouterMondeCacheDebloque('monde_miroir', etatHist);
     conditionsRuntime.notificationsMontrées.add('miroir');
 
@@ -65,9 +68,9 @@ function _debloquerMiroir(etatHist) {
 }
 
 export function tickConditionTrame(dt) {
-    if (!store.modeHistoireActif) return;
-    if (store.mondeHistoireActuel !== 'monde_finale') return;
-    if (!store.bossActif || store.bossActif.id !== 'distorsion') return;
+    if (!store.histoire.actif) return;
+    if (store.histoire.mondeActuel !== 'monde_finale') return;
+    if (!store.histoire.boss.actif || store.histoire.boss.actif.id !== 'distorsion') return;
 
     const etatHist = _obtenirEtatHistoire();
     if (etatHist.conditionsTrame.actionDistorsionFaite) return;

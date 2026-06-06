@@ -71,7 +71,7 @@ export function initialiserBoutons() {
         .getElementById('btn-profil-achievements')
         ?.addEventListener('click', () => afficherEcran(ECRANS.ACHIEVEMENTS));
     document.getElementById('btn-rejouer')?.addEventListener('click', () => {
-        if (store.modeHistoireActif) {
+        if (store.histoire.actif) {
             retournerAuMondeActuel();
         } else {
             obtenirActions().demarrerJeu?.();
@@ -169,14 +169,14 @@ export function initialiserBoutons() {
     document.getElementById('btn-journal-fermer')?.addEventListener('click', fermerJournalHistoire);
     document.getElementById('btn-fin-menu')?.addEventListener('click', () => {
         arreterFondFin();
-        store.modeHistoireActif = false;
+        store.histoire.actif = false;
         document.body.classList.remove('histoire-active');
         afficherEcran(ECRANS.TITRE);
     });
     document.getElementById('btn-fin-rejouer')?.addEventListener('click', () => {
         arreterFondFin();
         reinitialiserHistoirePourReplay();
-        store.modeHistoireActif = false;
+        store.histoire.actif = false;
         document.body.classList.remove('histoire-active');
         afficherEcran(ECRANS.HISTOIRE_MAP);
     });

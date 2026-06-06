@@ -19,6 +19,11 @@ export default defineConfig({
                 'js/vivant.js',
                 'js/vivant-strategies.js',
                 'js/actions-piece-communes.js',
+                'js/mecaniques-histoire.js',
+                'js/conditions-secrets.js',
+                'js/histoire-etat.js',
+                'js/histoire-manager.js',
+                'js/boss-jeu.js',
             ],
             thresholds: {
                 lines: 50,

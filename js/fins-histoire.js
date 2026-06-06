@@ -1,17 +1,14 @@
 import { store } from './store-core.js';
 import { logger } from './logger.js';
 import { FINS, ETAT_HISTOIRE_VIDE } from './histoire-donnees.js';
-import { chargerEtatHistoire, sauvegarderEtatHistoire } from './progression.js';
+import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
 import { ECRANS } from './ecrans-config.js';
 import { afficherEcran } from './navigation-ecrans.js';
 import { demarrerFondFin } from './fin-bg-rendu.js';
 import { verifierAchievements, statsGlobales, sauvegarderStats } from './achievements.js';
 
 function _obtenirEtatHistoire() {
-    if (!store.etatHistoire) {
-        store.etatHistoire = chargerEtatHistoire();
-    }
-    return store.etatHistoire;
+    return obtenirEtatHistoirePersiste();
 }
 
 export function executerFin(finId) {
@@ -27,8 +24,8 @@ export function executerFin(finId) {
     if (!etatHist.toutesFinObtenues.includes(finId)) {
         etatHist.toutesFinObtenues.push(finId);
     }
-    sauvegarderEtatHistoire(etatHist);
-    store.etatHistoire = etatHist;
+    persisterEtatHistoire(etatHist);
+    store.histoire.etat = etatHist;
     statsGlobales.toutesFinHistoire = [...etatHist.toutesFinObtenues];
     sauvegarderStats();
 
@@ -67,7 +64,7 @@ function _afficherEcranFin(finId, etatHist) {
     }
 
     if (elStats) {
-        elStats.innerHTML = _genererStatsFinales(etatHist, finId);
+        _remplirStatsFinales(elStats, etatHist, finId);
     }
 
     if (elBtnR) {
@@ -81,7 +78,7 @@ function _afficherEcranFin(finId, etatHist) {
     if (elHint) {
         elHint.textContent =
             finId === 'fin_normale' ? "D'autres fins existent. Explore davantage." : '';
-        elHint.style.display = finId === 'fin_normale' ? 'block' : 'none';
+        elHint.classList.toggle('element-masque', finId !== 'fin_normale');
     }
 
     const elEmbleme = document.getElementById('histoire-fin-embleme');
@@ -110,7 +107,7 @@ function _couleurFin(finId) {
     }
 }
 
-function _genererStatsFinales(etatHist, finId) {
+function _obtenirItemsStats(etatHist, finId) {
     const nbMondes = etatHist.mondesCompletes.filter(
         (id) => !['monde_miroir', 'monde_trame', 'monde_paradoxe'].includes(id)
     ).length;
@@ -144,19 +141,29 @@ function _genererStatsFinales(etatHist, finId) {
         });
     }
 
-    return items
-        .map(
-            (it) => `
-        <div class="histoire-fin-stat-item">
-            <span class="histoire-fin-stat-label">${it.label}</span>
-            <span class="histoire-fin-stat-valeur"
-                  style="color:${it.couleur};text-shadow:0 0 6px ${it.couleur}">
-                ${it.valeur}
-            </span>
-        </div>
-    `
-        )
-        .join('');
+    return items;
+}
+
+/** @param {HTMLElement} conteneur @param {typeof ETAT_HISTOIRE_VIDE} etatHist @param {string} finId */
+function _remplirStatsFinales(conteneur, etatHist, finId) {
+    conteneur.replaceChildren();
+    for (const it of _obtenirItemsStats(etatHist, finId)) {
+        const ligne = document.createElement('div');
+        ligne.className = 'histoire-fin-stat-item';
+
+        const label = document.createElement('span');
+        label.className = 'histoire-fin-stat-label';
+        label.textContent = it.label;
+
+        const valeur = document.createElement('span');
+        valeur.className = 'histoire-fin-stat-valeur';
+        valeur.textContent = it.valeur;
+        valeur.style.color = it.couleur;
+        valeur.style.textShadow = `0 0 6px ${it.couleur}`;
+
+        ligne.append(label, valeur);
+        conteneur.appendChild(ligne);
+    }
 }
 
 function _decorerEcranFin(finId) {
@@ -196,7 +203,6 @@ export function reinitialiserHistoirePourReplay() {
         nouvelEtat.conditionsTrame.miroirComplete = true;
     }
 
-    sauvegarderEtatHistoire(nouvelEtat);
-    store.etatHistoire = nouvelEtat;
+    persisterEtatHistoire(nouvelEtat);
     logger.info('[fins] histoire réinitialisée pour replay');
 }

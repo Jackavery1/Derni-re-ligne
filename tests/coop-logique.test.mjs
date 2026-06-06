@@ -11,6 +11,8 @@ import {
     coop_calculerScore,
     coop_vitesseChute,
     reinitialiserEtatCoop,
+    coop_deplacerDroite,
+    coop_tourner,
 } from '../js/coop-logique.js';
 
 describe('coop-logique', () => {
@@ -79,5 +81,19 @@ describe('coop-logique', () => {
         coop.niveau = 5;
         const v5 = coop_vitesseChute();
         expect(v5).toBeLessThan(v1);
+    });
+
+    it('coop_deplacerDroite déplace la pièce active du joueur', () => {
+        coop.j1.pieceActuelle = coop_nouvellePiece('j1');
+        const xAvant = coop.j1.pieceActuelle.x;
+        coop_deplacerDroite('j1');
+        expect(coop.j1.pieceActuelle.x).toBe(xAvant + 1);
+    });
+
+    it('coop_tourner change la rotation quand la position reste valide', () => {
+        coop.j1.pieceActuelle = coop_nouvellePiece('j1');
+        const rotAvant = coop.j1.pieceActuelle.rotation;
+        coop_tourner('j1', 1);
+        expect(coop.j1.pieceActuelle.rotation).not.toBe(rotAvant);
     });
 });

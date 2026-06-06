@@ -43,7 +43,7 @@ export function initialiserEffetsPartie() {
         const intensitesSecousse = { 1: 2, 2: 3.5, 3: 5, 4: 8 };
         declencherSecousse(intensitesSecousse[nbSupprimees] ?? 8);
         changerHumeur(nbSupprimees >= 4 ? 'excite' : 'content');
-        if (store.modeHistoireActif && nbSupprimees > 0) {
+        if (store.histoire.actif && nbSupprimees > 0) {
             const mec = biomeActuelMecanique();
             if (mec === 'eclipse') {
                 const lignesBasseCount = lignesEffacees.filter(

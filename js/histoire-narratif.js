@@ -7,15 +7,11 @@ import {
 } from './histoire-textes.js';
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { ILLUSTRATIONS_JOURNAUX } from './histoire-illustrations.js';
-import { store } from './store-core.js';
-import { chargerEtatHistoire } from './progression.js';
+import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
 import { executerFin } from './fins-histoire.js';
 
 function _obtenirEtatHistoireLocal() {
-    if (!store.etatHistoire) {
-        store.etatHistoire = chargerEtatHistoire();
-    }
-    return store.etatHistoire;
+    return obtenirEtatHistoirePersiste();
 }
 
 function _importerManager() {

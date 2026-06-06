@@ -7,7 +7,11 @@ import {
     archi_calculerEtoiles,
     archi_prochainePiece,
     archi_estPositionValide,
+    archi_verrouillerPiece,
+    archi_annuler,
+    archi_reinitialiserEtatNiveau,
 } from '../js/archi-logique.js';
+import { NIVEAUX_ARCHI } from '../js/archi-donnees.js';
 import { creerPlateau } from '../js/piece-jeu.js';
 
 describe('archi_parserSilhouette', () => {
@@ -99,5 +103,29 @@ describe('archi_estPositionValide', () => {
     it('rejette une pièce hors plateau', () => {
         const piece = { type: 'I', rotation: 0, x: -5, y: 0 };
         expect(archi_estPositionValide(piece)).toBe(false);
+    });
+});
+
+describe('archi_verrouillerPiece et archi_annuler', () => {
+    beforeEach(() => {
+        archi.niveauActuel = NIVEAUX_ARCHI[0];
+        archi_reinitialiserEtatNiveau();
+        archi_parserSilhouette(archi.niveauActuel);
+    });
+
+    it('verrouille une pièce et en propose une autre', () => {
+        const resultat = archi_verrouillerPiece();
+        expect(resultat).toBe('continue');
+        expect(archi.piecesUtilisees).toBe(1);
+        expect(archi.pieceActuelle).not.toBeNull();
+        expect(archi.inventaire[0].qteDispo).toBe(3);
+    });
+
+    it('archi_annuler restaure le snapshot précédent', () => {
+        const pieceAvant = { ...archi.pieceActuelle };
+        archi_verrouillerPiece();
+        archi_annuler();
+        expect(archi.pieceActuelle).toEqual(pieceAvant);
+        expect(archi.piecesUtilisees).toBe(0);
     });
 });

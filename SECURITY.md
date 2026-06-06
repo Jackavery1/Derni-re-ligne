@@ -15,7 +15,7 @@ Dernière Ligne est une application **100 % client** (Vanilla JS, PWA). Il n'y a
 Si vous découvrez une faille de sécurité (XSS, contournement CSP, corruption localStorage, etc.) :
 
 1. **Ne pas** ouvrir d'issue publique GitHub.
-2. Décrire le problème par message privé au mainteneur du dépôt.
+2. Utiliser [GitHub Security Advisories](https://github.com/security/advisories) (onglet _Security_ → _Report a vulnerability_) ou ouvrir une issue privée si le dépôt le permet.
 3. Inclure : étapes de reproduction, impact estimé, version concernée.
 
 Délai de réponse visé : **7 jours ouvrés**.
@@ -44,7 +44,11 @@ Délai de réponse visé : **7 jours ouvrés**.
 
 Scores, préférences et progression sont stockés **localement** (`localStorage`). Aucune transmission réseau hors chargement des assets statiques du jeu.
 
+## Licence et intégrité
+
+Le Logiciel est distribué sous licence propriétaire (voir [LICENSE](LICENSE)). Toute modification non autorisée du code ou des assets est interdite.
+
 ## Périmètre hors scope
 
-- Triche locale (modification `localStorage` côté client)
+- Triche locale (modification `localStorage` ou du code client) — aucun anti-triche côté serveur ; les scores locaux ne sont pas certifiés pour un usage compétitif en ligne.
 - Problèmes liés au navigateur ou aux extensions tierces

@@ -16,6 +16,7 @@ let sourisCY = 0;
 let canvasConst = null;
 let ctxConst = null;
 let evenementsOk = false;
+let selectBiomesOk = false;
 let dernierTapBiome = null;
 let dernierTapTemps = 0;
 
@@ -140,6 +141,37 @@ function initConstellation() {
     }
 
     attacherEvenementsConstellation();
+    mettreAJourSelectBiomesClavier();
+}
+
+function mettreAJourSelectBiomesClavier() {
+    const select = /** @type {HTMLSelectElement | null} */ (
+        document.getElementById('sel-biome-clavier')
+    );
+    if (!select) return;
+
+    select.replaceChildren();
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Choisir un biome';
+    select.appendChild(placeholder);
+
+    for (const noeud of constellationNoeuds) {
+        const opt = document.createElement('option');
+        opt.value = noeud.id;
+        opt.textContent = noeud.verrouille ? `${noeud.biome.nom} (verrouillé)` : noeud.biome.nom;
+        opt.disabled = noeud.verrouille;
+        if (noeud.id === biomeChoisi) opt.selected = true;
+        select.appendChild(opt);
+    }
+
+    if (!selectBiomesOk) {
+        selectBiomesOk = true;
+        select.addEventListener('change', () => {
+            const noeud = constellationNoeuds.find((n) => n.id === select.value);
+            if (noeud) traiterSelectionNoeud(noeud, false);
+        });
+    }
 }
 
 function dessinerLignesConstellation() {
@@ -330,6 +362,10 @@ function traiterSelectionNoeud(noeud, doubleTap = false) {
     deps.definirBiomeActif(noeud.id);
     deps.sauvegarderBiomeActif(noeud.id);
     mettreAJourInfoBiome(noeud.id);
+    const select = /** @type {HTMLSelectElement | null} */ (
+        document.getElementById('sel-biome-clavier')
+    );
+    if (select && select.value !== noeud.id) select.value = noeud.id;
     deps.sonMenu?.('menu_hover');
 
     if (doubleTap) {

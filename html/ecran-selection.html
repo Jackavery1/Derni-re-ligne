@@ -1,5 +1,11 @@
 <div id="ecran-selection" class="ecran">
-    <canvas id="canvas-constellation" aria-hidden="true"></canvas>
+    <canvas
+        id="canvas-constellation"
+        role="img"
+        aria-label="Constellation des biomes. Utilisez la liste de sélection pour choisir un monde au clavier."
+    ></canvas>
+    <label for="sel-biome-clavier" class="sr-only">Sélection de biome au clavier</label>
+    <select id="sel-biome-clavier" class="sr-only" aria-label="Sélection de biome"></select>
     <div id="selection-overlay">
         <div id="selection-header">
             <span id="sel-titre-jeu" class="sel-titre-jeu"></span>
@@ -10,7 +16,12 @@
             <div id="sel-biome-record"></div>
             <div id="sel-biome-statut"></div>
             <div id="toggle-coop-wrap" class="toggle-oracle-wrap">
-                <button id="toggle-coop" class="toggle-oracle" type="button">
+                <button
+                    id="toggle-coop"
+                    class="toggle-oracle"
+                    type="button"
+                    aria-label="Activer ou désactiver le mode coopératif"
+                >
                     <span>👥</span>
                     <span id="coop-toggle-label">COOP : OFF</span>
                 </button>
@@ -19,7 +30,12 @@
                 </div>
             </div>
             <div id="toggle-oracle-wrap" class="toggle-oracle-wrap">
-                <button id="toggle-oracle" class="toggle-oracle" type="button">
+                <button
+                    id="toggle-oracle"
+                    class="toggle-oracle"
+                    type="button"
+                    aria-label="Activer ou désactiver l'Oracle"
+                >
                     <span id="oracle-toggle-icone">🔮</span>
                     <span id="oracle-toggle-label">ORACLE : OFF</span>
                 </button>
@@ -28,7 +44,14 @@
                     pour multiplier votre score.
                 </div>
             </div>
-            <button id="sel-btn-jouer" class="bouton bouton-jouer" type="button">▶ JOUER</button>
+            <button
+                id="sel-btn-jouer"
+                class="bouton bouton-jouer"
+                type="button"
+                aria-label="Lancer la partie avec le biome sélectionné"
+            >
+                ▶ JOUER
+            </button>
         </div>
         <button
             class="bouton discret sel-retour"

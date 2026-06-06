@@ -253,11 +253,11 @@ export function mettreAJourIndicateurVivant() {
     if (!sect) return;
 
     if (!config) {
-        sect.style.display = 'none';
+        sect.classList.add('element-masque');
         return;
     }
 
-    sect.style.display = 'flex';
+    sect.classList.remove('element-masque');
     const elNom = document.getElementById('vivant-label-nom');
     const elBar = document.getElementById('vivant-barre');
     const elTitr = document.getElementById('vivant-label-titre');

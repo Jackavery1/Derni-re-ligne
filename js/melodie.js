@@ -1,23 +1,12 @@
 import { CONFIG } from './config.js';
 import { AudioMoteur } from './audio.js';
+import { TONIQUES_BIOMES } from './audio-donnees.js';
 import { etat, obtenirBiomeActif } from './store-jeu.js';
 import { creerContexteAudio } from './dom-utils.js';
 import { obtenirCanvas } from './dom-utils.js';
 
 const GAMME_PENTA = [1, 9 / 8, 5 / 4, 3 / 2, 5 / 3];
 const OCTAVES = 2;
-
-const TONIQUES_BIOMES = {
-    classique: 220,
-    lave: 233,
-    ocean: 196,
-    foret: 246,
-    glace: 262,
-    desert: 220,
-    cyber: 277,
-    fuochi: 294,
-    cosmos: 185,
-};
 
 const MAP_TIMBRE = {
     '#00f5ff': 'sine',

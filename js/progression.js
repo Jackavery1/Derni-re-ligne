@@ -129,7 +129,7 @@ export function ecrireStockageJson(cle, valeur) {
     try {
         return ecrireStockage(cle, JSON.stringify(valeur));
     } catch (err) {
-        logger.warn('S├®rialisation localStorage impossible:', cle, err);
+        logger.warn('Sérialisation localStorage impossible:', cle, err);
         return false;
     }
 }
@@ -137,7 +137,7 @@ export function ecrireStockageJson(cle, valeur) {
 /** @param {string} cle @param {string} defaut @returns {string} */
 export function lireStockage(cle, defaut) {
     if (!estCleValide(cle)) {
-        logger.warn('Cl├® localStorage inconnue:', cle);
+        logger.warn('Clé localStorage inconnue:', cle);
         return defaut;
     }
     const cleN = cleCanonique(cle);
@@ -159,14 +159,14 @@ export function lireStockage(cle, defaut) {
 /** @param {string} cle @param {string} valeur @returns {boolean} */
 export function ecrireStockage(cle, valeur) {
     if (!estCleValide(cle)) {
-        logger.warn('├ëcriture localStorage refus├®e, cl├® inconnue:', cle);
+        logger.warn('Écriture localStorage refusée, clé inconnue:', cle);
         return false;
     }
     try {
         localStorage.setItem(cleCanonique(cle), valeur);
         return true;
     } catch (err) {
-        logger.warn('├ëcriture localStorage impossible:', err);
+        logger.warn('Écriture localStorage impossible:', err);
         return false;
     }
 }

@@ -8,7 +8,7 @@ import { verifierConditionMiroir, verifierConditionC3 } from './conditions-secre
 import { ajouterBlocksRouillesEffaces } from './achievements-histoire.js';
 
 export function biomeActuelMecanique() {
-    if (!store.modeHistoireActif) return null;
+    if (!store.histoire.actif) return null;
     return BIOMES[obtenirBiomeActif()]?.mecaniqueSpeciale ?? null;
 }
 
@@ -23,28 +23,27 @@ export function biomeActuelEstVide() {
 let _desinscriptions = [];
 
 export function initialiserMecaniquesHistoire() {
-    if (!store.modeHistoireActif) return;
+    if (!store.histoire.actif) return;
 
     const mec = biomeActuelMecanique();
     if (!mec) return;
 
     const N = CONFIG.lignes * CONFIG.colonnes;
-    store.plateauTimestamps = new Float64Array(N).fill(0);
-    store.plateauRouille = new Uint8Array(N).fill(0);
+    store.histoire.mecaniques.plateauTimestamps = new Float64Array(N).fill(0);
+    store.histoire.mecaniques.plateauRouille = new Uint8Array(N).fill(0);
 
-    store.eclipseLigneActuelle = BIOMES.eclipse?.ligneEclipseBase ?? 10;
-    store.eclipseDerniereMaj = performance.now();
+    store.histoire.mecaniques.eclipseLigne = BIOMES.eclipse?.ligneEclipseBase ?? 10;
+    store.histoire.mecaniques.eclipseDerniereMaj = performance.now();
 
-    store.videPieceTimestamp = performance.now();
-    store.videPieceInvisible = false;
+    store.histoire.mecaniques.videTimestamp = performance.now();
+    store.histoire.mecaniques.videInvisible = false;
 
-    store.cyberTetrisConsecutifs = 0;
-    store.cyberTetrisCumulPartie = 0;
+    store.histoire.mecaniques.cyberTetrisConsecutifs = 0;
 
-    store.trameBiomeIndex = 0;
-    store.trameTimerMorph = 0;
-    store.trameAlphaMorph = 1.0;
-    store.trameEnTransition = false;
+    store.histoire.mecaniques.trameBiomeIndex = 0;
+    store.histoire.mecaniques.trameTimerMorph = 0;
+    store.histoire.mecaniques.trameAlphaMorph = 1.0;
+    store.histoire.mecaniques.trameEnTransition = false;
 
     if (mec === 'miroir') _appliquerCSSMiroir(true);
 
@@ -63,15 +62,15 @@ export function arreterMecaniquesHistoire() {
     _desinscriptions.forEach((fn) => fn?.());
     _desinscriptions = [];
 
-    store.plateauTimestamps = null;
-    store.plateauRouille = null;
-    store.videPieceInvisible = false;
+    store.histoire.mecaniques.plateauTimestamps = null;
+    store.histoire.mecaniques.plateauRouille = null;
+    store.histoire.mecaniques.videInvisible = false;
 
     logger.info('[mecHistoire] arrêté');
 }
 
 export function mettreAJourMecaniquesHistoire(dt, timestamp) {
-    if (!store.modeHistoireActif || etat.estEnPause) return;
+    if (!store.histoire.actif || etat.estEnPause) return;
     const mec = biomeActuelMecanique();
     if (!mec) return;
 
@@ -92,18 +91,18 @@ export function mettreAJourMecaniquesHistoire(dt, timestamp) {
 }
 
 function _surNouvellepiece() {
-    if (!store.modeHistoireActif) return;
+    if (!store.histoire.actif) return;
     if (biomeActuelEstVide()) {
-        store.videPieceTimestamp = performance.now();
-        store.videPieceInvisible = false;
+        store.histoire.mecaniques.videTimestamp = performance.now();
+        store.histoire.mecaniques.videInvisible = false;
     }
 }
 
 function _surLignesEffacees({ nbSupprimees, lignesEffacees }) {
-    if (!store.modeHistoireActif) return;
+    if (!store.histoire.actif) return;
     const mec = biomeActuelMecanique();
 
-    if (mec === 'rouille' && store.plateauTimestamps) {
+    if (mec === 'rouille' && store.histoire.mecaniques.plateauTimestamps) {
         _decalerMatricesRouille(lignesEffacees);
     }
 
@@ -122,35 +121,35 @@ const TRAME_INTERVALLE_MORPH_MS = () => BIOMES.trame?.intervalleMorphMs ?? 35000
 const TRAME_DUREE_FADE_MS = () => BIOMES.trame?.dureeFadeMs ?? 1200;
 
 export function enregistrerTimestampCellules(cellules) {
-    if (!store.modeHistoireActif) return;
+    if (!store.histoire.actif) return;
     if (biomeActuelMecanique() !== 'rouille') return;
-    if (!store.plateauTimestamps) return;
+    if (!store.histoire.mecaniques.plateauTimestamps) return;
     const now = performance.now();
     for (const { x, y } of cellules) {
         if (y >= 0 && y < CONFIG.lignes && x >= 0 && x < CONFIG.colonnes) {
-            store.plateauTimestamps[y * CONFIG.colonnes + x] = now;
-            store.plateauRouille[y * CONFIG.colonnes + x] = 0;
+            store.histoire.mecaniques.plateauTimestamps[y * CONFIG.colonnes + x] = now;
+            store.histoire.mecaniques.plateauRouille[y * CONFIG.colonnes + x] = 0;
         }
     }
 }
 
 function _tickRouille(timestamp) {
-    if (!store.plateauTimestamps) return;
+    if (!store.histoire.mecaniques.plateauTimestamps) return;
     for (let i = 0; i < CONFIG.lignes * CONFIG.colonnes; i++) {
-        const ts = store.plateauTimestamps[i];
+        const ts = store.histoire.mecaniques.plateauTimestamps[i];
         if (ts === 0) continue;
-        if (store.plateauRouille[i]) continue;
+        if (store.histoire.mecaniques.plateauRouille[i]) continue;
         if (timestamp - ts >= SEUIL_ROUILLE_MS()) {
-            store.plateauRouille[i] = 1;
+            store.histoire.mecaniques.plateauRouille[i] = 1;
         }
     }
 }
 
 function _decalerMatricesRouille(lignesEffacees) {
-    if (!store.plateauTimestamps || !lignesEffacees?.length) return;
+    if (!store.histoire.mecaniques.plateauTimestamps || !lignesEffacees?.length) return;
     const sorted = [...lignesEffacees].sort((a, b) => b - a);
-    const TS = store.plateauTimestamps;
-    const RO = store.plateauRouille;
+    const TS = store.histoire.mecaniques.plateauTimestamps;
+    const RO = store.histoire.mecaniques.plateauRouille;
     const C = CONFIG.colonnes;
 
     for (const lig of sorted) {
@@ -169,51 +168,57 @@ function _decalerMatricesRouille(lignesEffacees) {
 }
 
 export function celluleEstRouillee(x, y) {
-    if (!store.modeHistoireActif || !store.plateauRouille) return false;
+    if (!store.histoire.actif || !store.histoire.mecaniques.plateauRouille) return false;
     if (y < 0 || y >= CONFIG.lignes || x < 0 || x >= CONFIG.colonnes) return false;
-    return store.plateauRouille[y * CONFIG.colonnes + x] === 1;
+    return store.histoire.mecaniques.plateauRouille[y * CONFIG.colonnes + x] === 1;
 }
 
 function _tickEclipse(dt, timestamp) {
     void dt;
-    if (timestamp - store.eclipseDerniereMaj >= ECLIPSE_MONTEE_INTERVALLE_MS()) {
-        store.eclipseLigneActuelle = Math.max(ECLIPSE_LIGNE_MIN(), store.eclipseLigneActuelle - 1);
-        store.eclipseDerniereMaj = timestamp;
+    if (
+        timestamp - store.histoire.mecaniques.eclipseDerniereMaj >=
+        ECLIPSE_MONTEE_INTERVALLE_MS()
+    ) {
+        store.histoire.mecaniques.eclipseLigne = Math.max(
+            ECLIPSE_LIGNE_MIN(),
+            store.histoire.mecaniques.eclipseLigne - 1
+        );
+        store.histoire.mecaniques.eclipseDerniereMaj = timestamp;
     }
 }
 
 export function obtenirVitesseChuteModifiee(vitesseBase) {
-    if (!store.modeHistoireActif) return vitesseBase;
+    if (!store.histoire.actif) return vitesseBase;
     if (biomeActuelMecanique() !== 'eclipse') return vitesseBase;
     if (!etat.pieceActuelle) return vitesseBase;
 
     const pieceY = etat.pieceActuelle.y;
-    if (pieceY < store.eclipseLigneActuelle) {
+    if (pieceY < store.histoire.mecaniques.eclipseLigne) {
         return Math.min(vitesseBase * ECLIPSE_VITESSE_HAUT_FACTEUR, CONFIG.vitesseBase * 2);
     }
     return Math.max(vitesseBase * ECLIPSE_VITESSE_BAS_FACTEUR, CONFIG.vitesseMin);
 }
 
 export function obtenirLigneEclipse() {
-    return store.eclipseLigneActuelle;
+    return store.histoire.mecaniques.eclipseLigne;
 }
 
 function _tickVide(timestamp) {
-    if (store.videPieceInvisible) return;
+    if (store.histoire.mecaniques.videInvisible) return;
     if (!etat.pieceActuelle) return;
-    const ecoule = timestamp - store.videPieceTimestamp;
+    const ecoule = timestamp - store.histoire.mecaniques.videTimestamp;
     if (ecoule >= VIDE_SEUIL_INVISIBILITE_MS()) {
-        store.videPieceInvisible = true;
+        store.histoire.mecaniques.videInvisible = true;
     }
 }
 
 export function pieceEstInvisible() {
-    if (!store.modeHistoireActif) return false;
-    return biomeActuelEstVide() && store.videPieceInvisible;
+    if (!store.histoire.actif) return false;
+    return biomeActuelEstVide() && store.histoire.mecaniques.videInvisible;
 }
 
 export function ghostEstDesactive() {
-    if (!store.modeHistoireActif) return false;
+    if (!store.histoire.actif) return false;
     return biomeActuelEstVide();
 }
 
@@ -228,7 +233,7 @@ function _appliquerCSSMiroir(actif) {
 }
 
 export function actionMiroir(actionDemandee) {
-    if (!store.modeHistoireActif) return actionDemandee;
+    if (!store.histoire.actif) return actionDemandee;
     if (!biomeActuelEstMiroir()) return actionDemandee;
     if (actionDemandee === 'bas') return 'chute';
     if (actionDemandee === 'chute') return 'bas';
@@ -248,25 +253,29 @@ const TRAME_BIOMES_CYCLE = [
 ];
 function _tickTrame(dt, timestamp) {
     void timestamp;
-    store.trameTimerMorph += dt;
-    if (!store.trameEnTransition && store.trameTimerMorph >= TRAME_INTERVALLE_MORPH_MS()) {
-        store.trameEnTransition = true;
-        store.trameAlphaMorph = 1.0;
+    store.histoire.mecaniques.trameTimerMorph += dt;
+    if (
+        !store.histoire.mecaniques.trameEnTransition &&
+        store.histoire.mecaniques.trameTimerMorph >= TRAME_INTERVALLE_MORPH_MS()
+    ) {
+        store.histoire.mecaniques.trameEnTransition = true;
+        store.histoire.mecaniques.trameAlphaMorph = 1.0;
     }
-    if (store.trameEnTransition) {
-        store.trameAlphaMorph -= dt / TRAME_DUREE_FADE_MS();
-        if (store.trameAlphaMorph <= 0) {
-            store.trameBiomeIndex = (store.trameBiomeIndex + 1) % TRAME_BIOMES_CYCLE.length;
-            store.trameAlphaMorph = 1.0;
-            store.trameEnTransition = false;
-            store.trameTimerMorph = 0;
+    if (store.histoire.mecaniques.trameEnTransition) {
+        store.histoire.mecaniques.trameAlphaMorph -= dt / TRAME_DUREE_FADE_MS();
+        if (store.histoire.mecaniques.trameAlphaMorph <= 0) {
+            store.histoire.mecaniques.trameBiomeIndex =
+                (store.histoire.mecaniques.trameBiomeIndex + 1) % TRAME_BIOMES_CYCLE.length;
+            store.histoire.mecaniques.trameAlphaMorph = 1.0;
+            store.histoire.mecaniques.trameEnTransition = false;
+            store.histoire.mecaniques.trameTimerMorph = 0;
         }
     }
 }
 
 export function obtenirFondTrame() {
-    const biomeId = TRAME_BIOMES_CYCLE[store.trameBiomeIndex];
-    const alpha = Math.max(0, Math.min(1, store.trameAlphaMorph));
+    const biomeId = TRAME_BIOMES_CYCLE[store.histoire.mecaniques.trameBiomeIndex];
+    const alpha = Math.max(0, Math.min(1, store.histoire.mecaniques.trameAlphaMorph));
     return { biomeId, alpha };
 }
 
@@ -277,7 +286,7 @@ function _trackerTetrisCyber(nbLignes) {
 }
 
 export function onGameOverHistoire(lignes, mondeId) {
-    if (!store.modeHistoireActif) return;
+    if (!store.histoire.actif) return;
     if (mondeId !== 'monde_prologue') return;
     if (lignes > 0) return;
 
@@ -286,7 +295,7 @@ export function onGameOverHistoire(lignes, mondeId) {
 
     etatHist.conditionsParadoxe.topsVolontairesPrologue =
         (etatHist.conditionsParadoxe.topsVolontairesPrologue ?? 0) + 1;
-    store.prologueTopsVolontaires = etatHist.conditionsParadoxe.topsVolontairesPrologue;
+    store.histoire.prologueTopsVolontaires = etatHist.conditionsParadoxe.topsVolontairesPrologue;
 
     logger.info(
         '[mecHistoire] top prologue n°',

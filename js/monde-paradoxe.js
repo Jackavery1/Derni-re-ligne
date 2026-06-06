@@ -5,7 +5,7 @@ import { chargerEtatHistoire, sauvegarderEtatHistoire } from './progression.js';
 const _NOM = 'monde_paradoxe';
 
 export function paradoxeEstDebloque() {
-    const e = store.etatHistoire ?? chargerEtatHistoire();
+    const e = store.histoire.etat ?? chargerEtatHistoire();
     return (
         e.conditionsParadoxe.finSecreteObtenue &&
         (e.conditionsParadoxe.topsVolontairesPrologue ?? 0) >= 3
@@ -16,8 +16,8 @@ export function demarrerParadoxe() {
     if (!paradoxeEstDebloque()) return;
     logger.info('[paradoxe] entrée');
 
-    store.modeHistoireActif = true;
-    store.mondeHistoireActuel = _NOM;
+    store.histoire.actif = true;
+    store.histoire.mondeActuel = _NOM;
 
     void Promise.all([import('./histoire-textes.js'), import('./histoire-manager.js')]).then(
         ([{ CUTSCENES_ENTREE }, { afficherCutsceneHistoire, retournerACarte }]) => {
@@ -32,11 +32,11 @@ export function demarrerParadoxe() {
 }
 
 function _surFinParadoxe(retournerACarte) {
-    const etatHist = store.etatHistoire ?? chargerEtatHistoire();
+    const etatHist = store.histoire.etat ?? chargerEtatHistoire();
     if (!etatHist.mondesCompletes.includes(_NOM)) {
         etatHist.mondesCompletes.push(_NOM);
         sauvegarderEtatHistoire(etatHist);
-        store.etatHistoire = etatHist;
+        store.histoire.etat = etatHist;
     }
     setTimeout(retournerACarte, 600);
 }

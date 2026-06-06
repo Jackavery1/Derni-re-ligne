@@ -186,7 +186,7 @@ export function quitterVersMenu() {
 
 function initialiserFeaturesPartie() {
     reinitialiserOraclePartie();
-    if (store.modeHistoireActif) {
+    if (store.histoire.actif) {
         reinitialiserConditionsRuntime();
     }
     afficherSectionOracle(oracle.actif);
@@ -291,8 +291,8 @@ export function demarrerJeu() {
     initialiserAudioPartie();
     initialiserEtatPartie();
 
-    if (store.modeHistoireActif && store.mondeHistoireActuel) {
-        const monde = SEQUENCE_HISTOIRE.find((m) => m.id === store.mondeHistoireActuel);
+    if (store.histoire.actif && store.histoire.mondeActuel) {
+        const monde = SEQUENCE_HISTOIRE.find((m) => m.id === store.histoire.mondeActuel);
         if (monde?.estBoss && monde?.bossId) {
             demarrerBoss(monde.bossId);
         } else {
@@ -336,8 +336,8 @@ export function terminerPartie(victoire = false) {
         arreterBoss();
     }
     etat.estEnCours = false;
-    if (store.modeHistoireActif && !victoire) {
-        onGameOverHistoire(etat.lignes, store.mondeHistoireActuel ?? '');
+    if (store.histoire.actif && !victoire) {
+        onGameOverHistoire(etat.lignes, store.histoire.mondeActuel ?? '');
     }
     annulerMeteo();
     AudioMoteur.arreterMusique(200);
@@ -392,7 +392,7 @@ export function terminerPartie(victoire = false) {
     finaliserStatsPartie(scoreFinal, tempsPartie);
     void verifierCodex();
 
-    if (!store.modeHistoireActif) {
+    if (!store.histoire.actif) {
         const btnCarte = document.getElementById('btn-histoire-carte');
         if (btnCarte) btnCarte.style.display = 'none';
     } else {

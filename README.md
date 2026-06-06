@@ -65,22 +65,27 @@ Documentation détaillée : [docs/architecture.md](docs/architecture.md). Guide 
 
 ```
 moteur.js
-├── store-jeu.js       état partagé
-├── piece-jeu.js       pièces, DAS, lock delay
-├── logique-partie.js  score, actions joueur
-├── boucle-jeu.js      boucle RAF solo
-├── rendu-jeu.js       canvas
-├── partie.js          cycle de partie solo
-├── coop-jeu.js        mode coop 2 joueurs
-├── archi-jeu.js       mode Architecte (puzzles)
-├── ecrans-ui.js       menus et HUD
-├── constellation.js   sélection biome
-├── achievements.js    défis et stats globales
-├── profil-jeu.js      analyse de style
-├── codex.js           encyclopédie
+├── store-jeu.js          état partagé (arcade + store.histoire)
+├── store-histoire.js     état runtime mode Histoire
+├── piece-jeu.js          pièces, DAS, lock delay
+├── logique-partie.js     score, actions joueur
+├── boucle-jeu.js         boucle RAF solo
+├── rendu-jeu.js          canvas
+├── partie.js             cycle de partie solo
+├── coop-jeu.js           mode coop 2 joueurs
+├── archi-jeu.js          mode Architecte (puzzles)
+├── histoire-manager.js   campagne narrative
+├── boss-jeu.js           combats boss
+├── mecaniques-histoire.js biomes spéciaux (rouille, éclipse…)
+├── conditions-secrets.js mondes cachés
+├── ecrans-ui.js          menus et HUD
+├── constellation.js      sélection biome (9 biomes arcade)
+├── achievements.js       défis et stats globales
+├── profil-jeu.js         analyse de style
+├── codex.js              encyclopédie (+ codex-histoire.js)
 ├── meteo.js / reliques.js / audio.js
-├── logique-pure.js    logique testable (7-bag, SRS)
-└── config.js          réexporte config-jeu, biomes, contenu-jeu
+├── logique-pure.js       logique testable (7-bag, SRS)
+└── config.js             réexporte config-jeu, biomes, contenu-jeu
 ```
 
 Styles : `styles/main.css`. Cache offline : `sw.js`.
@@ -106,4 +111,4 @@ Statique — GitHub Pages via `deploy.yml` (tests requis avant publish). Preview
 
 ## Licence
 
-MIT — [LICENSE](LICENSE). Contribuer : [CONTRIBUTING.md](CONTRIBUTING.md).
+Tous droits réservés — voir [LICENSE](LICENSE). Le jeu est jouable gratuitement ; toute modification, redistribution ou création d'œuvres dérivées est interdite sans autorisation écrite. Signaler une faille de sécurité : [SECURITY.md](SECURITY.md).

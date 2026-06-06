@@ -3,10 +3,10 @@ import { ETAT_HISTOIRE_VIDE } from './histoire-donnees.js';
 import { chargerEtatHistoire, sauvegarderEtatHistoire } from './progression.js';
 
 function etatH() {
-    if (!store.etatHistoire) {
-        store.etatHistoire = chargerEtatHistoire();
+    if (!store.histoire.etat) {
+        store.histoire.etat = chargerEtatHistoire();
     }
-    return store.etatHistoire;
+    return store.histoire.etat;
 }
 
 /** @param {keyof typeof ETAT_HISTOIRE_VIDE.prouessesHistoire} champ @param {number} valeur */
@@ -24,7 +24,7 @@ function _majProuesse(champ, valeur) {
         e.prouessesHistoire[champ] = Math.max(e.prouessesHistoire[champ] ?? 0, valeur);
     }
     sauvegarderEtatHistoire(e);
-    store.etatHistoire = e;
+    store.histoire.etat = e;
 }
 
 function _valeurProuesse(champ, sessionValue = 0) {
@@ -299,7 +299,7 @@ export const ACHIEVEMENTS_HISTOIRE = {
 };
 
 export function reinitialiserStatsAchievementsHistoire() {
-    store.timerBossDebut = 0;
+    store.histoire.boss.timerDebut = 0;
     store.timerBossBattus = Infinity;
     store.blocksRouillesEffaces = 0;
     store.lignesEclipseBasse = 0;
@@ -314,25 +314,25 @@ export function enregistrerVictoireBossTimer(timestampDebut) {
 }
 
 export function ajouterBlocksRouillesEffaces(nb) {
-    if (!store.modeHistoireActif) return;
+    if (!store.histoire.actif) return;
     store.blocksRouillesEffaces = (store.blocksRouillesEffaces ?? 0) + nb;
     _majProuesse('blocksRouillesMax', store.blocksRouillesEffaces);
 }
 
 export function ajouterLignesEclipseBasse(nb) {
-    if (!store.modeHistoireActif) return;
+    if (!store.histoire.actif) return;
     store.lignesEclipseBasse = (store.lignesEclipseBasse ?? 0) + nb;
     _majProuesse('lignesEclipseBasseMax', store.lignesEclipseBasse);
 }
 
 export function ajouterLignesVide(nb) {
-    if (!store.modeHistoireActif) return;
+    if (!store.histoire.actif) return;
     store.lignesVide = (store.lignesVide ?? 0) + nb;
     _majProuesse('lignesVideMax', store.lignesVide);
 }
 
 export function enregistrerPrecisionMiroir(precision) {
-    if (!store.modeHistoireActif) return;
+    if (!store.histoire.actif) return;
     store.precisionMiroir = precision;
     _majProuesse('precisionMiroirMax', precision);
 }

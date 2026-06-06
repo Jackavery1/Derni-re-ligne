@@ -1,6 +1,10 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { demarrerPartie, filtrerViolationsCritiques } from './helpers.mjs';
+import {
+    demarrerPartie,
+    demarrerPartieViaClavier,
+    filtrerViolationsCritiques,
+} from './helpers.mjs';
 
 test('aucune bannière erreur au démarrage', async ({ page }) => {
     await page.goto('/');
@@ -55,4 +59,31 @@ test('options affiche l’onglet contrôles', async ({ page }) => {
     await page.locator('#tab-controles').click();
     await expect(page.locator('#panneau-controles')).toBeVisible();
     await expect(page.locator('#panneau-controles')).not.toHaveAttribute('hidden');
+});
+
+test('sélection biome au clavier démarre une partie', async ({ page }) => {
+    await demarrerPartieViaClavier(page);
+    await expect(page.locator('#affichage-temps')).not.toHaveText('00:00', { timeout: 5000 });
+});
+
+test('mode sprint sélectionnable', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('#btn-mode-sprint').click();
+    await expect(page.locator('#btn-mode-sprint')).toHaveClass(/actif/);
+});
+
+test('game over affiche l écran dédié', async ({ page }) => {
+    await demarrerPartieViaClavier(page);
+    await page.evaluate(async () => {
+        const { terminerPartie } = await import('/js/partie.js');
+        terminerPartie(false);
+    });
+    await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/);
+});
+
+test('options respecte le contraste des couleurs', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('#btn-options').click();
+    const result = await new AxeBuilder({ page }).include('#ecran-options').analyze();
+    expect(filtrerViolationsCritiques(result.violations, { inclureContraste: true })).toEqual([]);
 });

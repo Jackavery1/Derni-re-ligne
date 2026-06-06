@@ -1,5 +1,6 @@
 import { TOUCHES_DEFAUT } from './config.js';
 import { ECRANS } from './ecrans-config.js';
+import { creerEtatHistoireRuntime } from './store-histoire.js';
 
 export { ECRANS };
 
@@ -84,47 +85,7 @@ export const store = {
     flashVerrou: { cellules: [], timer: 0, duree: 75 },
     flashLignes: { lignes: [], timer: 0, duree: 160 },
     touchesActives: {},
-    modeHistoireActif: false,
-    etatHistoire: null,
-    bossActif: null,
-    pvBossActuels: 0,
-    bossPhaseActuelle: 0,
-    timerAttaqueBoss: 0,
-    timerAttaqueActive: 0,
-    mechaniquesBiomeActif: {
-        colonnesGelees: [],
-        timerDegelMs: 0,
-        blocksRouilles: [],
-        pieceInvisibleDepuis: null,
-        bossControlesInverses: false,
-        timerControlesInverses: 0,
-        bossFauxFantome: false,
-        timerFauxFantome: 0,
-        decalageDistorsion: 0,
-        timerDistorsion: 0,
-    },
-    timerPortraitBoss: 0,
-    bossVaincu: false,
-    timerBossVaincu: 0,
-    tetrisConsecutifsCyber: 0,
-    dernierJournalTrouve: null,
-    mondeHistoireActuel: null,
-    cutsceneEnCours: false,
-    cutsceneOnFin: null,
-    tetrisConsecutifsCyberBoss: 0,
-    plateauTimestamps: null,
-    plateauRouille: null,
-    eclipseLigneActuelle: 10,
-    eclipseDerniereMaj: 0,
-    videPieceTimestamp: 0,
-    videPieceInvisible: false,
-    cyberTetrisConsecutifs: 0,
-    cyberTetrisCumulPartie: 0,
-    trameBiomeIndex: 0,
-    trameTimerMorph: 0,
-    trameAlphaMorph: 1.0,
-    trameEnTransition: false,
-    prologueTopsVolontaires: 0,
+    histoire: creerEtatHistoireRuntime(),
 };
 
 export const etat = store.etat;

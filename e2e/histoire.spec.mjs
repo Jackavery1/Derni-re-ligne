@@ -1,0 +1,45 @@
+import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+import {
+    ouvrirCarteHistoire,
+    lancerMondeBossBrasier,
+    filtrerViolationsCritiques,
+} from './helpers.mjs';
+
+test('carte histoire accessible depuis le menu', async ({ page }) => {
+    await ouvrirCarteHistoire(page);
+    await expect(page.locator('#canvas-histoire-map')).toBeVisible();
+    await expect(page.locator('#histoire-prog-mondes')).toContainText('MONDES');
+});
+
+test('carte histoire sans violations accessibilité critiques', async ({ page }) => {
+    await ouvrirCarteHistoire(page);
+    const result = await new AxeBuilder({ page }).include('#ecran-histoire-map').analyze();
+    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
+});
+
+test('lancement boss affiche le HUD boss', async ({ page }) => {
+    await ouvrirCarteHistoire(page);
+    await lancerMondeBossBrasier(page);
+
+    const sectionBoss = page.locator('#section-boss');
+    await expect(sectionBoss).toBeVisible();
+    await expect(page.locator('#boss-nom-affiche')).toContainText('BRASIER');
+    await expect(page.locator('#boss-hp-label')).toHaveText('8 / 8');
+    await expect(page.locator('#canvas-boss-portrait')).toBeVisible();
+});
+
+test('sélection clavier d un monde sur la carte histoire', async ({ page }) => {
+    await ouvrirCarteHistoire(page);
+    await page.locator('#histoire-monde-clavier').selectOption('monde_boss_1');
+    await expect(page.locator('#histoire-monde-details')).not.toHaveClass(
+        /histoire-panneau-masque/
+    );
+    await expect(page.locator('.bouton-jouer-monde')).toBeVisible();
+});
+
+test('carte histoire respecte le contraste des couleurs', async ({ page }) => {
+    await ouvrirCarteHistoire(page);
+    const result = await new AxeBuilder({ page }).include('#ecran-histoire-map').analyze();
+    expect(filtrerViolationsCritiques(result.violations, { inclureContraste: true })).toEqual([]);
+});

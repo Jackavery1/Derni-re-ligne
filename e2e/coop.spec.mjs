@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { demarrerPartieCoop } from './helpers.mjs';
+import AxeBuilder from '@axe-core/playwright';
+import { demarrerPartieCoop, filtrerViolationsCritiques } from './helpers.mjs';
 
 test('toggle coop active le mode coopératif', async ({ page }) => {
     await page.goto('/');
@@ -23,4 +24,17 @@ test('codex accessible depuis le menu', async ({ page }) => {
     await page.locator('#btn-codex').click();
     await expect(page.locator('#ecran-codex')).toHaveClass(/actif/);
     await expect(page.locator('.codex-contenu')).toBeVisible();
+});
+
+test('interface coop sans violations accessibilité critiques', async ({ page }) => {
+    await demarrerPartieCoop(page);
+    const result = await new AxeBuilder({ page }).include('#interface-jeu-coop').analyze();
+    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
+});
+
+test('codex sans violations accessibilité critiques', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('#btn-codex').click();
+    const result = await new AxeBuilder({ page }).include('#ecran-codex').analyze();
+    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
 });

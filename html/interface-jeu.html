@@ -36,30 +36,11 @@
                         <span class="stat-valeur" id="affichage-temps">00:00</span>
                     </div>
                 </div>
-                <div id="section-vivant" class="section" style="display: none">
+                <div id="section-vivant" class="section element-masque">
                     <div class="section-titre" id="vivant-label-titre">LE VIVANT</div>
-                    <div
-                        style="
-                            font-size: 0.3rem;
-                            color: var(--texte-dim);
-                            letter-spacing: 1px;
-                            text-align: center;
-                        "
-                        id="vivant-label-nom"
-                    ></div>
-                    <div
-                        style="
-                            width: 100%;
-                            height: 3px;
-                            background: rgba(255, 255, 255, 0.1);
-                            margin-top: 4px;
-                            overflow: hidden;
-                        "
-                    >
-                        <div
-                            id="vivant-barre"
-                            style="height: 100%; width: 0%; transition: width 0.5s linear"
-                        ></div>
+                    <div class="vivant-sous-titre" id="vivant-label-nom"></div>
+                    <div class="vivant-barre-piste">
+                        <div id="vivant-barre" class="vivant-barre-fill"></div>
                     </div>
                 </div>
                 <div id="section-oracle-stats" class="section element-masque">
@@ -73,18 +54,9 @@
                         <span class="stat-valeur oracle-dev-val" id="oracle-dev">0</span>
                     </div>
                 </div>
-                <div class="section" id="indicateur-vide-actif" style="display: none">
-                    <div class="section-titre" style="color: rgba(255, 255, 255, 0.2)">LE VIDE</div>
-                    <div
-                        style="
-                            font-size: 0.26rem;
-                            color: rgba(255, 255, 255, 0.15);
-                            letter-spacing: 1px;
-                            text-align: center;
-                        "
-                    >
-                        SIGNAL PERDU
-                    </div>
+                <div class="section element-masque" id="indicateur-vide-actif">
+                    <div class="section-titre section-vide-titre">LE VIDE</div>
+                    <div class="section-vide-msg">SIGNAL PERDU</div>
                 </div>
             </aside>
 
@@ -116,10 +88,10 @@
                     </div>
                 </div>
 
-                <div class="section" id="section-boss" style="display: none">
+                <div class="section element-masque" id="section-boss">
                     <div class="section-titre boss-nom" id="boss-nom-affiche">BOSS</div>
                     <div id="boss-hp-wrapper">
-                        <div id="boss-hp-fill" style="width: 100%"></div>
+                        <div id="boss-hp-fill" class="boss-hp-fill-init"></div>
                     </div>
                     <div id="boss-hp-label" class="boss-hp-label">0 / 0</div>
                     <canvas

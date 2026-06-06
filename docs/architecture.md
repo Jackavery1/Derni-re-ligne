@@ -35,7 +35,8 @@ flowchart TD
 | ------------ | ------------------------------ | --------------------------------------------------------------------------------------------------------------- |
 | Données      | Constantes, biomes, pièces     | `config-jeu.js`, `biomes.js`, `contenu-jeu.js`, `ecrans-config.js`                                              |
 | Logique pure | Fonctions sans DOM             | `logique-pure.js`, `progression.js`, `moteur-piece.js`                                                          |
-| État         | Variables partagées            | `store-jeu.js`                                                                                                  |
+| État         | Variables partagées            | `store-jeu.js`, `store-core.js`, `store-histoire.js`                                                            |
+| Histoire     | Campagne, boss, secrets        | `histoire-manager.js`, `histoire-map.js`, `boss-jeu.js`, `mecaniques-histoire.js`, `conditions-secrets.js`      |
 | Gameplay     | Actions joueur, verrouillage   | `logique-partie.js`, `piece-jeu.js`, `boucle-jeu.js`, `actions-piece-communes.js`                               |
 | Vivant       | Comportements biome plateau    | `vivant.js`, `vivant-strategies.js`                                                                             |
 | Coop         | 2 joueurs, plateau partagé     | `coop-logique.js`, `coop-jeu.js`, `coop-rendu.js`, `coop-input.js`                                              |
@@ -55,7 +56,7 @@ flowchart TD
 
 ## État et actions
 
-- `store-core.js`, `store-etat-partie.js`, `store-refs-canvas.js` : état centralisé (barrel `store-jeu.js`)
+- `store-core.js`, `store-etat-partie.js`, `store-refs-canvas.js`, `store-histoire.js` : état centralisé (barrel `store-jeu.js`). Le mode Histoire vit dans `store.histoire` (boss, mécaniques, cutscenes).
 - `bus-jeu.js` : bus d'événements léger (`partie:stats`, `lignes:effacees`, `score:maj`, etc.)
 - `effets-partie.js` : écouteurs rendu/UI découplés de `logique-partie.js`
 - `actions-jeu.js` : injection explicite des callbacks gameplay via `configurerActionsJeu()` dans `moteur.js`

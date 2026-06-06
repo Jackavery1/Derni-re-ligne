@@ -13,6 +13,7 @@ import {
 } from './histoire-narratif.js';
 import { store } from './store-core.js';
 import { definirBiomeActif } from './store-etat-partie.js';
+import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
 import {
     sauvegarderBiomeActif,
     chargerEtatHistoire,
@@ -50,15 +51,12 @@ export const SEUILS_COMPLETION = {
 
 /** @returns {typeof ETAT_HISTOIRE_VIDE} */
 export function obtenirEtatHistoire() {
-    if (!store.etatHistoire) {
-        store.etatHistoire = chargerEtatHistoire();
-    }
-    return store.etatHistoire;
+    return obtenirEtatHistoirePersiste();
 }
 
 export function rafraichirEtatHistoire() {
-    store.etatHistoire = chargerEtatHistoire();
-    return store.etatHistoire;
+    store.histoire.etat = chargerEtatHistoire();
+    return store.histoire.etat;
 }
 
 /**
@@ -163,8 +161,8 @@ export function demarrerMondeHistoire(mondeId) {
 function _lancerPartieHistoire(monde) {
     void import('./histoire-map.js').then(({ arreterCarteHistoire }) => arreterCarteHistoire());
 
-    store.modeHistoireActif = true;
-    store.mondeHistoireActuel = monde.id;
+    store.histoire.actif = true;
+    store.histoire.mondeActuel = monde.id;
 
     definirBiomeActif(monde.biomeId);
     sauvegarderBiomeActif(monde.biomeId);
@@ -180,15 +178,15 @@ function _lancerPartieHistoire(monde) {
  * @param {number} score
  */
 export function surFinDeMondeHistoire(lignes, score) {
-    if (!store.modeHistoireActif) return;
+    if (!store.histoire.actif) return;
 
-    const mondeId = store.mondeHistoireActuel;
+    const mondeId = store.histoire.mondeActuel;
     const monde = SEQUENCE_HISTOIRE.find((m) => m.id === mondeId);
     if (!monde) return;
 
     const etatHist = obtenirEtatHistoire();
     const seuil = SEUILS_COMPLETION[monde.biomeId] ?? 10;
-    const estComplete = lignes >= seuil || (monde.estBoss && store.bossVaincu);
+    const estComplete = lignes >= seuil || (monde.estBoss && store.histoire.boss.vaincu);
 
     let journalDebloque = null;
 
@@ -231,7 +229,7 @@ export function surFinDeMondeHistoire(lignes, score) {
                 const j5 = JOURNAUX_VERA.find((j) => j.id === 'journal_5');
                 if (j5 && !etatHist.journauxTrouves.includes(j5.id)) {
                     etatHist.journauxTrouves.push(j5.id);
-                    store.dernierJournalTrouve = j5;
+                    store.histoire.dernierJournal = j5;
                 }
             }
         }
@@ -242,27 +240,27 @@ export function surFinDeMondeHistoire(lignes, score) {
         }
 
         sauvegarderEtatHistoire(etatHist);
-        store.etatHistoire = etatHist;
+        store.histoire.etat = etatHist;
 
         if (monde.biomeId === 'cyber') {
             etatHist.conditionsMiroir.tetrisTriplesCyber = Math.max(
                 etatHist.conditionsMiroir.tetrisTriplesCyber ?? 0,
-                store.cyberTetrisConsecutifs ?? 0
+                store.histoire.mecaniques.cyberTetrisConsecutifs ?? 0
             );
             sauvegarderEtatHistoire(etatHist);
-            store.etatHistoire = etatHist;
+            store.histoire.etat = etatHist;
         }
 
         if (journalDebloque) {
-            store.dernierJournalTrouve = journalDebloque;
+            store.histoire.dernierJournal = journalDebloque;
         }
     }
 
-    if (!estComplete && store.modeHistoireActif) {
+    if (!estComplete && store.histoire.actif) {
         etatHist.nbContinuesUtilises = (etatHist.nbContinuesUtilises ?? 0) + 1;
         etatHist.conditionsTrame.tousBossSansContinue = false;
         sauvegarderEtatHistoire(etatHist);
-        store.etatHistoire = etatHist;
+        store.histoire.etat = etatHist;
     }
 
     if (estComplete && monde) {
@@ -315,7 +313,7 @@ function _mettreAJourStatsCodexHistoire(monde) {
 
 /** @param {typeof ETAT_HISTOIRE_VIDE} etatHist */
 function _verifierTetrisTriplesCyber(etatHist) {
-    const tetrisTriples = store.cyberTetrisConsecutifs ?? 0;
+    const tetrisTriples = store.histoire.mecaniques.cyberTetrisConsecutifs ?? 0;
     if (tetrisTriples >= 3) {
         etatHist.conditionsMiroir.tetrisTriplesCyber = tetrisTriples;
     }
@@ -328,17 +326,17 @@ function _afficherBoutonCarteGameOver(afficher) {
 }
 
 export function retournerACarte() {
-    store.modeHistoireActif = false;
-    store.mondeHistoireActuel = null;
-    store.etatHistoire = null;
+    store.histoire.actif = false;
+    store.histoire.mondeActuel = null;
+    store.histoire.etat = null;
     document.body.classList.remove('histoire-active');
     arreterBoss();
     arreterFondFin();
     _afficherBoutonCarteGameOver(false);
 
-    if (store.dernierJournalTrouve) {
-        const journal = store.dernierJournalTrouve;
-        store.dernierJournalTrouve = null;
+    if (store.histoire.dernierJournal) {
+        const journal = store.histoire.dernierJournal;
+        store.histoire.dernierJournal = null;
         afficherJournalVera(journal, () => afficherEcran(ECRANS.HISTOIRE_MAP));
     } else {
         afficherEcran(ECRANS.HISTOIRE_MAP);
@@ -346,7 +344,7 @@ export function retournerACarte() {
 }
 
 export function retournerAuMondeActuel() {
-    const mondeId = store.mondeHistoireActuel;
+    const mondeId = store.histoire.mondeActuel;
     if (mondeId) {
         document.body.classList.remove('histoire-active');
         demarrerMondeHistoire(mondeId);
@@ -372,8 +370,8 @@ export function afficherCutsceneHistoire(textes, personnages, onFin) {
     _cutscenePersonnages = /** @type {string[]} */ (personnages ?? []);
     _cutsceneIndex = 0;
     _cutsceneCallbackFin = onFin ?? null;
-    store.cutsceneEnCours = true;
-    store.cutsceneOnFin = onFin ?? null;
+    store.histoire.cutscene.enCours = true;
+    store.histoire.cutscene.onFin = onFin ?? null;
 
     const conteneur = document.getElementById('histoire-cutscene-lignes');
     if (conteneur) conteneur.textContent = '';
@@ -402,8 +400,8 @@ export function avancerCutscene() {
         cacherEcrans();
         const cb = _cutsceneCallbackFin;
         _cutsceneCallbackFin = null;
-        store.cutsceneEnCours = false;
-        store.cutsceneOnFin = null;
+        store.histoire.cutscene.enCours = false;
+        store.histoire.cutscene.onFin = null;
         cb?.();
         return;
     }
@@ -534,7 +532,7 @@ export function demarrerMondeHistoireCache(mondeId) {
 
 export function masquerPanneauDetails() {
     const panneau = document.getElementById('histoire-monde-details');
-    if (panneau) panneau.style.display = 'none';
+    panneau?.classList.add('histoire-panneau-masque');
 }
 
 export function obtenirProgressionGlobale() {
@@ -552,7 +550,7 @@ export function obtenirProgressionGlobale() {
 /** @param {typeof ETAT_HISTOIRE_VIDE} etatHist */
 export function sauvegarderEtatHistoireStore(etatHist) {
     sauvegarderEtatHistoire(etatHist);
-    store.etatHistoire = etatHist;
+    store.histoire.etat = etatHist;
 }
 
 /** @param {typeof SEQUENCE_HISTOIRE[number]} monde @param {typeof ETAT_HISTOIRE_VIDE} etatHist */
@@ -564,14 +562,14 @@ function _declencherNarratifPostMonde(monde, etatHist) {
     ) {
         etatHist.laboDecouvert = true;
         sauvegarderEtatHistoire(etatHist);
-        store.etatHistoire = etatHist;
+        store.histoire.etat = etatHist;
 
         const j7 = _trouverJournal('journal_7');
         if (j7 && !etatHist.journauxTrouves.includes('journal_7')) {
             etatHist.journauxTrouves.push('journal_7');
             sauvegarderEtatHistoire(etatHist);
-            store.etatHistoire = etatHist;
-            store.dernierJournalTrouve = j7;
+            store.histoire.etat = etatHist;
+            store.histoire.dernierJournal = j7;
         }
 
         afficherDecouverteLabo(() => _suiteNarratifPostMonde(monde, etatHist));
@@ -598,9 +596,9 @@ function _declencherNarratifPostMonde(monde, etatHist) {
 /** @param {typeof SEQUENCE_HISTOIRE[number]} monde */
 function _suiteNarratifPostMonde(monde, etatHist) {
     void etatHist;
-    const journal = store.dernierJournalTrouve;
+    const journal = store.histoire.dernierJournal;
     if (journal) {
-        store.dernierJournalTrouve = null;
+        store.histoire.dernierJournal = null;
         afficherJournalVera(journal, () => _suiteTransitionChapitre(monde));
         return;
     }

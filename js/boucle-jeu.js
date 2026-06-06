@@ -1,6 +1,6 @@
 import { CONFIG } from './config.js';
 import { mettreAJourMeteo } from './meteo.js';
-import { logger } from './logger.js';
+import { logger, afficherErreurUtilisateur } from './logger.js';
 import {
     etat,
     particules,
@@ -58,6 +58,9 @@ import { dessinerSuggestionOracle } from './oracle-jeu.js';
 import { mettreAJourBoss, bossEstActif, bossEstVaincu } from './boss-jeu.js';
 import { rendrePortraitBoss } from './boss-rendu.js';
 import { mettreAJourMecaniquesHistoire } from './mecaniques-histoire.js';
+
+const SEUIL_ERREURS_BOUCLE = 5;
+let erreursConsecutivesBoucle = 0;
 
 export function mettreAJourFps(deltaTemps) {
     if (deltaTemps <= 0) return;
@@ -222,8 +225,17 @@ function boucleJeu(timestamp) {
         if (doitDessiner) {
             dessinerFrameSolo(ctx, enPartie);
         }
+        erreursConsecutivesBoucle = 0;
     } catch (err) {
+        erreursConsecutivesBoucle++;
         logger.error('Erreur boucle jeu:', err);
+        if (erreursConsecutivesBoucle >= SEUIL_ERREURS_BOUCLE) {
+            afficherErreurUtilisateur(
+                'Une erreur empêche le jeu de fonctionner. Rechargez la page ou retournez au menu.'
+            );
+            suspendreBoucleSolo();
+            return;
+        }
     } finally {
         planifierBoucle();
     }

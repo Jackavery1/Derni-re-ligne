@@ -26,6 +26,7 @@ let dernierTapTemps = 0;
 /** @type {Record<string, { x: number, y: number, rayon: number }>} */
 let positionsNoeuds = {};
 let _evenementsCarteAttaches = false;
+let _selectMondesOk = false;
 
 export function initialiserCarteMonde() {
     canvasCarte = obtenirCanvas('canvas-histoire-map');
@@ -38,7 +39,45 @@ export function initialiserCarteMonde() {
         _evenementsCarteAttaches = true;
     }
     _mettreAJourEnteteHistoire();
+    _mettreAJourSelectMondesClavier();
     return true;
+}
+
+function _mettreAJourSelectMondesClavier() {
+    const select = /** @type {HTMLSelectElement | null} */ (
+        document.getElementById('histoire-monde-clavier')
+    );
+    if (!select) return;
+
+    select.replaceChildren();
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Choisir un monde';
+    select.appendChild(placeholder);
+
+    const etatHist = obtenirEtatHistoire();
+    for (const monde of SEQUENCE_HISTOIRE) {
+        if (monde.estCache && !positionsNoeuds[monde.id]) continue;
+        const etatMonde = obtenirEtatMonde(monde.id, etatHist);
+        const opt = document.createElement('option');
+        opt.value = monde.id;
+        opt.textContent =
+            etatMonde === 'verrouille' ? `${monde.nomAffiche} (verrouillé)` : monde.nomAffiche;
+        opt.disabled = etatMonde === 'verrouille';
+        if (noeudSelectionne === monde.id) opt.selected = true;
+        select.appendChild(opt);
+    }
+
+    if (!_selectMondesOk) {
+        _selectMondesOk = true;
+        select.addEventListener('change', () => {
+            const monde = SEQUENCE_HISTOIRE.find((m) => m.id === select.value);
+            if (!monde) return;
+            const pos = positionsNoeuds[monde.id];
+            if (!pos) return;
+            _traiterSelectionNoeud({ id: monde.id, monde, pos }, false);
+        });
+    }
 }
 
 function _redimensionnerCanvas() {
@@ -561,6 +600,10 @@ function _traiterSelectionNoeud(noeud, doubleTap) {
 
     noeudSelectionne = noeud.id;
     _mettreAJourPanneauDetails(noeud.monde, obtenirEtatHistoire());
+    const select = /** @type {HTMLSelectElement | null} */ (
+        document.getElementById('histoire-monde-clavier')
+    );
+    if (select && select.value !== noeud.id) select.value = noeud.id;
 
     if (doubleTap && mondePeutEtreJoue(noeud.monde.id, obtenirEtatHistoire())) {
         _lancerMondeDepuisCarte(noeud.monde);
@@ -662,12 +705,12 @@ function _mettreAJourPanneauDetails(monde, etatHist) {
     );
     if (btnJouer) {
         const peutJouer = etatMonde !== 'verrouille';
-        btnJouer.style.display = peutJouer ? 'block' : 'none';
+        btnJouer.classList.toggle('element-masque', !peutJouer);
         btnJouer.textContent = etatMonde === 'complete' ? '↺ REJOUER' : '▶ JOUER';
         btnJouer.onclick = () => _lancerMondeDepuisCarte(monde);
     }
 
-    panneau.style.display = 'flex';
+    panneau.classList.remove('histoire-panneau-masque');
 }
 
 function _mettreAJourEnteteHistoire() {
