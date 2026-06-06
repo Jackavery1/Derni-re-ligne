@@ -48,8 +48,8 @@ export function compterLignesCompletes(plateau) {
 
 /**
  * Supprime les lignes complètes et retourne un nouveau plateau.
- * @param {number[][]} plateau
- * @returns {{ plateau: number[][], nbSupprimees: number, lignesEffacees: number[] }}
+ * @param {(number | string)[][]} plateau
+ * @returns {{ plateau: (number | string)[][], nbSupprimees: number, lignesEffacees: number[] }}
  */
 export function supprimerLignesDuPlateau(plateau) {
     const lignesEffacees = [];
@@ -80,7 +80,7 @@ export function calculerNiveauDepuisLignes(lignes) {
 }
 
 /**
- * @param {number[][]} plateau
+ * @param {(number | string)[][]} plateau
  * @param {{ x: number, y: number }} piece
  * @param {number[][]} forme
  * @param {number} [dx]

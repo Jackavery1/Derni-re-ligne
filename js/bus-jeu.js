@@ -1,4 +1,4 @@
-/** @typedef {(payload?: unknown) => void} EcouteurBus */
+/** @typedef {(payload?: any) => void} EcouteurBus */
 
 /** @type {Map<string, Set<EcouteurBus>>} */
 const ecouteurs = new Map();

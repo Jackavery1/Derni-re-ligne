@@ -15,27 +15,36 @@
  * @property {number} reactionsRobo
  * @property {number} maxNotesComposition
  * @property {number} nbAchievementsDebloques
- * @property {Set<string>} debloques
- * @property {number} [oracleDeviationsPartieActuelle]
- * @property {number} [oracleMeilleuresMult]
- * @property {number} [lignesCoopTotal]
- * @property {number} [coopMaxLignesUnCoup]
- * @property {Set<string>} [archiNiveauxCompletes]
- * @property {number} [archiEtoilesMax]
- * @property {number} [archiPrecisionMax]
- * @property {number} [archiParAtteint]
- * @property {number} [evenementsVivantSubis]
- * @property {number} [maxEvenementsUnePartie]
- * @property {Set<string>} [biomesVivantSubis]
- * @property {number} [lignesPendantVivant]
+ * @property {Record<string, boolean>} debloqués
+ * @property {string[]} decorationsActives
+ * @property {number} oraclePartiesJouees
+ * @property {number} oracleMeilleuresMult
+ * @property {number} oracleTotalDeviations
+ * @property {number} oracleDeviationsPartieActuelle
+ * @property {number} lignesCoopTotal
+ * @property {number} coopMaxLignesUnCoup
+ * @property {number} archiScoreTotal
+ * @property {Set<string>} archiNiveauxCompletes
+ * @property {number} archiEtoilesMax
+ * @property {number} archiPrecisionMax
+ * @property {number} archiParAtteint
+ * @property {number} evenementsVivantSubis
+ * @property {number} maxEvenementsUnePartie
+ * @property {Set<string>} biomesVivantSubis
+ * @property {number} lignesPendantVivant
+ * @property {string[]} bossHistoireVaincus
+ * @property {string[]} journauxHistoire
+ * @property {string[]} toutesFinHistoire
+ * @property {string[]} mondesHistoireCompletes
+ * @property {string[]} mondesCachesDebloques
  */
 
 /**
  * @typedef {Object} PieceJeu
  * @property {string} type
  * @property {number} rotation
- * @property {number} x
- * @property {number} y
+ * @property {number} [x]
+ * @property {number} [y]
  * @property {number[][]} [reliqueForme]
  * @property {object} [reliqueData]
  * @property {'j1' | 'j2'} [joueur]
@@ -43,7 +52,7 @@
 
 /**
  * @typedef {Object} EtatPartie
- * @property {number[][]} plateau
+ * @property {(number | string)[][]} plateau
  * @property {PieceJeu | null} pieceActuelle
  * @property {PieceJeu[]} filePieces
  * @property {PieceJeu | null} pieceEnReserve
@@ -55,10 +64,103 @@
  * @property {boolean} estEnPause
  * @property {number} combo
  * @property {boolean} dernierEtaitTetris
+ * @property {string} humeur
+ * @property {number | null} tempsDebut
+ * @property {number} tempsPauseAccumule
+ * @property {number | null} tempsPauseDebut
+ * @property {string} modeJeu
+ * @property {boolean} victoireSprint
+ * @property {number} [compteurEvenementsPartie]
  */
 
 /**
- * @typedef {Window & typeof globalThis & { webkitAudioContext?: typeof AudioContext }} WindowEtendu
+ * @typedef {Object} Particule
+ * @property {string} [type]
+ * @property {number} [x]
+ * @property {number} [y]
+ * @property {number} [vx]
+ * @property {number} [vy]
+ * @property {number} [opacite]
+ * @property {number | string} [couleur]
+ * @property {number} [rotation]
+ * @property {number} [vRot]
+ * @property {number} [taille]
+ * @property {boolean} [trainee]
+ * @property {number} [hauteur]
+ * @property {number} [longueur]
+ * @property {boolean} [actif]
+ * @property {number} [age]
+ * @property {number} [sinPhase]
+ * @property {number} [scintille]
+ * @property {string} [char]
+ * @property {number} [dureeVie]
+ * @property {number} [duree]
+ * @property {number} [timer]
+ */
+
+/**
+ * @typedef {Object} TexteFlottant
+ * @property {string} texte
+ * @property {number} x
+ * @property {number} y
+ * @property {string} couleur
+ * @property {number} opacite
+ * @property {number} vy
+ * @property {number} taille
+ * @property {boolean} arcEnCiel
+ * @property {number} age
+ * @property {number} duree
+ */
+
+/**
+ * @typedef {Object} StoreJeu
+ * @property {string} biomeActif
+ * @property {number} niveauGlobal
+ * @property {number} compteurPieces
+ * @property {number} seuilProchRelique
+ * @property {boolean} reliqueEnAttente
+ * @property {string | null} reliqueActive
+ * @property {string} ecranActuel
+ * @property {number} transitionAlpha
+ * @property {number} transitionDebut
+ * @property {number} tempsAmbianceDecor
+ * @property {number[]} couleurAmbRgb
+ * @property {number} derniereSecondeTemps
+ * @property {string[]} sacPieces
+ * @property {number} lockDelayRestant
+ * @property {number} nbLockResets
+ * @property {boolean} pieceAuSol
+ * @property {Record<string, { moment: number, repete: boolean }>} dasEtat
+ * @property {boolean} prefererMoinsAnimations
+ * @property {number} fpsMoyen
+ * @property {boolean} effetsReduits
+ * @property {number | null} idFrame
+ * @property {boolean} boucleActive
+ * @property {HTMLCanvasElement | null} canvasPlateau
+ * @property {CanvasRenderingContext2D | null} ctx
+ * @property {HTMLCanvasElement | null} canvasPreview
+ * @property {CanvasRenderingContext2D | null} ctxPreview
+ * @property {HTMLCanvasElement | null} canvasReserve
+ * @property {CanvasRenderingContext2D | null} ctxReserve
+ * @property {{ x: number, y: number } | null} touchDepart
+ * @property {number} dernierTimestamp
+ * @property {number} accumulateur
+ * @property {EtatPartie} etat
+ * @property {Particule[]} particules
+ * @property {Particule[]} particulesAmbiance
+ * @property {TexteFlottant[]} textesFlottants
+ * @property {{ timer: number, intensite: number, duree: number }} secousse
+ * @property {{ cellules: { x: number, y: number }[], timer: number, duree: number }} flashVerrou
+ * @property {{ lignes: number[], timer: number, duree: number }} flashLignes
+ * @property {Record<string, boolean>} touchesActives
+ * @property {ReturnType<import('./store-histoire.js').creerEtatHistoireRuntime>} histoire
+ */
+
+/**
+ * @typedef {Window & typeof globalThis & {
+ *   webkitAudioContext?: typeof AudioContext,
+ *   __NEO_TEST__?: { terminerPartie?: (victoire: boolean) => void }
+ * }} WindowEtendu
  */
 
 export {};

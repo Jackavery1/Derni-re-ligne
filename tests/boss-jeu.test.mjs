@@ -49,6 +49,20 @@ describe('boss-jeu', () => {
         expect(bossEstActif()).toBe(false);
     });
 
+    it('endommagerBoss réduit les PV partiellement', () => {
+        demarrerBoss('brasier');
+        endommagerBoss(3);
+        expect(store.histoire.boss.pv).toBe(5);
+        expect(bossEstVaincu()).toBe(false);
+    });
+
+    it('demarrerBoss initialise les PV du boss Sentinelle', () => {
+        demarrerBoss('sentinelle');
+        expect(bossEstActif()).toBe(true);
+        expect(store.histoire.boss.pv).toBe(10);
+        expect(store.histoire.boss.actif?.id).toBe('sentinelle');
+    });
+
     it('endommagerBoss réduit les PV et déclenche la victoire', () => {
         demarrerBoss('brasier');
         endommagerBoss(8);

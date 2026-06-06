@@ -19,7 +19,7 @@ export function extraireForme(piece, rotation = null) {
 
 /**
  * Valide une position avec bornes horizontales personnalisées (mode coop).
- * @param {number[][]} plateau
+ * @param {(number | string)[][]} plateau
  * @param {{ x: number, y: number }} piece
  * @param {number[][]} forme
  * @param {number} dx
@@ -43,7 +43,7 @@ export function estPositionValideAvecBornes(plateau, piece, forme, dx, dy, xMin,
 
 /**
  * Valide une position sur le plateau complet (mode solo).
- * @param {number[][]} plateau
+ * @param {(number | string)[][]} plateau
  * @param {{ x: number, y: number }} piece
  * @param {number[][]} forme
  * @param {number} [dx]
@@ -56,7 +56,7 @@ export function estPositionValideSurPlateau(plateau, piece, forme, dx = 0, dy = 
 /**
  * Valide une pièce sur un plateau (solo, architecte, etc.).
  * @param {{ type: string, rotation: number, x: number, y: number, reliqueForme?: number[][] }} piece
- * @param {number[][]} plateau
+ * @param {(number | string)[][]} plateau
  * @param {number} [dx]
  * @param {number} [dy]
  * @param {number | null} [rotation]
@@ -86,7 +86,7 @@ export function estPositionValidePiece(
 }
 
 /**
- * @param {number[][]} plateau
+ * @param {(number | string)[][]} plateau
  * @param {{ x: number, y: number }} piece
  * @param {(piece: object, dx: number, dy: number) => boolean} estValide
  */

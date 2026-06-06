@@ -1,4 +1,48 @@
+import { existsSync } from 'fs';
+import { join } from 'path';
+
 const serveDist = process.env.E2E_DIST === '1';
+
+/** @returns {string | undefined} */
+function detecterChannelNavigateur() {
+    if (process.env.PW_CHANNEL) return process.env.PW_CHANNEL;
+    if (process.env.CI) return 'chromium';
+
+    const candidats = [
+        { channel: 'chrome', path: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe' },
+        {
+            channel: 'chrome',
+            path: join(
+                process.env.LOCALAPPDATA ?? '',
+                'Google',
+                'Chrome',
+                'Application',
+                'chrome.exe'
+            ),
+        },
+        {
+            channel: 'msedge',
+            path: 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+        },
+        {
+            channel: 'msedge',
+            path: join(
+                process.env.ProgramFiles ?? '',
+                'Microsoft',
+                'Edge',
+                'Application',
+                'msedge.exe'
+            ),
+        },
+    ];
+
+    for (const { channel, path } of candidats) {
+        if (path && existsSync(path)) return channel;
+    }
+    return 'chromium';
+}
+
+const channel = detecterChannelNavigateur();
 
 export default {
     testDir: './e2e',
@@ -13,6 +57,7 @@ export default {
     use: {
         baseURL: 'http://127.0.0.1:3000',
         headless: true,
+        ...(channel !== 'chromium' ? { channel } : {}),
     },
     webServer: {
         command: serveDist ? 'npx --yes serve dist -p 3000' : 'npx --yes serve . -p 3000',

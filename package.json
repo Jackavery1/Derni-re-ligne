@@ -21,7 +21,9 @@
         "build": "node scripts/build.mjs",
         "analyze": "node scripts/analyze.mjs",
         "typecheck": "tsc --noEmit -p jsconfig.json",
-        "prepare:e2e": "playwright install chromium",
+        "typecheck:migrate": "node scripts/corriger-strict.mjs",
+        "prepare:e2e": "node scripts/prepare-e2e.mjs",
+        "test:e2e:update": "playwright test --update-snapshots",
         "prepare": "husky"
     },
     "lint-staged": {

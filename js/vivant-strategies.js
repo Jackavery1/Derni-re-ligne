@@ -201,7 +201,7 @@ function declencherForet() {
 
             const cible = libres[Math.floor(Math.random() * libres.length)];
             const couleurParente = etat.plateau[l][c];
-            deps.poserCellule(cible.x, cible.y, couleurParente);
+            deps.poserCellule(cible.x, cible.y, /** @type {string} */ (String(couleurParente)));
             deps.pousserParticule({
                 x: cible.x * CONFIG.taille + CONFIG.taille / 2,
                 y: cible.y * CONFIG.taille + CONFIG.taille / 2,

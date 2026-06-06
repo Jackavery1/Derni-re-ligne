@@ -50,7 +50,7 @@ import {
     enregistrerLignesParNiveau,
 } from './profil-jeu.js';
 import { sauvegarderPlacementOracle, declencherCalculOracle } from './oracle-jeu.js';
-import { annoncer } from './annonces.js';
+import { annoncer, annoncerPieceCourante } from './annonces.js';
 import {
     vivant_enregistrerDepot,
     vivant_recompenserActivite,
@@ -142,6 +142,7 @@ export function verrouillerPiece() {
 
     emettre('partie:nouvelle-piece');
     signalerApparitionPiece();
+    annoncerPieceCourante();
     declencherCalculOracle();
 
     if (!estPositionValide(etat.pieceActuelle)) obtenirActions().terminerPartie?.();
@@ -352,6 +353,7 @@ export function utiliserReserve() {
     annoncer('Réserve utilisée');
     reinitialiserLockDelay();
     signalerApparitionPiece();
+    annoncerPieceCourante();
     declencherCalculOracle();
     emettre('partie:reserve-preview', { reserve: etat.pieceEnReserve });
 }

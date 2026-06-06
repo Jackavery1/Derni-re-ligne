@@ -23,6 +23,7 @@ export default defineConfig({
                 'js/conditions-secrets.js',
                 'js/histoire-etat.js',
                 'js/histoire-manager.js',
+                'js/histoire-manager-completion.js',
                 'js/boss-jeu.js',
             ],
             thresholds: {

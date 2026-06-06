@@ -38,6 +38,7 @@ import {
     coop_estPositionValide,
 } from './coop-logique.js';
 import { coop_dessinerPreview, coop_rendreFrame } from './coop-rendu.js';
+import { definirCoopPartieEnCours } from './coop-etat.js';
 
 export { coop, modeCoopActif, basculerModeCoop, utiliserPasserelle } from './coop-logique.js';
 export {
@@ -111,7 +112,7 @@ function afficherInterfaceCoop(visible) {
 }
 
 export function demarrerCooperatif() {
-    coop.actif = true;
+    definirCoopPartieEnCours(true);
     etat.estEnCours = false;
     arreterBoucleSolo();
 
@@ -240,7 +241,7 @@ export function terminerCooperatif(joueurFautif) {
 }
 
 export function quitterModeCoop() {
-    coop.actif = false;
+    definirCoopPartieEnCours(false);
     coop.estEnCours = false;
     arreterBoucleCoop();
     restaurerZoneJeu();

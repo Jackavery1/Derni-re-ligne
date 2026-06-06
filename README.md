@@ -39,9 +39,10 @@ npm install
 npm start              # http://localhost:3000 — charge js/*.js directement
 npm test               # tests unitaires Vitest
 npm run test:coverage  # couverture logique
-npm run prepare:e2e    # installer Chromium (première fois)
+npm run prepare:e2e    # détecte Chrome/Edge local (évite le téléchargement TLS)
 npm run test:e2e       # Playwright + Axe (accessibilité)
-npm run typecheck      # vérification types (checkJs)
+npm run test:e2e:update  # régénérer les snapshots visuels
+npm run typecheck      # vérification types strict (checkJs)
 npm run lint           # ESLint
 npm run sync:sw        # régénère la liste de cache PWA (modules dev)
 ```

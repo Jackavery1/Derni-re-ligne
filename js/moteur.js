@@ -52,13 +52,15 @@ import { initialiserBoutons } from './ui-init.js';
 import { initialiserInput } from './input-jeu.js';
 import { adapterInterface, initialiserLayout } from './layout-jeu.js';
 import { chargerStats } from './achievements.js';
-import { demarrerCooperatif, modeCoopActif } from './coop-jeu.js';
+import { demarrerCooperatif } from './coop-jeu.js';
+import { coopEstPrefere } from './coop-etat.js';
 import { initialiserInputCoop } from './coop-input.js';
 import { initialiserInputArchi } from './archi-input.js';
 import { rechargerCodex, initialiserCodexUI } from './codex.js';
 import { initialiserEffetsPartie } from './effets-partie.js';
 import { rafraichirEtatHistoire } from './histoire-manager.js';
 import { initialiserTutoriel } from './tutoriel.js';
+import { obtenirActions } from './actions-jeu.js';
 
 export { obtenirEcranActuel as ecranActuel };
 
@@ -123,7 +125,7 @@ export function initialiserApplication() {
         appliquerThemeBiome,
         demarrerJeu,
         demarrerCooperatif,
-        modeCoopEstActif: () => modeCoopActif,
+        modeCoopEstActif: coopEstPrefere,
         sonMenu: (type) => AudioMoteur.son(type),
     });
     appliquerThemeBiome(obtenirBiomeActif());
@@ -139,4 +141,10 @@ export function initialiserApplication() {
     afficherEcran(ECRANS.TITRE);
     initialiserTutoriel();
     planifierBoucle();
+    if (typeof window !== 'undefined') {
+        /** @type {any} */ (window).__NEO_TEST__ = {
+            terminerPartie: (victoire) => obtenirActions().terminerPartie?.(victoire),
+        };
+        document.body.dataset.neoTestReady = '1';
+    }
 }

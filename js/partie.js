@@ -88,6 +88,7 @@ import {
     signalerApparitionPiece,
     sauvegarderSnapshotProfil,
 } from './profil-jeu.js';
+import { annoncerPieceCourante } from './annonces.js';
 import { store } from './store-core.js';
 import { surFinDeMondeHistoire } from './histoire-manager.js';
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
@@ -244,6 +245,7 @@ function initialiserEtatPartie() {
     activerReliqueSurPiece(etat.pieceActuelle);
     etat.filePieces = [genererProchainePiece(), genererProchainePiece(), genererProchainePiece()];
     signalerApparitionPiece();
+    annoncerPieceCourante();
 }
 
 function initialiserAudioPartie() {

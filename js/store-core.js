@@ -20,6 +20,30 @@ export const NB_PARTICULES_AMBIANCE = {
 export const CARACTERES_HEX = '0123456789ABCDEF';
 export const VERTS_FORET = ['#00cc44', '#55dd00', '#88ff00', '#66bb00', '#aaee44'];
 
+/** @returns {import('./types.js').EtatPartie} */
+export function creerEtatPartieInitial() {
+    return {
+        plateau: [],
+        pieceActuelle: null,
+        filePieces: [],
+        pieceEnReserve: null,
+        reserveUtilisee: false,
+        score: 0,
+        lignes: 0,
+        niveau: 1,
+        estEnCours: false,
+        estEnPause: false,
+        humeur: 'neutre',
+        combo: 0,
+        dernierEtaitTetris: false,
+        tempsDebut: null,
+        tempsPauseAccumule: 0,
+        tempsPauseDebut: null,
+        modeJeu: 'marathon',
+        victoireSprint: false,
+    };
+}
+
 export const store = {
     biomeActif: 'classique',
     niveauGlobal: 0,
@@ -58,29 +82,10 @@ export const store = {
     touchDepart: null,
     dernierTimestamp: 0,
     accumulateur: 0,
-    etat: {
-        plateau: [],
-        pieceActuelle: null,
-        filePieces: [],
-        pieceEnReserve: null,
-        reserveUtilisee: false,
-        score: 0,
-        lignes: 0,
-        niveau: 1,
-        estEnCours: false,
-        estEnPause: false,
-        humeur: 'neutre',
-        combo: 0,
-        dernierEtaitTetris: false,
-        tempsDebut: null,
-        tempsPauseAccumule: 0,
-        tempsPauseDebut: null,
-        modeJeu: 'marathon',
-        victoireSprint: false,
-    },
-    particules: [],
-    particulesAmbiance: [],
-    textesFlottants: [],
+    etat: creerEtatPartieInitial(),
+    particules: /** @type {import('./types.js').Particule[]} */ ([]),
+    particulesAmbiance: /** @type {import('./types.js').Particule[]} */ ([]),
+    textesFlottants: /** @type {import('./types.js').TexteFlottant[]} */ ([]),
     secousse: { timer: 0, intensite: 0, duree: 260 },
     flashVerrou: { cellules: [], timer: 0, duree: 75 },
     flashLignes: { lignes: [], timer: 0, duree: 160 },

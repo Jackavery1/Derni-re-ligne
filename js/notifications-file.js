@@ -1,6 +1,6 @@
 /**
  * File d’affichage séquentielle pour notifications DOM (achievements, codex, etc.).
- * @param {{ afficher: (item: unknown, terminer: () => void) => boolean | void }} config
+ * @param {{ afficher: (item: any, terminer: () => void) => boolean | void }} config
  */
 export function creerFileNotifications({ afficher }) {
     /** @type {unknown[]} */

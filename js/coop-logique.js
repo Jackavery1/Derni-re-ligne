@@ -23,10 +23,6 @@ export const COLONNES_J2 = [5, 6, 7, 8, 9];
 /** Préférence sur l'écran sélection (avant lancement). `coop.actif` = partie coop en cours. */
 export let modeCoopActif = false;
 
-export function modeCoopPrefere() {
-    return modeCoopActif;
-}
-
 export function basculerModeCoop() {
     modeCoopActif = !modeCoopActif;
     if (typeof document === 'undefined') return;
