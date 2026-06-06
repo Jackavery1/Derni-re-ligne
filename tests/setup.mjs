@@ -17,10 +17,17 @@ globalThis.localStorage = {
 
 globalThis.window = globalThis.window ?? globalThis;
 globalThis.document = globalThis.document ?? {
+    body: { innerHTML: '', appendChild: () => {}, classList: { add: () => {}, remove: () => {} } },
     getElementById: () => null,
     querySelector: () => null,
     querySelectorAll: () => [],
-    createElement: () => ({ style: {}, appendChild: () => {}, setAttribute: () => {} }),
+    createElement: () => ({
+        style: {},
+        appendChild: () => {},
+        setAttribute: () => {},
+        classList: { add: () => {}, remove: () => {}, contains: () => false, toggle: () => {} },
+        click: () => {},
+    }),
 };
 globalThis.window.matchMedia =
     globalThis.window.matchMedia ??

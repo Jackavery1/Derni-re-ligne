@@ -93,4 +93,8 @@ Toutes les clés `localStorage` passent par `progression.js` avec whitelist stri
 | `npm run build`     | Bundle esbuild prod → `dist/` (1 fichier JS)  |
 | `npm run analyze`   | Analyse taille modules (metafile esbuild)     |
 | `npm run typecheck` | Vérification TypeScript (`checkJs`) sur `js/` |
-| `npm run release`   | Bump version + cache-bust + sync SW           |
+
+Typecheck progressif : `alwaysStrict`, `noImplicitThis`, `useUnknownInCatchVariables` activés ; `strict: true` complet prévu après typage JSDoc (`js/types.js`, dont `StatsGlobales`).
+
+Modules découpés (< 450 lignes ESLint) : `achievements-donnees`, `audio-musique`/`audio-effets`, `histoire-manager-ui`/`completion`, `histoire-map-rendu`/`ui`, `profil-rendu`, `rendu-ambiance-particules`.
+| `npm run release` | Bump version + cache-bust + sync SW |

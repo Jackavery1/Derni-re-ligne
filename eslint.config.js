@@ -7,6 +7,19 @@ export default [
         ignores: ['node_modules/**', 'coverage/**', 'test-results/**', 'dist/**'],
     },
     {
+        files: [
+            'js/histoire-donnees.js',
+            'js/histoire-textes.js',
+            'js/codex-donnees.js',
+            'js/codex-illustrations.js',
+            'js/codex-illustrations-histoire.js',
+            'js/archi-donnees.js',
+        ],
+        rules: {
+            'max-lines': 'off',
+        },
+    },
+    {
         files: ['**/*.{js,mjs}'],
         languageOptions: {
             ecmaVersion: 2022,

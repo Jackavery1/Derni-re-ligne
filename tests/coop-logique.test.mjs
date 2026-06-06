@@ -91,7 +91,7 @@ describe('coop-logique', () => {
     });
 
     it('coop_tourner change la rotation quand la position reste valide', () => {
-        coop.j1.pieceActuelle = coop_nouvellePiece('j1');
+        coop.j1.pieceActuelle = { type: 'T', rotation: 0, x: 1, y: 0, joueur: 'j1' };
         const rotAvant = coop.j1.pieceActuelle.rotation;
         coop_tourner('j1', 1);
         expect(coop.j1.pieceActuelle.rotation).not.toBe(rotAvant);

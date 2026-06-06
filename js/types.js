@@ -1,4 +1,36 @@
 /**
+ * @typedef {Object} StatsGlobales
+ * @property {number} lignesTotal
+ * @property {number} meilleurScore
+ * @property {number} meilleurTemps
+ * @property {number} maxLignesUnCoup
+ * @property {number} maxCombo
+ * @property {Set<string>} biomesJoues
+ * @property {Record<string, number>} meilleurTempsParBiome
+ * @property {Record<string, number>} lignesParBiome
+ * @property {number} reliquesUtilisees
+ * @property {Set<string>} typesReliquesUtilises
+ * @property {number} meteosSubies
+ * @property {Set<string>} meteosPartieActuelle
+ * @property {number} reactionsRobo
+ * @property {number} maxNotesComposition
+ * @property {number} nbAchievementsDebloques
+ * @property {Set<string>} debloques
+ * @property {number} [oracleDeviationsPartieActuelle]
+ * @property {number} [oracleMeilleuresMult]
+ * @property {number} [lignesCoopTotal]
+ * @property {number} [coopMaxLignesUnCoup]
+ * @property {Set<string>} [archiNiveauxCompletes]
+ * @property {number} [archiEtoilesMax]
+ * @property {number} [archiPrecisionMax]
+ * @property {number} [archiParAtteint]
+ * @property {number} [evenementsVivantSubis]
+ * @property {number} [maxEvenementsUnePartie]
+ * @property {Set<string>} [biomesVivantSubis]
+ * @property {number} [lignesPendantVivant]
+ */
+
+/**
  * @typedef {Object} PieceJeu
  * @property {string} type
  * @property {number} rotation

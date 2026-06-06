@@ -58,6 +58,7 @@ import { initialiserInputArchi } from './archi-input.js';
 import { rechargerCodex, initialiserCodexUI } from './codex.js';
 import { initialiserEffetsPartie } from './effets-partie.js';
 import { rafraichirEtatHistoire } from './histoire-manager.js';
+import { initialiserTutoriel } from './tutoriel.js';
 
 export { obtenirEcranActuel as ecranActuel };
 
@@ -136,5 +137,6 @@ export function initialiserApplication() {
     initialiserBoutons();
     initialiserCodexUI();
     afficherEcran(ECRANS.TITRE);
+    initialiserTutoriel();
     planifierBoucle();
 }
