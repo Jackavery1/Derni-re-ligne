@@ -25,7 +25,8 @@ function listerFichiers(dossier, prefixe, extension) {
 
 const html = listerFichiers('html', './html/', '.html');
 const js = listerFichiers('js', './js/', '.js');
-const fichiers = [...STATIQUES, ...html, ...js];
+const img = listerFichiers('img', './img/', '.png');
+const fichiers = [...STATIQUES, ...img, ...html, ...js];
 
 const lignes = fichiers.map((f) => `    '${f}',`).join('\n');
 const bloc = `const FICHIERS_A_CACHER = [\n${lignes}\n];`;

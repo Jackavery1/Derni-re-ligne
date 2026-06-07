@@ -2,6 +2,31 @@ import { store } from './store-core.js';
 import { obtenirCanvas } from './dom-utils.js';
 import { COULEUR_BRAISE, COULEUR_GLACE_B } from './boss-jeu.js';
 
+/** @returns {'calme'|'irrite'|'enrage'|'attaque'|'vaincu'} */
+function _obtenirEtatPortraitBoss() {
+    if (store.histoire.boss.vaincu) return 'vaincu';
+    if (store.histoire.boss._flashAttaque) return 'attaque';
+    const boss = store.histoire.boss.actif;
+    if (!boss) return 'calme';
+    const pct = (store.histoire.boss.pv / boss.pvMax) * 100;
+    if (pct > 66) return 'calme';
+    if (pct > 33) return 'irrite';
+    return 'enrage';
+}
+
+function _appliquerClassePortraitBoss(etatPortrait) {
+    const canvas = document.getElementById('canvas-boss-portrait');
+    if (!canvas) return;
+    canvas.classList.remove(
+        'etat-calme',
+        'etat-irrite',
+        'etat-enrage',
+        'etat-attaque',
+        'etat-vaincu'
+    );
+    canvas.classList.add(`etat-${etatPortrait}`);
+}
+
 /** @param {number} timestamp */
 export function rendrePortraitBoss(timestamp) {
     if (typeof document === 'undefined') return;
@@ -13,33 +38,47 @@ export function rendrePortraitBoss(timestamp) {
     const h = canvas.height;
     ctx.clearRect(0, 0, w, h);
 
+    const etatPortrait = _obtenirEtatPortraitBoss();
+    _appliquerClassePortraitBoss(etatPortrait);
     const t = timestamp / 1000;
+    const intensite = etatPortrait === 'enrage' ? 1.6 : etatPortrait === 'irrite' ? 1.25 : 1;
+
+    if (store.histoire.boss.vaincu) {
+        _dessinerFragmentationBoss(ctx, w, h, t);
+        return;
+    }
+
+    const shakeX = etatPortrait === 'enrage' ? Math.sin(t * 22) * 2 : 0;
+    const shakeY = etatPortrait === 'enrage' ? Math.cos(t * 19) * 1.5 : 0;
+    ctx.save();
+    ctx.translate(shakeX, shakeY);
+    ctx.globalAlpha = Math.min(1, 0.85 + (intensite - 1) * 0.15);
 
     switch (store.histoire.boss.actif.id) {
         case 'brasier':
-            _portraitBrasier(ctx, w, h, t);
+            _portraitBrasier(ctx, w, h, t, intensite);
             break;
         case 'sentinelle':
-            _portraitSentinelle(ctx, w, h, t);
+            _portraitSentinelle(ctx, w, h, t, intensite);
             break;
         case 'archiviste':
-            _portraitArchiviste(ctx, w, h, t);
+            _portraitArchiviste(ctx, w, h, t, intensite);
             break;
         case 'avantgarde':
-            _portraitAvantgarde(ctx, w, h, t);
+            _portraitAvantgarde(ctx, w, h, t, intensite);
             break;
         case 'distorsion':
-            _portraitDistorsion(ctx, w, h, t);
+            _portraitDistorsion(ctx, w, h, t, intensite);
             break;
         default:
             _portraitGenerique(ctx, w, h, t);
             break;
     }
+    ctx.restore();
 
-    if (store.histoire.boss.vaincu) {
-        const alpha = 0.5 + 0.5 * Math.sin(t * 20);
+    if (etatPortrait === 'attaque') {
         ctx.save();
-        ctx.globalAlpha = alpha * 0.6;
+        ctx.globalAlpha = 0.35 + 0.25 * Math.sin(t * 30);
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, w, h);
         ctx.restore();
@@ -47,14 +86,37 @@ export function rendrePortraitBoss(timestamp) {
 }
 
 /** @param {CanvasRenderingContext2D} ctx @param {number} w @param {number} h @param {number} t */
-function _portraitBrasier(ctx, w, h, t) {
+function _dessinerFragmentationBoss(ctx, w, h, t) {
+    ctx.fillStyle = '#050508';
+    ctx.fillRect(0, 0, w, h);
+    const couleur = store.histoire.boss.actif?.couleur ?? '#ff006e';
+    const fragments = [
+        { x: 0.2, y: 0.3, rot: 0.2, s: 0.18 },
+        { x: 0.55, y: 0.25, rot: -0.4, s: 0.14 },
+        { x: 0.75, y: 0.45, rot: 0.8, s: 0.12 },
+        { x: 0.35, y: 0.6, rot: 1.2, s: 0.16 },
+        { x: 0.6, y: 0.7, rot: -0.6, s: 0.13 },
+    ];
+    for (const f of fragments) {
+        ctx.save();
+        ctx.translate(w * f.x, h * (f.y + t * 0.02));
+        ctx.rotate(f.rot + t * 0.5);
+        ctx.fillStyle = couleur;
+        ctx.globalAlpha = 0.7;
+        ctx.fillRect(-w * f.s, -h * f.s * 0.6, w * f.s * 2, h * f.s * 1.2);
+        ctx.restore();
+    }
+}
+
+/** @param {CanvasRenderingContext2D} ctx @param {number} w @param {number} h @param {number} t @param {number} [intensite] */
+function _portraitBrasier(ctx, w, h, t, intensite = 1) {
     const grad = ctx.createRadialGradient(w / 2, h * 0.6, 4, w / 2, h * 0.6, h * 0.65);
     grad.addColorStop(0, '#660800');
     grad.addColorStop(1, '#110000');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    const pulse = 0.5 + 0.5 * Math.sin(t * 3);
+    const pulse = 0.5 + 0.5 * Math.sin(t * 3 * intensite);
     const flammes = [
         { x: w * 0.18, h: h * 0.55 },
         { x: w * 0.35, h: h * 0.45 },
@@ -113,15 +175,15 @@ function _portraitBrasier(ctx, w, h, t) {
     _labelPortrait(ctx, w, h, 'LE BRASIER', '#ff4500');
 }
 
-/** @param {CanvasRenderingContext2D} ctx @param {number} w @param {number} h @param {number} t */
-function _portraitSentinelle(ctx, w, h, t) {
+/** @param {CanvasRenderingContext2D} ctx @param {number} w @param {number} h @param {number} t @param {number} [intensite] */
+function _portraitSentinelle(ctx, w, h, t, intensite = 1) {
     const grad = ctx.createLinearGradient(0, 0, 0, h);
     grad.addColorStop(0, '#020d14');
     grad.addColorStop(1, '#061828');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    const slow = 0.5 + 0.5 * Math.sin(t * 0.8);
+    const slow = 0.5 + 0.5 * Math.sin(t * 0.8 * intensite);
     const cristaux = [
         { x: w * 0.1, y: h * 0.9, s: 22 },
         { x: w * 0.85, y: h * 0.85, s: 18 },
@@ -189,8 +251,8 @@ function _portraitSentinelle(ctx, w, h, t) {
     _labelPortrait(ctx, w, h, 'LA SENTINELLE', COULEUR_GLACE_B);
 }
 
-/** @param {CanvasRenderingContext2D} ctx @param {number} w @param {number} h @param {number} t */
-function _portraitArchiviste(ctx, w, h, t) {
+/** @param {CanvasRenderingContext2D} ctx @param {number} w @param {number} h @param {number} t @param {number} [intensite] */
+function _portraitArchiviste(ctx, w, h, t, intensite = 1) {
     ctx.fillStyle = '#0a000f';
     ctx.fillRect(0, 0, w, h);
 
@@ -208,8 +270,8 @@ function _portraitArchiviste(ctx, w, h, t) {
         ctx.restore();
     }
 
-    const pulse = 0.5 + 0.5 * Math.sin(t * 6);
-    const glitchX = Math.sin(t * 13) > 0.85 ? 4 : 0;
+    const pulse = 0.5 + 0.5 * Math.sin(t * 6 * intensite);
+    const glitchX = Math.sin(t * 13 * intensite) > 0.85 ? 4 : 0;
     ctx.save();
     ctx.shadowColor = '#ff00ff';
     ctx.shadowBlur = 16 + pulse * 8;
@@ -262,13 +324,13 @@ function _portraitArchiviste(ctx, w, h, t) {
     _labelPortrait(ctx, w, h, "L'ARCHIVISTE", '#aa00ff');
 }
 
-/** @param {CanvasRenderingContext2D} ctx @param {number} w @param {number} h @param {number} t */
-function _portraitAvantgarde(ctx, w, h, t) {
+/** @param {CanvasRenderingContext2D} ctx @param {number} w @param {number} h @param {number} t @param {number} [intensite] */
+function _portraitAvantgarde(ctx, w, h, t, intensite = 1) {
     ctx.fillStyle = '#000008';
     ctx.fillRect(0, 0, w, h);
 
     const couleurs = ['#ff4500', COULEUR_GLACE_B, '#aa00ff', '#7700ff'];
-    const ci = Math.floor((t * 1.5) % couleurs.length);
+    const ci = Math.floor((t * 1.5 * intensite) % couleurs.length);
     const coul = couleurs[ci];
     const prochaine = couleurs[(ci + 1) % couleurs.length];
 
@@ -311,8 +373,8 @@ function _portraitAvantgarde(ctx, w, h, t) {
     _labelPortrait(ctx, w, h, "L'AVANT-GARDE", '#7700ff');
 }
 
-/** @param {CanvasRenderingContext2D} ctx @param {number} w @param {number} h @param {number} t */
-function _portraitDistorsion(ctx, w, h, t) {
+/** @param {CanvasRenderingContext2D} ctx @param {number} w @param {number} h @param {number} t @param {number} [intensite] */
+function _portraitDistorsion(ctx, w, h, t, intensite = 1) {
     ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, w, h);
 

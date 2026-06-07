@@ -10,6 +10,8 @@ export default [
         files: [
             'js/histoire-donnees.js',
             'js/histoire-textes.js',
+            'js/histoire-manager-ui.js',
+            'js/portraits-cutscene.js',
             'js/codex-donnees.js',
             'js/codex-illustrations.js',
             'js/codex-illustrations-histoire.js',

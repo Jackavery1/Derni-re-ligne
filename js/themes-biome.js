@@ -1,23 +1,23 @@
 import { BIOMES } from './config.js';
-import { obtenirBiomeActif, etat } from './store-jeu.js';
-import { majStatsReactionRobo } from './achievements.js';
-
-export function changerHumeur(humeur) {
-    majStatsReactionRobo(humeur);
-    etat.humeur = humeur;
-    document.querySelectorAll('.expression').forEach((el) => el.classList.remove('active'));
-    const expr = document.getElementById(`expr-${humeur}`);
-    if (expr) expr.classList.add('active');
-    const couleurLed = {
-        neutre: '#ff006e',
-        content: '#00ff88',
-        excite: '#ffe600',
-        triste: '#4488aa',
-    };
-    const led = document.getElementById('led-antenne');
-    if (led) led.setAttribute('fill', couleurLed[humeur] ?? '#ff006e');
-    if (humeur !== 'triste') setTimeout(() => changerHumeur('neutre'), 2500);
-}
+import { obtenirBiomeActif } from './store-jeu.js';
+export {
+    changerHumeur,
+    reagirRoboAuxLignes,
+    determinerHumeurLignes,
+    appliquerHumeurMascotte,
+    reinitialiserTimerMascotte,
+    reinitialiserMascottePartie,
+    flashGrimaceRobo,
+    reagirRoboLevelUp,
+    reagirRoboRelique,
+    reagirRoboBossAttaque,
+    reagirRoboBossDegats,
+    reagirRoboBossVaincu,
+    reagirRoboMeteoActive,
+    reagirRoboNouveauRecord,
+    reagirRoboGameOver,
+    verifierPlateauCritiqueRobo,
+} from './mascotte-robo.js';
 
 export function appliquerThemeBiome(biomeId) {
     const biome = BIOMES[biomeId] ?? BIOMES.classique;
@@ -31,6 +31,7 @@ export function appliquerThemeBiome(biomeId) {
     root.setProperty('--theme-canvas', ui.bordureCanvas);
 
     document.body.dataset.biome = biomeId;
+    document.getElementById('conteneur-principal')?.setAttribute('data-biome', biomeId);
 
     const canvas = document.getElementById('canvas-plateau');
     if (canvas) {
@@ -67,15 +68,5 @@ export function appliquerThemeMascotte() {
     const biome = BIOMES[obtenirBiomeActif()] ?? BIOMES.classique;
     const lueur = biome.lueurCoul;
     const section = document.getElementById('section-mascotte');
-    const mascotte = document.getElementById('mascotte');
     if (section) section.style.setProperty('--mascotte-lueur', lueur);
-    if (mascotte) {
-        mascotte.style.filter = `drop-shadow(0 0 6px ${lueur})`;
-        mascotte.querySelectorAll('[stroke="#00f5ff"]').forEach((el) => {
-            el.setAttribute('stroke', lueur);
-        });
-        mascotte.querySelectorAll('[fill="#00f5ff"]').forEach((el) => {
-            if (el.closest('#expr-neutre')) el.setAttribute('fill', lueur);
-        });
-    }
 }

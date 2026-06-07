@@ -1,5 +1,6 @@
 import { CONFIG, METEO_BIOMES } from './config.js';
 import { majStatsMeteo } from './achievements.js';
+import { reagirRoboMeteoActive } from './mascotte-robo.js';
 
 export const ETATS_METEO = { REPOS: 'repos', ALERTE: 'alerte', ACTIF: 'actif' };
 
@@ -95,7 +96,7 @@ function declencherEffetMeteo(evenement) {
     switch (evenement.effet) {
         case 'acceleration':
             meteo.vitesseBase = CONFIG.vitesseBase;
-            CONFIG.vitesseBase = Math.floor(CONFIG.vitesseBase * 0.45);
+            CONFIG.vitesseBase = Math.floor(CONFIG.vitesseBase * 0.52);
             break;
 
         case 'eruption': {
@@ -268,6 +269,7 @@ export function mettreAJourMeteo(dt) {
                     meteo.etat = ETATS_METEO.ACTIF;
                     meteo.timerActif = meteo.evenementActuel.duree;
                     mettreAJourIndicateurMeteo();
+                    reagirRoboMeteoActive();
                 }
             }
             break;

@@ -25,6 +25,9 @@ export default defineConfig({
                 'js/histoire-manager.js',
                 'js/histoire-manager-completion.js',
                 'js/boss-jeu.js',
+                'js/rendu-robo.js',
+                'js/mascotte-robo.js',
+                'js/portraits-cutscene.js',
             ],
             thresholds: {
                 lines: 50,

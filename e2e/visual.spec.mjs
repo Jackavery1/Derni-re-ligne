@@ -1,5 +1,9 @@
 import { test, expect } from '@playwright/test';
-import { preparerPageSansSw, ETAT_DEBLOCAGE_COMPLET } from './helpers.mjs';
+import {
+    preparerPageSansSw,
+    attendreApplicationPrete,
+    ETAT_DEBLOCAGE_COMPLET,
+} from './helpers.mjs';
 
 test.describe('régressions visuelles', () => {
     test.beforeEach(async ({ page }) => {
@@ -20,7 +24,9 @@ test.describe('régressions visuelles', () => {
 
     test('écran options', async ({ page }) => {
         await page.goto('/');
+        await attendreApplicationPrete(page);
         await page.locator('#btn-options').click();
+        await expect(page.locator('#ecran-options')).toHaveClass(/actif/);
         await expect(page.locator('#ecran-options')).toHaveScreenshot('ecran-options.png', {
             animations: 'disabled',
         });
@@ -28,7 +34,9 @@ test.describe('régressions visuelles', () => {
 
     test('écran codex', async ({ page }) => {
         await page.goto('/');
+        await attendreApplicationPrete(page);
         await page.locator('#btn-codex').click();
+        await expect(page.locator('#ecran-codex')).toHaveClass(/actif/);
         await expect(page.locator('#ecran-codex')).toHaveScreenshot('ecran-codex.png', {
             animations: 'disabled',
         });

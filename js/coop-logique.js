@@ -5,7 +5,7 @@ import { etat } from './store-jeu.js';
 import { creerPlateau, obtenirCouleurPieceParType } from './piece-jeu.js';
 import { creerParticulesLigne } from './particules-jeu.js';
 import { statsGlobales, verifierAchievements, sauvegarderStats } from './achievements.js';
-import { changerHumeur } from './ecrans-ui.js';
+import { reagirRoboAuxLignes } from './ecrans-ui.js';
 import { obtenirBouton, obtenirElement } from './dom-utils.js';
 import {
     poserPieceSurPlateau,
@@ -201,7 +201,7 @@ export function coop_verifierLignes() {
         coop.lignes += nbSupprimees;
         coop_calculerScore(nbSupprimees);
         if (typeof document !== 'undefined') {
-            changerHumeur(nbSupprimees >= 4 ? 'excite' : 'content');
+            reagirRoboAuxLignes(nbSupprimees, 0);
         }
         afficherNotifSynchro(nbSupprimees);
         verifierAchievements();

@@ -26,7 +26,7 @@ test('lancement boss affiche le HUD boss', async ({ page }) => {
     const sectionBoss = page.locator('#section-boss');
     await expect(sectionBoss).toBeVisible();
     await expect(page.locator('#boss-nom-affiche')).toContainText('BRASIER');
-    await expect(page.locator('#boss-hp-label')).toHaveText('8 / 8');
+    await expect(page.locator('#boss-hp-label')).toHaveText('14 / 14');
     await expect(page.locator('#canvas-boss-portrait')).toBeVisible();
 });
 
@@ -54,11 +54,15 @@ test('lancement prologue depuis la carte histoire', async ({ page }) => {
     }, ETAT_HISTOIRE_VIDE);
     await page.goto('/');
     await page.locator('#btn-mode-histoire').click();
-    await page.locator('#histoire-monde-clavier').selectOption('monde_prologue');
+    await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });
     await page.locator('.bouton-jouer-monde').click();
     const passerCutscene = page.locator('#btn-cutscene-passer');
     if (await passerCutscene.isVisible().catch(() => false)) {
         await passerCutscene.click();
+    }
+    const tutoriel = page.locator('#overlay-tutoriel:not(.element-masque)');
+    if (await tutoriel.isVisible().catch(() => false)) {
+        await page.locator('#btn-tutoriel-fermer').click();
     }
     await expect(page.locator('#interface-jeu')).toBeVisible({ timeout: 15000 });
     await expect(page.locator('#canvas-plateau')).toBeVisible();

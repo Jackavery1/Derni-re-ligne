@@ -1,5 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { initialiserTutoriel, afficherTutorielContextuel } from '../js/tutoriel.js';
+import {
+    initialiserTutoriel,
+    afficherTutorielContextuel,
+    afficherTutorielPrologueApresCutscene,
+} from '../js/tutoriel.js';
 
 function creerElement(initialClasses = ['element-masque']) {
     const classes = new Set(initialClasses);
@@ -35,20 +39,22 @@ describe('tutoriel', () => {
     let btnFermer;
     /** @type {ReturnType<typeof creerElement>} */
     let corps;
+    /** @type {ReturnType<typeof creerElement>} */
+    let blocControles;
 
     beforeEach(() => {
         localStorage.clear();
         overlay = creerElement(['element-masque']);
         btnFermer = creerElement([]);
         corps = creerElement([]);
+        blocControles = creerElement(['element-masque']);
 
         vi.spyOn(document, 'getElementById').mockImplementation((id) => {
             if (id === 'overlay-tutoriel') return overlay;
             if (id === 'btn-tutoriel-fermer') return btnFermer;
-            if (id === 'btn-tutoriel-options') return creerElement([]);
-            if (id === 'tab-controles') return creerElement([]);
             if (id === 'tutoriel-titre') return creerElement([]);
             if (id === 'tutoriel-corps') return corps;
+            if (id === 'tutoriel-controles') return blocControles;
             return null;
         });
 
@@ -59,20 +65,30 @@ describe('tutoriel', () => {
         });
     });
 
-    it('affiche l overlay la première fois', () => {
-        initialiserTutoriel();
-        expect(overlay.classList.contains('element-masque')).toBe(false);
-    });
-
-    it('ne réaffiche pas l overlay accueil après fermeture', () => {
-        initialiserTutoriel();
-        btnFermer.onclick?.();
+    it('initialiserTutoriel n affiche plus l overlay à l accueil', () => {
         initialiserTutoriel();
         expect(overlay.classList.contains('element-masque')).toBe(true);
     });
 
-    it('affiche le tutoriel histoire la première fois', () => {
-        afficherTutorielContextuel('histoire');
+    it('affiche le tutoriel prologue avec contrôles la première fois', () => {
+        afficherTutorielPrologueApresCutscene();
+        expect(overlay.classList.contains('element-masque')).toBe(false);
+        expect(corps.replaceChildren).toHaveBeenCalled();
+        expect(blocControles.replaceChildren).toHaveBeenCalled();
+        expect(blocControles.classList.contains('element-masque')).toBe(false);
+    });
+
+    it('appelle onCompris directement si le tutoriel prologue a déjà été vu', () => {
+        const cb = vi.fn();
+        afficherTutorielPrologueApresCutscene();
+        btnFermer.onclick?.();
+        afficherTutorielPrologueApresCutscene(cb);
+        expect(cb).toHaveBeenCalledTimes(1);
+        expect(overlay.classList.contains('element-masque')).toBe(true);
+    });
+
+    it('affiche le tutoriel coop la première fois', () => {
+        afficherTutorielContextuel('coop');
         expect(overlay.classList.contains('element-masque')).toBe(false);
         expect(corps.replaceChildren).toHaveBeenCalled();
     });

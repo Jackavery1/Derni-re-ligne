@@ -8,12 +8,14 @@ import {
     obtenirEffetsReduits,
     obtenirPrefererMoinsAnimations,
     obtenirReliqueActive,
+    obtenirBiomeActif,
     obtenirCanvasPlateau,
     obtenirCtx,
 } from './store-jeu.js';
 import { obtenirForme, obtenirCouleurPiece, calculerDistanceChute } from './piece-jeu.js';
 import { obtenirFauxFantomeActif, COULEUR_BRAISE } from './boss-jeu.js';
 import { dessinerCellule } from './rendu-cellule.js';
+import { dessinerCelluleStyle } from './rendu-blocs.js';
 import { dessinerFondBiome } from './rendu-ambiance.js';
 import { dessinerSignesVie } from './rendu-vivant.js';
 import { celluleEstRouillee, pieceEstInvisible, ghostEstDesactive } from './mecaniques-histoire.js';
@@ -170,7 +172,7 @@ export function dessinerPieceFantome() {
             const x = xAffiche + c;
             const y = etat.pieceActuelle.y + l + distAffichee;
             if (y >= 0 && x >= 0 && x < CONFIG.colonnes) {
-                dessinerCellule(obtenirCtx(), x, y, couleur, CONFIG.taille, 0.12);
+                dessinerCellule(obtenirCtx(), x, y, couleur, CONFIG.taille, 0.09);
             }
         }
     }
@@ -226,7 +228,22 @@ export function dessinerPieceActive() {
             if (!forme[l][c]) continue;
             const x = etat.pieceActuelle.x + c;
             const y = etat.pieceActuelle.y + l;
-            if (y >= 0) dessinerCellule(obtenirCtx(), x, y, couleur);
+            if (y >= 0) {
+                dessinerCelluleStyle(
+                    obtenirCtx(),
+                    x,
+                    y,
+                    couleur,
+                    CONFIG.taille,
+                    1,
+                    obtenirBiomeActif(),
+                    {
+                        effetsReduits: obtenirEffetsReduits(),
+                        prefererMoinsAnimations: obtenirPrefererMoinsAnimations(),
+                        sansOmbreExterne: true,
+                    }
+                );
+            }
         }
     }
 
@@ -267,10 +284,10 @@ export function dessinerParticules() {
         } else {
             if (p.trainee && !obtenirPrefererMoinsAnimations()) {
                 obtenirCtx().shadowColor = p.couleur;
-                obtenirCtx().shadowBlur = 20;
+                obtenirCtx().shadowBlur = 14;
             } else if (!obtenirPrefererMoinsAnimations()) {
                 obtenirCtx().shadowColor = p.couleur;
-                obtenirCtx().shadowBlur = 4 + p.opacite * 8;
+                obtenirCtx().shadowBlur = 3 + p.opacite * 5;
             }
             obtenirCtx().translate(p.x + p.taille / 2, p.y + p.taille / 2);
             obtenirCtx().rotate(p.rotation);

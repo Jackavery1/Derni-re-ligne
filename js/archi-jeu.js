@@ -7,7 +7,12 @@ import { planifierBoucle, suspendreBoucleSolo } from './boucle-jeu.js';
 import { mettreAJourParticules } from './particules-jeu.js';
 import { dessinerPreview } from './rendu-jeu.js';
 import { obtenirCanvas } from './dom-utils.js';
-import { cacherEcrans, afficherEcran, appliquerThemeBiome } from './ecrans-ui.js';
+import {
+    cacherEcrans,
+    afficherEcran,
+    retournerAuMenuTitre,
+    appliquerThemeBiome,
+} from './ecrans-ui.js';
 import { arreterConstellation } from './constellation.js';
 import { arreterAnimationMenu } from './menu-fond.js';
 import { basculerOracle, oracle } from './oracle-jeu.js';
@@ -351,7 +356,5 @@ export function quitterModeArchi() {
     restaurerZoneJeu();
     afficherInterfaceArchi(false);
     document.body.classList.remove('partie-active');
-    cacherEcrans();
-    afficherEcran(ECRANS.TITRE);
-    planifierBoucle();
+    retournerAuMenuTitre(() => planifierBoucle());
 }

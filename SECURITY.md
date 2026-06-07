@@ -10,7 +10,7 @@
 
 ## Signaler une vulnérabilité
 
-Dernière Ligne est une application **100 % client** (Vanilla JS, PWA). Il n'y a pas de backend ni de collecte de données personnelles côté serveur.
+Dernière Ligne est une application **100 % client** (Vanilla JS, PWA). Il n'y a pas de backend ni de collecte de données personnelles côté serveur. **RGPD** : aucune donnée personnelle n'est transmise à un serveur ; seul le `localStorage`/`sessionStorage` local stocke la progression de jeu (scores, déblocages).
 
 Si vous découvrez une faille de sécurité (XSS, contournement CSP, corruption localStorage, etc.) :
 

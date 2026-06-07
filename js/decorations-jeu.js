@@ -9,8 +9,9 @@ import {
 } from './store-jeu.js';
 import { obtenirForme, obtenirCouleurPiece } from './piece-jeu.js';
 import { oracle } from './oracle-jeu.js';
+import { definirArcEnCiel, definirCouronne } from './rendu-robo.js';
 
-const MAX_HISTORIQUE = 10;
+const MAX_HISTORIQUE = 6;
 export const historiquePositions = [];
 
 export function reinitialiserHistoriquePositions() {
@@ -31,12 +32,14 @@ function dessinerTrainee(intensite) {
     const couleur = obtenirCouleurPiece(etat.pieceActuelle);
     const forme = obtenirForme(etat.pieceActuelle);
     historiquePositions.forEach((pos, i) => {
-        const alpha = (i / historiquePositions.length) * 0.25 * intensite;
+        const alpha = (i / historiquePositions.length) * 0.14 * intensite;
+        if (alpha < 0.02) return;
         obtenirCtx().save();
         obtenirCtx().globalAlpha = alpha;
-        obtenirCtx().fillStyle = couleur;
-        obtenirCtx().shadowColor = couleur;
-        obtenirCtx().shadowBlur = 4;
+        const rgb = couleur.startsWith('#')
+            ? `${parseInt(couleur.slice(1, 3), 16)},${parseInt(couleur.slice(3, 5), 16)},${parseInt(couleur.slice(5, 7), 16)}`
+            : '255,255,255';
+        obtenirCtx().fillStyle = `rgba(${rgb},0.55)`;
         for (let l = 0; l < forme.length; l++) {
             for (let c = 0; c < forme[l].length; c++) {
                 if (!forme[l][c]) continue;
@@ -57,12 +60,11 @@ function dessinerTraineeArcEnCiel() {
     const hue = (performance.now() / 20) % 360;
     const forme = obtenirForme(etat.pieceActuelle);
     historiquePositions.forEach((pos, i) => {
-        const alpha = (i / historiquePositions.length) * 0.35;
+        const alpha = (i / historiquePositions.length) * 0.2;
+        if (alpha < 0.025) return;
         obtenirCtx().save();
         obtenirCtx().globalAlpha = alpha;
-        obtenirCtx().fillStyle = `hsl(${(hue + i * 30) % 360}, 100%, 60%)`;
-        obtenirCtx().shadowColor = obtenirCtx().fillStyle;
-        obtenirCtx().shadowBlur = 6;
+        obtenirCtx().fillStyle = `hsl(${(hue + i * 30) % 360}, 95%, 58%)`;
         for (let l = 0; l < forme.length; l++) {
             for (let c = 0; c < forme[l].length; c++) {
                 if (!forme[l][c]) continue;
@@ -82,12 +84,11 @@ function dessinerTraineeCombo() {
     if (!etat.pieceActuelle || historiquePositions.length === 0) return;
     const forme = obtenirForme(etat.pieceActuelle);
     historiquePositions.forEach((pos, i) => {
-        const alpha = (i / historiquePositions.length) * 0.3;
+        const alpha = (i / historiquePositions.length) * 0.17;
+        if (alpha < 0.025) return;
         obtenirCtx().save();
         obtenirCtx().globalAlpha = alpha;
-        obtenirCtx().fillStyle = i % 2 === 0 ? '#00ff88' : '#00f5ff';
-        obtenirCtx().shadowBlur = 5;
-        obtenirCtx().shadowColor = obtenirCtx().fillStyle;
+        obtenirCtx().fillStyle = i % 2 === 0 ? 'rgba(0,255,136,0.65)' : 'rgba(0,245,255,0.65)';
         for (let l = 0; l < forme.length; l++) {
             for (let c = 0; c < forme[l].length; c++) {
                 if (!forme[l][c]) continue;
@@ -107,15 +108,14 @@ function dessinerEtoilesTrainee() {
     if (!etat.pieceActuelle || historiquePositions.length === 0) return;
     const t = performance.now() / 1000;
     historiquePositions.forEach((pos, i) => {
-        const alpha = (i / historiquePositions.length) * 0.45;
+        const alpha = (i / historiquePositions.length) * 0.26;
+        if (alpha < 0.03) return;
         obtenirCtx().save();
         obtenirCtx().globalAlpha = alpha;
-        obtenirCtx().fillStyle = '#ffffff';
-        obtenirCtx().shadowColor = '#b400ff';
-        obtenirCtx().shadowBlur = 8;
+        obtenirCtx().fillStyle = 'rgba(255,255,255,0.7)';
         const px = (pos.x + 1) * CONFIG.taille;
         const py = (pos.y + 1) * CONFIG.taille;
-        const r = 2 + Math.sin(t + i) * 0.5;
+        const r = 1.5 + Math.sin(t + i) * 0.35;
         obtenirCtx().beginPath();
         obtenirCtx().arc(px, py, r, 0, Math.PI * 2);
         obtenirCtx().fill();
@@ -316,13 +316,6 @@ function dessinerHaloRelique() {
     obtenirCtx().restore();
 }
 
-function dessinerRoboArcEnCiel() {
-    const mascotte = document.getElementById('mascotte');
-    if (!mascotte) return;
-    const hue = (performance.now() / 30) % 360;
-    mascotte.style.filter = `drop-shadow(0 0 6px hsl(${hue}, 100%, 60%)) hue-rotate(${hue}deg)`;
-}
-
 function dessinerBordureBicolore() {
     const w = obtenirCanvasPlateau().width;
     const h = obtenirCanvasPlateau().height;
@@ -363,13 +356,11 @@ function dessinerHaloOracle() {
 }
 
 function reinitialiserEffetsHorsCanvas() {
-    const couronne = document.getElementById('couronne');
-    if (couronne && !statsGlobales.decorationsActives.includes('couronne_lumineuse')) {
-        couronne.style.display = 'none';
+    if (!statsGlobales.decorationsActives.includes('couronne_lumineuse')) {
+        definirCouronne(false);
     }
-    const mascotte = document.getElementById('mascotte');
-    if (mascotte && !statsGlobales.decorationsActives.includes('robo_arc_en_ciel')) {
-        mascotte.style.filter = '';
+    if (!statsGlobales.decorationsActives.includes('robo_arc_en_ciel')) {
+        definirArcEnCiel(false);
     }
 }
 
@@ -379,9 +370,6 @@ export function dessinerDecorations() {
         reinitialiserEffetsHorsCanvas();
         return;
     }
-
-    let couronneDemandee = false;
-    let roboDemandee = false;
 
     actives.forEach((deco) => {
         switch (deco) {
@@ -446,19 +434,11 @@ export function dessinerDecorations() {
                 dessinerBordureBicolore();
                 break;
             case 'couronne_lumineuse':
-                couronneDemandee = true;
+                definirCouronne(true);
                 break;
             case 'robo_arc_en_ciel':
-                roboDemandee = true;
+                definirArcEnCiel(true);
                 break;
         }
     });
-
-    const couronne = document.getElementById('couronne');
-    if (couronne) couronne.style.display = couronneDemandee ? 'block' : 'none';
-    if (roboDemandee) dessinerRoboArcEnCiel();
-    else {
-        const mascotte = document.getElementById('mascotte');
-        if (mascotte) mascotte.style.filter = '';
-    }
 }

@@ -8,6 +8,7 @@ import { cacherBanniereVivant } from './vivant.js';
 import { mettreAJourAffichageRecord } from './hud-jeu.js';
 import { annoncer } from './annonces.js';
 import { demarrerCarteHistoire, arreterCarteHistoire } from './histoire-map.js';
+import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 
 export { annoncer };
 
@@ -46,6 +47,7 @@ export function afficherEcran(idEcran) {
         AudioMoteur.arreterMusique(500);
         mettreAJourAffichageRecord();
         demarrerAnimationMenu();
+        mettreAJourVisibiliteModesDebloques();
     } else {
         arreterAnimationMenu();
     }
@@ -58,6 +60,7 @@ export function afficherEcran(idEcran) {
 
     if (idEcran === ECRANS.ACHIEVEMENTS) {
         genererGalerieAchievements();
+        mettreAJourVisibiliteModesDebloques();
     }
 
     if (idEcran === ECRANS.PROFIL) {
@@ -65,6 +68,7 @@ export function afficherEcran(idEcran) {
             chargerProfilDernier();
             afficherProfil();
         });
+        mettreAJourVisibiliteModesDebloques();
     }
 
     if (idEcran === ECRANS.CODEX) {
@@ -75,6 +79,10 @@ export function afficherEcran(idEcran) {
         demarrerCarteHistoire();
     } else {
         arreterCarteHistoire();
+    }
+
+    if (idEcran === ECRANS.GAME_OVER || idEcran === ECRANS.GAME_OVER_COOP) {
+        mettreAJourVisibiliteModesDebloques();
     }
 
     if (idEcran === ECRANS.PAUSE) {
@@ -89,4 +97,11 @@ export function afficherEcran(idEcran) {
 
 export function cacherEcrans() {
     document.querySelectorAll('.ecran').forEach((el) => el.classList.remove('actif'));
+}
+
+/** @param {() => void} [apresNavigation] */
+export function retournerAuMenuTitre(apresNavigation) {
+    cacherEcrans();
+    afficherEcran(ECRANS.TITRE);
+    apresNavigation?.();
 }

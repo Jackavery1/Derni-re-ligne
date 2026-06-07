@@ -25,6 +25,7 @@ cpSync('styles', `${dist}/styles`, { recursive: true });
 cpSync('html', `${dist}/html`, { recursive: true });
 cpSync('fonts', `${dist}/fonts`, { recursive: true });
 cpSync('manifest.json', `${dist}/manifest.json`);
+cpSync('img', `${dist}/img`, { recursive: true });
 cpSync('icon.svg', `${dist}/icon.svg`);
 for (const ic of ['icon-192.png', 'icon-512.png', 'icon-maskable.png']) {
     try {
@@ -54,6 +55,8 @@ const staticFiles = [
     './icon-192.png',
     './icon-512.png',
     './icon-maskable.png',
+    './img/robo-accueil.png',
+    './img/robo-favicon.png',
     './fonts/PressStart2P-Regular.ttf',
     ...htmlFiles,
 ];

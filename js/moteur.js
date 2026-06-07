@@ -6,6 +6,7 @@ import {
     ecrireStockage,
     sauvegarderBiomeActif,
     obtenirRecordBiome,
+    obtenirRecordNiveauBiome,
     calculerEtoiles,
     formaterEtoiles,
     biomeEstDebloque,
@@ -61,6 +62,7 @@ import { initialiserEffetsPartie } from './effets-partie.js';
 import { rafraichirEtatHistoire } from './histoire-manager.js';
 import { initialiserTutoriel } from './tutoriel.js';
 import { obtenirActions } from './actions-jeu.js';
+import { demarrerBoucleRobo } from './rendu-robo.js';
 
 export { obtenirEcranActuel as ecranActuel };
 
@@ -119,6 +121,7 @@ export function initialiserApplication() {
         definirBiomeActif,
         sauvegarderBiomeActif,
         obtenirRecordBiome,
+        obtenirRecordNiveauBiome,
         calculerEtoiles,
         formaterEtoiles,
         biomeEstDebloque,
@@ -141,6 +144,7 @@ export function initialiserApplication() {
     afficherEcran(ECRANS.TITRE);
     initialiserTutoriel();
     planifierBoucle();
+    demarrerBoucleRobo();
     if (typeof window !== 'undefined') {
         /** @type {any} */ (window).__NEO_TEST__ = {
             terminerPartie: (victoire) => obtenirActions().terminerPartie?.(victoire),

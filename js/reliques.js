@@ -1,6 +1,7 @@
 import { CONFIG, RELIQUES } from './config.js';
 import { majStatsRelique } from './achievements.js';
 import { AudioMoteur } from './audio.js';
+import { reagirRoboRelique } from './mascotte-robo.js';
 
 let deps = {};
 
@@ -204,5 +205,6 @@ export function appliquerEffetRelique(relique, piece) {
     effets[relique.effet]?.();
     majStatsRelique(relique.effet);
     afficherAnnonceRelique(relique);
+    reagirRoboRelique();
     AudioMoteur.son('relique');
 }

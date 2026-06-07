@@ -8,6 +8,7 @@ import {
     obtenirTypeFin,
     typeFinVersCleBoss,
     afficherDecouverteLabo,
+    obtenirCutscenePostMonde,
 } from './histoire-narratif.js';
 import { store } from './store-core.js';
 import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
@@ -16,22 +17,23 @@ import { statsGlobales, sauvegarderStats, verifierAchievements } from './achieve
 import { onMiroirComplete, verifierDeblocageTrame } from './conditions-secrets.js';
 import { enregistrerPrecisionMiroir } from './achievements-histoire.js';
 import { afficherBoutonCarteGameOver } from './histoire-manager-ui.js';
+import { definirExpressionVera } from './portraits-vera.js';
 
 export const SEUILS_COMPLETION = {
-    classique: 6,
+    classique: 8,
     lave: 10,
-    rouille: 8,
+    rouille: 9,
     ocean: 10,
     foret: 10,
     glace: 10,
-    desert: 12,
+    desert: 11,
     eclipse: 10,
     cyber: 12,
     fuochi: 12,
     cosmos: 12,
-    vide: 8,
+    vide: 9,
     miroir: 12,
-    trame: 18,
+    trame: 14,
 };
 
 function obtenirEtatHistoire() {
@@ -51,8 +53,10 @@ export function surFinDeMondeHistoire(lignes, score) {
     const estComplete = lignes >= seuil || (monde.estBoss && store.histoire.boss.vaincu);
 
     let journalDebloque = null;
+    let premiereCompletionCeMonde = false;
 
     if (estComplete && !etatHist.mondesCompletes.includes(mondeId)) {
+        premiereCompletionCeMonde = true;
         etatHist.mondesCompletes.push(mondeId);
 
         if (monde.biomeId === 'cyber') {
@@ -131,7 +135,7 @@ export function surFinDeMondeHistoire(lignes, score) {
     verifierAchievements();
 
     if (estComplete) {
-        declencherNarratifPostMonde(monde, etatHist);
+        declencherNarratifPostMonde(monde, etatHist, premiereCompletionCeMonde);
     } else {
         afficherBoutonCarteGameOver(true);
     }
@@ -178,7 +182,7 @@ function verifierTetrisTriplesCyber(etatHist) {
     }
 }
 
-function declencherNarratifPostMonde(monde, etatHist) {
+function declencherNarratifPostMonde(monde, etatHist, premiereCompletion) {
     if (
         monde.biomeId === 'cyber' &&
         etatHist.conditionsMiroir.tetrisTriplesCyber >= 3 &&
@@ -196,42 +200,65 @@ function declencherNarratifPostMonde(monde, etatHist) {
             store.histoire.dernierJournal = j7;
         }
 
-        afficherDecouverteLabo(() => suiteNarratifPostMonde(monde, etatHist));
+        afficherDecouverteLabo(() => suiteNarratifPostMonde(monde, etatHist, premiereCompletion));
         return;
     }
 
     if (monde.estBoss && monde.bossId) {
         if (monde.bossId === 'distorsion') {
             const typeFin = obtenirTypeFin();
+            definirExpressionVera(
+                typeFin === 'fin_secrete'
+                    ? 'fin_secrete'
+                    : typeFin === 'fin_vraie'
+                      ? 'fin_vraie'
+                      : 'fin_normale'
+            );
             afficherVictoireBoss(monde.bossId, typeFinVersCleBoss(typeFin), () =>
                 declencherFin(typeFin)
             );
             return;
         }
-        afficherVictoireBoss(monde.bossId, 'normal', () => suiteNarratifPostMonde(monde, etatHist));
+        definirExpressionVera('boss_vaincu');
+        afficherVictoireBoss(monde.bossId, 'normal', () =>
+            suiteNarratifPostMonde(monde, etatHist, premiereCompletion)
+        );
         return;
     }
 
-    suiteNarratifPostMonde(monde, etatHist);
+    suiteNarratifPostMonde(monde, etatHist, premiereCompletion);
 }
 
-function suiteNarratifPostMonde(monde, etatHist) {
+function suiteNarratifPostMonde(monde, etatHist, premiereCompletion) {
     void etatHist;
     const journal = store.histoire.dernierJournal;
     if (journal) {
         store.histoire.dernierJournal = null;
-        afficherJournalVera(journal, () => suiteTransitionChapitre(monde));
+        definirExpressionVera('journal_decouvert');
+        afficherJournalVera(journal, () => suiteTransitionChapitre(monde, premiereCompletion));
         return;
     }
-    suiteTransitionChapitre(monde);
+    suiteTransitionChapitre(monde, premiereCompletion);
 }
 
-function suiteTransitionChapitre(monde) {
+function suiteTransitionChapitre(monde, premiereCompletion) {
     const cleTrans = obtenirTransitionApresVictoire(monde.id);
     if (cleTrans) {
+        definirExpressionVera('chapitre_complete');
         afficherTransitionChapitre(cleTrans, () => afficherBoutonCarteGameOver(true));
         return;
     }
+
+    const postMonde = obtenirCutscenePostMonde(monde.id, premiereCompletion);
+    if (postMonde) {
+        void import('./histoire-manager.js').then(({ afficherCutsceneHistoire }) => {
+            afficherCutsceneHistoire(postMonde.lignes, postMonde.personnages, () =>
+                afficherBoutonCarteGameOver(true)
+            );
+        });
+        return;
+    }
+
     afficherBoutonCarteGameOver(true);
 }
 

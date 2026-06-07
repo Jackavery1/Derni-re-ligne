@@ -14,7 +14,6 @@ import {
 } from './store-jeu.js';
 import { obtenirScoreAffiche } from './oracle-jeu.js';
 import { annoncer } from './annonces.js';
-import { changerHumeur } from './themes-biome.js';
 
 export function chargerProgression() {
     definirNiveauGlobal(chargerNiveauGlobal());
@@ -22,7 +21,7 @@ export function chargerProgression() {
 }
 
 export function sauvegarderRecord(score) {
-    return sauvegarderRecordBiome(obtenirBiomeActif(), score);
+    return sauvegarderRecordBiome(obtenirBiomeActif(), score, etat.niveau);
 }
 
 export function mettreAJourAffichageRecord() {
@@ -91,5 +90,4 @@ export function afficherNotifNiveau() {
     void notif.offsetWidth;
     notif.classList.add('visible');
     annoncer(`Niveau ${etat.niveau} atteint`);
-    changerHumeur('excite');
 }

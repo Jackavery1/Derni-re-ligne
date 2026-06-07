@@ -210,6 +210,20 @@ describe('logique-partie', () => {
         expect(partie.score).toBe(500);
     });
 
+    it('appliquerScoreLignes applique le bonus combo', () => {
+        const partie = { score: 0, lignes: 4, niveau: 2, combo: 1, dernierEtaitTetris: false };
+        const result = appliquerScoreLignes(partie, 2);
+        expect(result.points).toBe(750);
+        expect(partie.score).toBe(750);
+    });
+
+    it('appliquerScoreLignes applique le bonus back-to-back Tetris', () => {
+        const partie = { score: 0, lignes: 4, niveau: 2, combo: 1, dernierEtaitTetris: true };
+        const result = appliquerScoreLignes(partie, 4);
+        expect(result.backToBack).toBe(true);
+        expect(result.points).toBe(3000);
+    });
+
     it('appliquerScoreLignes monte de niveau à 10 lignes', () => {
         const partie = { score: 0, lignes: 9, niveau: 1, combo: 0, dernierEtaitTetris: false };
         const result = appliquerScoreLignes(partie, 1);

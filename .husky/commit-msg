@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+msg=$(cat "$1")
+pattern='^(feat|fix|docs|style|refactor|test|chore|perf|ci|build)(\([a-z0-9-]+\))?: .+'
+echo "$msg" | head -1 | grep -Eq "$pattern" || {
+  echo "Commit refusé : utiliser Conventional Commits (feat:, fix:, refactor:, etc.)"
+  exit 1
+}

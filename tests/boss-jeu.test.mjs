@@ -40,7 +40,7 @@ describe('boss-jeu', () => {
     it('demarrerBoss initialise les PV du boss Brasier', () => {
         demarrerBoss('brasier');
         expect(bossEstActif()).toBe(true);
-        expect(store.histoire.boss.pv).toBe(8);
+        expect(store.histoire.boss.pv).toBe(14);
         expect(store.histoire.boss.actif?.id).toBe('brasier');
     });
 
@@ -52,20 +52,20 @@ describe('boss-jeu', () => {
     it('endommagerBoss réduit les PV partiellement', () => {
         demarrerBoss('brasier');
         endommagerBoss(3);
-        expect(store.histoire.boss.pv).toBe(5);
+        expect(store.histoire.boss.pv).toBe(11);
         expect(bossEstVaincu()).toBe(false);
     });
 
     it('demarrerBoss initialise les PV du boss Sentinelle', () => {
         demarrerBoss('sentinelle');
         expect(bossEstActif()).toBe(true);
-        expect(store.histoire.boss.pv).toBe(10);
+        expect(store.histoire.boss.pv).toBe(12);
         expect(store.histoire.boss.actif?.id).toBe('sentinelle');
     });
 
     it('endommagerBoss réduit les PV et déclenche la victoire', () => {
         demarrerBoss('brasier');
-        endommagerBoss(8);
+        endommagerBoss(14);
         expect(store.histoire.boss.pv).toBe(0);
         expect(bossEstVaincu()).toBe(true);
         expect(store.histoire.boss.timerVaincu).toBe(DUREE_VICTOIRE_BOSS_MS);

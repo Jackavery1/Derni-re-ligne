@@ -62,14 +62,22 @@ function coordsBloc(x, y, taille) {
 function debutBloc(ctx2d, couleur, opacite, sansOmbre, shadowBlur) {
     ctx2d.save();
     ctx2d.globalAlpha = opacite;
-    if (!sansOmbre) {
-        ctx2d.shadowColor = couleur;
-        ctx2d.shadowBlur = shadowBlur;
+    if (!sansOmbre && shadowBlur > 0) {
+        const rgb = couleurValide(couleur)
+            ? [
+                  parseInt(couleur.slice(1, 3), 16),
+                  parseInt(couleur.slice(3, 5), 16),
+                  parseInt(couleur.slice(5, 7), 16),
+              ]
+            : [255, 255, 255];
+        ctx2d.shadowColor = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.24)`;
+        ctx2d.shadowBlur = Math.max(1, shadowBlur * 0.65);
     }
 }
 
 function finBloc(ctx2d) {
     ctx2d.shadowBlur = 0;
+    ctx2d.shadowColor = 'transparent';
     ctx2d.restore();
 }
 

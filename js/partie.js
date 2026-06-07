@@ -58,13 +58,17 @@ import {
     appliquerThemeBiome,
     appliquerTextesBiome,
     appliquerThemeMascotte,
-    changerHumeur,
+    reinitialiserMascottePartie,
+    appliquerHumeurMascotte,
+    reagirRoboGameOver,
+    reagirRoboNouveauRecord,
     annoncer,
     rafraichirStats,
     sauvegarderRecord,
     mettreAJourAffichageRecord,
     afficherEcran,
     cacherEcrans,
+    retournerAuMenuTitre,
     formaterTemps,
     obtenirTempsEcoule,
 } from './ecrans-ui.js';
@@ -178,9 +182,8 @@ export function quitterVersMenu() {
     arreterBoss();
     arreterMecaniquesHistoire();
     AudioMoteur.arreterMusique();
-    changerHumeur('neutre');
-    cacherEcrans();
-    afficherEcran(ECRANS.TITRE);
+    reinitialiserMascottePartie();
+    retournerAuMenuTitre();
     const btnPause = document.getElementById('btn-pause');
     if (btnPause) btnPause.textContent = '⏸ PAUSE';
 }
@@ -278,7 +281,7 @@ function initialiserUIPartie() {
     arreterMecaniquesHistoire();
     initialiserMecaniquesHistoire();
     document.body.classList.add('partie-active');
-    changerHumeur('neutre');
+    reinitialiserMascottePartie();
 
     document.getElementById('btn-pause').textContent = '⏸ PAUSE';
 
@@ -343,7 +346,11 @@ export function terminerPartie(victoire = false) {
     }
     annulerMeteo();
     AudioMoteur.arreterMusique(200);
-    changerHumeur(victoire ? 'excite' : 'triste');
+    if (victoire) {
+        appliquerHumeurMascotte('excite');
+    } else {
+        reagirRoboGameOver();
+    }
     if (!victoire) setTimeout(() => AudioMoteur.son('game_over'), 250);
     annoncer(victoire ? 'Sprint terminé ! Victoire' : 'Partie terminée');
 
@@ -388,6 +395,7 @@ export function terminerPartie(victoire = false) {
 
     const badge = document.getElementById('badge-record');
     if (badge) badge.style.display = nouveauRecord ? 'block' : 'none';
+    if (nouveauRecord) reagirRoboNouveauRecord();
 
     const tempsPartie = Math.floor(obtenirTempsEcoule() / 1000);
     sauvegarderSnapshotProfil(etat.lignes, obtenirBiomeActif());

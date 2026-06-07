@@ -14,7 +14,15 @@ import {
     obtenirYHautTas,
     declencherSecousse,
 } from './rendu-jeu.js';
-import { changerHumeur, annoncer, rafraichirStats, afficherNotifNiveau } from './ecrans-ui.js';
+import {
+    reagirRoboAuxLignes,
+    flashGrimaceRobo,
+    reagirRoboLevelUp,
+    verifierPlateauCritiqueRobo,
+    annoncer,
+    rafraichirStats,
+    afficherNotifNiveau,
+} from './ecrans-ui.js';
 import { evaluerDecisionOracle } from './oracle-jeu.js';
 import { endommagerBoss, bossEstActif, bossEstVaincu } from './boss-jeu.js';
 import { mettreAJourIndicateurRelique } from './piece-jeu.js';
@@ -42,7 +50,6 @@ export function initialiserEffetsPartie() {
         for (const l of lignesEffacees) creerParticulesLigne(l);
         const intensitesSecousse = { 1: 2, 2: 3.5, 3: 5, 4: 8 };
         declencherSecousse(intensitesSecousse[nbSupprimees] ?? 8);
-        changerHumeur(nbSupprimees >= 4 ? 'excite' : 'content');
         if (store.histoire.actif && nbSupprimees > 0) {
             const mec = biomeActuelMecanique();
             if (mec === 'eclipse') {
@@ -64,6 +71,13 @@ export function initialiserEffetsPartie() {
     });
 
     ecouter('score:maj', ({ nbLignes, result }) => {
+        if (nbLignes > 0) {
+            reagirRoboAuxLignes(nbLignes, result.combo);
+        } else {
+            flashGrimaceRobo();
+        }
+        verifierPlateauCritiqueRobo();
+
         if (nbLignes > 0) {
             if (result.tetris) {
                 afficherTexteFlottant('TETRIS !', '#ffe600', 16);
@@ -102,6 +116,7 @@ export function initialiserEffetsPartie() {
         evaluerDecisionOracle(nbLignes);
         if (result.levelUp) {
             afficherNotifNiveau();
+            reagirRoboLevelUp();
             AudioMoteur.son('niveau');
             AudioMoteur.relancerIntervalleMusique();
             annoncer(`Niveau ${etat.niveau} atteint`);

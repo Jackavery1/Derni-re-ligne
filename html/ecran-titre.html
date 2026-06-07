@@ -24,9 +24,9 @@
 
         <img
             class="menu-robot"
-            src="icon-192.png"
-            width="80"
-            height="80"
+            src="img/robo-accueil.png"
+            width="108"
+            height="108"
             alt=""
             aria-hidden="true"
         />
@@ -46,17 +46,19 @@
         </div>
 
         <!-- ========== MODE LIBRE ========== -->
-        <div class="menu-separateur">
+        <div class="menu-separateur element-masque" id="menu-separateur-libre" aria-hidden="true">
             <span>— MODE LIBRE —</span>
         </div>
 
-        <div class="menu-bloc-libre">
+        <div class="menu-bloc-libre element-masque" id="menu-bloc-libre" aria-hidden="true">
             <button
                 id="btn-jouer"
-                class="btn-menu btn-jouer"
+                class="btn-menu btn-jouer element-masque"
                 type="button"
                 data-condition="Complétez le Chapitre I"
                 aria-label="Ouvrir le Monde Libre"
+                aria-hidden="true"
+                hidden
             >
                 <span class="btn-icone">★</span>
                 <span class="btn-texte">MONDE LIBRE</span>
@@ -64,10 +66,12 @@
 
             <button
                 id="btn-architecte"
-                class="btn-menu btn-architecte"
+                class="btn-menu btn-architecte element-masque"
                 type="button"
                 data-condition="Battez la Distorsion"
                 aria-label="Ouvrir le mode Architecte"
+                aria-hidden="true"
+                hidden
             >
                 <span class="btn-icone">▦</span>
                 <span class="btn-texte">ARCHITECTE</span>
@@ -75,17 +79,27 @@
         </div>
 
         <!-- ========== COLLECTION ========== -->
-        <div class="menu-separateur">
+        <div
+            class="menu-separateur element-masque"
+            id="menu-separateur-collection"
+            aria-hidden="true"
+        >
             <span>— COLLECTION —</span>
         </div>
 
-        <div class="menu-bloc-collection">
+        <div
+            class="menu-bloc-collection element-masque"
+            id="menu-bloc-collection"
+            aria-hidden="true"
+        >
             <button
                 id="btn-codex"
-                class="btn-menu btn-codex"
+                class="btn-menu btn-codex element-masque"
                 type="button"
                 data-condition="Complétez le Prologue"
                 aria-label="Ouvrir le Codex"
+                aria-hidden="true"
+                hidden
             >
                 <span class="btn-icone">📖</span>
                 <span class="btn-texte">CODEX</span>
@@ -93,10 +107,12 @@
 
             <button
                 id="btn-profil"
-                class="btn-menu btn-profil"
+                class="btn-menu btn-profil element-masque"
                 type="button"
                 data-condition="Complétez le Chapitre II"
                 aria-label="Voir le profil de jeu"
+                aria-hidden="true"
+                hidden
             >
                 <span class="btn-icone">◈</span>
                 <span class="btn-texte">PROFIL</span>
@@ -104,10 +120,12 @@
 
             <button
                 id="btn-achievements"
-                class="btn-menu btn-achievements"
+                class="btn-menu btn-achievements element-masque"
                 type="button"
                 data-condition="Complétez le Chapitre III"
                 aria-label="Voir les achievements"
+                aria-hidden="true"
+                hidden
             >
                 <span class="btn-icone">🏆</span>
                 <span class="btn-texte">ACHIEVEMENTS</span>

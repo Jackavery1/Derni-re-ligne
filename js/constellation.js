@@ -1,7 +1,7 @@
 import { BIOMES, ORDRE_BIOMES } from './config.js';
 import { eclaircir, assombrir } from './rendu-blocs-utils.js';
 import { obtenirCanvas } from './dom-utils.js';
-import { obtenirEtatDeblocage } from './progression.js';
+import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 
 let deps = {};
 
@@ -49,7 +49,8 @@ function mettreAJourInfoBiome(idBiome) {
 
     const verrouille = !deps.biomeEstDebloque(deps.obtenirNiveauGlobal(), biome.niveauDeblocage);
     const record = deps.obtenirRecordBiome(idBiome);
-    const etoiles = deps.formaterEtoiles(deps.calculerEtoiles(record));
+    const niveauRecord = deps.obtenirRecordNiveauBiome(idBiome);
+    const etoiles = deps.formaterEtoiles(deps.calculerEtoiles(record, niveauRecord));
 
     if (elNom) {
         elNom.textContent = `${biome.icone} ${biome.nom}`;
@@ -457,27 +458,14 @@ export function configurerConstellation(configuration) {
     deps = configuration;
 }
 
-function verrouillerOracleCoopSiNecessaire() {
-    const deblocage = obtenirEtatDeblocage();
-    ['toggle-oracle', 'toggle-coop'].forEach((id) => {
-        const btn = document.getElementById(id);
-        if (!btn) return;
-        if (!deblocage.oracleCoop) {
-            btn.classList.add('btn-verrouille');
-            btn.setAttribute('data-condition', 'Complétez le Chapitre IV');
-            btn.setAttribute('aria-disabled', 'true');
-        } else {
-            btn.classList.remove('btn-verrouille');
-            btn.removeAttribute('data-condition');
-            btn.removeAttribute('aria-disabled');
-        }
-    });
+function masquerOracleCoopSiNecessaire() {
+    mettreAJourVisibiliteModesDebloques();
 }
 
 export function demarrerConstellation() {
     arreterConstellation();
     initConstellation();
-    verrouillerOracleCoopSiNecessaire();
+    masquerOracleCoopSiNecessaire();
     idFrameConst = requestAnimationFrame(boucleConstellation);
 }
 

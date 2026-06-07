@@ -50,37 +50,31 @@
     </div>
 </div>
 
-<div id="ecran-histoire-cutscene" class="ecran">
-    <div id="histoire-cutscene-contenu">
-        <div id="histoire-cutscene-portrait-wrap">
-            <div id="histoire-cutscene-portrait-icon" class="histoire-cs-portrait-icon">🤖</div>
-            <div id="histoire-cutscene-nom" class="histoire-cs-nom">ROBO</div>
-        </div>
-        <div
-            id="histoire-cutscene-lignes"
-            role="log"
-            aria-live="polite"
-            aria-label="Dialogue de la cutscene"
-        ></div>
-        <div id="histoire-cutscene-progress" class="histoire-cs-progress"></div>
-        <button
-            class="bouton"
-            type="button"
-            id="btn-cutscene-suivant"
-            aria-label="Ligne suivante ou passer la cutscene"
-        >
-            ► CONTINUER
-        </button>
-        <button
-            class="bouton discret"
-            type="button"
-            id="btn-cutscene-passer"
-            aria-label="Passer toute la cutscene"
-        >
-            PASSER
-        </button>
+<section id="ecran-histoire-cutscene" class="ecran" data-personnage="narrateur">
+    <div class="cutscene-fond-overlay"></div>
+
+    <div class="cutscene-portrait-zone">
+        <canvas
+            id="canvas-cutscene-portrait"
+            width="96"
+            height="96"
+            class="cutscene-canvas-portrait"
+        ></canvas>
+        <span id="histoire-cutscene-nom" class="cutscene-nom"></span>
     </div>
-</div>
+
+    <div class="cutscene-texte-zone">
+        <div id="histoire-cutscene-lignes" class="cutscene-lignes"></div>
+        <div id="histoire-cutscene-progress" class="cutscene-progress"></div>
+    </div>
+
+    <div class="cutscene-controles">
+        <button id="btn-cutscene-suivant" class="btn-cutscene" type="button">
+            CONTINUER <span class="btn-cutscene-hint">[ Espace / Clic ]</span>
+        </button>
+        <button id="btn-cutscene-passer" class="btn-cutscene-passer" type="button">PASSER ›</button>
+    </div>
+</section>
 
 <div id="ecran-histoire-journal" class="ecran">
     <div id="histoire-journal-contenu">

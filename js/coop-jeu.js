@@ -19,10 +19,10 @@ import {
     changerHumeur,
     cacherEcrans,
     afficherEcran,
-    sauvegarderRecord,
+    retournerAuMenuTitre,
     mettreAJourAffichageRecord,
 } from './ecrans-ui.js';
-import { obtenirRecordBiome } from './progression.js';
+import { obtenirRecordBiome, sauvegarderRecordBiome } from './progression.js';
 import { obtenirBouton } from './dom-utils.js';
 import { planifierBoucle } from './boucle-jeu.js';
 import { arreterAnimationMenu } from './menu-fond.js';
@@ -231,7 +231,7 @@ export function terminerCooperatif(joueurFautif) {
             joueurFautif === 'j1' ? 'J1 a dépassé le sommet !' : 'J2 a dépassé le sommet !';
     }
 
-    sauvegarderRecord(coop.score);
+    sauvegarderRecordBiome(obtenirBiomeActif(), coop.score, coop.niveau);
     mettreAJourAffichageRecord();
     if (elRecord) {
         elRecord.textContent = obtenirRecordBiome(obtenirBiomeActif()).toLocaleString('fr-FR');
@@ -249,7 +249,5 @@ export function quitterModeCoop() {
     etat.estEnCours = false;
     AudioMoteur.arreterMusique();
     changerHumeur('neutre');
-    cacherEcrans();
-    afficherEcran(ECRANS.TITRE);
-    planifierBoucle();
+    retournerAuMenuTitre(() => planifierBoucle());
 }

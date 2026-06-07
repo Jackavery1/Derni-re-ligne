@@ -88,6 +88,7 @@ function estCleValide(cle) {
     if (cle.startsWith(PREFIXE_STOCKAGE)) return true;
     if (/^tetrisNeo_record_[a-z]+$/.test(cle)) return true;
     if (/^derniereLigne_record_[a-z]+$/.test(cle)) return true;
+    if (/^derniereLigne_recniv_[a-z]+$/.test(cle)) return true;
     if (/^tetrisNeo_monde_histoire_[a-z_]+$/.test(cle)) return true;
     if (/^derniereLigne_monde_histoire_[a-z_]+$/.test(cle)) return true;
     if (/^tetrisNeo_archi_[a-z_]+$/.test(cle)) return true;
@@ -184,10 +185,13 @@ export function biomeEstDebloque(niveauGlobal, niveauDeblocage) {
     return niveauGlobal >= niveauDeblocage;
 }
 
-/** @param {number} record @returns {0|1|2|3} */
-export function calculerEtoiles(record) {
-    if (record >= SEUIL_ETOILE_3) return 3;
-    if (record >= SEUIL_ETOILE_2) return 2;
+/** @param {number} record @param {number} [niveauAtteint] @returns {0|1|2|3} */
+export function calculerEtoiles(record, niveauAtteint = 1) {
+    const n = Math.max(1, Math.min(15, Math.floor(niveauAtteint) || 1));
+    const seuil2 = SEUIL_ETOILE_2 * n;
+    const seuil3 = SEUIL_ETOILE_3 * n;
+    if (record >= seuil3) return 3;
+    if (record >= seuil2) return 2;
     if (record > 0) return 1;
     return 0;
 }
@@ -228,12 +232,21 @@ export function obtenirRecordBiome(idBiome) {
     return Number.isFinite(brut) && brut >= 0 ? brut : 0;
 }
 
-/** @param {string} idBiome @param {number} score @returns {boolean} */
-export function sauvegarderRecordBiome(idBiome, score) {
+/** @param {string} idBiome @returns {number} */
+export function obtenirRecordNiveauBiome(idBiome) {
+    if (!BIOMES[idBiome]) return 1;
+    const brut = parseInt(lireStockage(`derniereLigne_recniv_${idBiome}`, '1'), 10);
+    return Number.isFinite(brut) && brut >= 1 ? brut : 1;
+}
+
+/** @param {string} idBiome @param {number} score @param {number} [niveauAtteint] @returns {boolean} */
+export function sauvegarderRecordBiome(idBiome, score, niveauAtteint = 1) {
     if (!BIOMES[idBiome] || !Number.isFinite(score) || score < 0) return false;
     const recordActuel = obtenirRecordBiome(idBiome);
     if (score > recordActuel) {
         ecrireStockage(`derniereLigne_record_${idBiome}`, Math.floor(score).toString());
+        const niv = Math.max(1, Math.floor(niveauAtteint) || 1);
+        ecrireStockage(`derniereLigne_recniv_${idBiome}`, String(niv));
         return true;
     }
     return false;

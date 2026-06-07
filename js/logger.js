@@ -71,17 +71,17 @@ export function obtenirJournalErreurs() {
 
 export const logger = {
     debug(...args) {
-        if (DEBUG) console.debug('[TetrisNeo]', ...formaterArgs(args));
+        if (DEBUG) console.debug('[DerniereLigne]', ...formaterArgs(args));
     },
     info(...args) {
-        if (DEBUG) console.info('[TetrisNeo]', ...formaterArgs(args));
+        if (DEBUG) console.info('[DerniereLigne]', ...formaterArgs(args));
     },
     warn(...args) {
-        console.warn('[TetrisNeo]', ...formaterArgs(args));
+        console.warn('[DerniereLigne]', ...formaterArgs(args));
         enregistrerErreurJournal('warn', args);
     },
     error(...args) {
-        console.error('[TetrisNeo]', ...formaterArgs(args));
+        console.error('[DerniereLigne]', ...formaterArgs(args));
         if (DEBUG) {
             const err = args.find((a) => a instanceof Error);
             if (err?.stack) console.error(err.stack);

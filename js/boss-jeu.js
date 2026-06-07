@@ -12,10 +12,47 @@ import {
     conditionsRuntime,
 } from './conditions-secrets.js';
 import { enregistrerVictoireBossTimer } from './achievements-histoire.js';
+import {
+    reagirRoboBossAttaque,
+    reagirRoboBossDegats,
+    reagirRoboBossVaincu,
+} from './mascotte-robo.js';
 
 export const COULEUR_BRAISE = '#cc2200';
 export const COULEUR_GLACE_B = '#aaeeff';
 export const DUREE_VICTOIRE_BOSS_MS = 2200;
+
+const TEXTES_MI_COMBAT = {
+    brasier: {
+        50: '🔥 IMPOSSIBLE. TU RÉSISTES ENCORE.',
+        25: '🔥 TOUT BRÛLE... MÊME LA DOUTE...',
+    },
+    sentinelle: {
+        50: '❄ CALCUL EN COURS. ADAPTATION NÉCESSAIRE.',
+        25: "❄ PROTOCOLE D'URGENCE... ACTIVÉ.",
+    },
+    archiviste: {
+        50: '⚠ MÉMOIRE_CORROMPUE : [37%] — REDÉMARRAGE PARTIEL',
+        25: '⚠ INTÉGRITÉ_SYSTÈME : CRITIQUE — 12% RESTANT',
+    },
+    avantgarde: {
+        50: '✦ TU AS SURVÉCU À TOUS LES AUTRES. BIEN.',
+        25: '✦ ELLE TE TESTAIT. JE TE TESTAIS. NOUS AVONS NOTRE RÉPONSE.',
+    },
+    distorsion: {
+        66: '∞ TU NE COMPRENDS PAS ENCORE.',
+        33: '∞ PEUT-ÊTRE QUE SI.',
+    },
+};
+
+/** @param {{ id?: string, attaqueIntervalleMs?: number }} boss */
+function _obtenirIntervalleAttaque(boss) {
+    const base = boss.attaqueIntervalleMs ?? 15000;
+    if (boss.id === 'distorsion' && store.histoire.boss.pv <= 12) {
+        return 9000;
+    }
+    return base;
+}
 
 /** @param {string} bossId */
 export function demarrerBoss(bossId) {
@@ -27,12 +64,14 @@ export function demarrerBoss(bossId) {
     store.histoire.boss.actif = boss;
     store.histoire.boss.pv = boss.pvMax;
     store.histoire.boss.phase = 0;
-    store.histoire.boss.timerAttaque = boss.attaqueIntervalleMs ?? 15000;
+    store.histoire.boss.timerAttaque = _obtenirIntervalleAttaque(boss);
     store.histoire.boss.timerAttaqueActive = 0;
     store.histoire.boss.vaincu = false;
     store.histoire.boss.timerVaincu = 0;
     store.histoire.boss.timerDebut = performance.now();
     store.histoire.boss.timerPortrait = 0;
+    store.histoire.boss._textesMiAffichés = new Set();
+    store.histoire.boss._flashAttaque = false;
     _reinitialiserMecaniques();
 
     _afficherSectionBoss(true);
@@ -45,6 +84,8 @@ export function demarrerBoss(bossId) {
 export function arreterBoss() {
     if (!store.histoire.boss.actif) return;
     _reinitialiserMecaniques();
+    store.histoire.boss._textesMiAffichés = null;
+    store.histoire.boss._flashAttaque = false;
     store.histoire.boss.actif = null;
     store.histoire.boss.pv = 0;
     store.histoire.boss.phase = 0;
@@ -107,7 +148,7 @@ export function mettreAJourBoss(dt) {
     store.histoire.boss.timerAttaque -= dt;
     if (store.histoire.boss.timerAttaque <= 0) {
         _exectuterAttaque();
-        store.histoire.boss.timerAttaque = boss.attaqueIntervalleMs ?? 15000;
+        store.histoire.boss.timerAttaque = _obtenirIntervalleAttaque(boss);
     }
 
     _verifierPhase();
@@ -129,6 +170,7 @@ export function endommagerBoss(nbLignes) {
     if (!store.histoire.boss.actif || store.histoire.boss.vaincu) return;
     store.histoire.boss.pv = Math.max(0, store.histoire.boss.pv - nbLignes);
     _mettreAJourHPBar();
+    reagirRoboBossDegats();
 
     if (store.histoire.boss.pv <= 0) {
         _declencherVictoireBoss();
@@ -146,6 +188,7 @@ function _declencherVictoireBoss() {
     const boss = store.histoire.boss.actif;
     const texte = boss?.texteDefaite ?? boss?.texteDefaite_normal ?? 'Défaite...';
     _afficherTexteBoss(texte);
+    reagirRoboBossVaincu();
 
     for (let i = 0; i < 20; i++) {
         const x = Math.floor(Math.random() * CONFIG.colonnes);
@@ -163,6 +206,12 @@ function _declencherVictoireBoss() {
 
 function _exectuterAttaque() {
     if (!store.histoire.boss.actif || store.histoire.boss.vaincu) return;
+    store.histoire.boss._flashAttaque = true;
+    reagirRoboBossAttaque();
+    setTimeout(() => {
+        if (store.histoire.boss.actif) store.histoire.boss._flashAttaque = false;
+    }, 280);
+
     const boss = store.histoire.boss.actif;
     const phase = _obtenirPhaseActuelle();
     const typeAttaque = phase?.attaqueType ?? boss.attaqueType;
@@ -293,11 +342,30 @@ export function obtenirFauxFantomeActif() {
 
 function _verifierPhase() {
     const boss = store.histoire.boss.actif;
-    if (!boss?.phases) return;
+    if (!boss) return;
+
+    const pctRestant = (store.histoire.boss.pv / boss.pvMax) * 100;
+    const textesMi = TEXTES_MI_COMBAT[boss.id];
+    if (textesMi && !store.histoire.boss._textesMiAffichés) {
+        store.histoire.boss._textesMiAffichés = new Set();
+    }
+    if (textesMi) {
+        for (const [seuilStr, texte] of Object.entries(textesMi)) {
+            const seuil = Number(seuilStr);
+            if (pctRestant <= seuil && !store.histoire.boss._textesMiAffichés.has(seuil)) {
+                store.histoire.boss._textesMiAffichés.add(seuil);
+                _afficherTexteBoss(texte);
+                if (!AudioMoteur.muet) AudioMoteur.son('rotation');
+            }
+        }
+    }
+
+    if (!boss.phases) return;
+
     for (let i = boss.phases.length - 1; i >= 0; i--) {
         const phase = boss.phases[i];
-        const seuil = phase.pvSeuil ?? boss.pvMax;
-        if (store.histoire.boss.pv <= seuil && store.histoire.boss.phase < i) {
+        const seuilPhase = phase.pvSeuil ?? boss.pvMax;
+        if (store.histoire.boss.pv <= seuilPhase && store.histoire.boss.phase < i) {
             store.histoire.boss.phase = i;
             _afficherTexteBoss('⚠ NOUVELLE PHASE');
             if (!AudioMoteur.muet) AudioMoteur.son('niveau');

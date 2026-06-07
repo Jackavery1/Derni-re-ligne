@@ -1,30 +1,34 @@
 import { lireStockage, ecrireStockage } from './progression.js';
-import { afficherEcran } from './ecrans-ui.js';
-import { ECRANS } from './ecrans-config.js';
 
 const CLES = {
-    accueil: 'derniereLigne_tutorielVu',
-    histoire: 'derniereLigne_tutorielHistoireVu',
+    prologue: 'derniereLigne_tutorielHistoireVu',
     coop: 'derniereLigne_tutorielCoopVu',
     architecte: 'derniereLigne_tutorielArchitecteVu',
 };
 
-/** @type {Record<string, { titre: string, lignes: string[] }>} */
+/** @type {{ titre: string, lignes: string[] }} */
+const CONTENU_PROLOGUE = {
+    titre: 'BIENVENUE DANS DERNIÈRE LIGNE',
+    lignes: [
+        'Parcourez la carte des mondes au clavier via la liste de sélection ou à la souris sur la carte.',
+        "Suivez l'histoire de ROBO contre son ennemi juré à travers les différents mondes où ils s'affronteront.",
+        'Aidez-le à atteindre son objectif et surtout… Amusez-vous !',
+    ],
+};
+
+/** @type {{ touche: string, action: string }[]} */
+const CONTROLES_CLAVIER = [
+    { touche: '← →', action: 'Déplacer' },
+    { touche: '↑ / Z', action: 'Tourner (horaire)' },
+    { touche: 'X', action: 'Tourner (anti-horaire)' },
+    { touche: '↓', action: 'Chute lente' },
+    { touche: 'ESPACE', action: 'Chute rapide' },
+    { touche: 'C / ⇧', action: 'Réserve (hold)' },
+    { touche: 'P / Échap', action: 'Pause' },
+];
+
+/** @type {Record<'coop' | 'architecte', { titre: string, lignes: string[] }>} */
 const CONTENUS = {
-    accueil: {
-        titre: 'BIENVENUE DANS DERNIÈRE LIGNE',
-        lignes: [
-            'Déplacez les pièces avec les flèches, tournez avec Z/X, chute rapide avec Espace, hold avec C ou Maj. Pause : P ou Échap.',
-            'Choisissez Marathon ou Sprint, explorez les biomes, ou lancez le Mode Histoire depuis le menu.',
-        ],
-    },
-    histoire: {
-        titre: 'MODE HISTOIRE',
-        lignes: [
-            'Parcourez la carte des mondes au clavier via la liste de sélection ou à la souris sur la carte.',
-            'Atteignez l’objectif de lignes indiqué pour compléter un monde et débloquer la suite de la campagne.',
-        ],
-    },
     coop: {
         titre: 'MODE COOPÉRATIF',
         lignes: [
@@ -49,9 +53,12 @@ function marquerTutorielVu(cle) {
     ecrireStockage(cle, '1');
 }
 
-function remplirContenu(contenu) {
+/** @param {{ titre: string, lignes: string[] }} contenu @param {boolean} [avecControles] */
+function remplirContenu(contenu, avecControles = false) {
     const titre = document.getElementById('tutoriel-titre');
     const corps = document.getElementById('tutoriel-corps');
+    const blocControles = document.getElementById('tutoriel-controles');
+
     if (titre) titre.textContent = contenu.titre;
     if (corps) {
         corps.replaceChildren();
@@ -62,15 +69,74 @@ function remplirContenu(contenu) {
             corps.appendChild(p);
         }
     }
+
+    if (blocControles) {
+        blocControles.replaceChildren();
+        if (avecControles) {
+            blocControles.classList.remove('element-masque');
+            const intro = document.createElement('p');
+            intro.className = 'tutoriel-controles-intro';
+            intro.textContent = 'CONTRÔLES';
+            blocControles.appendChild(intro);
+
+            const dl = document.createElement('dl');
+            dl.className = 'guide guide-options tutoriel-guide';
+            for (const { touche, action } of CONTROLES_CLAVIER) {
+                const dt = document.createElement('dt');
+                dt.textContent = touche;
+                const dd = document.createElement('dd');
+                dd.textContent = action;
+                dl.appendChild(dt);
+                dl.appendChild(dd);
+            }
+            blocControles.appendChild(dl);
+
+            const mobile = document.createElement('p');
+            mobile.className = 'tutoriel-controles-mobile';
+            mobile.textContent =
+                'Sur mobile : boutons tactiles en bas de l’écran et swipe sur le plateau.';
+            blocControles.appendChild(mobile);
+        } else {
+            blocControles.classList.add('element-masque');
+        }
+    }
 }
 
-function fermerTutoriel(cleStockage) {
+function fermerTutoriel(cleStockage, onFermer) {
     marquerTutorielVu(cleStockage);
     document.getElementById('overlay-tutoriel')?.classList.add('element-masque');
+    onFermer?.();
 }
 
 /**
- * @param {'accueil' | 'histoire' | 'coop' | 'architecte'} contexte
+ * Tutoriel d’accueil histoire : après la première cutscene du prologue, avant la partie.
+ * @param {() => void} [onCompris]
+ */
+export function afficherTutorielPrologueApresCutscene(onCompris) {
+    const cle = CLES.prologue;
+    if (tutorielDejaVu(cle)) {
+        onCompris?.();
+        return;
+    }
+
+    const overlay = document.getElementById('overlay-tutoriel');
+    if (!overlay) {
+        onCompris?.();
+        return;
+    }
+
+    remplirContenu(CONTENU_PROLOGUE, true);
+    overlay.classList.remove('element-masque');
+
+    const btnFermer = document.getElementById('btn-tutoriel-fermer');
+    if (btnFermer) {
+        btnFermer.textContent = 'COMPRIS — COMMENCER';
+        btnFermer.onclick = () => fermerTutoriel(cle, onCompris);
+    }
+}
+
+/**
+ * @param {'coop' | 'architecte'} contexte
  */
 export function afficherTutorielContextuel(contexte) {
     const cle = CLES[contexte];
@@ -80,23 +146,14 @@ export function afficherTutorielContextuel(contexte) {
     const overlay = document.getElementById('overlay-tutoriel');
     if (!overlay) return;
 
-    remplirContenu(contenu);
+    remplirContenu(contenu, false);
     overlay.classList.remove('element-masque');
 
     const btnFermer = document.getElementById('btn-tutoriel-fermer');
-    const btnOptions = document.getElementById('btn-tutoriel-options');
     if (btnFermer) {
+        btnFermer.textContent = 'COMPRIS';
         btnFermer.onclick = () => fermerTutoriel(cle);
-    }
-    if (btnOptions) {
-        btnOptions.onclick = () => {
-            fermerTutoriel(cle);
-            afficherEcran(ECRANS.OPTIONS);
-            document.getElementById('tab-controles')?.click();
-        };
     }
 }
 
-export function initialiserTutoriel() {
-    afficherTutorielContextuel('accueil');
-}
+export function initialiserTutoriel() {}

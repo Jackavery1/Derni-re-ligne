@@ -6,6 +6,7 @@ import {
     terminerPartieCourante,
     filtrerViolationsCritiques,
     preparerPageSansSw,
+    attendreApplicationPrete,
 } from './helpers.mjs';
 
 test('aucune bannière erreur au démarrage', async ({ page }) => {
@@ -61,6 +62,7 @@ test('interface jeu sans violations accessibilité critiques', async ({ page }) 
 test('options affiche l’onglet contrôles', async ({ page }) => {
     await preparerPageSansSw(page);
     await page.goto('/');
+    await attendreApplicationPrete(page);
     await page.locator('#btn-options').click();
     await expect(page.locator('#ecran-options')).toHaveClass(/actif/);
     await page.locator('#tab-controles').click();
@@ -88,6 +90,7 @@ test('game over affiche l écran dédié', async ({ page }) => {
 test('options respecte le contraste des couleurs', async ({ page }) => {
     await preparerPageSansSw(page);
     await page.goto('/');
+    await attendreApplicationPrete(page);
     await page.locator('#btn-options').click();
     const result = await new AxeBuilder({ page }).include('#ecran-options').analyze();
     expect(filtrerViolationsCritiques(result.violations, { inclureContraste: true })).toEqual([]);

@@ -60,17 +60,31 @@ export async function preparerPageSansSw(page, etatHistoire = ETAT_DEBLOCAGE_MON
 }
 
 /** @param {import('@playwright/test').Page} page */
+export async function attendreApplicationPrete(page) {
+    await expect(page.locator('body')).toHaveAttribute('data-neo-test-ready', '1', {
+        timeout: 15000,
+    });
+}
+
+/** @param {import('@playwright/test').Page} page */
 export async function attendreEcranTitre(page) {
+    await attendreApplicationPrete(page);
     await expect(page.locator('#ecran-titre')).toHaveClass(/actif/, { timeout: 15000 });
+}
+
+/** @param {import('@playwright/test').Page} page @param {{ index?: number, value?: string }} option */
+export async function selectionnerBiomeClavier(page, option = { index: 1 }) {
+    await page.locator('#sel-biome-clavier').selectOption(option, { force: true });
 }
 
 /** @param {import('@playwright/test').Page} page */
 export async function demarrerPartie(page) {
     await preparerPageSansSw(page);
     await page.goto('/');
+    await attendreApplicationPrete(page);
     await page.locator('#btn-jouer').click();
-    await expect(page.locator('#sel-biome-clavier')).toBeVisible();
-    await page.locator('#sel-biome-clavier').selectOption({ index: 1 });
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    await selectionnerBiomeClavier(page, { index: 1 });
     await page.locator('#sel-btn-jouer').click();
     await expect(page.locator('#interface-jeu')).toBeVisible();
     await expect(page.locator('#canvas-plateau')).toBeVisible();
@@ -115,13 +129,14 @@ export async function ouvrirCarteHistoire(page, etatHistoire = ETAT_HISTOIRE_BOS
         localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
     }, etatHistoire);
     await page.goto('/');
+    await attendreApplicationPrete(page);
     await page.locator('#btn-mode-histoire').click();
     await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/);
 }
 
 /** @param {import('@playwright/test').Page} page */
 export async function lancerMondeBossBrasier(page) {
-    await page.locator('#histoire-monde-clavier').selectOption('monde_boss_1');
+    await page.locator('#histoire-monde-clavier').selectOption('monde_boss_1', { force: true });
     await page.locator('.bouton-jouer-monde').click();
     await expect(page.locator('#interface-jeu')).toBeVisible({ timeout: 10000 });
     await expect(page.locator('#canvas-plateau')).toBeVisible();
@@ -135,9 +150,10 @@ export async function demarrerPartieViaClavier(page) {
     if (await fermerTutoriel.isVisible().catch(() => false)) {
         await fermerTutoriel.click();
     }
+    await attendreApplicationPrete(page);
     await page.locator('#btn-jouer').click();
-    await expect(page.locator('#sel-biome-clavier')).toBeVisible({ timeout: 10000 });
-    await page.locator('#sel-biome-clavier').selectOption({ index: 1 });
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    await selectionnerBiomeClavier(page, { index: 1 });
     await page.locator('#sel-btn-jouer').click();
     await expect(page.locator('#interface-jeu')).toBeVisible();
     await expect(page.locator('#canvas-plateau')).toBeVisible();
@@ -147,10 +163,11 @@ export async function demarrerPartieViaClavier(page) {
 export async function demarrerPartieCoop(page) {
     await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
     await page.goto('/');
+    await attendreApplicationPrete(page);
     await page.locator('#btn-jouer').click();
     await page.locator('#toggle-coop').click();
-    await expect(page.locator('#sel-biome-clavier')).toBeVisible();
-    await page.locator('#sel-biome-clavier').selectOption({ index: 1 });
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    await selectionnerBiomeClavier(page, { index: 1 });
     await page.locator('#sel-btn-jouer').click();
     await expect(page.locator('#interface-jeu-coop')).toBeVisible({ timeout: 5000 });
 }

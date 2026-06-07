@@ -1,6 +1,7 @@
 import {
     CUTSCENES_ENTREE,
     CUTSCENES_VICTOIRE_BOSS,
+    CUTSCENES_POST_MONDE,
     TRANSITIONS_CHAPITRE,
     EPILOGUES,
     DECOUVERTE_LABO,
@@ -152,4 +153,21 @@ function _formaterLignes(lignesRaw) {
 
 function _extrairePersonnages(lignesRaw) {
     return lignesRaw.map((l) => l.personnage ?? 'narrateur');
+}
+
+/**
+ * Retourne la cutscene post-monde pour un monde donné (ou null).
+ * Utilisé après un monde normal complété (pas boss).
+ * @param {string} mondeId
+ * @param {boolean} premiereCompletion
+ * @returns {{ lignes: string[], personnages: string[] } | null}
+ */
+export function obtenirCutscenePostMonde(mondeId, premiereCompletion) {
+    if (!premiereCompletion) return null;
+    const lignesRaw = CUTSCENES_POST_MONDE[mondeId];
+    if (!lignesRaw?.length) return null;
+    return {
+        lignes: _formaterLignes(lignesRaw),
+        personnages: _extrairePersonnages(lignesRaw),
+    };
 }

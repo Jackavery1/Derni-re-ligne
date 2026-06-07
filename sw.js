@@ -1,4 +1,4 @@
-const VERSION_CACHE = 'derniere-ligne-2.5.0';
+const VERSION_CACHE = 'derniere-ligne-2.5.1';
 
 const FICHIERS_A_CACHER = [
     './',
@@ -10,6 +10,8 @@ const FICHIERS_A_CACHER = [
     './icon-512.png',
     './icon-maskable.png',
     './fonts/PressStart2P-Regular.ttf',
+    './img/robo-accueil.png',
+    './img/robo-favicon.png',
     './html/controles.html',
     './html/ecran-achievements.html',
     './html/ecran-archi-resultat.html',
@@ -65,6 +67,7 @@ const FICHIERS_A_CACHER = [
     './js/coop-jeu.js',
     './js/coop-logique.js',
     './js/coop-rendu.js',
+    './js/deblocage-ui.js',
     './js/decorations-jeu.js',
     './js/dom-utils.js',
     './js/ecrans-config.js',
@@ -75,6 +78,7 @@ const FICHIERS_A_CACHER = [
     './js/histoire-donnees.js',
     './js/histoire-etat.js',
     './js/histoire-illustrations.js',
+    './js/histoire-intro.js',
     './js/histoire-manager-completion.js',
     './js/histoire-manager-ui.js',
     './js/histoire-manager.js',
@@ -90,6 +94,7 @@ const FICHIERS_A_CACHER = [
     './js/logique-partie.js',
     './js/logique-pure.js',
     './js/main.js',
+    './js/mascotte-robo.js',
     './js/mecaniques-histoire.js',
     './js/melodie.js',
     './js/menu-fond.js',
@@ -104,6 +109,8 @@ const FICHIERS_A_CACHER = [
     './js/particules-jeu.js',
     './js/partie.js',
     './js/piece-jeu.js',
+    './js/portraits-cutscene.js',
+    './js/portraits-vera.js',
     './js/profil-jeu.js',
     './js/profil-rendu.js',
     './js/progression.js',
@@ -120,6 +127,7 @@ const FICHIERS_A_CACHER = [
     './js/rendu-jeu.js',
     './js/rendu-plateau.js',
     './js/rendu-previews.js',
+    './js/rendu-robo.js',
     './js/rendu-vivant.js',
     './js/store-core.js',
     './js/store-etat-partie.js',
@@ -183,10 +191,12 @@ self.addEventListener('fetch', (evenement) => {
 
     const url = new URL(evenement.request.url);
     const estModuleJeu = url.pathname.includes('/js/') && /\.js$/.test(url.pathname);
+    const estHtmlOuCss = /\.(html|css)$/.test(url.pathname);
 
     evenement.respondWith(
         chercherDansCache(evenement.request).then((reponseCache) => {
-            if (reponseCache && (!estModuleJeu || !navigator.onLine)) {
+            const prefererReseau = (estModuleJeu || estHtmlOuCss) && navigator.onLine;
+            if (reponseCache && !prefererReseau) {
                 return reponseCache;
             }
 

@@ -166,7 +166,7 @@ function supprimerLignesCompletes() {
  * @param {number} nbLignes
  */
 export function appliquerScoreLignes(etatPartie, nbLignes) {
-    const points = calculerPointsLignes(nbLignes, etatPartie.niveau);
+    let points = 0;
     let levelUp = false;
     let tetris = false;
     let backToBack = false;
@@ -181,6 +181,14 @@ export function appliquerScoreLignes(etatPartie, nbLignes) {
             etatPartie.dernierEtaitTetris = true;
         } else {
             etatPartie.dernierEtaitTetris = false;
+        }
+
+        points = calculerPointsLignes(nbLignes, etatPartie.niveau);
+        if (etatPartie.combo >= 2) {
+            points = Math.floor(points * (1 + 0.25 * (etatPartie.combo - 1)));
+        }
+        if (backToBack) {
+            points = Math.floor(points * 1.5);
         }
     }
 

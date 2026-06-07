@@ -3,6 +3,7 @@ import {
     calculerPointsProgression,
     biomeEstDebloque,
     calculerEtoiles,
+    obtenirRecordNiveauBiome,
     formaterEtoiles,
     chargerBiomeActif,
     chargerNiveauGlobal,
@@ -52,6 +53,15 @@ describe('progression', () => {
 
     it('Étoiles : palier 3', () => {
         expect(calculerEtoiles(15000)).toBe(3);
+    });
+
+    it('Étoiles : paliers montent avec le niveau atteint', () => {
+        expect(calculerEtoiles(15000, 10)).toBe(1);
+        expect(calculerEtoiles(150000, 10)).toBe(3);
+    });
+
+    it('Record niveau : valeur par défaut', () => {
+        expect(obtenirRecordNiveauBiome('classique')).toBe(1);
     });
 
     it('Format étoiles 3 pleines', () => {

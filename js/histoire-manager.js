@@ -15,6 +15,7 @@ import { logger } from './logger.js';
 import { arreterBoss } from './boss-jeu.js';
 import { paradoxeEstDebloque, demarrerParadoxe } from './monde-paradoxe.js';
 import { arreterFondFin } from './fin-bg-rendu.js';
+import { afficherTutorielPrologueApresCutscene } from './tutoriel.js';
 import { afficherBoutonCarteGameOver, afficherCutsceneHistoire } from './histoire-manager-ui.js';
 import { surFinDeMondeHistoire } from './histoire-manager-completion.js';
 
@@ -129,11 +130,20 @@ export function demarrerMondeHistoire(mondeId) {
             sauvegarderEtatHistoire(etat);
         }
         afficherCutsceneHistoire(cutscene.lignes, cutscene.personnages, () =>
-            _lancerPartieHistoire(monde)
+            _apresPresentationMonde(monde)
         );
     } else {
-        _lancerPartieHistoire(monde);
+        _apresPresentationMonde(monde);
     }
+}
+
+/** @param {typeof SEQUENCE_HISTOIRE[number]} monde */
+function _apresPresentationMonde(monde) {
+    if (monde.id === 'monde_prologue') {
+        afficherTutorielPrologueApresCutscene(() => _lancerPartieHistoire(monde));
+        return;
+    }
+    _lancerPartieHistoire(monde);
 }
 
 /** @param {typeof SEQUENCE_HISTOIRE[number]} monde */

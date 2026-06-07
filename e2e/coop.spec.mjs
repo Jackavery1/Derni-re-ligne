@@ -4,6 +4,7 @@ import {
     demarrerPartieCoop,
     filtrerViolationsCritiques,
     preparerPageSansSw,
+    attendreApplicationPrete,
     ETAT_DEBLOCAGE_COMPLET,
 } from './helpers.mjs';
 
@@ -28,6 +29,7 @@ test('partie coop affiche le plateau partagé', async ({ page }) => {
 test('codex accessible depuis le menu', async ({ page }) => {
     await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
     await page.goto('/');
+    await attendreApplicationPrete(page);
     await page.locator('#btn-codex').click();
     await expect(page.locator('#ecran-codex')).toHaveClass(/actif/);
     await expect(page.locator('#ecran-codex .codex-contenu')).toBeVisible();

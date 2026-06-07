@@ -164,7 +164,7 @@ export const METEO_BIOMES = {
         alerte: 'CORRUPTION DÉTECTÉE',
         actif: 'CONTRÔLES INVERSÉS',
         couleur: '#ff00ff',
-        duree: 9000,
+        duree: 7000,
         effet: 'inversion',
     },
     fuochi: {

@@ -36,7 +36,13 @@ Format [Conventional Commits](https://www.conventionalcommits.org/) :
 
 Release : `npm run release` puis tag `vX.Y.Z`.
 
-## Documentation
+Rollback déploiement : revert du commit sur `main`, push, le workflow `deploy.yml` republie la version précédente.
+
+Politique branches : `main` (stable, déployée), branches `feat/*` / `fix/*` pour le développement.
+
+## Dépendances
+
+**Zéro dépendance runtime** — ne pas ajouter de package npm en production sans justification écrite.
 
 - [docs/architecture.md](docs/architecture.md)
 - [docs/mode-histoire.md](docs/mode-histoire.md)

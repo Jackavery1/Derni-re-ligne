@@ -8,7 +8,7 @@ import { basculerOracle } from './oracle-jeu.js';
 import { basculerModeCoop } from './coop-jeu.js';
 import { archi_afficherSelection } from './archi-jeu.js';
 import { afficherTutorielContextuel } from './tutoriel.js';
-import { obtenirEtatDeblocage } from './progression.js';
+import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 
 export function initialiserBoutonsNavigation() {
     document
@@ -19,8 +19,21 @@ export function initialiserBoutonsNavigation() {
         archi_afficherSelection();
     });
     document.getElementById('btn-mode-histoire')?.addEventListener('click', () => {
-        afficherTutorielContextuel('histoire');
-        afficherEcran(ECRANS.HISTOIRE_MAP);
+        void import('./histoire-intro.js').then(
+            ({ introHistoireDejaVue, marquerIntroHistoireVue, obtenirSequenceIntro }) => {
+                if (!introHistoireDejaVue()) {
+                    marquerIntroHistoireVue();
+                    void import('./histoire-manager.js').then(({ afficherCutsceneHistoire }) => {
+                        const seq = obtenirSequenceIntro();
+                        afficherCutsceneHistoire(seq.lignes, seq.personnages, () => {
+                            afficherEcran(ECRANS.HISTOIRE_MAP);
+                        });
+                    });
+                } else {
+                    afficherEcran(ECRANS.HISTOIRE_MAP);
+                }
+            }
+        );
     });
     document
         .getElementById('btn-achievements')
@@ -93,37 +106,5 @@ export function initialiserBoutonsNavigation() {
         });
     });
 
-    initialiserVerrouillageMenu();
-}
-
-function initialiserVerrouillageMenu() {
-    const deblocage = obtenirEtatDeblocage();
-
-    const boutonsConditionnes = [
-        { id: 'btn-jouer', debloque: deblocage.mondeLibre },
-        { id: 'btn-architecte', debloque: deblocage.architecte },
-        { id: 'btn-codex', debloque: deblocage.codex },
-        { id: 'btn-profil', debloque: deblocage.profil },
-        { id: 'btn-achievements', debloque: deblocage.achievements },
-    ];
-
-    boutonsConditionnes.forEach(({ id, debloque }) => {
-        const btn = document.getElementById(id);
-        if (!btn) return;
-
-        if (!debloque) {
-            btn.classList.add('btn-verrouille');
-            btn.setAttribute('aria-disabled', 'true');
-            btn.addEventListener(
-                'click',
-                (e) => {
-                    e.stopImmediatePropagation();
-                    e.preventDefault();
-                    btn.classList.add('btn-verrouille--actif');
-                    setTimeout(() => btn.classList.remove('btn-verrouille--actif'), 2000);
-                },
-                true
-            );
-        }
-    });
+    mettreAJourVisibiliteModesDebloques();
 }

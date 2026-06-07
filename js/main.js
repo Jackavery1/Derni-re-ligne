@@ -24,6 +24,9 @@ async function demarrer() {
     }
 
     try {
+        if (document.fonts?.ready) {
+            await document.fonts.ready;
+        }
         initialiserApplication();
     } catch (err) {
         logger.error('Échec initialisation moteur:', err);

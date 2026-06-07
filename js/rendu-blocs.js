@@ -43,7 +43,7 @@ const RENDERERS = {
 };
 
 export function dessinerCelluleStyle(ctx2d, x, y, couleur, taille, opacite, biomeId, preferences) {
-    const { effetsReduits } = preferences;
+    const { effetsReduits, sansOmbreExterne } = preferences;
     const px = x * taille;
     const py = y * taille;
 
@@ -60,7 +60,7 @@ export function dessinerCelluleStyle(ctx2d, x, y, couleur, taille, opacite, biom
     }
 
     const style = BIOMES[biomeId]?.styleBloc ?? 'biseaute';
-    const sansOmbre = opacite < 1;
+    const sansOmbre = opacite < 1 || sansOmbreExterne === true;
     const renderer = RENDERERS[style] ?? RENDERERS.biseaute;
     renderer(ctx2d, x, y, couleur, taille, opacite, sansOmbre, preferences);
 }

@@ -17,6 +17,21 @@ export function initialiserBoutonsHistoire() {
     document.getElementById('btn-histoire-carte')?.addEventListener('click', retournerACarte);
     document.getElementById('btn-cutscene-suivant')?.addEventListener('click', avancerCutscene);
     document.getElementById('btn-cutscene-passer')?.addEventListener('click', passerCutscene);
+
+    document.getElementById('ecran-histoire-cutscene')?.addEventListener('click', (e) => {
+        if (e.target instanceof HTMLElement && !e.target.closest('.cutscene-controles')) {
+            avancerCutscene();
+        }
+    });
+    document.addEventListener('keydown', (e) => {
+        const ecranCutscene = document.getElementById('ecran-histoire-cutscene');
+        if (!ecranCutscene?.classList.contains('actif')) return;
+        if (e.code === 'Space' || e.code === 'Enter') {
+            e.preventDefault();
+            avancerCutscene();
+        }
+        if (e.code === 'Escape') passerCutscene();
+    });
     document.getElementById('btn-journal-fermer')?.addEventListener('click', fermerJournalHistoire);
     document.getElementById('btn-fin-menu')?.addEventListener('click', () => {
         arreterFondFin();

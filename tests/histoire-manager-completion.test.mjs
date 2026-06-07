@@ -17,6 +17,7 @@ vi.mock('../js/histoire-narratif.js', () => ({
     obtenirTypeFin: vi.fn(() => 'normal'),
     typeFinVersCleBoss: vi.fn(() => 'normal'),
     afficherDecouverteLabo: vi.fn((_cb) => {}),
+    obtenirCutscenePostMonde: vi.fn(() => null),
 }));
 
 describe('histoire-manager-completion', () => {
@@ -33,13 +34,13 @@ describe('histoire-manager-completion', () => {
     });
 
     it('expose les seuils de completion par biome', () => {
-        expect(SEUILS_COMPLETION.classique).toBe(6);
+        expect(SEUILS_COMPLETION.classique).toBe(8);
         expect(SEUILS_COMPLETION.lave).toBe(10);
         expect(SEUILS_COMPLETION.miroir).toBe(12);
     });
 
     it('marque le monde complété quand le seuil de lignes est atteint', () => {
-        surFinDeMondeHistoire(6, 1200);
+        surFinDeMondeHistoire(8, 1200);
         expect(store.histoire.etat.mondesCompletes).toContain('monde_prologue');
     });
 

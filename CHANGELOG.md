@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version   | Date       | En bref                                                                                |
 | --------- | ---------- | -------------------------------------------------------------------------------------- |
+| **2.5.1** | 2026-06-07 | Corrections audit : ROBO canvas, portraits cutscene, CSP fonts, versions alignées      |
 | **2.5.0** | 2026-06-05 | Mode Architecte, coop, bundle prod, rendu découpé, CI renforcée, couverture étendue    |
 | **2.4.2** | 2026-06-05 | Docs minimalistes + tableau d'évolution, tests, debug `?debug=1`, versions SW alignées |
 | **2.4.1** | 2026-06-05 | `moteur.js` découpé en 14 modules, E2E pause/options, ESLint propre                    |
@@ -16,6 +17,16 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.0.0** | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                          |
 
 ---
+
+## [2.5.1] — 2026-06-07
+
+- Mascotte ROBO en canvas 2D (`rendu-robo.js`) avec 5 expressions animées
+- Portraits cutscene extraits (`portraits-cutscene.js`) pour tous les personnages histoire
+- Alignement versions package / HTML / SW ; cache PWA inclut `img/` dynamiquement
+- CSP durcie : polices self-hosted uniquement (suppression Google Fonts)
+- Logger renommé `[DerniereLigne]` ; try/catch sur boucles RAF canvas
+- Helper `retournerAuMenuTitre()` ; hook Conventional Commits (commit-msg)
+- Tests : `rendu-robo`, cohérence portraits histoire ; couverture Vitest étendue
 
 ## [2.5.0] — 2026-06-05
 

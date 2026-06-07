@@ -3,12 +3,12 @@
 Jeu de Tetris narratif en Vanilla JS + Canvas 2D. PWA jouable hors-ligne.
 Mode Arcade et Mode Histoire « La Fragmentation ».
 
-**Version actuelle : 2.5.0** — voir [CHANGELOG.md](CHANGELOG.md) pour l'historique complet.
+**Version actuelle : 2.5.1** — voir [CHANGELOG.md](CHANGELOG.md) pour l'historique complet.
 
 ## Le jeu
 
 - Mécaniques : hold, ghost, NEXT×3, 7-bag, SRS, DAS/ARR, lock delay
-- Modes Marathon et Sprint (40 lignes)
+- Mode Marathon (partie infinie, records par biome)
 - **Mode Coop** : deux joueurs sur un plateau partagé
 - **Mode Architecte** : 17 puzzles de placement sans gravité automatique
 - 9 biomes (couleurs, musique, reliques, météo), progression et records par biome
@@ -76,6 +76,8 @@ moteur.js
 ├── coop-jeu.js           mode coop 2 joueurs
 ├── archi-jeu.js          mode Architecte (puzzles)
 ├── histoire-manager.js   campagne narrative
+├── portraits-cutscene.js portraits canvas animés (cutscenes)
+├── rendu-robo.js         mascotte ROBO canvas in-game
 ├── boss-jeu.js           combats boss
 ├── mecaniques-histoire.js biomes spéciaux (rouille, éclipse…)
 ├── conditions-secrets.js mondes cachés

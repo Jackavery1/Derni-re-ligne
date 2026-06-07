@@ -1,3 +1,6 @@
+import { beforeEach } from 'vitest';
+import { reinitialiserBusJeu } from '../js/bus-jeu.js';
+
 const stockage = new Map();
 
 globalThis.localStorage = {
@@ -14,6 +17,11 @@ globalThis.localStorage = {
         stockage.clear();
     },
 };
+
+beforeEach(() => {
+    stockage.clear();
+    reinitialiserBusJeu();
+});
 
 globalThis.window = globalThis.window ?? globalThis;
 globalThis.document = globalThis.document ?? {
