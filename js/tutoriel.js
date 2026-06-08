@@ -111,8 +111,10 @@ function activerFocusTrap(overlay) {
     desactiverFocusTrap?.();
     const selecteur =
         'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-    const focusables = [...overlay.querySelectorAll(selecteur)].filter(
-        (el) => el instanceof HTMLElement && el.offsetParent !== null
+    const focusables = /** @type {HTMLElement[]} */ (
+        [...overlay.querySelectorAll(selecteur)].filter(
+            (el) => el instanceof HTMLElement && el.offsetParent !== null
+        )
     );
     const first = focusables[0];
     const last = focusables[focusables.length - 1];
