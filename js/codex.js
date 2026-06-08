@@ -2,6 +2,7 @@ import { statsGlobales } from './achievements.js';
 import { lireStockageJson, ecrireStockageJson, estTableauIds } from './progression.js';
 import { creerFileNotifications } from './notifications-file.js';
 import { obtenirCanvas } from './dom-utils.js';
+import { logger } from './logger.js';
 
 const CLE_CODEX = 'derniereLigne_codex';
 const CLE_CODEX_VUS = 'derniereLigne_codexVus';
@@ -14,10 +15,19 @@ let promesseCodex = null;
 export async function chargerDonneesCodex() {
     if (codexDonnees) return codexDonnees;
     if (!promesseCodex) {
-        promesseCodex = import('./codex-donnees.js').then((module) => {
-            codexDonnees = module.CODEX;
-            return codexDonnees;
-        });
+        promesseCodex = fetch('./data/codex-donnees.json')
+            .then(async (reponse) => {
+                if (!reponse.ok) {
+                    throw new Error('Impossible de charger data/codex-donnees.json');
+                }
+                const json = await reponse.json();
+                codexDonnees = json.CODEX;
+                return codexDonnees;
+            })
+            .catch((err) => {
+                promesseCodex = null;
+                throw err;
+            });
     }
     return promesseCodex;
 }
@@ -72,17 +82,21 @@ function sauvegarderCodexVus() {
 }
 
 export async function verifierCodex() {
-    const CODEX = await chargerDonneesCodex();
-    let nouveaux = 0;
-    for (const [, entree] of Object.entries(CODEX)) {
-        if (codexDebloque.has(entree.id)) continue;
-        if (!entree.condition(statsGlobales)) continue;
-        codexDebloque.add(entree.id);
-        fileCodexNotifs.ajouter(entree);
-        nouveaux++;
-    }
-    if (nouveaux > 0) {
-        sauvegarderCodex();
+    try {
+        const CODEX = await chargerDonneesCodex();
+        let nouveaux = 0;
+        for (const [, entree] of Object.entries(CODEX)) {
+            if (codexDebloque.has(entree.id)) continue;
+            if (!entree.condition(statsGlobales)) continue;
+            codexDebloque.add(entree.id);
+            fileCodexNotifs.ajouter(entree);
+            nouveaux++;
+        }
+        if (nouveaux > 0) {
+            sauvegarderCodex();
+        }
+    } catch (err) {
+        logger.warn('[codex] vérification impossible :', err);
     }
 }
 

@@ -3,7 +3,7 @@ import { store } from './store-core.js';
 import { etat, obtenirBiomeActif } from './store-jeu.js';
 import { ecouter } from './bus-jeu.js';
 import { logger } from './logger.js';
-import { obtenirEtatHistoire, sauvegarderEtatHistoireStore } from './histoire-manager.js';
+import { obtenirEtatHistoire, sauvegarderEtatHistoireStore } from './histoire-mondes.js';
 import { verifierConditionMiroir, verifierConditionC3 } from './conditions-secrets.js';
 import { ajouterBlocksRouillesEffaces } from './achievements-histoire.js';
 

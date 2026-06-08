@@ -3,7 +3,6 @@ import { logger } from './logger.js';
 import { FINS, ETAT_HISTOIRE_VIDE } from './histoire-donnees.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
 import { ECRANS } from './ecrans-config.js';
-import { afficherEcran } from './navigation-ecrans.js';
 import { demarrerFondFin } from './fin-bg-rendu.js';
 import { verifierAchievements, statsGlobales, sauvegarderStats } from './achievements.js';
 
@@ -38,7 +37,9 @@ function _afficherEcranFin(finId, etatHist) {
     const fin = FINS[finId];
     if (!fin) {
         logger.warn('[fins] finId inconnu :', finId);
-        afficherEcran(ECRANS.TITRE);
+        void import('./navigation-ecrans.js').then(({ afficherEcran }) =>
+            afficherEcran(ECRANS.TITRE)
+        );
         return;
     }
 
@@ -91,7 +92,9 @@ function _afficherEcranFin(finId, etatHist) {
         elEmbleme.textContent = EMBLEMES[finId] ?? '✦';
     }
 
-    afficherEcran(ECRANS.HISTOIRE_FIN);
+    void import('./navigation-ecrans.js').then(({ afficherEcran }) =>
+        afficherEcran(ECRANS.HISTOIRE_FIN)
+    );
 }
 
 function _couleurFin(finId) {

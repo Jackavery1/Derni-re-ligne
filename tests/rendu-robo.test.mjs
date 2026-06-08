@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { dessinerRobo, convertirHumeurVersCanvas, definirHumeurRobo } from '../js/rendu-robo.js';
+import { dessinerRobo, definirHumeurRobo } from '../js/rendu-robo.js';
+import { convertirHumeurVersCanvas } from '../js/mascotte-robo.js';
 
 function creerCtxMock() {
     const gradient = { addColorStop: vi.fn() };
@@ -44,8 +45,15 @@ function creerCtxMock() {
 describe('rendu-robo', () => {
     it('dessine ROBO sans erreur sur canvas 120×150', () => {
         const ctx = creerCtxMock();
-        expect(() => dessinerRobo(ctx, 120, 150, 'neutre', 0)).not.toThrow();
-        expect(() => dessinerRobo(ctx, 120, 150, 'excite', 1.5, { arcEnCiel: true })).not.toThrow();
+        dessinerRobo(ctx, 120, 150, 'neutre', 0);
+        expect(ctx.clearRect).toHaveBeenCalled();
+        expect(ctx.fillRect.mock.calls.length + ctx.arc.mock.calls.length).toBeGreaterThan(5);
+    });
+
+    it('dessine ROBO excité avec arc-en-ciel', () => {
+        const ctx = creerCtxMock();
+        dessinerRobo(ctx, 120, 150, 'excite', 1.5, { arcEnCiel: true });
+        expect(ctx.arc.mock.calls.length).toBeGreaterThan(0);
     });
 
     it('convertit les humeurs jeu vers canvas', () => {

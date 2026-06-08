@@ -102,8 +102,47 @@ function remplirContenu(contenu, avecControles = false) {
     }
 }
 
+/** @type {(() => void) | null} */
+let desactiverFocusTrap = null;
+
+/** @param {HTMLElement} overlay */
+function activerFocusTrap(overlay) {
+    if (!overlay?.querySelectorAll) return;
+    desactiverFocusTrap?.();
+    const selecteur =
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusables = [...overlay.querySelectorAll(selecteur)].filter(
+        (el) => el instanceof HTMLElement && el.offsetParent !== null
+    );
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    const precedent = document.activeElement;
+
+    first?.focus();
+
+    /** @param {KeyboardEvent} e */
+    function surTab(e) {
+        if (e.key !== 'Tab' || focusables.length === 0) return;
+        if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last?.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first?.focus();
+        }
+    }
+
+    overlay.addEventListener('keydown', surTab);
+    desactiverFocusTrap = () => {
+        overlay.removeEventListener('keydown', surTab);
+        if (precedent instanceof HTMLElement) precedent.focus();
+        desactiverFocusTrap = null;
+    };
+}
+
 function fermerTutoriel(cleStockage, onFermer) {
     marquerTutorielVu(cleStockage);
+    desactiverFocusTrap?.();
     document.getElementById('overlay-tutoriel')?.classList.add('element-masque');
     onFermer?.();
 }
@@ -127,6 +166,7 @@ export function afficherTutorielPrologueApresCutscene(onCompris) {
 
     remplirContenu(CONTENU_PROLOGUE, true);
     overlay.classList.remove('element-masque');
+    activerFocusTrap(overlay);
 
     const btnFermer = document.getElementById('btn-tutoriel-fermer');
     if (btnFermer) {
@@ -148,6 +188,7 @@ export function afficherTutorielContextuel(contexte) {
 
     remplirContenu(contenu, false);
     overlay.classList.remove('element-masque');
+    activerFocusTrap(overlay);
 
     const btnFermer = document.getElementById('btn-tutoriel-fermer');
     if (btnFermer) {

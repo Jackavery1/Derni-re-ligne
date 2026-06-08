@@ -449,6 +449,7 @@ export const ETAT_HISTOIRE_VIDE = {
     enModeHistoire: false,
     mondesDejaMontres: [],
     laboDecouvert: false,
+    fragmentsVusIds: [],
     prouessesHistoire: {
         blocksRouillesMax: 0,
         lignesEclipseBasseMax: 0,

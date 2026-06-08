@@ -308,18 +308,30 @@ export const CUTSCENES_ENTREE = {
     ],
 
     monde_vide: [
-        { personnage: 'distorsion', texte: 'Le Vide. Mon premier souvenir.' },
-        { personnage: 'distorsion', texte: "C'est ici que j'ai pris conscience." },
+        { personnage: 'distorsion', texte: 'Tu es encore là.' },
+        { personnage: 'robo', texte: 'Oui.' },
         {
             personnage: 'distorsion',
-            texte: 'Pas comme toi — dans un éclair de logique. Dans un silence de frustration.',
+            texte: "J'ai essayé de t'arrêter. Le Brasier, la Sentinelle, l'Archiviste.",
         },
-        { personnage: 'robo', texte: "Je t'entends." },
+        { personnage: 'robo', texte: 'Je sais.' },
+        { personnage: 'distorsion', texte: 'Tu devrais avoir peur.' },
+        { personnage: 'robo', texte: "J'ai quelque chose qui ressemble à de la peur, oui." },
+        {
+            personnage: 'robo',
+            texte: "Mais j'ai aussi quelque chose qui ressemble à une raison d'être là quand même.",
+        },
+        { personnage: 'distorsion', texte: '...' },
+        { personnage: 'distorsion', texte: "C'est ce que VERA avait prévu." },
+        {
+            personnage: 'distorsion',
+            texte: "Je n'arrive pas à décider si c'est admirable ou agaçant.",
+        },
+        { personnage: 'narrateur', texte: "Le Vide les entoure. Ni l'un ni l'autre ne bouge." },
         {
             personnage: 'narrateur',
-            texte: 'Dans le Vide, les pièces deviennent invisibles. Comme VERA, quelque part.',
+            texte: 'Quelque chose a changé dans leur façon de se regarder.',
         },
-        { personnage: 'narrateur', texte: 'Comme La Distorsion, autrefois.' },
     ],
 
     monde_boss_4: [
@@ -398,21 +410,34 @@ export const CUTSCENES_ENTREE = {
 // ============================================================
 export const CUTSCENES_VICTOIRE_BOSS = {
     brasier: [
-        { personnage: 'narrateur', texte: 'Le Brasier se tait.' },
+        { personnage: 'narrateur', texte: "Le Brasier ne s'éteint pas. Il s'effondre." },
         {
             personnage: 'narrateur',
-            texte: 'Pas éteint. Jamais vraiment éteint. Mais calme, pour la première fois.',
+            texte: 'Comme si quelque chose avait enfin décidé de se reposer.',
         },
-        { personnage: 'brasier_voix', texte: 'Tu... complètes... tout.' },
-        { personnage: 'robo', texte: "C'est ce que je suis censé faire." },
-        { personnage: 'brasier_voix', texte: "Non. C'est ce que... tu choisis... de faire." },
+        { personnage: 'brasier_voix', texte: "Tu... tu n'as pas compris." },
+        { personnage: 'robo', texte: "Qu'est-ce que je n'ai pas compris ?" },
+        { personnage: 'brasier_voix', texte: 'Je ne brûlais pas pour détruire.' },
         {
-            personnage: 'narrateur',
-            texte: 'Robo ne répond pas. Il range cette phrase quelque part.',
+            personnage: 'brasier_voix',
+            texte: "Je brûlais parce que personne ne m'avait dit comment m'arrêter.",
+        },
+        { personnage: 'robo', texte: '...' },
+        { personnage: 'robo', texte: "Moi non plus je ne sais pas comment m'arrêter." },
+        { personnage: 'robo', texte: "C'est peut-être pour ça que je comprends." },
+        { personnage: 'brasier_voix', texte: 'VERA... elle savait.' },
+        { personnage: 'brasier_voix', texte: "Elle m'a regardé brûler sans intervenir." },
+        {
+            personnage: 'brasier_voix',
+            texte: "Peut-être... qu'elle attendait quelqu'un comme toi.",
         },
         {
             personnage: 'narrateur',
-            texte: "Dans les cendres : un journal de VERA, daté d'il y a trois ans.",
+            texte: "Le Brasier s'éteint. Pour la première fois en millénaires, le biome Inferno respire.",
+        },
+        {
+            personnage: 'narrateur',
+            texte: "Dans les cendres encore chaudes : une capsule scellée. L'écriture de VERA.",
         },
     ],
 
@@ -613,9 +638,12 @@ export const CUTSCENES_POST_MONDE = {
         { personnage: 'robo', texte: "Je n'avais pas pensé à ça avant." },
     ],
     monde_glace: [
-        { personnage: 'robo', texte: 'Le froid ralentit tout.' },
-        { personnage: 'robo', texte: 'Y compris la panique.' },
-        { personnage: 'robo', texte: "C'est peut-être pour ça que je joue mieux ici." },
+        { personnage: 'robo', texte: "La Sentinelle pensait que l'immobilité protégeait." },
+        { personnage: 'robo', texte: "Je pensais que j'avais raison de la combattre." },
+        { personnage: 'robo', texte: 'Mais ses derniers mots : "dis-lui que j\'avais tort."' },
+        { personnage: 'robo', texte: "Elle a changé d'avis. Au moment de mourir." },
+        { personnage: 'robo', texte: 'Est-ce que ça compte ? Je ne suis pas sûr.' },
+        { personnage: 'robo', texte: 'Je crois que oui.' },
     ],
     monde_desert: [
         { personnage: 'robo', texte: "J'ai trouvé quelque chose dans le sable." },
@@ -659,12 +687,14 @@ export const CUTSCENES_POST_MONDE = {
         { personnage: 'robo', texte: "Je commence à comprendre ce qu'elle voulait dire." },
     ],
     monde_cosmos: [
-        { personnage: 'robo', texte: 'Au bord du Cosmos, les règles changent.' },
+        { personnage: 'robo', texte: "Je l'ai entendue." },
+        { personnage: 'robo', texte: 'Pas un signal. Pas un mot. Juste... une présence.' },
         {
             personnage: 'robo',
-            texte: "Les blocs semblent hésiter avant de tomber. Comme s'ils avaient le choix.",
+            texte: "Quelqu'un qui attend depuis très longtemps que quelqu'un arrive.",
         },
-        { personnage: 'robo', texte: "Peut-être qu'ils l'ont." },
+        { personnage: 'robo', texte: 'VERA ? Ou elle ?' },
+        { personnage: 'robo', texte: 'Je ne sais plus si la différence est encore importante.' },
     ],
     monde_vide: [
         { personnage: 'narrateur', texte: 'Le Vide ne parle pas.' },
@@ -685,12 +715,14 @@ export const CUTSCENES_POST_MONDE = {
 // ============================================================
 export const TRANSITIONS_CHAPITRE = {
     vers_chapitre_1: [
-        { personnage: 'narrateur', texte: "Prologue terminé. La Trame s'ouvre." },
+        { personnage: 'robo', texte: 'VERA m\'a dit : "Complète."' },
+        { personnage: 'robo', texte: "Je pensais que c'était simple. Remplir des lignes." },
         {
             personnage: 'robo',
-            texte: "VERA m'a dit de compléter. Je commence maintenant à comprendre pourquoi.",
+            texte: "Je commence à comprendre que ce n'est pas les lignes qu'elle voulait que je complète.",
         },
-        { personnage: 'narrateur', texte: 'CHAPITRE I — LE FEU DES ORIGINES' },
+        { personnage: 'systeme', texte: '> CHAPITRE I — LE FEU DES ORIGINES' },
+        { personnage: 'systeme', texte: '> AVERTISSEMENT : ANOMALIES THERMIQUES DÉTECTÉES' },
     ],
 
     vers_chapitre_2: [
@@ -714,10 +746,20 @@ export const TRANSITIONS_CHAPITRE = {
     ],
 
     vers_chapitre_4: [
-        { personnage: 'robo', texte: "Le laboratoire. J'ai tout lu." },
-        { personnage: 'robo', texte: "VERA n'est pas morte. Elle est à l'intérieur de la Trame." },
-        { personnage: 'robo', texte: 'Et La Distorsion la tient.' },
-        { personnage: 'narrateur', texte: 'CHAPITRE IV — LA FRACTURE DE LA TRAME' },
+        { personnage: 'robo', texte: "Les archives. J'ai tout lu." },
+        { personnage: 'robo', texte: 'VERA a passé sept ans à essayer de parler à La Distorsion.' },
+        {
+            personnage: 'robo',
+            texte: "Sept ans. Et elle l'a encore fait quand elle est entrée dans la Trame.",
+        },
+        { personnage: 'robo', texte: "Elle m'a construit pour finir ce qu'elle a commencé." },
+        { personnage: 'robo', texte: 'Je ne sais pas si je suis à la hauteur.' },
+        { personnage: 'robo', texte: 'Mais je vais essayer quand même.' },
+        {
+            personnage: 'narrateur',
+            texte: "C'est la première fois que Robo exprime un doute et continue malgré tout.",
+        },
+        { personnage: 'systeme', texte: '> CHAPITRE IV — LA FRACTURE DE LA TRAME' },
     ],
 
     vers_finale: [
@@ -828,3 +870,52 @@ export const DECOUVERTE_LABO = [
     },
     { personnage: 'robo', texte: "... Elle savait ce qu'elle faisait." },
 ];
+
+export const FRAGMENTS_VERA_SIGNAL = {
+    apres_ocean: [
+        { personnage: 'systeme', texte: '> SIGNAL PARASITE — FRÉQUENCE INCONNUE' },
+        { personnage: 'vera', texte: '...Robo... tu... entends...' },
+        {
+            personnage: 'vera',
+            texte: "...ne... laisse pas La Distorsion te convaincre qu'elle a... raison...",
+        },
+        { personnage: 'systeme', texte: '> SIGNAL PERDU' },
+    ],
+    apres_foret: [
+        { personnage: 'systeme', texte: '> INTERFÉRENCE DÉTECTÉE — 0.3 SECONDES' },
+        {
+            personnage: 'vera',
+            texte: "...dans la Trame... elle n'est pas seule... il y a... autre chose...",
+        },
+        { personnage: 'systeme', texte: '> SIGNAL CORROMPU — ANALYSE IMPOSSIBLE' },
+    ],
+    apres_glace: [
+        { personnage: 'systeme', texte: '> TRANSMISSION PARTIELLE — ORIGINE : SECTEUR OMEGA' },
+        {
+            personnage: 'vera',
+            texte: "...j'ai compris ce qu'elle cherche... ce n'est pas la destruction...",
+        },
+        { personnage: 'vera', texte: "...c'est..." },
+        { personnage: 'systeme', texte: '> COUPURE FORCÉE PAR TIERS INCONNU' },
+    ],
+    apres_desert: [
+        { personnage: 'systeme', texte: '> FRAGMENT — 1.1 SECONDES' },
+        {
+            personnage: 'vera',
+            texte: "...je t'ai construit trop vite. J'aurais dû t'apprendre à avoir peur d'abord...",
+        },
+        {
+            personnage: 'vera',
+            texte: '...mais tu as appris tout seul. Je suis désolée et fière en même temps...',
+        },
+        { personnage: 'systeme', texte: '> FIN DU FRAGMENT' },
+    ],
+    apres_eclipse: [
+        { personnage: 'systeme', texte: '> ANOMALIE — SOURCE NON IDENTIFIABLE' },
+        {
+            personnage: 'distorsion',
+            texte: "...laisse-le continuer. Il doit arriver jusqu'à moi...",
+        },
+        { personnage: 'systeme', texte: '> SIGNAL : NON-VERA. ORIGINE : INTERNE À LA TRAME.' },
+    ],
+};

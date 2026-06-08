@@ -4,12 +4,11 @@ import {
     obtenirEtatHistoire,
     mondePeutEtreJoue,
     obtenirEtatMonde,
-    demarrerMondeHistoire,
-    demarrerMondeHistoireCache,
     masquerPanneauDetails,
     obtenirProgressionGlobale,
     SEUILS_COMPLETION,
-} from './histoire-manager.js';
+} from './histoire-mondes.js';
+import { obtenirActionsHistoire } from './histoire-actions.js';
 
 export function mettreAJourSelectMondesClavier(etatCarte, traiterSelectionNoeud) {
     const select = /** @type {HTMLSelectElement | null} */ (
@@ -197,9 +196,10 @@ export function mettreAJourEnteteHistoire() {
 }
 
 export function lancerMondeDepuisCarte(monde) {
+    const actions = obtenirActionsHistoire();
     if (['monde_miroir', 'monde_trame', 'monde_paradoxe'].includes(monde.id)) {
-        demarrerMondeHistoireCache(monde.id);
+        actions.demarrerMondeCache?.(monde.id);
     } else {
-        demarrerMondeHistoire(monde.id);
+        actions.demarrerMonde?.(monde.id);
     }
 }

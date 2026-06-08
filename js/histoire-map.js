@@ -1,7 +1,7 @@
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { obtenirCanvas } from './dom-utils.js';
-import { obtenirEtatHistoire } from './histoire-manager.js';
-import { paradoxeEstDebloque } from './monde-paradoxe.js';
+import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
+import { paradoxeEstDebloque } from './monde-paradoxe-etat.js';
 import { dessinerCarteHistoire } from './histoire-map-rendu.js';
 import {
     attacherEvenementsCarteHistoire,
@@ -10,6 +10,7 @@ import {
     mettreAJourSelectMondesClavier,
     traiterSelectionNoeud,
 } from './histoire-map-ui.js';
+import { configurerActionsHistoire } from './histoire-actions.js';
 
 const etatCarte = {
     canvasCarte: null,
@@ -94,7 +95,7 @@ function calculerPositionsNoeuds() {
 
     placerNoeud('monde_finale', w / 2, pY + pasY * 5, 32);
 
-    const etatHist = obtenirEtatHistoire();
+    const etatHist = obtenirEtatHistoirePersiste();
 
     if (
         etatHist.conditionsMiroir.bossArchivisteVaincu &&
@@ -126,8 +127,10 @@ function placerNoeud(id, x, y, rayon) {
     etatCarte.positionsNoeuds[id] = { x, y, rayon };
 }
 
-export function demarrerCarteHistoire() {
+export async function demarrerCarteHistoire() {
     arreterCarteHistoire();
+    const { chargerHistoireTextes } = await import('./charger-histoire-textes.js');
+    await chargerHistoireTextes();
     if (!initialiserCarteMonde()) return;
     etatCarte.carteActive = true;
     etatCarte.idFrameCarte = requestAnimationFrame(boucleCarte);
@@ -177,3 +180,5 @@ export function redimensionnerCarteHistoire() {
     redimensionnerCanvas();
     calculerPositionsNoeuds();
 }
+
+configurerActionsHistoire({ arreterCarte: arreterCarteHistoire });

@@ -9,7 +9,7 @@ import {
 } from './store-jeu.js';
 import { obtenirForme, obtenirCouleurPiece } from './piece-jeu.js';
 import { oracle } from './oracle-jeu.js';
-import { definirArcEnCiel, definirCouronne } from './rendu-robo.js';
+import { definirArcEnCiel } from './rendu-robo.js';
 
 const MAX_HISTORIQUE = 6;
 export const historiquePositions = [];
@@ -356,9 +356,6 @@ function dessinerHaloOracle() {
 }
 
 function reinitialiserEffetsHorsCanvas() {
-    if (!statsGlobales.decorationsActives.includes('couronne_lumineuse')) {
-        definirCouronne(false);
-    }
     if (!statsGlobales.decorationsActives.includes('robo_arc_en_ciel')) {
         definirArcEnCiel(false);
     }
@@ -434,7 +431,6 @@ export function dessinerDecorations() {
                 dessinerBordureBicolore();
                 break;
             case 'couronne_lumineuse':
-                definirCouronne(true);
                 break;
             case 'robo_arc_en_ciel':
                 definirArcEnCiel(true);

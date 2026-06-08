@@ -79,65 +79,84 @@ const fileAchievements = creerFileNotifications({
 
 const CLE_STATS = 'derniereLigne_statsGlobales';
 
+/** @param {Record<string, any>} parsed @param {ReturnType<typeof creerStatsVides>} base */
+function _restaurerStatsJeu(parsed, base) {
+    statsGlobales.lignesTotal = parsed.lignesTotal ?? base.lignesTotal;
+    statsGlobales.meilleurScore = parsed.meilleurScore ?? base.meilleurScore;
+    statsGlobales.meilleurTemps = parsed.meilleurTemps ?? base.meilleurTemps;
+    statsGlobales.maxLignesUnCoup = parsed.maxLignesUnCoup ?? base.maxLignesUnCoup;
+    statsGlobales.maxCombo = parsed.maxCombo ?? base.maxCombo;
+    statsGlobales.biomesJoues = new Set(parsed.biomesJoues || []);
+    statsGlobales.meilleurTempsParBiome = parsed.meilleurTempsParBiome ?? {};
+    statsGlobales.lignesParBiome = parsed.lignesParBiome ?? {};
+    statsGlobales.reliquesUtilisees = parsed.reliquesUtilisees ?? 0;
+    statsGlobales.typesReliquesUtilises = new Set(parsed.typesReliquesUtilises || []);
+    statsGlobales.meteosSubies = parsed.meteosSubies ?? 0;
+    statsGlobales.reactionsRobo = parsed.reactionsRobo ?? 0;
+    statsGlobales.maxNotesComposition = parsed.maxNotesComposition ?? 0;
+    statsGlobales.nbAchievementsDebloques = parsed.nbAchievementsDebloques ?? 0;
+    statsGlobales.debloqués = parsed.debloqués ?? {};
+    statsGlobales.decorationsActives = parsed.decorationsActives ?? [];
+    statsGlobales.meteosPartieActuelle = new Set();
+}
+
+/** @param {Record<string, any>} parsed @param {ReturnType<typeof creerStatsVides>} base */
+function _restaurerStatsModes(parsed, base) {
+    statsGlobales.oraclePartiesJouees = parsed.oraclePartiesJouees ?? 0;
+    statsGlobales.oracleMeilleuresMult = parsed.oracleMeilleuresMult ?? 1.0;
+    statsGlobales.oracleTotalDeviations = parsed.oracleTotalDeviations ?? 0;
+    statsGlobales.oracleDeviationsPartieActuelle = 0;
+    statsGlobales.lignesCoopTotal = parsed.lignesCoopTotal ?? 0;
+    statsGlobales.coopMaxLignesUnCoup = parsed.coopMaxLignesUnCoup ?? 0;
+    statsGlobales.archiScoreTotal = parsed.archiScoreTotal ?? base.archiScoreTotal;
+    statsGlobales.archiNiveauxCompletes = new Set(parsed.archiNiveauxCompletes || []);
+    statsGlobales.archiEtoilesMax = parsed.archiEtoilesMax ?? base.archiEtoilesMax;
+    statsGlobales.archiPrecisionMax = parsed.archiPrecisionMax ?? base.archiPrecisionMax;
+    statsGlobales.archiParAtteint = parsed.archiParAtteint ?? base.archiParAtteint;
+    statsGlobales.evenementsVivantSubis =
+        parsed.evenementsVivantSubis ?? base.evenementsVivantSubis;
+    statsGlobales.maxEvenementsUnePartie =
+        parsed.maxEvenementsUnePartie ?? base.maxEvenementsUnePartie;
+    statsGlobales.biomesVivantSubis = new Set(parsed.biomesVivantSubis || []);
+    statsGlobales.lignesPendantVivant = parsed.lignesPendantVivant ?? base.lignesPendantVivant;
+}
+
+/** @param {Record<string, any>} parsed */
+function _restaurerStatsHistoire(parsed) {
+    statsGlobales.bossHistoireVaincus = parsed.bossHistoireVaincus ?? [];
+    statsGlobales.journauxHistoire = parsed.journauxHistoire ?? [];
+    statsGlobales.toutesFinHistoire = parsed.toutesFinHistoire ?? [];
+    statsGlobales.mondesHistoireCompletes = parsed.mondesHistoireCompletes ?? [];
+    statsGlobales.mondesCachesDebloques = parsed.mondesCachesDebloques ?? [];
+}
+
+/** @param {Record<string, any>} parsed @param {ReturnType<typeof creerStatsVides>} base */
+function _restaurerStatsPersistees(parsed, base) {
+    _restaurerStatsJeu(parsed, base);
+    _restaurerStatsModes(parsed, base);
+    _restaurerStatsHistoire(parsed);
+}
+
+function _fusionnerProgressionHistoire() {
+    const etatHist = chargerEtatHistoire();
+    statsGlobales.mondesHistoireCompletes = [
+        ...new Set([...statsGlobales.mondesHistoireCompletes, ...(etatHist.mondesCompletes ?? [])]),
+    ];
+    statsGlobales.mondesCachesDebloques = [
+        ...new Set([
+            ...statsGlobales.mondesCachesDebloques,
+            ...(etatHist.mondesCachesDebloques ?? []),
+        ]),
+    ];
+}
+
 export function chargerStats() {
     try {
         /** @type {Record<string, any> | null} */
         const parsed = lireStockageJson(CLE_STATS, null);
         if (!parsed || typeof parsed !== 'object') return;
-        const base = creerStatsVides();
-        statsGlobales.lignesTotal = parsed.lignesTotal ?? base.lignesTotal;
-        statsGlobales.meilleurScore = parsed.meilleurScore ?? base.meilleurScore;
-        statsGlobales.meilleurTemps = parsed.meilleurTemps ?? base.meilleurTemps;
-        statsGlobales.maxLignesUnCoup = parsed.maxLignesUnCoup ?? base.maxLignesUnCoup;
-        statsGlobales.maxCombo = parsed.maxCombo ?? base.maxCombo;
-        statsGlobales.biomesJoues = new Set(parsed.biomesJoues || []);
-        statsGlobales.meilleurTempsParBiome = parsed.meilleurTempsParBiome ?? {};
-        statsGlobales.lignesParBiome = parsed.lignesParBiome ?? {};
-        statsGlobales.reliquesUtilisees = parsed.reliquesUtilisees ?? 0;
-        statsGlobales.typesReliquesUtilises = new Set(parsed.typesReliquesUtilises || []);
-        statsGlobales.meteosSubies = parsed.meteosSubies ?? 0;
-        statsGlobales.reactionsRobo = parsed.reactionsRobo ?? 0;
-        statsGlobales.maxNotesComposition = parsed.maxNotesComposition ?? 0;
-        statsGlobales.nbAchievementsDebloques = parsed.nbAchievementsDebloques ?? 0;
-        statsGlobales.debloqués = parsed.debloqués ?? {};
-        statsGlobales.decorationsActives = parsed.decorationsActives ?? [];
-        statsGlobales.oraclePartiesJouees = parsed.oraclePartiesJouees ?? 0;
-        statsGlobales.oracleMeilleuresMult = parsed.oracleMeilleuresMult ?? 1.0;
-        statsGlobales.oracleTotalDeviations = parsed.oracleTotalDeviations ?? 0;
-        statsGlobales.oracleDeviationsPartieActuelle = 0;
-        statsGlobales.lignesCoopTotal = parsed.lignesCoopTotal ?? 0;
-        statsGlobales.coopMaxLignesUnCoup = parsed.coopMaxLignesUnCoup ?? 0;
-        statsGlobales.archiScoreTotal = parsed.archiScoreTotal ?? base.archiScoreTotal;
-        statsGlobales.archiNiveauxCompletes = new Set(parsed.archiNiveauxCompletes || []);
-        statsGlobales.archiEtoilesMax = parsed.archiEtoilesMax ?? base.archiEtoilesMax;
-        statsGlobales.archiPrecisionMax = parsed.archiPrecisionMax ?? base.archiPrecisionMax;
-        statsGlobales.archiParAtteint = parsed.archiParAtteint ?? base.archiParAtteint;
-        statsGlobales.evenementsVivantSubis =
-            parsed.evenementsVivantSubis ?? base.evenementsVivantSubis;
-        statsGlobales.maxEvenementsUnePartie =
-            parsed.maxEvenementsUnePartie ?? base.maxEvenementsUnePartie;
-        statsGlobales.biomesVivantSubis = new Set(parsed.biomesVivantSubis || []);
-        statsGlobales.lignesPendantVivant = parsed.lignesPendantVivant ?? base.lignesPendantVivant;
-        statsGlobales.bossHistoireVaincus = parsed.bossHistoireVaincus ?? [];
-        statsGlobales.journauxHistoire = parsed.journauxHistoire ?? [];
-        statsGlobales.toutesFinHistoire = parsed.toutesFinHistoire ?? [];
-        statsGlobales.mondesHistoireCompletes = parsed.mondesHistoireCompletes ?? [];
-        statsGlobales.mondesCachesDebloques = parsed.mondesCachesDebloques ?? [];
-        statsGlobales.meteosPartieActuelle = new Set();
-
-        const etatHist = chargerEtatHistoire();
-        statsGlobales.mondesHistoireCompletes = [
-            ...new Set([
-                ...statsGlobales.mondesHistoireCompletes,
-                ...(etatHist.mondesCompletes ?? []),
-            ]),
-        ];
-        statsGlobales.mondesCachesDebloques = [
-            ...new Set([
-                ...statsGlobales.mondesCachesDebloques,
-                ...(etatHist.mondesCachesDebloques ?? []),
-            ]),
-        ];
+        _restaurerStatsPersistees(parsed, creerStatsVides());
+        _fusionnerProgressionHistoire();
     } catch (err) {
         logger.warn('Erreur chargement stats achievements:', err);
     }

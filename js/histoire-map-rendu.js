@@ -1,7 +1,7 @@
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { BIOMES } from './config.js';
-import { obtenirEtatHistoire, mondePeutEtreJoue, obtenirEtatMonde } from './histoire-manager.js';
-import { paradoxeEstDebloque } from './monde-paradoxe.js';
+import { obtenirEtatHistoire, mondePeutEtreJoue, obtenirEtatMonde } from './histoire-mondes.js';
+import { paradoxeEstDebloque } from './monde-paradoxe-etat.js';
 
 const CONNEXIONS_CHEMIN = [
     ['monde_prologue', 'monde_lave'],
@@ -191,6 +191,66 @@ function dessinerTousLesNoeuds(etatCarte, timestamp) {
     }
 }
 
+function _dessinerHaloNoeud(ctx, x, y, rayon, couleur, pulse, estDisponible, estComplete) {
+    if (!estDisponible || estComplete) return;
+    ctx.shadowColor = couleur;
+    ctx.shadowBlur = 10 + pulse * 16;
+    ctx.strokeStyle = couleur;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(x, y, rayon + 8 + pulse * 4, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+}
+
+function _dessinerContourNoeud(ctx, x, y, rayon) {
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.shadowColor = '#ffffff';
+    ctx.shadowBlur = 8;
+    ctx.beginPath();
+    ctx.arc(x, y, rayon + 5, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+}
+
+function _dessinerFormeNoeud(ctx, x, y, rayon, estBoss) {
+    if (estBoss) {
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+            const angle = (i * Math.PI) / 3 - Math.PI / 6;
+            const px = x + rayon * Math.cos(angle);
+            const py = y + rayon * Math.sin(angle);
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        return;
+    }
+    ctx.beginPath();
+    ctx.arc(x, y, rayon, 0, Math.PI * 2);
+}
+
+function _dessinerSymboleNoeud(ctx, monde, x, y, biome, estComplete, estDisponible) {
+    const alpha = estComplete || estDisponible ? 1 : 0.25;
+    ctx.globalAlpha = alpha;
+    ctx.font = monde.estBoss ? '16px serif' : '13px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    if (!estDisponible && !estComplete) {
+        ctx.fillStyle = '#3a3a5a';
+        ctx.font = '13px serif';
+        ctx.fillText('🔒', x, y);
+    } else if (estComplete) {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText('✓', x, y);
+    } else {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(biome.icone, x, y);
+    }
+    ctx.globalAlpha = 1;
+}
+
 function dessinerNoeud(etatCarte, monde, pos, etatHist, timestamp) {
     const { ctxCarte, noeudSelectionne, noeudSurvole } = etatCarte;
     if (!ctxCarte) return;
@@ -204,51 +264,19 @@ function dessinerNoeud(etatCarte, monde, pos, etatHist, timestamp) {
 
     const biome = BIOMES[monde.biomeId] ?? BIOMES.classique;
     const couleur = estComplete || estDisponible ? biome.lueurCoul : '#1a1a2e';
-
-    const t = timestamp / 900;
-    const pulse = 0.5 + 0.5 * Math.sin(t);
+    const pulse = 0.5 + 0.5 * Math.sin(timestamp / 900);
 
     ctxCarte.save();
 
-    if (estDisponible && !estComplete) {
-        ctxCarte.shadowColor = couleur;
-        ctxCarte.shadowBlur = 10 + pulse * 16;
-        ctxCarte.strokeStyle = couleur;
-        ctxCarte.lineWidth = 1;
-        ctxCarte.beginPath();
-        ctxCarte.arc(x, y, rayon + 8 + pulse * 4, 0, Math.PI * 2);
-        ctxCarte.stroke();
-        ctxCarte.shadowBlur = 0;
-    }
+    _dessinerHaloNoeud(ctxCarte, x, y, rayon, couleur, pulse, estDisponible, estComplete);
 
     if (estSelectionne || estSurvole) {
-        ctxCarte.strokeStyle = '#ffffff';
-        ctxCarte.lineWidth = 2;
-        ctxCarte.shadowColor = '#ffffff';
-        ctxCarte.shadowBlur = 8;
-        ctxCarte.beginPath();
-        ctxCarte.arc(x, y, rayon + 5, 0, Math.PI * 2);
-        ctxCarte.stroke();
-        ctxCarte.shadowBlur = 0;
+        _dessinerContourNoeud(ctxCarte, x, y, rayon);
     }
 
     ctxCarte.shadowColor = couleur;
     ctxCarte.shadowBlur = estComplete || estDisponible ? 10 : 0;
-
-    if (monde.estBoss) {
-        ctxCarte.beginPath();
-        for (let i = 0; i < 6; i++) {
-            const angle = (i * Math.PI) / 3 - Math.PI / 6;
-            const px = x + rayon * Math.cos(angle);
-            const py = y + rayon * Math.sin(angle);
-            if (i === 0) ctxCarte.moveTo(px, py);
-            else ctxCarte.lineTo(px, py);
-        }
-        ctxCarte.closePath();
-    } else {
-        ctxCarte.beginPath();
-        ctxCarte.arc(x, y, rayon, 0, Math.PI * 2);
-    }
+    _dessinerFormeNoeud(ctxCarte, x, y, rayon, monde.estBoss);
 
     if (estComplete) {
         ctxCarte.fillStyle = couleur + 'aa';
@@ -264,23 +292,7 @@ function dessinerNoeud(etatCarte, monde, pos, etatHist, timestamp) {
     ctxCarte.stroke();
     ctxCarte.shadowBlur = 0;
 
-    const alpha = estComplete || estDisponible ? 1 : 0.25;
-    ctxCarte.globalAlpha = alpha;
-    ctxCarte.font = monde.estBoss ? '16px serif' : '13px serif';
-    ctxCarte.textAlign = 'center';
-    ctxCarte.textBaseline = 'middle';
-    if (!estDisponible && !estComplete) {
-        ctxCarte.fillStyle = '#3a3a5a';
-        ctxCarte.font = '13px serif';
-        ctxCarte.fillText('🔒', x, y);
-    } else if (estComplete) {
-        ctxCarte.fillStyle = '#ffffff';
-        ctxCarte.fillText('✓', x, y);
-    } else {
-        ctxCarte.fillStyle = '#ffffff';
-        ctxCarte.fillText(biome.icone, x, y);
-    }
-    ctxCarte.globalAlpha = 1;
+    _dessinerSymboleNoeud(ctxCarte, monde, x, y, biome, estComplete, estDisponible);
 
     ctxCarte.font = '5px "Press Start 2P", monospace';
     ctxCarte.textAlign = 'center';

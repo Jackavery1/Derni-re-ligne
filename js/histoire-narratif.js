@@ -1,27 +1,23 @@
-import {
-    CUTSCENES_ENTREE,
-    CUTSCENES_VICTOIRE_BOSS,
-    CUTSCENES_POST_MONDE,
-    TRANSITIONS_CHAPITRE,
-    EPILOGUES,
-    DECOUVERTE_LABO,
-} from './histoire-textes.js';
-import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
+import { obtenirHistoireTextesSync } from './charger-histoire-textes.js';
 import { ILLUSTRATIONS_JOURNAUX } from './histoire-illustrations.js';
 import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
-import { executerFin } from './fins-histoire.js';
 
 function _obtenirEtatHistoireLocal() {
     return obtenirEtatHistoirePersiste();
 }
 
-function _importerManager() {
-    return import('./histoire-manager.js');
+/** @returns {typeof import('./histoire-textes.js')} */
+function _textes() {
+    return obtenirHistoireTextesSync();
+}
+
+function _importerUi() {
+    return import('./histoire-manager-ui.js');
 }
 
 export function obtenirCutsceneEntree(mondeId, premiereVisite) {
     if (!premiereVisite) return null;
-    const lignesRaw = CUTSCENES_ENTREE[mondeId];
+    const lignesRaw = _textes().CUTSCENES_ENTREE[mondeId];
     if (!lignesRaw?.length) return null;
     return {
         lignes: _formaterLignes(lignesRaw),
@@ -34,12 +30,13 @@ export function afficherVictoireBoss(bossId, typeFin = 'normal', onFin) {
     if (bossId === 'distorsion') {
         cle = `distorsion_${typeFin}`;
     }
+    const { CUTSCENES_VICTOIRE_BOSS } = _textes();
     const lignesRaw = CUTSCENES_VICTOIRE_BOSS[cle] ?? CUTSCENES_VICTOIRE_BOSS[bossId] ?? [];
     if (!lignesRaw.length) {
         onFin?.();
         return;
     }
-    void _importerManager().then(({ afficherCutsceneHistoire }) => {
+    void _importerUi().then(({ afficherCutsceneHistoire }) => {
         afficherCutsceneHistoire(
             _formaterLignes(lignesRaw),
             _extrairePersonnages(lignesRaw),
@@ -49,12 +46,12 @@ export function afficherVictoireBoss(bossId, typeFin = 'normal', onFin) {
 }
 
 export function afficherTransitionChapitre(cleChapitre, onFin) {
-    const lignesRaw = TRANSITIONS_CHAPITRE[cleChapitre] ?? [];
+    const lignesRaw = _textes().TRANSITIONS_CHAPITRE[cleChapitre] ?? [];
     if (!lignesRaw.length) {
         onFin?.();
         return;
     }
-    void _importerManager().then(({ afficherCutsceneHistoire }) => {
+    void _importerUi().then(({ afficherCutsceneHistoire }) => {
         afficherCutsceneHistoire(
             _formaterLignes(lignesRaw),
             _extrairePersonnages(lignesRaw),
@@ -72,29 +69,29 @@ export function afficherJournalVera(journalData, onFermer) {
         ...journalData,
         _illustrerFn: ILLUSTRATIONS_JOURNAUX[journalData.id] ?? null,
     };
-    void _importerManager().then(({ afficherJournalHistoire }) => {
+    void _importerUi().then(({ afficherJournalHistoire }) => {
         afficherJournalHistoire(journalEnrichi, onFermer);
     });
 }
 
 export function declencherFin(finId) {
-    const epilogue = EPILOGUES[finId] ?? [];
+    const epilogue = _textes().EPILOGUES[finId] ?? [];
     if (!epilogue.length) {
-        executerFin(finId);
+        void import('./fins-histoire.js').then(({ executerFin }) => executerFin(finId));
         return;
     }
-    void _importerManager().then(({ afficherCutsceneHistoire }) => {
+    void _importerUi().then(({ afficherCutsceneHistoire }) => {
         afficherCutsceneHistoire(_formaterLignes(epilogue), _extrairePersonnages(epilogue), () =>
-            executerFin(finId)
+            import('./fins-histoire.js').then(({ executerFin }) => executerFin(finId))
         );
     });
 }
 
 export function afficherDecouverteLabo(onFin) {
-    void _importerManager().then(({ afficherCutsceneHistoire }) => {
+    void _importerUi().then(({ afficherCutsceneHistoire }) => {
         afficherCutsceneHistoire(
-            _formaterLignes(DECOUVERTE_LABO),
-            _extrairePersonnages(DECOUVERTE_LABO),
+            _formaterLignes(_textes().DECOUVERTE_LABO),
+            _extrairePersonnages(_textes().DECOUVERTE_LABO),
             onFin
         );
     });
@@ -164,7 +161,7 @@ function _extrairePersonnages(lignesRaw) {
  */
 export function obtenirCutscenePostMonde(mondeId, premiereCompletion) {
     if (!premiereCompletion) return null;
-    const lignesRaw = CUTSCENES_POST_MONDE[mondeId];
+    const lignesRaw = _textes().CUTSCENES_POST_MONDE[mondeId];
     if (!lignesRaw?.length) return null;
     return {
         lignes: _formaterLignes(lignesRaw),

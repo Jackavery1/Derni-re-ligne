@@ -1,11 +1,17 @@
 import * as esbuild from 'esbuild';
 import { cpSync, mkdirSync, readFileSync, writeFileSync, rmSync, readdirSync } from 'fs';
+import { execSync } from 'child_process';
 
 const dist = 'dist';
 const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
 
+execSync('node scripts/exporter-donnees-json.mjs', { stdio: 'inherit' });
+
 rmSync(dist, { recursive: true, force: true });
 mkdirSync(`${dist}/js`, { recursive: true });
+mkdirSync(`${dist}/data`, { recursive: true });
+
+cpSync('data', `${dist}/data`, { recursive: true });
 
 await esbuild.build({
     entryPoints: ['js/main.js'],
@@ -49,6 +55,8 @@ const staticFiles = [
     './index.html',
     './manifest.json',
     './styles/main.css',
+    './data/histoire-textes.json',
+    './data/codex-donnees.json',
     ...jsFiles,
     ...jsFiles.map((f) => `${f}.map`),
     './icon.svg',

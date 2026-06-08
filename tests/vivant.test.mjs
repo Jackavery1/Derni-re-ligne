@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { CONFIG } from '../js/config.js';
 import { etat, definirBiomeActif } from '../js/store-jeu.js';
 import { creerPlateau } from '../js/piece-jeu.js';

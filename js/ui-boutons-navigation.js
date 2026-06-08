@@ -23,7 +23,7 @@ export function initialiserBoutonsNavigation() {
             ({ introHistoireDejaVue, marquerIntroHistoireVue, obtenirSequenceIntro }) => {
                 if (!introHistoireDejaVue()) {
                     marquerIntroHistoireVue();
-                    void import('./histoire-manager.js').then(({ afficherCutsceneHistoire }) => {
+                    void import('./histoire-manager-ui.js').then(({ afficherCutsceneHistoire }) => {
                         const seq = obtenirSequenceIntro();
                         afficherCutsceneHistoire(seq.lignes, seq.personnages, () => {
                             afficherEcran(ECRANS.HISTOIRE_MAP);

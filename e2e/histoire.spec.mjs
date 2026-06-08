@@ -4,6 +4,7 @@ import {
     ouvrirCarteHistoire,
     lancerMondeBossBrasier,
     filtrerViolationsCritiques,
+    attendreApplicationPrete,
 } from './helpers.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 
@@ -51,18 +52,32 @@ test('lancement prologue depuis la carte histoire', async ({ page }) => {
         localStorage.setItem('dl_migration_v1', '1');
         localStorage.setItem('derniereLigne_tutorielVu', '1');
         localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
+        localStorage.setItem('derniereLigne_introHistoireVue', '1');
     }, ETAT_HISTOIRE_VIDE);
     await page.goto('/');
+    await attendreApplicationPrete(page);
     await page.locator('#btn-mode-histoire').click();
+    await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/);
     await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });
     await page.locator('.bouton-jouer-monde').click();
-    const passerCutscene = page.locator('#btn-cutscene-passer');
-    if (await passerCutscene.isVisible().catch(() => false)) {
-        await passerCutscene.click();
-    }
-    const tutoriel = page.locator('#overlay-tutoriel:not(.element-masque)');
-    if (await tutoriel.isVisible().catch(() => false)) {
-        await page.locator('#btn-tutoriel-fermer').click();
+    for (let i = 0; i < 12; i++) {
+        if (await page.locator('#interface-jeu').isVisible()) break;
+        const passer = page.locator('#btn-cutscene-passer');
+        if (await passer.isVisible().catch(() => false)) {
+            await passer.click({ force: true });
+            continue;
+        }
+        const suivant = page.locator('#btn-cutscene-suivant');
+        if (await suivant.isVisible().catch(() => false)) {
+            await suivant.click({ force: true });
+            continue;
+        }
+        const tutoriel = page.locator('#btn-tutoriel-fermer');
+        if (await tutoriel.isVisible().catch(() => false)) {
+            await tutoriel.click();
+            continue;
+        }
+        await page.waitForTimeout(250);
     }
     await expect(page.locator('#interface-jeu')).toBeVisible({ timeout: 15000 });
     await expect(page.locator('#canvas-plateau')).toBeVisible();

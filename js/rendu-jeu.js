@@ -31,26 +31,10 @@ export {
 
 export { dessinerPreview, dessinerFileNext } from './rendu-previews.js';
 
-import {
-    dessinerRobo,
-    demarrerBoucleRobo,
-    arreterBoucleRobo,
-    definirHumeurRobo,
-    definirArcEnCiel,
-    definirCouronne,
-    convertirHumeurVersCanvas,
-} from './rendu-robo.js';
-
 export {
     dessinerRobo,
     demarrerBoucleRobo,
     arreterBoucleRobo,
     definirHumeurRobo,
     definirArcEnCiel,
-    definirCouronne,
-    convertirHumeurVersCanvas,
-};
-
-export function dessinerDecoRobo(actif) {
-    definirArcEnCiel(actif);
-}
+} from './rendu-robo.js';

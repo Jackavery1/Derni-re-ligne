@@ -143,6 +143,30 @@ function dessinerFrameSolo(ctx, enPartie) {
     ctx.restore();
 }
 
+function _mettreAJourGravitePiece(deltaTemps) {
+    if (!etat.pieceActuelle) return;
+    const peutDescendre = estPositionValide(etat.pieceActuelle, 0, 1);
+    if (peutDescendre) {
+        definirPieceAuSol(false);
+        definirLockDelayRestant(0);
+        definirAccumulateur(obtenirAccumulateur() + deltaTemps);
+        if (obtenirAccumulateur() >= vitesseChute()) {
+            definirAccumulateur(0);
+            etat.pieceActuelle.y++;
+            mettreAJourHistoriquePositions();
+        }
+        return;
+    }
+    if (!obtenirPieceAuSol()) {
+        definirPieceAuSol(true);
+        definirLockDelayRestant(CONFIG.lockDelay);
+        definirNbLockResets(0);
+        return;
+    }
+    definirLockDelayRestant(obtenirLockDelayRestant() - deltaTemps);
+    if (obtenirLockDelayRestant() <= 0) verrouillerPiece();
+}
+
 function boucleJeu(timestamp) {
     if (archi.actif || coop.actif) {
         suspendreBoucleSolo();
@@ -170,30 +194,7 @@ function boucleJeu(timestamp) {
             mettreAJourMecaniquesHistoire(deltaTemps, timestamp);
             mettreAJourVivant(deltaTemps);
             mettreAJourDas(deltaTemps);
-
-            if (etat.pieceActuelle) {
-                const peutDescendre = estPositionValide(etat.pieceActuelle, 0, 1);
-
-                if (peutDescendre) {
-                    definirPieceAuSol(false);
-                    definirLockDelayRestant(0);
-                    definirAccumulateur(obtenirAccumulateur() + deltaTemps);
-                    if (obtenirAccumulateur() >= vitesseChute()) {
-                        definirAccumulateur(0);
-                        etat.pieceActuelle.y++;
-                        mettreAJourHistoriquePositions();
-                    }
-                } else {
-                    if (!obtenirPieceAuSol()) {
-                        definirPieceAuSol(true);
-                        definirLockDelayRestant(CONFIG.lockDelay);
-                        definirNbLockResets(0);
-                    } else {
-                        definirLockDelayRestant(obtenirLockDelayRestant() - deltaTemps);
-                        if (obtenirLockDelayRestant() <= 0) verrouillerPiece();
-                    }
-                }
-            }
+            _mettreAJourGravitePiece(deltaTemps);
 
             mettreAJourParticules(deltaTemps);
             mettreAJourParticulesAmbiance(deltaTemps);

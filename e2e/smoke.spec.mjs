@@ -33,7 +33,8 @@ test('lancement partie via constellation affiche le plateau', async ({ page }) =
 
 test('pause puis quitter retourne au menu', async ({ page }) => {
     await demarrerPartie(page);
-    await page.locator('#btn-pause').click();
+    await expect(page.locator('#banniere-erreur')).not.toHaveClass(/visible/);
+    await page.keyboard.press('p');
     await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
     await page.locator('#btn-pause-quitter').click();
     await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);

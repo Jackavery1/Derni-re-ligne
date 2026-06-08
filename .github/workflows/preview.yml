@@ -17,8 +17,10 @@ jobs:
                   node-version-file: '.nvmrc'
             - run: npm ci
             - run: npm run lint
+            - run: npm run check:circular
             - run: npm run typecheck
             - run: npm run format:check
+            - run: node scripts/exporter-donnees-json.mjs
             - run: npm test
             - run: npm run test:coverage
             - run: npm audit --audit-level=moderate

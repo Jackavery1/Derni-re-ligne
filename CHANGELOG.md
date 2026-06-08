@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version   | Date       | En bref                                                                                |
 | --------- | ---------- | -------------------------------------------------------------------------------------- |
+| **2.5.2** | 2026-06-08 | Audit v2.5.2 : SW sync, modes verrouillés visibles, E2E offline/gameplay, focus trap   |
 | **2.5.1** | 2026-06-07 | Corrections audit : ROBO canvas, portraits cutscene, CSP fonts, versions alignées      |
 | **2.5.0** | 2026-06-05 | Mode Architecte, coop, bundle prod, rendu découpé, CI renforcée, couverture étendue    |
 | **2.4.2** | 2026-06-05 | Docs minimalistes + tableau d'évolution, tests, debug `?debug=1`, versions SW alignées |
@@ -17,6 +18,16 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.0.0** | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                          |
 
 ---
+
+## [2.5.2] — 2026-06-08
+
+- Cache PWA resynchronisé automatiquement (152 fichiers, nouveaux modules histoire/partie)
+- Modes verrouillés visibles en grisé avec condition de déblocage (menu titre)
+- Focus trap clavier sur les modales tutoriel
+- Tests E2E : offline après precache, hold, game over, modes verrouillés
+- Tests unitaires `boucle-jeu` ; export JSON données (`exporter-donnees-json.mjs`)
+- Découpage partie (`partie-canvas.js`, `partie-fin.js`), session histoire (`histoire-session.js`, `histoire-mondes.js`)
+- CI deploy/preview : `check:circular`, export données, smoke post-déploiement
 
 ## [2.5.1] — 2026-06-07
 

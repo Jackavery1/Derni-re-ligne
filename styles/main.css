@@ -1519,13 +1519,23 @@ body.partie-active #conteneur-principal {
     --mascotte-lueur: var(--theme-primaire, var(--cyan));
     flex-shrink: 0;
 }
+
+/* ═══ ISOLATION COULEUR CANVAS ROBO ═══ */
+/* Le canvas dessine sa propre palette hardcodée.
+   Aucun filtre biome ne doit modifier ses couleurs. */
 #canvas-mascotte {
     display: block;
     width: 100%;
     height: auto;
     max-width: 130px;
     image-rendering: pixelated;
-    filter: drop-shadow(0 0 6px var(--mascotte-lueur, rgba(92, 229, 229, 0.35)));
+    filter: none !important;
+    -webkit-filter: none !important;
+}
+
+#section-mascotte,
+#section-mascotte canvas {
+    color-scheme: normal;
 }
 
 #canvas-boss-portrait.etat-calme {
@@ -1886,6 +1896,25 @@ body.contraste-eleve .bouton {
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+}
+
+.sr-only-focusable:focus {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 10000;
+    width: auto;
+    height: auto;
+    padding: 0.5rem 1rem;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    background: var(--jaune, #ffe600);
+    color: #08081a;
+    font-family: inherit;
+    font-size: 0.75rem;
+    text-decoration: none;
 }
 
 .bouton:focus-visible,
@@ -3573,16 +3602,7 @@ body.histoire-active #indicateur-vide-actif {
     gap: 8px;
 }
 
-/* Modes progressifs : masqués par défaut, visibles uniquement avec .mode-debloque */
-#ecran-titre #btn-jouer:not(.mode-debloque),
-#ecran-titre #btn-architecte:not(.mode-debloque),
-#ecran-titre #btn-codex:not(.mode-debloque),
-#ecran-titre #btn-profil:not(.mode-debloque),
-#ecran-titre #btn-achievements:not(.mode-debloque),
-#ecran-titre #menu-separateur-libre:not(.mode-debloque),
-#ecran-titre #menu-separateur-collection:not(.mode-debloque),
-#ecran-titre #menu-bloc-libre:not(.mode-debloque),
-#ecran-titre #menu-bloc-collection:not(.mode-debloque),
+/* Liens croisés et toggles : masqués tant que le mode n'est pas débloqué */
 #toggle-oracle-wrap:not(.mode-debloque),
 #toggle-coop-wrap:not(.mode-debloque),
 #btn-profil-codex:not(.mode-debloque),
@@ -3887,6 +3907,42 @@ h1,
     z-index: 200;
     cursor: pointer;
     transition: background 0.8s ease;
+}
+
+.cutscene-bg-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* S'assurer que le contenu existant (portrait + texte) passe au-dessus */
+.cutscene-contenu,
+.cutscene-nom,
+#canvas-cutscene-portrait,
+.histoire-cutscene-lignes,
+.cutscene-controles,
+.cutscene-portrait-zone,
+.cutscene-texte-zone,
+.cutscene-lignes,
+.cutscene-progress {
+    position: relative;
+    z-index: 2;
+}
+
+.cutscene-fond-overlay {
+    z-index: 1;
+}
+
+#ecran-histoire-cutscene:has(.cutscene-bg-canvas) {
+    background: transparent !important;
+    animation: none;
+}
+
+#ecran-histoire-cutscene:has(.cutscene-bg-canvas) .cutscene-fond-overlay {
+    background: transparent !important;
 }
 
 #ecran-histoire-cutscene.ecran.actif {

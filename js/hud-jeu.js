@@ -14,6 +14,7 @@ import {
 } from './store-jeu.js';
 import { obtenirScoreAffiche } from './oracle-jeu.js';
 import { annoncer } from './annonces.js';
+import { afficherNotificationNiveau } from './ui-notifications.js';
 
 export function chargerProgression() {
     definirNiveauGlobal(chargerNiveauGlobal());
@@ -84,10 +85,6 @@ export function rafraichirStats() {
 }
 
 export function afficherNotifNiveau() {
-    const notif = document.getElementById('notif-niveau');
-    notif.textContent = `NIVEAU ${etat.niveau} !`;
-    notif.classList.remove('visible');
-    void notif.offsetWidth;
-    notif.classList.add('visible');
+    afficherNotificationNiveau(`NIVEAU ${etat.niveau} !`);
     annoncer(`Niveau ${etat.niveau} atteint`);
 }

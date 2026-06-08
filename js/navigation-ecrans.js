@@ -7,7 +7,6 @@ import { genererCodexComplet } from './codex.js';
 import { cacherBanniereVivant } from './vivant.js';
 import { mettreAJourAffichageRecord } from './hud-jeu.js';
 import { annoncer } from './annonces.js';
-import { demarrerCarteHistoire, arreterCarteHistoire } from './histoire-map.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 
 export { annoncer };
@@ -76,9 +75,11 @@ export function afficherEcran(idEcran) {
     }
 
     if (idEcran === ECRANS.HISTOIRE_MAP) {
-        demarrerCarteHistoire();
+        void import('./histoire-map.js').then(({ demarrerCarteHistoire }) =>
+            demarrerCarteHistoire()
+        );
     } else {
-        arreterCarteHistoire();
+        void import('./histoire-map.js').then(({ arreterCarteHistoire }) => arreterCarteHistoire());
     }
 
     if (idEcran === ECRANS.GAME_OVER || idEcran === ECRANS.GAME_OVER_COOP) {

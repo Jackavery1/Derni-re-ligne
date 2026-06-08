@@ -33,6 +33,39 @@ function attacher(idBouton, action, avecRepetition = false) {
     btn.addEventListener('mouseleave', fin);
 }
 
+function traiterToucheClavier(code, actions) {
+    switch (code) {
+        case TOUCHES_DEFAUT.gauche:
+            actions().deplacerGauche?.();
+            break;
+        case TOUCHES_DEFAUT.droite:
+            actions().deplacerDroite?.();
+            break;
+        case TOUCHES_DEFAUT.bas:
+            actions().deplacerBas?.();
+            break;
+        case TOUCHES_DEFAUT.tournerH:
+        case 'KeyZ':
+            if (!etat.pieceActuelle?.reliqueForme) actions().tourner?.(1);
+            break;
+        case TOUCHES_DEFAUT.tournerAH:
+            if (!etat.pieceActuelle?.reliqueForme) actions().tourner?.(-1);
+            break;
+        case TOUCHES_DEFAUT.chute:
+            actions().chuteRapide?.();
+            break;
+        case TOUCHES_DEFAUT.hold:
+        case 'ShiftLeft':
+        case 'ShiftRight':
+            actions().utiliserReserve?.();
+            break;
+        case TOUCHES_DEFAUT.pause:
+        case 'Escape':
+            actions().basculerPause?.();
+            break;
+    }
+}
+
 export function initialiserInput() {
     const actions = () => obtenirActions();
 
@@ -45,36 +78,10 @@ export function initialiserInput() {
             reinitialiserDas(e.code);
         }
 
-        switch (e.code) {
-            case TOUCHES_DEFAUT.gauche:
-                actions().deplacerGauche?.();
-                break;
-            case TOUCHES_DEFAUT.droite:
-                actions().deplacerDroite?.();
-                break;
-            case TOUCHES_DEFAUT.bas:
-                actions().deplacerBas?.();
-                break;
-            case TOUCHES_DEFAUT.tournerH:
-            case 'KeyZ':
-                if (!etat.pieceActuelle?.reliqueForme) actions().tourner?.(1);
-                break;
-            case TOUCHES_DEFAUT.tournerAH:
-                if (!etat.pieceActuelle?.reliqueForme) actions().tourner?.(-1);
-                break;
-            case TOUCHES_DEFAUT.chute:
-                actions().chuteRapide?.();
-                e.preventDefault();
-                break;
-            case TOUCHES_DEFAUT.hold:
-            case 'ShiftLeft':
-            case 'ShiftRight':
-                actions().utiliserReserve?.();
-                break;
-            case TOUCHES_DEFAUT.pause:
-            case 'Escape':
-                actions().basculerPause?.();
-                break;
+        traiterToucheClavier(e.code, actions);
+
+        if (e.code === TOUCHES_DEFAUT.chute) {
+            e.preventDefault();
         }
     });
 

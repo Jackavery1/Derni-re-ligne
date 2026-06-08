@@ -22,7 +22,6 @@ import {
     obtenirForme,
     hexVersRgb,
     reinitialiserDas,
-    getCouleurPiece,
     obtenirCouleurPieceParType,
     obtenirCouleurPiece,
     creerPieceRelique,

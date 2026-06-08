@@ -23,6 +23,8 @@ vi.mock('../js/histoire-narratif.js', () => ({
 describe('histoire-manager-completion', () => {
     beforeEach(async () => {
         localStorage.clear();
+        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        await chargerHistoireTextes();
         store.histoire.actif = true;
         store.histoire.mondeActuel = 'monde_prologue';
         store.histoire.boss.vaincu = false;

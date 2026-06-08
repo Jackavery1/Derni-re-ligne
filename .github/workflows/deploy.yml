@@ -24,8 +24,10 @@ jobs:
           node-version-file: '.nvmrc'
       - run: npm ci
       - run: npm run lint
+      - run: npm run check:circular
       - run: npm run typecheck
       - run: npm run format:check
+      - run: node scripts/exporter-donnees-json.mjs
       - run: npm test
       - run: npm run test:coverage
       - run: npm audit --audit-level=moderate
@@ -62,3 +64,7 @@ jobs:
           path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
+      - name: Smoke post-déploiement
+        if: steps.deployment.outputs.page_url != ''
+        run: |
+          curl -fsSL "${{ steps.deployment.outputs.page_url }}" | grep -q "Dernière Ligne"

@@ -319,6 +319,7 @@ export function chargerEtatHistoire() {
     const etat = {
         ...ETAT_HISTOIRE_VIDE,
         ...parsed,
+        fragmentsVusIds: parsed.fragmentsVusIds ?? [],
         conditionsMiroir: {
             ...ETAT_HISTOIRE_VIDE.conditionsMiroir,
             ...(parsed.conditionsMiroir ?? {}),

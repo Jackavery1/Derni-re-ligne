@@ -3,13 +3,6 @@ import { arreterConstellation } from './constellation.js';
 import { initialiserMeteo, annulerMeteo } from './meteo.js';
 import { initialiserVivant, annulerTimersVivant } from './vivant.js';
 import { AudioMoteur } from './audio.js';
-import { logger, afficherErreurUtilisateur } from './logger.js';
-import { obtenirCanvas } from './dom-utils.js';
-import {
-    sauvegarderNiveauGlobal,
-    obtenirRecordBiome,
-    calculerPointsProgression,
-} from './progression.js';
 import {
     etat,
     particules,
@@ -19,9 +12,7 @@ import {
     flashLignes,
     dasEtat,
     obtenirBiomeActif,
-    obtenirNiveauGlobal,
     obtenirSacPieces,
-    obtenirTouchDepart,
     obtenirCtxReserve,
     obtenirCanvasReserve,
     definirReliqueEnAttente,
@@ -35,9 +26,6 @@ import {
     definirNbLockResets,
     definirAccumulateur,
     definirDernierTimestamp,
-    definirRefsCanvas,
-    definirTouchDepart,
-    ajouterNiveauGlobal,
 } from './store-jeu.js';
 import {
     creerPlateau,
@@ -59,49 +47,28 @@ import {
     appliquerTextesBiome,
     appliquerThemeMascotte,
     reinitialiserMascottePartie,
-    appliquerHumeurMascotte,
-    reagirRoboGameOver,
-    reagirRoboNouveauRecord,
-    annoncer,
     rafraichirStats,
-    sauvegarderRecord,
-    mettreAJourAffichageRecord,
     afficherEcran,
     cacherEcrans,
     retournerAuMenuTitre,
-    formaterTemps,
-    obtenirTempsEcoule,
 } from './ecrans-ui.js';
 import { ECRANS } from './store-jeu.js';
 import { planifierBoucle } from './boucle-jeu.js';
 import { arreterAnimationMenu } from './menu-fond.js';
-import {
-    deplacerGauche,
-    deplacerDroite,
-    deplacerBas,
-    chuteRapide,
-    tourner,
-} from './logique-partie.js';
-import { reinitialiserMelodie, afficherMelodieGameOver, arreterLectureMelodie } from './melodie.js';
-import { initStatsPartie, finaliserStatsPartie } from './achievements.js';
+import { reinitialiserMelodie, arreterLectureMelodie } from './melodie.js';
+import { initStatsPartie } from './achievements.js';
 import { verifierCodex } from './codex.js';
 import { reinitialiserHistoriquePositions } from './decorations-jeu.js';
 import {
     donneesPartie,
     reinitialiserDonneesPartie,
     signalerApparitionPiece,
-    sauvegarderSnapshotProfil,
 } from './profil-jeu.js';
 import { annoncerPieceCourante } from './annonces.js';
 import { store } from './store-core.js';
-import { surFinDeMondeHistoire } from './histoire-manager.js';
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
-import { demarrerBoss, arreterBoss, bossEstActif } from './boss-jeu.js';
-import {
-    initialiserMecaniquesHistoire,
-    arreterMecaniquesHistoire,
-    onGameOverHistoire,
-} from './mecaniques-histoire.js';
+import { demarrerBoss, arreterBoss } from './boss-jeu.js';
+import { initialiserMecaniquesHistoire, arreterMecaniquesHistoire } from './mecaniques-histoire.js';
 import { reinitialiserConditionsRuntime } from './conditions-secrets.js';
 import {
     oracle,
@@ -109,64 +76,9 @@ import {
     declencherCalculOracle,
     afficherSectionOracle,
     mettreAJourStatsOracleUI,
-    obtenirScoreFinalOracle,
 } from './oracle-jeu.js';
-import { statsGlobales } from './achievements.js';
-
-export function initialiserCanvas() {
-    const cp = obtenirCanvas('canvas-plateau');
-    const cprev = obtenirCanvas('canvas-preview');
-    const cres = obtenirCanvas('canvas-reserve');
-    if (!cp || !cprev || !cres) {
-        logger.error('Canvas introuvable dans le DOM');
-        afficherErreurUtilisateur(
-            'Impossible de charger le jeu — canvas manquant. Rechargez la page.'
-        );
-        return false;
-    }
-    definirRefsCanvas({
-        canvasPlateau: cp,
-        ctx: cp.getContext('2d', { alpha: false }),
-        canvasPreview: cprev,
-        ctxPreview: cprev.getContext('2d'),
-        canvasReserve: cres,
-        ctxReserve: cres.getContext('2d'),
-    });
-
-    if (!cp.dataset.evenementsOk) {
-        cp.dataset.evenementsOk = '1';
-        cp.addEventListener(
-            'touchstart',
-            (e) => {
-                definirTouchDepart({ x: e.touches[0].clientX, y: e.touches[0].clientY });
-            },
-            { passive: true }
-        );
-        cp.addEventListener(
-            'touchend',
-            (e) => {
-                const touchDepart = obtenirTouchDepart();
-                if (!touchDepart) return;
-                const dx = e.changedTouches[0].clientX - touchDepart.x;
-                const dy = e.changedTouches[0].clientY - touchDepart.y;
-                const seuil = 25;
-                if (Math.abs(dx) > Math.abs(dy)) {
-                    if (dx > seuil) deplacerDroite();
-                    if (dx < -seuil) deplacerGauche();
-                } else {
-                    if (dy > seuil) deplacerBas();
-                    if (dy < -seuil) chuteRapide();
-                }
-                definirTouchDepart(null);
-            },
-            { passive: true }
-        );
-        cp.addEventListener('click', () => {
-            if (!etat.pieceActuelle?.reliqueForme) tourner(1);
-        });
-    }
-    return true;
-}
+export { initialiserCanvas } from './partie-canvas.js';
+export { terminerPartie } from './partie-fin.js';
 
 export function confirmerRecommencer() {
     if (window.confirm('Recommencer la partie ?')) demarrerJeu();
@@ -334,85 +246,4 @@ export function basculerPause() {
     }
 
     document.getElementById('btn-pause').textContent = etat.estEnPause ? '▶ REPRENDRE' : '⏸ PAUSE';
-}
-
-export function terminerPartie(victoire = false) {
-    if (bossEstActif() && !victoire) {
-        arreterBoss();
-    }
-    etat.estEnCours = false;
-    if (store.histoire.actif && !victoire) {
-        onGameOverHistoire(etat.lignes, store.histoire.mondeActuel ?? '');
-    }
-    annulerMeteo();
-    AudioMoteur.arreterMusique(200);
-    if (victoire) {
-        appliquerHumeurMascotte('excite');
-    } else {
-        reagirRoboGameOver();
-    }
-    if (!victoire) setTimeout(() => AudioMoteur.son('game_over'), 250);
-    annoncer(victoire ? 'Sprint terminé ! Victoire' : 'Partie terminée');
-
-    const textes = BIOMES[obtenirBiomeActif()]?.textes ?? BIOMES.classique.textes;
-    const titreGo = document.querySelector('.go-titre');
-    if (titreGo) titreGo.textContent = victoire ? 'VICTOIRE !' : textes.gameOver;
-
-    const scoreFinal = obtenirScoreFinalOracle();
-
-    if (oracle.actif) {
-        statsGlobales.oraclePartiesJouees++;
-        statsGlobales.oracleTotalDeviations += oracle.piecesIgnorees;
-        statsGlobales.oracleDeviationsPartieActuelle = oracle.piecesIgnorees;
-        if (oracle.multiplicateur > statsGlobales.oracleMeilleuresMult) {
-            statsGlobales.oracleMeilleuresMult = oracle.multiplicateur;
-        }
-        if (oracle.scoreBonus > 0) {
-            const elBonus = document.getElementById('oracle-bonus-go');
-            if (elBonus) {
-                elBonus.textContent = `+${oracle.scoreBonus.toLocaleString('fr-FR')}`;
-                document.getElementById('oracle-bonus-go-wrap')?.classList.remove('element-masque');
-            }
-        }
-    }
-
-    const nouveauRecord = sauvegarderRecord(scoreFinal);
-
-    const points = calculerPointsProgression(scoreFinal, etat.lignes);
-    if (points > 0) {
-        ajouterNiveauGlobal(points);
-        sauvegarderNiveauGlobal(obtenirNiveauGlobal());
-    }
-
-    mettreAJourAffichageRecord();
-
-    document.getElementById('score-final').textContent = scoreFinal.toLocaleString('fr-FR');
-    document.getElementById('lignes-finales').textContent = String(etat.lignes);
-    document.getElementById('niveau-final').textContent = String(etat.niveau);
-    document.getElementById('record-final').textContent =
-        obtenirRecordBiome(obtenirBiomeActif()).toLocaleString('fr-FR');
-    document.getElementById('temps-final').textContent = formaterTemps(obtenirTempsEcoule());
-
-    const badge = document.getElementById('badge-record');
-    if (badge) badge.style.display = nouveauRecord ? 'block' : 'none';
-    if (nouveauRecord) reagirRoboNouveauRecord();
-
-    const tempsPartie = Math.floor(obtenirTempsEcoule() / 1000);
-    sauvegarderSnapshotProfil(etat.lignes, obtenirBiomeActif());
-    finaliserStatsPartie(scoreFinal, tempsPartie);
-    void verifierCodex();
-
-    if (!store.histoire.actif) {
-        const btnCarte = document.getElementById('btn-histoire-carte');
-        if (btnCarte) btnCarte.style.display = 'none';
-    } else {
-        surFinDeMondeHistoire(etat.lignes, scoreFinal);
-    }
-
-    setTimeout(() => {
-        afficherEcran(ECRANS.GAME_OVER);
-        planifierBoucle();
-    }, 350);
-
-    setTimeout(() => afficherMelodieGameOver(), 400);
 }

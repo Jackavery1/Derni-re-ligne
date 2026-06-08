@@ -65,13 +65,13 @@ function mettreAJourInfoBiome(idBiome) {
         elStatut.textContent = verrouille ? '🔒 MONDE VERROUILLÉ' : "PRÊT POUR L'AVENTURE";
     }
 
-    panneau.style.display = 'flex';
+    panneau.classList.remove('element-masque');
     deps.appliquerThemeBiome(idBiome);
 }
 
 function masquerInfoBiome() {
     const panneau = document.getElementById('sel-info-biome');
-    if (panneau) panneau.style.display = 'none';
+    if (panneau) panneau.classList.add('element-masque');
 }
 
 function noeudSousCurseur(cx, cy) {

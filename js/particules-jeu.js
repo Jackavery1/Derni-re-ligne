@@ -39,14 +39,67 @@ export function creerParticulesExplosion(colonneCell, ligneCell, couleur) {
     }
 }
 
+function _particulesBiomeColonne(c, numeroLigne) {
+    const biome = obtenirBiomeActif();
+    if (biome === 'lave' && c % 2 === 0) {
+        for (let e = 0; e < 3; e++) {
+            if (particules.length >= MAX_PARTICULES) return;
+            pousserParticuleJeu({
+                type: 'etincelle',
+                x: c * CONFIG.taille + Math.random() * CONFIG.taille,
+                y: numeroLigne * CONFIG.taille + Math.random() * CONFIG.taille,
+                vx: (Math.random() - 0.5) * 3,
+                vy: -(Math.random() * 8 + 3),
+                hauteur: 6,
+                opacite: 1,
+                couleur: `hsl(${20 + Math.random() * 30},100%,65%)`,
+                rotation: Math.random() * Math.PI * 2,
+                vRot: (Math.random() - 0.5) * 0.3,
+            });
+        }
+    }
+    if (biome === 'ocean' && c % 3 === 0) {
+        if (particules.length >= MAX_PARTICULES) return;
+        pousserParticuleJeu({
+            type: 'defaut',
+            x: c * CONFIG.taille + CONFIG.taille / 2,
+            y: numeroLigne * CONFIG.taille,
+            vx: (Math.random() - 0.5) * 1.5,
+            vy: -(Math.random() * 4 + 2),
+            taille: Math.random() * 6 + 3,
+            opacite: 0.7,
+            couleur: '#00cfff',
+            rotation: 0,
+            vRot: 0,
+            trainee: true,
+        });
+    }
+    if (biome === 'cosmos' && c % 2 === 0) {
+        if (particules.length >= MAX_PARTICULES) return;
+        pousserParticuleJeu({
+            type: 'eclair',
+            x: c * CONFIG.taille + CONFIG.taille / 2,
+            y: numeroLigne * CONFIG.taille,
+            vx: (Math.random() - 0.5) * 15,
+            vy: (Math.random() - 0.5) * 12,
+            longueur: 10,
+            opacite: 1,
+            couleur: Math.random() > 0.5 ? '#aa44ff' : '#ffffff',
+            rotation: Math.random() * Math.PI * 2,
+            vRot: 0,
+        });
+    }
+}
+
 export function creerParticulesLigne(numeroLigne) {
-    const nbBase = obtenirBiomeActif() === 'fuochi' ? 14 : 7;
-    const tailleMax = obtenirBiomeActif() === 'fuochi' ? 10 : 3;
+    const biome = obtenirBiomeActif();
+    const nbBase = biome === 'fuochi' ? 14 : 7;
+    const tailleMax = biome === 'fuochi' ? 10 : 3;
 
     for (let c = 0; c < CONFIG.colonnes; c++) {
         if (particules.length >= MAX_PARTICULES) return;
         let couleur = etat.plateau[numeroLigne][c] || '#ffffff';
-        if (obtenirBiomeActif() === 'foret' && Math.random() < 0.35) {
+        if (biome === 'foret' && Math.random() < 0.35) {
             couleur = VERTS_FORET[Math.floor(Math.random() * VERTS_FORET.length)];
         }
 
@@ -55,59 +108,10 @@ export function creerParticulesLigne(numeroLigne) {
             creerParticuleJeuStandard(c, numeroLigne, couleur, tailleMax);
         }
 
-        if (obtenirBiomeActif() === 'lave' && c % 2 === 0) {
-            for (let e = 0; e < 3; e++) {
-                if (particules.length >= MAX_PARTICULES) return;
-                pousserParticuleJeu({
-                    type: 'etincelle',
-                    x: c * CONFIG.taille + Math.random() * CONFIG.taille,
-                    y: numeroLigne * CONFIG.taille + Math.random() * CONFIG.taille,
-                    vx: (Math.random() - 0.5) * 3,
-                    vy: -(Math.random() * 8 + 3),
-                    hauteur: 6,
-                    opacite: 1,
-                    couleur: `hsl(${20 + Math.random() * 30},100%,65%)`,
-                    rotation: Math.random() * Math.PI * 2,
-                    vRot: (Math.random() - 0.5) * 0.3,
-                });
-            }
-        }
-
-        if (obtenirBiomeActif() === 'ocean' && c % 3 === 0) {
-            if (particules.length >= MAX_PARTICULES) return;
-            pousserParticuleJeu({
-                type: 'defaut',
-                x: c * CONFIG.taille + CONFIG.taille / 2,
-                y: numeroLigne * CONFIG.taille,
-                vx: (Math.random() - 0.5) * 1.5,
-                vy: -(Math.random() * 4 + 2),
-                taille: Math.random() * 6 + 3,
-                opacite: 0.7,
-                couleur: '#00cfff',
-                rotation: 0,
-                vRot: 0,
-                trainee: true,
-            });
-        }
-
-        if (obtenirBiomeActif() === 'cosmos' && c % 2 === 0) {
-            if (particules.length >= MAX_PARTICULES) return;
-            pousserParticuleJeu({
-                type: 'eclair',
-                x: c * CONFIG.taille + CONFIG.taille / 2,
-                y: numeroLigne * CONFIG.taille,
-                vx: (Math.random() - 0.5) * 15,
-                vy: (Math.random() - 0.5) * 12,
-                longueur: 10,
-                opacite: 1,
-                couleur: Math.random() > 0.5 ? '#aa44ff' : '#ffffff',
-                rotation: Math.random() * Math.PI * 2,
-                vRot: 0,
-            });
-        }
+        _particulesBiomeColonne(c, numeroLigne);
     }
 
-    if (obtenirBiomeActif() === 'fuochi') {
+    if (biome === 'fuochi') {
         for (let c = 0; c < CONFIG.colonnes; c++) {
             if (particules.length >= MAX_PARTICULES) return;
             const couleur = etat.plateau[numeroLigne][c] || '#ffe600';

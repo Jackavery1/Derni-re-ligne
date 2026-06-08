@@ -55,6 +55,7 @@ export async function preparerPageSansSw(page, etatHistoire = ETAT_DEBLOCAGE_MON
         localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
         localStorage.setItem('derniereLigne_tutorielCoopVu', '1');
         localStorage.setItem('derniereLigne_tutorielArchitecteVu', '1');
+        localStorage.setItem('derniereLigne_introHistoireVue', '1');
         localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
     }, etatHistoire);
 }
@@ -127,6 +128,7 @@ export async function ouvrirCarteHistoire(page, etatHistoire = ETAT_HISTOIRE_BOS
         localStorage.setItem('dl_migration_v1', '1');
         localStorage.setItem('derniereLigne_tutorielVu', '1');
         localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
+        localStorage.setItem('derniereLigne_introHistoireVue', '1');
     }, etatHistoire);
     await page.goto('/');
     await attendreApplicationPrete(page);

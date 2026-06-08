@@ -1,4 +1,4 @@
-const VERSION_CACHE = 'derniere-ligne-2.5.1';
+const VERSION_CACHE = 'derniere-ligne-2.5.2';
 
 const FICHIERS_A_CACHER = [
     './',
@@ -52,6 +52,7 @@ const FICHIERS_A_CACHER = [
     './js/boucle-jeu.js',
     './js/bus-jeu.js',
     './js/charger-ecrans.js',
+    './js/charger-histoire-textes.js',
     './js/codex-donnees.js',
     './js/codex-histoire.js',
     './js/codex-illustrations-histoire.js',
@@ -75,6 +76,7 @@ const FICHIERS_A_CACHER = [
     './js/effets-partie.js',
     './js/fin-bg-rendu.js',
     './js/fins-histoire.js',
+    './js/histoire-actions.js',
     './js/histoire-donnees.js',
     './js/histoire-etat.js',
     './js/histoire-illustrations.js',
@@ -85,7 +87,9 @@ const FICHIERS_A_CACHER = [
     './js/histoire-map-rendu.js',
     './js/histoire-map-ui.js',
     './js/histoire-map.js',
+    './js/histoire-mondes.js',
     './js/histoire-narratif.js',
+    './js/histoire-session.js',
     './js/histoire-textes.js',
     './js/hud-jeu.js',
     './js/input-jeu.js',
@@ -99,6 +103,7 @@ const FICHIERS_A_CACHER = [
     './js/melodie.js',
     './js/menu-fond.js',
     './js/meteo.js',
+    './js/monde-paradoxe-etat.js',
     './js/monde-paradoxe.js',
     './js/moteur-piece.js',
     './js/moteur.js',
@@ -107,6 +112,8 @@ const FICHIERS_A_CACHER = [
     './js/options-ui.js',
     './js/oracle-jeu.js',
     './js/particules-jeu.js',
+    './js/partie-canvas.js',
+    './js/partie-fin.js',
     './js/partie.js',
     './js/piece-jeu.js',
     './js/portraits-cutscene.js',
@@ -141,8 +148,11 @@ const FICHIERS_A_CACHER = [
     './js/ui-boutons-navigation.js',
     './js/ui-boutons-partie.js',
     './js/ui-init.js',
+    './js/ui-notifications.js',
     './js/vivant-strategies.js',
     './js/vivant.js',
+    './data/codex-donnees.json',
+    './data/histoire-textes.json',
 ];
 
 /** @param {Request} requete */

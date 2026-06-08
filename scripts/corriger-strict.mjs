@@ -93,22 +93,6 @@ function ajouterTypeAnyAvantLigne(lines, lineIndex) {
     return true;
 }
 
-/**
- * @param {string[]} lines
- * @param {number} lineIndex
- */
-function corrigerIndexation(lines, lineIndex) {
-    const ligne = lines[lineIndex];
-    const match = ligne.match(/^(\s*)(.*?)(\[[^\]]+\])(.*)$/);
-    if (!match) return false;
-    const [, indent, base, index, reste] = match;
-    const baseTrim = base.trim();
-    if (!baseTrim || baseTrim.includes('@type {any}')) return false;
-    if (baseTrim.startsWith('(/** @type {any} */')) return false;
-    lines[lineIndex] = `${indent}(/** @type {any} */ (${baseTrim}))${index}${reste}`;
-    return true;
-}
-
 /** @param {string} cheminRelatif @param {{ file: string, line: number, code: string, message: string }[]} erreurs */
 function appliquerCorrectionsFichier(cheminRelatif, erreurs) {
     const cheminAbs = join(RACINE, cheminRelatif);

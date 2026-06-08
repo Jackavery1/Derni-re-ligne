@@ -5,6 +5,7 @@ import { etat } from './store-jeu.js';
 import { creerPlateau, obtenirCouleurPieceParType } from './piece-jeu.js';
 import { creerParticulesLigne } from './particules-jeu.js';
 import { statsGlobales, verifierAchievements, sauvegarderStats } from './achievements.js';
+import { afficherNotificationNiveau } from './ui-notifications.js';
 import { reagirRoboAuxLignes } from './ecrans-ui.js';
 import { obtenirBouton, obtenirElement } from './dom-utils.js';
 import {
@@ -137,15 +138,10 @@ export function afficherNotifSynchro(nbLignes) {
 }
 
 export function afficherNotifNiveauCoop() {
-    if (typeof document === 'undefined') return;
-    const notif = document.getElementById('notif-niveau');
-    if (!notif) return;
-    notif.textContent = `✦ NIVEAU ${coop.niveau} ✦`;
-    notif.classList.remove('notif-synchro');
-    notif.classList.add('notif-niveau-vert');
-    notif.classList.remove('visible');
-    void notif.offsetWidth;
-    notif.classList.add('visible');
+    afficherNotificationNiveau(`✦ NIVEAU ${coop.niveau} ✦`, {
+        classesRetirer: ['notif-synchro'],
+        classesAjouter: ['notif-niveau-vert'],
+    });
 }
 
 export function coop_calculerScore(nbLignes) {

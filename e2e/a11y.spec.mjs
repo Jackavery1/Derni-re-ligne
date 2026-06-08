@@ -50,7 +50,8 @@ test('sélection biome sans violations accessibilité critiques', async ({ page 
 
 test('pause sans violations accessibilité critiques', async ({ page }) => {
     await demarrerPartie(page);
-    await page.locator('#btn-pause').click();
+    await expect(page.locator('#banniere-erreur')).not.toHaveClass(/visible/);
+    await page.keyboard.press('p');
     await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
     const result = await new AxeBuilder({ page }).include('#ecran-pause').analyze();
     expect(filtrerViolationsCritiques(result.violations)).toEqual([]);

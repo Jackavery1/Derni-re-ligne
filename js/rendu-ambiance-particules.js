@@ -228,6 +228,87 @@ export function initParticulesAmbiance() {
     }
 }
 
+function _mettreAJourParticuleAmbiance(p, dt, w, h, t) {
+    switch (p.type) {
+        case 'bulle_lave':
+        case 'bulle_eau':
+            p.x += p.vx + Math.sin(t * 0.8 + p.sinPhase) * 0.3;
+            p.y += p.vy;
+            if (p.y < -p.taille) {
+                p.y = h + p.taille;
+                p.x = Math.random() * w;
+                p.opacite = Math.random() * 0.18 + 0.04;
+            }
+            if (p.x < 0) p.x = w;
+            if (p.x > w) p.x = 0;
+            break;
+
+        case 'rayon_eau':
+            p.opacite = 0.04 + Math.sin(t * 0.3 + p.sinPhase) * 0.02;
+            break;
+
+        case 'feuille':
+            p.x += p.vx + Math.sin(t * 0.5 + p.sinPhase) * 0.5;
+            p.y += p.vy;
+            p.rotation += p.vRot;
+            if (p.y > h + p.taille) {
+                p.y = -p.taille;
+                p.x = Math.random() * w;
+            }
+            if (p.x < 0) p.x = w;
+            if (p.x > w) p.x = 0;
+            break;
+
+        case 'flocon':
+            p.x += p.vx + Math.sin(t * 0.4 + p.sinPhase) * 0.4;
+            p.y += p.vy;
+            p.rotation += p.vRot;
+            if (p.y > h + p.taille) {
+                p.y = -p.taille;
+                p.x = Math.random() * w;
+            }
+            if (p.x < 0) p.x = w;
+            if (p.x > w) p.x = 0;
+            break;
+
+        case 'grain_sable':
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x > w + p.taille) {
+                p.x = -p.taille;
+                p.y = Math.random() * h;
+            }
+            break;
+
+        case 'code_hex':
+            p.y += p.vy;
+            if (p.age >= p.dureeVie) {
+                p.char = HEX_CHARS[Math.floor(Math.random() * HEX_CHARS.length)];
+                p.age = 0;
+                p.opacite = Math.random() * 0.12 + 0.03;
+            }
+            if (p.y > h + 10) {
+                p.y = -10;
+                p.x = Math.random() * w;
+            }
+            break;
+
+        case 'braise':
+            p.x += p.vx;
+            p.y += p.vy;
+            p.opacite -= 0.003 * (dt / 16);
+            if (p.opacite <= 0 || p.y < -p.taille) {
+                recyclerParticulAmbiance(p, w, h);
+            }
+            break;
+
+        case 'etoile_cosmos':
+            p.scintille += p.vRot * (dt / 16);
+            p.opacite = Math.max(0.02, 0.15 + Math.sin(p.scintille) * 0.13);
+            break;
+    }
+}
+
 export function mettreAJourParticulesAmbiance(dt) {
     if (particulesAmbiance.length === 0) return;
     const canvas = obtenirCanvasPlateau();
@@ -246,84 +327,7 @@ export function mettreAJourParticulesAmbiance(dt) {
             continue;
         }
 
-        switch (p.type) {
-            case 'bulle_lave':
-            case 'bulle_eau':
-                p.x += p.vx + Math.sin(t * 0.8 + p.sinPhase) * 0.3;
-                p.y += p.vy;
-                if (p.y < -p.taille) {
-                    p.y = h + p.taille;
-                    p.x = Math.random() * w;
-                    p.opacite = Math.random() * 0.18 + 0.04;
-                }
-                if (p.x < 0) p.x = w;
-                if (p.x > w) p.x = 0;
-                break;
-
-            case 'rayon_eau':
-                p.opacite = 0.04 + Math.sin(t * 0.3 + p.sinPhase) * 0.02;
-                break;
-
-            case 'feuille':
-                p.x += p.vx + Math.sin(t * 0.5 + p.sinPhase) * 0.5;
-                p.y += p.vy;
-                p.rotation += p.vRot;
-                if (p.y > h + p.taille) {
-                    p.y = -p.taille;
-                    p.x = Math.random() * w;
-                }
-                if (p.x < 0) p.x = w;
-                if (p.x > w) p.x = 0;
-                break;
-
-            case 'flocon':
-                p.x += p.vx + Math.sin(t * 0.4 + p.sinPhase) * 0.4;
-                p.y += p.vy;
-                p.rotation += p.vRot;
-                if (p.y > h + p.taille) {
-                    p.y = -p.taille;
-                    p.x = Math.random() * w;
-                }
-                if (p.x < 0) p.x = w;
-                if (p.x > w) p.x = 0;
-                break;
-
-            case 'grain_sable':
-                p.x += p.vx;
-                p.y += p.vy;
-                if (p.x > w + p.taille) {
-                    p.x = -p.taille;
-                    p.y = Math.random() * h;
-                }
-                break;
-
-            case 'code_hex':
-                p.y += p.vy;
-                if (p.age >= p.dureeVie) {
-                    p.char = HEX_CHARS[Math.floor(Math.random() * HEX_CHARS.length)];
-                    p.age = 0;
-                    p.opacite = Math.random() * 0.12 + 0.03;
-                }
-                if (p.y > h + 10) {
-                    p.y = -10;
-                    p.x = Math.random() * w;
-                }
-                break;
-
-            case 'braise':
-                p.x += p.vx;
-                p.y += p.vy;
-                p.opacite -= 0.003 * (dt / 16);
-                if (p.opacite <= 0 || p.y < -p.taille) {
-                    recyclerParticulAmbiance(p, w, h);
-                }
-                break;
-
-            case 'etoile_cosmos':
-                p.scintille += p.vRot * (dt / 16);
-                p.opacite = Math.max(0.02, 0.15 + Math.sin(p.scintille) * 0.13);
-                break;
-        }
+        _mettreAJourParticuleAmbiance(p, dt, w, h, t);
     }
 
     if (obtenirBiomeActif() === 'fuochi' && Math.random() < 0.04) {

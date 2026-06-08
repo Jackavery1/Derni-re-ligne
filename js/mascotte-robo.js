@@ -1,7 +1,32 @@
 import { CONFIG } from './config-jeu.js';
 import { etat } from './store-jeu.js';
 import { majStatsReactionRobo } from './achievements.js';
-import { definirHumeurRobo, convertirHumeurVersCanvas } from './rendu-robo.js';
+import { definirHumeurRobo } from './rendu-robo.js';
+
+/** @param {string} humeur */
+export function convertirHumeurVersCanvas(humeur) {
+    if (humeur === 'triste') return 'triste';
+    if (
+        humeur === 'excite' ||
+        humeur === 'excite-plus' ||
+        humeur === 'triomphal' ||
+        humeur === 'euphorique' ||
+        humeur === 'emerveille'
+    ) {
+        return 'excite';
+    }
+    if (humeur === 'content' || humeur === 'heureux') return 'content';
+    if (
+        humeur === 'alerte' ||
+        humeur === 'stresse' ||
+        humeur === 'inquiet' ||
+        humeur === 'determine' ||
+        humeur === 'grimace'
+    ) {
+        return 'alerte';
+    }
+    return 'neutre';
+}
 
 const DUREES_HUMEUR = {
     content: 2200,

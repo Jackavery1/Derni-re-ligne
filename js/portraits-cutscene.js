@@ -206,9 +206,6 @@ function _portraitDistorsion(ctx, w, h, t) {
 }
 
 function _portraitSysteme(ctx, w, h, t) {
-    const cx = w / 2;
-    const cy = h / 2;
-
     ctx.fillStyle = '#000d00';
     ctx.fillRect(0, 0, w, h);
     for (let y = 0; y < h; y += 3) {

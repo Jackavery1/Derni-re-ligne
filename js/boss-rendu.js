@@ -1,6 +1,6 @@
 import { store } from './store-core.js';
 import { obtenirCanvas } from './dom-utils.js';
-import { COULEUR_BRAISE, COULEUR_GLACE_B } from './boss-jeu.js';
+import { COULEUR_GLACE_B } from './boss-jeu.js';
 
 /** @returns {'calme'|'irrite'|'enrage'|'attaque'|'vaincu'} */
 function _obtenirEtatPortraitBoss() {
@@ -373,8 +373,8 @@ function _portraitAvantgarde(ctx, w, h, t, intensite = 1) {
     _labelPortrait(ctx, w, h, "L'AVANT-GARDE", '#7700ff');
 }
 
-/** @param {CanvasRenderingContext2D} ctx @param {number} w @param {number} h @param {number} t @param {number} [intensite] */
-function _portraitDistorsion(ctx, w, h, t, intensite = 1) {
+/** @param {CanvasRenderingContext2D} ctx @param {number} w @param {number} h @param {number} t @param {number} [_intensite] */
+function _portraitDistorsion(ctx, w, h, t, _intensite = 1) {
     ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, w, h);
 
@@ -436,8 +436,8 @@ function _portraitDistorsion(ctx, w, h, t, intensite = 1) {
     _labelPortrait(ctx, w, h, 'LA DISTORSION', '#ff006e');
 }
 
-/** @param {CanvasRenderingContext2D} ctx @param {number} w @param {number} h @param {number} t */
-function _portraitGenerique(ctx, w, h, t) {
+/** @param {CanvasRenderingContext2D} ctx @param {number} w @param {number} h @param {number} [_t] */
+function _portraitGenerique(ctx, w, h, _t) {
     ctx.fillStyle = '#08081a';
     ctx.fillRect(0, 0, w, h);
     ctx.save();

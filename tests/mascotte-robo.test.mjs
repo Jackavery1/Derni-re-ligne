@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { determinerHumeurLignes } from '../js/mascotte-robo.js';
-import { convertirHumeurVersCanvas } from '../js/rendu-robo.js';
+import { convertirHumeurVersCanvas } from '../js/mascotte-robo.js';
 
 describe('mascotte-robo', () => {
     it('cartographie les lignes effacées vers la bonne humeur', () => {
