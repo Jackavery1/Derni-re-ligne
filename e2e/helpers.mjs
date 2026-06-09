@@ -47,6 +47,14 @@ export const ETAT_DEBLOCAGE_COMPLET = {
     mondesCompletes: ['monde_prologue'],
 };
 
+/** État vierge : aucun déblocage, comme un premier lancement. */
+export async function preparerPremierLancement(page) {
+    await page.addInitScript(() => {
+        localStorage.setItem('dl_migration_v1', '1');
+        localStorage.removeItem('derniereLigne_histoire');
+    });
+}
+
 /** Désactive le cache stale en tests locaux et débloque le mode libre. */
 export async function preparerPageSansSw(page, etatHistoire = ETAT_DEBLOCAGE_MONDE_LIBRE) {
     await page.addInitScript((etat) => {

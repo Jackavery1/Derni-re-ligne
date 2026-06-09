@@ -64,3 +64,23 @@ test('game over sans violations accessibilité critiques', async ({ page }) => {
     const result = await new AxeBuilder({ page }).include('#ecran-game-over').analyze();
     expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
 });
+
+test('codex sans violations accessibilité critiques', async ({ page }) => {
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-codex').click();
+    await expect(page.locator('#ecran-codex')).toHaveClass(/actif/);
+    const result = await new AxeBuilder({ page }).include('#ecran-codex').analyze();
+    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
+});
+
+test('options sans violations accessibilité critiques', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-options').click();
+    await expect(page.locator('#ecran-options')).toHaveClass(/actif/);
+    const result = await new AxeBuilder({ page }).include('#ecran-options').analyze();
+    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
+});

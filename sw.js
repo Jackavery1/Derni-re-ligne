@@ -1,4 +1,4 @@
-const VERSION_CACHE = 'derniere-ligne-2.5.2';
+const VERSION_CACHE = 'derniere-ligne-2.5.3';
 
 const FICHIERS_A_CACHER = [
     './',
@@ -61,6 +61,7 @@ const FICHIERS_A_CACHER = [
     './js/conditions-secrets.js',
     './js/config-jeu.js',
     './js/config.js',
+    './js/constellation-rendu.js',
     './js/constellation.js',
     './js/contenu-jeu.js',
     './js/coop-etat.js',
@@ -84,7 +85,9 @@ const FICHIERS_A_CACHER = [
     './js/histoire-manager-completion.js',
     './js/histoire-manager-ui.js',
     './js/histoire-manager.js',
+    './js/histoire-map-chemins.js',
     './js/histoire-map-rendu.js',
+    './js/histoire-map-terrain.js',
     './js/histoire-map-ui.js',
     './js/histoire-map.js',
     './js/histoire-mondes.js',

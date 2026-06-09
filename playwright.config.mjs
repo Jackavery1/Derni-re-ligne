@@ -1,5 +1,8 @@
 import { existsSync } from 'fs';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const racineProjet = dirname(fileURLToPath(import.meta.url));
 
 const serveDist = process.env.E2E_DIST === '1';
 
@@ -46,6 +49,7 @@ const channel = detecterChannelNavigateur();
 
 export default {
     testDir: './e2e',
+    workers: process.env.CI ? undefined : 1,
     timeout: 30000,
     snapshotPathTemplate: '{testDir}/__snapshots__/{testFilePath}/{arg}{ext}',
     expect: {
@@ -60,8 +64,9 @@ export default {
         ...(channel !== 'chromium' ? { channel } : {}),
     },
     webServer: {
-        command: serveDist ? 'npx --yes serve dist -p 3000' : 'npx --yes serve . -p 3000',
+        command: serveDist ? 'npx --yes serve dist -p 3000' : 'python -m http.server 3000',
         url: 'http://127.0.0.1:3000',
+        cwd: racineProjet,
         reuseExistingServer: !process.env.CI,
     },
 };

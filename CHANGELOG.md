@@ -6,7 +6,8 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version   | Date       | En bref                                                                                |
 | --------- | ---------- | -------------------------------------------------------------------------------------- |
-| **2.5.2** | 2026-06-08 | Audit v2.5.2 : SW sync, modes verrouillés visibles, E2E offline/gameplay, focus trap   |
+| **2.5.3** | 2026-06-09 | ROBO restauré, modes masqués, carte histoire, CI factorisée, a11y overlays             |
+| **2.5.2** | 2026-06-08 | Audit v2.5.2 : SW sync, E2E offline/gameplay, focus trap tutoriel                      |
 | **2.5.1** | 2026-06-07 | Corrections audit : ROBO canvas, portraits cutscene, CSP fonts, versions alignées      |
 | **2.5.0** | 2026-06-05 | Mode Architecte, coop, bundle prod, rendu découpé, CI renforcée, couverture étendue    |
 | **2.4.2** | 2026-06-05 | Docs minimalistes + tableau d'évolution, tests, debug `?debug=1`, versions SW alignées |
@@ -19,12 +20,23 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 ---
 
+## [2.5.3] — 2026-06-09
+
+- ROBO : design pixel art d'origine restauré, palette fixe indépendante du biome en jeu
+- Modes verrouillés à nouveau masqués sur l'écran titre (progression par déblocage)
+- Carte histoire : refonte visuelle canvas (nébuleuse, chapitres, chemins bézier, terrain, visibilité progressive)
+- Constellation : rendu extrait dans `constellation-rendu.js`
+- Overlays : `role="status"` et `aria-live` sur notifications (achievement, codex, météo…)
+- CI : workflow réutilisable `quality.yml`, artefact couverture, deploy sans double build
+- Husky pre-push aligné (format, circular, build, budget bundle)
+- Tests E2E a11y étendus (codex, options) ; snapshot visuel écran sélection
+- README et versions alignées ; documentation `E2E_DIST` dans CONTRIBUTING
+
 ## [2.5.2] — 2026-06-08
 
 - Cache PWA resynchronisé automatiquement (152 fichiers, nouveaux modules histoire/partie)
-- Modes verrouillés visibles en grisé avec condition de déblocage (menu titre)
 - Focus trap clavier sur les modales tutoriel
-- Tests E2E : offline après precache, hold, game over, modes verrouillés
+- Tests E2E : offline après precache, hold, game over
 - Tests unitaires `boucle-jeu` ; export JSON données (`exporter-donnees-json.mjs`)
 - Découpage partie (`partie-canvas.js`, `partie-fin.js`), session histoire (`histoire-session.js`, `histoire-mondes.js`)
 - CI deploy/preview : `check:circular`, export données, smoke post-déploiement

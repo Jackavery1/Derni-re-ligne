@@ -1,70 +1,51 @@
 name: Deploy
 
 on:
-  push:
-    branches: [main, master]
-    tags: ['v*']
+    push:
+        branches: [main, master]
+        tags: ['v*']
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+    contents: read
+    pages: write
+    id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+    group: pages
+    cancel-in-progress: true
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+    test:
+        uses: ./.github/workflows/quality.yml
         with:
-          node-version-file: '.nvmrc'
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run check:circular
-      - run: npm run typecheck
-      - run: npm run format:check
-      - run: node scripts/exporter-donnees-json.mjs
-      - run: npm test
-      - run: npm run test:coverage
-      - run: npm audit --audit-level=moderate
-      - run: npm run build
-      - run: npm run analyze
-      - name: Budget taille bundle prod
-        run: node scripts/verifier-bundle.mjs
-      - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
-        env:
-          E2E_DIST: '1'
+            upload_dist: true
 
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-      - run: npm ci
-      - run: npm run build
-      - name: Préparer artefact statique (bundle prod)
-        run: |
-          mkdir -p _site
-          cp -r dist/* _site/
-          cp LICENSE README.md _site/ 2>/dev/null || true
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-      - id: deployment
-        uses: actions/deploy-pages@v4
-      - name: Smoke post-déploiement
-        if: steps.deployment.outputs.page_url != ''
-        run: |
-          curl -fsSL "${{ steps.deployment.outputs.page_url }}" | grep -q "Dernière Ligne"
+    deploy:
+        needs: test
+        runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+            - uses: actions/download-artifact@v4
+              with:
+                  name: dist
+                  path: dist/
+            - uses: actions/checkout@v4
+            - name: Préparer artefact statique (bundle prod)
+              run: |
+                  mkdir -p _site
+                  cp -r dist/* _site/
+                  cp LICENSE README.md _site/ 2>/dev/null || true
+            - uses: actions/configure-pages@v5
+            - uses: actions/upload-pages-artifact@v3
+              with:
+                  path: _site
+            - id: deployment
+              uses: actions/deploy-pages@v4
+            - name: Smoke post-déploiement
+              if: steps.deployment.outputs.page_url != ''
+              run: |
+                  BASE="${{ steps.deployment.outputs.page_url }}"
+                  curl -fsSL "$BASE" | grep -q "Dernière Ligne"
+                  curl -fsSL "${BASE}js/bundle.js" -o /dev/null

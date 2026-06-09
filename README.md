@@ -3,7 +3,7 @@
 Jeu de Tetris narratif en Vanilla JS + Canvas 2D. PWA jouable hors-ligne.
 Mode Arcade et Mode Histoire « La Fragmentation ».
 
-**Version actuelle : 2.5.1** — voir [CHANGELOG.md](CHANGELOG.md) pour l'historique complet.
+**Version actuelle : 2.5.3** — voir [CHANGELOG.md](CHANGELOG.md) pour l'historique complet.
 
 ## Le jeu
 
@@ -42,6 +42,7 @@ npm run test:coverage  # couverture logique
 npm run prepare:e2e    # détecte Chrome/Edge local (évite le téléchargement TLS)
 npm run test:e2e       # Playwright + Axe (accessibilité)
 npm run test:e2e:update  # régénérer les snapshots visuels
+npm run build && npm run test:e2e  # E2E sur bundle prod (comme la CI)
 npm run typecheck      # vérification types strict (checkJs)
 npm run lint           # ESLint
 npm run sync:sw        # régénère la liste de cache PWA (modules dev)
@@ -105,6 +106,7 @@ Styles : `styles/main.css`. Cache offline : `sw.js`.
 | 2.4.1   | Découpage modulaire du moteur (14 fichiers)      |
 | 2.4.2   | Tests étendus, docs, alignement versions         |
 | 2.5     | Coop, build prod, mode Architecte, rendu découpé |
+| 2.5.3   | ROBO restauré, carte histoire, CI factorisée     |
 
 Détails par version : [CHANGELOG.md](CHANGELOG.md).
 

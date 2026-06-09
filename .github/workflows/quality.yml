@@ -1,0 +1,51 @@
+name: Quality
+
+on:
+    workflow_call:
+        inputs:
+            upload_dist:
+                description: Publier dist/ en artefact
+                type: boolean
+                default: false
+            upload_coverage:
+                description: Publier coverage/ en artefact
+                type: boolean
+                default: false
+jobs:
+    quality:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+            - run: npm ci
+            - run: npm run lint
+            - run: npm run check:circular
+            - run: npm run typecheck
+            - run: npm run format:check
+            - run: node scripts/exporter-donnees-json.mjs
+            - run: npm run test:coverage
+            - run: npm audit --audit-level=moderate
+            - run: npm run build
+            - run: npm run analyze
+            - name: Budget taille bundle prod
+              run: node scripts/verifier-bundle.mjs
+            - run: npx playwright install --with-deps chromium
+            - run: npm run test:e2e
+              env:
+                  E2E_DIST: '1'
+            - name: Artefact couverture
+              if: inputs.upload_coverage
+              uses: actions/upload-artifact@v4
+              with:
+                  name: coverage
+                  path: coverage/
+                  retention-days: 14
+            - name: Artefact dist
+              if: inputs.upload_dist
+              uses: actions/upload-artifact@v4
+              with:
+                  name: dist
+                  path: dist/
+                  retention-days: 7

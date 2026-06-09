@@ -1,5 +1,4 @@
 import { BIOMES } from './config.js';
-import { obtenirBiomeActif } from './store-jeu.js';
 export {
     changerHumeur,
     reagirRoboAuxLignes,
@@ -38,11 +37,6 @@ export function appliquerThemeBiome(biomeId) {
         canvas.style.boxShadow = `0 0 15px ${ui.bordureCanvas}, 0 0 40px ${ui.bordureCanvas}44, inset 0 0 20px ${ui.bordureCanvas}0a`;
         canvas.style.borderColor = ui.bordureCanvas;
     }
-
-    const sectionMascotte = document.getElementById('section-mascotte');
-    if (sectionMascotte) {
-        sectionMascotte.style.setProperty('--mascotte-lueur', ui.couleurPrimaire);
-    }
 }
 
 export function appliquerTextesBiome(biomeId) {
@@ -64,9 +58,4 @@ export function appliquerTextesBiome(biomeId) {
     }
 }
 
-export function appliquerThemeMascotte() {
-    const biome = BIOMES[obtenirBiomeActif()] ?? BIOMES.classique;
-    const lueur = biome.lueurCoul;
-    const section = document.getElementById('section-mascotte');
-    if (section) section.style.setProperty('--mascotte-lueur', lueur);
-}
+export function appliquerThemeMascotte() {}

@@ -1,7 +1,14 @@
 import { BIOMES, ORDRE_BIOMES } from './config.js';
-import { eclaircir, assombrir } from './rendu-blocs-utils.js';
 import { obtenirCanvas } from './dom-utils.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
+import { biomeEstDebloqueParHistoire } from './progression.js';
+export { FONDS_BIOME, NOMS_MONDES_REQUIS } from './constellation-rendu.js';
+import {
+    afficherPanneauVerrouille,
+    dessinerFondBiome,
+    dessinerLignesConstellation as dessinerLignesRendu,
+    dessinerNoeudBiome as dessinerNoeudRendu,
+} from './constellation-rendu.js';
 
 let deps = {};
 
@@ -130,7 +137,7 @@ function initConstellation() {
             rayon: 28 + index * 2,
             pulsation: Math.random() * Math.PI * 2,
             vitessePuls: 0.02 + Math.random() * 0.01,
-            verrouille: !deps.biomeEstDebloque(deps.obtenirNiveauGlobal(), biome.niveauDeblocage),
+            verrouille: !biomeEstDebloqueParHistoire(id),
             flashRejet: 0,
         });
     });
@@ -176,132 +183,6 @@ function mettreAJourSelectBiomesClavier() {
     }
 }
 
-function dessinerLignesConstellation() {
-    for (let i = 0; i < constellationNoeuds.length; i++) {
-        for (let j = i + 1; j < constellationNoeuds.length; j++) {
-            const a = constellationNoeuds[i];
-            const b = constellationNoeuds[j];
-            const dx = a.x - b.x;
-            const dy = a.y - b.y;
-            const dist = Math.hypot(dx, dy);
-            if (dist >= 220) continue;
-            const debloque = !a.verrouille && !b.verrouille;
-            ctxConst.strokeStyle = debloque ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.06)';
-            ctxConst.lineWidth = 0.8;
-            ctxConst.beginPath();
-            ctxConst.moveTo(a.x, a.y);
-            ctxConst.lineTo(b.x, b.y);
-            ctxConst.stroke();
-        }
-    }
-}
-
-function dessinerNoeudBiome(noeud, timestamp) {
-    const t = timestamp / 1000;
-    noeud.pulsation += noeud.vitessePuls;
-    const pulse = Math.sin(noeud.pulsation);
-    const couleur = noeud.biome.lueurCoul;
-    const estHover = biomeHover === noeud.id;
-    const estChoisi = biomeChoisi === noeud.id;
-    const rayon = noeud.verrouille ? noeud.rayon * 0.72 : noeud.rayon;
-
-    if (noeud.flashRejet && timestamp - noeud.flashRejet < 400) {
-        ctxConst.save();
-        ctxConst.fillStyle = 'rgba(255,40,40,0.35)';
-        ctxConst.beginPath();
-        ctxConst.arc(noeud.x, noeud.y, rayon + 10, 0, Math.PI * 2);
-        ctxConst.fill();
-        ctxConst.restore();
-    }
-
-    if (noeud.verrouille) {
-        ctxConst.save();
-        ctxConst.fillStyle = 'rgba(60,60,80,0.85)';
-        ctxConst.beginPath();
-        ctxConst.arc(noeud.x, noeud.y, rayon, 0, Math.PI * 2);
-        ctxConst.fill();
-        ctxConst.fillStyle = 'rgba(255,255,255,0.5)';
-        ctxConst.font = '18px serif';
-        ctxConst.textAlign = 'center';
-        ctxConst.textBaseline = 'middle';
-        ctxConst.fillText('🔒', noeud.x, noeud.y - 2);
-        ctxConst.font = '7px "Press Start 2P", monospace';
-        ctxConst.fillStyle = 'rgba(180,180,200,0.6)';
-        ctxConst.fillText(noeud.biome.nom, noeud.x, noeud.y + rayon + 14);
-        ctxConst.restore();
-        return;
-    }
-
-    ctxConst.save();
-
-    if (estChoisi) {
-        ctxConst.shadowColor = couleur;
-        ctxConst.shadowBlur = 35;
-        ctxConst.strokeStyle = couleur;
-        ctxConst.lineWidth = 3;
-        ctxConst.beginPath();
-        ctxConst.arc(noeud.x, noeud.y, rayon + 10, 0, Math.PI * 2);
-        ctxConst.stroke();
-    }
-
-    if (estHover) {
-        ctxConst.shadowColor = couleur;
-        ctxConst.shadowBlur = 25;
-        ctxConst.save();
-        ctxConst.translate(noeud.x, noeud.y);
-        ctxConst.rotate(t * 1.2);
-        ctxConst.strokeStyle = couleur;
-        ctxConst.lineWidth = 2;
-        ctxConst.setLineDash([6, 5]);
-        ctxConst.beginPath();
-        ctxConst.arc(0, 0, rayon + 14, 0, Math.PI * 2);
-        ctxConst.stroke();
-        ctxConst.restore();
-    }
-
-    ctxConst.strokeStyle = couleur + '33';
-    ctxConst.lineWidth = 1;
-    ctxConst.shadowBlur = 0;
-    ctxConst.beginPath();
-    ctxConst.arc(noeud.x, noeud.y, rayon + 8 + pulse * 4, 0, Math.PI * 2);
-    ctxConst.stroke();
-
-    ctxConst.strokeStyle = couleur + '55';
-    ctxConst.beginPath();
-    ctxConst.arc(noeud.x, noeud.y, rayon + 4, 0, Math.PI * 2);
-    ctxConst.stroke();
-
-    const grad = ctxConst.createRadialGradient(
-        noeud.x - rayon * 0.2,
-        noeud.y - rayon * 0.2,
-        0,
-        noeud.x,
-        noeud.y,
-        rayon
-    );
-    grad.addColorStop(0, eclaircir(couleur, 1.35));
-    grad.addColorStop(0.55, couleur);
-    grad.addColorStop(1, assombrir(couleur, 0.45));
-    ctxConst.fillStyle = grad;
-    ctxConst.shadowColor = couleur;
-    ctxConst.shadowBlur = estHover || estChoisi ? 0 : 12;
-    ctxConst.beginPath();
-    ctxConst.arc(noeud.x, noeud.y, rayon, 0, Math.PI * 2);
-    ctxConst.fill();
-
-    ctxConst.shadowBlur = 0;
-    ctxConst.font = '20px serif';
-    ctxConst.textAlign = 'center';
-    ctxConst.textBaseline = 'middle';
-    ctxConst.fillText(noeud.biome.icone, noeud.x, noeud.y);
-
-    ctxConst.font = '7px "Press Start 2P", monospace';
-    ctxConst.fillStyle = couleur + '99';
-    ctxConst.fillText(noeud.biome.nom, noeud.x, noeud.y + rayon + 14);
-
-    ctxConst.restore();
-}
-
 function boucleConstellation(timestamp) {
     if (!ctxConst || !canvasConst) return;
 
@@ -310,19 +191,7 @@ function boucleConstellation(timestamp) {
     offsetCamX = (sourisCX / w - 0.5) * 18;
     offsetCamY = (sourisCY / h - 0.5) * 18;
 
-    const gradFond = ctxConst.createRadialGradient(
-        w / 2,
-        h / 2,
-        0,
-        w / 2,
-        h / 2,
-        Math.max(w, h) * 0.75
-    );
-    gradFond.addColorStop(0, '#020210');
-    gradFond.addColorStop(0.5, '#060818');
-    gradFond.addColorStop(1, '#000004');
-    ctxConst.fillStyle = gradFond;
-    ctxConst.fillRect(0, 0, w, h);
+    dessinerFondBiome(ctxConst, w, h, biomeChoisi ?? 'classique');
 
     ctxConst.save();
     ctxConst.translate(offsetCamX, offsetCamY);
@@ -336,10 +205,10 @@ function boucleConstellation(timestamp) {
         ctxConst.fill();
     }
 
-    dessinerLignesConstellation();
+    dessinerLignesRendu(ctxConst, constellationNoeuds);
 
     for (const noeud of constellationNoeuds) {
-        dessinerNoeudBiome(noeud, timestamp);
+        dessinerNoeudRendu(ctxConst, noeud, timestamp, biomeHover, biomeChoisi);
     }
 
     ctxConst.restore();
@@ -357,6 +226,7 @@ function traiterSelectionNoeud(noeud, doubleTap = false) {
     if (noeud.verrouille) {
         noeud.flashRejet = performance.now();
         deps.sonMenu?.('menu_hover');
+        afficherPanneauVerrouille(noeud);
         return;
     }
 

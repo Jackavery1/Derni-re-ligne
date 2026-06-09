@@ -379,6 +379,41 @@ export function obtenirEtatDeblocage() {
     };
 }
 
+const BIOME_VERS_MONDE_HISTOIRE = {
+    classique: null,
+    lave: 'monde_lave',
+    ocean: 'monde_ocean',
+    foret: 'monde_foret',
+    glace: 'monde_glace',
+    desert: 'monde_desert',
+    cyber: 'monde_cyber',
+    fuochi: 'monde_fuochi',
+    cosmos: 'monde_cosmos',
+};
+
+/**
+ * Retourne true si le biome est débloqué en Mode Libre.
+ * Un biome est débloqué si son monde Histoire correspondant a été complété.
+ * Le biome classique est toujours débloqué.
+ * @param {string} biomeId
+ * @returns {boolean}
+ */
+export function biomeEstDebloqueParHistoire(biomeId) {
+    const mondeRequis = BIOME_VERS_MONDE_HISTOIRE[biomeId];
+    if (mondeRequis === null) return true;
+    if (mondeRequis === undefined) return false;
+
+    try {
+        const etatHist = chargerEtatHistoire();
+        return (
+            Array.isArray(etatHist.mondesCompletes) &&
+            etatHist.mondesCompletes.includes(mondeRequis)
+        );
+    } catch {
+        return false;
+    }
+}
+
 /** @param {typeof ETAT_HISTOIRE_VIDE} etat */
 export function sauvegarderEtatHistoire(etat) {
     ecrireStockageJson('derniereLigne_histoire', etat);

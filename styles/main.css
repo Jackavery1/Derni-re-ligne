@@ -3602,7 +3602,16 @@ body.histoire-active #indicateur-vide-actif {
     gap: 8px;
 }
 
-/* Liens croisés et toggles : masqués tant que le mode n'est pas débloqué */
+/* Modes progressifs : masqués par défaut, visibles uniquement avec .mode-debloque */
+#ecran-titre #btn-jouer:not(.mode-debloque),
+#ecran-titre #btn-architecte:not(.mode-debloque),
+#ecran-titre #btn-codex:not(.mode-debloque),
+#ecran-titre #btn-profil:not(.mode-debloque),
+#ecran-titre #btn-achievements:not(.mode-debloque),
+#ecran-titre #menu-separateur-libre:not(.mode-debloque),
+#ecran-titre #menu-separateur-collection:not(.mode-debloque),
+#ecran-titre #menu-bloc-libre:not(.mode-debloque),
+#ecran-titre #menu-bloc-collection:not(.mode-debloque),
 #toggle-oracle-wrap:not(.mode-debloque),
 #toggle-coop-wrap:not(.mode-debloque),
 #btn-profil-codex:not(.mode-debloque),

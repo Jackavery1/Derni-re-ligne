@@ -3,6 +3,7 @@ import {
     demarrerPartie,
     terminerPartieCourante,
     preparerPageSansSw,
+    preparerPremierLancement,
     attendreApplicationPrete,
 } from './helpers.mjs';
 
@@ -31,14 +32,14 @@ test('game over affiche l écran de fin', async ({ page }) => {
     await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/);
 });
 
-test('modes verrouillés visibles au premier lancement', async ({ page }) => {
+test('modes verrouillés masqués au premier lancement', async ({ page }) => {
+    await preparerPremierLancement(page);
     await page.goto('/');
     await attendreApplicationPrete(page);
-    await expect(page.locator('#btn-jouer')).toBeVisible();
-    await expect(page.locator('#btn-jouer')).toHaveClass(/btn-verrouille/);
-    await expect(page.locator('#btn-jouer')).toBeDisabled();
-    await expect(page.locator('#btn-codex')).toBeVisible();
-    await expect(page.locator('#btn-codex')).toBeDisabled();
+    await expect(page.locator('#btn-jouer')).toBeHidden();
+    await expect(page.locator('#btn-codex')).toBeHidden();
+    await expect(page.locator('#menu-bloc-libre')).toBeHidden();
+    await expect(page.locator('#menu-bloc-collection')).toBeHidden();
 });
 
 test('mode libre débloqué après progression histoire', async ({ page }) => {

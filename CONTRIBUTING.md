@@ -24,6 +24,10 @@ npm run test:e2e
 
 Node 18+ (`.nvmrc`). Logs verbeux : `?debug=1`.
 
+### Tests E2E sur le bundle prod
+
+La CI définit `E2E_DIST=1` : Playwright sert `dist/` et non les modules ES. En local, lancer **`npm run build`** avant `npm run test:e2e` si cette variable est active, sinon les tests peuvent charger un build obsolète. Sans `E2E_DIST`, `npm run test:e2e` sert la racine du projet (modules dev).
+
 ## Commits (usage interne)
 
 Format [Conventional Commits](https://www.conventionalcommits.org/) :

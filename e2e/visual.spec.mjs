@@ -41,4 +41,14 @@ test.describe('régressions visuelles', () => {
             animations: 'disabled',
         });
     });
+
+    test('écran sélection', async ({ page }) => {
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+        await page.locator('#btn-jouer').click();
+        await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+        await expect(page.locator('#ecran-selection')).toHaveScreenshot('ecran-selection.png', {
+            animations: 'disabled',
+        });
+    });
 });

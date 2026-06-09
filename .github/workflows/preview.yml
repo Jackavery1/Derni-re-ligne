@@ -9,29 +9,18 @@ permissions:
 
 jobs:
     preview:
+        uses: ./.github/workflows/quality.yml
+        with:
+            upload_dist: true
+
+    package:
+        needs: preview
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
+            - uses: actions/download-artifact@v4
               with:
-                  node-version-file: '.nvmrc'
-            - run: npm ci
-            - run: npm run lint
-            - run: npm run check:circular
-            - run: npm run typecheck
-            - run: npm run format:check
-            - run: node scripts/exporter-donnees-json.mjs
-            - run: npm test
-            - run: npm run test:coverage
-            - run: npm audit --audit-level=moderate
-            - run: npm run build
-            - run: npm run analyze
-            - name: Budget taille bundle prod
-              run: node scripts/verifier-bundle.mjs
-            - run: npx playwright install --with-deps chromium
-            - run: npm run test:e2e
-              env:
-                  E2E_DIST: '1'
+                  name: dist
+                  path: dist/
             - name: Préparer artefact statique (bundle prod)
               run: |
                   mkdir -p _site

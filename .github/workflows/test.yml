@@ -1,33 +1,13 @@
 name: Tests
 
 on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+    push:
+        branches: [main, master]
+    pull_request:
+        branches: [main, master]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+    test:
+        uses: ./.github/workflows/quality.yml
         with:
-          node-version-file: '.nvmrc'
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run check:circular
-      - run: npm run typecheck
-      - run: npm run format:check
-      - run: node scripts/exporter-donnees-json.mjs
-      - run: npm test
-      - run: npm run test:coverage
-      - run: npm audit --audit-level=moderate
-      - run: npm run build
-      - run: npm run analyze
-      - name: Budget taille bundle prod
-        run: node scripts/verifier-bundle.mjs
-      - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
-        env:
-          E2E_DIST: '1'
+            upload_coverage: true
