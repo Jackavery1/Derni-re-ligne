@@ -2,7 +2,7 @@ import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { obtenirCanvas } from './dom-utils.js';
 import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
 import { paradoxeEstDebloque } from './monde-paradoxe-etat.js';
-import { dessinerCarteHistoire } from './histoire-map-rendu.js';
+import { dessinerCarteHistoire, invaliderDonneesEtoilesHistoire } from './histoire-map-rendu.js';
 import {
     attacherEvenementsCarteHistoire,
     lancerMondeDepuisCarte,
@@ -11,6 +11,8 @@ import {
     traiterSelectionNoeud,
 } from './histoire-map-ui.js';
 import { configurerActionsHistoire } from './histoire-actions.js';
+import { obtenirEtatHistoire, mondePeutEtreJoue } from './histoire-mondes.js';
+import { logger } from './logger.js';
 
 const etatCarte = {
     canvasCarte: null,
@@ -24,6 +26,17 @@ const etatCarte = {
     positionsNoeuds: {},
     evenementsCarteAttaches: false,
     selectMondesOk: false,
+    camera: {
+        y: 0,
+        zoom: 1.6,
+        cibleY: 0,
+        cibleZoom: 1.6,
+        vitesseLerp: 0.07,
+        scrollMin: -60,
+        scrollMax: 2500,
+        initialise: false,
+    },
+    scrollOk: false,
 };
 
 export function initialiserCarteMonde() {
@@ -46,6 +59,48 @@ export function initialiserCarteMonde() {
     mettreAJourSelectMondesClavier(etatCarte, (noeud, doubleTap) =>
         traiterSelectionNoeud(etatCarte, noeud, doubleTap, lancerMondeDepuisCarte)
     );
+
+    if (!etatCarte.scrollOk) {
+        etatCarte.scrollOk = true;
+        const cvs = etatCarte.canvasCarte;
+
+        cvs.addEventListener(
+            'wheel',
+            (e) => {
+                e.preventDefault();
+                const cam = etatCarte.camera;
+                cam.cibleY = Math.max(
+                    cam.scrollMin,
+                    Math.min(cam.scrollMax, cam.cibleY + e.deltaY * 0.45)
+                );
+            },
+            { passive: false }
+        );
+
+        let touchY0 = 0;
+        let camY0 = 0;
+        cvs.addEventListener(
+            'touchstart',
+            (e) => {
+                touchY0 = e.touches[0].clientY;
+                camY0 = etatCarte.camera.cibleY;
+            },
+            { passive: true }
+        );
+        cvs.addEventListener(
+            'touchmove',
+            (e) => {
+                e.preventDefault();
+                const cam = etatCarte.camera;
+                cam.cibleY = Math.max(
+                    cam.scrollMin,
+                    Math.min(cam.scrollMax, camY0 + (touchY0 - e.touches[0].clientY) * 1.1)
+                );
+            },
+            { passive: false }
+        );
+    }
+
     return true;
 }
 
@@ -56,75 +111,110 @@ function redimensionnerCanvas() {
 }
 
 function calculerPositionsNoeuds() {
+    const canvas = etatCarte.canvasCarte;
+    if (!canvas) return;
+    const w = canvas.width;
+
+    const PAS_Y = 140;
+    const MARGE_Y = 100;
+    const R = 20;
+    const R_BOSS = 28;
+
+    const LAYOUT = [
+        ['monde_prologue', 0.5, R],
+        ['monde_lave', 0.32, R],
+        ['monde_rouille', 0.68, R],
+        ['monde_boss_1', 0.5, R_BOSS],
+        ['monde_ocean', 0.3, R],
+        ['monde_foret', 0.65, R],
+        ['monde_glace', 0.38, R],
+        ['monde_boss_2', 0.5, R_BOSS],
+        ['monde_desert', 0.64, R],
+        ['monde_eclipse', 0.32, R],
+        ['monde_cyber', 0.62, R],
+        ['monde_boss_3', 0.5, R_BOSS],
+        ['monde_fuochi', 0.28, R],
+        ['monde_cosmos', 0.68, R],
+        ['monde_vide', 0.38, R],
+        ['monde_boss_4', 0.5, R_BOSS],
+        ['monde_finale', 0.5, R_BOSS + 4],
+    ];
+
     etatCarte.positionsNoeuds = {};
-    if (!etatCarte.canvasCarte) return;
-
-    const w = etatCarte.canvasCarte.width;
-    const h = etatCarte.canvasCarte.height;
-    const pX = w * 0.1;
-    const pY = h * 0.09;
-    const zoneH = h - pY * 2;
-    const zoneW = w - pX * 2;
-    const nbRangees = 6;
-    const pasY = zoneH / (nbRangees - 1);
-
-    placerNoeud('monde_prologue', w / 2, pY, 22);
-
-    const y1 = pY + pasY;
-    placerNoeud('monde_lave', pX + zoneW * 0.15, y1, 22);
-    placerNoeud('monde_rouille', pX + zoneW * 0.5, y1, 22);
-    placerNoeud('monde_boss_1', pX + zoneW * 0.85, y1, 28);
-
-    const y2 = pY + pasY * 2;
-    placerNoeud('monde_ocean', pX + zoneW * 0.08, y2, 22);
-    placerNoeud('monde_foret', pX + zoneW * 0.33, y2, 22);
-    placerNoeud('monde_glace', pX + zoneW * 0.6, y2, 22);
-    placerNoeud('monde_boss_2', pX + zoneW * 0.88, y2, 28);
-
-    const y3 = pY + pasY * 3;
-    placerNoeud('monde_desert', pX + zoneW * 0.08, y3, 22);
-    placerNoeud('monde_eclipse', pX + zoneW * 0.33, y3, 22);
-    placerNoeud('monde_cyber', pX + zoneW * 0.6, y3, 22);
-    placerNoeud('monde_boss_3', pX + zoneW * 0.88, y3, 28);
-
-    const y4 = pY + pasY * 4;
-    placerNoeud('monde_fuochi', pX + zoneW * 0.08, y4, 22);
-    placerNoeud('monde_cosmos', pX + zoneW * 0.33, y4, 22);
-    placerNoeud('monde_vide', pX + zoneW * 0.6, y4, 22);
-    placerNoeud('monde_boss_4', pX + zoneW * 0.88, y4, 28);
-
-    placerNoeud('monde_finale', w / 2, pY + pasY * 5, 32);
-
-    const etatHist = obtenirEtatHistoirePersiste();
-
-    if (
-        etatHist.conditionsMiroir.bossArchivisteVaincu &&
-        etatHist.conditionsMiroir.tetrisTriplesCyber >= 3
-    ) {
-        placerNoeud(
-            'monde_miroir',
-            pX * 0.35,
-            etatCarte.positionsNoeuds['monde_eclipse']?.y ?? h / 2,
-            20
-        );
-    }
-
-    if (etatHist.conditionsTrame.miroirComplete) {
-        placerNoeud(
-            'monde_trame',
-            w - pX * 0.35,
-            etatCarte.positionsNoeuds['monde_foret']?.y ?? h * 0.4,
-            20
-        );
-    }
-
-    if (paradoxeEstDebloque()) {
-        placerNoeud('monde_paradoxe', pX * 0.12, h - pY * 0.6, 8);
-    }
+    LAYOUT.forEach(([id, xFrac, rayon], index) => {
+        etatCarte.positionsNoeuds[id] = {
+            x: Math.round(w * xFrac),
+            y: Math.round(MARGE_Y + index * PAS_Y),
+            rayon,
+        };
+    });
 }
 
-function placerNoeud(id, x, y, rayon) {
-    etatCarte.positionsNoeuds[id] = { x, y, rayon };
+function _lerpCamera() {
+    const cam = etatCarte.camera;
+    cam.y += (cam.cibleY - cam.y) * cam.vitesseLerp;
+    cam.zoom += (cam.cibleZoom - cam.zoom) * cam.vitesseLerp;
+
+    if (cam.initialise) return;
+
+    const canvas = etatCarte.canvasCarte;
+    if (!canvas) return;
+    const h = canvas.height;
+
+    const etatHist = obtenirEtatHistoire();
+    const SEQUENCE = [
+        'monde_prologue',
+        'monde_lave',
+        'monde_rouille',
+        'monde_boss_1',
+        'monde_ocean',
+        'monde_foret',
+        'monde_glace',
+        'monde_boss_2',
+        'monde_desert',
+        'monde_eclipse',
+        'monde_cyber',
+        'monde_boss_3',
+        'monde_fuochi',
+        'monde_cosmos',
+        'monde_vide',
+        'monde_boss_4',
+        'monde_finale',
+    ];
+    let idCible = 'monde_prologue';
+    for (const id of SEQUENCE) {
+        if (mondePeutEtreJoue(id, etatHist)) {
+            idCible = id;
+            break;
+        }
+    }
+
+    const pos = etatCarte.positionsNoeuds[idCible];
+    if (!pos) return;
+
+    const ZOOM = 1.6;
+
+    const cibleY = pos.y - h / (ZOOM * 3.0);
+
+    const posFinale = etatCarte.positionsNoeuds['monde_finale'];
+    const yMax = posFinale ? posFinale.y - h / (ZOOM * 1.8) : cibleY + 800;
+
+    cam.scrollMin = -60;
+    cam.scrollMax = Math.max(cibleY + 40, yMax);
+    cam.y = cibleY;
+    cam.cibleY = cibleY;
+    cam.zoom = ZOOM;
+    cam.cibleZoom = ZOOM;
+    cam.initialise = true;
+
+    logger.debug(`[carte] focus : ${idCible} y=${Math.round(cibleY)} zoom=${ZOOM}`);
+}
+
+export function appliquerTransformCamera(ctx, w, h) {
+    const cam = etatCarte.camera;
+    ctx.translate(w / 2, h / 2);
+    ctx.scale(cam.zoom, cam.zoom);
+    ctx.translate(-w / 2, -(h / 2 + cam.y));
 }
 
 export async function demarrerCarteHistoire() {
@@ -146,6 +236,7 @@ export function arreterCarteHistoire() {
 
 function boucleCarte(timestamp) {
     if (!etatCarte.carteActive || !etatCarte.ctxCarte || !etatCarte.canvasCarte) return;
+    _lerpCamera();
     dessinerCarteHistoire(etatCarte, timestamp);
     etatCarte.idFrameCarte = requestAnimationFrame(boucleCarte);
 }
@@ -161,10 +252,24 @@ function coordsCanvas(clientX, clientY) {
     };
 }
 
+function ecranVersMonde(sx, sy) {
+    const cam = etatCarte.camera;
+    const cvs = etatCarte.canvasCarte;
+    const w = cvs?.width ?? 0;
+    const h = cvs?.height ?? 0;
+    const zoom = cam?.zoom ?? 1;
+    const camY = cam?.y ?? 0;
+    return {
+        mx: w / 2 + (sx - w / 2) / zoom,
+        my: h / 2 + camY + (sy - h / 2) / zoom,
+    };
+}
+
 function noeudSousCurseur(cx, cy) {
+    const { mx, my } = ecranVersMonde(cx, cy);
     for (const [id, pos] of Object.entries(etatCarte.positionsNoeuds)) {
-        const dx = cx - pos.x;
-        const dy = cy - pos.y;
+        const dx = mx - pos.x;
+        const dy = my - pos.y;
         const hitRadius = pos.rayon + 10;
         if (dx * dx + dy * dy <= hitRadius * hitRadius) {
             const monde = SEQUENCE_HISTOIRE.find((m) => m.id === id);
@@ -179,6 +284,9 @@ export function redimensionnerCarteHistoire() {
     if (!etatCarte.canvasCarte || !etatCarte.carteActive) return;
     redimensionnerCanvas();
     calculerPositionsNoeuds();
+    etatCarte.camera.initialise = false;
+    etatCarte.scrollOk = false;
+    invaliderDonneesEtoilesHistoire();
 }
 
 configurerActionsHistoire({ arreterCarte: arreterCarteHistoire });

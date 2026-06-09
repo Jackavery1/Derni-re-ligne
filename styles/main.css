@@ -2844,24 +2844,49 @@ body.archi-active #conteneur-principal-archi {
     border-bottom: 1px solid rgba(255, 0, 110, 0.2);
 }
 .histoire-titre-principale {
-    font-size: clamp(0.5rem, 2vw, 0.72rem);
-    letter-spacing: 5px;
-    color: var(--rose);
-    text-shadow: 0 0 10px var(--rose);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: clamp(0.62rem, 2.5vw, 0.88rem);
+    letter-spacing: 0;
+    opacity: 1 !important;
+}
+.histoire-titre-principale .dl-mot-1 {
+    display: inline-flex;
+    letter-spacing: 0;
+}
+.histoire-titre-principale .lettre-titre {
+    display: inline;
+    animation: none;
+    letter-spacing: 0;
+    text-shadow:
+        0 0 6px var(--couleur-lettre),
+        0 0 14px color-mix(in srgb, var(--couleur-lettre) 40%, transparent);
+}
+.histoire-titre-principale .dl-mot-2 {
+    font-size: 1em;
+    letter-spacing: 0;
+    color: var(--cyan);
+    text-shadow:
+        0 0 8px var(--cyan),
+        0 0 18px rgba(0, 245, 255, 0.35);
+    animation: none;
 }
 .histoire-sous-titre {
-    font-size: 0.3rem;
-    color: var(--texte-dim);
-    letter-spacing: 4px;
-    margin-top: 3px;
+    font-size: clamp(0.36rem, 1.3vw, 0.44rem);
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.15em;
+    margin-top: 9px;
 }
 .histoire-progression {
     display: flex;
     gap: 16px;
     align-items: center;
-    font-size: 0.3rem;
-    color: var(--texte-dim);
+    font-size: clamp(0.36rem, 1.3vw, 0.44rem);
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 0 6px rgba(0, 221, 200, 0.5);
     letter-spacing: 2px;
+    opacity: 1 !important;
 }
 .histoire-prog-item {
     display: flex;
