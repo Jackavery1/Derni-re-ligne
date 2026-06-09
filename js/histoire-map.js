@@ -1,8 +1,7 @@
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { obtenirCanvas } from './dom-utils.js';
-import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
-import { paradoxeEstDebloque } from './monde-paradoxe-etat.js';
 import { dessinerCarteHistoire, invaliderDonneesEtoilesHistoire } from './histoire-map-rendu.js';
+import { ecranVersMonde } from './histoire-map-camera.js';
 import {
     attacherEvenementsCarteHistoire,
     lancerMondeDepuisCarte,
@@ -120,6 +119,7 @@ function calculerPositionsNoeuds() {
     const R = 20;
     const R_BOSS = 28;
 
+    /** @type {[string, number, number][]} */
     const LAYOUT = [
         ['monde_prologue', 0.5, R],
         ['monde_lave', 0.32, R],
@@ -210,13 +210,6 @@ function _lerpCamera() {
     logger.debug(`[carte] focus : ${idCible} y=${Math.round(cibleY)} zoom=${ZOOM}`);
 }
 
-export function appliquerTransformCamera(ctx, w, h) {
-    const cam = etatCarte.camera;
-    ctx.translate(w / 2, h / 2);
-    ctx.scale(cam.zoom, cam.zoom);
-    ctx.translate(-w / 2, -(h / 2 + cam.y));
-}
-
 export async function demarrerCarteHistoire() {
     arreterCarteHistoire();
     const { chargerHistoireTextes } = await import('./charger-histoire-textes.js');
@@ -252,21 +245,11 @@ function coordsCanvas(clientX, clientY) {
     };
 }
 
-function ecranVersMonde(sx, sy) {
-    const cam = etatCarte.camera;
+function noeudSousCurseur(cx, cy) {
     const cvs = etatCarte.canvasCarte;
     const w = cvs?.width ?? 0;
     const h = cvs?.height ?? 0;
-    const zoom = cam?.zoom ?? 1;
-    const camY = cam?.y ?? 0;
-    return {
-        mx: w / 2 + (sx - w / 2) / zoom,
-        my: h / 2 + camY + (sy - h / 2) / zoom,
-    };
-}
-
-function noeudSousCurseur(cx, cy) {
-    const { mx, my } = ecranVersMonde(cx, cy);
+    const { mx, my } = ecranVersMonde(etatCarte.camera, cx, cy, w, h);
     for (const [id, pos] of Object.entries(etatCarte.positionsNoeuds)) {
         const dx = mx - pos.x;
         const dy = my - pos.y;

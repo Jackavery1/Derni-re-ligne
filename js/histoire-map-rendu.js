@@ -2,7 +2,7 @@ import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { BIOMES } from './config.js';
 import { obtenirEtatHistoire, mondePeutEtreJoue, obtenirEtatMonde } from './histoire-mondes.js';
 import { paradoxeEstDebloque } from './monde-paradoxe-etat.js';
-import { appliquerTransformCamera } from './histoire-map.js';
+import { appliquerTransformCamera } from './histoire-map-camera.js';
 
 // ── Fond Mode Histoire — données pré-calculées ──────────────────
 let _etoilesHistoire = null;
@@ -229,7 +229,7 @@ export function dessinerCarteHistoire(etatCarte, timestamp) {
     dessinerEtoilesFond(etatCarte, timestamp);
 
     ctx.save();
-    appliquerTransformCamera(ctx, w, h);
+    appliquerTransformCamera(etatCarte.camera, ctx, w, h);
 
     _dessinerChemins(etatCarte, timestamp);
     _dessinerEtiquettesChapitres(etatCarte);
