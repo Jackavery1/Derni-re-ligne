@@ -162,6 +162,60 @@ export function calculerProfilStyle(donnees, lignesPartie) {
     return { vitesse, precision, agressivite, endurance, creativite, equilibre };
 }
 
+const NOTES_VERA = {
+    agressivite: 'Il fonce. Comme si chaque ligne était la dernière. — V.',
+    precision: "Pas un geste de trop. Je n'ai jamais vu ça. — V.",
+    equilibre: "Il apprend l'équilibre. Plus vite que moi. — V.",
+    endurance: "Il ne s'arrête pas. Je me demande s'il sait pourquoi. — V.",
+    creativite: 'Il joue comme on invente. — V.',
+    vitesse: 'Chaque pièce, une décision instantanée. — V.',
+};
+
+const NOTE_VERA_DEFAUT = "La Trame m'observe à travers lui. — V.";
+
+/**
+ * @param {NonNullable<ReturnType<typeof calculerProfilStyle>>} profil
+ * @returns {keyof typeof NOTES_VERA | null}
+ */
+export function obtenirAxeDominant(profil) {
+    if (!profil) return null;
+    const axes = [
+        { cle: 'vitesse', val: profil.vitesse },
+        { cle: 'precision', val: profil.precision },
+        { cle: 'agressivite', val: profil.agressivite },
+        { cle: 'endurance', val: profil.endurance },
+        { cle: 'creativite', val: profil.creativite },
+        { cle: 'equilibre', val: profil.equilibre },
+    ];
+    axes.sort((a, b) => b.val - a.val);
+    return axes[0].cle;
+}
+
+/**
+ * @param {ReturnType<typeof calculerProfilStyle>} profil
+ * @returns {string}
+ */
+export function obtenirNoteVera(profil) {
+    const axe = obtenirAxeDominant(profil);
+    if (!axe) return NOTE_VERA_DEFAUT;
+    return NOTES_VERA[axe] ?? NOTE_VERA_DEFAUT;
+}
+
+function dimensionnerCanvasProfil(canvas) {
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+    const parent = canvas.parentElement;
+    if (!parent) return;
+    const style = getComputedStyle(parent);
+    const paddingX = parseFloat(style.paddingLeft || '0') + parseFloat(style.paddingRight || '0');
+    const w = Math.max(200, Math.floor(parent.clientWidth - paddingX));
+    const ratio = canvas.height / canvas.width;
+    const h = Math.max(80, Math.floor(w * ratio));
+    if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+    }
+}
+
 export function genererTitreStyle(profil) {
     if (!profil) return 'JOUEUR MYSTÉRIEUX';
 
@@ -252,12 +306,26 @@ export function afficherProfil() {
 
     const elTitre = document.getElementById('profil-titre-style');
     const elBiome = document.getElementById('profil-biome-badge');
-    if (elTitre) elTitre.textContent = titre;
+    const elNote = document.getElementById('profil-note-vera');
+    const elVide = document.getElementById('profil-vide-msg');
+    const profilVide = donnees.timestampsVerrou.length === 0;
+
+    if (elTitre) elTitre.textContent = profilVide ? '' : titre;
+    if (elVide) elVide.classList.toggle('element-masque', !profilVide);
+    if (elNote) {
+        if (profil && !profilVide) {
+            elNote.textContent = obtenirNoteVera(profil);
+            elNote.classList.remove('element-masque');
+        } else {
+            elNote.textContent = '';
+            elNote.classList.add('element-masque');
+        }
+    }
 
     const biomeId = donnees.biomeId || dernierProfil.donnees.biomeId;
     if (elBiome) {
         const b = BIOMES[biomeId];
-        elBiome.textContent = b ? `${b.icone} ${b.nom}` : '';
+        elBiome.textContent = b && !profilVide ? b.nom.toUpperCase() : '';
     }
 
     const nb = donnees.timestampsVerrou.length;
@@ -295,6 +363,9 @@ export function afficherProfil() {
         const cHeat = obtenirCanvas('canvas-heatmap');
         const cRythm = obtenirCanvas('canvas-rythme');
         const cRad = obtenirCanvas('canvas-radar');
+        if (cHeat) dimensionnerCanvasProfil(cHeat);
+        if (cRythm) dimensionnerCanvasProfil(cRythm);
+        if (cRad) dimensionnerCanvasProfil(cRad);
         const ctxHeat = cHeat?.getContext('2d');
         const ctxRythm = cRythm?.getContext('2d');
         const ctxRad = cRad?.getContext('2d');

@@ -4,6 +4,8 @@ import {
     reinitialiserDonneesPartie,
     calculerProfilStyle,
     genererTitreStyle,
+    obtenirAxeDominant,
+    obtenirNoteVera,
     calculerHauteurPlateau,
     enregistrerReaction,
 } from '../js/profil-jeu.js';
@@ -55,6 +57,19 @@ describe('profil-jeu', () => {
         expect(calculerHauteurPlateau()).toBe(1);
         etat.plateau[17][3] = '#ffe600';
         expect(calculerHauteurPlateau()).toBe(3);
+    });
+
+    it('obtenirNoteVera suit l axe dominant du profil', () => {
+        const profil = {
+            vitesse: 10,
+            precision: 20,
+            agressivite: 85,
+            endurance: 30,
+            creativite: 15,
+            equilibre: 25,
+        };
+        expect(obtenirAxeDominant(profil)).toBe('agressivite');
+        expect(obtenirNoteVera(profil)).toContain('fonce');
     });
 
     it('enregistrerReaction ne compte qu une fois par pièce', () => {

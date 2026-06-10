@@ -1,77 +1,96 @@
 <div id="ecran-profil" class="ecran">
     <canvas class="canvas-fond-meta" id="fond-meta-profil"></canvas>
     <div class="profil-contenu">
-        <div class="profil-header">
+        <header class="profil-rapport-header profil-col-full">
+            <div class="profil-rapport-ligne">
+                <span class="profil-rapport-meta"
+                    >ANALYSE COMPORTEMENTALE — TRAME // SUJET : ROBO</span
+                >
+                <span class="profil-rapport-ref">REF. V-2554</span>
+            </div>
             <div class="profil-titre">PROFIL VIVANT</div>
             <div id="profil-titre-style" class="profil-titre-style"></div>
+            <p id="profil-note-vera" class="profil-note-vera element-masque"></p>
             <div id="profil-biome-badge" class="profil-biome-badge"></div>
+            <p id="profil-vide-msg" class="profil-vide-msg element-masque">
+                Données insuffisantes. Joue, et la Trame apprendra qui tu es.
+            </p>
+        </header>
+
+        <div class="profil-grille">
+            <div class="profil-col-gauche">
+                <section class="profil-section panneau-meta panneau-meta--accent-cyan">
+                    <h2 class="profil-section-label">STYLE DE JEU</h2>
+                    <canvas
+                        id="canvas-radar"
+                        width="360"
+                        height="300"
+                        class="profil-canvas"
+                        aria-label="Radar du style de jeu"
+                    ></canvas>
+                </section>
+            </div>
+
+            <div class="profil-col-droite">
+                <section class="profil-section panneau-meta panneau-meta--accent-cyan">
+                    <h2 class="profil-section-label">ZONES D'ATTERRISSAGE</h2>
+                    <canvas
+                        id="canvas-heatmap"
+                        width="480"
+                        height="140"
+                        class="profil-canvas"
+                        aria-label="Heatmap des atterrissages"
+                    ></canvas>
+                </section>
+
+                <section class="profil-section panneau-meta panneau-meta--accent-cyan">
+                    <h2 class="profil-section-label">RYTHME DE JEU</h2>
+                    <canvas
+                        id="canvas-rythme"
+                        width="480"
+                        height="120"
+                        class="profil-canvas"
+                        aria-label="Graphe de rythme de jeu"
+                    ></canvas>
+                </section>
+            </div>
         </div>
 
-        <div class="profil-section">
-            <div class="profil-section-label">STYLE DE JEU</div>
-            <canvas
-                id="canvas-radar"
-                width="260"
-                height="220"
-                class="profil-canvas"
-                aria-label="Radar du style de jeu"
-            ></canvas>
-        </div>
-
-        <div class="profil-section">
-            <div class="profil-section-label">ZONES D'ATTERRISSAGE</div>
-            <canvas
-                id="canvas-heatmap"
-                width="260"
-                height="100"
-                class="profil-canvas"
-                aria-label="Heatmap des atterrissages"
-            ></canvas>
-        </div>
-
-        <div class="profil-section">
-            <div class="profil-section-label">RYTHME DE JEU</div>
-            <canvas
-                id="canvas-rythme"
-                width="260"
-                height="80"
-                class="profil-canvas"
-                aria-label="Graphe de rythme de jeu"
-            ></canvas>
-        </div>
-
-        <div class="profil-stats-chiffrees">
-            <div class="profil-stat-item">
+        <div class="profil-stats-chiffrees profil-col-full">
+            <div class="profil-stat-item panneau-meta panneau-meta--accent-cyan">
                 <span class="psi-label">PIECES</span>
                 <span class="psi-val" id="pstat-pieces">0</span>
             </div>
-            <div class="profil-stat-item">
+            <div class="profil-stat-item panneau-meta panneau-meta--accent-cyan">
                 <span class="psi-label">ROTATIONS</span>
                 <span class="psi-val" id="pstat-rotations">0</span>
             </div>
-            <div class="profil-stat-item">
+            <div class="profil-stat-item panneau-meta panneau-meta--accent-cyan">
                 <span class="psi-label">HARD DROPS</span>
                 <span class="psi-val" id="pstat-drops">0</span>
             </div>
-            <div class="profil-stat-item">
+            <div class="profil-stat-item panneau-meta panneau-meta--accent-cyan">
                 <span class="psi-label">HOLDS</span>
                 <span class="psi-val" id="pstat-holds">0</span>
             </div>
-            <div class="profil-stat-item">
+            <div class="profil-stat-item panneau-meta panneau-meta--accent-cyan">
                 <span class="psi-label">REACTION MOY.</span>
                 <span class="psi-val" id="pstat-reaction">0ms</span>
             </div>
-            <div class="profil-stat-item">
+            <div class="profil-stat-item panneau-meta panneau-meta--accent-cyan">
                 <span class="psi-label">MOUVEMENTS</span>
                 <span class="psi-val" id="pstat-mouvements">0</span>
             </div>
-            <div class="profil-stat-item element-masque" id="pstat-oracle-wrap">
+            <div
+                class="profil-stat-item panneau-meta panneau-meta--accent-cyan element-masque"
+                id="pstat-oracle-wrap"
+            >
                 <span class="psi-label">MULT. MAX</span>
                 <span class="psi-val" id="pstat-oracle-mult">×1.0</span>
             </div>
         </div>
 
-        <div class="profil-boutons">
+        <div class="profil-boutons profil-col-full">
             <button class="bouton discret" type="button" id="btn-profil-menu">← MENU</button>
             <button
                 class="bouton discret element-masque"
@@ -80,7 +99,7 @@
                 aria-hidden="true"
                 hidden
             >
-                🏆 ACHIEVEMENTS
+                ACHIEVEMENTS
             </button>
             <button
                 class="bouton discret element-masque"
@@ -89,7 +108,7 @@
                 aria-hidden="true"
                 hidden
             >
-                📖 CODEX
+                CODEX
             </button>
         </div>
     </div>

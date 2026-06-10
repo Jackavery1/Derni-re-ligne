@@ -1,4 +1,4 @@
-const VERSION_CACHE = 'derniere-ligne-2.5.9-r7';
+const VERSION_CACHE = 'derniere-ligne-2.5.9-r8';
 
 const FICHIERS_A_CACHER = [
     './',
