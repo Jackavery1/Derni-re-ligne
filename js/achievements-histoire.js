@@ -1,6 +1,7 @@
 import { store } from './store-core.js';
 import { ETAT_HISTOIRE_VIDE } from './histoire-donnees.js';
 import { chargerEtatHistoire, sauvegarderEtatHistoire } from './progression.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
 
 function etatH() {
     if (!store.histoire.etat) {
@@ -333,25 +334,25 @@ export function enregistrerVictoireBossTimer(timestampDebut) {
 }
 
 export function ajouterBlocksRouillesEffaces(nb) {
-    if (!store.histoire.actif) return;
+    if (!modeHistoireEnCours()) return;
     store.blocksRouillesEffaces = (store.blocksRouillesEffaces ?? 0) + nb;
     _majProuesse('blocksRouillesMax', store.blocksRouillesEffaces);
 }
 
 export function ajouterLignesEclipseBasse(nb) {
-    if (!store.histoire.actif) return;
+    if (!modeHistoireEnCours()) return;
     store.lignesEclipseBasse = (store.lignesEclipseBasse ?? 0) + nb;
     _majProuesse('lignesEclipseBasseMax', store.lignesEclipseBasse);
 }
 
 export function ajouterLignesVide(nb) {
-    if (!store.histoire.actif) return;
+    if (!modeHistoireEnCours()) return;
     store.lignesVide = (store.lignesVide ?? 0) + nb;
     _majProuesse('lignesVideMax', store.lignesVide);
 }
 
 export function enregistrerPrecisionMiroir(precision) {
-    if (!store.histoire.actif) return;
+    if (!modeHistoireEnCours()) return;
     store.precisionMiroir = precision;
     _majProuesse('precisionMiroirMax', precision);
 }

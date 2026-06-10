@@ -4,11 +4,12 @@ import { etat, obtenirBiomeActif } from './store-jeu.js';
 import { ecouter } from './bus-jeu.js';
 import { logger } from './logger.js';
 import { obtenirEtatHistoire, sauvegarderEtatHistoireStore } from './histoire-mondes.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
 import { verifierConditionMiroir, verifierConditionC3 } from './conditions-secrets.js';
 import { ajouterBlocksRouillesEffaces } from './achievements-histoire.js';
 
 export function biomeActuelMecanique() {
-    if (!store.histoire.actif) return null;
+    if (!modeHistoireEnCours()) return null;
     return BIOMES[obtenirBiomeActif()]?.mecaniqueSpeciale ?? null;
 }
 
@@ -28,7 +29,7 @@ let _desinscriptions = [];
 const _celluleActivesRouille = new Set();
 
 export function initialiserMecaniquesHistoire() {
-    if (!store.histoire.actif) return;
+    if (!modeHistoireEnCours()) return;
 
     const mec = biomeActuelMecanique();
     if (!mec) return;
@@ -77,7 +78,7 @@ export function arreterMecaniquesHistoire() {
 }
 
 export function mettreAJourMecaniquesHistoire(dt, timestamp) {
-    if (!store.histoire.actif || etat.estEnPause) return;
+    if (!modeHistoireEnCours() || etat.estEnPause) return;
     const mec = biomeActuelMecanique();
     if (!mec) return;
 
@@ -102,7 +103,7 @@ export function mettreAJourMecaniquesHistoire(dt, timestamp) {
 }
 
 function _surNouvellepiece() {
-    if (!store.histoire.actif) return;
+    if (!modeHistoireEnCours()) return;
     if (biomeActuelEstVide()) {
         store.histoire.mecaniques.videTimestamp = performance.now();
         store.histoire.mecaniques.videInvisible = false;
@@ -110,7 +111,7 @@ function _surNouvellepiece() {
 }
 
 function _surLignesEffacees({ nbSupprimees, lignesEffacees }) {
-    if (!store.histoire.actif) return;
+    if (!modeHistoireEnCours()) return;
     const mec = biomeActuelMecanique();
 
     if (mec === 'rouille' && store.histoire.mecaniques.plateauTimestamps) {
@@ -132,7 +133,7 @@ const TRAME_INTERVALLE_MORPH_MS = () => BIOMES.trame?.intervalleMorphMs ?? 35000
 const TRAME_DUREE_FADE_MS = () => BIOMES.trame?.dureeFadeMs ?? 1200;
 
 export function enregistrerTimestampCellules(cellules) {
-    if (!store.histoire.actif) return;
+    if (!modeHistoireEnCours()) return;
     if (biomeActuelMecanique() !== 'rouille') return;
     if (!store.histoire.mecaniques.plateauTimestamps) return;
     const now = performance.now();
@@ -228,7 +229,7 @@ function _decalerMatricesRouille(lignesEffacees) {
 }
 
 export function celluleEstRouillee(x, y) {
-    if (!store.histoire.actif || !store.histoire.mecaniques.plateauRouille) return false;
+    if (!modeHistoireEnCours() || !store.histoire.mecaniques.plateauRouille) return false;
     if (y < 0 || y >= CONFIG.lignes || x < 0 || x >= CONFIG.colonnes) return false;
     return store.histoire.mecaniques.plateauRouille[y * CONFIG.colonnes + x] === 1;
 }
@@ -247,7 +248,7 @@ function _tickEclipse(timestamp) {
 }
 
 export function obtenirVitesseChuteModifiee(vitesseBase) {
-    if (!store.histoire.actif) return vitesseBase;
+    if (!modeHistoireEnCours()) return vitesseBase;
     if (biomeActuelMecanique() !== 'eclipse') return vitesseBase;
     if (!etat.pieceActuelle) return vitesseBase;
 
@@ -264,7 +265,7 @@ export function obtenirLigneEclipse() {
 
 /** Libellé HUD des modificateurs de vitesse (éclipse, surtension). */
 export function obtenirLibelleModificateurBiomeHud() {
-    if (!store.histoire.actif) return '';
+    if (!modeHistoireEnCours()) return '';
     const parties = [];
     if (store.surtensionActive) parties.push('SURTENSION');
     if (biomeActuelMecanique() === 'eclipse') {
@@ -283,12 +284,12 @@ function _tickVide(timestamp) {
 }
 
 export function pieceEstInvisible() {
-    if (!store.histoire.actif) return false;
+    if (!modeHistoireEnCours()) return false;
     return biomeActuelEstVide() && store.histoire.mecaniques.videInvisible;
 }
 
 export function ghostEstDesactive() {
-    if (!store.histoire.actif) return false;
+    if (!modeHistoireEnCours()) return false;
     return biomeActuelEstVide();
 }
 
@@ -303,7 +304,7 @@ function _appliquerCSSMiroir(actif) {
 }
 
 export function actionMiroir(actionDemandee) {
-    if (!store.histoire.actif) return actionDemandee;
+    if (!modeHistoireEnCours()) return actionDemandee;
     if (!biomeActuelEstMiroir()) return actionDemandee;
     if (actionDemandee === 'bas') return 'chute';
     if (actionDemandee === 'chute') return 'bas';
@@ -355,7 +356,7 @@ function _trackerTetrisCyber(nbLignes) {
 }
 
 export function onGameOverHistoire(lignes, mondeId) {
-    if (!store.histoire.actif) return;
+    if (!modeHistoireEnCours()) return;
     if (mondeId !== 'monde_prologue') return;
     if (lignes > 0) return;
 

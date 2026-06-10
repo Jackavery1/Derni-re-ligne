@@ -8,6 +8,7 @@ import { SEUILS_COMPLETION } from './histoire-mondes.js';
 import { store } from './store-core.js';
 import { logger } from './logger.js';
 import { emettre, ecouter } from './bus-jeu.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
 
 const DUREE_VICTOIRE_OBJECTIF_MS = 2200;
 
@@ -85,7 +86,7 @@ export function arreterSuiviMonde() {
 }
 
 export function suiviDifficulteActif() {
-    return store.histoire.actif && (store.histoire.difficulte?.actif ?? false);
+    return modeHistoireEnCours() && (store.histoire.difficulte?.actif ?? false);
 }
 
 export function victoireObjectifDeclenchee() {

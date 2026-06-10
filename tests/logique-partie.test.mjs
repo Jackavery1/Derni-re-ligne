@@ -47,7 +47,7 @@ import {
     deplacerBas,
     verrouillerPiece,
 } from '../js/logique-partie.js';
-import { reinitialiserBusJeu } from '../js/bus-jeu.js';
+import { reinitialiserBusJeu, ecouter } from '../js/bus-jeu.js';
 import { initialiserVivant } from '../js/vivant.js';
 import { etat, definirRefsCanvas } from '../js/store-jeu.js';
 import { CONFIG } from '../js/config.js';
@@ -176,6 +176,27 @@ describe('logique-partie', () => {
         etat.pieceActuelle = { type: 'T', rotation: 0, x: 3, y: 0 };
         utiliserReserve();
         expect(etat.pieceEnReserve.type).toBe('O');
+    });
+
+    it('utiliserReserve annule le flag T-Spin de la rotation precedente', () => {
+        etat.estEnCours = true;
+        etat.plateau = creerPlateau();
+        etat.plateau[17][4] = 1;
+        etat.plateau[17][6] = 1;
+        etat.plateau[19][4] = 1;
+        etat.pieceActuelle = { type: 'I', rotation: 0, x: 3, y: 0 };
+        etat.filePieces = [{ type: 'T', rotation: 0 }];
+        etat.pieceEnReserve = null;
+        tourner(1);
+        let dernierResult = null;
+        const arret = ecouter('score:maj', ({ result }) => {
+            dernierResult = result;
+        });
+        utiliserReserve();
+        etat.pieceActuelle = { type: 'T', rotation: 0, x: 4, y: 17 };
+        verrouillerPiece();
+        arret();
+        expect(dernierResult?.tSpin).toBeFalsy();
     });
 
     it('vitesseChute diminue avec le niveau', () => {

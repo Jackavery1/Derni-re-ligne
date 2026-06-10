@@ -12,6 +12,7 @@ import { creerFileNotifications } from './notifications-file.js';
 import { reinitialiserStatsAchievementsHistoire } from './achievements-histoire.js';
 import { ACHIEVEMENTS } from './achievements-donnees.js';
 import { sansAccentsE } from './texte-jeu.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
 
 export { ACHIEVEMENTS };
 
@@ -219,7 +220,7 @@ export function initStatsPartie() {
     statsGlobales.biomesJoues.add(obtenirBiomeActif());
     statsGlobales.meteosPartieActuelle = new Set();
     statsGlobales.oracleDeviationsPartieActuelle = 0;
-    if (store.histoire.actif) {
+    if (modeHistoireEnCours()) {
         reinitialiserStatsAchievementsHistoire();
     }
 }
@@ -272,7 +273,7 @@ export function finaliserStatsPartie(score, tempsSecondes) {
     if (melodie.notes.length > statsGlobales.maxNotesComposition) {
         statsGlobales.maxNotesComposition = melodie.notes.length;
     }
-    if (store.histoire.actif) {
+    if (modeHistoireEnCours()) {
         const etatHist = store.histoire.etat ?? chargerEtatHistoire();
         if (etatHist?.finObtenue) {
             if (!etatHist.toutesFinObtenues) etatHist.toutesFinObtenues = [];

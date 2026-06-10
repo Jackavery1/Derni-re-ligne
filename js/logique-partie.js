@@ -383,6 +383,7 @@ export function utiliserReserve() {
     const forme = obtenirForme(etat.pieceActuelle);
     etat.pieceActuelle.x = Math.floor(CONFIG.colonnes / 2) - Math.floor(forme[0].length / 2);
     etat.pieceActuelle.y = 0;
+    _poseApresRotation = false;
     etat.reserveUtilisee = true;
     compterHold();
     emettre('piece:son', { type: 'hold' });

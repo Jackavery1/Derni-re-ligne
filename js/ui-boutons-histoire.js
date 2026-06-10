@@ -1,4 +1,3 @@
-import { store } from './store-core.js';
 import { afficherEcran } from './ecrans-ui.js';
 import { ECRANS } from './store-jeu.js';
 import {
@@ -8,6 +7,7 @@ import {
     fermerJournalHistoire,
 } from './histoire-manager.js';
 import { reinitialiserHistoirePourReplay } from './fins-histoire.js';
+import { desactiverModeHistoire } from './mode-histoire.js';
 import { arreterFondFin } from './fin-bg-rendu.js';
 
 export function initialiserBoutonsHistoire() {
@@ -35,14 +35,14 @@ export function initialiserBoutonsHistoire() {
     document.getElementById('btn-journal-fermer')?.addEventListener('click', fermerJournalHistoire);
     document.getElementById('btn-fin-menu')?.addEventListener('click', () => {
         arreterFondFin();
-        store.histoire.actif = false;
+        desactiverModeHistoire();
         document.body.classList.remove('histoire-active');
         afficherEcran(ECRANS.TITRE);
     });
     document.getElementById('btn-fin-rejouer')?.addEventListener('click', () => {
         arreterFondFin();
         reinitialiserHistoirePourReplay();
-        store.histoire.actif = false;
+        desactiverModeHistoire();
         document.body.classList.remove('histoire-active');
         afficherEcran(ECRANS.HISTOIRE_MAP);
     });

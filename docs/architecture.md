@@ -20,7 +20,7 @@ Vanilla ES modules en dev, bundle esbuild en prod.
 ## Règles utiles
 
 1. **Scoring partagé** — `score-partie.js` (`appliquerScoreLignes`) pour solo, coop et archi.
-2. **Mode histoire** — `modeHistoireEnCours()` dans les modules légers ; `store.histoire.actif` dans les modules histoire lourds (évite les cycles).
+2. **Mode histoire** — `modeHistoireEnCours()` pour toute lecture ; `activerModeHistoire()` / `desactiverModeHistoire()` pour les écritures (source unique dans `mode-histoire.js`).
 3. **Événements** — `bus-jeu.js` pour découpler logique et effets (`effets-partie.js`).
 4. **HTML** — fragments `html/*.html` chargés par `charger-ecrans.js` (pas d'`innerHTML`).
 5. **PWA** — cache listé dans `sw.js`, régénéré par `npm run sync:sw`.

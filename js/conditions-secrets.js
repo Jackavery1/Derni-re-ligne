@@ -4,6 +4,7 @@ import { CONFIG } from './config.js';
 import { logger } from './logger.js';
 import { sansAccentsE } from './texte-jeu.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
 
 const SEUIL_PLATEAU_TRAME = 0.5;
 export const DUREE_ATTENTE_TRAME_MS = 30000;
@@ -34,7 +35,7 @@ function _ajouterMondeCacheDebloque(mondeId, etatHist) {
 }
 
 export function verifierConditionMiroir(nbLignes, etatHist) {
-    if (!store.histoire.actif) return;
+    if (!modeHistoireEnCours()) return;
     if (store.histoire.mondeActuel !== 'monde_cyber') return;
     if (etatHist.mondesCompletes.includes('monde_miroir')) return;
 
@@ -84,7 +85,7 @@ export function verifierDeblocageMiroirDiffere(etatHist) {
 }
 
 export function tickConditionTrame(dt) {
-    if (!store.histoire.actif) return;
+    if (!modeHistoireEnCours()) return;
     if (store.histoire.mondeActuel !== 'monde_finale') return;
     if (!store.histoire.boss.actif || store.histoire.boss.actif.id !== 'distorsion') return;
 

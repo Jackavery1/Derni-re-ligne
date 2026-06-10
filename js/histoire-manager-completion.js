@@ -25,6 +25,7 @@ import { enregistrerPrecisionMiroir, flushProuessesHistoire } from './achievemen
 import { definirExpressionVera } from './portraits-vera.js';
 import { ECRANS } from './ecrans-config.js';
 import { logger } from './logger.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
 import {
     victoireObjectifDeclenchee,
     calculerEtoiles,
@@ -178,7 +179,7 @@ export function devCompleterMondeHistoire(mondeId) {
 
 export function surFinDeMondeHistoire(lignes, score) {
     void score;
-    if (!store.histoire.actif) return;
+    if (!modeHistoireEnCours()) return;
     flushProuessesHistoire();
 
     const mondeId = store.histoire.mondeActuel;
@@ -211,7 +212,7 @@ export function surFinDeMondeHistoire(lignes, score) {
         ));
         _enregistrerProgressionBoss(monde, etatHist);
         _persisterCompletionMonde(monde, etatHist, journalDebloque);
-    } else if (store.histoire.actif && monde.estBoss) {
+    } else if (modeHistoireEnCours() && monde.estBoss) {
         if (!etatHist.continuesParBoss) etatHist.continuesParBoss = {};
         etatHist.continuesParBoss[mondeId] = (etatHist.continuesParBoss[mondeId] ?? 0) + 1;
         etatHist.nbContinuesUtilises = (etatHist.nbContinuesUtilises ?? 0) + 1;
@@ -385,7 +386,7 @@ const INTERLUDES_PAR_MONDE = {
 };
 
 function _afficherInterludeSiDisponible(mondeId, premiereCompletion, callback) {
-    if (!store.histoire.actif) {
+    if (!modeHistoireEnCours()) {
         callback?.();
         return;
     }

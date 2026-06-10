@@ -19,6 +19,7 @@ import { modeDevActif } from './mode-dev-etat.js';
 import { obtenirActionsHistoire, configurerActionsHistoire } from './histoire-actions.js';
 import { arreterSuiviMonde, demarrerSuiviMonde } from './gestionnaire-difficulte.js';
 import { fermerOverlayObjectifsPre } from './ui-panneau-objectifs.js';
+import { activerModeHistoire, desactiverModeHistoire } from './mode-histoire.js';
 
 /** @param {string} mondeId */
 export function demarrerMondeHistoire(mondeId) {
@@ -94,7 +95,7 @@ function _apresPresentationMonde(monde) {
 function _lancerPartieHistoire(monde) {
     obtenirActionsHistoire().arreterCarte?.();
 
-    store.histoire.actif = true;
+    activerModeHistoire();
     store.histoire.mondeActuel = monde.id;
 
     definirBiomeActif(monde.biomeId);
@@ -115,7 +116,7 @@ function _lancerPartieHistoire(monde) {
 }
 
 export async function retournerACarte() {
-    store.histoire.actif = false;
+    desactiverModeHistoire();
     store.histoire.mondeActuel = null;
     arreterSuiviMonde();
     store.histoire.etat = null;
@@ -160,7 +161,7 @@ export function relancerMondeActuel() {
 
     document.body.classList.remove('partie-active');
     obtenirActionsHistoire().arreterCarte?.();
-    store.histoire.actif = true;
+    activerModeHistoire();
     store.histoire.mondeActuel = mondeId;
 
     definirBiomeActif(monde.biomeId);
@@ -192,7 +193,7 @@ export function demarrerParadoxe() {
     if (!modeDevActif() && !paradoxeEstDebloque()) return;
     logger.info('[paradoxe] entree');
 
-    store.histoire.actif = true;
+    activerModeHistoire();
     store.histoire.mondeActuel = _NOM_PARADOXE;
 
     void Promise.all([chargerHistoireTextes(), import('./histoire-manager-ui.js')])

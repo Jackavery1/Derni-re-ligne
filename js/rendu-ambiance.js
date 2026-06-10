@@ -1,5 +1,4 @@
 import { CONFIG, BIOMES } from './config.js';
-import { store } from './store-core.js';
 import {
     dessinerFondCosmos,
     dessinerFondCyber,
@@ -26,6 +25,7 @@ import {
     initParticulesAmbiance,
     mettreAJourParticulesAmbiance,
 } from './rendu-ambiance-particules.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
 
 function dessinerGrille() {
     const ctx = obtenirCtx();
@@ -97,10 +97,10 @@ export function dessinerFondBiome() {
     dessinerParticulesAmbiance();
     dessinerGrille();
 
-    if (store.histoire.actif && BIOMES[obtenirBiomeActif()]?.mecaniqueSpeciale === 'eclipse') {
+    if (modeHistoireEnCours() && BIOMES[obtenirBiomeActif()]?.mecaniqueSpeciale === 'eclipse') {
         dessinerLigneEclipse();
     }
-    if (store.histoire.actif && BIOMES[obtenirBiomeActif()]?.mecaniqueSpeciale === 'trame') {
+    if (modeHistoireEnCours() && BIOMES[obtenirBiomeActif()]?.mecaniqueSpeciale === 'trame') {
         dessinerFondTrame();
         dessinerFlickerTrame();
     }
