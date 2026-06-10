@@ -13,6 +13,13 @@ import { reinitialiserStatsAchievementsHistoire } from './achievements-histoire.
 import { ACHIEVEMENTS } from './achievements-donnees.js';
 import { sansAccentsE } from './texte-jeu.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
+import { rendreIconeSurCanvas, rendreIconeGlitchSurCanvas } from './icones-pixel.js';
+import {
+    obtenirIdIconeAchievement,
+    obtenirAccentCategorie,
+    obtenirAccentFiltre,
+    obtenirTexteVerrouille,
+} from './achievements-icones-map.js';
 
 export { ACHIEVEMENTS };
 
@@ -314,17 +321,29 @@ export function genererGalerieAchievements() {
     const nb = Object.keys(statsGlobales.debloqués).length;
     const total = Object.keys(ACHIEVEMENTS).length;
     const compteur = document.getElementById('ach-compteur');
-    if (compteur) compteur.textContent = `${nb} / ${total} DEBLOQUES`;
+    if (compteur) compteur.textContent = `${nb} / ${total} EXPLOITS GRAVES`;
 
     for (const [, ach] of Object.entries(ACHIEVEMENTS)) {
         const debloque = !!statsGlobales.debloqués[ach.id];
+        const categorie = ach.categorie ?? 'general';
+        const accent = obtenirAccentCategorie(categorie);
+        const idIcone = obtenirIdIconeAchievement(ach.id, categorie);
         const carte = document.createElement('div');
-        carte.className = `ach-carte ${debloque ? 'debloque' : 'verrouille'}`;
-        carte.dataset.categorie = ach.categorie ?? 'general';
+        carte.className = `ach-carte panneau-meta ${debloque ? 'debloque' : 'verrouille'}`;
+        carte.dataset.categorie = categorie;
+        carte.dataset.id = ach.id;
+        carte.style.setProperty('--accent-carte', accent);
 
-        const iconeEl = document.createElement('div');
+        const iconeEl = document.createElement('canvas');
         iconeEl.className = 'ach-carte-icone';
-        iconeEl.textContent = debloque ? ach.icone : '🔒';
+        iconeEl.width = 64;
+        iconeEl.height = 64;
+        iconeEl.setAttribute('aria-hidden', 'true');
+        if (debloque) {
+            rendreIconeSurCanvas(iconeEl, idIcone);
+        } else {
+            rendreIconeGlitchSurCanvas(iconeEl, idIcone, { accent, seedId: ach.id });
+        }
 
         const nomEl = document.createElement('div');
         nomEl.className = 'ach-carte-nom';
@@ -332,11 +351,11 @@ export function genererGalerieAchievements() {
 
         const descEl = document.createElement('div');
         descEl.className = 'ach-carte-desc';
-        descEl.textContent = sansAccentsE(debloque ? ach.description : 'Non debloque');
+        descEl.textContent = sansAccentsE(
+            debloque ? ach.description : obtenirTexteVerrouille(categorie, ach.description)
+        );
 
-        carte.appendChild(iconeEl);
-        carte.appendChild(nomEl);
-        carte.appendChild(descEl);
+        carte.append(iconeEl, nomEl, descEl);
 
         if (debloque) {
             const d = new Date(statsGlobales.debloqués[ach.id]);
@@ -353,20 +372,26 @@ export function genererGalerieAchievements() {
     btnsFiltres.forEach((btn) => {
         if (!(btn instanceof HTMLElement) || btn.dataset.filtreInit === '1') return;
         btn.dataset.filtreInit = '1';
+        const filtreDefaut = btn.dataset.filtre ?? 'tous';
+        if (btn.classList.contains('actif')) {
+            btn.style.setProperty('--accent-filtre', obtenirAccentFiltre(filtreDefaut));
+        }
         btn.addEventListener('click', () => {
-            btnsFiltres.forEach((b) => b.classList.remove('actif'));
+            btnsFiltres.forEach((b) => {
+                b.classList.remove('actif');
+                if (b instanceof HTMLElement) b.style.removeProperty('--accent-filtre');
+            });
             btn.classList.add('actif');
-            const filtre = /** @type {HTMLButtonElement} */ (btn).dataset.filtre;
+            const filtre = btn.dataset.filtre ?? 'tous';
+            btn.style.setProperty('--accent-filtre', obtenirAccentFiltre(filtre));
             document.querySelectorAll('.ach-carte').forEach((el) => {
                 const carte = /** @type {HTMLElement} */ (el);
                 const cat = carte.dataset.categorie ?? '';
-                if (filtre === 'tous') {
-                    carte.style.display = '';
-                } else if (filtre === 'histoire') {
-                    carte.style.display = cat.startsWith('histoire') ? '' : 'none';
-                } else {
-                    carte.style.display = cat === filtre ? '' : 'none';
-                }
+                let visible = false;
+                if (filtre === 'tous') visible = true;
+                else if (filtre === 'histoire') visible = cat.startsWith('histoire');
+                else visible = cat === filtre;
+                carte.classList.toggle('ach-carte-filtre-masque', !visible);
             });
         });
     });

@@ -1,4 +1,4 @@
-const VERSION_CACHE = 'derniere-ligne-2.5.9-r8';
+const VERSION_CACHE = 'derniere-ligne-2.5.9-r9';
 
 const FICHIERS_A_CACHER = [
     './',
@@ -33,6 +33,7 @@ const FICHIERS_A_CACHER = [
     './js/accessibilite.js',
     './js/achievements-donnees.js',
     './js/achievements-histoire.js',
+    './js/achievements-icones-map.js',
     './js/achievements.js',
     './js/actions-jeu.js',
     './js/actions-piece-communes.js',
