@@ -20,6 +20,7 @@
         "sync:data": "node scripts/exporter-donnees-json.mjs",
         "verify:data": "node scripts/verifier-sync-textes.mjs",
         "check:circular": "madge --circular --extensions js js/main.js",
+        "check:outdated": "npm outdated || exit 0",
         "test": "vitest run",
         "test:watch": "vitest",
         "test:coverage": "vitest run --coverage",
