@@ -10,6 +10,13 @@ import { annoncer } from './annonces.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { modeArchiActif } from './registre-modes.js';
+import { demarrerFondMeta, arreterFondMeta } from './fond-ecrans-meta.js';
+
+const FONDS_META = {
+    [ECRANS.CODEX]: { canvasId: 'fond-meta-codex', teinte: '#ff2d78' },
+    [ECRANS.PROFIL]: { canvasId: 'fond-meta-profil', teinte: '#00ddc8' },
+    [ECRANS.ACHIEVEMENTS]: { canvasId: 'fond-meta-memorial', teinte: '#ffbb44' },
+};
 
 export { annoncer };
 
@@ -87,6 +94,13 @@ export function afficherEcran(idEcran) {
 
     if (idEcran === ECRANS.CODEX) {
         void genererCodexComplet();
+    }
+
+    const fondMeta = FONDS_META[idEcran];
+    if (fondMeta) {
+        demarrerFondMeta(fondMeta.canvasId, { teinte: fondMeta.teinte });
+    } else {
+        arreterFondMeta();
     }
 
     if (idEcran === ECRANS.HISTOIRE_MAP) {

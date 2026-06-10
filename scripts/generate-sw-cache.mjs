@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
 
 const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
-const REVISION_CACHE = 'r5';
+const REVISION_CACHE = 'r6';
 const versionCache = `derniere-ligne-${pkg.version}-${REVISION_CACHE}`;
 
 const STATIQUES = [

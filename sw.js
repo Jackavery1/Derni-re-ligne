@@ -1,4 +1,4 @@
-const VERSION_CACHE = 'derniere-ligne-2.5.9-r5';
+const VERSION_CACHE = 'derniere-ligne-2.5.9-r6';
 
 const FICHIERS_A_CACHER = [
     './',
@@ -85,6 +85,7 @@ const FICHIERS_A_CACHER = [
     './js/file-narrative.js',
     './js/fin-bg-rendu.js',
     './js/fins-histoire.js',
+    './js/fond-ecrans-meta.js',
     './js/gestionnaire-difficulte.js',
     './js/histoire-actions.js',
     './js/histoire-cutscene-config.js',
