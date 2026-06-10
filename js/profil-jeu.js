@@ -188,7 +188,7 @@ export function obtenirAxeDominant(profil) {
         { cle: 'equilibre', val: profil.equilibre },
     ];
     axes.sort((a, b) => b.val - a.val);
-    return axes[0].cle;
+    return /** @type {keyof typeof NOTES_VERA} */ (axes[0].cle);
 }
 
 /**

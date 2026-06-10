@@ -1291,7 +1291,14 @@ function obtenirSurfaceCachee(idIcone, taillePixel, options) {
 
     ctx.imageSmoothingEnabled = false;
     ctx.filter = 'none';
-    dessinerGrille(ctx, icone, 0, 0, taillePixel, options);
+    dessinerGrille(
+        /** @type {CanvasRenderingContext2D} */ (ctx),
+        icone,
+        0,
+        0,
+        taillePixel,
+        options
+    );
     _cache.set(cle, surface);
     return surface;
 }
