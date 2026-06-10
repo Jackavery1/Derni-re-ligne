@@ -155,7 +155,7 @@ function _portraitVera(ctx, w, h, t, params) {
     ctx.globalAlpha = 1;
 }
 
-/** @param {Record<string, number | boolean> | null | undefined} params */
+/** @param {Record<string, number | boolean | number[]> | null | undefined} params */
 function _portraitDistorsion(ctx, w, h, t, params) {
     const cx = w / 2;
     const cy = h / 2;
@@ -252,7 +252,7 @@ function _portraitDistorsion(ctx, w, h, t, params) {
     }
 }
 
-/** @param {Record<string, number | boolean> | null | undefined} params */
+/** @param {Record<string, number | boolean | number[]> | null | undefined} params */
 function _portraitSysteme(ctx, w, h, t, params) {
     const p = params ?? {};
     const alerte = p.alerte === true;
@@ -350,7 +350,7 @@ function _portraitNarrateur(ctx, w, h, t) {
     ctx.restore();
 }
 
-/** @param {Record<string, number | boolean> | null | undefined} params */
+/** @param {Record<string, number | boolean | number[]> | null | undefined} params */
 function _portraitBrasier(ctx, w, h, t, defaite = false, params) {
     const cx = w / 2;
     const cy = h / 2;
@@ -461,7 +461,7 @@ function _portraitBrasier(ctx, w, h, t, defaite = false, params) {
     ctx.restore();
 }
 
-/** @param {Record<string, number | boolean> | null | undefined} params */
+/** @param {Record<string, number | boolean | number[]> | null | undefined} params */
 function _portraitSentinelle(ctx, w, h, t, defaite = false, params) {
     const cx = w / 2;
     const cy = h / 2;
@@ -565,7 +565,7 @@ function _portraitSentinelle(ctx, w, h, t, defaite = false, params) {
     ctx.restore();
 }
 
-/** @param {Record<string, number | boolean> | null | undefined} params */
+/** @param {Record<string, number | boolean | number[]> | null | undefined} params */
 function _portraitArchiviste(ctx, w, h, t, params) {
     const cx = w / 2;
     const cy = h / 2;
@@ -657,7 +657,7 @@ function _portraitArchiviste(ctx, w, h, t, params) {
     ctx.restore();
 }
 
-/** @param {Record<string, number | boolean> | null | undefined} params */
+/** @param {Record<string, number | boolean | number[]> | null | undefined} params */
 function _portraitAvantgarde(ctx, w, h, t, params) {
     const cx = w / 2;
     const cy = h / 2;

@@ -9,7 +9,6 @@ import { definirHumeurRoboCutscene } from './portraits-cutscene.js';
 import { afficherEcranHistoire, cacherEcransHistoire } from './histoire-cutscene-nav.js';
 import { COULEUR_PERSONNAGE, idPortraitMeta } from './histoire-cutscene-config.js';
 import {
-    demarrerFondCutscene,
     stopFondCutscene,
     definirSceneCutsceneFond,
     retirerSceneCutsceneFond,
@@ -26,7 +25,6 @@ import {
     preparerTexteLigneCutscene,
     estLigneNarration,
     obtenirElTexteLigneCourante,
-    refsDomCutscene,
 } from './histoire-cutscene-ui.js';
 import {
     detecterParticipantsCutscene,

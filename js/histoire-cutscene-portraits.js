@@ -1,6 +1,7 @@
 import { logger } from './logger.js';
 import { definirHumeurRoboCutscene, dessinerPortraitCutscene } from './portraits-cutscene.js';
 import { dessinerRobo } from './rendu-robo.js';
+import { convertirHumeurVersCanvas } from './mascotte-robo.js';
 import {
     POSITION_PERSONNAGE,
     COULEUR_PERSONNAGE,
@@ -140,7 +141,15 @@ function _dessinerPortrait(canvas, ctx, personnageId, parle, ts, ligneCourante) 
         definirHumeurRoboCutscene(humeurRobo);
         if (typeof dessinerRobo === 'function') {
             try {
-                dessinerRobo(ctx, w, h, humeurRobo, ts / 1000);
+                dessinerRobo(
+                    ctx,
+                    w,
+                    h,
+                    /** @type {'neutre'|'content'|'excite'|'triste'|'alerte'} */ (
+                        convertirHumeurVersCanvas(humeurRobo)
+                    ),
+                    ts / 1000
+                );
                 return;
             } catch {
                 _dessinerROBOSimple(ctx, w, h, ts, humeurRobo);

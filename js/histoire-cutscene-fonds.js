@@ -161,12 +161,12 @@ function _dessinerFondCanvas(ctx, w, h, ts) {
 }
 
 /**
- * @param {typeof SCENES_CUTSCENE[string]} scene
+ * @param {{ voile?: number, kenBurns?: string }} scene
  * @param {number} progress
  * @param {number} w
- * @param {number} h
+ * @param {number} _h
  */
-function _calculerKenBurns(scene, progress, w, h) {
+function _calculerKenBurns(scene, progress, w, _h) {
     const kb = scene.kenBurns ?? 'fixe';
     let scale = 1;
     let offsetX = 0;
@@ -181,7 +181,7 @@ function _calculerKenBurns(scene, progress, w, h) {
  * @param {number} w
  * @param {number} h
  * @param {HTMLImageElement} img
- * @param {typeof SCENES_CUTSCENE[string]} scene
+ * @param {{ voile?: number, kenBurns?: string }} scene
  * @param {number} progress
  * @param {number} [alpha]
  */

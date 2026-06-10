@@ -65,7 +65,11 @@ function _definirExpression(expression, timestamp = performance.now()) {
     logger.debug('[reactions] boss portrait →', expression);
 }
 
-/** @param {number} timestamp */
+/**
+ * @typedef {{ vitesseAnim: number, glow: number, echelle: number, vacillant: boolean, effetsReduits: boolean }} ParamsPortraitBossCombat
+ */
+
+/** @param {number} timestamp @returns {ParamsPortraitBossCombat} */
 export function obtenirParamsPortraitBossCombat(timestamp = performance.now()) {
     if (!_actif()) return { ...PRESETS.calme, effetsReduits: true };
     const cible = _preset(_expressionCible);
@@ -76,7 +80,11 @@ export function obtenirParamsPortraitBossCombat(timestamp = performance.now()) {
     const elapsed = timestamp - _debutTransition;
     const t = _easing(elapsed / DUREE_TRANSITION_MS);
     const interpole = _lerp(_paramsDepart, cible, t);
-    return { ...interpole, effetsReduits: false };
+    return /** @type {ParamsPortraitBossCombat} */ ({
+        ...cible,
+        ...interpole,
+        effetsReduits: false,
+    });
 }
 
 export function obtenirExpressionBossCombat() {
