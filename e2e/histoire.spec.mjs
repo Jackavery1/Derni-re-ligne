@@ -187,9 +187,21 @@ test('monde caché Paradoxe affiche sa cutscene puis revient à la carte', async
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
         timeout: 10000,
     });
-    // Le premier clic termine la frappe en cours, le second saute la cutscene.
-    await page.locator('#btn-cutscene-passer').click({ force: true });
-    await page.locator('#btn-cutscene-passer').click({ force: true });
+    for (let i = 0; i < 4; i++) {
+        if (
+            await page
+                .locator('#ecran-histoire-map')
+                .evaluate((el) => el.classList.contains('actif'))
+        ) {
+            break;
+        }
+        const passer = page.locator('#btn-cutscene-passer');
+        if (await passer.isVisible().catch(() => false)) {
+            await passer.click({ force: true });
+        } else {
+            await page.waitForTimeout(200);
+        }
+    }
     await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/, { timeout: 10000 });
 });
 
