@@ -40,6 +40,65 @@ Vanilla ES modules en dev, bundle esbuild en prod.
 
 `demarrerJeu()` → boucle RAF → gravité / DAS / lock → `verrouillerPiece()` → `score-partie.js` → rendu.
 
+## Découpage logique-partie
+
+| Module                           | Rôle                             |
+| -------------------------------- | -------------------------------- |
+| `logique-partie.js`              | Barrel public + `vitesseChute()` |
+| `logique-partie-pose.js`         | Flag T-Spin post-rotation        |
+| `logique-partie-score.js`        | `calculerScore()`                |
+| `logique-partie-hold.js`         | Hold + file pièces               |
+| `logique-partie-verrouillage.js` | `verrouillerPiece()`             |
+| `logique-partie-mouvement.js`    | Déplacements, rotation, chute    |
+
+## Boucles RAF
+
+- **Principale (partie)** — `boucle-jeu.js` : gravité, DAS, rendu plateau. Suspendue en coop/archi.
+- **Secondaires (UI / ambiance)** — `planificateur-raf.js` : constellation, portraits, fonds méta. Une clé par contexte.
+
+```mermaid
+flowchart TB
+    subgraph entree [Entrée]
+        index[index.html]
+        main[main.js]
+        moteur[moteur.js]
+    end
+
+    subgraph etat [État]
+        store[store-core.js]
+        bus[bus-jeu.js]
+    end
+
+    subgraph solo [Solo]
+        partie[partie.js]
+        boucle[boucle-jeu.js]
+        logique[logique-partie*.js]
+    end
+
+    subgraph ui [UI / secondaire]
+        nav[navigation-ecrans.js]
+        raf[planificateur-raf.js]
+        constellation[constellation.js]
+    end
+
+    index --> main --> moteur
+    moteur --> nav
+    moteur --> partie
+    partie --> boucle
+    boucle --> logique
+    logique --> store
+    logique --> bus
+    bus --> effets[effets-partie.js]
+    constellation --> raf
+```
+
+## Dépendances entre modules
+
+1. **Logique → bus** — pas d'import direct logique → UI/audio (sauf barrels testés).
+2. **Store** — lectures via `store-jeu.js` / `store-histoire.js` ; éviter `store-core` hors modules état.
+3. **Cycles** — vérifiés par `npm run check:circular` depuis `main.js`.
+4. **Barrels** — `logique-partie.js`, `rendu-jeu.js`, `progression.js` : point d'entrée stable pour les consommateurs.
+
 ## Guides
 
 - [Mode Histoire](mode-histoire.md)

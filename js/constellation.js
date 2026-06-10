@@ -10,6 +10,9 @@ import {
     dessinerLignesConstellation as dessinerLignesRendu,
     dessinerNoeudBiome as dessinerNoeudRendu,
 } from './constellation-rendu.js';
+import { planifierBoucleSecondaire, arreterBoucleSecondaire } from './planificateur-raf.js';
+
+const CLE_RAF_CONSTELLATION = 'constellation';
 
 let deps = {};
 
@@ -17,7 +20,6 @@ const constellationEtoiles = [];
 const constellationNoeuds = [];
 let biomeHover = null;
 let biomeChoisi = null;
-let idFrameConst = null;
 let offsetCamX = 0;
 let offsetCamY = 0;
 let sourisCX = 0;
@@ -217,8 +219,6 @@ function boucleConstellation(timestamp) {
     }
 
     ctxConst.restore();
-
-    idFrameConst = requestAnimationFrame(boucleConstellation);
 }
 
 function traiterSelectionNoeud(noeud, doubleTap = false) {
@@ -341,14 +341,11 @@ export function demarrerConstellation() {
     arreterConstellation();
     initConstellation();
     masquerOracleCoopSiNecessaire();
-    idFrameConst = requestAnimationFrame(boucleConstellation);
+    planifierBoucleSecondaire(CLE_RAF_CONSTELLATION, boucleConstellation);
 }
 
 export function arreterConstellation() {
-    if (idFrameConst) {
-        cancelAnimationFrame(idFrameConst);
-        idFrameConst = null;
-    }
+    arreterBoucleSecondaire(CLE_RAF_CONSTELLATION);
 }
 
 export function redimensionnerConstellation() {
