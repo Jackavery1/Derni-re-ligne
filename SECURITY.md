@@ -22,16 +22,17 @@ Délai de réponse visé : **7 jours ouvrés**.
 
 ## Modèle de menaces
 
-| Menace                     | Mitigation en place                                                                                                 | Risque résiduel                            |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| **XSS**                    | CSP stricte (`script-src 'self'`), pas de `innerHTML` sur contenu dynamique, fragments HTML chargés via `DOMParser` | Faible — contenu statique contrôlé         |
-| **Intégrité JS prod**      | SRI `sha384` sur `bundle.js` (`npm run build` → `dist/index.html`)                                                  | Faible                                     |
-| **Injection localStorage** | Whitelist stricte de clés dans `progression.js`, validation regex (sans wildcard préfixe)                           | Faible — impact local uniquement           |
-| **Clickjacking**           | CSP `frame-ancestors 'none'` dans `index.html`                                                                      | Faible                                     |
-| **Cache poisoning SW**     | SW versionné (`derniere-ligne-{semver}`), notification MAJ, purge anciens caches                                    | Moyen — utilisateur peut retarder la MAJ   |
-| **Intégrité bundle prod**  | SRI `sha384` sur `js/bundle.js` dans `dist/index.html` (build CI)                                                   | Faible — dev local sans SRI volontairement |
-| **Supply chain npm**       | 0 dépendance runtime, `npm audit` + Dependabot + CodeQL en CI                                                       | Faible                                     |
-| **CSRF / SQLi**            | Non applicable (pas de backend)                                                                                     | N/A                                        |
+| Menace                            | Mitigation en place                                                                                                 | Risque résiduel                            |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| **XSS**                           | CSP stricte (`script-src 'self'`), pas de `innerHTML` sur contenu dynamique, fragments HTML chargés via `DOMParser` | Faible — contenu statique contrôlé         |
+| **Intégrité JS prod**             | SRI `sha384` sur `bundle.js` (`npm run build` → `dist/index.html`)                                                  | Faible                                     |
+| **Injection localStorage**        | Whitelist stricte de clés dans `progression.js`, validation regex (sans wildcard préfixe)                           | Faible — impact local uniquement           |
+| **Clickjacking**                  | CSP `frame-ancestors 'none'` dans `index.html`                                                                      | Faible                                     |
+| **Cache poisoning SW**            | SW versionné (`derniere-ligne-{semver}`), notification MAJ, purge anciens caches                                    | Moyen — utilisateur peut retarder la MAJ   |
+| **Intégrité bundle prod**         | SRI `sha384` sur `js/bundle.js` dans `dist/index.html` (build CI)                                                   | Faible — dev local sans SRI volontairement |
+| **Supply chain npm**              | 0 dépendance runtime, `npm audit` + Dependabot + CodeQL en CI                                                       | Faible                                     |
+| **API test E2E (`__NEO_TEST__`)** | Exposée uniquement sur `localhost` / `127.0.0.1` ou avec `?neoTest=1` (`js/neo-test-api.js`)                        | Faible sur GitHub Pages sans paramètre     |
+| **CSRF / SQLi**                   | Non applicable (pas de backend)                                                                                     | N/A                                        |
 
 ## Bonnes pratiques en place
 
@@ -43,6 +44,7 @@ Délai de réponse visé : **7 jours ouvrés**.
 - `npm audit --audit-level=moderate` en CI
 - Analyse CodeQL sur le dépôt
 - Journal d'erreurs local (`sessionStorage`, mode debug via `?debug=1`)
+- API E2E `__NEO_TEST__` conditionnée (`js/neo-test-api.js`) — absente sur le déploiement public par défaut
 
 ## Données utilisateur
 

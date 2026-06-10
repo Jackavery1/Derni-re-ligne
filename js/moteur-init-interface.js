@@ -23,6 +23,7 @@ import { initialiserBoutons } from './ui-init.js';
 import { initialiserUiObjectifs } from './ui-panneau-objectifs.js';
 import { initialiserTutoriel } from './tutoriel.js';
 import { obtenirActions } from './actions-jeu.js';
+import { exposerNeoTestApi } from './neo-test-api.js';
 
 export function initialiserInterfaceMoteur() {
     chargerStats();
@@ -48,14 +49,14 @@ export function initialiserInterfaceMoteur() {
     demarrerBoucleRobo();
 
     if (typeof window !== 'undefined') {
-        /** @type {any} */ (window).__NEO_TEST__ = {
+        document.body.dataset.neoTestReady = '1';
+        exposerNeoTestApi({
             terminerPartie: (victoire) => obtenirActions().terminerPartie?.(victoire),
             demarrerPartieLibre: (biomeId = 'classique') => {
                 definirBiomeActif(biomeId);
                 sauvegarderBiomeActif(biomeId);
                 demarrerJeu();
             },
-        };
-        document.body.dataset.neoTestReady = '1';
+        });
     }
 }
