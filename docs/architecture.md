@@ -98,6 +98,7 @@ flowchart TB
 2. **Store** — lectures via `store-jeu.js` / `store-histoire.js` ; éviter `store-core` hors modules état.
 3. **Cycles** — vérifiés par `npm run check:circular` depuis `main.js`.
 4. **Barrels** — `logique-partie.js`, `rendu-jeu.js`, `progression.js` : point d'entrée stable pour les consommateurs.
+5. **Index modules** — `docs/modules-index.md` (régénéré par `npm run analyze`) pour repérer les hotspots.
 
 ## Gestion des erreurs
 

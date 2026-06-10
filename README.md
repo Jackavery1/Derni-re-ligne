@@ -56,6 +56,7 @@ E2E bundle prod : voir [CONTRIBUTING.md](CONTRIBUTING.md) (`E2E_DIST=1`). Releas
 | Sujet         | Fichier                                              |
 | ------------- | ---------------------------------------------------- |
 | Architecture  | [docs/architecture.md](docs/architecture.md)         |
+| Index modules | [docs/modules-index.md](docs/modules-index.md)       |
 | Mode Histoire | [docs/mode-histoire.md](docs/mode-histoire.md)       |
 | Nouveau biome | [docs/ajouter-un-biome.md](docs/ajouter-un-biome.md) |
 | Nouveau boss  | [docs/ajouter-un-boss.md](docs/ajouter-un-boss.md)   |

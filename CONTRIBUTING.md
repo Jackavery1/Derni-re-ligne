@@ -28,6 +28,31 @@ Node 18+ (`.nvmrc`). Logs verbeux : `?debug=1`.
 
 La CI définit `E2E_DIST=1` : Playwright sert `dist/` et non les modules ES. En local, lancer **`npm run build`** avant `npm run test:e2e` si cette variable est active, sinon les tests peuvent charger un build obsolète. Sans `E2E_DIST`, `npm run test:e2e` sert la racine du projet (modules dev).
 
+### Environnements de déploiement
+
+| Environnement         | Déclencheur                | Usage                                    |
+| --------------------- | -------------------------- | ---------------------------------------- |
+| **Production**        | Push sur `main` / tag `v*` | GitHub Pages (`deploy.yml`)              |
+| **Preview (staging)** | Pull request               | Artefact `dist/` 7 jours (`preview.yml`) |
+| **Release**           | Tag `v*`                   | GitHub Release + notes (`release.yml`)   |
+
+La preview PR sert de **staging** : même pipeline `quality.yml` que la prod, sans publier sur Pages.
+
+### Hooks Git (Husky)
+
+| Hook           | Contenu                                                                                |
+| -------------- | -------------------------------------------------------------------------------------- |
+| **pre-commit** | lint-staged (ESLint + Prettier sur fichiers stagés)                                    |
+| **pre-push**   | lint, format, typecheck, cycles, tests unitaires, build, budget bundle, smoke E2E dist |
+| **commit-msg** | Conventional Commits                                                                   |
+
+Le pre-push est volontairement lourd pour éviter de pousser une régression. **`git push --no-verify`** ne doit être utilisé qu'en exception (urgence, CI en cours de réparation) : le pipeline GitHub exécutera quand même l'intégralité des checks. Ne jamais contourner les hooks pour merger du code non testé sur `main`.
+
+### Analyse et maintenance
+
+- `npm run analyze` — top 15 taille bundle + régénère `docs/modules-index.md`
+- `npm run check:circular` — dépendances circulaires depuis `js/main.js`
+
 ## Commits (usage interne)
 
 Format [Conventional Commits](https://www.conventionalcommits.org/) :
