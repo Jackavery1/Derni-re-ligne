@@ -67,17 +67,32 @@ export function enqueueDialogueBoss(texte) {
     d.dernierDeclenchementMs = maintenant;
 }
 
-function _afficherTexteBossDirect(texte) {
+export function mettreAJourLabelBossAttaque(texte) {
     if (typeof document === 'undefined') return;
     const el = document.getElementById('boss-attaque-label');
-    if (el) el.textContent = texte;
+    if (!el) return;
+    el.textContent = texte;
+    el.classList?.remove('boss-attaque-defile');
+    el.style?.removeProperty('--boss-defile-distance');
+    if (!texte || !el.classList) return;
+    requestAnimationFrame(() => {
+        const lh = parseFloat(getComputedStyle(el).lineHeight) || 14;
+        const maxH = lh * 2;
+        if (el.scrollHeight > maxH + 2) {
+            el.style.setProperty('--boss-defile-distance', `${el.scrollHeight - maxH}px`);
+            el.classList.add('boss-attaque-defile');
+        }
+    });
+}
+
+function _afficherTexteBossDirect(texte) {
+    mettreAJourLabelBossAttaque(texte);
 }
 
 function _viderTexteBoss() {
     if (typeof document === 'undefined') return;
-    const el = document.getElementById('boss-attaque-label');
-    if (el && !store.histoire.boss._dialogues?.presentationEnCours) {
-        el.textContent = '';
+    if (!store.histoire.boss._dialogues?.presentationEnCours) {
+        mettreAJourLabelBossAttaque('');
     }
 }
 
@@ -184,19 +199,29 @@ export function notifierSeuilsPvBoss(pctRestant) {
     if (!dialogues?.phases?.length) return;
 
     const boss = store.histoire.boss.actif;
+    const d = _etatDialogues();
+
     if (boss?.phases?.length) {
         if (bossId === 'distorsion' && pctRestant <= SEUIL_DISTORSION_PHASE_3) {
-            const d = _etatDialogues();
             const idx = 2;
             if (dialogues.phases[idx] && !d.phasesVues.includes(idx)) {
                 d.phasesVues.push(idx);
                 enqueueDialogueBoss(dialogues.phases[idx]);
             }
         }
+
+        for (let i = 0; i < SEUILS_PHASE_CLASSIQUES.length; i++) {
+            const seuil = SEUILS_PHASE_CLASSIQUES[i];
+            if (!dialogues.phases[i] || d.phasesVues.includes(i)) continue;
+            if (pctRestant <= seuil && !d.seuilsPvVus.includes(seuil)) {
+                d.seuilsPvVus.push(seuil);
+                d.phasesVues.push(i);
+                enqueueDialogueBoss(dialogues.phases[i]);
+            }
+        }
         return;
     }
 
-    const d = _etatDialogues();
     for (let i = 0; i < SEUILS_PHASE_CLASSIQUES.length; i++) {
         const seuil = SEUILS_PHASE_CLASSIQUES[i];
         if (pctRestant <= seuil && !d.seuilsPvVus.includes(seuil) && dialogues.phases[i]) {

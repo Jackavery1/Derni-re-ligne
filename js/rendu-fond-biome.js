@@ -7,6 +7,8 @@
  */
 
 import { dessinerMotifBiome } from './rendu-motifs-biome.js';
+import { obtenirEffetsAccessibiliteReduits } from './accessibilite.js';
+import { store } from './store-core.js';
 
 // ─── Configs biomes ───────────────────────────────────────────────────────────
 
@@ -244,18 +246,22 @@ function _boucle(ts) {
     if (!config) return;
 
     _ctx.save();
+    const reduits = obtenirEffetsAccessibiliteReduits();
+    const facteurAmp = reduits ? 1 / 3 : store.surtensionActive ? 1.25 : 1;
     _particules.forEach((p, i) => {
+        if (reduits && i % 3 !== 0) return;
         const phase = 0.5 + 0.5 * Math.sin(ts * 0.001 * p.vitesse + p.offset);
         _ctx.globalAlpha = 0.3 + phase * 0.7;
 
         const type = config.particules.type;
         const couleur = config.particules.couleur;
+        const ampX = p.ampX * facteurAmp;
         let x, y;
 
         switch (type) {
             case 'braise':
             case 'flamme': {
-                x = p.x0 + Math.sin(ts * 0.0006 * p.vitesse + p.offset) * p.ampX;
+                x = p.x0 + Math.sin(ts * 0.0006 * p.vitesse + p.offset) * ampX;
                 y = h - ((ts * 0.04 * p.vitesse + p.decalY) % (h * 1.1));
                 const tF = p.taille * (type === 'flamme' ? 1 + phase * 0.6 : 1);
                 _ctx.fillStyle = phase > 0.65 ? '#ffcc00' : couleur;
@@ -263,14 +269,14 @@ function _boucle(ts) {
                 break;
             }
             case 'eclat': {
-                x = p.x0 + Math.sin(ts * 0.0004 + p.offset) * p.ampX;
+                x = p.x0 + Math.sin(ts * 0.0004 + p.offset) * ampX;
                 y = (p.y0 + ts * 0.008 * p.vitesse) % h;
                 _ctx.fillStyle = couleur;
                 _ctx.fillRect(x, y, p.taille, p.taille);
                 break;
             }
             case 'bulle': {
-                x = p.x0 + Math.sin(ts * 0.0005 + p.offset) * p.ampX;
+                x = p.x0 + Math.sin(ts * 0.0005 + p.offset) * ampX;
                 y = h - ((ts * 0.02 * p.vitesse + p.decalY) % (h * 1.2));
                 _ctx.strokeStyle = couleur;
                 _ctx.lineWidth = 1;
@@ -281,13 +287,13 @@ function _boucle(ts) {
             }
             case 'feuille': {
                 x = (((p.x0 - ts * 0.012 * p.vitesse + p.decalX) % w) + w) % w;
-                y = p.y0 + Math.sin(ts * 0.001 * p.vitesse + p.offset) * 18;
+                y = p.y0 + Math.sin(ts * 0.001 * p.vitesse + p.offset) * 18 * facteurAmp;
                 _ctx.fillStyle = couleur;
                 _ctx.fillRect(x, y, p.taille, p.taille);
                 break;
             }
             case 'flocon': {
-                x = p.x0 + Math.sin(ts * 0.0005 + p.offset) * p.ampX;
+                x = p.x0 + Math.sin(ts * 0.0005 + p.offset) * ampX;
                 y = (p.decalY + ts * 0.008 * p.vitesse) % h;
                 _ctx.strokeStyle = couleur;
                 _ctx.lineWidth = 0.8;
@@ -395,7 +401,7 @@ function _boucle(ts) {
             }
             case 'circuit_spark':
             default: {
-                x = p.x0 + Math.sin(ts * 0.001 * p.vitesse + p.offset) * p.ampX;
+                x = p.x0 + Math.sin(ts * 0.001 * p.vitesse + p.offset) * ampX;
                 y = (p.decalY + ts * 0.01 * p.vitesse) % h;
                 _ctx.fillStyle = couleur ?? '#ffffff';
                 _ctx.fillRect(x, y, p.taille, p.taille);

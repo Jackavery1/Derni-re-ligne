@@ -8,6 +8,7 @@ import {
     lancerMondeDepuisCarte,
     mettreAJourEnteteHistoire,
     mettreAJourSelectMondesClavier,
+    mettreAJourAriaCarteHistoire,
     traiterSelectionNoeud,
 } from './histoire-map-ui.js';
 import { configurerActionsHistoire } from './histoire-actions.js';
@@ -293,6 +294,7 @@ export async function demarrerCarteHistoire() {
     await chargerHistoireTextes();
     if (!initialiserCarteMonde()) return;
     etatCarte.carteActive = true;
+    mettreAJourAriaCarteHistoire(etatCarte);
     etatCarte.idFrameCarte = requestAnimationFrame(boucleCarte);
 }
 
@@ -306,10 +308,11 @@ export function arreterCarteHistoire() {
 
 function boucleCarte(timestamp) {
     if (!etatCarte.carteActive || !etatCarte.ctxCarte || !etatCarte.canvasCarte) return;
+    etatCarte.idFrameCarte = requestAnimationFrame(boucleCarte);
+    if (document.hidden) return;
     _mettreAJourVisibiliteCarte();
     _lerpCamera();
     dessinerCarteHistoire(etatCarte, timestamp);
-    etatCarte.idFrameCarte = requestAnimationFrame(boucleCarte);
 }
 
 function coordsCanvas(clientX, clientY) {

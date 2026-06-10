@@ -9,6 +9,8 @@ export const CLES_STOCKAGE = new Set([
     'derniereLigne_volumeMusique',
     'derniereLigne_muet',
     'derniereLigne_contraste',
+    'derniereLigne_daltonien',
+    'derniereLigne_reduireEffets',
     'derniereLigne_niveauGlobal',
     'derniereLigne_biomeActif',
     'derniereLigne_codex',
@@ -128,6 +130,20 @@ export function ecrireStockageJson(cle, valeur) {
         return ecrireStockage(cle, JSON.stringify(valeur));
     } catch (err) {
         logger.warn('Serialisation localStorage impossible:', cle, err);
+        return false;
+    }
+}
+
+/** @param {string} cle @returns {boolean} */
+export function existeStockage(cle) {
+    if (!estCleValide(cle)) return false;
+    const cleN = cleCanonique(cle);
+    const cleA = cleLegacy(cleN);
+    try {
+        if (localStorage.getItem(cleN) !== null) return true;
+        if (cleA !== cleN && localStorage.getItem(cleA) !== null) return true;
+        return false;
+    } catch {
         return false;
     }
 }

@@ -22,18 +22,21 @@ Délai de réponse visé : **7 jours ouvrés**.
 
 ## Modèle de menaces
 
-| Menace                     | Mitigation en place                                                                                                 | Risque résiduel                          |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| **XSS**                    | CSP stricte (`script-src 'self'`), pas de `innerHTML` sur contenu dynamique, fragments HTML chargés via `DOMParser` | Faible — contenu statique contrôlé       |
-| **Injection localStorage** | Whitelist stricte de clés dans `progression.js`, validation regex (sans wildcard préfixe)                           | Faible — impact local uniquement         |
-| **Clickjacking**           | CSP `frame-ancestors 'none'` dans `index.html`                                                                      | Faible                                   |
-| **Cache poisoning SW**     | SW versionné (`derniere-ligne-{semver}`), notification MAJ, purge anciens caches                                    | Moyen — utilisateur peut retarder la MAJ |
-| **Supply chain npm**       | 0 dépendance runtime, `npm audit` + Dependabot + CodeQL en CI                                                       | Faible                                   |
-| **CSRF / SQLi**            | Non applicable (pas de backend)                                                                                     | N/A                                      |
+| Menace                     | Mitigation en place                                                                                                 | Risque résiduel                            |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| **XSS**                    | CSP stricte (`script-src 'self'`), pas de `innerHTML` sur contenu dynamique, fragments HTML chargés via `DOMParser` | Faible — contenu statique contrôlé         |
+| **Intégrité JS prod**      | SRI `sha384` sur `bundle.js` (`npm run build` → `dist/index.html`)                                                  | Faible                                     |
+| **Injection localStorage** | Whitelist stricte de clés dans `progression.js`, validation regex (sans wildcard préfixe)                           | Faible — impact local uniquement           |
+| **Clickjacking**           | CSP `frame-ancestors 'none'` dans `index.html`                                                                      | Faible                                     |
+| **Cache poisoning SW**     | SW versionné (`derniere-ligne-{semver}`), notification MAJ, purge anciens caches                                    | Moyen — utilisateur peut retarder la MAJ   |
+| **Intégrité bundle prod**  | SRI `sha384` sur `js/bundle.js` dans `dist/index.html` (build CI)                                                   | Faible — dev local sans SRI volontairement |
+| **Supply chain npm**       | 0 dépendance runtime, `npm audit` + Dependabot + CodeQL en CI                                                       | Faible                                     |
+| **CSRF / SQLi**            | Non applicable (pas de backend)                                                                                     | N/A                                        |
 
 ## Bonnes pratiques en place
 
-- Content-Security-Policy stricte (`index.html`, incluant `frame-ancestors 'none'`)
+- Content-Security-Policy stricte (`index.html`, incluant `frame-ancestors 'none'` et `worker-src 'self'`)
+- **SRI (Subresource Integrity)** sur le bundle prod (`dist/index.html` — `integrity="sha384-…"` + `crossorigin="anonymous"`, généré par `npm run build`)
 - Whitelist `localStorage` (`js/progression.js`)
 - Aucune dépendance runtime npm
 - Pas d'`innerHTML` sur des données utilisateur (DOM via `createElement` / `textContent`)
@@ -51,7 +54,15 @@ Le Logiciel est distribué sous licence propriétaire (voir [LICENSE](LICENSE)).
 
 ## Limites du déploiement GitHub Pages
 
-GitHub Pages ne permet pas de configurer des en-têtes HTTP personnalisés (HSTS, `Referrer-Policy`, etc.). La CSP est donc déclarée via balise `<meta>`. Pour une défense en profondeur renforcée, un proxy (Cloudflare Pages, Netlify) peut ajouter ces en-têtes.
+GitHub Pages ne permet pas de configurer des en-têtes HTTP personnalisés (HSTS, `Referrer-Policy`, CSP via en-tête, etc.). Conséquences :
+
+| Mesure     | Dev (`index.html`)                                   | Prod (`dist/index.html`)                          |
+| ---------- | ---------------------------------------------------- | ------------------------------------------------- |
+| CSP        | Balise `<meta http-equiv="Content-Security-Policy">` | Identique (copiée au build)                       |
+| SRI bundle | Non (rechargement à chaque edit)                     | Oui — `sha384` recalculé à chaque `npm run build` |
+| HSTS       | Non disponible                                       | Non disponible                                    |
+
+Pour une défense en profondeur renforcée (CSP en en-tête HTTP, HSTS), un hébergeur avec en-têtes custom (Cloudflare Pages, Netlify) est recommandé.
 
 ## Périmètre hors scope
 

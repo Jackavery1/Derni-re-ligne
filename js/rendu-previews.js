@@ -1,6 +1,7 @@
 import { etat, obtenirCtxPreview, obtenirCanvasPreview } from './store-jeu.js';
 import { obtenirForme, obtenirCouleurPiece } from './piece-jeu.js';
 import { dessinerCellule } from './rendu-cellule.js';
+import { dessinerMotifsPreview } from './rendu-accessibilite.js';
 
 export function dessinerPreview(ctx2d, canvasEl, piece) {
     const tailleCell = 23;
@@ -22,6 +23,7 @@ function dessinerPieceDansPreview(ctx2d, canvasEl, piece, slotY, slotHauteur, ta
             dessinerCellule(ctx2d, offsetX + c, offsetY + l, couleur, tailleCell);
         }
     }
+    dessinerMotifsPreview(ctx2d, piece, offsetX, offsetY, tailleCell);
 }
 
 export function dessinerFileNext() {
@@ -50,5 +52,6 @@ export function dessinerFileNext() {
                 dessinerCellule(obtenirCtxPreview(), offsetX + c, offsetY + l, couleur, tailleCell);
             }
         }
+        dessinerMotifsPreview(obtenirCtxPreview(), piece, offsetX, offsetY, tailleCell);
     });
 }

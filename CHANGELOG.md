@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version   | Date       | En bref                                                                                |
 | --------- | ---------- | -------------------------------------------------------------------------------------- |
+| **2.5.8** | 2026-06-10 | Accessibilité (daltonien, effets réduits), UI mobile histoire, file narrative          |
 | **2.5.7** | 2026-06-10 | Narration enrichie, dialogues boss, cutscenes narration, UI sans accents               |
 | **2.5.6** | 2026-06-10 | Audit gameplay, refactor archi, docs simplifiées                                       |
 | **2.5.5** | 2026-06-10 | Correctifs audit : intro Jour 2 554, cutscenes, dev, objectifs, rendu, E2E             |
@@ -23,6 +24,26 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.0.0** | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                          |
 
 ---
+
+## [2.5.8] — 2026-06-10
+
+### Accessibilité
+
+- Mode daltonien : motifs I/O/T/S/Z/J/L sur cellules actives et previews (tous modes)
+- Réduire les effets : classe `effets-reduits`, particules/FX atténués, Surtension allégée
+- Volumes musique et SFX séparés (options), persistance `accessibilite` dans le stockage
+
+### UX mobile (mode Histoire)
+
+- Panneau objectifs, récap étoiles, overlay boss et dialogues : safe-area, scroll, cibles tactiles ≥48px
+- Label attaque boss : deux lignes max + défilement si débordement
+- E2E : panneau objectifs prologue 390×844 sans débordement horizontal
+
+### Qualité
+
+- `file-narrative.js`, scripts build/E2E (`run-e2e-dist`, `verifier-sync-textes`)
+- Tests : `accessibilite`, `file-narrative`, `build-prod`, `maintainabilite` ; **477+** tests unitaires
+- Cache SW synchronisé (193 fichiers)
 
 ## [2.5.7] — 2026-06-10
 

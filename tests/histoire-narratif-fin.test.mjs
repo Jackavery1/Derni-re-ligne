@@ -38,6 +38,8 @@ describe('declencherFin — épilogue puis outro', () => {
     });
 
     it('enchaîne épilogue, outro LE CYCLE et executerFin pour fin_normale', async () => {
+        const { store } = await import('../js/store-core.js');
+        store.histoire.actif = true;
         const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
         await chargerHistoireTextes();
         const { declencherFin } = await import('../js/histoire-narratif.js');

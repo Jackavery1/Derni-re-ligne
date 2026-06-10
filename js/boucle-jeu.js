@@ -12,6 +12,7 @@ import {
     obtenirLockDelayRestant,
     obtenirPieceAuSol,
     obtenirPrefererMoinsAnimations,
+    obtenirEffetsAccessibiliteReduits,
     obtenirFpsMoyen,
     obtenirIdFrame,
     obtenirBoucleActive,
@@ -58,6 +59,7 @@ import { dessinerSuggestionOracle } from './oracle-jeu.js';
 import { mettreAJourBoss, bossEstActif, bossEstVaincu } from './boss-jeu.js';
 import { rendrePortraitBoss } from './boss-rendu.js';
 import { mettreAJourMecaniquesHistoire } from './mecaniques-histoire.js';
+import { dessinerMotifsAccessibilite, dessinerMotifsPieceCourante } from './rendu-accessibilite.js';
 
 const SEUIL_ERREURS_BOUCLE = 5;
 let erreursConsecutivesBoucle = 0;
@@ -67,7 +69,7 @@ export function mettreAJourFps(deltaTemps) {
     const fps = 1000 / deltaTemps;
     const nouveau = obtenirFpsMoyen() * 0.92 + fps * 0.08;
     definirFpsMoyen(nouveau);
-    definirEffetsReduits(obtenirPrefererMoinsAnimations() || nouveau < 45);
+    definirEffetsReduits(obtenirEffetsAccessibiliteReduits() || nouveau < 45);
 }
 
 function aBesoinDeBoucle() {
@@ -118,12 +120,14 @@ function dessinerFrameSolo(ctx, enPartie) {
     ctx.translate(dec.x, dec.y);
     ctx.globalCompositeOperation = 'source-over';
     dessinerPlateau();
+    dessinerMotifsAccessibilite(ctx, etat.plateau, CONFIG.taille);
     dessinerAvertissementsVivant();
     dessinerFlashLignes();
     if (etat.pieceActuelle) {
         dessinerPieceFantome();
         dessinerSuggestionOracle();
         dessinerPieceActive();
+        dessinerMotifsPieceCourante(ctx);
     }
     dessinerFlashVerrou();
     dessinerParticules();

@@ -1,10 +1,15 @@
 import { CONFIG, TETROMINOS } from './config.js';
-import { obtenirCanvasPlateau, obtenirCtx } from './store-jeu.js';
+import {
+    obtenirCanvasPlateau,
+    obtenirCtx,
+    obtenirEffetsAccessibiliteReduits,
+} from './store-jeu.js';
 import { etat } from './store-jeu.js';
 import { obtenirCouleurPieceParType } from './piece-jeu.js';
 import { dessinerCellule, dessinerPreview, dessinerParticules } from './rendu-jeu.js';
 import { coop, DEMI_LARGEUR, coop_estPositionValide } from './coop-logique.js';
 import { obtenirCanvas } from './dom-utils.js';
+import { dessinerMotifsAccessibilite, dessinerMotifsCoopPieces } from './rendu-accessibilite.js';
 
 function obtenirFormeCoop(piece) {
     const rotations = TETROMINOS[piece.type].rotations;
@@ -80,6 +85,7 @@ export function coop_dessinerPlateau() {
             }
         }
     }
+    dessinerMotifsAccessibilite(ctx, etat.plateau, CONFIG.taille);
 }
 
 export function coop_dessinerPiecesActives() {
@@ -116,14 +122,14 @@ export function coop_dessinerPiecesFantomes() {
             ligne.forEach((cellule, ci) => {
                 if (!cellule) return;
                 const py = piece.y + li + dist;
-                if (py >= 0) dessinerCellule(ctx, piece.x + ci, py, couleur, CONFIG.taille, 0.15);
+                if (py >= 0) dessinerCellule(ctx, piece.x + ci, py, couleur, CONFIG.taille, 0.22);
             });
         });
     }
 }
 
 export function coop_dessinerLignesEnAttente() {
-    if (!coop.estEnCours) return;
+    if (!coop.estEnCours || obtenirEffetsAccessibiliteReduits()) return;
     const ctx = obtenirCtx();
     if (!ctx) return;
 
@@ -163,7 +169,7 @@ export function coop_dessinerLignesEnAttente() {
 }
 
 export function coop_dessinerFlashSynchro() {
-    if (coop.flashSynchro <= 0) return;
+    if (coop.flashSynchro <= 0 || obtenirEffetsAccessibiliteReduits()) return;
     const ctx = obtenirCtx();
     const canvasPlateau = obtenirCanvasPlateau();
     if (!ctx || !canvasPlateau) return;
@@ -177,9 +183,19 @@ export function coop_dessinerFlashSynchro() {
 }
 
 export function coop_rendreFrame() {
+    const ctx = obtenirCtx();
     coop_dessinerPlateau();
+    const piecesCoop = [];
+    for (const j of ['j1', 'j2']) {
+        const piece = coop[j].pieceActuelle;
+        if (!piece) continue;
+        let dist = 0;
+        while (coop_estPositionValide(piece, 0, dist + 1)) dist++;
+        piecesCoop.push({ piece, distFantome: dist });
+    }
     coop_dessinerPiecesFantomes();
     coop_dessinerPiecesActives();
+    if (ctx) dessinerMotifsCoopPieces(ctx, piecesCoop, obtenirFormeCoop);
     coop_dessinerLignesEnAttente();
     coop_dessinerFlashSynchro();
     dessinerParticules();

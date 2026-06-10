@@ -1,6 +1,8 @@
 import { obtenirHistoireTextesSync } from './charger-histoire-textes.js';
 import { ILLUSTRATIONS_JOURNAUX } from './histoire-illustrations.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
+import { creerFile } from './file-narrative.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
 import { logger } from './logger.js';
 
 function _obtenirEtatHistoireLocal() {
@@ -92,49 +94,63 @@ export function afficherJournalVera(journalData, onFermer) {
 }
 
 export function declencherFin(finId) {
-    const jouerOutroPuisFin = () => {
-        const outro = _textes().OUTRO_FINS?.[finId];
-        if (!outro?.length) {
-            void import('./fins-histoire.js').then(({ executerFin }) => executerFin(finId));
-            return;
-        }
-        void _importerUi()
-            .then(({ afficherCutsceneHistoire }) => {
-                afficherCutsceneHistoire(
-                    _formaterLignes(outro),
-                    _extrairePersonnages(outro),
-                    () => {
-                        const etatHist = _obtenirEtatHistoireLocal();
-                        etatHist.outroVue = true;
-                        persisterEtatHistoire(etatHist);
-                        void import('./fins-histoire.js').then(({ executerFin }) =>
-                            executerFin(finId)
-                        );
-                    }
-                );
-            })
-            .catch(() => {
-                void import('./fins-histoire.js').then(({ executerFin }) => executerFin(finId));
-            });
-    };
+    if (!modeHistoireEnCours()) return;
 
-    const epilogue = _textes().EPILOGUES[finId] ?? [];
-    if (!epilogue.length) {
-        jouerOutroPuisFin();
-        return;
-    }
-    void _importerUi()
-        .then(({ afficherCutsceneHistoire }) => {
-            afficherCutsceneHistoire(
-                _formaterLignes(epilogue),
-                _extrairePersonnages(epilogue),
-                jouerOutroPuisFin
-            );
-        })
-        .catch((err) => {
-            logger.warn('[histoire] épilogue indisponible :', err);
-            jouerOutroPuisFin();
-        });
+    const file = creerFile(`fin:${finId}`);
+
+    file.ajouter({
+        id: 'epilogue',
+        condition: () => (_textes().EPILOGUES[finId] ?? []).length > 0,
+        executer: (suivant) => {
+            const epilogue = _textes().EPILOGUES[finId];
+            void _importerUi()
+                .then(({ afficherCutsceneHistoire }) => {
+                    afficherCutsceneHistoire(
+                        _formaterLignes(epilogue),
+                        _extrairePersonnages(epilogue),
+                        suivant
+                    );
+                })
+                .catch((err) => {
+                    logger.warn('[histoire] épilogue indisponible :', err);
+                    suivant();
+                });
+        },
+    });
+
+    file.ajouter({
+        id: 'outro',
+        condition: () => (_textes().OUTRO_FINS?.[finId] ?? []).length > 0,
+        executer: (suivant) => {
+            const outro = _textes().OUTRO_FINS[finId];
+            void _importerUi()
+                .then(({ afficherCutsceneHistoire }) => {
+                    afficherCutsceneHistoire(
+                        _formaterLignes(outro),
+                        _extrairePersonnages(outro),
+                        () => {
+                            const etatHist = _obtenirEtatHistoireLocal();
+                            etatHist.outroVue = true;
+                            persisterEtatHistoire(etatHist);
+                            suivant();
+                        }
+                    );
+                })
+                .catch(() => suivant());
+        },
+    });
+
+    file.ajouter({
+        id: 'executerFin',
+        executer: (suivant) => {
+            void import('./fins-histoire.js').then(({ executerFin }) => {
+                executerFin(finId);
+                suivant();
+            });
+        },
+    });
+
+    file.demarrer();
 }
 
 export function afficherDecouverteLabo(onFin) {

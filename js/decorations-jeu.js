@@ -1,11 +1,13 @@
 import { CONFIG, BIOMES } from './config.js';
 import { statsGlobales } from './achievements.js';
+import { store } from './store-core.js';
 import {
     etat,
     obtenirBiomeActif,
     obtenirCanvasPlateau,
     obtenirCtx,
     obtenirEffetsReduits,
+    obtenirEffetsAccessibiliteReduits,
 } from './store-jeu.js';
 import { obtenirForme, obtenirCouleurPiece } from './piece-jeu.js';
 import { oracle } from './oracle-jeu.js';
@@ -173,7 +175,8 @@ function dessinerEclairsBords() {
 function dessinerBordurePulse() {
     const pulsation = 0.5 + 0.5 * Math.sin(performance.now() / 600);
     const couleur = BIOMES[obtenirBiomeActif()]?.ui?.bordureCanvas || '#00f5ff';
-    const intensite = 12 + pulsation * 18;
+    const multSurtension = store.surtensionActive ? 1.4 : 1;
+    const intensite = (12 + pulsation * 18) * multSurtension;
     obtenirCanvasPlateau().style.boxShadow = `0 0 ${intensite}px ${couleur}, 0 0 ${intensite * 2}px ${couleur}44`;
 }
 
@@ -378,6 +381,12 @@ export function dessinerDecorations() {
         return;
     }
 
+    const reduits = obtenirEffetsAccessibiliteReduits();
+    if (reduits) {
+        const canvas = obtenirCanvasPlateau();
+        if (canvas) canvas.style.boxShadow = '';
+    }
+
     actives.forEach((deco) => {
         switch (deco) {
             case 'trainee_simple':
@@ -405,10 +414,10 @@ export function dessinerDecorations() {
                 dessinerEclairsBords();
                 break;
             case 'bordure_pulse':
-                dessinerBordurePulse();
+                if (!reduits) dessinerBordurePulse();
                 break;
             case 'pouls_bordure':
-                dessinerPoulsBordure();
+                if (!reduits) dessinerPoulsBordure();
                 break;
             case 'aura_doree':
                 dessinerAuraDoree();
@@ -426,7 +435,7 @@ export function dessinerDecorations() {
                 dessinerGemmesOrbitales();
                 break;
             case 'flash_cyan':
-                dessinerFlashCyan();
+                if (!reduits) dessinerFlashCyan();
                 break;
             case 'particules_biome':
                 dessinerParticulesBiome();

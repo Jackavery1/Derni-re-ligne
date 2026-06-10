@@ -69,6 +69,11 @@ export const store = {
     prefererMoinsAnimations:
         typeof window !== 'undefined' &&
         window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    accessibilite: {
+        daltonien: false,
+        reduireEffets: false,
+        reduireEffetsConfigure: false,
+    },
     fpsMoyen: 60,
     effetsReduits: false,
     idFrame: null,
@@ -101,6 +106,11 @@ if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
     const mediaReduitAnims = window.matchMedia('(prefers-reduced-motion: reduce)');
     mediaReduitAnims.addEventListener?.('change', (e) => {
         store.prefererMoinsAnimations = e.matches;
+        import('./accessibilite.js').then(
+            ({ synchroniserReduireEffetsPrefererMoinsAnimations }) => {
+                synchroniserReduireEffetsPrefererMoinsAnimations();
+            }
+        );
     });
 }
 

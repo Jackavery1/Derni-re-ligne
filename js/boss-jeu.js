@@ -10,6 +10,7 @@ import {
     tickConditionTrame,
     reinitialiserConditionsRuntime,
     obtenirSecondesRestantesAttenteTrame,
+    obtenirProgressionAttenteTrameMs,
     conditionsRuntime,
 } from './conditions-secrets.js';
 import { obtenirEtatHistoire } from './histoire-mondes.js';
@@ -39,6 +40,7 @@ import {
     notifierQuasiVaincuBoss,
     dialogueBossActif,
     reinitialiserDialoguesBoss,
+    mettreAJourLabelBossAttaque,
 } from './boss-dialogues.js';
 
 export { COULEUR_BRAISE, COULEUR_GLACE_B };
@@ -386,26 +388,48 @@ function _mettreAJourHPBar() {
 
 /** @param {string} texte */
 function _afficherTexteBoss(texte) {
-    if (typeof document === 'undefined') return;
-    const el = document.getElementById('boss-attaque-label');
-    if (el) el.textContent = texte;
+    mettreAJourLabelBossAttaque(texte);
+}
+
+function _masquerUiAttenteTrame(trameWrap, trameFill) {
+    if (trameWrap) {
+        trameWrap.classList.add('element-masque');
+        trameWrap.setAttribute('aria-hidden', 'true');
+    }
+    if (trameFill) trameFill.style.width = '0%';
+}
+
+function _afficherUiAttenteTrame(el, attaqueEl, trameWrap, trameFill) {
+    const secRestantes = obtenirSecondesRestantesAttenteTrame();
+    const progression = obtenirProgressionAttenteTrameMs();
+    if (el) {
+        el.textContent = secRestantes > 0 ? `ATTENTE : ${secRestantes}s` : 'CONDITION VALIDÉE';
+    }
+    if (trameWrap) {
+        trameWrap.classList.remove('element-masque');
+        trameWrap.setAttribute('aria-hidden', 'false');
+    }
+    if (trameFill) {
+        trameFill.style.width = `${Math.round(progression * 100)}%`;
+    }
+    if (attaqueEl && !dialogueBossActif()) {
+        mettreAJourLabelBossAttaque('NE RIEN EFFACER…');
+    }
 }
 
 function _mettreAJourTimerUI() {
     if (typeof document === 'undefined') return;
     const el = document.getElementById('boss-timer-label');
     const attaqueEl = document.getElementById('boss-attaque-label');
+    const trameWrap = document.getElementById('boss-trame-attente-wrap');
+    const trameFill = document.getElementById('boss-trame-attente-fill');
 
     if (store.histoire.boss.actif?.id === 'distorsion' && conditionsRuntime.trameAttenteActive) {
-        const secRestantes = obtenirSecondesRestantesAttenteTrame();
-        if (el) {
-            el.textContent = secRestantes > 0 ? `ATTENTE : ${secRestantes}s` : 'CONDITION VALIDÉE';
-        }
-        if (attaqueEl && !dialogueBossActif()) {
-            attaqueEl.textContent = 'NE RIEN EFFACER…';
-        }
+        _afficherUiAttenteTrame(el, attaqueEl, trameWrap, trameFill);
         return;
     }
+
+    _masquerUiAttenteTrame(trameWrap, trameFill);
 
     if (store.histoire.boss.actif?.id === 'distorsion' && attaqueEl && !dialogueBossActif()) {
         const etatHist = obtenirEtatHistoire();
@@ -417,7 +441,7 @@ function _mettreAJourTimerUI() {
             ct.tousJournauxTrouves &&
             ct.tousBossSansContinue;
         if (prerequisOk) {
-            attaqueEl.textContent = "UN ÉCHO RÉSONNE… REMPLISSEZ LE PLATEAU SANS L'EFFACER";
+            mettreAJourLabelBossAttaque("UN ÉCHO RÉSONNE… REMPLISSEZ LE PLATEAU SANS L'EFFACER");
         }
     }
 

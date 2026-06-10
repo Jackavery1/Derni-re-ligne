@@ -1,9 +1,14 @@
 import { CONFIG, BIOMES } from './config.js';
 import { obtenirForme, obtenirCouleurPieceParType } from './piece-jeu.js';
-import { obtenirCtx, obtenirCanvasPlateau } from './store-jeu.js';
+import {
+    obtenirCtx,
+    obtenirCanvasPlateau,
+    obtenirEffetsAccessibiliteReduits,
+} from './store-jeu.js';
 import { dessinerCellule } from './rendu-cellule.js';
 import { dessinerParticules } from './rendu-jeu.js';
 import { archi, archi_estPositionValide } from './archi-logique.js';
+import { dessinerMotifsAccessibilite, dessinerMotifsCoopPieces } from './rendu-accessibilite.js';
 
 function archi_dessinerGrille(ctx2d, biomeId) {
     const biome = BIOMES[biomeId] ?? BIOMES.classique;
@@ -65,7 +70,7 @@ export function archi_dessinerSilhouette() {
                 ctx2d.shadowBlur = 8;
                 ctx2d.fillRect(px, py, CONFIG.taille, CONFIG.taille);
                 ctx2d.restore();
-            } else {
+            } else if (!obtenirEffetsAccessibiliteReduits()) {
                 const pulse = 0.15 + Math.sin(t * 2 + l * 0.3) * 0.08;
                 ctx2d.save();
                 ctx2d.globalAlpha = pulse;
@@ -151,10 +156,21 @@ export function archi_dessinerScoreTempsReel() {
 }
 
 export function archi_rendreFrame() {
+    const ctx2d = obtenirCtx();
     archi_dessinerPlateau();
+    if (ctx2d) dessinerMotifsAccessibilite(ctx2d, archi.plateau, CONFIG.taille);
     archi_dessinerSilhouette();
     archi_dessinerFantome();
     archi_dessinerPieceActive();
+    if (ctx2d && archi.pieceActuelle) {
+        let dist = 0;
+        while (archi_estPositionValide(archi.pieceActuelle, 0, dist + 1)) dist++;
+        dessinerMotifsCoopPieces(
+            ctx2d,
+            [{ piece: archi.pieceActuelle, distFantome: dist }],
+            obtenirForme
+        );
+    }
     archi_dessinerScoreTempsReel();
     dessinerParticules();
 }

@@ -31,10 +31,12 @@ describe('histoire-intro', () => {
         expect(localStorage.getItem('derniereLigne_introHistoireVue')).toBe('1');
     });
 
-    it('obtenirHistoireTextesSync fonctionne sans chargement JSON prealable', async () => {
+    it('obtenirHistoireTextesSync exige un chargement prealable', async () => {
         vi.resetModules();
-        const { obtenirHistoireTextesSync } = await import('../js/charger-histoire-textes.js');
-        const textes = obtenirHistoireTextesSync();
+        const mod = await import('../js/charger-histoire-textes.js');
+        expect(() => mod.obtenirHistoireTextesSync()).toThrow(/chargerHistoireTextes/);
+        await mod.chargerHistoireTextes();
+        const textes = mod.obtenirHistoireTextesSync();
         expect(textes.INTRO_HISTOIRE?.length).toBe(15);
         expect(textes.INTERLUDES?.interlude_gardiens?.length).toBeGreaterThan(3);
         expect(textes.OUTRO_FINS?.fin_normale?.length).toBeGreaterThan(0);

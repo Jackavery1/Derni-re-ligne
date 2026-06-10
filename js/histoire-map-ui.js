@@ -11,7 +11,39 @@ import {
 import { obtenirActionsHistoire } from './histoire-actions.js';
 import { modeDevActif } from './mode-dev-etat.js';
 import { obtenirEtoilesPersistees } from './gestionnaire-difficulte.js';
-import { sansAccentsE } from './texte-jeu.js';
+import { definirTexteUi } from './texte-jeu.js';
+
+export function mettreAJourAriaCarteHistoire(etatCarte) {
+    const canvas = etatCarte.canvasCarte;
+    if (!canvas) return;
+
+    const base =
+        'Carte des mondes de la campagne. Utilisez la liste de selection pour choisir un monde au clavier.';
+    const noeudId = etatCarte.noeudSurvole ?? etatCarte.noeudSelectionne;
+    if (!noeudId) {
+        canvas.setAttribute('aria-label', base);
+        return;
+    }
+
+    const monde = SEQUENCE_HISTOIRE.find((m) => m.id === noeudId);
+    if (!monde) {
+        canvas.setAttribute('aria-label', base);
+        return;
+    }
+
+    const etatMonde = obtenirEtatMonde(noeudId, obtenirEtatHistoire());
+    const statut =
+        etatMonde === 'complete'
+            ? 'complete'
+            : etatMonde === 'disponible'
+              ? 'disponible'
+              : 'verrouille';
+    const interaction = etatCarte.noeudSurvole ? 'survole' : 'selectionne';
+    canvas.setAttribute(
+        'aria-label',
+        `${base} Monde ${monde.nomAffiche}, ${statut}, ${interaction}.`
+    );
+}
 
 export function mettreAJourSelectMondesClavier(etatCarte, traiterSelectionNoeud) {
     const select = /** @type {HTMLSelectElement | null} */ (
@@ -32,9 +64,9 @@ export function mettreAJourSelectMondesClavier(etatCarte, traiterSelectionNoeud)
         const etatMonde = obtenirEtatMonde(monde.id, etatHist);
         const opt = document.createElement('option');
         opt.value = monde.id;
-        opt.textContent = sansAccentsE(
-            etatMonde === 'verrouille' ? `${monde.nomAffiche} (verrouille)` : monde.nomAffiche
-        );
+        const labelAccents =
+            etatMonde === 'verrouille' ? `${monde.nomAffiche} (verrouille)` : monde.nomAffiche;
+        definirTexteUi(opt, labelAccents);
         opt.disabled = !modeDevActif() && etatMonde === 'verrouille';
         if (etatCarte.noeudSelectionne === monde.id) opt.selected = true;
         select.appendChild(opt);
@@ -67,12 +99,14 @@ export function attacherEvenementsCarteHistoire(
         etatCarte.noeudSurvole = noeud?.id ?? null;
         if (etatCarte.noeudSurvole !== precedent) {
             canvasCarte.style.cursor = noeud ? 'pointer' : 'default';
+            mettreAJourAriaCarteHistoire(etatCarte);
         }
     });
 
     canvasCarte.addEventListener('mouseleave', () => {
         etatCarte.noeudSurvole = null;
         canvasCarte.style.cursor = 'default';
+        mettreAJourAriaCarteHistoire(etatCarte);
     });
 
     canvasCarte.addEventListener('click', (e) => {
@@ -105,6 +139,7 @@ export function traiterSelectionNoeud(etatCarte, noeud, doubleTap, lancerMondeDe
     if (!noeud) {
         etatCarte.noeudSelectionne = null;
         masquerPanneauDetails();
+        mettreAJourAriaCarteHistoire(etatCarte);
         return;
     }
 
@@ -119,6 +154,7 @@ export function traiterSelectionNoeud(etatCarte, noeud, doubleTap, lancerMondeDe
         document.getElementById('histoire-monde-clavier')
     );
     if (select && select.value !== noeud.id) select.value = noeud.id;
+    mettreAJourAriaCarteHistoire(etatCarte);
 
     if (doubleTap && mondePeutEtreJoue(noeud.monde.id, obtenirEtatHistoire())) {
         lancerMondeDepuisCarte(noeud.monde);
@@ -136,7 +172,7 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
 
     const elNom = /** @type {HTMLElement | null} */ (panneau.querySelector('.histoire-detail-nom'));
     if (elNom) {
-        elNom.textContent = sansAccentsE(monde.nomAffiche);
+        definirTexteUi(elNom, monde.nomAffiche);
         elNom.style.setProperty('--detail-couleur', biome.lueurCoul);
     }
 
@@ -144,9 +180,7 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
         panneau.querySelector('.histoire-detail-type')
     );
     if (elType) {
-        elType.textContent = sansAccentsE(
-            estBoss ? '⚔ COMBAT DE BOSS' : `${biome.icone} ${biome.nom}`
-        );
+        definirTexteUi(elType, estBoss ? '⚔ COMBAT DE BOSS' : `${biome.icone} ${biome.nom}`);
         elType.style.setProperty('--detail-couleur', estBoss ? 'var(--rose)' : biome.lueurCoul);
     }
 

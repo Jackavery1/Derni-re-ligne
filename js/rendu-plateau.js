@@ -7,6 +7,7 @@ import {
     couleurAmbRgb,
     obtenirEffetsReduits,
     obtenirPrefererMoinsAnimations,
+    obtenirEffetsAccessibiliteReduits,
     obtenirReliqueActive,
     obtenirBiomeActif,
     obtenirCanvasPlateau,
@@ -19,6 +20,7 @@ import { dessinerCelluleStyle } from './rendu-blocs.js';
 import { dessinerFondBiome } from './rendu-ambiance.js';
 import { dessinerSignesVie } from './rendu-vivant.js';
 import { celluleEstRouillee, pieceEstInvisible, ghostEstDesactive } from './mecaniques-histoire.js';
+import { dessinerMotifsAccessibilite, dessinerMotifsPieceCourante } from './rendu-accessibilite.js';
 
 function dessinerAmbianceJeu() {
     if (obtenirEffetsReduits()) return;
@@ -139,9 +141,11 @@ export function rendreFrameJeu() {
         obtenirCtx().globalAlpha = 1;
         obtenirCtx().globalCompositeOperation = 'source-over';
         dessinerPlateau();
+        dessinerMotifsAccessibilite(obtenirCtx(), etat.plateau, CONFIG.taille);
         if (etat.pieceActuelle) {
             dessinerPieceFantome();
             dessinerPieceActive();
+            dessinerMotifsPieceCourante(obtenirCtx());
         }
         obtenirCtx().restore();
     } catch (err) {
@@ -181,6 +185,7 @@ export function dessinerPieceFantome() {
 
 export function dessinerOverlayBraise() {
     if (!obtenirCtx() || !obtenirCanvasPlateau()) return;
+    if (obtenirEffetsAccessibiliteReduits()) return;
     const pulse = 0.12 + 0.1 * Math.sin(performance.now() / 220);
     for (let l = 0; l < CONFIG.lignes; l++) {
         for (let c = 0; c < CONFIG.colonnes; c++) {

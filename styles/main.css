@@ -17,6 +17,30 @@
     }
 }
 
+body.effets-reduits .titre-neo,
+body.effets-reduits .titre-lettre,
+body.effets-reduits .titre-robot,
+body.effets-reduits .btn-jouer,
+body.effets-reduits .record-badge,
+body.effets-reduits .niveau-notif,
+body.effets-reduits .vivant-alerte,
+body.effets-reduits .vivant-panneau-actif,
+body.effets-reduits .codex-carte-nouvelle,
+body.effets-reduits .boss-portrait-cadre,
+body.effets-reduits .hud-flash-vitesse-actif,
+body.effets-reduits .hud-flash-vitesse-descente {
+    animation: none !important;
+    transition: none !important;
+}
+
+body.effets-reduits .boss-portrait-cadre.tremble {
+    animation: none !important;
+}
+
+body.effets-reduits .boss-portrait-cadre.flash {
+    animation: none !important;
+}
+
 .element-masque,
 [hidden] {
     display: none !important;
@@ -3368,13 +3392,33 @@ body.archi-active #conteneur-principal-archi {
 }
 
 .boss-attaque-label {
+    --boss-dialogue-lh: 1.25em;
     font-size: 0.26rem;
     color: var(--rose);
     text-align: center;
     letter-spacing: 1px;
+    line-height: var(--boss-dialogue-lh);
+    max-height: calc(var(--boss-dialogue-lh) * 2);
+    overflow: hidden;
+    word-break: break-word;
     min-height: 1em;
     text-shadow: 0 0 6px var(--rose);
     animation: clignoteBoss 0.8s ease-in-out infinite;
+}
+
+.boss-attaque-label.boss-attaque-defile {
+    animation:
+        clignoteBoss 0.8s ease-in-out infinite,
+        bossDialogueDefile 7s ease-in-out infinite alternate;
+}
+
+@keyframes bossDialogueDefile {
+    from {
+        margin-top: 0;
+    }
+    to {
+        margin-top: calc(-1 * var(--boss-defile-distance, 0px));
+    }
 }
 @keyframes clignoteBoss {
     0%,
@@ -3391,6 +3435,34 @@ body.archi-active #conteneur-principal-archi {
     color: var(--texte-dim);
     text-align: center;
     letter-spacing: 1px;
+}
+
+.boss-trame-attente-wrap {
+    margin-top: 4px;
+    width: 100%;
+}
+
+.boss-trame-attente-libelle {
+    font-size: 0.22rem;
+    color: var(--cyan);
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+}
+
+.boss-trame-attente-barre {
+    height: 6px;
+    background: rgba(0, 245, 255, 0.15);
+    border: 1px solid rgba(0, 245, 255, 0.35);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.boss-trame-attente-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--cyan), var(--vert));
+    transition: width 0.15s linear;
 }
 
 .overlay-boss-presentation {
@@ -3435,10 +3507,62 @@ body.archi-active #conteneur-principal-archi {
 .boss-presentation-epithete {
     font-family: 'Crimson Pro', Georgia, serif;
     font-style: italic;
-    font-size: 0.9rem;
+    font-size: clamp(0.72rem, 2.4vw, 0.9rem);
     color: var(--texte-dim);
-    max-width: 28em;
-    line-height: 1.5;
+    max-width: min(28em, 92vw);
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+}
+
+@media (max-width: 768px), (max-height: 600px) {
+    .overlay-boss-presentation {
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: max(10vh, calc(env(safe-area-inset-top, 0px) + 40px));
+        padding-bottom: calc(132px + env(safe-area-inset-bottom, 0px));
+        box-sizing: border-box;
+    }
+
+    .boss-presentation-contenu {
+        max-width: min(92vw, 360px);
+        padding: 16px 12px;
+        gap: 10px;
+    }
+
+    .boss-presentation-nom {
+        font-size: clamp(0.38rem, 3.2vw, 0.55rem);
+        line-height: 1.5;
+        max-width: 100%;
+        word-break: break-word;
+    }
+
+    body.histoire-active.partie-active #section-boss:not(.element-masque) .boss-attaque-label {
+        position: fixed;
+        left: 50%;
+        bottom: calc(128px + env(safe-area-inset-bottom, 0px));
+        transform: translateX(-50%);
+        width: min(92vw, 300px);
+        z-index: 55;
+        margin: 0;
+        padding: 6px 8px;
+        box-sizing: border-box;
+        background: rgba(8, 8, 26, 0.94);
+        border: 1px solid rgba(255, 0, 110, 0.35);
+        border-radius: 4px;
+        max-height: calc(var(--boss-dialogue-lh, 1.25em) * 2 + 12px);
+    }
+
+    body.histoire-active.partie-active
+        #section-boss:not(.element-masque)
+        .boss-attaque-label.boss-attaque-defile {
+        animation:
+            clignoteBoss 0.8s ease-in-out infinite,
+            bossDialogueDefile 7s ease-in-out infinite alternate;
+    }
 }
 
 .go-boss-replique {

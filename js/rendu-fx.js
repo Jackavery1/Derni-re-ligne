@@ -1,4 +1,5 @@
 import { CONFIG } from './config.js';
+import { store } from './store-core.js';
 import {
     textesFlottants,
     secousse,
@@ -11,15 +12,19 @@ import {
     obtenirTransitionDebut,
     definirTransitionAlpha,
     definirTransitionDebut,
+    obtenirEffetsAccessibiliteReduits,
 } from './store-jeu.js';
 
 export function declencherSecousse(intensite) {
+    if (obtenirEffetsAccessibiliteReduits()) return;
+    let force = intensite;
+    if (store.surtensionActive) force *= 1.5;
     secousse.timer = secousse.duree;
-    secousse.intensite = intensite;
+    secousse.intensite = force;
 }
 
 export function getDecalageSecousse() {
-    if (secousse.timer <= 0) return { x: 0, y: 0 };
+    if (obtenirEffetsAccessibiliteReduits() || secousse.timer <= 0) return { x: 0, y: 0 };
     const force = secousse.intensite * (secousse.timer / secousse.duree);
     const t = secousse.timer * 0.05;
     return {
@@ -33,7 +38,7 @@ export function mettreAJourSecousse(dt) {
 }
 
 export function dessinerFlashVerrou() {
-    if (flashVerrou.timer <= 0) return;
+    if (obtenirEffetsAccessibiliteReduits() || flashVerrou.timer <= 0) return;
     const opacite = (flashVerrou.timer / flashVerrou.duree) * 0.8;
     obtenirCtx().save();
     obtenirCtx().globalAlpha = opacite;
@@ -50,7 +55,7 @@ export function dessinerFlashVerrou() {
 }
 
 export function dessinerFlashLignes() {
-    if (flashLignes.timer <= 0) return;
+    if (obtenirEffetsAccessibiliteReduits() || flashLignes.timer <= 0) return;
     const opacite = Math.min(0.9, flashLignes.timer / flashLignes.duree);
     obtenirCtx().save();
     obtenirCtx().globalAlpha = opacite;

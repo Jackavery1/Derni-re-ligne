@@ -8,6 +8,8 @@ import {
     reinitialiserOraclePartie,
     obtenirScoreAffiche,
     obtenirScoreFinalOracle,
+    basculerOracle,
+    afficherFeedbackOracle,
 } from '../js/oracle-jeu.js';
 import { etat } from '../js/store-jeu.js';
 import { creerPlateau } from '../js/piece-jeu.js';
@@ -107,5 +109,48 @@ describe('oracle-jeu', () => {
         expect(oracle.multiplicateur).toBe(1.6);
         expect(oracle.piecesSuivies).toBe(1);
         expect(oracle.piecesIgnorees).toBe(0);
+    });
+
+    it('reinitialiserOraclePartie remet les compteurs à zéro', () => {
+        oracle.actif = true;
+        oracle.multiplicateur = 3.2;
+        oracle.scoreBonus = 900;
+        oracle.piecesSuivies = 4;
+        oracle.piecesIgnorees = 2;
+        reinitialiserOraclePartie();
+        expect(oracle.multiplicateur).toBe(1);
+        expect(oracle.scoreBonus).toBe(0);
+        expect(oracle.piecesSuivies).toBe(0);
+        expect(oracle.piecesIgnorees).toBe(0);
+    });
+
+    it('basculerOracle met à jour le libellé du bouton', () => {
+        const label = { textContent: '' };
+        const desc = { textContent: '' };
+        document.getElementById = (id) => {
+            if (id === 'toggle-oracle') return { classList: { add: () => {}, remove: () => {} } };
+            if (id === 'oracle-toggle-label') return label;
+            if (id === 'oracle-toggle-desc') return desc;
+            return null;
+        };
+        oracle.actif = false;
+        basculerOracle();
+        expect(oracle.actif).toBe(true);
+        expect(label.textContent).toBe('ORACLE : ON');
+        basculerOracle();
+        expect(label.textContent).toBe('ORACLE : OFF');
+    });
+
+    it('afficherFeedbackOracle affiche succès ou reset', () => {
+        const notif = {
+            textContent: '',
+            classList: { add: () => {}, remove: () => {} },
+            offsetWidth: 0,
+        };
+        document.getElementById = (id) => (id === 'notif-oracle' ? notif : null);
+        afficherFeedbackOracle(true, 2.4);
+        expect(notif.textContent).toContain('DÉVIATION');
+        afficherFeedbackOracle(false, 1.1);
+        expect(notif.textContent).toContain('RESET');
     });
 });

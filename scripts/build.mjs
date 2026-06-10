@@ -1,3 +1,4 @@
+import { createHash } from 'crypto';
 import * as esbuild from 'esbuild';
 import { cpSync, mkdirSync, readFileSync, writeFileSync, rmSync, readdirSync } from 'fs';
 import { execSync } from 'child_process';
@@ -33,8 +34,18 @@ cpSync('fonts', `${dist}/fonts`, { recursive: true });
 cpSync('manifest.json', `${dist}/manifest.json`);
 cpSync('img', `${dist}/img`, { recursive: true });
 
+const bundlePath = `${dist}/js/bundle.js`;
+const bundleIntegrity =
+    'sha384-' + createHash('sha384').update(readFileSync(bundlePath)).digest('base64');
+
 const html = readFileSync('index.html', 'utf8');
-writeFileSync(`${dist}/index.html`, html.replace(/js\/main\.js\?v=[^"']+/, 'js/bundle.js'));
+writeFileSync(
+    `${dist}/index.html`,
+    html.replace(
+        /<script type="module" src="js\/main\.js\?v=[^"']+"><\/script>/,
+        `<script type="module" src="js/bundle.js" integrity="${bundleIntegrity}" crossorigin="anonymous"></script>`
+    )
+);
 
 const jsFiles = readdirSync(`${dist}/js`)
     .filter((f) => f.endsWith('.js') && !f.endsWith('.map'))

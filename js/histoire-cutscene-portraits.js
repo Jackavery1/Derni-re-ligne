@@ -177,6 +177,8 @@ export function demarrerBouclePortraitsCutscene(enCours, obtenirContexteFrame) {
     if (_rafPortraits) return;
     function boucle(ts) {
         if (!enCours()) return;
+        _rafPortraits = requestAnimationFrame(boucle);
+        if (document.hidden) return;
         const ctx = obtenirContexteFrame();
         mettreAJourPortraitsCutscene(
             ctx.personnageParlant,
@@ -185,7 +187,6 @@ export function demarrerBouclePortraitsCutscene(enCours, obtenirContexteFrame) {
             ctx.indexLigne,
             ts
         );
-        _rafPortraits = requestAnimationFrame(boucle);
     }
     _rafPortraits = requestAnimationFrame(boucle);
 }

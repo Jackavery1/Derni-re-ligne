@@ -77,3 +77,9 @@ export {
     obtenirCtxReserve,
     definirRefsCanvas,
 } from './store-refs-canvas.js';
+
+export {
+    obtenirDaltonien,
+    obtenirReduireEffetsAccessibilite,
+    obtenirEffetsAccessibiliteReduits,
+} from './accessibilite.js';

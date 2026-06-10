@@ -144,6 +144,7 @@ function _fondEtoilesDefaut(ctx, w, h, ts) {
 function _boucleFondCutscene(ts) {
     if (!_fondActif || !_ctxBg) return;
     _rafBg = requestAnimationFrame(_boucleFondCutscene);
+    if (document.hidden) return;
 
     const w = _canvasBgCutscene.width;
     const h = _canvasBgCutscene.height;

@@ -5,6 +5,7 @@ import {
     notifierTetrisBoss,
     notifierQuasiVaincuBoss,
     notifierSeuilsPvBoss,
+    notifierTransitionPhaseBoss,
     obtenirRepliqueGameOverBoss,
     reinitialiserDialoguesBoss,
     dialogueBossActif,
@@ -58,6 +59,27 @@ describe('boss-dialogues', () => {
         notifierSeuilsPvBoss(24);
         const d = store.histoire.boss._dialogues;
         expect(d.seuilsPvVus).toEqual([50, 25]);
+    });
+
+    it('archiviste : transition phase puis replique au seuil 25%', () => {
+        store.histoire.boss.actif = {
+            id: 'archiviste',
+            nom: 'ARCHIVISTE',
+            couleur: '#ff00ff',
+            pvMax: 14,
+            phases: [
+                { pvSeuil: 13, type: 'inverser_controles', dureeMs: 6000 },
+                { pvSeuil: 7, type: 'faux_fantome', dureeMs: 8000 },
+            ],
+        };
+        reinitialiserDialoguesBoss();
+
+        notifierTransitionPhaseBoss(0, 1);
+        expect(store.histoire.boss._dialogues.phasesVues).toContain(0);
+
+        notifierSeuilsPvBoss(24);
+        expect(store.histoire.boss._dialogues.phasesVues).toContain(1);
+        expect(store.histoire.boss._dialogues.seuilsPvVus).toContain(25);
     });
 
     it('enqueue un dialogue avec durée d affichage', () => {

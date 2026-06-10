@@ -73,7 +73,9 @@ import {
     enregistrerPosePiece,
     estMondeZenActif,
     enregistrerTopOut,
+    suiviDifficulteActif,
 } from './gestionnaire-difficulte.js';
+import { store } from './store-core.js';
 import { appliquerScoreLignes } from './score-partie.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 
@@ -224,7 +226,14 @@ function supprimerLignesCompletes() {
 
 export function calculerScore(nbLignes, tSpin = null) {
     vivant_enregistrerLignesScore(nbLignes);
-    const result = appliquerScoreLignes(etat, nbLignes, tSpin);
+    const optionsScore =
+        modeHistoireEnCours() && suiviDifficulteActif()
+            ? {
+                  niveauScore: store.histoire.difficulte.palierCourant,
+                  ignorerLevelUp: true,
+              }
+            : {};
+    const result = appliquerScoreLignes(etat, nbLignes, tSpin, optionsScore);
 
     if (nbLignes > 0) {
         majStatsScorePartie(nbLignes, etat.combo);

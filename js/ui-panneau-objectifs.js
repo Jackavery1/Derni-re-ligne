@@ -9,6 +9,7 @@ import { ecouter } from './bus-jeu.js';
 import { DIFFICULTE_MONDES } from '../data/difficulte-mondes.js';
 import { logger } from './logger.js';
 import { sansAccentsE } from './texte-jeu.js';
+import { afficherNotificationNiveau } from './ui-notifications.js';
 import {
     demarrerSuiviMonde,
     obtenirEtoilesPersistees,
@@ -247,7 +248,7 @@ export function rafraichirHudObjectifsHistoire() {
     const etoiles = calculerEtoiles(suivi.mondeId ?? '');
 
     ['hud-etoile-0', 'hud-etoile-1', 'hud-etoile-2'].forEach((id, i) => {
-        _el(id)?.classList.toggle('hud-etoile-active', etoiles[i]);
+        _el(id)?.classList.toggle('objectif-hud-etoile-active', etoiles[i]);
     });
 
     if (config?.boss) {
@@ -303,8 +304,11 @@ export function initialiserUiObjectifs() {
 
     _el('overlay-recap-monde')?.addEventListener('click', () => _fermerRecap());
 
-    ecouter('difficulte:vague', ({ montee }) => {
+    ecouter('difficulte:vague', ({ montee, palierApres }) => {
         _flashVague(montee);
+        if (montee && palierApres != null) {
+            afficherNotificationNiveau(`PALIER P${palierApres}`);
+        }
         rafraichirHudObjectifsHistoire();
     });
 

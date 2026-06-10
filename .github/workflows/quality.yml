@@ -24,6 +24,7 @@ jobs:
             - run: npm run check:circular
             - run: npm run typecheck
             - run: npm run format:check
+            - run: npm run verify:data
             - run: node scripts/exporter-donnees-json.mjs
             - run: npm run test:coverage
             - run: npm audit --audit-level=moderate
@@ -32,6 +33,10 @@ jobs:
             - name: Budget taille bundle prod
               run: node scripts/verifier-bundle.mjs
             - run: npx playwright install --with-deps chromium
+            - name: Smoke E2E dist
+              run: npm run test:e2e:smoke:dist
+            - name: Budget perf chargement
+              run: npm run test:e2e:perf
             - run: npm run test:e2e
               env:
                   E2E_DIST: '1'

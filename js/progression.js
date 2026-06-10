@@ -11,6 +11,7 @@
     ecrireStockageJson,
     lireStockage,
     ecrireStockage,
+    existeStockage,
 } from './progression-stockage.js';
 
 export {

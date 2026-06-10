@@ -33,6 +33,7 @@ import {
     estMondeZenActif,
 } from './gestionnaire-difficulte.js';
 import { afficherRecapAvantNarratif } from './ui-panneau-objectifs.js';
+import { creerFile } from './file-narrative.js';
 
 export { SEUILS_COMPLETION } from './histoire-mondes.js';
 
@@ -228,9 +229,7 @@ export function surFinDeMondeHistoire(lignes, score) {
 
     if (estComplete) {
         const etoilesFin = calculerEtoiles(mondeId, etatHist);
-        afficherRecapAvantNarratif(monde, etoilesFin, () =>
-            declencherNarratifPostMonde(monde, etatHist, premiereCompletionCeMonde)
-        );
+        declencherNarratifPostMonde(monde, etatHist, premiereCompletionCeMonde, etoilesFin);
     } else {
         void import('./histoire-manager-ui.js').then(({ afficherBoutonCarteGameOver }) =>
             afficherBoutonCarteGameOver(true)
@@ -279,188 +278,60 @@ function verifierTetrisTriplesCyber(etatHist) {
     }
 }
 
-function declencherNarratifPostMonde(monde, etatHist, premiereCompletion) {
-    if (
-        monde.biomeId === 'cyber' &&
-        etatHist.conditionsMiroir.tetrisTriplesCyber >= 3 &&
-        !etatHist.laboDecouvert
-    ) {
-        etatHist.laboDecouvert = true;
-        sauvegarderEtatHistoire(etatHist);
-        store.histoire.etat = etatHist;
-
-        const j7 = trouverJournal('journal_7');
-        if (j7 && !etatHist.journauxTrouves.includes('journal_7')) {
-            etatHist.journauxTrouves.push('journal_7');
-            sauvegarderEtatHistoire(etatHist);
-            store.histoire.etat = etatHist;
-            store.histoire.dernierJournal = j7;
-        }
-
-        afficherDecouverteLabo(() => suiteNarratifPostMonde(monde, etatHist, premiereCompletion));
-        return;
-    }
-
-    if (monde.estBoss && monde.bossId) {
-        if (monde.bossId === 'distorsion') {
-            const typeFin = obtenirTypeFin();
-            definirExpressionVera(
-                typeFin === 'fin_secrete'
-                    ? 'fin_secrete'
-                    : typeFin === 'fin_vraie'
-                      ? 'fin_vraie'
-                      : 'fin_normale'
-            );
-            afficherVictoireBoss(monde.bossId, typeFinVersCleBoss(typeFin), () =>
-                declencherFin(typeFin)
-            );
-            return;
-        }
-        definirExpressionVera('boss_vaincu');
-        afficherVictoireBoss(monde.bossId, 'normal', () =>
-            suiteNarratifPostMonde(monde, etatHist, premiereCompletion)
-        );
-        return;
-    }
-
-    suiteNarratifPostMonde(monde, etatHist, premiereCompletion);
-}
-
-function suiteNarratifPostMonde(monde, etatHist, premiereCompletion) {
-    void etatHist;
-    const journal = store.histoire.dernierJournal;
-    if (journal) {
-        store.histoire.dernierJournal = null;
-        definirExpressionVera('journal_decouvert');
-        afficherJournalVera(journal, () => suiteTransitionChapitre(monde, premiereCompletion));
-        return;
-    }
-    suiteTransitionChapitre(monde, premiereCompletion);
-}
-
-function suiteTransitionChapitre(monde, premiereCompletion) {
-    const afficherCarteAvecFragment = () => {
-        _afficherFragmentVeraSiDisponible(monde.id, () => {
-            _afficherInterludeSiDisponible(monde.id, premiereCompletion, () => {
-                void import('./histoire-manager-ui.js').then(({ afficherBoutonCarteGameOver }) =>
-                    afficherBoutonCarteGameOver(true)
-                );
-                void import('./navigation-ecrans.js').then(({ afficherEcran }) =>
-                    afficherEcran(ECRANS.GAME_OVER)
-                );
-            });
-        });
-    };
-
-    const cleTrans = obtenirTransitionApresVictoire(monde.id);
-    if (cleTrans) {
-        definirExpressionVera('chapitre_complete');
-        afficherTransitionChapitre(cleTrans, afficherCarteAvecFragment);
-        return;
-    }
-
-    const postMonde = obtenirCutscenePostMonde(monde.id, premiereCompletion);
-    if (postMonde) {
-        void import('./histoire-manager-ui.js')
-            .then(({ afficherCutsceneHistoire }) => {
-                afficherCutsceneHistoire(
-                    postMonde.lignes,
-                    postMonde.personnages,
-                    afficherCarteAvecFragment
-                );
-            })
-            .catch((err) => {
-                logger.warn('[histoire] cutscene post-monde indisponible :', err);
-                afficherCarteAvecFragment();
-            });
-        return;
-    }
-
-    afficherCarteAvecFragment();
-}
-
 const INTERLUDES_PAR_MONDE = {
     monde_rouille: 'interlude_gardiens',
     monde_eclipse: 'interlude_elle',
     monde_vide: 'interlude_veille',
 };
 
-function _afficherInterludeSiDisponible(mondeId, premiereCompletion, callback) {
-    if (!modeHistoireEnCours()) {
-        callback?.();
-        return;
-    }
-    const cleInterlude = INTERLUDES_PAR_MONDE[mondeId];
-    if (!cleInterlude || !premiereCompletion) {
-        callback?.();
-        return;
-    }
+const CLE_FRAGMENT_PAR_MONDE = {
+    monde_ocean: 'apres_ocean',
+    monde_foret: 'apres_foret',
+    monde_glace: 'apres_glace',
+    monde_desert: 'apres_desert',
+    monde_eclipse: 'apres_eclipse',
+};
 
-    const etatHist = obtenirEtatHistoire();
-    if (!etatHist.interludesVusIds) etatHist.interludesVusIds = [];
-    if (etatHist.interludesVusIds.includes(cleInterlude)) {
-        callback?.();
-        return;
-    }
+function _conditionLaboCyber(monde, etatHist) {
+    return (
+        monde.biomeId === 'cyber' &&
+        etatHist.conditionsMiroir.tetrisTriplesCyber >= 3 &&
+        !etatHist.laboDecouvert
+    );
+}
 
-    let interlude;
-    try {
-        interlude = obtenirHistoireTextesSync().INTERLUDES?.[cleInterlude];
-    } catch (err) {
-        logger.warn('[histoire] textes interlude indisponibles :', err);
-        callback?.();
-        return;
-    }
-    if (!interlude?.length) {
-        callback?.();
-        return;
-    }
-
-    etatHist.interludesVusIds.push(cleInterlude);
+function _preparerDecouverteLabo(etatHist) {
+    etatHist.laboDecouvert = true;
     sauvegarderEtatHistoire(etatHist);
     store.histoire.etat = etatHist;
 
-    try {
-        void import('./histoire-manager-ui.js')
-            .then(({ afficherCutsceneHistoire }) => {
-                afficherCutsceneHistoire(
-                    interlude.map((l) => l.texte),
-                    interlude.map((l) => l.personnage),
-                    callback
-                );
-            })
-            .catch((err) => {
-                logger.warn('[histoire] interlude indisponible :', err);
-                callback?.();
-            });
-    } catch (err) {
-        logger.warn('[histoire] erreur interlude :', err);
-        callback?.();
+    const j7 = trouverJournal('journal_7');
+    if (j7 && !etatHist.journauxTrouves.includes('journal_7')) {
+        etatHist.journauxTrouves.push('journal_7');
+        sauvegarderEtatHistoire(etatHist);
+        store.histoire.etat = etatHist;
+        store.histoire.dernierJournal = j7;
     }
 }
 
-function _afficherFragmentVeraSiDisponible(mondeId, callback) {
-    const CLE_FRAGMENT = {
-        monde_ocean: 'apres_ocean',
-        monde_foret: 'apres_foret',
-        monde_glace: 'apres_glace',
-        monde_desert: 'apres_desert',
-        monde_eclipse: 'apres_eclipse',
-    };
-
-    const { FRAGMENTS_VERA_SIGNAL } = obtenirHistoireTextesSync();
-    const cleFragment = CLE_FRAGMENT[mondeId];
-    if (!cleFragment || !FRAGMENTS_VERA_SIGNAL[cleFragment]) {
-        callback?.();
-        return;
+function _conditionFragment(mondeId) {
+    const cleFragment = CLE_FRAGMENT_PAR_MONDE[mondeId];
+    if (!cleFragment) return false;
+    try {
+        const { FRAGMENTS_VERA_SIGNAL } = obtenirHistoireTextesSync();
+        if (!FRAGMENTS_VERA_SIGNAL[cleFragment]) return false;
+    } catch {
+        return false;
     }
+    const etatHist = obtenirEtatHistoire();
+    return !etatHist.fragmentsVusIds?.includes(cleFragment);
+}
 
+function _executerFragmentVera(mondeId, suivant) {
+    const cleFragment = CLE_FRAGMENT_PAR_MONDE[mondeId];
+    const { FRAGMENTS_VERA_SIGNAL } = obtenirHistoireTextesSync();
     const etatHist = obtenirEtatHistoire();
     if (!etatHist.fragmentsVusIds) etatHist.fragmentsVusIds = [];
-    if (etatHist.fragmentsVusIds.includes(cleFragment)) {
-        callback?.();
-        return;
-    }
     etatHist.fragmentsVusIds.push(cleFragment);
     sauvegarderEtatHistoire(etatHist);
     store.histoire.etat = etatHist;
@@ -472,17 +343,171 @@ function _afficherFragmentVeraSiDisponible(mondeId, callback) {
                 afficherCutsceneHistoire(
                     fragment.map((l) => l.texte),
                     fragment.map((l) => l.personnage),
-                    callback
+                    suivant
                 );
             })
             .catch((err) => {
                 logger.warn('[histoire] fragment VERA indisponible :', err);
-                callback?.();
+                suivant();
             });
     } catch (err) {
         logger.warn('[histoire] erreur fragment VERA :', err);
-        callback?.();
+        suivant();
     }
+}
+
+function _conditionInterlude(mondeId, premiereCompletion) {
+    if (!modeHistoireEnCours() || !premiereCompletion) return false;
+    const cleInterlude = INTERLUDES_PAR_MONDE[mondeId];
+    if (!cleInterlude) return false;
+    const etatHist = obtenirEtatHistoire();
+    if (etatHist.interludesVusIds?.includes(cleInterlude)) return false;
+    try {
+        const interlude = obtenirHistoireTextesSync().INTERLUDES?.[cleInterlude];
+        return Boolean(interlude?.length);
+    } catch {
+        return false;
+    }
+}
+
+function _executerInterlude(mondeId, suivant) {
+    const cleInterlude = INTERLUDES_PAR_MONDE[mondeId];
+    const interlude = obtenirHistoireTextesSync().INTERLUDES?.[cleInterlude];
+    const etatHist = obtenirEtatHistoire();
+    if (!etatHist.interludesVusIds) etatHist.interludesVusIds = [];
+    etatHist.interludesVusIds.push(cleInterlude);
+    sauvegarderEtatHistoire(etatHist);
+    store.histoire.etat = etatHist;
+
+    try {
+        void import('./histoire-manager-ui.js')
+            .then(({ afficherCutsceneHistoire }) => {
+                afficherCutsceneHistoire(
+                    interlude.map((l) => l.texte),
+                    interlude.map((l) => l.personnage),
+                    suivant
+                );
+            })
+            .catch((err) => {
+                logger.warn('[histoire] interlude indisponible :', err);
+                suivant();
+            });
+    } catch (err) {
+        logger.warn('[histoire] erreur interlude :', err);
+        suivant();
+    }
+}
+
+function declencherNarratifPostMonde(monde, etatHist, premiereCompletion, etoilesFin) {
+    if (!modeHistoireEnCours()) return;
+
+    const file = creerFile(`post-monde:${monde.id}`);
+
+    file.ajouter({
+        id: 'recap_etoiles',
+        executer: (suivant) => {
+            afficherRecapAvantNarratif(monde, etoilesFin, suivant);
+        },
+    });
+
+    file.ajouter({
+        id: 'labo_cyber',
+        condition: () => _conditionLaboCyber(monde, etatHist),
+        executer: (suivant) => {
+            _preparerDecouverteLabo(etatHist);
+            afficherDecouverteLabo(suivant);
+        },
+    });
+
+    file.ajouter({
+        id: 'victoire_boss',
+        condition: () => Boolean(monde.estBoss && monde.bossId),
+        executer: (suivant) => {
+            if (monde.bossId === 'distorsion') {
+                const typeFin = obtenirTypeFin();
+                definirExpressionVera(
+                    typeFin === 'fin_secrete'
+                        ? 'fin_secrete'
+                        : typeFin === 'fin_vraie'
+                          ? 'fin_vraie'
+                          : 'fin_normale'
+                );
+                afficherVictoireBoss(monde.bossId, typeFinVersCleBoss(typeFin), () => {
+                    declencherFin(typeFin);
+                });
+                return;
+            }
+            definirExpressionVera('boss_vaincu');
+            afficherVictoireBoss(monde.bossId, 'normal', suivant);
+        },
+    });
+
+    file.ajouter({
+        id: 'journal',
+        condition: () => Boolean(store.histoire.dernierJournal),
+        executer: (suivant) => {
+            const journal = store.histoire.dernierJournal;
+            store.histoire.dernierJournal = null;
+            definirExpressionVera('journal_decouvert');
+            afficherJournalVera(journal, suivant);
+        },
+    });
+
+    file.ajouter({
+        id: 'transition_chapitre',
+        condition: () => Boolean(obtenirTransitionApresVictoire(monde.id)),
+        executer: (suivant) => {
+            const cleTrans = obtenirTransitionApresVictoire(monde.id);
+            definirExpressionVera('chapitre_complete');
+            afficherTransitionChapitre(cleTrans, suivant);
+        },
+    });
+
+    file.ajouter({
+        id: 'cutscene_post_monde',
+        condition: () => {
+            if (obtenirTransitionApresVictoire(monde.id)) return false;
+            return Boolean(obtenirCutscenePostMonde(monde.id, premiereCompletion));
+        },
+        executer: (suivant) => {
+            const postMonde = obtenirCutscenePostMonde(monde.id, premiereCompletion);
+            void import('./histoire-manager-ui.js')
+                .then(({ afficherCutsceneHistoire }) => {
+                    afficherCutsceneHistoire(postMonde.lignes, postMonde.personnages, suivant);
+                })
+                .catch((err) => {
+                    logger.warn('[histoire] cutscene post-monde indisponible :', err);
+                    suivant();
+                });
+        },
+    });
+
+    file.ajouter({
+        id: 'fragment',
+        condition: () => _conditionFragment(monde.id),
+        executer: (suivant) => _executerFragmentVera(monde.id, suivant),
+    });
+
+    file.ajouter({
+        id: 'interlude',
+        condition: () => _conditionInterlude(monde.id, premiereCompletion),
+        executer: (suivant) => _executerInterlude(monde.id, suivant),
+    });
+
+    file.ajouter({
+        id: 'bouton_carte',
+        executer: (suivant) => {
+            void import('./histoire-manager-ui.js').then(({ afficherBoutonCarteGameOver }) =>
+                afficherBoutonCarteGameOver(true)
+            );
+            void import('./navigation-ecrans.js').then(({ afficherEcran }) =>
+                afficherEcran(ECRANS.GAME_OVER)
+            );
+            suivant();
+        },
+    });
+
+    file.demarrer();
 }
 
 function trouverJournal(id) {

@@ -25,10 +25,26 @@ import {
 import { evaluerDecisionOracle } from './oracle-jeu.js';
 import { endommagerBoss, bossEstActif, bossEstVaincu, notifierTetrisBoss } from './boss-jeu.js';
 import { mettreAJourIndicateurRelique } from './piece-jeu.js';
-import { enregistrerProgression } from './gestionnaire-difficulte.js';
+import { enregistrerProgression, suiviDifficulteActif } from './gestionnaire-difficulte.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 
 let effetsInitialises = false;
+
+function _endommagerBossTSpinSansLigne(result, nbLignes) {
+    if (!modeHistoireEnCours() || !result.tSpin || nbLignes !== 0) return;
+    if (!bossEstActif() || bossEstVaincu()) return;
+    if (result.tSpin === 'full') endommagerBoss(1);
+}
+
+function _traiterLevelUpSolo(result) {
+    if (!result.levelUp) return;
+    if (modeHistoireEnCours() && suiviDifficulteActif()) return;
+    afficherNotifNiveau();
+    reagirRoboLevelUp();
+    AudioMoteur.son('niveau');
+    AudioMoteur.relancerIntervalleMusique();
+    annoncer(`Niveau ${etat.niveau} atteint`);
+}
 
 export function initialiserEffetsPartie() {
     // Idempotence : une re-initialisation doublerait tous les ecouteurs du bus (sons, textes…).
@@ -134,13 +150,8 @@ export function initialiserEffetsPartie() {
         }
 
         evaluerDecisionOracle(nbLignes);
-        if (result.levelUp) {
-            afficherNotifNiveau();
-            reagirRoboLevelUp();
-            AudioMoteur.son('niveau');
-            AudioMoteur.relancerIntervalleMusique();
-            annoncer(`Niveau ${etat.niveau} atteint`);
-        }
+        _endommagerBossTSpinSansLigne(result, nbLignes);
+        _traiterLevelUpSolo(result);
         rafraichirStats();
 
         if (etat.modeJeu === 'sprint' && etat.lignes >= CONFIG.sprintLignes) {

@@ -70,6 +70,9 @@
     <canvas id="canvas-cutscene-bg" aria-hidden="true"></canvas>
 
     <div id="zone-narration-cutscene" aria-live="polite" aria-atomic="true">
+        <p id="cutscene-instructions-clavier" class="sr-only">
+            Espace ou Entree pour avancer. Echap pour passer toute la scene.
+        </p>
         <div id="texte-narration-cutscene"></div>
         <span id="indicateur-suite-narration" aria-hidden="true">▼</span>
     </div>
@@ -87,17 +90,24 @@
     <div class="cutscene-barre-bas">
         <div id="histoire-cutscene-progress" class="cutscene-progress"></div>
         <div class="cutscene-controles">
-            <button id="btn-cutscene-suivant" class="btn-cutscene" type="button">
-                CONTINUER <span class="btn-cutscene-hint">[ Espace / Clic ]</span>
+            <button
+                id="btn-cutscene-suivant"
+                class="btn-cutscene"
+                type="button"
+                aria-keyshortcuts="Space Enter"
+                aria-label="Continuer la scene (Espace, Entree ou clic)"
+            >
+                CONTINUER
+                <span class="btn-cutscene-hint" aria-hidden="true">[ Espace / Clic ]</span>
             </button>
             <button
                 id="btn-cutscene-passer"
                 class="btn-cutscene-passer"
                 type="button"
                 aria-keyshortcuts="Escape"
-                aria-label="Passer la scene entiere"
+                aria-label="Passer toute la scene (Echap)"
             >
-                PASSER › <span class="btn-cutscene-hint">[ Echap ]</span>
+                PASSER › <span class="btn-cutscene-hint" aria-hidden="true">[ Echap ]</span>
             </button>
         </div>
     </div>

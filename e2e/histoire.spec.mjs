@@ -99,6 +99,45 @@ test('lancement prologue depuis la carte histoire', async ({ page }) => {
     await attendrePartieVisible(page);
 });
 
+test('panneau objectifs prologue mobile sans debordement horizontal', async ({ page }) => {
+    test.setTimeout(45000);
+    await page.setViewportSize({ width: 390, height: 844 });
+    const etatProloguePanneau = {
+        ...ETAT_HISTOIRE_VIDE,
+        mondesDejaMontres: ['monde_prologue'],
+    };
+    await ouvrirCarteHistoire(page, etatProloguePanneau);
+    await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });
+    await expect(page.locator('.bouton-jouer-monde')).not.toHaveClass(/element-masque/, {
+        timeout: 5000,
+    });
+    await page.locator('.bouton-jouer-monde').click({ force: true });
+
+    const btnCommencer = page.locator('#btn-objectifs-commencer');
+    await expect(btnCommencer).toBeVisible({ timeout: 15000 });
+
+    const metriques = await page.evaluate(() => {
+        const doc = document.documentElement;
+        const btn = document.getElementById('btn-objectifs-commencer');
+        const rect = btn?.getBoundingClientRect();
+        return {
+            debord: doc.scrollWidth > doc.clientWidth + 1,
+            btnH: rect?.height ?? 0,
+            btnW: rect?.width ?? 0,
+        };
+    });
+
+    expect(metriques.debord).toBe(false);
+    expect(metriques.btnH).toBeGreaterThanOrEqual(44);
+    expect(metriques.btnW).toBeGreaterThan(0);
+
+    await btnCommencer.click({ force: true, noWaitAfter: true });
+    await expect(page.locator('body')).toHaveClass(/partie-active/, { timeout: 10000 });
+    await expect(page.locator('#overlay-objectifs-pre')).not.toHaveClass(
+        /objectif-overlay-visible/
+    );
+});
+
 test('carte histoire utilisable sur viewport mobile', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await ouvrirCarteHistoire(page);
@@ -152,6 +191,19 @@ test('monde caché Paradoxe affiche sa cutscene puis revient à la carte', async
     await page.locator('#btn-cutscene-passer').click({ force: true });
     await page.locator('#btn-cutscene-passer').click({ force: true });
     await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/, { timeout: 10000 });
+});
+
+test('cutscene narration active le mode voix off', async ({ page }) => {
+    const etatPremiereVisiteBoss = {
+        ...ETAT_HISTOIRE_BOSS_BRASIER,
+        mondesDejaMontres: [],
+    };
+    await ouvrirCarteHistoire(page, etatPremiereVisiteBoss);
+    await page.locator('#histoire-monde-clavier').selectOption('monde_boss_1', { force: true });
+    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 10000 });
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/cutscene-mode-narration/);
+    await expect(page.locator('#texte-narration-cutscene')).toBeVisible();
 });
 
 test('mondes cachés non débloqués absents de la sélection clavier', async ({ page }) => {

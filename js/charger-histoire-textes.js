@@ -1,6 +1,5 @@
 /** Chargement runtime des textes histoire depuis JSON (fallback module source en dev). */
 import { logger } from './logger.js';
-import * as textesSource from './histoire-textes.js';
 
 /** @type {typeof import('./histoire-textes.js') | null} */
 let cache = null;
@@ -39,6 +38,10 @@ export async function chargerHistoireTextes() {
 
 /** @returns {typeof import('./histoire-textes.js')} */
 export function obtenirHistoireTextesSync() {
-    if (!cache) return textesSource;
-    return { ...textesSource, ...cache };
+    if (!cache) {
+        throw new Error(
+            '[histoire] Textes non disponibles — appelez await chargerHistoireTextes() avant obtenirHistoireTextesSync()'
+        );
+    }
+    return cache;
 }
