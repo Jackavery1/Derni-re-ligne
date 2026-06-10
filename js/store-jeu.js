@@ -1,3 +1,8 @@
+/**
+ * Barrel public de l'état de jeu — réexporte store-core, store-etat-partie,
+ * store-refs-canvas et helpers accessibilité. Point d'entrée unique pour la
+ * logique solo/coop qui lit ou modifie l'état runtime.
+ */
 export {
     ECRANS,
     MAX_PARTICULES,

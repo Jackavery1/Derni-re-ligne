@@ -36,6 +36,21 @@ Utile : `npm run lint` · `npm run typecheck` · `npm run test:e2e` · `npm run 
 
 Node 18+ (`.nvmrc`).
 
+## Développement avancé
+
+| Commande                      | Rôle                                                |
+| ----------------------------- | --------------------------------------------------- |
+| `npm run test:coverage`       | Couverture Vitest (seuils dans `vitest.config.mjs`) |
+| `npm run check:circular`      | Détection de dépendances circulaires (madge)        |
+| `npm run check:outdated`      | Versions npm obsolètes                              |
+| `npm run test:e2e:smoke:dist` | Smoke E2E sur bundle prod (hooks pre-push)          |
+| `npm run analyze`             | Analyse taille bundle après `npm run build`         |
+| `npm run sync:sw`             | Régénère la liste de cache du service worker        |
+
+Hooks **husky pre-push** : lint, format, typecheck, `check:circular`, tests unitaires + smoke E2E dist.
+
+E2E bundle prod : voir [CONTRIBUTING.md](CONTRIBUTING.md) (`E2E_DIST=1`). Release : `npm run release` puis tag `vX.Y.Z`.
+
 ## Docs
 
 | Sujet         | Fichier                                              |

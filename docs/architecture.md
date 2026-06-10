@@ -54,7 +54,7 @@ Vanilla ES modules en dev, bundle esbuild en prod.
 ## Boucles RAF
 
 - **Principale (partie)** — `boucle-jeu.js` : gravité, DAS, rendu plateau. Suspendue en coop/archi.
-- **Secondaires (UI / ambiance)** — `planificateur-raf.js` : constellation, portraits, fonds méta. Une clé par contexte.
+- **Secondaires (UI / ambiance)** — `planificateur-raf.js` : constellation, mascotte ROBO, fonds méta (`fond-ecrans-meta.js`). Une clé par contexte (`constellation`, `rendu-robo`, `fond-meta:<canvasId>`).
 
 ```mermaid
 flowchart TB
@@ -98,6 +98,21 @@ flowchart TB
 2. **Store** — lectures via `store-jeu.js` / `store-histoire.js` ; éviter `store-core` hors modules état.
 3. **Cycles** — vérifiés par `npm run check:circular` depuis `main.js`.
 4. **Barrels** — `logique-partie.js`, `rendu-jeu.js`, `progression.js` : point d'entrée stable pour les consommateurs.
+
+## Gestion des erreurs
+
+- **Handlers globaux** — `main.js` capture `error` et `unhandledrejection` → `logger.js` + bannière `#banniere-erreur`.
+- **Journal session** — 10 dernières entrées warn/error en `sessionStorage` ; bouton « Copier rapport » exporte JSON (`formaterRapportErreurs()`).
+- **Chargement écrans** — `charger-ecrans.js` : 3 tentatives fetch avec backoff exponentiel avant échec fatal.
+- **Boucle de jeu** — `boucle-jeu.js` suspend après 5 erreurs consécutives de rendu.
+- **Debug** — `?debug=1` active logs `debug`/`info` et stack traces détaillées.
+
+## Performance
+
+- **RAF conditionnelle** — `aBesoinDeBoucle()` suspend la boucle principale quand inutile.
+- **FPS adaptatif** — EWMA dans `boucle-jeu.js` ; effets réduits si FPS < 45 ou `prefers-reduced-motion`.
+- **Cache canvas** — gradients statiques (vignette, ambiance bas, masque météo) en offscreen dans `rendu-plateau.js` ; fonds biome/méta pré-générés.
+- **Budget bundle** — `scripts/verifier-bundle.mjs` en CI (max 560 Ko) ; `npm run analyze` après build.
 
 ## Guides
 

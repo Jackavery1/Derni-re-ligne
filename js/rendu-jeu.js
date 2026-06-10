@@ -1,3 +1,8 @@
+/**
+ * Barrel public du rendu Canvas — cellules, FX, ambiance, plateau, previews et mascotte.
+ * Les modules bas niveau (`rendu-plateau.js`, `rendu-fx.js`…) ne doivent pas être
+ * importés directement depuis le moteur : passer par ce fichier.
+ */
 export { dessinerCellule, mettreAJourAmbiante } from './rendu-cellule.js';
 
 export {
