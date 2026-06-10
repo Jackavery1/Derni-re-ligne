@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version   | Date       | En bref                                                                                |
 | --------- | ---------- | -------------------------------------------------------------------------------------- |
+| **2.5.9** | 2026-06-10 | Expressions cutscene, réactions ROBO/boss, scènes fond PNG, mode narrateur cinématique |
 | **2.5.8** | 2026-06-10 | Accessibilité (daltonien, effets réduits), UI mobile histoire, file narrative          |
 | **2.5.7** | 2026-06-10 | Narration enrichie, dialogues boss, cutscenes narration, UI sans accents               |
 | **2.5.6** | 2026-06-10 | Audit gameplay, refactor archi, docs simplifiées                                       |
@@ -24,6 +25,26 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.0.0** | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                          |
 
 ---
+
+## [2.5.9] — 2026-06-10
+
+### Cutscenes & narration
+
+- Moteur d'expressions portraits (`humeur` optionnel, transitions 400 ms)
+- Annotation éditoriale `humeur` sur les dialogues cutscene
+- Scènes de fond image (`scenes-cutscene.js`) + fallback canvas offline
+- Mode narrateur cinématique : letterbox, portraits masqués, texte centré Rajdhani
+- Champ `scene` cutscene/ligne (démo `INTRO_HISTOIRE` → observatoire)
+
+### Gameplay visuel
+
+- Réactions mascotte ROBO : priorité, cooldown, pile 75 %, inactivité 20 s
+- Portraits boss synchronisés aux dialogues combat (calme/agressif/vacillant)
+
+### Qualité
+
+- **490** tests unitaires, `check:circular` vert
+- Cache SW `derniere-ligne-2.5.9-r5`, scan `assets/cutscenes/`
 
 ## [2.5.8] — 2026-06-10
 

@@ -3,23 +3,42 @@ import { dessinerRobo } from './rendu-robo.js';
 import { rectArrondiPortrait, interpolerCouleurPortrait } from './portraits-cutscene-utils.js';
 import { obtenirHumeurRoboCutscene } from './portraits-cutscene-etat.js';
 
-function _portraitVera(ctx, w, h, t) {
+/** @param {Record<string, number | boolean | number[]> | null | undefined} params */
+function _portraitVera(ctx, w, h, t, params) {
     const cx = w / 2;
     const cy = h / 2;
-    const glitch = Math.sin(t * 0.7) > 0.85;
-    const respiration = 0.99 + Math.sin(t * 1.2) * 0.01;
+    const p = params ?? {};
+    const effetsReduits = p.effetsReduits === true;
+    const tAnim = effetsReduits ? 0 : t;
+    const fv = /** @type {number} */ (p.fragmentVitesse ?? 0.6);
+    const fr = /** @type {number} */ (p.fragmentRayon ?? 1);
+    const lr = /** @type {number} */ (p.lueurRose ?? 1);
+    const incl = /** @type {number} */ (p.inclinaison ?? 0);
+    const sourcils = p.sourcils === true;
+    const scanline = /** @type {number} */ (p.scanline ?? 1);
+    const glitchAleatoire = p.glitchAleatoire !== false && !p.glitchBandes;
+    const glitchBandes = p.glitchBandes === true;
+    const decalages = /** @type {number[]} */ (p.decalagesGlitch ?? [0, 0, 0]);
+
+    const glitch = glitchBandes ? false : glitchAleatoire ? Math.sin(tAnim * 0.7) > 0.85 : false;
+    const respiration = effetsReduits ? 1 : 0.99 + Math.sin(tAnim * 1.2) * 0.01;
 
     const grad = ctx.createRadialGradient(cx, cy - 15, 0, cx, cy, w * 0.55);
-    grad.addColorStop(0, 'rgba(80,0,40,0.55)');
+    grad.addColorStop(0, `rgba(80,0,40,${0.55 * lr})`);
     grad.addColorStop(1, 'rgba(40,0,20,0)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
     ctx.save();
     ctx.translate(cx, cy);
+    ctx.rotate(incl);
     ctx.scale(respiration, respiration);
     ctx.translate(-cx, -cy);
-    if (glitch) ctx.translate(2 + Math.sin(t * 20) * 1, 0);
+    if (glitch && !effetsReduits) ctx.translate(2 + Math.sin(tAnim * 20) * 1, 0);
+    if (glitchBandes && effetsReduits) {
+        ctx.fillStyle = 'rgba(0,255,255,0.25)';
+        ctx.fillRect(4, cy - 20, w - 8, 3);
+    }
 
     ctx.fillStyle = 'rgba(255,0,110,0.08)';
     ctx.strokeStyle = '#ff006e';
@@ -28,6 +47,17 @@ function _portraitVera(ctx, w, h, t) {
     ctx.arc(cx, cy - 4, 18, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
+
+    if (sourcils) {
+        ctx.strokeStyle = '#ff6699';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(cx - 12, cy - 22);
+        ctx.lineTo(cx - 6, cy - 24);
+        ctx.moveTo(cx + 6, cy - 24);
+        ctx.lineTo(cx + 12, cy - 22);
+        ctx.stroke();
+    }
 
     ctx.fillStyle = '#ff337a';
     for (let i = 0; i < 5; i++) {
@@ -81,35 +111,78 @@ function _portraitVera(ctx, w, h, t) {
     ctx.fillStyle = '#aaddff';
     ctx.fillRect(cx - 4, cy + 14, 8, 6);
 
-    if (glitch) {
+    if (glitch && !glitchBandes) {
         ctx.fillStyle = 'rgba(0,255,255,0.3)';
         ctx.fillRect(4, cy - 20, w - 8, 3);
     }
+    if (p.visiereLumineuse) {
+        ctx.shadowColor = '#ff337a';
+        ctx.shadowBlur = 10;
+        ctx.strokeStyle = '#ffaad4';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(cx, cy - 8, 12, Math.PI, 0);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+    }
+    if (scanline > 1) {
+        ctx.fillStyle = `rgba(0,255,255,${Math.min(0.35, 0.12 * scanline)})`;
+        for (let sy = cy - 22; sy < cy + 4; sy += 3) {
+            ctx.fillRect(cx - 16, sy, 32, 1);
+        }
+    }
     ctx.restore();
 
+    if (glitchBandes && !effetsReduits) {
+        const bandes = [0, 1, 2];
+        bandes.forEach((bi, idx) => {
+            const y0 = cy - 28 + bi * 22 + (decalages[idx] ?? 0);
+            ctx.save();
+            ctx.translate(decalages[idx] ?? 0, 0);
+            ctx.fillStyle = 'rgba(255,0,110,0.35)';
+            ctx.fillRect(0, y0, w, 18);
+            ctx.restore();
+        });
+    }
+
     for (let i = 0; i < 5; i++) {
-        const angle = (i / 5) * Math.PI * 2 + t * 0.6;
-        const r = 32 + Math.sin(t + i * 1.3) * 4;
-        ctx.globalAlpha = 0.25 + 0.2 * Math.sin(t * 2 + i);
+        const angle = (i / 5) * Math.PI * 2 + tAnim * fv;
+        const r = (32 + Math.sin(tAnim + i * 1.3) * 4) * fr;
+        ctx.globalAlpha = effetsReduits ? 0.35 : 0.25 + 0.2 * Math.sin(tAnim * 2 + i);
         ctx.fillStyle = '#ff006e';
         ctx.fillRect(cx + Math.cos(angle) * r - 1, cy + Math.sin(angle) * r - 1, 2, 2);
     }
     ctx.globalAlpha = 1;
 }
 
-function _portraitDistorsion(ctx, w, h, t) {
+/** @param {Record<string, number | boolean> | null | undefined} params */
+function _portraitDistorsion(ctx, w, h, t, params) {
     const cx = w / 2;
     const cy = h / 2;
-    const glitchChrom = Math.sin(t * 13) > 0.7;
-    const glitchBandes = Math.sin(t * 0.4) > 0.92;
+    const p = params ?? {};
+    const effetsReduits = p.effetsReduits === true;
+    const tAnim = effetsReduits ? 0 : t;
+    const vv = /** @type {number} */ (p.vortexVitesse ?? 1);
+    const ab = /** @type {number} */ (p.aberrationChrom ?? 1);
+    const yeuxRouge = p.yeuxViolet !== true;
+    const yeuxViolet = p.yeuxViolet === true;
+    const irr = /** @type {number} */ (p.vortexIrregulier ?? 0);
+    const unOeil = p.unOeil === true;
+    const paupiere = p.paupiere === true;
+    const stables = p.fragmentsStables === true;
+
+    const glitchChrom = ab > 0.5 && !effetsReduits && Math.sin(tAnim * 13) > 0.7;
+    const glitchBandes = !effetsReduits && Math.sin(tAnim * 0.4) > 0.92 && ab > 0.8;
 
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, w, h);
 
     const dessinerNoyau = (decalX, couleurStroke) => {
         for (let i = 1; i <= 8; i++) {
-            const alpha = 0.04 + 0.06 * Math.sin(t * 2 + i * 0.5);
-            const radius = 4 * i + 3 * Math.sin(t * 3 + i * 0.4);
+            const alpha = 0.04 + 0.06 * Math.sin(tAnim * 2 * vv + i * 0.5);
+            const wobble =
+                irr > 0 ? Math.sin(tAnim * 5 + i) * irr * 4 : Math.sin(tAnim * 3 + i * 0.4);
+            const radius = (4 * i + 3 * wobble) * (stables ? 1 : 1);
             ctx.strokeStyle = couleurStroke;
             ctx.globalAlpha = alpha;
             ctx.lineWidth = 0.7;
@@ -123,26 +196,28 @@ function _portraitDistorsion(ctx, w, h, t) {
     if (glitchChrom) {
         ctx.save();
         ctx.globalCompositeOperation = 'screen';
-        dessinerNoyau(2, 'rgba(255,0,80,0.8)');
-        dessinerNoyau(-2, 'rgba(0,255,255,0.8)');
+        dessinerNoyau(2 * ab, 'rgba(255,0,80,0.8)');
+        dessinerNoyau(-2 * ab, 'rgba(0,255,255,0.8)');
         ctx.restore();
     } else {
-        dessinerNoyau(0, 'rgba(180,0,255,1)');
+        const coulNoyau = yeuxViolet ? 'rgba(180,0,255,0.9)' : 'rgba(180,0,255,1)';
+        dessinerNoyau(0, coulNoyau);
     }
 
-    for (let i = 0; i < 12; i++) {
-        const angle = (i / 12) * Math.PI * 2 + t * 1.3;
-        const r = 28 + 6 * Math.sin(t * 2 + i * 0.8);
+    const nbFragments = stables ? 8 : 12;
+    for (let i = 0; i < nbFragments; i++) {
+        const angle = (i / nbFragments) * Math.PI * 2 + tAnim * 1.3 * vv;
+        const r = 28 + 6 * Math.sin(tAnim * 2 * vv + i * 0.8);
         const couleurs = ['#ff006e', '#b400ff', '#00ffcc'];
-        ctx.globalAlpha = 0.15 + 0.15 * Math.sin(t * 3 + i * 1.1);
-        ctx.fillStyle = couleurs[i % 3];
+        ctx.globalAlpha = effetsReduits ? 0.2 : 0.15 + 0.15 * Math.sin(tAnim * 3 * vv + i * 1.1);
+        ctx.fillStyle = yeuxViolet ? '#b400ff' : couleurs[i % 3];
         ctx.fillRect(cx + Math.cos(angle) * r - 2, cy + Math.sin(angle) * r - 2, 4, 4);
     }
     ctx.globalAlpha = 1;
 
     for (let i = 0; i < 6; i++) {
-        const angle = (i / 6) * Math.PI * 2 + t * 0.4;
-        const longueur = 28 + 8 * Math.sin(t * 2 + i);
+        const angle = (i / 6) * Math.PI * 2 + tAnim * 0.4 * vv;
+        const longueur = 28 + 8 * Math.sin(tAnim * 2 * vv + i);
         ctx.strokeStyle = 'rgba(255,0,110,0.2)';
         ctx.lineWidth = 0.6;
         ctx.beginPath();
@@ -153,38 +228,54 @@ function _portraitDistorsion(ctx, w, h, t) {
 
     ctx.save();
     ctx.translate(cx, cy);
-    ctx.rotate(Math.sin(t * 0.3) * 0.05);
-    ctx.globalAlpha = 0.4 + 0.5 * Math.sin(t * 1.5);
-    ctx.fillStyle = '#ff006e';
+    ctx.rotate(effetsReduits ? 0 : Math.sin(tAnim * 0.3) * 0.05);
+    ctx.globalAlpha = effetsReduits ? 0.7 : 0.4 + 0.5 * Math.sin(tAnim * 1.5 * vv);
+    ctx.fillStyle = yeuxViolet ? '#b400ff' : yeuxRouge ? '#ff006e' : '#b400ff';
     ctx.font = 'bold 26px serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.shadowColor = '#ff006e';
-    ctx.shadowBlur = 16 + 12 * Math.sin(t * 2);
-    ctx.fillText('∞', 0, 0);
+    ctx.shadowColor = ctx.fillStyle;
+    ctx.shadowBlur = effetsReduits ? 12 : 16 + 12 * Math.sin(tAnim * 2);
+    ctx.fillText(unOeil ? '◉' : '∞', 0, 0);
+    if (paupiere && !effetsReduits) {
+        ctx.fillStyle = '#000';
+        ctx.fillRect(-14, -6, 28, 8);
+    }
     ctx.restore();
 
     if (glitchBandes) {
         for (let b = 0; b < 6; b++) {
-            const yBande = ((b * 17 + t * 40) % h) | 0;
+            const yBande = effetsReduits ? (b * 17) % h : ((b * 17 + tAnim * 40) % h) | 0;
             ctx.fillStyle = b % 2 === 0 ? 'rgba(0,255,255,0.2)' : 'rgba(255,0,110,0.2)';
             ctx.fillRect(0, yBande, w, 1 + (b % 2));
         }
     }
 }
 
-function _portraitSysteme(ctx, w, h, t) {
-    ctx.fillStyle = '#000d00';
+/** @param {Record<string, number | boolean> | null | undefined} params */
+function _portraitSysteme(ctx, w, h, t, params) {
+    const p = params ?? {};
+    const alerte = p.alerte === true;
+    const clign = /** @type {number} */ (p.clignotement ?? 1);
+    const effetsReduits = p.effetsReduits === true;
+    const tAnim = effetsReduits ? 0 : t;
+    ctx.fillStyle = alerte ? '#1a0000' : '#000d00';
     ctx.fillRect(0, 0, w, h);
+    if (alerte) {
+        ctx.strokeStyle = 'rgba(255,40,40,0.55)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(2, 2, w - 4, h - 4);
+    }
     for (let y = 0; y < h; y += 3) {
         ctx.fillStyle = 'rgba(0,0,0,0.35)';
         ctx.fillRect(0, y, w, 1);
     }
 
     ctx.save();
-    ctx.shadowColor = '#00ff44';
-    ctx.shadowBlur = 8;
-    ctx.strokeStyle = 'rgba(0,255,68,0.6)';
+    const coulSys = alerte ? '#ff3333' : '#00ff44';
+    ctx.shadowColor = coulSys;
+    ctx.shadowBlur = alerte ? 12 : 8;
+    ctx.strokeStyle = alerte ? 'rgba(255,60,60,0.75)' : 'rgba(0,255,68,0.6)';
     ctx.lineWidth = 1;
     rectArrondiPortrait(ctx, 8, 8, w - 16, h - 16, 4);
     ctx.stroke();
@@ -197,23 +288,27 @@ function _portraitSysteme(ctx, w, h, t) {
         [8, h - 12],
         [w - 12, h - 12],
     ];
-    ctx.fillStyle = '#00ff44';
+    ctx.fillStyle = coulSys;
     coins.forEach(([x, y]) => ctx.fillRect(x, y, 4, 4));
 
     ctx.font = '7px "Courier New", monospace';
-    ctx.fillStyle = 'rgba(0,255,68,0.7)';
-    ['> SYSTÈME', '> INIT OK', '> MODE ACTIF'].forEach((ligne, i) => {
+    ctx.fillStyle = alerte ? 'rgba(255,80,80,0.9)' : 'rgba(0,255,68,0.7)';
+    const lignes = alerte
+        ? ['> ALERTE', '> ANOMALIE', '> SIGNAL ROUGE']
+        : ['> SYSTÈME', '> INIT OK', '> MODE ACTIF'];
+    lignes.forEach((ligne, i) => {
         ctx.fillText(ligne, 16, 28 + i * 12);
     });
 
-    const prog = (w - 32) * (0.5 + 0.5 * Math.sin(t * 0.5));
-    ctx.globalAlpha = 0.5 + 0.5 * Math.sin(t * 1.2);
-    ctx.fillStyle = '#00ff44';
+    const prog = (w - 32) * (effetsReduits ? 0.65 : 0.5 + 0.5 * Math.sin(tAnim * 0.5));
+    ctx.globalAlpha = effetsReduits ? 0.7 : 0.5 + 0.5 * Math.sin(tAnim * 1.2 * clign);
+    ctx.fillStyle = coulSys;
     ctx.fillRect(16, h - 28, prog, 4);
     ctx.globalAlpha = 1;
 
-    if (Math.floor(t * 2) % 2 === 0) {
-        ctx.fillStyle = '#00ff44';
+    const clignotant = effetsReduits ? true : Math.floor(tAnim * 2 * clign) % 2 === 0;
+    if (clignotant) {
+        ctx.fillStyle = coulSys;
         ctx.fillRect(16, h - 42, 6, 8);
     }
     ctx.restore();
@@ -255,14 +350,31 @@ function _portraitNarrateur(ctx, w, h, t) {
     ctx.restore();
 }
 
-function _portraitBrasier(ctx, w, h, t, defaite = false) {
+/** @param {Record<string, number | boolean> | null | undefined} params */
+function _portraitBrasier(ctx, w, h, t, defaite = false, params) {
     const cx = w / 2;
     const cy = h / 2;
-    const alphaGlobale = defaite ? 0.5 + 0.3 * Math.sin(t * 2) : 1;
-    const facteurFlamme = defaite ? 0.4 + 0.3 * Math.sin(t * 1.5) : 1;
+    const p = params ?? {};
+    const vacillant = p.vacillant === true || defaite;
+    const vitesse = /** @type {number} */ (p.vitesseAnim ?? 1);
+    const glow = /** @type {number} */ (p.glow ?? 1);
+    const echelle = /** @type {number} */ (p.echelle ?? 1);
+    const effetsReduits = p.effetsReduits === true;
+    const tAnim = effetsReduits ? 0 : t * vitesse;
+
+    const alphaGlobale = vacillant ? (effetsReduits ? 0.75 : 0.5 + 0.3 * Math.sin(tAnim * 2)) : 1;
+    const facteurFlamme = vacillant
+        ? effetsReduits
+            ? 0.55
+            : 0.4 + 0.3 * Math.sin(tAnim * 1.5)
+        : 1;
 
     ctx.save();
-    ctx.globalAlpha = alphaGlobale;
+    ctx.translate(cx, cy);
+    ctx.scale(echelle, echelle);
+    ctx.translate(-cx, -cy);
+
+    ctx.globalAlpha = alphaGlobale * glow;
 
     const gradFond = ctx.createRadialGradient(cx, h * 0.7, 0, cx, cy, w * 0.55);
     gradFond.addColorStop(0, '#1a0500');
@@ -281,7 +393,7 @@ function _portraitBrasier(ctx, w, h, t, defaite = false) {
     ctx.beginPath();
     for (let i = 0; i < sommets; i++) {
         const angle = (i / sommets) * Math.PI * 2 - Math.PI / 2;
-        const r = baseR + Math.sin(t + i) * (defaite ? 4 : 2);
+        const r = baseR + Math.sin(tAnim + i) * (vacillant ? 4 : 2);
         const px = cx + Math.cos(angle) * r;
         const py = cy + 4 + Math.sin(angle) * r * 0.85;
         if (i === 0) ctx.moveTo(px, py);
@@ -299,11 +411,11 @@ function _portraitBrasier(ctx, w, h, t, defaite = false) {
 
     for (let f = 0; f < 3; f++) {
         ctx.strokeStyle = '#ff8800';
-        ctx.globalAlpha = (0.6 + 0.4 * Math.sin(t * 3 + f)) * alphaGlobale;
-        ctx.lineWidth = defaite ? 2 + Math.sin(t) : 1;
+        ctx.globalAlpha = (0.6 + 0.4 * Math.sin(tAnim * 3 + f)) * alphaGlobale;
+        ctx.lineWidth = vacillant ? 2 + Math.sin(tAnim) : 1;
         ctx.beginPath();
         const fx = cx - 12 + f * 12;
-        const fh = (15 + 8 * Math.sin(t * 3 + f)) * facteurFlamme;
+        const fh = (15 + 8 * Math.sin(tAnim * 3 + f)) * facteurFlamme;
         ctx.moveTo(fx, cy - 18);
         ctx.quadraticCurveTo(fx + 4, cy - 18 - fh, fx + 8, cy - 18 - fh * 0.6);
         ctx.stroke();
@@ -312,8 +424,8 @@ function _portraitBrasier(ctx, w, h, t, defaite = false) {
 
     for (let f = 0; f < 4; f++) {
         ctx.strokeStyle = '#ff8800';
-        ctx.globalAlpha = 0.6 + 0.4 * Math.sin(t * 3 + f);
-        ctx.lineWidth = defaite ? 2 + Math.sin(t) : 1;
+        ctx.globalAlpha = 0.6 + 0.4 * Math.sin(tAnim * 3 + f);
+        ctx.lineWidth = vacillant ? 2 + Math.sin(tAnim) : 1;
         ctx.beginPath();
         const a1 = (f / 4) * Math.PI * 2;
         ctx.moveTo(cx, cy + 2);
@@ -337,9 +449,9 @@ function _portraitBrasier(ctx, w, h, t, defaite = false) {
     ctx.fill();
 
     for (let i = 0; i < 6; i++) {
-        const prog = defaite ? (t * 0.8 + i * 0.17) % 1 : (t * 0.5 + i * 0.17) % 1;
+        const prog = vacillant ? (tAnim * 0.8 + i * 0.17) % 1 : (tAnim * 0.5 + i * 0.17) % 1;
         const py = h * 0.8 - prog * h * 0.6;
-        const px = cx + (i - 3) * 8 + Math.sin(t + i) * 2;
+        const px = cx + (i - 3) * 8 + Math.sin(tAnim + i) * 2;
         ctx.globalAlpha = (1 - prog) * alphaGlobale;
         ctx.fillStyle = i % 2 === 0 ? '#ff8800' : '#ffcc00';
         ctx.beginPath();
@@ -349,13 +461,20 @@ function _portraitBrasier(ctx, w, h, t, defaite = false) {
     ctx.restore();
 }
 
-function _portraitSentinelle(ctx, w, h, t, defaite = false) {
+/** @param {Record<string, number | boolean> | null | undefined} params */
+function _portraitSentinelle(ctx, w, h, t, defaite = false, params) {
     const cx = w / 2;
     const cy = h / 2;
-    const alphaGlobale = defaite ? 0.8 - 0.1 * Math.sin(t * 0.5) : 1;
+    const p = params ?? {};
+    const vacillant = p.vacillant === true || defaite;
+    const vitesse = /** @type {number} */ (p.vitesseAnim ?? 1);
+    const glow = /** @type {number} */ (p.glow ?? 1);
+    const effetsReduits = p.effetsReduits === true;
+    const tAnim = effetsReduits ? 0 : t * vitesse;
+    const alphaGlobale = vacillant ? (effetsReduits ? 0.85 : 0.8 - 0.1 * Math.sin(tAnim * 0.5)) : 1;
 
     ctx.save();
-    ctx.globalAlpha = alphaGlobale;
+    ctx.globalAlpha = alphaGlobale * glow;
 
     const gradFond = ctx.createLinearGradient(0, 0, 0, h);
     gradFond.addColorStop(0, '#030a14');
@@ -367,7 +486,7 @@ function _portraitSentinelle(ctx, w, h, t, defaite = false) {
     ctx.beginPath();
     for (let i = 0; i < 6; i++) {
         const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
-        const ecart = defaite ? Math.sin(t + i) * 3 : 0;
+        const ecart = vacillant ? Math.sin(tAnim + i) * 3 : 0;
         const px = cx + Math.cos(angle) * (rHex + ecart);
         const py = cy + Math.sin(angle) * (rHex + ecart);
         if (i === 0) ctx.moveTo(px, py);
@@ -379,13 +498,13 @@ function _portraitSentinelle(ctx, w, h, t, defaite = false) {
     ctx.strokeStyle = '#aaeeff';
     ctx.lineWidth = 1.5;
     ctx.shadowColor = '#aaeeff';
-    ctx.shadowBlur = 12 + 8 * Math.sin(t * 0.8);
+    ctx.shadowBlur = effetsReduits ? 12 : 12 + 8 * Math.sin(tAnim * 0.8);
     ctx.stroke();
     ctx.shadowBlur = 0;
 
     for (let i = 0; i < 6; i++) {
         const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
-        const ecart = defaite ? Math.sin(t + i) * 3 : 0;
+        const ecart = vacillant ? Math.sin(tAnim + i) * 3 : 0;
         ctx.strokeStyle = 'rgba(170,238,255,0.25)';
         ctx.lineWidth = 0.5;
         ctx.beginPath();
@@ -405,13 +524,13 @@ function _portraitSentinelle(ctx, w, h, t, defaite = false) {
     ctx.shadowBlur = 0;
 
     for (let i = 0; i < 5; i++) {
-        const angle = (i / 5) * Math.PI * 2 + t * 0.3;
-        const orbit = defaite ? 35 + Math.sin(t + i) * 8 : 35;
+        const angle = (i / 5) * Math.PI * 2 + tAnim * 0.3;
+        const orbit = vacillant ? 35 + Math.sin(tAnim + i) * 8 : 35;
         const fx = cx + Math.cos(angle) * orbit;
         const fy = cy + Math.sin(angle) * orbit;
         ctx.strokeStyle = '#cceeff';
         ctx.lineWidth = 0.8;
-        ctx.globalAlpha = (0.2 + 0.15 * Math.sin(t + i)) * alphaGlobale;
+        ctx.globalAlpha = (effetsReduits ? 0.25 : 0.2 + 0.15 * Math.sin(tAnim + i)) * alphaGlobale;
         for (let b = 0; b < 3; b++) {
             const a = angle + (b / 3) * Math.PI * 2;
             const br = 6 + (i % 3);
@@ -424,16 +543,16 @@ function _portraitSentinelle(ctx, w, h, t, defaite = false) {
     ctx.globalAlpha = alphaGlobale;
 
     for (let i = 0; i < 8; i++) {
-        const py = (i * 13 + t * 8) % h;
-        ctx.fillStyle = `rgba(255,255,255,${0.4 + 0.3 * Math.sin(t + i * 2.1)})`;
+        const py = effetsReduits ? (i * 13) % h : (i * 13 + tAnim * 8) % h;
+        ctx.fillStyle = `rgba(255,255,255,${effetsReduits ? 0.45 : 0.4 + 0.3 * Math.sin(tAnim + i * 2.1)})`;
         ctx.beginPath();
         ctx.arc(cx - 28 + i * 7, py, 0.8, 0, Math.PI * 2);
         ctx.fill();
     }
 
-    if (defaite) {
+    if (vacillant) {
         for (let e = 0; e < 6; e++) {
-            const angle = (e / 6) * Math.PI * 2 + t * 0.5;
+            const angle = (e / 6) * Math.PI * 2 + tAnim * 0.5;
             ctx.fillStyle = 'rgba(170,220,255,0.35)';
             ctx.fillRect(
                 cx + Math.cos(angle) * (40 + e * 2) - 1,
@@ -446,10 +565,19 @@ function _portraitSentinelle(ctx, w, h, t, defaite = false) {
     ctx.restore();
 }
 
-function _portraitArchiviste(ctx, w, h, t) {
+/** @param {Record<string, number | boolean> | null | undefined} params */
+function _portraitArchiviste(ctx, w, h, t, params) {
     const cx = w / 2;
     const cy = h / 2;
-    const glitchGlobal = Math.sin(t * 17) > 0.7;
+    const p = params ?? {};
+    const vacillant = p.vacillant === true;
+    const vitesse = /** @type {number} */ (p.vitesseAnim ?? 1);
+    const glow = /** @type {number} */ (p.glow ?? 1);
+    const echelle = /** @type {number} */ (p.echelle ?? 1);
+    const effetsReduits = p.effetsReduits === true;
+    const tAnim = effetsReduits ? 0 : t * vitesse;
+    const alphaGlobale = vacillant ? (effetsReduits ? 0.8 : 0.7 + 0.2 * Math.sin(tAnim * 2)) : 1;
+    const glitchGlobal = !effetsReduits && Math.sin(tAnim * 17) > 0.7;
 
     ctx.fillStyle = '#0a000f';
     ctx.fillRect(0, 0, w, h);
@@ -458,11 +586,19 @@ function _portraitArchiviste(ctx, w, h, t) {
     ctx.font = '6px monospace';
     for (let i = 0; i < 10; i++) {
         ctx.fillStyle = `rgba(255,0,255,${0.08 + 0.04 * (i % 3)})`;
-        ctx.fillText(chars[i % chars.length], (i * 13) % w, ((t * 40 + i * 17) % (h + 10)) - 5);
+        ctx.fillText(
+            chars[i % chars.length],
+            (i * 13) % w,
+            effetsReduits ? (i * 17) % h : ((tAnim * 40 + i * 17) % (h + 10)) - 5
+        );
     }
 
     ctx.save();
-    if (glitchGlobal) ctx.translate(Math.sin(t * 31) * 2, 0);
+    ctx.globalAlpha = alphaGlobale * glow;
+    ctx.translate(cx, cy);
+    ctx.scale(echelle, echelle);
+    ctx.translate(-cx, -cy);
+    if (glitchGlobal) ctx.translate(Math.sin(tAnim * 31) * 2, 0);
 
     ctx.strokeStyle = '#aa00ff';
     ctx.lineWidth = 1.5;
@@ -490,11 +626,11 @@ function _portraitArchiviste(ctx, w, h, t) {
     ctx.shadowColor = '#ff00ff';
     ctx.shadowBlur = 8;
     ctx.fillStyle = '#ff00ff';
-    ctx.globalAlpha = 0.5 + 0.5 * Math.sin(t * 4);
+    ctx.globalAlpha = effetsReduits ? 0.75 : 0.5 + 0.5 * Math.sin(tAnim * 4);
     ctx.beginPath();
     ctx.arc(cx - 8, cy - 4, 6, 0, Math.PI * 2);
     ctx.fill();
-    if (Math.sin(t * 11) > 0.5) {
+    if (effetsReduits || Math.sin(tAnim * 11) > 0.5) {
         ctx.fillStyle = '#00ffff';
         ctx.fillRect(cx + 4, cy - 7, 8, 5);
     } else {
@@ -521,11 +657,20 @@ function _portraitArchiviste(ctx, w, h, t) {
     ctx.restore();
 }
 
-function _portraitAvantgarde(ctx, w, h, t) {
+/** @param {Record<string, number | boolean> | null | undefined} params */
+function _portraitAvantgarde(ctx, w, h, t, params) {
     const cx = w / 2;
     const cy = h / 2;
+    const p = params ?? {};
+    const vacillant = p.vacillant === true;
+    const vitesse = /** @type {number} */ (p.vitesseAnim ?? 1);
+    const glow = /** @type {number} */ (p.glow ?? 1);
+    const echelle = /** @type {number} */ (p.echelle ?? 1);
+    const effetsReduits = p.effetsReduits === true;
+    const tAnim = effetsReduits ? 0 : t * vitesse;
+    const alphaGlobale = vacillant ? (effetsReduits ? 0.8 : 0.7 + 0.25 * Math.sin(tAnim * 2.2)) : 1;
     const couleurs = ['#ff4500', '#aaeeff', '#ff00ff', '#7700ff'];
-    const tCycle = (t * 0.3) % 1;
+    const tCycle = effetsReduits ? 0.25 : (tAnim * 0.3) % 1;
     const idx = Math.floor(tCycle * 4) % 4;
     const frac = (tCycle * 4) % 1;
     const coulActuelle = interpolerCouleurPortrait(couleurs[idx], couleurs[(idx + 1) % 4], frac);
@@ -539,19 +684,22 @@ function _portraitAvantgarde(ctx, w, h, t) {
     ctx.fillRect(0, 0, w, h);
 
     for (let i = 0; i < 16; i++) {
-        const angle = (i / 16) * Math.PI * 2 + t * 2.5;
-        const r = 28 + 5 * Math.sin(t * 2 + i * 0.5);
-        ctx.globalAlpha = 0.4 + 0.3 * Math.sin(t * 3 + i * 0.8);
+        const angle = (i / 16) * Math.PI * 2 + tAnim * 2.5;
+        const r = 28 + 5 * Math.sin(tAnim * 2 + i * 0.5);
+        ctx.globalAlpha =
+            (effetsReduits ? 0.5 : 0.4 + 0.3 * Math.sin(tAnim * 3 + i * 0.8)) * alphaGlobale;
         ctx.fillStyle = couleurs[i % 4];
         ctx.fillRect(cx + Math.cos(angle) * r - 1.5, cy + Math.sin(angle) * r - 1.5, 3, 3);
     }
     ctx.globalAlpha = 1;
 
     ctx.save();
+    ctx.globalAlpha = alphaGlobale * glow;
     ctx.translate(cx, cy);
-    ctx.rotate(t * 0.5);
+    ctx.scale(echelle, echelle);
+    ctx.rotate(effetsReduits ? 0 : tAnim * 0.5);
     ctx.shadowColor = coulActuelle;
-    ctx.shadowBlur = 16 + 10 * Math.sin(t * 4);
+    ctx.shadowBlur = effetsReduits ? 16 : 16 + 10 * Math.sin(tAnim * 4);
     ctx.beginPath();
     for (let i = 0; i < 12; i++) {
         const angle = (i / 12) * Math.PI * 2;
@@ -577,7 +725,7 @@ function _portraitAvantgarde(ctx, w, h, t) {
         [6, 4],
     ];
     yeux.forEach(([ox, oy], i) => {
-        if (Math.sin(t * 0.5 + i * 2) > -0.2) {
+        if (effetsReduits || Math.sin(tAnim * 0.5 + i * 2) > -0.2) {
             ctx.fillStyle = '#fff';
             ctx.shadowColor = coulActuelle;
             ctx.shadowBlur = 6;
@@ -592,46 +740,56 @@ function _portraitAvantgarde(ctx, w, h, t) {
         ctx.strokeStyle = 'rgba(255,255,255,0.05)';
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc(cx, cy, r + Math.sin(t * 0.3 + i) * 2, 0, Math.PI * 2);
+        ctx.arc(cx, cy, r + (effetsReduits ? 0 : Math.sin(tAnim * 0.3 + i) * 2), 0, Math.PI * 2);
         ctx.stroke();
     });
 }
 
-export function dessinerPortraitCutsceneInterne(ctx, w, h, personnageId, t) {
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {number} w
+ * @param {number} h
+ * @param {string} personnageId
+ * @param {number} t
+ * @param {{ humeur?: string, params?: Record<string, number | boolean | number[]> | null }} [options]
+ */
+export function dessinerPortraitCutsceneInterne(ctx, w, h, personnageId, t, options = {}) {
     ctx.clearRect(0, 0, w, h);
+    const params = options.params ?? null;
+    const humeur = options.humeur ?? 'neutre';
 
     switch (personnageId) {
         case 'robo':
             dessinerRobo(ctx, w, h, obtenirHumeurRoboCutscene(), t);
             break;
         case 'vera':
-            _portraitVera(ctx, w, h, t);
+            _portraitVera(ctx, w, h, t, params);
             break;
         case 'distorsion':
-            _portraitDistorsion(ctx, w, h, t);
+            _portraitDistorsion(ctx, w, h, t, params);
             break;
         case 'systeme':
-            _portraitSysteme(ctx, w, h, t);
+            _portraitSysteme(ctx, w, h, t, params);
             break;
         case 'brasier':
-            _portraitBrasier(ctx, w, h, t, false);
+            _portraitBrasier(ctx, w, h, t, humeur === 'vacillant', params);
             break;
         case 'brasier_voix':
-            _portraitBrasier(ctx, w, h, t, true);
+            _portraitBrasier(ctx, w, h, t, humeur !== 'calme' && humeur !== 'agressif', params);
             break;
         case 'sentinelle':
-            _portraitSentinelle(ctx, w, h, t, false);
+            _portraitSentinelle(ctx, w, h, t, humeur === 'vacillant', params);
             break;
         case 'sentinelle_voix':
-            _portraitSentinelle(ctx, w, h, t, true);
+            _portraitSentinelle(ctx, w, h, t, humeur !== 'calme' && humeur !== 'agressif', params);
             break;
         case 'archiviste':
         case 'archiviste_voix':
-            _portraitArchiviste(ctx, w, h, t);
+            _portraitArchiviste(ctx, w, h, t, params);
             break;
         case 'avantgarde':
         case 'avantgarde_voix':
-            _portraitAvantgarde(ctx, w, h, t);
+            _portraitAvantgarde(ctx, w, h, t, params);
             break;
         default:
             _portraitNarrateur(ctx, w, h, t);

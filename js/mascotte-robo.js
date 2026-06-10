@@ -1,7 +1,8 @@
 import { CONFIG } from './config-jeu.js';
 import { etat } from './store-jeu.js';
 import { majStatsReactionRobo } from './achievements.js';
-import { definirHumeurRobo } from './rendu-robo.js';
+import { definirHumeurRobo, definirClignementInactifMascotte } from './rendu-robo.js';
+import { logger } from './logger.js';
 
 /** @param {string} humeur */
 export function convertirHumeurVersCanvas(humeur) {
@@ -28,11 +29,16 @@ export function convertirHumeurVersCanvas(humeur) {
     return 'neutre';
 }
 
+const COOLDOWN_MS = 800;
+const SEUIL_PILE_HAUTE = 0.75;
+const SEUIL_PILE_BASSE = 0.6;
+const INACTIVITE_MS = 20000;
+
 const DUREES_HUMEUR = {
-    content: 2200,
-    heureux: 2800,
-    excite: 3200,
-    'excite-plus': 3800,
+    content: 1200,
+    heureux: 1200,
+    excite: 2500,
+    'excite-plus': 2500,
     grimace: 700,
     emerveille: 2600,
     inquiet: 1800,
@@ -43,46 +49,161 @@ const DUREES_HUMEUR = {
     alerte: 2200,
 };
 
-const SEUIL_LIGNES_CRITIQUE = 5;
 let _timerRetourNeutre = null;
 let _humeurPersistante = false;
-let _dernierStress = 0;
+let _prioriteCourante = 0;
+let _dernierChangementMs = 0;
+let _pileHaute = false;
+let _dernierVerrouMs = Date.now();
+let _humeurLogiqueCourante = 'neutre';
+let _inactiviteInitialisee = false;
 
 /**
  * @param {number} nbLignes
  * @param {number} [combo]
+ * @returns {{ humeur: string, priorite: number, duree: number } | null}
  */
 export function determinerHumeurLignes(nbLignes, combo = 0) {
     if (nbLignes <= 0) return null;
-    if (combo >= 3) return 'excite-plus';
-    if (nbLignes >= 4) return 'excite';
-    if (nbLignes >= 2) return 'heureux';
-    return 'content';
+    if (nbLignes >= 4) return { humeur: 'excite', priorite: 3, duree: 2500 };
+    if (combo >= 3) return { humeur: 'content', priorite: 2, duree: 2000 };
+    return { humeur: 'content', priorite: 1, duree: 1200 };
 }
 
-/** @param {number} nbLignes @param {number} [combo] */
-export function reagirRoboAuxLignes(nbLignes, combo = 0) {
-    const humeur = determinerHumeurLignes(nbLignes, combo);
-    if (humeur) appliquerHumeurMascotte(humeur);
+/** @returns {number} */
+function _ratioHauteurPile() {
+    if (!etat.plateau?.length) return 0;
+    for (let l = 0; l < CONFIG.lignes; l++) {
+        if (etat.plateau[l].some((c) => c !== 0)) {
+            return (CONFIG.lignes - l) / CONFIG.lignes;
+        }
+    }
+    return 0;
 }
 
-/** @param {{ dureeRetour?: number, persistant?: boolean }} [options] */
-export function appliquerHumeurMascotte(humeur, options = {}) {
-    majStatsReactionRobo(humeur);
+/**
+ * @param {string} humeur
+ * @param {number} priorite
+ * @param {{ dureeRetour?: number, persistant?: boolean, etatContinu?: boolean, compterStats?: boolean }} [options]
+ */
+function _appliquerReaction(humeur, priorite, options = {}) {
+    const etatContinu = options.etatContinu === true;
+    const persistant = options.persistant === true || etatContinu;
+
+    if (
+        !persistant &&
+        priorite < _prioriteCourante &&
+        (_humeurPersistante || _timerRetourNeutre !== null)
+    ) {
+        return false;
+    }
+    if (
+        !persistant &&
+        priorite === _prioriteCourante &&
+        _humeurPersistante &&
+        etatContinu !== true
+    ) {
+        _humeurPersistante = false;
+    }
+    const now = Date.now();
+    if (!persistant && priorite < 4 && now - _dernierChangementMs < COOLDOWN_MS) {
+        return false;
+    }
+
+    if (options.compterStats !== false && humeur !== 'neutre') {
+        majStatsReactionRobo(humeur);
+    }
+    if (humeur !== _humeurLogiqueCourante) {
+        logger.debug('[reactions] mascotte →', humeur, `(p${priorite})`);
+    }
+
+    _humeurLogiqueCourante = humeur;
+    _prioriteCourante = persistant ? priorite : priorite;
+    _dernierChangementMs = now;
     etat.humeur = humeur;
-    _humeurPersistante = options.persistant === true;
+    _humeurPersistante = persistant;
 
     definirHumeurRobo(convertirHumeurVersCanvas(humeur));
+    definirClignementInactifMascotte(humeur === 'neutre' && priorite === 0);
 
     if (_timerRetourNeutre !== null) {
         clearTimeout(_timerRetourNeutre);
         _timerRetourNeutre = null;
     }
 
-    if (!_humeurPersistante && humeur !== 'neutre' && humeur !== 'triste') {
+    if (!persistant && humeur !== 'neutre' && humeur !== 'triste') {
         const duree = options.dureeRetour ?? DUREES_HUMEUR[humeur] ?? 2500;
-        _timerRetourNeutre = setTimeout(() => appliquerHumeurMascotte('neutre'), duree);
+        _timerRetourNeutre = setTimeout(() => {
+            _prioriteCourante = 0;
+            _appliquerReaction('neutre', 0, { compterStats: false });
+            _reevaluerPileHaute();
+        }, duree);
     }
+    return true;
+}
+
+function _reevaluerPileHaute() {
+    const ratio = _ratioHauteurPile();
+    const etaitHaute = _pileHaute;
+    if (ratio > SEUIL_PILE_HAUTE) {
+        if (!etaitHaute) {
+            _pileHaute = true;
+            _appliquerReaction('alerte', 4, { etatContinu: true });
+        }
+    } else if (etaitHaute && ratio < SEUIL_PILE_BASSE) {
+        _pileHaute = false;
+        if (_humeurLogiqueCourante === 'alerte') {
+            _humeurPersistante = false;
+            _prioriteCourante = 0;
+            _appliquerReaction('neutre', 0, { compterStats: false });
+        }
+    }
+}
+
+export function evaluerPileMascotte() {
+    _reevaluerPileHaute();
+}
+
+export function evaluerInactiviteMascotte() {
+    if (Date.now() - _dernierVerrouMs < INACTIVITE_MS) return;
+    if (_prioriteCourante >= 4 && _humeurPersistante) return;
+    if (_prioriteCourante > 0 && _timerRetourNeutre !== null) return;
+    if (_pileHaute) return;
+    definirClignementInactifMascotte(true);
+    if (_humeurLogiqueCourante !== 'neutre') {
+        _appliquerReaction('neutre', 0, { compterStats: false });
+    }
+}
+
+export function signalerActiviteMascotte() {
+    _dernierVerrouMs = Date.now();
+    definirClignementInactifMascotte(false);
+}
+
+/** @param {import('./bus-jeu.js').ecouter} ecouterFn */
+export function brancherBusReactionsMascotte(ecouterFn) {
+    if (_inactiviteInitialisee) return;
+    _inactiviteInitialisee = true;
+    ecouterFn('partie:nouvelle-piece', () => signalerActiviteMascotte());
+    ecouterFn('piece:son', ({ type }) => {
+        if (type === 'verrou' || type === 'deplacement' || type === 'rotation') {
+            signalerActiviteMascotte();
+        }
+    });
+    ecouterFn('monde:objectif-atteint', () => reagirRoboVictoireMonde());
+}
+
+/** @param {number} nbLignes @param {number} [combo] */
+export function reagirRoboAuxLignes(nbLignes, combo = 0) {
+    const reaction = determinerHumeurLignes(nbLignes, combo);
+    if (!reaction) return;
+    _appliquerReaction(reaction.humeur, reaction.priorite, { dureeRetour: reaction.duree });
+}
+
+/** @param {{ dureeRetour?: number, persistant?: boolean }} [options] */
+export function appliquerHumeurMascotte(humeur, options = {}) {
+    const priorite = options.persistant ? 5 : 2;
+    _appliquerReaction(humeur, priorite, options);
 }
 
 /** @param {string} humeur @param {{ dureeRetour?: number, persistant?: boolean }} [options] */
@@ -91,57 +212,52 @@ export function changerHumeur(humeur, options) {
 }
 
 export function flashGrimaceRobo() {
-    appliquerHumeurMascotte('grimace', { dureeRetour: DUREES_HUMEUR.grimace });
+    _appliquerReaction('grimace', 1, { dureeRetour: DUREES_HUMEUR.grimace });
 }
 
 export function reagirRoboLevelUp() {
-    appliquerHumeurMascotte('excite', { dureeRetour: 800 });
+    _appliquerReaction('excite', 3, { dureeRetour: 800 });
 }
 
 export function reagirRoboRelique() {
-    appliquerHumeurMascotte('emerveille');
+    _appliquerReaction('emerveille', 3, { dureeRetour: DUREES_HUMEUR.emerveille });
 }
 
 export function reagirRoboBossAttaque() {
-    appliquerHumeurMascotte('inquiet');
+    _appliquerReaction('inquiet', 4, { dureeRetour: DUREES_HUMEUR.inquiet });
 }
 
 export function reagirRoboBossDegats() {
-    appliquerHumeurMascotte('determine');
+    _appliquerReaction('determine', 3, { dureeRetour: DUREES_HUMEUR.determine });
 }
 
 export function reagirRoboBossVaincu() {
-    appliquerHumeurMascotte('triomphal', { dureeRetour: 2000 });
+    _appliquerReaction('triomphal', 5, { dureeRetour: 2000 });
 }
 
 export function reagirRoboMeteoActive() {
-    appliquerHumeurMascotte('alerte');
+    _appliquerReaction('alerte', 4, { dureeRetour: DUREES_HUMEUR.alerte });
 }
 
 export function reagirRoboNouveauRecord() {
-    appliquerHumeurMascotte('euphorique');
+    _appliquerReaction('euphorique', 5, { dureeRetour: DUREES_HUMEUR.euphorique });
 }
 
 export function reagirRoboGameOver() {
-    appliquerHumeurMascotte('triste', { persistant: true });
+    _appliquerReaction('triste', 5, { persistant: true });
 }
 
-/** @returns {number|null} */
-function _obtenirLigneHautTas() {
-    if (!etat.plateau?.length) return null;
-    for (let l = 0; l < CONFIG.lignes; l++) {
-        if (etat.plateau[l].some((c) => c !== 0)) return l;
-    }
-    return CONFIG.lignes;
+export function reagirRoboVictoireMonde() {
+    _appliquerReaction('excite', 5, { persistant: true });
+}
+
+export function reagirRoboContinueBoss() {
+    _appliquerReaction('triste', 4, { dureeRetour: 2000 });
 }
 
 export function verifierPlateauCritiqueRobo() {
-    const haut = _obtenirLigneHautTas();
-    if (haut === null || haut > SEUIL_LIGNES_CRITIQUE) return;
-    const now = Date.now();
-    if (now - _dernierStress < 4000) return;
-    _dernierStress = now;
-    appliquerHumeurMascotte('stresse');
+    evaluerPileMascotte();
+    evaluerInactiviteMascotte();
 }
 
 export function reinitialiserTimerMascotte() {
@@ -150,9 +266,14 @@ export function reinitialiserTimerMascotte() {
         _timerRetourNeutre = null;
     }
     _humeurPersistante = false;
+    _prioriteCourante = 0;
 }
 
 export function reinitialiserMascottePartie() {
     reinitialiserTimerMascotte();
-    appliquerHumeurMascotte('neutre');
+    _pileHaute = false;
+    _dernierVerrouMs = Date.now();
+    _humeurLogiqueCourante = 'neutre';
+    definirClignementInactifMascotte(false);
+    _appliquerReaction('neutre', 0, { compterStats: false });
 }

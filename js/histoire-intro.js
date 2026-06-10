@@ -42,7 +42,8 @@ export async function ouvrirModeHistoireDepuisMenu() {
         logger.debug('[intro] textes histoire charges');
 
         const seq = obtenirSequenceIntro();
-        logger.debug('[intro] lancement cutscene,', seq.length, 'lignes');
+        const lignesIntro = Array.isArray(seq) ? seq : (seq.lignes ?? []);
+        logger.debug('[intro] lancement cutscene,', lignesIntro.length, 'lignes');
 
         const { afficherCutsceneHistoire } = await import('./histoire-manager-ui.js');
 
@@ -51,15 +52,15 @@ export async function ouvrirModeHistoireDepuisMenu() {
                 let termine = false;
                 let cutsceneJouee = false;
                 const demarre = afficherCutsceneHistoire(
-                    seq.map((l) => l.texte),
-                    seq.map((l) => l.personnage),
+                    seq,
+                    null,
                     () => {
                         if (termine) return;
                         termine = true;
                         logger.debug(
                             '[intro] callback fin cutscene (jouee ou passee par le joueur)'
                         );
-                        if (cutsceneJouee && seq.length > 0) {
+                        if (cutsceneJouee && lignesIntro.length > 0) {
                             marquerIntroHistoireVue();
                         }
                         resolve();

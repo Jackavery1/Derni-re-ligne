@@ -5,13 +5,25 @@ import { convertirHumeurVersCanvas } from '../js/mascotte-robo.js';
 describe('mascotte-robo', () => {
     it('cartographie les lignes effacées vers la bonne humeur', () => {
         expect(determinerHumeurLignes(0)).toBeNull();
-        expect(determinerHumeurLignes(1)).toBe('content');
-        expect(determinerHumeurLignes(2)).toBe('heureux');
-        expect(determinerHumeurLignes(3)).toBe('heureux');
-        expect(determinerHumeurLignes(4)).toBe('excite');
-        expect(determinerHumeurLignes(4, 2)).toBe('excite');
-        expect(determinerHumeurLignes(1, 3)).toBe('excite-plus');
-        expect(determinerHumeurLignes(4, 3)).toBe('excite-plus');
+        expect(determinerHumeurLignes(1)).toEqual({ humeur: 'content', priorite: 1, duree: 1200 });
+        expect(determinerHumeurLignes(2)).toEqual({ humeur: 'content', priorite: 1, duree: 1200 });
+        expect(determinerHumeurLignes(3)).toEqual({ humeur: 'content', priorite: 1, duree: 1200 });
+        expect(determinerHumeurLignes(4)).toEqual({ humeur: 'excite', priorite: 3, duree: 2500 });
+        expect(determinerHumeurLignes(4, 2)).toEqual({
+            humeur: 'excite',
+            priorite: 3,
+            duree: 2500,
+        });
+        expect(determinerHumeurLignes(1, 3)).toEqual({
+            humeur: 'content',
+            priorite: 2,
+            duree: 2000,
+        });
+        expect(determinerHumeurLignes(4, 3)).toEqual({
+            humeur: 'excite',
+            priorite: 3,
+            duree: 2500,
+        });
     });
 
     it('convertit les humeurs jeu vers les 5 expressions canvas', () => {

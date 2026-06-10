@@ -15,6 +15,9 @@ export {
     reagirRoboMeteoActive,
     reagirRoboNouveauRecord,
     reagirRoboGameOver,
+    reagirRoboVictoireMonde,
+    reagirRoboContinueBoss,
+    brancherBusReactionsMascotte,
     verifierPlateauCritiqueRobo,
 } from './mascotte-robo.js';
 

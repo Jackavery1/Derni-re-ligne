@@ -27,6 +27,7 @@ import { endommagerBoss, bossEstActif, bossEstVaincu, notifierTetrisBoss } from 
 import { mettreAJourIndicateurRelique } from './piece-jeu.js';
 import { enregistrerProgression, suiviDifficulteActif } from './gestionnaire-difficulte.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
+import { brancherBusReactionsMascotte } from './mascotte-robo.js';
 
 let effetsInitialises = false;
 
@@ -50,6 +51,7 @@ export function initialiserEffetsPartie() {
     // Idempotence : une re-initialisation doublerait tous les ecouteurs du bus (sons, textes…).
     if (effetsInitialises) return;
     effetsInitialises = true;
+    brancherBusReactionsMascotte(ecouter);
     ecouter('piece:son', ({ type }) => AudioMoteur.son(type));
 
     ecouter('partie:stats', () => rafraichirStats());

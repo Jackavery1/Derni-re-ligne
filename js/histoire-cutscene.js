@@ -11,8 +11,10 @@ import { COULEUR_PERSONNAGE, idPortraitMeta } from './histoire-cutscene-config.j
 import {
     demarrerFondCutscene,
     stopFondCutscene,
-    estFondCutsceneActif,
+    definirSceneCutsceneFond,
+    retirerSceneCutsceneFond,
 } from './histoire-cutscene-fonds.js';
+import { precharger, reinitialiserCacheScenes } from './scenes-cutscene.js';
 import {
     assurerZoneNarrationCutscene,
     initDomCutscene,
@@ -34,6 +36,7 @@ import {
     definirPersonnageParlantCutscene,
     reinitVisuelPortraitsCutscene,
 } from './histoire-cutscene-portraits.js';
+import { reinitExpressionsCutscene } from './expressions-cutscene.js';
 import {
     typewriterEstActif,
     stopTypewriter,
@@ -44,13 +47,91 @@ import {
 let cutsceneIndex = 0;
 let cutsceneLignes = [];
 let cutscenePersonnages = [];
+/** @type {(string | undefined)[]} */
+let cutsceneHumeurs = [];
+/** @type {(string | null | undefined)[]} */
+let cutsceneScenes = [];
+let cutsceneSceneDefaut = null;
+/** @type {string | null} */
+let _sceneActive = null;
 let cutsceneCallbackFin = null;
 let _finCutsceneEnCours = false;
+
+function _normaliserEntreeCutscene(textes, personnages) {
+    let sceneDefaut = null;
+    /** @type {unknown} */
+    let lignesRaw = textes;
+
+    if (
+        textes &&
+        typeof textes === 'object' &&
+        !Array.isArray(textes) &&
+        'lignes' in /** @type {object} */ (textes)
+    ) {
+        sceneDefaut = /** @type {{ scene?: string }} */ (textes).scene ?? null;
+        lignesRaw = /** @type {{ lignes?: unknown[] }} */ (textes).lignes ?? [];
+    }
+
+    if (
+        Array.isArray(lignesRaw) &&
+        lignesRaw.length > 0 &&
+        typeof lignesRaw[0] === 'object' &&
+        lignesRaw[0] !== null &&
+        'texte' in /** @type {object} */ (lignesRaw[0])
+    ) {
+        return {
+            sceneDefaut,
+            lignes: lignesRaw.map((l) => /** @type {{ texte: string }} */ (l).texte ?? ''),
+            personnages: lignesRaw.map(
+                (l, i) =>
+                    /** @type {{ personnage?: string }} */ (l).personnage ??
+                    personnages?.[i] ??
+                    'narrateur'
+            ),
+            humeurs: lignesRaw.map((l) => /** @type {{ humeur?: string }} */ (l).humeur),
+            scenes: lignesRaw.map((l) => /** @type {{ scene?: string }} */ (l).scene ?? null),
+        };
+    }
+    return {
+        sceneDefaut,
+        lignes: /** @type {string[]} */ (lignesRaw ?? []),
+        personnages: personnages ?? [],
+        humeurs: [],
+        scenes: [],
+    };
+}
+
+function _prechargerScenesCutscene(entree) {
+    const ids = new Set();
+    if (entree.sceneDefaut) ids.add(entree.sceneDefaut);
+    for (const s of entree.scenes) {
+        if (s) ids.add(s);
+    }
+    if (ids.size === 0) return;
+    void Promise.all([...ids].map((id) => precharger(id)));
+}
+
+function _appliquerFondPourLigne(personnageId) {
+    const sceneLigne = cutsceneScenes[cutsceneIndex];
+    if (sceneLigne) {
+        _sceneActive = sceneLigne;
+    } else if (cutsceneIndex === 0 && cutsceneSceneDefaut) {
+        _sceneActive = cutsceneSceneDefaut;
+    }
+
+    if (_sceneActive) {
+        const ok = definirSceneCutsceneFond(_sceneActive, personnageId, performance.now());
+        if (!ok) _sceneActive = null;
+    } else {
+        retirerSceneCutsceneFond(personnageId, performance.now());
+    }
+}
 
 function _obtenirSequenceCutscene() {
     return cutsceneLignes.map((texte, i) => ({
         texte,
         personnage: cutscenePersonnages[i] ?? 'narrateur',
+        humeur: cutsceneHumeurs[i],
     }));
 }
 
@@ -74,10 +155,16 @@ function _terminerCutscene() {
     stopBouclePortraitsCutscene();
     stopFondCutscene();
     reinitVisuelPortraitsCutscene();
+    reinitExpressionsCutscene();
 
     cutsceneLignes = [];
     cutscenePersonnages = [];
+    cutsceneHumeurs = [];
+    cutsceneScenes = [];
+    cutsceneSceneDefaut = null;
+    _sceneActive = null;
     cutsceneIndex = 0;
+    reinitialiserCacheScenes();
 
     store.histoire.cutscene.enCours = false;
     const cb = cutsceneCallbackFin;
@@ -119,14 +206,22 @@ export function afficherCutsceneHistoire(textes, personnages, onFin, options = {
         logger.warn('[cutscene] éléments portrait introuvables dans le DOM');
     }
     reinitVisuelPortraitsCutscene();
+    reinitExpressionsCutscene();
 
-    cutsceneLignes = textes;
-    cutscenePersonnages = personnages ?? [];
+    const entree = _normaliserEntreeCutscene(textes, personnages);
+    cutsceneLignes = entree.lignes;
+    cutscenePersonnages = entree.personnages;
+    cutsceneHumeurs = entree.humeurs;
+    cutsceneScenes = entree.scenes;
+    cutsceneSceneDefaut = entree.sceneDefaut;
+    _sceneActive = entree.sceneDefaut ?? null;
     cutsceneIndex = 0;
     cutsceneCallbackFin = onFin ?? null;
     store.histoire.cutscene.onFin = onFin ?? null;
 
-    if (!textes.length) {
+    _prechargerScenesCutscene(entree);
+
+    if (!entree.lignes.length) {
         store.histoire.cutscene.enCours = true;
         _terminerCutscene();
         return true;
@@ -142,7 +237,7 @@ export function afficherCutsceneHistoire(textes, personnages, onFin, options = {
     viderTextesCutscene();
 
     const premiereLigne = cutscenePersonnages[0] ?? 'narrateur';
-    demarrerFondCutscene(premiereLigne);
+    _appliquerFondPourLigne(premiereLigne);
     demarrerBouclePortraitsCutscene(
         () => store.histoire.cutscene.enCours,
         () => ({
@@ -182,7 +277,7 @@ export function afficherCutsceneHistoire(textes, personnages, onFin, options = {
         return false;
     }
 
-    mettreAJourProgressCutscene(0, textes.length);
+    mettreAJourProgressCutscene(0, entree.lignes.length);
     return true;
 }
 
@@ -236,13 +331,8 @@ function afficherProchaineLigneCutscene() {
     if (!prep) return;
 
     definirPersonnageParlantCutscene(personnageId);
-    const fondPrecedent = refsDomCutscene.fondPersonnageId;
     appliquerFondPersonnageEcran(personnageId);
-
-    if (fondPrecedent !== personnageId || !estFondCutsceneActif()) {
-        stopFondCutscene();
-        demarrerFondCutscene(personnageId);
-    }
+    _appliquerFondPourLigne(personnageId);
 
     mettreAJourPortraitsCutscene(
         personnageId,

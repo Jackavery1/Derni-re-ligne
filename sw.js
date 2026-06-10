@@ -1,4 +1,4 @@
-const VERSION_CACHE = 'derniere-ligne-2.5.8-r2';
+const VERSION_CACHE = 'derniere-ligne-2.5.9-r5';
 
 const FICHIERS_A_CACHER = [
     './',
@@ -81,6 +81,7 @@ const FICHIERS_A_CACHER = [
     './js/ecrans-config.js',
     './js/ecrans-ui.js',
     './js/effets-partie.js',
+    './js/expressions-cutscene.js',
     './js/file-narrative.js',
     './js/fin-bg-rendu.js',
     './js/fins-histoire.js',
@@ -156,6 +157,7 @@ const FICHIERS_A_CACHER = [
     './js/progression-records.js',
     './js/progression-stockage.js',
     './js/progression.js',
+    './js/reactions-boss-portrait.js',
     './js/registre-modes.js',
     './js/reliques.js',
     './js/rendu-accessibilite.js',
@@ -175,6 +177,7 @@ const FICHIERS_A_CACHER = [
     './js/rendu-previews.js',
     './js/rendu-robo.js',
     './js/rendu-vivant.js',
+    './js/scenes-cutscene.js',
     './js/score-partie.js',
     './js/store-core.js',
     './js/store-etat-partie.js',

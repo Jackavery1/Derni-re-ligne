@@ -4419,6 +4419,102 @@ h1,
     margin-top: auto;
 }
 
+.letterbox-haut,
+.letterbox-bas {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: clamp(48px, 9vh, 90px);
+    background: #000;
+    z-index: 4;
+    pointer-events: none;
+    transition: transform 500ms ease;
+}
+
+.letterbox-haut {
+    top: 0;
+    transform: translateY(-100%);
+}
+
+.letterbox-bas {
+    bottom: 0;
+    transform: translateY(100%);
+}
+
+#ecran-histoire-cutscene.mode-narrateur .letterbox-haut,
+#ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
+    transform: translateY(0);
+}
+
+#ecran-histoire-cutscene.mode-narrateur #canvas-portrait-gauche,
+#ecran-histoire-cutscene.mode-narrateur #canvas-portrait-droite {
+    opacity: 0 !important;
+    pointer-events: none;
+}
+
+#ecran-histoire-cutscene.mode-narrateur #zone-narration-cutscene {
+    display: none !important;
+}
+
+#ecran-histoire-cutscene.mode-narrateur #rangee-portraits-cutscene {
+    position: absolute;
+    inset: 0;
+    align-items: stretch;
+    justify-content: center;
+    padding: 0;
+    z-index: 3;
+    pointer-events: none;
+}
+
+#ecran-histoire-cutscene.mode-narrateur #boite-dialogue-cutscene {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(72px, 16vh, 140px);
+    transform: translateX(-50%);
+    width: min(84vw, 780px);
+    margin: 0;
+    padding: 0 20px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    min-height: 0;
+    text-align: center;
+    visibility: visible;
+    pointer-events: none;
+}
+
+#ecran-histoire-cutscene.mode-narrateur #nom-perso-dialogue {
+    display: none;
+}
+
+#ecran-histoire-cutscene.mode-narrateur .cutscene-texte-narrateur-cinematique,
+#ecran-histoire-cutscene.mode-narrateur #texte-dialogue-cutscene {
+    font-family: var(--font-ui, 'Rajdhani', sans-serif);
+    font-size: clamp(1.15rem, var(--typo-narratif, 1.4rem), 1.85rem);
+    line-height: 1.55;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.92);
+    min-height: 2.4em;
+}
+
+#ecran-histoire-cutscene.mode-narrateur #indicateur-suite-dialogue {
+    position: static;
+    display: inline-block;
+    margin-top: 12px;
+}
+
+body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-haut,
+body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
+    transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #ecran-histoire-cutscene.mode-narrateur .letterbox-haut,
+    #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
+        transition: none;
+    }
+}
+
 .cutscene-barre-bas {
     position: relative;
     z-index: 2;

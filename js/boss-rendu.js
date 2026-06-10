@@ -1,11 +1,22 @@
 import { store } from './store-core.js';
 import { obtenirCanvas } from './dom-utils.js';
 import { COULEUR_GLACE_B } from './boss-jeu.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
+import {
+    obtenirParamsPortraitBossCombat,
+    obtenirExpressionBossCombat,
+} from './reactions-boss-portrait.js';
 
 /** @returns {'calme'|'irrite'|'enrage'|'attaque'|'vaincu'} */
 function _obtenirEtatPortraitBoss() {
     if (store.histoire.boss.vaincu) return 'vaincu';
     if (store.histoire.boss._flashAttaque) return 'attaque';
+    if (modeHistoireEnCours() && store.histoire.boss.actif) {
+        const expr = obtenirExpressionBossCombat();
+        if (expr === 'vacillant') return 'enrage';
+        if (expr === 'agressif') return 'irrite';
+        return 'calme';
+    }
     const boss = store.histoire.boss.actif;
     if (!boss) return 'calme';
     const pct = (store.histoire.boss.pv / boss.pvMax) * 100;
@@ -41,37 +52,58 @@ export function rendrePortraitBoss(timestamp) {
     const etatPortrait = _obtenirEtatPortraitBoss();
     _appliquerClassePortraitBoss(etatPortrait);
     const t = timestamp / 1000;
-    const intensite = etatPortrait === 'enrage' ? 1.6 : etatPortrait === 'irrite' ? 1.25 : 1;
+    const paramsCombat = modeHistoireEnCours() ? obtenirParamsPortraitBossCombat(timestamp) : null;
+    const intensite = paramsCombat
+        ? paramsCombat.glow
+        : etatPortrait === 'enrage'
+          ? 1.6
+          : etatPortrait === 'irrite'
+            ? 1.25
+            : 1;
+    const vitesseAnim = paramsCombat?.vitesseAnim ?? 1;
+    const tAnim = t * vitesseAnim;
+    const echelle = paramsCombat?.echelle ?? 1;
+    const vacillant = paramsCombat?.vacillant === true;
 
     if (store.histoire.boss.vaincu) {
         _dessinerFragmentationBoss(ctx, w, h, t);
         return;
     }
 
-    const shakeX = etatPortrait === 'enrage' ? Math.sin(t * 22) * 2 : 0;
-    const shakeY = etatPortrait === 'enrage' ? Math.cos(t * 19) * 1.5 : 0;
+    const shakeX = vacillant
+        ? Math.sin(t * 22) * 2
+        : etatPortrait === 'enrage'
+          ? Math.sin(t * 22) * 2
+          : 0;
+    const shakeY = vacillant
+        ? Math.cos(t * 19) * 1.5
+        : etatPortrait === 'enrage'
+          ? Math.cos(t * 19) * 1.5
+          : 0;
     ctx.save();
-    ctx.translate(shakeX, shakeY);
+    ctx.translate(w / 2 + shakeX, h / 2 + shakeY);
+    ctx.scale(echelle, echelle);
+    ctx.translate(-w / 2, -h / 2);
     ctx.globalAlpha = Math.min(1, 0.85 + (intensite - 1) * 0.15);
 
     switch (store.histoire.boss.actif.id) {
         case 'brasier':
-            _portraitBrasier(ctx, w, h, t, intensite);
+            _portraitBrasier(ctx, w, h, tAnim, intensite);
             break;
         case 'sentinelle':
-            _portraitSentinelle(ctx, w, h, t, intensite);
+            _portraitSentinelle(ctx, w, h, tAnim, intensite);
             break;
         case 'archiviste':
-            _portraitArchiviste(ctx, w, h, t, intensite);
+            _portraitArchiviste(ctx, w, h, tAnim, intensite);
             break;
         case 'avantgarde':
-            _portraitAvantgarde(ctx, w, h, t, intensite);
+            _portraitAvantgarde(ctx, w, h, tAnim, intensite);
             break;
         case 'distorsion':
-            _portraitDistorsion(ctx, w, h, t, intensite);
+            _portraitDistorsion(ctx, w, h, tAnim, intensite);
             break;
         default:
-            _portraitGenerique(ctx, w, h, t);
+            _portraitGenerique(ctx, w, h, tAnim);
             break;
     }
     ctx.restore();

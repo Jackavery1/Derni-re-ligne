@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
 
 const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
-const REVISION_CACHE = 'r2';
+const REVISION_CACHE = 'r5';
 const versionCache = `derniere-ligne-${pkg.version}-${REVISION_CACHE}`;
 
 const STATIQUES = [
@@ -25,7 +25,8 @@ const html = listerFichiers('html', './html/', '.html');
 const js = listerFichiers('js', './js/', '.js');
 const img = listerFichiers('img', './img/', '.png');
 const data = existsSync('data') ? listerFichiers('data', './data/', '.json') : [];
-const fichiers = [...STATIQUES, ...img, ...html, ...js, ...data];
+const cutscenes = listerFichiers('assets/cutscenes', './assets/cutscenes/', '.png');
+const fichiers = [...STATIQUES, ...img, ...html, ...js, ...data, ...cutscenes];
 
 const lignes = fichiers.map((f) => `    '${f}',`).join('\n');
 const bloc = `const FICHIERS_A_CACHER = [\n${lignes}\n];`;

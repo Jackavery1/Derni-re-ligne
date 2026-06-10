@@ -16,12 +16,14 @@ describe('histoire-intro', () => {
     it('expose une séquence d’environ 15 lignes avec narrateur, systeme et vera', () => {
         const seq = obtenirSequenceIntro();
         expect(seq).toEqual(INTRO_HISTOIRE);
-        expect(seq).toHaveLength(15);
-        expect(seq[0].texte).toMatch(/inventé un jeu/);
-        expect(seq[0].personnage).toBe('narrateur');
-        expect(seq.some((l) => l.personnage === 'systeme')).toBe(true);
-        expect(seq.some((l) => l.personnage === 'vera')).toBe(true);
-        expect(seq.some((l) => l.texte.includes('Jour 2 554'))).toBe(true);
+        expect(seq.scene).toBe('observatoire');
+        const lignes = seq.lignes ?? seq;
+        expect(lignes).toHaveLength(15);
+        expect(lignes[0].texte).toMatch(/inventé un jeu/);
+        expect(lignes[0].personnage).toBe('narrateur');
+        expect(lignes.some((l) => l.personnage === 'systeme')).toBe(true);
+        expect(lignes.some((l) => l.personnage === 'vera')).toBe(true);
+        expect(lignes.some((l) => l.texte.includes('Jour 2 554'))).toBe(true);
     });
 
     it('persiste la vue intro via localStorage', () => {
@@ -37,7 +39,7 @@ describe('histoire-intro', () => {
         expect(() => mod.obtenirHistoireTextesSync()).toThrow(/chargerHistoireTextes/);
         await mod.chargerHistoireTextes();
         const textes = mod.obtenirHistoireTextesSync();
-        expect(textes.INTRO_HISTOIRE?.length).toBe(15);
+        expect(textes.INTRO_HISTOIRE?.lignes?.length ?? textes.INTRO_HISTOIRE?.length).toBe(15);
         expect(textes.INTERLUDES?.interlude_gardiens?.length).toBeGreaterThan(3);
         expect(textes.OUTRO_FINS?.fin_normale?.length).toBeGreaterThan(0);
     });

@@ -7,11 +7,21 @@ import {
     idPortraitRendu,
 } from './histoire-cutscene-config.js';
 import { refsDomCutscene, reinitDomPortraitsCutscene } from './histoire-cutscene-ui.js';
+import {
+    notifierChangementLigneCutscene,
+    obtenirHumeurEffectivePortrait,
+    obtenirParamsExpressionPortrait,
+    obtenirHumeurRoboCutsceneDepuisLigne,
+    reinitExpressionsCutscene,
+    expressionsCutsceneActives,
+} from './expressions-cutscene.js';
+import { store } from './store-core.js';
 
 let _personnageGauche = null;
 let _personnageDroite = null;
 let _personnageParlant = 'narrateur';
 let _rafPortraits = null;
+let _dernierIndexLigne = -1;
 
 export function obtenirPersonnageParlantCutscene() {
     return _personnageParlant;
@@ -25,6 +35,8 @@ export function reinitPortraitsCutscene() {
     _personnageGauche = null;
     _personnageDroite = null;
     _personnageParlant = 'narrateur';
+    _dernierIndexLigne = -1;
+    reinitExpressionsCutscene();
 }
 
 export function detecterParticipantsCutscene(sequenceLignes) {
@@ -96,32 +108,55 @@ function _dessinerROBOSimple(ctx, w, h, ts, humeur) {
     void ts;
 }
 
-function _dessinerPortrait(canvas, ctx, personnageId, parle, ts) {
-    if (!ctx || !canvas) return;
+/**
+ * @param {HTMLCanvasElement} canvas
+ * @param {CanvasRenderingContext2D | null} ctx
+ * @param {string | null} personnageId
+ * @param {boolean} parle
+ * @param {number} ts
+ * @param {{ humeur?: string } | null | undefined} ligneCourante
+ */
+function _dessinerPortrait(canvas, ctx, personnageId, parle, ts, ligneCourante) {
+    if (!ctx || !canvas || !personnageId) return;
     const w = canvas.width;
     const h = canvas.height;
     ctx.clearRect(0, 0, w, h);
 
     const idRendu = idPortraitRendu(personnageId);
+    const expressionsActives = expressionsCutsceneActives() && store.histoire.cutscene.enCours;
+
+    const humeur = expressionsActives
+        ? obtenirHumeurEffectivePortrait(personnageId, ligneCourante, parle)
+        : parle
+          ? 'content'
+          : 'neutre';
 
     if (idRendu === 'robo') {
-        const humeur = parle ? 'content' : 'neutre';
-        definirHumeurRoboCutscene(humeur);
+        const humeurRobo = expressionsActives
+            ? obtenirHumeurRoboCutsceneDepuisLigne(personnageId, ligneCourante?.humeur, parle)
+            : parle
+              ? 'content'
+              : 'neutre';
+        definirHumeurRoboCutscene(humeurRobo);
         if (typeof dessinerRobo === 'function') {
             try {
-                dessinerRobo(ctx, w, h, humeur, ts / 1000);
+                dessinerRobo(ctx, w, h, humeurRobo, ts / 1000);
                 return;
             } catch {
-                _dessinerROBOSimple(ctx, w, h, ts, humeur);
+                _dessinerROBOSimple(ctx, w, h, ts, humeurRobo);
                 return;
             }
         }
-        _dessinerROBOSimple(ctx, w, h, ts, humeur);
+        _dessinerROBOSimple(ctx, w, h, ts, humeurRobo);
         return;
     }
 
+    const params = expressionsActives
+        ? obtenirParamsExpressionPortrait(personnageId, humeur, ts)
+        : null;
+
     try {
-        dessinerPortraitCutscene(ctx, w, h, idRendu, ts / 1000);
+        dessinerPortraitCutscene(ctx, w, h, idRendu, ts / 1000, { humeur, params });
     } catch (err) {
         logger.warn('[cutscene] erreur portrait :', err);
     }
@@ -141,6 +176,18 @@ export function mettreAJourPortraitsCutscene(
         detecterParticipantsCutscene(sequenceLignes);
     }
 
+    if (indexLigne !== _dernierIndexLigne && expressionsCutsceneActives()) {
+        const ligne = sequenceLignes[indexLigne] ?? {
+            personnage: personnages[indexLigne] ?? personnageActuel,
+            texte: '',
+            humeur: undefined,
+        };
+        notifierChangementLigneCutscene(indexLigne, ligne, ts);
+        _dernierIndexLigne = indexLigne;
+    }
+
+    const ligneCourante = sequenceLignes[indexLigne] ?? null;
+
     const { gauche, droite, parleGauche } = _portraitsPourLigne(
         personnageActuel,
         personnages,
@@ -154,11 +201,28 @@ export function mettreAJourPortraitsCutscene(
     canvasGauche.className = clsG;
     canvasDroite.className = clsD;
 
+    const ligneGauche = parleGauche && !enEcoute ? ligneCourante : null;
+    const ligneDroite = !parleGauche && !enEcoute ? ligneCourante : null;
+
     if (gauche) {
-        _dessinerPortrait(canvasGauche, ctxGauche, gauche, !enEcoute && parleGauche, ts);
+        _dessinerPortrait(
+            canvasGauche,
+            ctxGauche,
+            gauche,
+            !enEcoute && parleGauche,
+            ts,
+            ligneGauche
+        );
     }
     if (droite) {
-        _dessinerPortrait(canvasDroite, ctxDroite, droite, !enEcoute && !parleGauche, ts);
+        _dessinerPortrait(
+            canvasDroite,
+            ctxDroite,
+            droite,
+            !enEcoute && !parleGauche,
+            ts,
+            ligneDroite
+        );
     }
 
     const couleur = COULEUR_PERSONNAGE[personnageActuel] ?? '#ffffff';

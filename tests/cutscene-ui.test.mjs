@@ -74,7 +74,12 @@ describe('cutscene UI', () => {
         narrationEl = { textContent: '', className: '', style: {}, dataset: {} };
         ecranCutscene = {
             dataset: {},
-            classList: { add: vi.fn(), remove: vi.fn(), toggle: vi.fn() },
+            classList: {
+                add: vi.fn(),
+                remove: vi.fn(),
+                toggle: vi.fn(),
+                contains: vi.fn(() => false),
+            },
         };
 
         const gauche = creerCanvas('canvas-portrait-gauche');
@@ -128,19 +133,15 @@ describe('cutscene UI', () => {
         expect(texteEl.textContent).not.toContain('Ligne un.');
     }, 15_000);
 
-    it('affiche la narration en haut sans bulle de dialogue', async () => {
+    it('active le mode narrateur cinématique (texte centré, letterbox)', async () => {
         const { afficherCutsceneHistoire, avancerCutscene } =
             await import('../js/histoire-manager-ui.js');
 
         afficherCutsceneHistoire(['Une voix off.', 'ROBO parle.'], ['narrateur', 'robo'], null);
         avancerCutscene();
 
-        expect(narrationEl.textContent).toBe('Une voix off.');
-        expect(texteEl.textContent).toBe('');
-        expect(ecranCutscene.classList.toggle).toHaveBeenCalledWith(
-            'cutscene-mode-narration',
-            true
-        );
+        expect(texteEl.textContent).toBe('Une voix off.');
+        expect(ecranCutscene.classList.toggle).toHaveBeenCalledWith('mode-narrateur', true);
     }, 15_000);
 
     it('passe toute la cutscene en un seul appel', async () => {

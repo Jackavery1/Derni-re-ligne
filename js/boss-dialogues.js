@@ -2,6 +2,15 @@ import { store } from './store-core.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { obtenirHistoireTextesSync } from './charger-histoire-textes.js';
 import { logger } from './logger.js';
+import {
+    notifierPresentationBossPortrait,
+    notifierDebutCombatBossPortrait,
+    notifierPhaseBossPortrait,
+    notifierTetrisBossPortrait,
+    notifierQuasiVaincuBossPortrait,
+    notifierGameOverBossPortrait,
+    reinitialiserReactionsBossPortrait,
+} from './reactions-boss-portrait.js';
 
 export const DUREE_PRESENTATION_BOSS_MS = 2500;
 export const DUREE_AFFICHAGE_DIALOGUE_MS = 4000;
@@ -135,11 +144,13 @@ export function demarrerPresentationBoss(bossId) {
     d.presentationEnCours = true;
     d.presentationRestantMs = DUREE_PRESENTATION_BOSS_MS;
     _afficherOverlayPresentation(bossId, dialogues);
+    notifierPresentationBossPortrait();
     logger.debug('[boss-dialogues] presentation', bossId);
 }
 
 /** @param {string} bossId */
 function _afficherDebutCombat(bossId) {
+    notifierDebutCombatBossPortrait();
     const dialogues = _dialoguesBoss(bossId);
     if (dialogues?.debut) enqueueDialogueBoss(dialogues.debut);
 }
@@ -188,6 +199,7 @@ export function notifierTransitionPhaseBoss(phaseAvant, phaseApres) {
     if (idx < 0 || idx >= dialogues.phases.length || d.phasesVues.includes(idx)) return;
     d.phasesVues.push(idx);
     enqueueDialogueBoss(dialogues.phases[idx]);
+    notifierPhaseBossPortrait();
     logger.debug('[boss-dialogues] phase', phaseApres, 'idx', idx);
 }
 
@@ -207,6 +219,7 @@ export function notifierSeuilsPvBoss(pctRestant) {
             if (dialogues.phases[idx] && !d.phasesVues.includes(idx)) {
                 d.phasesVues.push(idx);
                 enqueueDialogueBoss(dialogues.phases[idx]);
+                notifierPhaseBossPortrait();
             }
         }
 
@@ -217,6 +230,7 @@ export function notifierSeuilsPvBoss(pctRestant) {
                 d.seuilsPvVus.push(seuil);
                 d.phasesVues.push(i);
                 enqueueDialogueBoss(dialogues.phases[i]);
+                notifierPhaseBossPortrait();
             }
         }
         return;
@@ -227,6 +241,7 @@ export function notifierSeuilsPvBoss(pctRestant) {
         if (pctRestant <= seuil && !d.seuilsPvVus.includes(seuil) && dialogues.phases[i]) {
             d.seuilsPvVus.push(seuil);
             enqueueDialogueBoss(dialogues.phases[i]);
+            notifierPhaseBossPortrait();
         }
     }
 }
@@ -241,6 +256,7 @@ export function notifierTetrisBoss() {
     if (d.tetrisVu) return;
     d.tetrisVu = true;
     enqueueDialogueBoss(dialogues.reactionTetris);
+    notifierTetrisBossPortrait();
     logger.debug('[boss-dialogues] tetris', bossId);
 }
 
@@ -255,6 +271,7 @@ export function notifierQuasiVaincuBoss(pctRestant) {
     if (d.quasiVaincuVu) return;
     d.quasiVaincuVu = true;
     enqueueDialogueBoss(dialogues.quasiVaincu);
+    notifierQuasiVaincuBossPortrait();
     logger.debug('[boss-dialogues] quasi-vaincu', bossId);
 }
 
@@ -276,9 +293,11 @@ export function appliquerRepliqueGameOverBoss(visible, bossId) {
     const texte = visible ? obtenirRepliqueGameOverBoss(bossId) : '';
     el.textContent = texte;
     el.classList.toggle('element-masque', !texte);
+    if (visible) notifierGameOverBossPortrait();
 }
 
 export function reinitialiserDialoguesBoss() {
+    reinitialiserReactionsBossPortrait();
     store.histoire.boss._dialogues = null;
     if (typeof document === 'undefined') return;
     const overlay = document.getElementById('overlay-boss-presentation');

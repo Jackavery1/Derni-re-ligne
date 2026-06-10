@@ -40,6 +40,7 @@ let _rafId = null;
 let _canvas = null;
 let _arcEnCielActif = false;
 let _couronneActif = false;
+let _clignementInactif = false;
 
 function _px(cx, refX, E) {
     return cx + (refX - 60) * E;
@@ -344,7 +345,12 @@ function _dessinerOreilles(ctx, cx, E, offsetY, h) {
     ctx.fill();
 }
 
-function _dessinerOeil(ctx, cx, cy, E, humeur, cote) {
+function _dessinerOeil(ctx, cx, cy, E, humeur, cote, fermer = false) {
+    if (fermer) {
+        ctx.fillStyle = C.NOIR_PUP;
+        ctx.fillRect(cx - 14 * E, cy - 2 * E, 28 * E, 4 * E);
+        return;
+    }
     const dir = cote === 'g' ? -1 : 1;
     let irisR = 12 * E;
     let irisIntR = 9 * E;
@@ -410,10 +416,11 @@ function _dessinerOeil(ctx, cx, cy, E, humeur, cote) {
     }
 }
 
-function _dessinerYeux(ctx, cx, E, offsetY, h, humeur) {
+function _dessinerYeux(ctx, cx, E, offsetY, h, humeur, t) {
     const y = _py(52, E, offsetY, h);
-    _dessinerOeil(ctx, _px(cx, 38, E), y, E, humeur, 'g');
-    _dessinerOeil(ctx, _px(cx, 82, E), y, E, humeur, 'd');
+    const fermer = humeur === 'neutre' && _clignementInactif && Math.sin(t * 2.2) > 0.92;
+    _dessinerOeil(ctx, _px(cx, 38, E), y, E, humeur, 'g', fermer);
+    _dessinerOeil(ctx, _px(cx, 82, E), y, E, humeur, 'd', fermer);
 }
 
 function _dessinerBouche(ctx, cx, E, offsetY, h, humeur) {
@@ -578,7 +585,7 @@ export function dessinerRobo(ctx, w, h, humeur, t, options = {}) {
     }
     _dessinerTete(ctx, cx, E, offsetY, h);
     _dessinerOreilles(ctx, cx, E, offsetY, h);
-    _dessinerYeux(ctx, cx, E, offsetY, h, humeur);
+    _dessinerYeux(ctx, cx, E, offsetY, h, humeur, t);
     _dessinerBouche(ctx, cx, E, offsetY, h, humeur);
     ctx.restore();
 
@@ -594,6 +601,10 @@ export function dessinerRobo(ctx, w, h, humeur, t, options = {}) {
 /** @param {'neutre'|'content'|'excite'|'triste'|'alerte'} humeur */
 export function definirHumeurRobo(humeur) {
     _humeurActuelle = humeur;
+}
+
+export function definirClignementInactifMascotte(actif) {
+    _clignementInactif = actif;
 }
 
 export function definirArcEnCiel(actif) {

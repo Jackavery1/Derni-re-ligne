@@ -3,9 +3,17 @@ import { dessinerPortraitCutsceneInterne } from './portraits-cutscene-personnage
 
 export { definirHumeurRoboCutscene, obtenirHumeurRoboCutscene } from './portraits-cutscene-etat.js';
 
-export function dessinerPortraitCutscene(ctx, w, h, personnageId, t) {
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {number} w
+ * @param {number} h
+ * @param {string} personnageId
+ * @param {number} t
+ * @param {{ humeur?: string, params?: Record<string, number | boolean> | null }} [options]
+ */
+export function dessinerPortraitCutscene(ctx, w, h, personnageId, t, options = {}) {
     try {
-        dessinerPortraitCutsceneInterne(ctx, w, h, personnageId, t);
+        dessinerPortraitCutsceneInterne(ctx, w, h, personnageId, t, options);
     } catch (err) {
         logger.warn('[portraits-cutscene] erreur rendu :', err);
         ctx.clearRect(0, 0, w, h);

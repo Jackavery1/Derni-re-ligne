@@ -1,10 +1,21 @@
-/** Fonds animes canvas cutscene. */
+/** Fonds animes canvas cutscene + scenes image plein ecran. */
 import { CONFIG_FOND_CUTSCENE } from './histoire-cutscene-config.js';
+import { obtenirScene, obtenirImageScenePrechargee } from './scenes-cutscene.js';
+import { obtenirEffetsAccessibiliteReduits } from './accessibilite.js';
+import { logger } from './logger.js';
+
+const DUREE_TRANSITION_SCENE_MS = 600;
 
 let _canvasBgCutscene = null;
 let _ctxBg = null;
 let _rafBg = null;
 let _fondActif = null;
+let _sceneIdCourante = null;
+let _sceneDebutMs = 0;
+let _personnageFallback = 'narrateur';
+let _transitionDebutMs = 0;
+/** @type {string | null} */
+let _transitionScenePrecedenteId = null;
 
 export function lierCanvasFondCutscene(canvas) {
     _canvasBgCutscene = canvas;
@@ -141,8 +152,65 @@ function _fondEtoilesDefaut(ctx, w, h, ts) {
     ctx.globalAlpha = 1;
 }
 
+function _dessinerFondCanvas(ctx, w, h, ts) {
+    ctx.fillStyle = 'rgba(4,4,20,0.85)';
+    ctx.fillRect(0, 0, w, h);
+    if (!_fondActif) return;
+    const dessiner = FONDS_CUTSCENE[_fondActif.type] ?? _fondEtoilesDefaut;
+    dessiner(ctx, w, h, ts);
+}
+
+/**
+ * @param {typeof SCENES_CUTSCENE[string]} scene
+ * @param {number} progress
+ * @param {number} w
+ * @param {number} h
+ */
+function _calculerKenBurns(scene, progress, w, h) {
+    const kb = scene.kenBurns ?? 'fixe';
+    let scale = 1;
+    let offsetX = 0;
+    if (kb === 'zoom_lent') scale = 1 + 0.06 * progress;
+    else if (kb === 'pan_gauche') offsetX = -0.03 * w * progress;
+    else if (kb === 'pan_droite') offsetX = 0.03 * w * progress;
+    return { scale, offsetX, offsetY: 0 };
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {number} w
+ * @param {number} h
+ * @param {HTMLImageElement} img
+ * @param {typeof SCENES_CUTSCENE[string]} scene
+ * @param {number} progress
+ * @param {number} [alpha]
+ */
+function _dessinerImageScene(ctx, w, h, img, scene, progress, alpha = 1) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.imageSmoothingEnabled = false;
+    const { scale, offsetX } = _calculerKenBurns(scene, progress, w, h);
+    const iw = img.width;
+    const ih = img.height;
+    const coverScale = Math.max(w / iw, h / ih) * scale;
+    const dw = iw * coverScale;
+    const dh = ih * coverScale;
+    const dx = (w - dw) / 2 + offsetX;
+    const dy = (h - dh) / 2;
+    ctx.drawImage(img, 0, 0, iw, ih, dx, dy, dw, dh);
+
+    const voile = scene.voile ?? 0.45;
+    const grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, `rgba(0,0,0,${voile * 0.25})`);
+    grad.addColorStop(0.55, `rgba(0,0,0,${voile * 0.55})`);
+    grad.addColorStop(1, `rgba(0,0,0,${Math.min(0.95, voile * 1.1)})`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+}
+
 function _boucleFondCutscene(ts) {
-    if (!_fondActif || !_ctxBg) return;
+    if (!_ctxBg) return;
     _rafBg = requestAnimationFrame(_boucleFondCutscene);
     if (document.hidden) return;
 
@@ -150,19 +218,102 @@ function _boucleFondCutscene(ts) {
     const h = _canvasBgCutscene.height;
     _ctxBg.clearRect(0, 0, w, h);
 
-    _ctxBg.fillStyle = 'rgba(4,4,20,0.85)';
-    _ctxBg.fillRect(0, 0, w, h);
+    const effetsReduits = obtenirEffetsAccessibiliteReduits();
+    const scene = _sceneIdCourante ? obtenirScene(_sceneIdCourante) : null;
+    const img = _sceneIdCourante ? obtenirImageScenePrechargee(_sceneIdCourante) : null;
 
-    const dessiner = FONDS_CUTSCENE[_fondActif.type] ?? _fondEtoilesDefaut;
-    dessiner(_ctxBg, w, h, ts);
+    if (scene && img) {
+        const elapsed = Math.max(0, ts - _sceneDebutMs);
+        const progress = effetsReduits ? 0 : Math.min(1, elapsed / 45000);
+
+        let transitionT = 1;
+        if (_transitionDebutMs > 0) {
+            transitionT = Math.min(1, (ts - _transitionDebutMs) / DUREE_TRANSITION_SCENE_MS);
+            if (transitionT >= 1) {
+                _transitionScenePrecedenteId = null;
+                _transitionDebutMs = 0;
+            }
+        }
+
+        if (_transitionScenePrecedenteId && transitionT < 1) {
+            const prevImg = obtenirImageScenePrechargee(_transitionScenePrecedenteId);
+            const prevScene = obtenirScene(_transitionScenePrecedenteId);
+            if (prevImg && prevScene) {
+                _dessinerImageScene(_ctxBg, w, h, prevImg, prevScene, progress, 1 - transitionT);
+            } else {
+                _dessinerFondCanvas(_ctxBg, w, h, ts);
+            }
+            _dessinerImageScene(_ctxBg, w, h, img, scene, progress, transitionT);
+        } else {
+            _dessinerImageScene(_ctxBg, w, h, img, scene, progress, 1);
+        }
+        return;
+    }
+
+    _dessinerFondCanvas(_ctxBg, w, h, ts);
+}
+
+function _assurerBoucleFond() {
+    if (!_ctxBg || !_canvasBgCutscene) return;
+    _canvasBgCutscene.width = window.innerWidth;
+    _canvasBgCutscene.height = window.innerHeight;
+    if (!_rafBg) _rafBg = requestAnimationFrame(_boucleFondCutscene);
+}
+
+/**
+ * @param {string} sceneId
+ * @param {string} personnageFallback
+ * @param {number} [timestamp]
+ */
+export function definirSceneCutsceneFond(
+    sceneId,
+    personnageFallback,
+    timestamp = performance.now()
+) {
+    if (!_ctxBg || !_canvasBgCutscene) return false;
+    const scene = obtenirScene(sceneId);
+    if (!scene) return false;
+    const img = obtenirImageScenePrechargee(sceneId);
+    if (!img) {
+        logger.debug('[scenes] fallback canvas personnage', personnageFallback);
+        _sceneIdCourante = null;
+        demarrerFondCutscene(personnageFallback);
+        return false;
+    }
+
+    _personnageFallback = personnageFallback;
+    _fondActif = CONFIG_FOND_CUTSCENE[personnageFallback] ?? CONFIG_FOND_CUTSCENE.narrateur;
+
+    if (_sceneIdCourante && _sceneIdCourante !== sceneId) {
+        _transitionScenePrecedenteId = _sceneIdCourante;
+        _transitionDebutMs = timestamp;
+    } else if (!_sceneIdCourante) {
+        _transitionScenePrecedenteId = null;
+        _transitionDebutMs = 0;
+    }
+
+    _sceneIdCourante = sceneId;
+    _sceneDebutMs = timestamp;
+    _assurerBoucleFond();
+    return true;
+}
+
+/** @param {string} personnageId @param {number} [timestamp] */
+export function retirerSceneCutsceneFond(personnageId, timestamp = performance.now()) {
+    if (_sceneIdCourante) {
+        _transitionScenePrecedenteId = _sceneIdCourante;
+        _transitionDebutMs = timestamp;
+    }
+    _sceneIdCourante = null;
+    demarrerFondCutscene(personnageId ?? _personnageFallback);
 }
 
 export function demarrerFondCutscene(personnageId) {
     if (!_ctxBg || !_canvasBgCutscene) return;
+    if (_sceneIdCourante && obtenirImageScenePrechargee(_sceneIdCourante)) return;
     _fondActif = CONFIG_FOND_CUTSCENE[personnageId] ?? CONFIG_FOND_CUTSCENE.narrateur;
-    _canvasBgCutscene.width = window.innerWidth;
-    _canvasBgCutscene.height = window.innerHeight;
-    if (!_rafBg) _rafBg = requestAnimationFrame(_boucleFondCutscene);
+    _personnageFallback = personnageId;
+    _assurerBoucleFond();
 }
 
 export function stopFondCutscene() {
@@ -171,6 +322,9 @@ export function stopFondCutscene() {
         _rafBg = null;
     }
     _fondActif = null;
+    _sceneIdCourante = null;
+    _transitionScenePrecedenteId = null;
+    _transitionDebutMs = 0;
     if (_ctxBg && _canvasBgCutscene) {
         _ctxBg.clearRect(0, 0, _canvasBgCutscene.width, _canvasBgCutscene.height);
     }
@@ -178,4 +332,8 @@ export function stopFondCutscene() {
 
 export function estFondCutsceneActif() {
     return _rafBg != null;
+}
+
+export function obtenirSceneCutsceneActive() {
+    return _sceneIdCourante;
 }

@@ -23,6 +23,7 @@ import {
 } from './conditions-secrets.js';
 import { enregistrerPrecisionMiroir, flushProuessesHistoire } from './achievements-histoire.js';
 import { definirExpressionVera } from './portraits-vera.js';
+import { reagirRoboContinueBoss } from './mascotte-robo.js';
 import { ECRANS } from './ecrans-config.js';
 import { logger } from './logger.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
@@ -220,6 +221,7 @@ export function surFinDeMondeHistoire(lignes, score) {
         etatHist.conditionsTrame.tousBossSansContinue = false;
         sauvegarderEtatHistoire(etatHist);
         store.histoire.etat = etatHist;
+        reagirRoboContinueBoss();
     }
 
     if (estComplete) {
