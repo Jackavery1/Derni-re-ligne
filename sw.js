@@ -1,4 +1,4 @@
-const VERSION_CACHE = 'derniere-ligne-2.5.9-r6';
+const VERSION_CACHE = 'derniere-ligne-2.5.9-r7';
 
 const FICHIERS_A_CACHER = [
     './',
@@ -60,6 +60,7 @@ const FICHIERS_A_CACHER = [
     './js/charger-histoire-textes.js',
     './js/codex-donnees.js',
     './js/codex-histoire.js',
+    './js/codex-icones-map.js',
     './js/codex-illustrations-histoire.js',
     './js/codex-illustrations.js',
     './js/codex.js',
@@ -114,6 +115,7 @@ const FICHIERS_A_CACHER = [
     './js/histoire-session.js',
     './js/histoire-textes.js',
     './js/hud-jeu.js',
+    './js/icones-pixel.js',
     './js/input-jeu.js',
     './js/input-repetition.js',
     './js/layout-calcul.js',

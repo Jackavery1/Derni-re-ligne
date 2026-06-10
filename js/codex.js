@@ -4,6 +4,8 @@ import { creerFileNotifications } from './notifications-file.js';
 import { obtenirCanvas } from './dom-utils.js';
 import { logger } from './logger.js';
 import { sansAccentsE } from './texte-jeu.js';
+import { rendreIconeSurCanvas } from './icones-pixel.js';
+import { obtenirIdIcone, obtenirAccentEntree } from './codex-icones-map.js';
 
 const CLE_CODEX = 'derniereLigne_codex';
 const CLE_CODEX_VUS = 'derniereLigne_codexVus';
@@ -34,14 +36,16 @@ export async function chargerDonneesCodex() {
 export let codexDebloque = chargerCodex();
 export let codexVus = chargerCodexVus();
 const fileCodexNotifs = creerFileNotifications({
-    /** @param {{ icone: string, titre: string, chapitre: string }} entree @param {() => void} terminer */
+    /** @param {{ id: string, titre: string, chapitre: string }} entree @param {() => void} terminer */
     afficher(entree, terminer) {
         const notif = document.getElementById('notif-codex');
         if (!notif) return false;
         const icone = document.getElementById('codex-notif-icone');
         const titre = document.getElementById('codex-notif-titre');
         const chapitre = document.getElementById('codex-notif-chapitre');
-        if (icone) icone.textContent = entree.icone;
+        if (icone instanceof HTMLCanvasElement) {
+            rendreIconeSurCanvas(icone, obtenirIdIcone(entree.id));
+        }
         if (titre) titre.textContent = sansAccentsE(entree.titre);
         if (chapitre) chapitre.textContent = sansAccentsE(entree.chapitre.toUpperCase());
         notif.classList.add('visible');
@@ -122,12 +126,19 @@ export async function genererListeCodex(chapitre) {
     entrees.forEach((entree) => {
         const debloque = codexDebloque.has(entree.id);
         const estNouveau = debloque && !codexVus.has(entree.id);
+        const accent = obtenirAccentEntree(entree.id);
+        const idIcone = obtenirIdIcone(entree.id);
         const item = document.createElement('div');
-        item.className = `codex-item ${debloque ? 'debloque' : 'verrouille'} ${estNouveau ? 'nouveau' : ''}`;
+        item.className = `codex-item panneau-meta ${debloque ? 'debloque' : 'verrouille'} ${estNouveau ? 'nouveau' : ''}`;
+        item.dataset.id = entree.id;
+        item.style.setProperty('--accent-carte', accent);
 
-        const iconeEl = document.createElement('div');
-        iconeEl.className = 'codex-item-icone';
-        iconeEl.textContent = debloque ? entree.icone : '🔒';
+        const iconeEl = document.createElement('canvas');
+        iconeEl.className = 'icone-carte-codex';
+        iconeEl.width = 64;
+        iconeEl.height = 64;
+        iconeEl.setAttribute('aria-hidden', 'true');
+        rendreIconeSurCanvas(iconeEl, idIcone, debloque ? {} : { silhouette: true, accent });
 
         const titreEl = document.createElement('div');
         titreEl.className = 'codex-item-titre';
@@ -166,7 +177,9 @@ export function ouvrirEntreeCodex(entree) {
     const sousTitreEl = document.getElementById('codex-entree-sous-titre');
     const texteEl = document.getElementById('codex-entree-texte');
 
-    if (iconeEl) iconeEl.textContent = entree.icone;
+    if (iconeEl instanceof HTMLCanvasElement) {
+        rendreIconeSurCanvas(iconeEl, obtenirIdIcone(entree.id));
+    }
     if (titreEl) titreEl.textContent = sansAccentsE(entree.titre);
     if (sousTitreEl) sousTitreEl.textContent = sansAccentsE(entree.sousTitre);
     if (texteEl) {

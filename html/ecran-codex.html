@@ -15,7 +15,7 @@
                 aria-controls="codex-liste"
                 data-chapitre="mondes"
             >
-                🌍 MONDES
+                MONDES
             </button>
             <button
                 class="codex-onglet"
@@ -25,7 +25,7 @@
                 aria-controls="codex-liste"
                 data-chapitre="reliques"
             >
-                ⊗ RELIQUES
+                RELIQUES
             </button>
             <button
                 class="codex-onglet"
@@ -35,16 +35,22 @@
                 aria-controls="codex-liste"
                 data-chapitre="chroniques"
             >
-                📖 CHRONIQUES
+                CHRONIQUES
             </button>
         </div>
 
         <div id="codex-liste" class="codex-liste" role="tabpanel"></div>
 
         <div id="codex-lecteur" class="codex-lecteur element-masque">
-            <button class="codex-btn-fermer" type="button" id="btn-codex-fermer">✕ FERMER</button>
+            <button class="codex-btn-fermer" type="button" id="btn-codex-fermer">FERMER</button>
             <canvas id="canvas-illust-codex" width="240" height="120" class="codex-illust"></canvas>
-            <div id="codex-entree-icone" class="codex-entree-icone"></div>
+            <canvas
+                id="codex-entree-icone"
+                class="codex-entree-icone"
+                width="80"
+                height="80"
+                aria-hidden="true"
+            ></canvas>
             <div id="codex-entree-titre" class="codex-entree-titre"></div>
             <div id="codex-entree-sous-titre" class="codex-entree-sous-titre"></div>
             <div id="codex-entree-texte" class="codex-entree-texte"></div>

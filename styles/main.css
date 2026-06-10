@@ -1260,19 +1260,6 @@ body::before {
     color: var(--rose);
     opacity: 0.6;
 }
-.codex-item[data-id^='monde_rouille'],
-.codex-item[data-id^='monde_eclipse'],
-.codex-item[data-id^='monde_vide'] {
-    border-color: rgba(255, 0, 110, 0.15);
-}
-.codex-item[data-id^='monde_miroir_codex'],
-.codex-item[data-id^='monde_trame_codex'] {
-    border-color: rgba(255, 230, 0, 0.15);
-}
-.codex-item[data-id^='chronique_vera'],
-.codex-item[data-id^='chronique_distorsion'] {
-    border-color: rgba(180, 0, 255, 0.2);
-}
 .ach-filtre-histoire {
     display: flex;
     gap: 6px;
@@ -2179,9 +2166,12 @@ body.contraste-eleve .bouton {
     bottom: 24px;
 }
 .codex-notif-icone-wrap {
-    font-size: 1.8rem;
-    line-height: 1;
+    line-height: 0;
     filter: drop-shadow(0 0 8px var(--violet));
+}
+.codex-notif-icone-wrap canvas {
+    display: block;
+    image-rendering: pixelated;
 }
 .codex-notif-label {
     font-size: 0.26rem;
@@ -2220,10 +2210,11 @@ body.contraste-eleve .bouton {
     text-align: center;
 }
 .codex-titre {
-    font-size: clamp(0.8rem, 3vw, 1.1rem);
-    color: var(--violet);
+    font-family: var(--font-titre);
+    font-size: var(--typo-titre-ecran);
+    color: #ff2d78;
     letter-spacing: 6px;
-    text-shadow: 0 0 12px var(--violet);
+    text-shadow: 0 0 12px #ff2d78;
 }
 
 .codex-titre.jaune {
@@ -2231,7 +2222,8 @@ body.contraste-eleve .bouton {
     text-shadow: 0 0 12px var(--jaune);
 }
 .codex-progression {
-    font-size: 0.3rem;
+    font-family: 'Orbitron', var(--font-stats);
+    font-size: var(--typo-stat);
     color: var(--texte-dim);
     letter-spacing: 2px;
     margin-top: 4px;
@@ -2245,19 +2237,21 @@ body.contraste-eleve .bouton {
 .codex-onglet {
     background: transparent;
     border: 1px solid var(--bordure);
+    border-bottom: 2px solid transparent;
     color: var(--texte-dim);
     font-family: var(--police);
-    font-size: 0.3rem;
-    padding: 8px 12px;
+    font-size: clamp(0.45rem, 1.2vw, 0.6rem);
+    padding: 10px 16px;
     cursor: pointer;
     letter-spacing: 1px;
     transition: all 0.15s;
 }
 .codex-onglet.actif {
-    border-color: var(--violet);
-    color: var(--violet);
-    text-shadow: 0 0 6px var(--violet);
-    box-shadow: 0 0 10px rgba(180, 0, 255, 0.2);
+    border-color: var(--bordure);
+    border-bottom-color: #ff2d78;
+    color: #ff2d78;
+    text-shadow: 0 0 6px #ff2d78;
+    box-shadow: 0 4px 12px rgba(255, 45, 120, 0.15);
 }
 .codex-onglet:hover:not(.actif) {
     border-color: var(--texte-dim);
@@ -2270,53 +2264,69 @@ body.contraste-eleve .bouton {
     width: 100%;
 }
 .codex-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.3);
-    padding: 10px 6px;
+    --accent-carte: #6644cc;
+    border-color: color-mix(in srgb, var(--accent-carte) 55%, transparent);
+    box-shadow:
+        0 0 10px color-mix(in srgb, var(--accent-carte) 22%, transparent),
+        inset 0 0 24px rgba(0, 0, 0, 0.45);
+    padding: 12px 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.15s;
+    transition:
+        border-color 0.15s,
+        box-shadow 0.15s,
+        transform 0.15s;
 }
 .codex-item.debloque:hover {
-    border-color: var(--violet);
-    box-shadow: 0 0 10px rgba(180, 0, 255, 0.2);
-    transform: scale(1.03);
+    border-color: color-mix(in srgb, var(--accent-carte) 75%, transparent);
+    box-shadow:
+        0 0 18px color-mix(in srgb, var(--accent-carte) 38%, transparent),
+        inset 0 0 24px rgba(0, 0, 0, 0.45);
+    transform: translateY(-2px);
 }
 .codex-item.verrouille {
-    opacity: 0.3;
     cursor: not-allowed;
-    filter: grayscale(1);
 }
 .codex-item.nouveau {
-    border-color: var(--violet);
+    border-color: color-mix(in srgb, var(--accent-carte) 80%, transparent);
     animation: pulseBordureCodex 1.5s ease-in-out infinite;
 }
 @keyframes pulseBordureCodex {
     0%,
     100% {
-        box-shadow: 0 0 6px rgba(180, 0, 255, 0.3);
+        box-shadow:
+            0 0 8px color-mix(in srgb, var(--accent-carte) 30%, transparent),
+            inset 0 0 24px rgba(0, 0, 0, 0.45);
     }
     50% {
-        box-shadow: 0 0 18px rgba(180, 0, 255, 0.7);
+        box-shadow:
+            0 0 20px color-mix(in srgb, var(--accent-carte) 55%, transparent),
+            inset 0 0 24px rgba(0, 0, 0, 0.45);
     }
 }
-.codex-item-icone {
-    font-size: 1.4rem;
+.icone-carte-codex {
+    display: block;
+    width: 64px;
+    height: 64px;
+    image-rendering: pixelated;
 }
 .codex-item-titre {
-    font-size: 0.26rem;
+    font-family: var(--font-titre);
+    font-size: var(--typo-nom-carte);
     color: var(--texte);
     letter-spacing: 1px;
     line-height: 1.4;
 }
 .codex-item-cond {
-    font-size: 0.22rem;
+    font-family: 'Rajdhani', var(--font-ui);
+    font-size: var(--typo-corps);
     color: var(--texte-dim);
     letter-spacing: 0.5px;
+    line-height: 1.35;
 }
 
 .codex-lecteur {
@@ -2360,7 +2370,10 @@ body.contraste-eleve .bouton {
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 .codex-entree-icone {
-    font-size: 2rem;
+    display: block;
+    width: 80px;
+    height: 80px;
+    image-rendering: pixelated;
 }
 .codex-entree-titre {
     font-size: clamp(0.5rem, 2vw, 0.75rem);
