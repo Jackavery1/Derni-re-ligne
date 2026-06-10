@@ -10,9 +10,9 @@ export function estNeoTestAutorise() {
 }
 
 /**
- * @param {NonNullable<Window['__NEO_TEST__']>} api
+ * @param {{ terminerPartie?: (victoire: boolean) => void, demarrerPartieLibre?: (biomeId?: string) => void }} api
  */
 export function exposerNeoTestApi(api) {
     if (!estNeoTestAutorise()) return;
-    window.__NEO_TEST__ = api;
+    /** @type {Window & { __NEO_TEST__?: typeof api }} */ (window).__NEO_TEST__ = api;
 }
