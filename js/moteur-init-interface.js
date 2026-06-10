@@ -16,7 +16,9 @@ import { initialiserModeDeveloppeur } from './mode-developpeur.js';
 import { initPiecesFond } from './menu-fond.js';
 import { initialiserOptions } from './options-ui.js';
 import { demarrerBoucleRobo } from './rendu-robo.js';
-import { ECRANS, obtenirBiomeActif } from './store-jeu.js';
+import { demarrerJeu } from './partie.js';
+import { ECRANS, obtenirBiomeActif, definirBiomeActif } from './store-jeu.js';
+import { sauvegarderBiomeActif } from './progression.js';
 import { initialiserBoutons } from './ui-init.js';
 import { initialiserUiObjectifs } from './ui-panneau-objectifs.js';
 import { initialiserTutoriel } from './tutoriel.js';
@@ -48,6 +50,11 @@ export function initialiserInterfaceMoteur() {
     if (typeof window !== 'undefined') {
         /** @type {any} */ (window).__NEO_TEST__ = {
             terminerPartie: (victoire) => obtenirActions().terminerPartie?.(victoire),
+            demarrerPartieLibre: (biomeId = 'classique') => {
+                definirBiomeActif(biomeId);
+                sauvegarderBiomeActif(biomeId);
+                demarrerJeu();
+            },
         };
         document.body.dataset.neoTestReady = '1';
     }

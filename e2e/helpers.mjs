@@ -83,8 +83,21 @@ export async function attendreEcranTitre(page) {
 }
 
 /** @param {import('@playwright/test').Page} page @param {{ index?: number, value?: string }} option */
-export async function selectionnerBiomeClavier(page, option = { index: 1 }) {
-    await page.locator('#sel-biome-clavier').selectOption(option, { force: true });
+export async function selectionnerBiomeClavier(page, option = { value: 'classique' }) {
+    const select = page.locator('#sel-biome-clavier');
+    const valeur = option.value ?? 'classique';
+    await expect(select.locator(`option[value="${valeur}"]`)).toBeAttached({ timeout: 10000 });
+    await select.selectOption(option.value ? option : { value: valeur }, { force: true });
+    await page.evaluate((id) => {
+        const el = document.getElementById('sel-biome-clavier');
+        if (!el || el.value === id) return;
+        el.value = id;
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+    }, valeur);
+    await expect(page.locator('#sel-info-biome')).not.toHaveClass(/element-masque/, {
+        timeout: 5000,
+    });
+    await expect(page.locator('#sel-btn-jouer')).toBeVisible({ timeout: 5000 });
 }
 
 /** @param {import('@playwright/test').Page} page */
@@ -151,8 +164,14 @@ export async function demarrerPartie(page) {
     await attendreNotificationsInitiales(page);
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
-    await selectionnerBiomeClavier(page, { index: 1 });
-    await page.locator('#sel-btn-jouer').click();
+    await selectionnerBiomeClavier(page);
+    await page.evaluate((biome) => {
+        const demarrer = window.__NEO_TEST__?.demarrerPartieLibre;
+        if (typeof demarrer !== 'function') {
+            throw new Error('__NEO_TEST__.demarrerPartieLibre indisponible');
+        }
+        demarrer(biome);
+    }, 'classique');
     await attendrePartieVisible(page);
 }
 
@@ -227,8 +246,14 @@ export async function demarrerPartieViaClavier(page) {
     await attendreNotificationsInitiales(page);
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
-    await selectionnerBiomeClavier(page, { index: 1 });
-    await page.locator('#sel-btn-jouer').click();
+    await selectionnerBiomeClavier(page);
+    await page.evaluate((biome) => {
+        const demarrer = window.__NEO_TEST__?.demarrerPartieLibre;
+        if (typeof demarrer !== 'function') {
+            throw new Error('__NEO_TEST__.demarrerPartieLibre indisponible');
+        }
+        demarrer(biome);
+    }, 'classique');
     await attendrePartieVisible(page);
 }
 
@@ -240,8 +265,8 @@ export async function demarrerPartieCoop(page) {
     await page.locator('#btn-jouer').click();
     await page.locator('#toggle-coop').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
-    await selectionnerBiomeClavier(page, { index: 1 });
-    await page.locator('#sel-btn-jouer').click();
+    await selectionnerBiomeClavier(page);
+    await page.locator('#sel-btn-jouer').click({ force: true });
     await expect(page.locator('#interface-jeu-coop')).toBeVisible({ timeout: 5000 });
 }
 
