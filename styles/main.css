@@ -2628,6 +2628,12 @@ body.contraste-eleve .bouton {
 #banniere-erreur.visible {
     display: flex;
 }
+#banniere-erreur-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+}
 
 .toggle-oracle-wrap {
     display: flex;

@@ -29,7 +29,7 @@ const DEBUG = modeDebugActif();
 
 function obtenirContexteLog() {
     if (typeof document === 'undefined') return '';
-    const ecran = document.querySelector('.ecran.actif')?.id;
+    const ecran = document.querySelector?.('.ecran.actif')?.id;
     return ecran ? `[${ecran}]` : '';
 }
 
@@ -86,6 +86,29 @@ export function obtenirJournalErreurs() {
     } catch {
         return [];
     }
+}
+
+export function formaterRapportErreurs() {
+    return JSON.stringify(
+        {
+            sessionId,
+            horodatage: new Date().toISOString(),
+            url: typeof window !== 'undefined' && window.location ? window.location.href : '',
+            userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+            journal: obtenirJournalErreurs(),
+        },
+        null,
+        2
+    );
+}
+
+export async function copierRapportErreurs() {
+    const texte = formaterRapportErreurs();
+    if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(texte);
+        return true;
+    }
+    return false;
 }
 
 export const logger = {

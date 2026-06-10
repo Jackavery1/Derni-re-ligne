@@ -1,3 +1,4 @@
+import { copierRapportErreurs } from './logger.js';
 import { configurerConstellation } from './constellation.js';
 import { configurerMeteo } from './meteo.js';
 import { configurerReliques } from './reliques.js';
@@ -39,6 +40,21 @@ export function initialiserSystemesMoteur() {
 
     document.getElementById('btn-recharger-erreur')?.addEventListener('click', () => {
         window.location.reload();
+    });
+
+    document.getElementById('btn-copier-rapport-erreur')?.addEventListener('click', async () => {
+        const btn = document.getElementById('btn-copier-rapport-erreur');
+        try {
+            const ok = await copierRapportErreurs();
+            if (ok && btn) {
+                btn.textContent = 'COPIE !';
+                setTimeout(() => {
+                    btn.textContent = 'COPIER RAPPORT';
+                }, 2000);
+            }
+        } catch {
+            /* clipboard refusé ou indisponible */
+        }
     });
 
     configurerAudioMoteur({
