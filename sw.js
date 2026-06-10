@@ -1,4 +1,4 @@
-const VERSION_CACHE = 'derniere-ligne-2.5.10-r9';
+const VERSION_CACHE = 'derniere-ligne-2.5.11-r10';
 
 const FICHIERS_A_CACHER = [
     './',
@@ -122,6 +122,11 @@ const FICHIERS_A_CACHER = [
     './js/layout-calcul.js',
     './js/layout-jeu.js',
     './js/logger.js',
+    './js/logique-partie-hold.js',
+    './js/logique-partie-mouvement.js',
+    './js/logique-partie-pose.js',
+    './js/logique-partie-score.js',
+    './js/logique-partie-verrouillage.js',
     './js/logique-partie.js',
     './js/logique-pure.js',
     './js/main.js',
@@ -141,6 +146,7 @@ const FICHIERS_A_CACHER = [
     './js/moteur-piece.js',
     './js/moteur.js',
     './js/navigation-ecrans.js',
+    './js/neo-test-api.js',
     './js/notifications-file.js',
     './js/options-ui.js',
     './js/oracle-jeu.js',
@@ -150,6 +156,7 @@ const FICHIERS_A_CACHER = [
     './js/partie-fin.js',
     './js/partie.js',
     './js/piece-jeu.js',
+    './js/planificateur-raf.js',
     './js/portraits-cutscene-etat.js',
     './js/portraits-cutscene-personnages.js',
     './js/portraits-cutscene-utils.js',

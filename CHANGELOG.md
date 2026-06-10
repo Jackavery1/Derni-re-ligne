@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version    | Date       | En bref                                                                                |
 | ---------- | ---------- | -------------------------------------------------------------------------------------- |
+| **2.5.11** | 2026-06-11 | Remédiation audit technique 12 dimensions (qualité, perf, sécurité, a11y, versioning)  |
 | **2.5.10** | 2026-06-11 | Memorial Trame, profil VERA synthwave, codex icônes pixel, socle visuel meta           |
 | **2.5.9**  | 2026-06-10 | Expressions cutscene, réactions ROBO/boss, scènes fond PNG, mode narrateur cinématique |
 | **2.5.8**  | 2026-06-10 | Accessibilité (daltonien, effets réduits), UI mobile histoire, file narrative          |
@@ -24,6 +25,29 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.2.0**  | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                             |
 | **2.1.0**  | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                             |
 | **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                          |
+
+---
+
+## [2.5.11] — 2026-06-11
+
+### Audit technique (12 dimensions)
+
+- **Qualité** : découpage `logique-partie*.js`, factorisation portraits boss, boucle coop unifiée
+- **Architecture** : `planificateur-raf.js`, doc mermaid, index modules (`docs/modules-index.md`)
+- **Dépendances** : Dependabot groupé, `check:outdated` en CI
+- **Tests** : couverture étendue (521 tests), E2E achievements, retry `charger-ecrans`
+- **Documentation** : README dev avancé, JSDoc barrels, `docs/accessibilite-wcag.md`, `docs/versioning.md`
+- **Erreurs** : retry fetch écrans, bouton « Copier rapport »
+- **Performance** : cache gradients plateau, RAF secondaires unifiés
+- **Sécurité** : `__NEO_TEST__` conditionnée (`neo-test-api.js`), police offline
+- **Maintenance** : `npm run analyze` étendu, E2E memorial
+- **Conformité** : tests Axe contraste meta + carte histoire
+- **Versioning** : `verify:versions`, release automatisée SW
+
+### Qualité
+
+- **522** tests unitaires, smoke E2E dist, budget bundle 560 Ko
+- Cache SW `derniere-ligne-2.5.11-r10`
 
 ---
 

@@ -1,6 +1,6 @@
 {
     "name": "derniere-ligne",
-    "version": "2.5.10",
+    "version": "2.5.11",
     "type": "module",
     "description": "Dernière Ligne — Tetris narratif, PWA hors-ligne",
     "private": true,
@@ -18,6 +18,7 @@
         "pretest": "node scripts/exporter-donnees-json.mjs",
         "start": "serve . -c serve.json -l tcp://127.0.0.1:3000",
         "sync:data": "node scripts/exporter-donnees-json.mjs",
+        "verify:versions": "node scripts/verifier-versions.mjs",
         "verify:data": "node scripts/verifier-sync-textes.mjs",
         "check:circular": "madge --circular --extensions js js/main.js",
         "check:outdated": "npm outdated || exit 0",

@@ -50,6 +50,12 @@ test('carte histoire accessible depuis le menu', async ({ page }) => {
 
 test('carte histoire sans violations accessibilité critiques', async ({ page }) => {
     await ouvrirCarteHistoire(page);
+    const result = await new AxeBuilder({ page }).include('#ecran-histoire-map').analyze();
+    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
+});
+
+test('carte histoire sans violations accessibilité critiques', async ({ page }) => {
+    await ouvrirCarteHistoire(page);
     await page.waitForTimeout(400);
     const result = await new AxeBuilder({ page }).include('#ecran-histoire-map').analyze();
     expect(filtrerViolationsCritiques(result.violations)).toEqual([]);

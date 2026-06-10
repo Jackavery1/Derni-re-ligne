@@ -22,6 +22,7 @@ const readme = readFileSync('README.md', 'utf8');
 writeFileSync('README.md', readme.replace(/\*\*Version[^:]*: [\d.]+\*\*/, `**Version : ${next}**`));
 
 execSync('node scripts/generate-sw-cache.mjs', { stdio: 'inherit' });
+execSync('node scripts/verifier-versions.mjs', { stdio: 'inherit' });
 
-console.log(`Release ${next} — cache SW : ${cacheVersion}`);
-console.log('Pensez à mettre à jour CHANGELOG.md');
+console.log(`Release ${next} — cache SW synchronise`);
+console.log('Verifiez CHANGELOG.md puis : git commit, git tag v' + next + ', git push --tags');

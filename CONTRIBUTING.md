@@ -4,9 +4,7 @@ Ce dépôt est **privé et non open source**. Le code source n'est pas ouvert au
 
 ## Licence
 
-Le Logiciel est protégé par copyright (voir [LICENSE](LICENSE)). Toute modification, fork public ou redistribution du code est **interdite** sans autorisation écrite du titulaire des droits.
-
-Jouer à la version officielle mise à disposition reste autorisé à titre personnel.
+Le Logiciel est protégé par copyright (voir [LICENSE](LICENSE)). **Projet privé, non open source** : pas de contribution externe, pas de redistribution du code sans autorisation écrite. Jouer à la version officielle reste autorisé à titre personnel.
 
 ## Développement interne
 
@@ -17,12 +15,14 @@ npm install
 npm start
 npm test
 npm run lint
+npm run format:check
 npm run typecheck
+npm run verify:versions
 npm run prepare:e2e
 npm run test:e2e
 ```
 
-Node 18+ (`.nvmrc`). Logs verbeux : `?debug=1`.
+Node 18+ (`.nvmrc`). Logs verbeux : `?debug=1`. Formatage : `.prettierrc` (Prettier via `npm run format` / `format:check`).
 
 ### Tests E2E sur le bundle prod
 
@@ -74,6 +74,8 @@ Politique branches : `main` (stable, déployée), branches `feat/*` / `fix/*` po
 **Zéro dépendance runtime** — ne pas ajouter de package npm en production sans justification écrite.
 
 - [docs/architecture.md](docs/architecture.md)
+- [docs/accessibilite-wcag.md](docs/accessibilite-wcag.md)
+- [docs/versioning.md](docs/versioning.md)
 - [docs/mode-histoire.md](docs/mode-histoire.md)
 - [docs/ajouter-un-biome.md](docs/ajouter-un-biome.md)
 - [docs/ajouter-un-boss.md](docs/ajouter-un-boss.md)
