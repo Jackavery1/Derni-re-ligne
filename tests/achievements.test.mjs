@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
     ACHIEVEMENTS,
     statsGlobales,
@@ -8,6 +8,10 @@ import {
     verifierAchievements,
     sauvegarderStats,
     chargerStats,
+    majStatsMeteo,
+    initStatsPartie,
+    finaliserStatsPartie,
+    genererGalerieAchievements,
 } from '../js/achievements.js';
 
 describe('achievements', () => {
@@ -92,5 +96,67 @@ describe('achievements', () => {
         chargerStats();
         expect(statsGlobales.lignesTotal).toBe(42);
         expect(statsGlobales.biomesJoues.has('lave')).toBe(true);
+    });
+
+    it('majStatsMeteo enregistre les effets uniques par partie', () => {
+        majStatsMeteo('turbo');
+        majStatsMeteo('turbo');
+        majStatsMeteo('inversion');
+        expect(statsGlobales.meteosPartieActuelle.size).toBe(2);
+    });
+
+    it('initStatsPartie réinitialise les compteurs de session', () => {
+        statsGlobales.meteosPartieActuelle.add('turbo');
+        statsGlobales.oracleDeviationsPartieActuelle = 3;
+        initStatsPartie();
+        expect(statsGlobales.meteosPartieActuelle.size).toBe(0);
+        expect(statsGlobales.oracleDeviationsPartieActuelle).toBe(0);
+    });
+
+    it('finaliserStatsPartie met à jour le meilleur score et le temps', () => {
+        finaliserStatsPartie(5000, 120);
+        expect(statsGlobales.meilleurScore).toBe(5000);
+        expect(statsGlobales.meilleurTemps).toBe(120);
+    });
+
+    it('genererGalerieAchievements remplit la grille DOM', () => {
+        class MockCanvas {
+            constructor() {
+                this.className = '';
+                this.dataset = {};
+                this.style = { setProperty: vi.fn() };
+                this.width = 64;
+                this.height = 64;
+            }
+            appendChild = vi.fn();
+            setAttribute = vi.fn();
+            getContext = vi.fn(() => null);
+        }
+        vi.stubGlobal('HTMLCanvasElement', MockCanvas);
+
+        const grille = { textContent: '', appendChild: vi.fn() };
+        const compteur = { textContent: '' };
+        vi.stubGlobal('document', {
+            getElementById: (id) => {
+                if (id === 'ach-galerie-grille') return grille;
+                if (id === 'ach-compteur') return compteur;
+                return null;
+            },
+            querySelectorAll: () => [],
+            createElement: (tag) => {
+                if (tag === 'canvas') return new MockCanvas();
+                return {
+                    className: '',
+                    dataset: {},
+                    style: { setProperty: vi.fn() },
+                    appendChild: vi.fn(),
+                    append: vi.fn(),
+                    textContent: '',
+                };
+            },
+        });
+        genererGalerieAchievements();
+        expect(grille.appendChild).toHaveBeenCalledTimes(Object.keys(ACHIEVEMENTS).length);
+        expect(compteur.textContent).toContain('/ 56');
     });
 });
