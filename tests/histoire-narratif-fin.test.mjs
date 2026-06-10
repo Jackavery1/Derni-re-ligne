@@ -27,21 +27,22 @@ vi.mock('../js/histoire-etat.js', () => ({
 }));
 
 describe('declencherFin — épilogue puis outro', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         vi.clearAllMocks();
+        vi.resetModules();
         globalThis.fetch = async (url) => {
             if (String(url).includes('histoire-textes.json')) {
                 return { ok: true, json: async () => textesHistoire };
             }
             return { ok: false, status: 404, json: async () => ({}) };
         };
+        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        await chargerHistoireTextes();
     });
 
     it('enchaîne épilogue, outro LE CYCLE et executerFin pour fin_normale', async () => {
         const { store } = await import('../js/store-core.js');
         store.histoire.actif = true;
-        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
-        await chargerHistoireTextes();
         const { declencherFin } = await import('../js/histoire-narratif.js');
 
         declencherFin('fin_normale');
@@ -54,12 +55,10 @@ describe('declencherFin — épilogue puis outro', () => {
         expect(textesEpilogue.length).toBeGreaterThan(0);
         expect(textesOutro.some((t) => String(t).includes('LE CYCLE'))).toBe(true);
         expect(executerFin).toHaveBeenCalledWith('fin_normale');
-    });
+    }, 15_000);
 
     it('expose OUTRO_FINS pour les trois IDs de fin', async () => {
-        const { chargerHistoireTextes, obtenirHistoireTextesSync } =
-            await import('../js/charger-histoire-textes.js');
-        await chargerHistoireTextes();
+        const { obtenirHistoireTextesSync } = await import('../js/charger-histoire-textes.js');
         const { OUTRO_FINS } = obtenirHistoireTextesSync();
         for (const cle of ['fin_normale', 'fin_vraie', 'fin_secrete']) {
             expect(OUTRO_FINS[cle]?.length).toBeGreaterThan(0);

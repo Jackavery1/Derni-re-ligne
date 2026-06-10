@@ -1,16 +1,7 @@
 import { BIOMES } from './config.js';
 import { arreterConstellation } from './constellation.js';
 import { AudioMoteur } from './audio.js';
-import {
-    etat,
-    particules,
-    obtenirBiomeActif,
-    definirIdFrame,
-    obtenirIdFrame,
-    definirBoucleActive,
-    definirCouleurAmbRgb,
-    ECRANS,
-} from './store-jeu.js';
+import { etat, particules, obtenirBiomeActif, definirCouleurAmbRgb, ECRANS } from './store-jeu.js';
 import { hexVersRgb, lierCouleursTetrominos } from './piece-jeu.js';
 import {
     changerHumeur,
@@ -21,7 +12,7 @@ import {
 } from './ecrans-ui.js';
 import { obtenirRecordCoopBiome, sauvegarderRecordCoopBiome } from './progression.js';
 import { finaliserPartieCommune } from './partie-fin-commun.js';
-import { planifierBoucle } from './boucle-jeu.js';
+import { planifierBoucle, suspendreBoucleSolo } from './boucle-jeu.js';
 import { obtenirBouton } from './dom-utils.js';
 import { mettreAJourParticules } from './particules-jeu.js';
 import { initialiserAudioBiome } from './audio-partie.js';
@@ -55,14 +46,6 @@ let dernierTimestampCoop = 0;
 let coopGameOverDeclenche = false;
 
 configurerCoopLogique({ terminerCooperatif: (j) => terminerCooperatif(j) });
-
-function arreterBoucleSolo() {
-    etat.estEnCours = false;
-    const id = obtenirIdFrame();
-    if (id) cancelAnimationFrame(id);
-    definirIdFrame(null);
-    definirBoucleActive(false);
-}
 
 function arreterBoucleCoop() {
     if (idFrameCoop) {
@@ -120,7 +103,7 @@ export function demarrerCooperatif() {
     coopGameOverDeclenche = false;
     definirCoopPartieEnCours(true);
     etat.estEnCours = false;
-    arreterBoucleSolo();
+    suspendreBoucleSolo();
 
     if (oracle.actif) basculerOracle();
 

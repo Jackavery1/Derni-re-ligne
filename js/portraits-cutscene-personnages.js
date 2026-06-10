@@ -796,3 +796,43 @@ export function dessinerPortraitCutsceneInterne(ctx, w, h, personnageId, t, opti
             break;
     }
 }
+
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {number} w
+ * @param {number} h
+ * @param {string} bossId
+ * @param {number} t
+ * @param {{ vacillant?: boolean, intensite?: number, vitesseAnim?: number, echelle?: number, effetsReduits?: boolean }} [options]
+ */
+export function dessinerPortraitBossCombat(ctx, w, h, bossId, t, options = {}) {
+    const params = {
+        vacillant: options.vacillant === true,
+        vitesseAnim: options.vitesseAnim ?? 1,
+        glow: options.intensite ?? 1,
+        echelle: options.echelle ?? 1,
+        effetsReduits: options.effetsReduits === true,
+    };
+    const defaite = params.vacillant;
+
+    switch (bossId) {
+        case 'brasier':
+            _portraitBrasier(ctx, w, h, t, defaite, params);
+            break;
+        case 'sentinelle':
+            _portraitSentinelle(ctx, w, h, t, defaite, params);
+            break;
+        case 'archiviste':
+            _portraitArchiviste(ctx, w, h, t, params);
+            break;
+        case 'avantgarde':
+            _portraitAvantgarde(ctx, w, h, t, params);
+            break;
+        case 'distorsion':
+            _portraitDistorsion(ctx, w, h, t, params);
+            break;
+        default:
+            _portraitNarrateur(ctx, w, h, t);
+            break;
+    }
+}

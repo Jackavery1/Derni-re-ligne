@@ -67,6 +67,8 @@ describe('cutscene UI', () => {
     let texteEl;
     let narrationEl;
     let ecranCutscene;
+    /** @type {typeof import('../js/histoire-manager-ui.js')} */
+    let managerUi;
 
     beforeEach(async () => {
         elements = new Map();
@@ -116,11 +118,11 @@ describe('cutscene UI', () => {
         vi.resetModules();
         const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
         await chargerHistoireTextes();
-    });
+        managerUi = await import('../js/histoire-manager-ui.js');
+    }, 30_000);
 
-    it('remplace le texte à chaque ligne au lieu de l accumuler', async () => {
-        const { afficherCutsceneHistoire, avancerCutscene } =
-            await import('../js/histoire-manager-ui.js');
+    it('remplace le texte à chaque ligne au lieu de l accumuler', () => {
+        const { afficherCutsceneHistoire, avancerCutscene } = managerUi;
 
         afficherCutsceneHistoire(['Ligne un.', 'Ligne deux.'], ['robo', 'vera'], null);
 
@@ -131,22 +133,20 @@ describe('cutscene UI', () => {
         avancerCutscene();
         expect(texteEl.textContent).toBe('Ligne deux.');
         expect(texteEl.textContent).not.toContain('Ligne un.');
-    }, 15_000);
+    });
 
-    it('active le mode narrateur cinématique (texte centré, letterbox)', async () => {
-        const { afficherCutsceneHistoire, avancerCutscene } =
-            await import('../js/histoire-manager-ui.js');
+    it('active le mode narrateur cinématique (texte centré, letterbox)', () => {
+        const { afficherCutsceneHistoire, avancerCutscene } = managerUi;
 
         afficherCutsceneHistoire(['Une voix off.', 'ROBO parle.'], ['narrateur', 'robo'], null);
         avancerCutscene();
 
         expect(texteEl.textContent).toBe('Une voix off.');
         expect(ecranCutscene.classList.toggle).toHaveBeenCalledWith('mode-narrateur', true);
-    }, 15_000);
+    });
 
-    it('passe toute la cutscene en un seul appel', async () => {
-        const { afficherCutsceneHistoire, passerCutscene } =
-            await import('../js/histoire-manager-ui.js');
+    it('passe toute la cutscene en un seul appel', () => {
+        const { afficherCutsceneHistoire, passerCutscene } = managerUi;
         const onFin = vi.fn();
 
         afficherCutsceneHistoire(['A', 'B', 'C'], ['narrateur', 'robo', 'vera'], onFin);
@@ -154,11 +154,10 @@ describe('cutscene UI', () => {
 
         expect(onFin).toHaveBeenCalledTimes(1);
         expect(store.histoire.cutscene.enCours).toBe(false);
-    }, 15_000);
+    });
 
-    it('ignore les avances supplementaires apres la fin', async () => {
-        const { afficherCutsceneHistoire, avancerCutscene } =
-            await import('../js/histoire-manager-ui.js');
+    it('ignore les avances supplementaires apres la fin', () => {
+        const { afficherCutsceneHistoire, avancerCutscene } = managerUi;
         const onFin = vi.fn();
 
         afficherCutsceneHistoire(['Fin.'], ['robo'], onFin);
@@ -167,7 +166,7 @@ describe('cutscene UI', () => {
         avancerCutscene();
 
         expect(onFin).toHaveBeenCalledTimes(1);
-    }, 15_000);
+    });
 
     it('injecte la zone narration si le HTML cache est obsolete', async () => {
         elements.delete('zone-narration-cutscene');
@@ -194,16 +193,16 @@ describe('cutscene UI', () => {
             if (child.id) elements.set(child.id, child);
         };
 
-        const { afficherCutsceneHistoire } = await import('../js/histoire-manager-ui.js');
+        const { afficherCutsceneHistoire } = managerUi;
         afficherCutsceneHistoire(['Voix off.'], ['narrateur'], null);
 
         expect(elements.has('zone-narration-cutscene')).toBe(true);
         expect(elements.get('texte-narration-cutscene')).toBeTruthy();
     });
 
-    it('intro sans DOM cutscene : pas de callback fin (flag intro preserve)', async () => {
+    it('intro sans DOM cutscene : pas de callback fin (flag intro preserve)', () => {
         elements.delete('ecran-histoire-cutscene');
-        const { afficherCutsceneHistoire } = await import('../js/histoire-manager-ui.js');
+        const { afficherCutsceneHistoire } = managerUi;
         const onFin = vi.fn();
 
         const demarre = afficherCutsceneHistoire(['Jour 2 554.'], ['narrateur'], onFin, {
