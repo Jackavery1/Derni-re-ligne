@@ -1,20 +1,9 @@
-import { CONFIG, TETROMINOS } from './config.js';
+import { TETROMINOS } from './config.js';
 import { AudioMoteur } from './audio.js';
 import { meteo, ETATS_METEO } from './meteo.js';
 import { emettre } from './bus-jeu.js';
-import {
-    etat,
-    definirLockDelayRestant,
-    definirNbLockResets,
-    definirPieceAuSol,
-} from './store-jeu.js';
-import {
-    obtenirForme,
-    estPositionValide,
-    calculerDistanceChute,
-    activerReliqueSurPiece,
-    reinitialiserLockDelay,
-} from './piece-jeu.js';
+import { etat, definirLockDelayRestant, definirPieceAuSol } from './store-jeu.js';
+import { estPositionValide, calculerDistanceChute, reinitialiserLockDelay } from './piece-jeu.js';
 import {
     compterRotation,
     compterMouvementLateral,
