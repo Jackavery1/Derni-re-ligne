@@ -18,6 +18,9 @@ writeFileSync(
 const html = readFileSync('index.html', 'utf8');
 writeFileSync('index.html', html.replace(/js\/main\.js\?v=[^"']+/, `js/main.js?v=${next}`));
 
+const readme = readFileSync('README.md', 'utf8');
+writeFileSync('README.md', readme.replace(/\*\*Version[^:]*: [\d.]+\*\*/, `**Version : ${next}**`));
+
 execSync('node scripts/generate-sw-cache.mjs', { stdio: 'inherit' });
 
 console.log(`Release ${next} — cache SW : ${cacheVersion}`);

@@ -12,8 +12,12 @@ import {
     coop_vitesseChute,
     reinitialiserEtatCoop,
     coop_deplacerDroite,
+    coop_deplacerBas,
     coop_tourner,
+    coop_mettreAJourGravite,
+    coop_verrouillerPiece,
 } from '../js/coop-logique.js';
+import { initialiserChronometreCoop } from '../js/coop-jeu.js';
 
 describe('coop-logique', () => {
     beforeEach(() => {
@@ -43,13 +47,26 @@ describe('coop-logique', () => {
         expect(coop_estPositionValide(pieceJ2, -3, 0)).toBe(false);
     });
 
+    it('coop_calculerScore applique combo et back-to-back', () => {
+        coop.niveau = 1;
+        coop.score = 0;
+        coop.lignes = 0;
+        coop.combo = 0;
+        coop.dernierEtaitTetris = false;
+        coop_calculerScore(4);
+        const scoreTetris = coop.score;
+        coop_calculerScore(4);
+        expect(coop.score).toBeGreaterThan(scoreTetris * 1.4);
+    });
+
     it("coop_verifierLignes n'efface que si les deux moitiés sont complètes", () => {
         const l = CONFIG.lignes - 1;
         for (let c = 0; c < DEMI_LARGEUR; c++) etat.plateau[l][c] = '#00f5ff';
         for (let c = DEMI_LARGEUR; c < CONFIG.colonnes; c++) etat.plateau[l][c] = '#ff006e';
 
         const lignesAvant = coop.lignes;
-        coop_verifierLignes();
+        const nb = coop_verifierLignes();
+        coop_calculerScore(nb);
         expect(coop.lignes).toBe(lignesAvant + 1);
         expect(etat.plateau[0].every((c) => c === 0)).toBe(true);
     });
@@ -95,5 +112,67 @@ describe('coop-logique', () => {
         const rotAvant = coop.j1.pieceActuelle.rotation;
         coop_tourner('j1', 1);
         expect(coop.j1.pieceActuelle.rotation).not.toBe(rotAvant);
+    });
+
+    it('coop_mettreAJourGravite respecte le lock delay guideline', () => {
+        etat.plateau = creerPlateau();
+        const piecePosee = { type: 'O', rotation: 0, x: 1, y: CONFIG.lignes - 2, joueur: 'j1' };
+        coop.j1.pieceActuelle = { ...piecePosee };
+        coop_mettreAJourGravite('j1', 16);
+        expect(coop.j1.pieceAuSol).toBe(true);
+        expect(coop.j1.lockDelayRestant).toBe(CONFIG.lockDelay);
+        coop_mettreAJourGravite('j1', CONFIG.lockDelay);
+        expect(coop.j1.pieceActuelle).not.toEqual(piecePosee);
+        expect(coop.j1.pieceAuSol).toBe(false);
+    });
+
+    it('coop_calculerScore(0) remet le combo à zéro', () => {
+        coop.combo = 4;
+        coop_calculerScore(0);
+        expect(coop.combo).toBe(0);
+    });
+
+    it('coop_verrouillerPiece remet le combo sans ligne effacée', () => {
+        coop.combo = 3;
+        coop.j1.pieceActuelle = {
+            type: 'O',
+            rotation: 0,
+            x: 1,
+            y: CONFIG.lignes - 2,
+            joueur: 'j1',
+        };
+        coop_verrouillerPiece('j1');
+        expect(coop.combo).toBe(0);
+    });
+
+    it('coop_deplacerBas crédite 1 point par descente', () => {
+        coop.j1.pieceActuelle = coop_nouvellePiece('j1');
+        const scoreAvant = coop.score;
+        coop_deplacerBas('j1');
+        expect(coop.score).toBe(scoreAvant + 1);
+    });
+
+    it('coop_calculerScore applique le bonus T-Spin', () => {
+        const scoreAvant = coop.score;
+        const result = coop_calculerScore(1, 'full');
+        expect(result.tSpin).toBe('full');
+        expect(coop.score).toBeGreaterThan(scoreAvant);
+    });
+
+    it('coop_tourner marque la pièce pour un T-Spin potentiel', () => {
+        etat.plateau = creerPlateau();
+        coop.j1.pieceActuelle = { type: 'T', rotation: 0, x: 1, y: 0, joueur: 'j1' };
+        coop_tourner('j1', 1);
+        expect(coop.j1.poseApresRotation).toBe(true);
+        coop_deplacerDroite('j1');
+        expect(coop.j1.poseApresRotation).toBe(false);
+    });
+
+    it('initialiserChronometreCoop initialise tempsDebut', () => {
+        etat.tempsDebut = null;
+        initialiserChronometreCoop();
+        expect(etat.tempsDebut).toBeGreaterThan(0);
+        expect(etat.tempsPauseAccumule).toBe(0);
+        expect(etat.tempsPauseDebut).toBeNull();
     });
 });

@@ -1,8 +1,8 @@
-import { store } from './store-core.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
+import { modeArchiActif } from './registre-modes.js';
 import { afficherEcran } from './ecrans-ui.js';
 import { obtenirActions } from './actions-jeu.js';
 import { ECRANS } from './store-jeu.js';
-import { modeArchiActif } from './archi-logique.js';
 import {
     basculerPauseCoop,
     demarrerCooperatif,
@@ -20,7 +20,7 @@ import { coop_dessinerPreview } from './coop-rendu.js';
 
 export function initialiserBoutonsPartie() {
     document.getElementById('btn-rejouer')?.addEventListener('click', () => {
-        if (store.histoire.actif) {
+        if (modeHistoireEnCours()) {
             retournerAuMondeActuel();
         } else {
             obtenirActions().demarrerJeu?.();

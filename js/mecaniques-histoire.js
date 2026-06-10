@@ -84,6 +84,7 @@ export function mettreAJourMecaniquesHistoire(dt, timestamp) {
     switch (mec) {
         case 'rouille':
             _tickRouille(timestamp);
+            _effondrerRouilleExpiree(timestamp);
             break;
         case 'eclipse':
             _tickEclipse(timestamp);
@@ -159,12 +160,49 @@ function _tickRouille(timestamp) {
     }
 }
 
+/** Les blocs rouillés finissent par s'effriter (trou sur le plateau). */
+function _effondrerRouilleExpiree(timestamp) {
+    const TS = store.histoire.mecaniques.plateauTimestamps;
+    const RO = store.histoire.mecaniques.plateauRouille;
+    if (!TS || !RO) return;
+    const seuilEffondrement = SEUIL_ROUILLE_MS() * 2;
+    const C = CONFIG.colonnes;
+    let nb = 0;
+    for (let idx = 0; idx < RO.length; idx++) {
+        if (RO[idx] !== 1 || TS[idx] === 0) continue;
+        if (timestamp - TS[idx] < seuilEffondrement) continue;
+        const y = Math.floor(idx / C);
+        const x = idx % C;
+        if (y >= 0 && y < CONFIG.lignes) etat.plateau[y][x] = 0;
+        TS[idx] = 0;
+        RO[idx] = 0;
+        nb++;
+    }
+    if (nb > 0) ajouterBlocksRouillesEffaces(nb);
+}
+
+export function reinitialiserMatricesRouille() {
+    const TS = store.histoire.mecaniques.plateauTimestamps;
+    const RO = store.histoire.mecaniques.plateauRouille;
+    if (!TS || !RO) return;
+    TS.fill(0);
+    RO.fill(0);
+    _celluleActivesRouille.clear();
+}
+
 function _decalerMatricesRouille(lignesEffacees) {
     if (!store.histoire.mecaniques.plateauTimestamps || !lignesEffacees?.length) return;
     const sorted = [...lignesEffacees].sort((a, b) => b - a);
     const TS = store.histoire.mecaniques.plateauTimestamps;
     const RO = store.histoire.mecaniques.plateauRouille;
     const C = CONFIG.colonnes;
+
+    let rustEffaces = 0;
+    for (const lig of sorted) {
+        for (let c = 0; c < C; c++) {
+            if (RO[lig * C + c]) rustEffaces++;
+        }
+    }
 
     for (const lig of sorted) {
         for (let l = lig; l > 0; l--) {
@@ -186,7 +224,7 @@ function _decalerMatricesRouille(lignesEffacees) {
         if (TS[i] !== 0 && !RO[i]) _celluleActivesRouille.add(i);
     }
 
-    ajouterBlocksRouillesEffaces(sorted.length);
+    if (rustEffaces > 0) ajouterBlocksRouillesEffaces(rustEffaces);
 }
 
 export function celluleEstRouillee(x, y) {
@@ -222,6 +260,17 @@ export function obtenirVitesseChuteModifiee(vitesseBase) {
 
 export function obtenirLigneEclipse() {
     return store.histoire.mecaniques.eclipseLigne;
+}
+
+/** Libellé HUD des modificateurs de vitesse (éclipse, surtension). */
+export function obtenirLibelleModificateurBiomeHud() {
+    if (!store.histoire.actif) return '';
+    const parties = [];
+    if (store.surtensionActive) parties.push('SURTENSION');
+    if (biomeActuelMecanique() === 'eclipse') {
+        parties.push(`ÉCLIPSE L${obtenirLigneEclipse()}`);
+    }
+    return parties.join(' · ');
 }
 
 function _tickVide(timestamp) {

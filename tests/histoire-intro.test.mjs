@@ -4,16 +4,18 @@ import {
     marquerIntroHistoireVue,
     obtenirSequenceIntro,
 } from '../js/histoire-intro.js';
+import { chargerHistoireTextes } from '../js/charger-histoire-textes.js';
 import { INTRO_HISTOIRE } from '../js/histoire-textes.js';
 
 describe('histoire-intro', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         localStorage.removeItem('derniereLigne_introHistoireVue');
+        await chargerHistoireTextes();
     });
 
     it('expose une séquence d’environ 15 lignes avec narrateur, systeme et vera', () => {
         const seq = obtenirSequenceIntro();
-        expect(seq).toBe(INTRO_HISTOIRE);
+        expect(seq).toEqual(INTRO_HISTOIRE);
         expect(seq).toHaveLength(15);
         expect(seq[0].texte).toMatch(/inventé un jeu/);
         expect(seq[0].personnage).toBe('narrateur');

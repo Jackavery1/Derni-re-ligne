@@ -49,3 +49,5 @@ jobs:
                   BASE="${{ steps.deployment.outputs.page_url }}"
                   curl -fsSL "$BASE" | grep -q "Dernière Ligne"
                   curl -fsSL "${BASE}js/bundle.js" -o /dev/null
+                  curl -fsSL "${BASE}sw.js" | grep -q "derniere-ligne-"
+                  curl -fsSL "$BASE" | grep -q "frame-ancestors"

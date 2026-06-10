@@ -1,10 +1,10 @@
 import { CONFIG, TETROMINOS, RELIQUES } from './config.js';
 import { AudioMoteur } from './audio.js';
 import {
-    calculerPointsLignes,
-    calculerNiveauDepuisLignes,
+    detecterTSpin,
     obtenirEssaisKick,
     supprimerLignesDuPlateau,
+    supprimerLignesDuPlateauExcluantRouille,
 } from './logique-pure.js';
 import { meteo, ETATS_METEO } from './meteo.js';
 import { appliquerEffetRelique } from './reliques.js';
@@ -64,14 +64,22 @@ import {
     obtenirVitesseChuteModifiee,
     enregistrerTimestampCellules,
     actionMiroir,
+    biomeActuelMecanique,
+    celluleEstRouillee,
+    reinitialiserMatricesRouille,
 } from './mecaniques-histoire.js';
-import { store } from './store-core.js';
 import {
     vitesseHistoireMs,
     enregistrerPosePiece,
     estMondeZenActif,
     enregistrerTopOut,
 } from './gestionnaire-difficulte.js';
+import { appliquerScoreLignes } from './score-partie.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
+
+export { appliquerScoreLignes } from './score-partie.js';
+
+let _poseApresRotation = false;
 
 function produireProchainePieceApresShift() {
     if (obtenirReliqueEnAttente()) {
@@ -102,6 +110,17 @@ export function verrouillerPiece() {
         etat.pieceActuelle.x += _decalageBoss;
     }
 
+    const formeVerrou = obtenirForme(etat.pieceActuelle);
+    const pieceVerrou = etat.pieceActuelle;
+    const tSpin =
+        _poseApresRotation &&
+        pieceVerrou.type === 'T' &&
+        pieceVerrou.x != null &&
+        pieceVerrou.y != null
+            ? detecterTSpin(etat.plateau, pieceVerrou, formeVerrou)
+            : null;
+    _poseApresRotation = false;
+
     const couleur = obtenirCouleurPiece(etat.pieceActuelle);
     const { gameOver, cellulesPosees } = poserPieceSurPlateau(
         etat.plateau,
@@ -111,21 +130,8 @@ export function verrouillerPiece() {
     );
 
     if (gameOver) {
-        if (store.histoire.actif && estMondeZenActif()) {
-            enregistrerTopOut();
-            etat.plateau = creerPlateau();
-            etat.pieceActuelle = genererProchainePiece();
-            activerReliqueSurPiece(etat.pieceActuelle);
-            etat.filePieces = [
-                genererProchainePiece(),
-                genererProchainePiece(),
-                genererProchainePiece(),
-            ];
-            etat.reserveUtilisee = false;
-            definirPieceAuSol(false);
-            emettre('partie:nouvelle-piece');
-            signalerApparitionPiece();
-            annoncerPieceCourante();
+        if (modeHistoireEnCours() && estMondeZenActif()) {
+            _recupererZenApresTopOut();
             return;
         }
         obtenirActions().terminerPartie?.();
@@ -157,7 +163,7 @@ export function verrouillerPiece() {
     enregistrerNotesLignesCompletes();
     const nbLignesEffacees = supprimerLignesCompletes();
     majStatsLignesEffacees(nbLignesEffacees);
-    calculerScore(nbLignesEffacees);
+    calculerScore(nbLignesEffacees, tSpin);
     emettre('piece:son', { type: 'verrou' });
 
     etat.pieceActuelle = etat.filePieces.shift();
@@ -174,19 +180,35 @@ export function verrouillerPiece() {
     declencherCalculOracle();
 
     if (!estPositionValide(etat.pieceActuelle)) {
-        if (store.histoire.actif && estMondeZenActif()) {
-            enregistrerTopOut();
-            etat.plateau = creerPlateau();
-            etat.pieceActuelle = genererProchainePiece();
-            activerReliqueSurPiece(etat.pieceActuelle);
+        if (modeHistoireEnCours() && estMondeZenActif()) {
+            _recupererZenApresTopOut();
             return;
         }
         obtenirActions().terminerPartie?.();
     }
 }
 
+function _recupererZenApresTopOut() {
+    enregistrerTopOut();
+    etat.plateau = creerPlateau();
+    reinitialiserMatricesRouille();
+    etat.pieceActuelle = genererProchainePiece();
+    activerReliqueSurPiece(etat.pieceActuelle);
+    etat.filePieces = [genererProchainePiece(), genererProchainePiece(), genererProchainePiece()];
+    etat.reserveUtilisee = false;
+    definirPieceAuSol(false);
+    definirLockDelayRestant(0);
+    definirNbLockResets(0);
+    emettre('partie:nouvelle-piece');
+    signalerApparitionPiece();
+    annoncerPieceCourante();
+}
+
 function supprimerLignesCompletes() {
-    const { plateau, nbSupprimees, lignesEffacees } = supprimerLignesDuPlateau(etat.plateau);
+    const { plateau, nbSupprimees, lignesEffacees } =
+        biomeActuelMecanique() === 'rouille'
+            ? supprimerLignesDuPlateauExcluantRouille(etat.plateau, celluleEstRouillee)
+            : supprimerLignesDuPlateau(etat.plateau);
     if (nbSupprimees === 0) return 0;
 
     etat.plateau = plateau;
@@ -197,53 +219,9 @@ function supprimerLignesCompletes() {
     return nbSupprimees;
 }
 
-/**
- * Met à jour score, combo et niveau sans effets DOM (testable).
- * @param {{ score: number, lignes: number, niveau: number, combo: number, dernierEtaitTetris: boolean }} etatPartie
- * @param {number} nbLignes
- */
-export function appliquerScoreLignes(etatPartie, nbLignes) {
-    let points = 0;
-    let levelUp = false;
-    let tetris = false;
-    let backToBack = false;
-
-    if (nbLignes === 0) {
-        etatPartie.combo = 0;
-    } else {
-        etatPartie.combo++;
-        if (nbLignes === 4) {
-            tetris = true;
-            backToBack = etatPartie.dernierEtaitTetris;
-            etatPartie.dernierEtaitTetris = true;
-        } else {
-            etatPartie.dernierEtaitTetris = false;
-        }
-
-        points = calculerPointsLignes(nbLignes, etatPartie.niveau);
-        if (etatPartie.combo >= 2) {
-            points = Math.floor(points * (1 + 0.25 * (etatPartie.combo - 1)));
-        }
-        if (backToBack) {
-            points = Math.floor(points * 1.5);
-        }
-    }
-
-    etatPartie.score += points;
-    etatPartie.lignes += nbLignes;
-
-    const nouveauNiveau = calculerNiveauDepuisLignes(etatPartie.lignes);
-    if (nouveauNiveau > etatPartie.niveau) {
-        etatPartie.niveau = nouveauNiveau;
-        levelUp = true;
-    }
-
-    return { points, combo: etatPartie.combo, tetris, backToBack, levelUp };
-}
-
-export function calculerScore(nbLignes) {
+export function calculerScore(nbLignes, tSpin = null) {
     vivant_enregistrerLignesScore(nbLignes);
-    const result = appliquerScoreLignes(etat, nbLignes);
+    const result = appliquerScoreLignes(etat, nbLignes, tSpin);
 
     if (nbLignes > 0) {
         majStatsScorePartie(nbLignes, etat.combo);
@@ -259,6 +237,7 @@ export function jouable() {
 
 function deplacerGaucheReel() {
     if (!jouable()) return;
+    _poseApresRotation = false;
     if (estPositionValide(etat.pieceActuelle, -1, 0)) {
         etat.pieceActuelle.x--;
         emettre('piece:son', { type: 'deplacement' });
@@ -269,6 +248,7 @@ function deplacerGaucheReel() {
 
 function deplacerDroiteReel() {
     if (!jouable()) return;
+    _poseApresRotation = false;
     if (estPositionValide(etat.pieceActuelle, 1, 0)) {
         etat.pieceActuelle.x++;
         emettre('piece:son', { type: 'deplacement' });
@@ -299,6 +279,7 @@ export function deplacerBas() {
         return;
     }
     if (!jouable()) return;
+    _poseApresRotation = false;
     if (estPositionValide(etat.pieceActuelle, 0, 1)) {
         etat.pieceActuelle.y++;
         etat.score++;
@@ -321,6 +302,7 @@ export function chuteRapide() {
         return;
     }
     if (!jouable()) return;
+    _poseApresRotation = false;
     if (meteo.etat === ETATS_METEO.ACTIF && meteo.evenementActuel?.effet === 'microgravite') return;
     compterHardDrop();
     const dist = calculerDistanceChute(etat.pieceActuelle);
@@ -343,6 +325,7 @@ export function tourner(sens) {
             piece.rotation = rotationCible;
             piece.x += dx;
             piece.y += dy;
+            _poseApresRotation = true;
             emettre('piece:son', { type: 'rotation' });
             reinitialiserLockDelay();
             compterRotation();
@@ -409,7 +392,7 @@ export function utiliserReserve() {
 }
 
 export function vitesseChute() {
-    if (store.histoire?.actif) {
+    if (modeHistoireEnCours()) {
         return obtenirVitesseChuteModifiee(vitesseHistoireMs());
     }
     const base = Math.max(

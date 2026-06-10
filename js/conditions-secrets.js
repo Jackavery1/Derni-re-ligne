@@ -181,25 +181,6 @@ function _afficherNotifDeblocageMonde(mondeId) {
     const notif = document.createElement('div');
     notif.className = 'notif-deblocage-monde';
     notif.textContent = msg;
-    notif.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0);
-        z-index: 400;
-        font-family: var(--police);
-        font-size: clamp(0.4rem, 1.5vw, 0.55rem);
-        letter-spacing: 3px;
-        color: #ffe600;
-        background: rgba(8,8,26,0.96);
-        border: 2px solid #ffe600;
-        padding: 14px 28px;
-        text-align: center;
-        box-shadow: 0 0 30px rgba(255,230,0,0.4);
-        text-shadow: 0 0 10px #ffe600;
-        pointer-events: none;
-        animation: apparitionSecret 4s cubic-bezier(0.34,1.56,0.64,1) forwards;
-    `;
     document.body.appendChild(notif);
     setTimeout(() => notif.remove(), 4200);
 }

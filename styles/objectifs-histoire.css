@@ -221,6 +221,13 @@ body.histoire-active #section-objectifs-histoire {
     opacity: 1;
 }
 
+.objectif-hud-modificateur {
+    font-size: 0.35rem;
+    color: #ff99ff;
+    letter-spacing: 1px;
+    margin-top: 4px;
+}
+
 .objectif-hud-palier {
     font-size: 0.35rem;
     color: rgba(255, 255, 255, 0.45);

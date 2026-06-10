@@ -67,6 +67,89 @@ export function supprimerLignesDuPlateau(plateau) {
     return { plateau: copie, nbSupprimees: lignesEffacees.length, lignesEffacees };
 }
 
+/**
+ * Comme supprimerLignesDuPlateau, mais ignore les lignes contenant une cellule rouillée.
+ * @param {(x: number, y: number) => boolean} estRouillee
+ */
+export function supprimerLignesDuPlateauExcluantRouille(plateau, estRouillee) {
+    const lignesEffacees = [];
+    for (let l = CONFIG.lignes - 1; l >= 0; l--) {
+        const complete = plateau[l].every((c) => c !== 0);
+        const bloquee = plateau[l].some((_, x) => estRouillee(x, l));
+        if (complete && !bloquee) lignesEffacees.push(l);
+    }
+    if (lignesEffacees.length === 0) {
+        return { plateau, nbSupprimees: 0, lignesEffacees: [] };
+    }
+    const copie = plateau.map((ligne) => [...ligne]);
+    for (const l of [...lignesEffacees].sort((a, b) => b - a)) {
+        copie.splice(l, 1);
+        copie.unshift(Array(CONFIG.colonnes).fill(0));
+    }
+    return { plateau: copie, nbSupprimees: lignesEffacees.length, lignesEffacees };
+}
+
+/** @param {number[][]} forme */
+function _trouverCentreT(forme) {
+    for (let y = 0; y < forme.length; y++) {
+        for (let x = 0; x < forme[y].length; x++) {
+            if (!forme[y][x]) continue;
+            let adj = 0;
+            if (forme[y - 1]?.[x]) adj++;
+            if (forme[y + 1]?.[x]) adj++;
+            if (forme[y][x - 1]) adj++;
+            if (forme[y][x + 1]) adj++;
+            if (adj >= 2) return { x, y };
+        }
+    }
+    return { x: 1, y: 1 };
+}
+
+function _coinOccupe(plateau, x, y, forme, piece) {
+    if (x < 0 || x >= CONFIG.colonnes || y < 0 || y >= CONFIG.lignes) return true;
+    for (let l = 0; l < forme.length; l++) {
+        for (let c = 0; c < forme[l].length; c++) {
+            if (!forme[l][c]) continue;
+            if (piece.x + c === x && piece.y + l === y) return false;
+        }
+    }
+    return plateau[y][x] !== 0;
+}
+
+/**
+ * Détecte un T-Spin (guideline simplifiée : 3 coins sur 4 remplis après rotation).
+ * @param {(number | string)[][]} plateau
+ * @param {{ type: string, x?: number, y?: number, rotation: number }} piece
+ * @param {number[][]} forme
+ * @returns {null | 'mini' | 'full'}
+ */
+export function detecterTSpin(plateau, piece, forme) {
+    if (piece.type !== 'T' || piece.x == null || piece.y == null) return null;
+    const centre = _trouverCentreT(forme);
+    const cx = piece.x + centre.x;
+    const cy = piece.y + centre.y;
+    const coins = [
+        [cx - 1, cy - 1],
+        [cx + 1, cy - 1],
+        [cx - 1, cy + 1],
+        [cx + 1, cy + 1],
+    ];
+    const remplis = coins.filter(([x, y]) => _coinOccupe(plateau, x, y, forme, piece)).length;
+    if (remplis < 3) return null;
+    const avant = coins
+        .slice(0, 2)
+        .filter(([x, y]) => _coinOccupe(plateau, x, y, forme, piece)).length;
+    return avant === 2 ? 'full' : 'mini';
+}
+
+/** @param {null | 'mini' | 'full'} type @param {number} nbLignes @param {number} niveau */
+export function calculerPointsTSpin(type, nbLignes, niveau) {
+    if (!type) return 0;
+    if (nbLignes === 0) return (type === 'full' ? 400 : 100) * niveau;
+    const base = type === 'full' ? [0, 800, 1200, 1600, 2000] : [0, 200, 400, 600, 800];
+    return (base[nbLignes] ?? base[4]) * niveau;
+}
+
 const POINTS_PAR_LIGNES = [0, 100, 300, 500, 800];
 
 /** @param {number} nbLignes @param {number} niveau @returns {number} */

@@ -14,7 +14,7 @@
         <!-- CSP stricte : pas de style/script inline — utiliser classes CSS et fichiers externes -->
         <meta
             http-equiv="Content-Security-Policy"
-            content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests;"
+            content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; upgrade-insecure-requests;"
         />
         <link rel="stylesheet" href="styles/main.css" />
         <link rel="stylesheet" href="styles/objectifs-histoire.css" />
@@ -36,6 +36,6 @@
 
         <div id="conteneur-ecrans" tabindex="-1"></div>
 
-        <script type="module" src="js/main.js?v=2.5.5"></script>
+        <script type="module" src="js/main.js?v=2.5.6"></script>
     </body>
 </html>

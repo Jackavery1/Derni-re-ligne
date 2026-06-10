@@ -1,4 +1,5 @@
 import { CONFIG, TETROMINOS } from './config.js';
+import { obtenirEssaisKick } from './logique-pure.js';
 import { extraireForme } from './moteur-piece.js';
 
 /**
@@ -60,6 +61,29 @@ export function deplacerPieceSiValide(piece, dx, dy, estValide) {
  * @param {(piece: object, dx: number, dy: number, rotation: number) => boolean} estValide
  * @returns {boolean}
  */
+/**
+ * Rotation SRS guideline (wall kicks standards).
+ * @param {{ x: number, y: number, rotation: number, type: string }} piece
+ * @param {number} sens
+ * @param {(piece: object, dx: number, dy: number, rotation: number) => boolean} estValide
+ * @returns {boolean}
+ */
+export function tenterRotationSrs(piece, sens, estValide) {
+    const nbRots = TETROMINOS[piece.type].rotations.length;
+    const rotationCible = (((piece.rotation + sens) % nbRots) + nbRots) % nbRots;
+    const essais = obtenirEssaisKick(piece.type, piece.rotation, rotationCible);
+
+    for (const [dx, dy] of essais) {
+        if (estValide(piece, dx, dy, rotationCible)) {
+            piece.rotation = rotationCible;
+            piece.x += dx;
+            piece.y += dy;
+            return true;
+        }
+    }
+    return false;
+}
+
 export function tenterRotationSimple(piece, sens, estValide) {
     const nbRots = TETROMINOS[piece.type].rotations.length;
     const rotationCible = (((piece.rotation + sens) % nbRots) + nbRots) % nbRots;

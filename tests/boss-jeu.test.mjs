@@ -1,12 +1,17 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import { CONFIG } from '../js/config.js';
 import { store } from '../js/store-core.js';
+import { etat } from '../js/store-jeu.js';
+import { creerPlateau } from '../js/piece-jeu.js';
 import {
     demarrerBoss,
     arreterBoss,
     endommagerBoss,
+    mettreAJourBoss,
     bossEstActif,
     bossEstVaincu,
     DUREE_VICTOIRE_BOSS_MS,
+    COULEUR_GLACE_B,
 } from '../js/boss-jeu.js';
 
 describe('boss-jeu', () => {
@@ -76,5 +81,33 @@ describe('boss-jeu', () => {
         arreterBoss();
         expect(bossEstActif()).toBe(false);
         expect(store.histoire.boss.pv).toBe(0);
+    });
+
+    it('rangee braise bloquee si le stack est deja trop haut', () => {
+        etat.plateau = creerPlateau();
+        for (let lig = 0; lig < CONFIG.lignes - 1; lig++) {
+            etat.plateau[lig] = Array(CONFIG.colonnes).fill('#ff0000');
+        }
+        etat.estEnPause = false;
+        demarrerBoss('brasier');
+        store.histoire.boss.timerAttaque = 1;
+        const hauteurAvant = etat.plateau.filter((l) => l.some((c) => c !== 0)).length;
+        mettreAJourBoss(100);
+        const hauteurApres = etat.plateau.filter((l) => l.some((c) => c !== 0)).length;
+        expect(hauteurApres).toBe(hauteurAvant);
+    });
+
+    it('degel glace uniquement sur les colonnes gelees actives', () => {
+        etat.plateau = creerPlateau();
+        etat.estEnPause = false;
+        demarrerBoss('sentinelle');
+        const lig = CONFIG.lignes - 1;
+        etat.plateau[lig][0] = COULEUR_GLACE_B;
+        etat.plateau[lig][5] = COULEUR_GLACE_B;
+        store.histoire.boss.effets.colonnesGelees = [0];
+        store.histoire.boss.effets.timerDegelMs = 1000;
+        mettreAJourBoss(1500);
+        expect(etat.plateau[lig][0]).toBe(0);
+        expect(etat.plateau[lig][5]).toBe(COULEUR_GLACE_B);
     });
 });

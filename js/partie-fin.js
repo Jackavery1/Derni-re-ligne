@@ -11,7 +11,6 @@ import {
     appliquerHumeurMascotte,
     reagirRoboGameOver,
     reagirRoboNouveauRecord,
-    annoncer,
     afficherEcran,
     sauvegarderRecord,
     mettreAJourAffichageRecord,
@@ -21,10 +20,10 @@ import {
 import { ECRANS } from './store-jeu.js';
 import { planifierBoucle } from './boucle-jeu.js';
 import { afficherMelodieGameOver } from './melodie.js';
-import { finaliserStatsPartie } from './achievements.js';
-import { verifierCodex } from './codex.js';
-import { sauvegarderSnapshotProfil } from './profil-jeu.js';
+import { finaliserPartieCommune } from './partie-fin-commun.js';
+import { coop } from './coop-logique.js';
 import { store } from './store-core.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
 import { enregistrerTopOut, arreterSuiviMonde } from './gestionnaire-difficulte.js';
 import { surFinDeMondeHistoire } from './histoire-manager.js';
 import { bossEstActif, arreterBoss } from './boss-jeu.js';
@@ -34,12 +33,13 @@ import { statsGlobales } from './achievements.js';
 import { arreterFondBiome } from './rendu-fond-biome.js';
 
 export function terminerPartie(victoire = false) {
+    if (coop.actif) return;
     arreterFondBiome();
     if (bossEstActif() && !victoire) {
         arreterBoss();
     }
     etat.estEnCours = false;
-    if (store.histoire.actif && !victoire) {
+    if (modeHistoireEnCours() && !victoire) {
         enregistrerTopOut();
         onGameOverHistoire(etat.lignes, store.histoire.mondeActuel ?? '');
     }
@@ -51,7 +51,9 @@ export function terminerPartie(victoire = false) {
         reagirRoboGameOver();
     }
     if (!victoire) setTimeout(() => AudioMoteur.son('game_over'), 250);
-    annoncer(victoire ? 'Sprint termine ! Victoire' : 'Partie terminee');
+    const annonceVictoire = modeHistoireEnCours()
+        ? 'Monde termine ! Victoire'
+        : 'Sprint termine ! Victoire';
 
     const textes = BIOMES[obtenirBiomeActif()]?.textes ?? BIOMES.classique.textes;
     const titreGo = document.querySelector('.go-titre');
@@ -66,10 +68,14 @@ export function terminerPartie(victoire = false) {
     mettreAJourAffichageRecord();
     _remplirEcranGameOver(scoreFinal, nouveauRecord);
 
-    const tempsPartie = Math.floor(obtenirTempsEcoule() / 1000);
-    sauvegarderSnapshotProfil(etat.lignes, obtenirBiomeActif());
-    finaliserStatsPartie(scoreFinal, tempsPartie);
-    void verifierCodex();
+    finaliserPartieCommune({
+        score: scoreFinal,
+        lignes: etat.lignes,
+        biomeId: obtenirBiomeActif(),
+        victoire,
+        annonceVictoire,
+        annonceDefaite: 'Partie terminee',
+    });
     _afficherActionsFinHistoire();
 
     setTimeout(() => {
@@ -115,14 +121,14 @@ function _remplirEcranGameOver(scoreFinal, nouveauRecord) {
     document.getElementById('temps-final').textContent = formaterTemps(obtenirTempsEcoule());
 
     const badge = document.getElementById('badge-record');
-    if (badge) badge.style.display = nouveauRecord ? 'block' : 'none';
+    badge?.classList.toggle('element-masque', !nouveauRecord);
     if (nouveauRecord) reagirRoboNouveauRecord();
 }
 
 function _afficherActionsFinHistoire() {
-    if (!store.histoire.actif) {
+    if (!modeHistoireEnCours()) {
         const btnCarte = document.getElementById('btn-histoire-carte');
-        if (btnCarte) btnCarte.style.display = 'none';
+        btnCarte?.classList.add('element-masque');
         arreterSuiviMonde();
     } else {
         surFinDeMondeHistoire(etat.lignes, etat.score);

@@ -25,14 +25,15 @@ Délai de réponse visé : **7 jours ouvrés**.
 | Menace                     | Mitigation en place                                                                                                 | Risque résiduel                          |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
 | **XSS**                    | CSP stricte (`script-src 'self'`), pas de `innerHTML` sur contenu dynamique, fragments HTML chargés via `DOMParser` | Faible — contenu statique contrôlé       |
-| **Injection localStorage** | Whitelist de clés dans `progression.js`, validation regex                                                           | Faible — impact local uniquement         |
+| **Injection localStorage** | Whitelist stricte de clés dans `progression.js`, validation regex (sans wildcard préfixe)                           | Faible — impact local uniquement         |
+| **Clickjacking**           | CSP `frame-ancestors 'none'` dans `index.html`                                                                      | Faible                                   |
 | **Cache poisoning SW**     | SW versionné (`derniere-ligne-{semver}`), notification MAJ, purge anciens caches                                    | Moyen — utilisateur peut retarder la MAJ |
 | **Supply chain npm**       | 0 dépendance runtime, `npm audit` + Dependabot + CodeQL en CI                                                       | Faible                                   |
 | **CSRF / SQLi**            | Non applicable (pas de backend)                                                                                     | N/A                                      |
 
 ## Bonnes pratiques en place
 
-- Content-Security-Policy stricte (`index.html`)
+- Content-Security-Policy stricte (`index.html`, incluant `frame-ancestors 'none'`)
 - Whitelist `localStorage` (`js/progression.js`)
 - Aucune dépendance runtime npm
 - Pas d'`innerHTML` sur des données utilisateur (DOM via `createElement` / `textContent`)
@@ -47,6 +48,10 @@ Scores, préférences et progression sont stockés **localement** (`localStorage
 ## Licence et intégrité
 
 Le Logiciel est distribué sous licence propriétaire (voir [LICENSE](LICENSE)). Toute modification non autorisée du code ou des assets est interdite.
+
+## Limites du déploiement GitHub Pages
+
+GitHub Pages ne permet pas de configurer des en-têtes HTTP personnalisés (HSTS, `Referrer-Policy`, etc.). La CSP est donc déclarée via balise `<meta>`. Pour une défense en profondeur renforcée, un proxy (Cloudflare Pages, Netlify) peut ajouter ces en-têtes.
 
 ## Périmètre hors scope
 

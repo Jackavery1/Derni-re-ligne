@@ -135,8 +135,7 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
     const elNom = /** @type {HTMLElement | null} */ (panneau.querySelector('.histoire-detail-nom'));
     if (elNom) {
         elNom.textContent = monde.nomAffiche;
-        elNom.style.color = biome.lueurCoul;
-        elNom.style.textShadow = `0 0 8px ${biome.lueurCoul}`;
+        elNom.style.setProperty('--detail-couleur', biome.lueurCoul);
     }
 
     const elType = /** @type {HTMLElement | null} */ (
@@ -144,7 +143,7 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
     );
     if (elType) {
         elType.textContent = estBoss ? '⚔ COMBAT DE BOSS' : `${biome.icone} ${biome.nom}`;
-        elType.style.color = estBoss ? 'var(--rose)' : biome.lueurCoul;
+        elType.style.setProperty('--detail-couleur', estBoss ? 'var(--rose)' : biome.lueurCoul);
     }
 
     const elStatut = /** @type {HTMLElement | null} */ (
@@ -153,7 +152,8 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
     if (elStatut) {
         if (etatMonde === 'complete') {
             elStatut.textContent = '✓ COMPLÉTÉ';
-            elStatut.style.color = 'var(--vert)';
+            elStatut.classList.add('histoire-detail-statut-complete');
+            elStatut.classList.remove('histoire-detail-statut-dim');
         } else if (etatMonde === 'disponible') {
             if (estBoss) {
                 elStatut.textContent = 'OBJECTIF : VAINCRE LE BOSS';
@@ -161,10 +161,12 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
                 const seuil = SEUILS_COMPLETION[monde.biomeId] ?? 10;
                 elStatut.textContent = `OBJECTIF : ${seuil} LIGNES`;
             }
-            elStatut.style.color = 'var(--texte-dim)';
+            elStatut.classList.remove('histoire-detail-statut-complete');
+            elStatut.classList.add('histoire-detail-statut-dim');
         } else {
             elStatut.textContent = '🔒 VERROUILLÉ';
-            elStatut.style.color = 'var(--texte-dim)';
+            elStatut.classList.remove('histoire-detail-statut-complete');
+            elStatut.classList.add('histoire-detail-statut-dim');
         }
     }
 

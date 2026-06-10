@@ -130,4 +130,15 @@ describe('progression', () => {
     it('ecrireStockageJson refuse une clé invalide', () => {
         expect(ecrireStockageJson('cle_invalide', {})).toBe(false);
     });
+
+    it('refuse une clé arbitraire même avec le préfixe derniereLigne_', () => {
+        expect(ecrireStockage('derniereLigne_injection_arbitraire', 'x')).toBe(false);
+        expect(lireStockage('derniereLigne_injection_arbitraire', 'defaut')).toBe('defaut');
+    });
+
+    it('accepte les clés tutoriel et intro explicitement listées', () => {
+        expect(ecrireStockage('derniereLigne_introHistoireVue', '1')).toBe(true);
+        expect(lireStockage('derniereLigne_introHistoireVue', '0')).toBe('1');
+        expect(ecrireStockage('derniereLigne_tutorielHistoireVu', '1')).toBe(true);
+    });
 });

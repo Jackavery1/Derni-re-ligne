@@ -1,0 +1,150 @@
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+
+const { afficherEcran, planifierBoucle } = vi.hoisted(() => ({
+    afficherEcran: vi.fn(),
+    planifierBoucle: vi.fn(),
+}));
+
+vi.mock('../js/meteo.js', () => ({
+    annulerMeteo: vi.fn(),
+}));
+
+vi.mock('../js/audio.js', () => ({
+    AudioMoteur: { arreterMusique: vi.fn(), son: vi.fn() },
+}));
+
+vi.mock('../js/progression.js', () => ({
+    calculerPointsProgression: vi.fn(() => 2),
+    obtenirRecordBiome: vi.fn(() => 1000),
+    sauvegarderNiveauGlobal: vi.fn(),
+}));
+
+vi.mock('../js/store-jeu.js', () => ({
+    etat: { estEnCours: true, lignes: 12, niveau: 3, score: 4500 },
+    obtenirBiomeActif: vi.fn(() => 'classique'),
+    obtenirNiveauGlobal: vi.fn(() => 5),
+    ajouterNiveauGlobal: vi.fn(),
+    ECRANS: { GAME_OVER: 'ecran-game-over' },
+}));
+
+vi.mock('../js/ecrans-ui.js', () => ({
+    appliquerHumeurMascotte: vi.fn(),
+    reagirRoboGameOver: vi.fn(),
+    reagirRoboNouveauRecord: vi.fn(),
+    annoncer: vi.fn(),
+    afficherEcran,
+    sauvegarderRecord: vi.fn(() => false),
+    mettreAJourAffichageRecord: vi.fn(),
+    formaterTemps: vi.fn(() => '01:23'),
+    obtenirTempsEcoule: vi.fn(() => 83000),
+}));
+
+vi.mock('../js/boucle-jeu.js', () => ({
+    planifierBoucle,
+}));
+
+vi.mock('../js/melodie.js', () => ({
+    afficherMelodieGameOver: vi.fn(),
+}));
+
+vi.mock('../js/achievements.js', () => ({
+    finaliserStatsPartie: vi.fn(),
+    statsGlobales: {},
+}));
+
+vi.mock('../js/codex.js', () => ({
+    verifierCodex: vi.fn(() => Promise.resolve()),
+}));
+
+vi.mock('../js/profil-jeu.js', () => ({
+    sauvegarderSnapshotProfil: vi.fn(),
+}));
+
+vi.mock('../js/store-core.js', () => ({
+    store: { histoire: { actif: false } },
+}));
+
+vi.mock('../js/gestionnaire-difficulte.js', () => ({
+    enregistrerTopOut: vi.fn(),
+    arreterSuiviMonde: vi.fn(),
+}));
+
+vi.mock('../js/histoire-manager.js', () => ({
+    surFinDeMondeHistoire: vi.fn(),
+}));
+
+vi.mock('../js/boss-jeu.js', () => ({
+    bossEstActif: vi.fn(() => false),
+    arreterBoss: vi.fn(),
+}));
+
+vi.mock('../js/mecaniques-histoire.js', () => ({
+    onGameOverHistoire: vi.fn(),
+}));
+
+vi.mock('../js/oracle-jeu.js', () => ({
+    oracle: { actif: false },
+    obtenirScoreFinalOracle: vi.fn(() => 4500),
+}));
+
+vi.mock('../js/rendu-fond-biome.js', () => ({
+    arreterFondBiome: vi.fn(),
+}));
+
+vi.mock('../js/coop-logique.js', () => ({
+    coop: { actif: false },
+}));
+
+import { terminerPartie } from '../js/partie-fin.js';
+import { etat } from '../js/store-jeu.js';
+
+describe('partie-fin', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+        vi.useFakeTimers();
+        const elements = {
+            'go-titre': { textContent: '' },
+            'score-final': { textContent: '' },
+            'lignes-finales': { textContent: '' },
+            'niveau-final': { textContent: '' },
+            'record-final': { textContent: '' },
+            'temps-final': { textContent: '' },
+            'badge-record': {
+                textContent: '',
+                classList: {
+                    contains: () => false,
+                    add: vi.fn(),
+                    remove: vi.fn(),
+                    toggle: vi.fn(),
+                },
+            },
+            'btn-histoire-carte': { classList: { add: vi.fn(), remove: vi.fn(), toggle: vi.fn() } },
+        };
+        document.getElementById = (id) => elements[id] ?? null;
+        document.querySelector = (sel) => (sel === '.go-titre' ? elements['go-titre'] : null);
+        etat.estEnCours = true;
+        etat.lignes = 12;
+        etat.niveau = 3;
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it('termine la partie et affiche le game over', () => {
+        terminerPartie(false);
+        expect(etat.estEnCours).toBe(false);
+        const scoreEl = document.getElementById('score-final');
+        expect(scoreEl?.textContent.replace(/\s/g, '')).toBe('4500');
+        expect(document.getElementById('lignes-finales')?.textContent).toBe('12');
+        vi.runAllTimers();
+        expect(afficherEcran).toHaveBeenCalledWith('ecran-game-over');
+        expect(planifierBoucle).toHaveBeenCalled();
+    });
+
+    it('masque le badge record si pas de nouveau record', () => {
+        const badge = document.getElementById('badge-record');
+        terminerPartie(false);
+        expect(badge?.classList.toggle).toHaveBeenCalledWith('element-masque', true);
+    });
+});

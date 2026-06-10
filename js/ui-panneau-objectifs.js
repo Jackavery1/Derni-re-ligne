@@ -2,6 +2,8 @@ import { BOSS } from './histoire-donnees.js';
 
 /** @typedef {import('./histoire-donnees.js').SEQUENCE_HISTOIRE[number]} MondeHistoire */
 import { store } from './store-core.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
+import { obtenirLibelleModificateurBiomeHud } from './mecaniques-histoire.js';
 import { obtenirEtatHistoire } from './histoire-mondes.js';
 import { ecouter } from './bus-jeu.js';
 import { DIFFICULTE_MONDES } from '../data/difficulte-mondes.js';
@@ -228,7 +230,7 @@ export function afficherRecapAvantNarratif(monde, etoiles, onFin) {
 }
 
 export function rafraichirHudObjectifsHistoire() {
-    if (!store.histoire.actif) {
+    if (!modeHistoireEnCours()) {
         _masquer('section-objectifs-histoire');
         return;
     }
@@ -261,6 +263,13 @@ export function rafraichirHudObjectifsHistoire() {
     }
 
     _texte('hud-palier-val', `VITESSE P${suivi.palierCourant}`);
+
+    const modificateur = obtenirLibelleModificateurBiomeHud();
+    const elMod = _el('hud-modificateur-biome');
+    if (elMod) {
+        elMod.textContent = modificateur;
+        elMod.classList.toggle('element-masque', !modificateur);
+    }
 }
 
 function _flashVague(montee) {
@@ -301,7 +310,7 @@ export function initialiserUiObjectifs() {
     ecouter('boss:phase', () => rafraichirHudObjectifsHistoire());
 
     ecouter('partie:stats', () => {
-        if (store.histoire.actif) rafraichirHudObjectifsHistoire();
+        if (modeHistoireEnCours()) rafraichirHudObjectifsHistoire();
     });
 }
 

@@ -1,5 +1,7 @@
 import { coop } from './coop-logique.js';
-import { modeArchiActif } from './archi-logique.js';
+import { modeArchiEnCours, modeCoopEnCours } from './registre-modes.js';
+import { attacherRepetitionBouton } from './input-repetition.js';
+import { coopActiverTouche, coopDesactiverTouche } from './coop-das.js';
 import {
     coop_deplacerGauche,
     coop_deplacerDroite,
@@ -11,6 +13,9 @@ import {
     basculerPauseCoop,
 } from './coop-jeu.js';
 import { coop_dessinerPreview } from './coop-rendu.js';
+
+/** @type {readonly ('j1' | 'j2')[]} */
+const JOUEURS_COOP = ['j1', 'j2'];
 
 const TOUCHES_COOP = {
     j1: {
@@ -36,32 +41,33 @@ const TOUCHES_COOP = {
 };
 
 function attacherCoop(idBouton, action, avecRepetition = false) {
-    const btn = document.getElementById(idBouton);
-    if (!btn) return;
-    let idInterval = null;
-    const repeter = () => {
-        if (!coop.actif || !coop.estEnCours || coop.estEnPause) return;
-        action();
-        if (avecRepetition) idInterval = setInterval(action, 110);
-    };
-    const fin = () => {
-        if (idInterval) {
-            clearInterval(idInterval);
-            idInterval = null;
-        }
-    };
-    btn.addEventListener(
-        'touchstart',
-        (e) => {
-            e.preventDefault();
-            repeter();
+    attacherRepetitionBouton(
+        document.getElementById(idBouton),
+        () => {
+            if (!modeCoopEnCours() || !coop.estEnCours || coop.estEnPause) return;
+            action();
         },
-        { passive: false }
+        avecRepetition
     );
-    btn.addEventListener('touchend', fin, { passive: false });
-    btn.addEventListener('mousedown', repeter);
-    btn.addEventListener('mouseup', fin);
-    btn.addEventListener('mouseleave', fin);
+}
+
+const coopTouchesActives = { j1: {}, j2: {} };
+
+const TOUS_CODES_MOUVEMENT_COOP = new Set([
+    ...TOUCHES_COOP.j1.gauche,
+    ...TOUCHES_COOP.j1.droite,
+    ...TOUCHES_COOP.j1.bas,
+    ...TOUCHES_COOP.j2.gauche,
+    ...TOUCHES_COOP.j2.droite,
+    ...TOUCHES_COOP.j2.bas,
+]);
+
+/** @param {'j1' | 'j2'} joueur @param {string} code @param {() => void} action */
+function activerMouvementCoop(joueur, code, action) {
+    if (coopTouchesActives[joueur][code]) return;
+    coopTouchesActives[joueur][code] = true;
+    coopActiverTouche(joueur, code);
+    action();
 }
 
 let inputCoopInitialise = false;
@@ -70,21 +76,21 @@ export function initialiserInputCoop() {
     if (inputCoopInitialise) return;
     inputCoopInitialise = true;
     document.addEventListener('keydown', (e) => {
-        if (modeArchiActif() || !coop.actif || !coop.estEnCours || coop.estEnPause) return;
+        if (modeArchiEnCours() || !modeCoopEnCours() || !coop.estEnCours || coop.estEnPause) return;
 
         let touchePrise = false;
-        for (const joueur of ['j1', 'j2']) {
+        for (const joueur of JOUEURS_COOP) {
             const t = TOUCHES_COOP[joueur];
             if (t.gauche.includes(e.code)) {
-                coop_deplacerGauche(joueur);
+                activerMouvementCoop(joueur, e.code, () => coop_deplacerGauche(joueur));
                 touchePrise = true;
             }
             if (t.droite.includes(e.code)) {
-                coop_deplacerDroite(joueur);
+                activerMouvementCoop(joueur, e.code, () => coop_deplacerDroite(joueur));
                 touchePrise = true;
             }
             if (t.bas.includes(e.code)) {
-                coop_deplacerBas(joueur);
+                activerMouvementCoop(joueur, e.code, () => coop_deplacerBas(joueur));
                 touchePrise = true;
             }
             if (t.rotation.includes(e.code)) {
@@ -115,6 +121,15 @@ export function initialiserInputCoop() {
         if (touchePrise) e.preventDefault();
 
         if (e.code === 'KeyP' || e.code === 'Escape') basculerPauseCoop();
+    });
+
+    document.addEventListener('keyup', (e) => {
+        if (!modeCoopEnCours()) return;
+        if (!TOUS_CODES_MOUVEMENT_COOP.has(e.code)) return;
+        for (const joueur of JOUEURS_COOP) {
+            delete coopTouchesActives[joueur][e.code];
+            coopDesactiverTouche(joueur, e.code);
+        }
     });
 
     attacherCoop('ccj1-gauche', () => coop_deplacerGauche('j1'), true);

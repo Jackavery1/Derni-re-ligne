@@ -9,6 +9,9 @@ import {
     estPositionValideAvecForme,
     calculerPointsLignes,
     calculerNiveauDepuisLignes,
+    detecterTSpin,
+    calculerPointsTSpin,
+    supprimerLignesDuPlateauExcluantRouille,
 } from '../js/logique-pure.js';
 import { CONFIG } from '../js/config.js';
 
@@ -71,5 +74,32 @@ describe('logique-pure', () => {
         expect(calculerNiveauDepuisLignes(0)).toBe(1);
         expect(calculerNiveauDepuisLignes(10)).toBe(2);
         expect(calculerNiveauDepuisLignes(25)).toBe(3);
+    });
+
+    it('supprimerLignesDuPlateauExcluantRouille ignore les lignes rouillées', () => {
+        const plateau = Array.from({ length: CONFIG.lignes }, () => Array(CONFIG.colonnes).fill(0));
+        plateau[19].fill('#8b4513');
+        const estRouillee = (x, y) => y === 19 && x === 2;
+        const { nbSupprimees } = supprimerLignesDuPlateauExcluantRouille(plateau, estRouillee);
+        expect(nbSupprimees).toBe(0);
+    });
+
+    it('detecterTSpin retourne full avec 3 coins remplis', () => {
+        const plateau = Array.from({ length: CONFIG.lignes }, () => Array(CONFIG.colonnes).fill(0));
+        const piece = { type: 'T', rotation: 0, x: 4, y: 17 };
+        const forme = [
+            [0, 1, 0],
+            [1, 1, 1],
+            [0, 0, 0],
+        ];
+        plateau[17][4] = '#fff';
+        plateau[17][6] = '#fff';
+        plateau[19][4] = '#fff';
+        expect(detecterTSpin(plateau, piece, forme)).toBe('full');
+    });
+
+    it('calculerPointsTSpin applique un bonus niveau', () => {
+        expect(calculerPointsTSpin('full', 1, 2)).toBe(1600);
+        expect(calculerPointsTSpin('mini', 0, 3)).toBe(300);
     });
 });

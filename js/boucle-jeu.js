@@ -30,8 +30,8 @@ import {
     definirAccumulateur,
 } from './store-jeu.js';
 import { mettreAJourDas, mettreAJourIndicateurRelique, estPositionValide } from './piece-jeu.js';
-import { archi } from './archi-logique.js';
-import { coop } from './coop-logique.js';
+import { partieSpecialiseeActive } from './registre-modes.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
 import {
     dessinerPlateau,
     dessinerPieceFantome,
@@ -71,7 +71,7 @@ export function mettreAJourFps(deltaTemps) {
 }
 
 function aBesoinDeBoucle() {
-    if (archi.actif || coop.actif) return false;
+    if (partieSpecialiseeActive()) return false;
     return (
         etat.estEnCours ||
         menuAnimActif ||
@@ -168,7 +168,7 @@ function _mettreAJourGravitePiece(deltaTemps) {
 }
 
 function boucleJeu(timestamp) {
-    if (archi.actif || coop.actif) {
+    if (partieSpecialiseeActive()) {
         suspendreBoucleSolo();
         return;
     }
@@ -192,7 +192,9 @@ function boucleJeu(timestamp) {
         if (enPartie) {
             mettreAJourMeteo(deltaTemps);
             mettreAJourMecaniquesHistoire(deltaTemps, timestamp);
-            mettreAJourVivant(deltaTemps);
+            if (!modeHistoireEnCours()) {
+                mettreAJourVivant(deltaTemps);
+            }
             mettreAJourDas(deltaTemps);
             _mettreAJourGravitePiece(deltaTemps);
 

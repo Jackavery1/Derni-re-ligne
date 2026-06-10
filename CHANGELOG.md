@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version   | Date       | En bref                                                                                |
 | --------- | ---------- | -------------------------------------------------------------------------------------- |
+| **2.5.6** | 2026-06-10 | Audit gameplay, refactor archi, docs simplifiées                                       |
 | **2.5.5** | 2026-06-10 | Correctifs audit : intro Jour 2 554, cutscenes, dev, objectifs, rendu, E2E             |
 | **2.5.4** | 2026-06-09 | Carte histoire verticale : visibilité, mondes secrets, découpage modules, tests        |
 | **2.5.3** | 2026-06-09 | ROBO restauré, modes masqués, carte histoire, CI factorisée, a11y overlays             |
@@ -21,6 +22,14 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.0.0** | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                          |
 
 ---
+
+## [2.5.6] — 2026-06-10
+
+- Rouille mécanique, T-Spin solo/coop, fin de partie partagée (`partie-fin-commun.js`)
+- Coop : combo, soft drop, chronomètre, pause temps
+- Refactor : `score-partie.js`, découpage cutscenes/portraits, `mode-histoire.js`
+- HUD Éclipse/Surtension, typecheck, CSP `worker-src`
+- Documentation simplifiée
 
 ## [2.5.5] — 2026-06-10
 

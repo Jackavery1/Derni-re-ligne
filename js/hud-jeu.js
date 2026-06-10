@@ -15,7 +15,8 @@ import {
 import { obtenirScoreAffiche } from './oracle-jeu.js';
 import { annoncer } from './annonces.js';
 import { afficherNotificationNiveau } from './ui-notifications.js';
-import { store } from './store-core.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
+import { obtenirSuiviDifficulte } from './gestionnaire-difficulte.js';
 
 export function chargerProgression() {
     definirNiveauGlobal(chargerNiveauGlobal());
@@ -57,10 +58,14 @@ export function mettreAJourAffichageTemps() {
 
 export function rafraichirStats() {
     const score = obtenirScoreAffiche();
+    const suiviHistoire = modeHistoireEnCours() ? obtenirSuiviDifficulte() : null;
+    const niveauAffiche = suiviHistoire?.actif
+        ? `P${suiviHistoire.palierCourant}`
+        : String(etat.niveau);
     const ids = {
         'affichage-score': score.toLocaleString('fr-FR'),
         'affichage-lignes': String(etat.lignes),
-        'affichage-niveau': String(etat.niveau),
+        'affichage-niveau': niveauAffiche,
     };
     for (const [id, valeur] of Object.entries(ids)) {
         const el = document.getElementById(id);
@@ -73,14 +78,16 @@ export function rafraichirStats() {
     }
 
     annoncer(
-        `Score ${score.toLocaleString('fr-FR')}, ${etat.lignes} lignes, niveau ${etat.niveau}`
+        suiviHistoire?.actif
+            ? `Score ${score.toLocaleString('fr-FR')}, ${etat.lignes} lignes, vitesse palier ${suiviHistoire.palierCourant}`
+            : `Score ${score.toLocaleString('fr-FR')}, ${etat.lignes} lignes, niveau ${etat.niveau}`
     );
 
     const modNiveau = etat.lignes % 10;
     const lignesRestantes = modNiveau === 0 ? 10 : 10 - modNiveau;
     const elRestant = document.getElementById('affichage-restant');
     if (elRestant) {
-        if (store.histoire.actif) {
+        if (modeHistoireEnCours()) {
             elRestant.textContent = '';
         } else {
             elRestant.textContent = `${lignesRestantes} ▸ NIV.${etat.niveau + 1}`;
@@ -89,14 +96,14 @@ export function rafraichirStats() {
 
     const elBarre = document.getElementById('barre-progression-fill');
     if (elBarre) {
-        if (store.histoire.actif) {
+        if (modeHistoireEnCours()) {
             elBarre.style.setProperty('--barre-progression-pct', '0%');
         } else {
             elBarre.style.setProperty('--barre-progression-pct', `${modNiveau * 10}%`);
         }
     }
 
-    if (store.histoire.actif) {
+    if (modeHistoireEnCours()) {
         void import('./ui-panneau-objectifs.js').then(({ rafraichirHudObjectifsHistoire }) =>
             rafraichirHudObjectifsHistoire()
         );

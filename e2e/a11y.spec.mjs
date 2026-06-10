@@ -18,6 +18,30 @@ test('écran titre sans violations accessibilité critiques', async ({ page }) =
     expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
 });
 
+test('écran titre — contraste des couleurs', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    const result = await new AxeBuilder({ page })
+        .include('#ecran-titre')
+        .withRules(['color-contrast'])
+        .analyze();
+    expect(filtrerViolationsCritiques(result.violations, { inclureContraste: true })).toEqual([]);
+});
+
+test('sélection biome — contraste des couleurs', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-jouer').click();
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    const result = await new AxeBuilder({ page })
+        .include('#ecran-selection')
+        .withRules(['color-contrast'])
+        .analyze();
+    expect(filtrerViolationsCritiques(result.violations, { inclureContraste: true })).toEqual([]);
+});
+
 test('achievements sans violations accessibilité critiques', async ({ page }) => {
     await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
     await page.goto('/');

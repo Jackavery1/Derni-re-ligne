@@ -13,9 +13,6 @@ import {
 } from './store-jeu.js';
 import { hexVersRgb, lierCouleursTetrominos } from './piece-jeu.js';
 import {
-    appliquerThemeBiome,
-    appliquerTextesBiome,
-    appliquerThemeMascotte,
     changerHumeur,
     cacherEcrans,
     afficherEcran,
@@ -23,22 +20,23 @@ import {
     mettreAJourAffichageRecord,
 } from './ecrans-ui.js';
 import { obtenirRecordCoopBiome, sauvegarderRecordCoopBiome } from './progression.js';
-import { obtenirBouton } from './dom-utils.js';
+import { finaliserPartieCommune } from './partie-fin-commun.js';
 import { planifierBoucle } from './boucle-jeu.js';
-import { arreterAnimationMenu } from './menu-fond.js';
+import { obtenirBouton } from './dom-utils.js';
 import { mettreAJourParticules } from './particules-jeu.js';
+import { initialiserAudioBiome } from './audio-partie.js';
 import { basculerOracle, oracle } from './oracle-jeu.js';
 import {
     coop,
     reinitialiserEtatCoop,
-    coop_vitesseChute,
-    coop_verrouillerPiece,
+    coop_mettreAJourGravite,
     coop_rafraichirStats,
     configurerCoopLogique,
-    coop_estPositionValide,
+    definirCoopPartieEnCours,
 } from './coop-logique.js';
 import { coop_dessinerPreview, coop_rendreFrame } from './coop-rendu.js';
-import { definirCoopPartieEnCours } from './coop-etat.js';
+import { mettreAJourDasCoop } from './coop-das.js';
+import { obtenirCarteDasCoop } from './coop-carte-das.js';
 
 export { coop, modeCoopActif, basculerModeCoop, utiliserPasserelle } from './coop-logique.js';
 export {
@@ -54,6 +52,7 @@ export {
 
 let idFrameCoop = null;
 let dernierTimestampCoop = 0;
+let coopGameOverDeclenche = false;
 
 configurerCoopLogique({ terminerCooperatif: (j) => terminerCooperatif(j) });
 
@@ -111,7 +110,14 @@ function afficherInterfaceCoop(visible) {
     }
 }
 
+export function initialiserChronometreCoop() {
+    etat.tempsDebut = Date.now();
+    etat.tempsPauseAccumule = 0;
+    etat.tempsPauseDebut = null;
+}
+
 export function demarrerCooperatif() {
+    coopGameOverDeclenche = false;
     definirCoopPartieEnCours(true);
     etat.estEnCours = false;
     arreterBoucleSolo();
@@ -119,18 +125,12 @@ export function demarrerCooperatif() {
     if (oracle.actif) basculerOracle();
 
     reinitialiserEtatCoop();
+    initialiserChronometreCoop();
     particules.length = 0;
 
     arreterConstellation();
-    appliquerThemeBiome(obtenirBiomeActif());
-    appliquerTextesBiome(obtenirBiomeActif());
-    appliquerThemeMascotte();
+    initialiserAudioBiome(obtenirBiomeActif(), { delaiMusique: 50 });
     lierCouleursTetrominos();
-    AudioMoteur.init();
-    if (AudioMoteur.ctx && AudioMoteur.actif) {
-        AudioMoteur.demarrerMusique(obtenirBiomeActif());
-    }
-    arreterAnimationMenu();
 
     definirCouleurAmbRgb(hexVersRgb(BIOMES[obtenirBiomeActif()].lueurCoul));
 
@@ -160,29 +160,11 @@ function boucleCooperatif(timestamp) {
     dernierTimestampCoop = timestamp;
 
     if (coop.estEnCours && !coop.estEnPause) {
-        const vitesse = coop_vitesseChute();
-
-        coop.accJ1 += dt;
-        if (coop.accJ1 >= vitesse && coop.j1.pieceActuelle) {
-            coop.accJ1 = 0;
-            if (coop_estPositionValide(coop.j1.pieceActuelle, 0, 1)) {
-                coop.j1.pieceActuelle.y++;
-            } else {
-                coop_verrouillerPiece('j1');
-                coop_dessinerPreview('j1');
-            }
-        }
-
-        coop.accJ2 += dt;
-        if (coop.accJ2 >= vitesse && coop.j2.pieceActuelle) {
-            coop.accJ2 = 0;
-            if (coop_estPositionValide(coop.j2.pieceActuelle, 0, 1)) {
-                coop.j2.pieceActuelle.y++;
-            } else {
-                coop_verrouillerPiece('j2');
-                coop_dessinerPreview('j2');
-            }
-        }
+        mettreAJourDasCoop(dt, obtenirCarteDasCoop());
+        coop_mettreAJourGravite('j1', dt);
+        coop_mettreAJourGravite('j2', dt);
+        coop_dessinerPreview('j1');
+        coop_dessinerPreview('j2');
 
         if (coop.flashSynchro > 0) coop.flashSynchro -= dt;
         mettreAJourParticules(dt);
@@ -197,12 +179,17 @@ export function basculerPauseCoop() {
     coop.estEnPause = !coop.estEnPause;
 
     if (coop.estEnPause) {
+        etat.tempsPauseDebut = Date.now();
         const elS = document.getElementById('coop-pause-score');
         const elN = document.getElementById('coop-pause-niveau');
         if (elS) elS.textContent = coop.score.toLocaleString('fr-FR');
         if (elN) elN.textContent = String(coop.niveau);
         afficherEcran(ECRANS.PAUSE_COOP);
     } else {
+        if (etat.tempsPauseDebut) {
+            etat.tempsPauseAccumule += Date.now() - etat.tempsPauseDebut;
+            etat.tempsPauseDebut = null;
+        }
         cacherEcrans();
         dernierTimestampCoop = performance.now();
         const btn = document.getElementById('btn-pause-coop');
@@ -211,6 +198,8 @@ export function basculerPauseCoop() {
 }
 
 export function terminerCooperatif(joueurFautif) {
+    if (coopGameOverDeclenche) return;
+    coopGameOverDeclenche = true;
     coop.estEnCours = false;
     arreterBoucleCoop();
     changerHumeur('triste');
@@ -238,7 +227,17 @@ export function terminerCooperatif(joueurFautif) {
         elRecord.textContent = obtenirRecordCoopBiome(obtenirBiomeActif()).toLocaleString('fr-FR');
     }
 
-    setTimeout(() => afficherEcran(ECRANS.GAME_OVER_COOP), 400);
+    finaliserPartieCommune({
+        score: coop.score,
+        lignes: coop.lignes,
+        biomeId: obtenirBiomeActif(),
+        annonceDefaite: 'Mission coop echouee',
+    });
+
+    setTimeout(() => {
+        afficherEcran(ECRANS.GAME_OVER_COOP);
+        planifierBoucle();
+    }, 400);
 }
 
 export function quitterModeCoop() {

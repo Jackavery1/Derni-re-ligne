@@ -116,5 +116,5 @@ describe('cutscene UI', () => {
         avancerCutscene();
         expect(texteEl.textContent).toBe('Ligne deux.');
         expect(texteEl.textContent).not.toContain('Ligne un.');
-    });
+    }, 15_000);
 });

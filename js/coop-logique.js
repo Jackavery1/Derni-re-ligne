@@ -1,5 +1,7 @@
 import { CONFIG, TETROMINOS } from './config.js';
-import { calculerPointsLignes, remplirSac } from './logique-pure.js';
+import { remplirSac, detecterTSpin } from './logique-pure.js';
+import { appliquerScoreLignes } from './score-partie.js';
+import { reinitialiserDasCoop } from './coop-das.js';
 import { extraireForme, estPositionValideAvecBornes } from './moteur-piece.js';
 import { etat } from './store-jeu.js';
 import { creerPlateau, obtenirCouleurPieceParType } from './piece-jeu.js';
@@ -12,7 +14,7 @@ import {
     poserPieceSurPlateau,
     vitesseChuteDepuisNiveau,
     deplacerPieceSiValide,
-    tenterRotationSimple,
+    tenterRotationSrs,
     calculerSpawnXCoop,
     executerChuteRapide,
 } from './actions-piece-communes.js';
@@ -72,6 +74,8 @@ export const coop = {
     lignesEnAttenteJ1: -1,
     lignesEnAttenteJ2: -1,
     flashSynchro: 0,
+    combo: 0,
+    dernierEtaitTetris: false,
 };
 
 function creerJoueurVide() {
@@ -81,7 +85,57 @@ function creerJoueurVide() {
         pieceEnReserve: null,
         reserveUtilisee: false,
         passerelleDisponible: true,
+        pieceAuSol: false,
+        lockDelayRestant: 0,
+        nbLockResets: 0,
+        poseApresRotation: false,
     };
+}
+
+/** @param {'j1' | 'j2'} joueur */
+export function coop_reinitialiserLockDelay(joueur) {
+    const jData = coop[joueur];
+    if (!jData.pieceAuSol) return;
+    if (jData.nbLockResets < CONFIG.maxLockResets) {
+        jData.lockDelayRestant = CONFIG.lockDelay;
+        jData.nbLockResets++;
+    }
+}
+
+/**
+ * @param {'j1' | 'j2'} joueur
+ * @param {number} dt
+ */
+export function coop_mettreAJourGravite(joueur, dt) {
+    const jData = coop[joueur];
+    const piece = jData.pieceActuelle;
+    if (!piece) return;
+
+    const accKey = joueur === 'j1' ? 'accJ1' : 'accJ2';
+    const vitesse = coop_vitesseChute();
+
+    if (coop_estPositionValide(piece, 0, 1)) {
+        jData.pieceAuSol = false;
+        jData.lockDelayRestant = 0;
+        coop[accKey] += dt;
+        if (coop[accKey] >= vitesse) {
+            coop[accKey] = 0;
+            piece.y++;
+        }
+        return;
+    }
+
+    if (!jData.pieceAuSol) {
+        jData.pieceAuSol = true;
+        jData.lockDelayRestant = CONFIG.lockDelay;
+        jData.nbLockResets = 0;
+        return;
+    }
+
+    jData.lockDelayRestant -= dt;
+    if (jData.lockDelayRestant <= 0) {
+        coop_verrouillerPiece(joueur);
+    }
 }
 
 // Sac 7-bag par joueur : même distribution de pieces qu'en solo (evite les
@@ -148,17 +202,27 @@ export function afficherNotifNiveauCoop() {
     });
 }
 
-export function coop_calculerScore(nbLignes) {
-    coop.score += calculerPointsLignes(nbLignes, coop.niveau);
+export function coop_calculerScore(nbLignes, tSpin = null) {
+    const etatScore = {
+        score: coop.score,
+        lignes: coop.lignes,
+        niveau: coop.niveau,
+        combo: coop.combo,
+        dernierEtaitTetris: coop.dernierEtaitTetris,
+    };
+    const result = appliquerScoreLignes(etatScore, nbLignes, tSpin);
+    coop.score = etatScore.score;
+    coop.lignes = etatScore.lignes;
+    coop.niveau = etatScore.niveau;
+    coop.combo = etatScore.combo;
+    coop.dernierEtaitTetris = etatScore.dernierEtaitTetris;
 
     statsGlobales.lignesCoopTotal = (statsGlobales.lignesCoopTotal || 0) + nbLignes;
     if (nbLignes > (statsGlobales.coopMaxLignesUnCoup || 0)) {
         statsGlobales.coopMaxLignesUnCoup = nbLignes;
     }
 
-    const nouveauNiveau = Math.floor(coop.lignes / 10) + 1;
-    if (nouveauNiveau > coop.niveau) {
-        coop.niveau = nouveauNiveau;
+    if (result.levelUp) {
         coop.j1.passerelleDisponible = true;
         coop.j2.passerelleDisponible = true;
         for (const j of ['j1', 'j2']) {
@@ -168,6 +232,15 @@ export function coop_calculerScore(nbLignes) {
         afficherNotifNiveauCoop();
     }
     coop_rafraichirStats();
+    return result;
+}
+
+function afficherNotifTSpinCoop(tSpin) {
+    if (typeof document === 'undefined' || !tSpin) return;
+    const label = tSpin === 'full' ? 'T-SPIN !' : 'T-SPIN MINI !';
+    afficherNotificationNiveau(label, {
+        classesRetirer: ['notif-synchro', 'notif-niveau-vert'],
+    });
 }
 
 export function coop_verifierLignes() {
@@ -197,16 +270,7 @@ export function coop_verifierLignes() {
         }
     }
 
-    if (nbSupprimees > 0) {
-        coop.lignes += nbSupprimees;
-        coop_calculerScore(nbSupprimees);
-        if (typeof document !== 'undefined') {
-            reagirRoboAuxLignes(nbSupprimees, 0);
-        }
-        afficherNotifSynchro(nbSupprimees);
-        verifierAchievements();
-        sauvegarderStats();
-    }
+    return nbSupprimees;
 }
 
 let terminerCoopCallback = null;
@@ -220,6 +284,13 @@ export function coop_verrouillerPiece(joueur) {
     const piece = jData.pieceActuelle;
     if (!piece) return;
 
+    const formeVerrou = extraireForme(piece);
+    const tSpin =
+        jData.poseApresRotation && piece.type === 'T' && piece.x != null && piece.y != null
+            ? detecterTSpin(etat.plateau, piece, formeVerrou)
+            : null;
+    jData.poseApresRotation = false;
+
     const couleur = obtenirCouleurPieceParType(piece.type);
     const { gameOver } = poserPieceSurPlateau(etat.plateau, piece, couleur);
 
@@ -228,11 +299,27 @@ export function coop_verrouillerPiece(joueur) {
         return;
     }
 
-    coop_verifierLignes();
+    const nbLignes = coop_verifierLignes();
+    const result = coop_calculerScore(nbLignes, tSpin);
+
+    if (nbLignes > 0) {
+        if (typeof document !== 'undefined') {
+            reagirRoboAuxLignes(nbLignes, result.combo);
+        }
+        afficherNotifSynchro(nbLignes);
+        verifierAchievements();
+        sauvegarderStats();
+    }
+    if (result.tSpin) {
+        afficherNotifTSpinCoop(result.tSpin);
+    }
 
     jData.pieceActuelle = jData.prochainePiece;
     jData.prochainePiece = coop_nouvellePiece(joueur);
     jData.reserveUtilisee = false;
+    jData.pieceAuSol = false;
+    jData.lockDelayRestant = 0;
+    jData.nbLockResets = 0;
 
     if (!coop_estPositionValide(jData.pieceActuelle)) {
         terminerCoopCallback?.(joueur);
@@ -240,34 +327,57 @@ export function coop_verrouillerPiece(joueur) {
 }
 
 export function coop_deplacerGauche(joueur) {
-    const p = coop[joueur].pieceActuelle;
+    const jData = coop[joueur];
+    const p = jData.pieceActuelle;
     if (!p || coop.estEnPause) return;
-    deplacerPieceSiValide(p, -1, 0, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy));
+    jData.poseApresRotation = false;
+    if (deplacerPieceSiValide(p, -1, 0, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy))) {
+        coop_reinitialiserLockDelay(joueur);
+    }
 }
 
 export function coop_deplacerDroite(joueur) {
-    const p = coop[joueur].pieceActuelle;
+    const jData = coop[joueur];
+    const p = jData.pieceActuelle;
     if (!p || coop.estEnPause) return;
-    deplacerPieceSiValide(p, 1, 0, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy));
+    jData.poseApresRotation = false;
+    if (deplacerPieceSiValide(p, 1, 0, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy))) {
+        coop_reinitialiserLockDelay(joueur);
+    }
 }
 
 export function coop_deplacerBas(joueur) {
-    const p = coop[joueur].pieceActuelle;
+    const jData = coop[joueur];
+    const p = jData.pieceActuelle;
     if (!p || coop.estEnPause) return;
-    deplacerPieceSiValide(p, 0, 1, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy));
+    jData.poseApresRotation = false;
+    if (deplacerPieceSiValide(p, 0, 1, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy))) {
+        coop.score += 1;
+        coop_rafraichirStats();
+        jData.pieceAuSol = false;
+        jData.lockDelayRestant = 0;
+    }
 }
 
 export function coop_tourner(joueur, sens) {
-    const p = coop[joueur].pieceActuelle;
+    const jData = coop[joueur];
+    const p = jData.pieceActuelle;
     if (!p || coop.estEnPause) return;
-    tenterRotationSimple(p, sens, (piece, dx, dy, rotation) =>
-        coop_estPositionValide(piece, dx, dy, rotation)
-    );
+    if (
+        tenterRotationSrs(p, sens, (piece, dx, dy, rotation) =>
+            coop_estPositionValide(piece, dx, dy, rotation)
+        )
+    ) {
+        jData.poseApresRotation = true;
+        coop_reinitialiserLockDelay(joueur);
+    }
 }
 
 export function coop_chuteRapide(joueur) {
-    const p = coop[joueur].pieceActuelle;
+    const jData = coop[joueur];
+    const p = jData.pieceActuelle;
     if (!p || coop.estEnPause) return;
+    jData.poseApresRotation = false;
     const dist = executerChuteRapide(p, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy));
     coop.score += dist * 2;
     coop_rafraichirStats();
@@ -295,6 +405,10 @@ export function coop_utiliserReserve(joueur) {
     jData.pieceActuelle.y = 0;
     jData.pieceActuelle.joueur = joueur;
     jData.reserveUtilisee = true;
+    jData.poseApresRotation = false;
+    jData.pieceAuSol = false;
+    jData.lockDelayRestant = 0;
+    jData.nbLockResets = 0;
 }
 
 export function utiliserPasserelle(joueur) {
@@ -345,6 +459,9 @@ export function reinitialiserEtatCoop() {
     coop.flashSynchro = 0;
     coop.lignesEnAttenteJ1 = -1;
     coop.lignesEnAttenteJ2 = -1;
+    coop.combo = 0;
+    coop.dernierEtaitTetris = false;
+    reinitialiserDasCoop();
 
     etat.plateau = creerPlateau();
 
@@ -357,4 +474,19 @@ export function reinitialiserEtatCoop() {
     coop.j1.prochainePiece = coop_nouvellePiece('j1');
     coop.j2.pieceActuelle = coop_nouvellePiece('j2');
     coop.j2.prochainePiece = coop_nouvellePiece('j2');
+}
+
+/** Préférence coop sur l'écran sélection (avant lancement). */
+export function coopEstPrefere() {
+    return modeCoopActif;
+}
+
+/** Partie coop en cours (runtime). */
+export function coopPartieEnCours() {
+    return coop.actif;
+}
+
+/** @param {boolean} actif */
+export function definirCoopPartieEnCours(actif) {
+    coop.actif = actif;
 }

@@ -23,9 +23,14 @@ import {
     reagirRoboBossDegats,
     reagirRoboBossVaincu,
 } from './mascotte-robo.js';
+import {
+    COULEUR_BRAISE,
+    COULEUR_GLACE_B,
+    degelColonnes,
+    executerAttaqueBoss,
+} from './boss-attaques.js';
 
-export const COULEUR_BRAISE = '#cc2200';
-export const COULEUR_GLACE_B = '#aaeeff';
+export { COULEUR_BRAISE, COULEUR_GLACE_B };
 export const DUREE_VICTOIRE_BOSS_MS = 2200;
 
 const TEXTES_MI_COMBAT = {
@@ -50,6 +55,15 @@ const TEXTES_MI_COMBAT = {
         33: '∞ PEUT-ÊTRE QUE SI.',
     },
 };
+
+/** @returns {import('./boss-attaques.js').ContexteAttaqueBoss} */
+function _ctxAttaque() {
+    return {
+        plateau: etat.plateau,
+        effets: store.histoire.boss.effets,
+        bossActif: store.histoire.boss.actif,
+    };
+}
 
 /** @param {{ id?: string, attaqueIntervalleMs?: number }} boss */
 function _obtenirIntervalleAttaque(boss) {
@@ -220,141 +234,61 @@ function _exectuterAttaque() {
     }, 280);
 
     const boss = store.histoire.boss.actif;
-    const phase = _obtenirPhaseActuelle();
-    const typeAttaque = phase?.attaqueType ?? boss.attaqueType;
-
-    if (!typeAttaque) return;
-
-    if (typeAttaque === 'multi_phase') {
-        const phaseData = boss.phases?.[store.histoire.boss.phase];
-        if (phaseData) _appliquerAttaque(phaseData.type, phaseData.dureeMs);
-    } else if (typeAttaque === 'combinaison' || typeAttaque === 'combinaison_glace_glitch') {
-        const disponibles = boss.attaquesDisponibles ?? [
-            'rangee_braise',
-            'colonne_gelee',
-            'inverser_controles',
-        ];
-        const type = disponibles[Math.floor(Math.random() * disponibles.length)];
-        _appliquerAttaque(type, 8000);
-    } else {
-        _appliquerAttaque(typeAttaque, phase?.dureeMs ?? 0);
-    }
+    const attaque = executerAttaqueBoss(boss, store.histoire.boss.phase, _ctxAttaque());
+    if (attaque) _afficherEffetAttaque(attaque.type, attaque.dureeMs, attaque.resultat);
 }
 
-/** @param {string} type @param {number} dureeMs */
-function _appliquerAttaque(type, dureeMs) {
-    const m = store.histoire.boss.effets;
+/**
+ * @param {string} type
+ * @param {number} dureeMs
+ * @param {unknown} resultat
+ */
+function _afficherEffetAttaque(type, dureeMs, resultat) {
     switch (type) {
         case 'rangee_braise':
-            _attaqueRangeeBraise();
+            if (resultat === false) {
+                _afficherTexteBoss('🔥 BRAISE CONTENUE');
+            } else {
+                _afficherTexteBoss('🔥 RANGÉE DE BRAISE');
+                if (!AudioMoteur.muet) AudioMoteur.son('verrou');
+            }
             break;
-        case 'colonne_gelee':
-            _attaqueColonneGelee(
-                store.histoire.boss.actif?.nbColonnesGelees ?? 2,
-                dureeMs || store.histoire.boss.actif?.dureeGelee || 8000
-            );
+        case 'colonne_gelee': {
+            const colonnes = /** @type {number[] | undefined} */ (resultat);
+            if (colonnes?.length) {
+                _afficherTexteBoss(`❄ COLONNES ${colonnes.map((c) => c + 1).join(', ')} GELÉES`);
+                if (!AudioMoteur.muet) AudioMoteur.son('hold');
+            }
             break;
+        }
         case 'inverser_controles':
-            m.bossControlesInverses = true;
-            m.timerControlesInverses = dureeMs || 6000;
             _afficherTexteBoss('⚠ CONTRÔLES INVERSÉS');
             if (!AudioMoteur.muet) AudioMoteur.son('niveau');
             break;
         case 'faux_fantome':
-            m.bossFauxFantome = true;
-            m.timerFauxFantome = dureeMs || 8000;
             _afficherTexteBoss('⚠ SIGNAL BROUILLÉ');
             if (!AudioMoteur.muet) AudioMoteur.son('rotation');
             break;
         case 'distorsion_plateau':
-            _attaqueDistorsionPlateau(dureeMs || 6000);
+            _afficherTexteBoss('∞ DISTORSION ACTIVE');
+            if (!AudioMoteur.muet) AudioMoteur.son('rotation');
             break;
-        case 'permutation_colonnes':
-            _attaquePermutationColonnes();
-            break;
-        default:
-            logger.warn("[boss] type d'attaque inconnu :", type);
-    }
-}
-
-function _attaqueRangeeBraise() {
-    const gap = Math.floor(Math.random() * CONFIG.colonnes);
-    const braise = new Array(CONFIG.colonnes).fill(COULEUR_BRAISE);
-    braise[gap] = 0;
-    etat.plateau.splice(0, 1);
-    etat.plateau.push(braise);
-    _afficherTexteBoss('🔥 RANGÉE DE BRAISE');
-    if (!AudioMoteur.muet) AudioMoteur.son('verrou');
-}
-
-/** @param {number} nb @param {number} dureeMs */
-function _attaqueColonneGelee(nb, dureeMs) {
-    const colonnesDispos = Array.from({ length: CONFIG.colonnes }, (_, i) => i);
-    const colonnesChoisies = _melangerTableau(colonnesDispos).slice(0, nb);
-    const m = store.histoire.boss.effets;
-    m.colonnesGelees = colonnesChoisies;
-    m.timerDegelMs = dureeMs;
-
-    const lignesAGeler = [
-        CONFIG.lignes - 4,
-        CONFIG.lignes - 3,
-        CONFIG.lignes - 2,
-        CONFIG.lignes - 1,
-    ];
-    for (const col of colonnesChoisies) {
-        for (const lig of lignesAGeler) {
-            if (lig >= 0 && etat.plateau[lig]?.[col] === 0) {
-                etat.plateau[lig][col] = COULEUR_GLACE_B;
+        case 'permutation_colonnes': {
+            const cols = /** @type {[number, number] | null | undefined} */ (resultat);
+            if (cols) {
+                _afficherTexteBoss(`🌀 PERMUTATION DES COLONNES ${cols[0] + 1} ↔ ${cols[1] + 1}`);
+                if (!AudioMoteur.muet) AudioMoteur.son('rotation');
             }
+            break;
         }
+        default:
+            break;
     }
-    _afficherTexteBoss(`❄ COLONNES ${colonnesChoisies.map((c) => c + 1).join(', ')} GELÉES`);
-    if (!AudioMoteur.muet) AudioMoteur.son('hold');
 }
 
 function _degelColonnes() {
-    const m = store.histoire.boss.effets;
-    for (let lig = 0; lig < CONFIG.lignes; lig++) {
-        for (let col = 0; col < CONFIG.colonnes; col++) {
-            if (etat.plateau[lig]?.[col] === COULEUR_GLACE_B) {
-                etat.plateau[lig][col] = 0;
-            }
-        }
-    }
-    m.colonnesGelees = [];
-    m.timerDegelMs = 0;
+    degelColonnes(etat.plateau, store.histoire.boss.effets);
     _afficherTexteBoss('');
-}
-
-/**
- * Attaque exclusive de l'Avant-Garde : echange le contenu de deux colonnes
- * du plateau, brouillant les empilements deja construits.
- */
-function _attaquePermutationColonnes() {
-    if (CONFIG.colonnes < 2) return;
-    const [colA, colB] = _melangerTableau(
-        Array.from({ length: CONFIG.colonnes }, (_, i) => i)
-    ).slice(0, 2);
-
-    for (let lig = 0; lig < CONFIG.lignes; lig++) {
-        const ligne = etat.plateau[lig];
-        if (!ligne) continue;
-        const tmp = ligne[colA];
-        ligne[colA] = ligne[colB];
-        ligne[colB] = tmp;
-    }
-
-    _afficherTexteBoss(`🌀 PERMUTATION DES COLONNES ${colA + 1} ↔ ${colB + 1}`);
-    if (!AudioMoteur.muet) AudioMoteur.son('rotation');
-}
-
-/** @param {number} dureeMs */
-function _attaqueDistorsionPlateau(dureeMs) {
-    const m = store.histoire.boss.effets;
-    m.decalageDistorsion = Math.random() < 0.5 ? 1 : -1;
-    m.timerDistorsion = dureeMs;
-    _afficherTexteBoss('∞ DISTORSION ACTIVE');
-    if (!AudioMoteur.muet) AudioMoteur.son('rotation');
 }
 
 export function obtenirDecalageDistorsionBoss() {
@@ -411,12 +345,6 @@ function _verifierPhase() {
             break;
         }
     }
-}
-
-function _obtenirPhaseActuelle() {
-    const boss = store.histoire.boss.actif;
-    if (!boss?.phases) return null;
-    return boss.phases[store.histoire.boss.phase] ?? null;
 }
 
 /** @param {boolean} visible */
@@ -491,16 +419,6 @@ function _mettreAJourTimerUI() {
         const sec = Math.ceil(store.histoire.boss.timerAttaque / 1000);
         el.textContent = sec > 0 ? `PROCHAINE : ${sec}s` : 'ATTAQUE !';
     }
-}
-
-/** @param {number[]} arr */
-function _melangerTableau(arr) {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
 }
 
 export function bossEstActif() {

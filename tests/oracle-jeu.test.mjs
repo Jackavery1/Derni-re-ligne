@@ -27,6 +27,19 @@ describe('oracle-jeu', () => {
         expect(evaluerPlateau(plein)).toBeGreaterThan(evaluerPlateau(vide));
     });
 
+    it('calculerMeilleurPlacement tient compte des wall kicks SRS', () => {
+        const plateau = creerPlateau();
+        for (let lig = CONFIG.lignes - 4; lig < CONFIG.lignes; lig++) {
+            for (let col = 0; col < CONFIG.colonnes; col++) {
+                if (col !== 9) plateau[lig][col] = '#888888';
+            }
+        }
+        const piece = { type: 'T', rotation: 0, x: 8, y: 0 };
+        const resultat = calculerMeilleurPlacement(piece, plateau);
+        expect(resultat.rotation).toBeGreaterThanOrEqual(0);
+        expect(resultat.x).toBeLessThan(CONFIG.colonnes);
+    });
+
     it("calculerMeilleurPlacement ne lève pas d'exception sur plateau vide", () => {
         const piece = {
             type: 'T',

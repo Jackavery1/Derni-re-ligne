@@ -5,6 +5,7 @@ import {
     vitesseChuteDepuisNiveau,
     deplacerPieceSiValide,
     tenterRotationSimple,
+    tenterRotationSrs,
     calculerSpawnXCoop,
     executerChuteRapide,
 } from '../js/actions-piece-communes.js';
@@ -55,6 +56,17 @@ describe('actions-piece-communes', () => {
         const plateau = creerPlateau();
         const piece = { type: 'T', rotation: 0, x: 3, y: 0 };
         const ok = tenterRotationSimple(piece, 1, (p, dx, dy, rot) => {
+            const forme = extraireForme(p, rot);
+            return estPositionValideSurPlateau(plateau, p, forme, dx, dy);
+        });
+        expect(ok).toBe(true);
+        expect(piece.rotation).toBe(1);
+    });
+
+    it('tenterRotationSrs applique les wall kicks guideline', () => {
+        const plateau = creerPlateau();
+        const piece = { type: 'T', rotation: 0, x: 3, y: 0 };
+        const ok = tenterRotationSrs(piece, 1, (p, dx, dy, rot) => {
             const forme = extraireForme(p, rot);
             return estPositionValideSurPlateau(plateau, p, forme, dx, dy);
         });

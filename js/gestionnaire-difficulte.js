@@ -164,6 +164,7 @@ export function enregistrerProgression(params) {
     d.lignesEffacees += nbLignes;
     if (combo > d.suiviEtoiles.comboMax) d.suiviEtoiles.comboMax = combo;
     if (estTetris) d.suiviEtoiles.tetris++;
+    if (nbLignes === 3) d.suiviEtoiles.triples++;
 
     const config = d.config;
     if (!config || config.boss) return;
@@ -253,7 +254,7 @@ function _evaluerDefi(def, suivi, hist, mondeId) {
         case 'tetris':
             return suivi.tetris >= (def.valeur ?? 1);
         case 'tetris_triple':
-            return (hist?.conditionsMiroir?.tetrisTriplesCyber ?? 0) >= (def.valeur ?? 3);
+            return suivi.triples >= (def.valeur ?? 3);
         case 'combo':
             return suivi.comboMax >= (def.valeur ?? 2);
         case 'pieces_max':
@@ -300,7 +301,7 @@ export function libelleEtoile(def) {
         case 'pieces_max':
             return `Terminez en ≤ ${def.valeur ?? 0} pièces`;
         case 'attente_sans_effacer':
-            return `Attendez ${def.valeur ?? 30} s sans effacer`;
+            return `Remplissez ≥50 % du plateau puis attendez ${def.valeur ?? 30} s sans effacer`;
         case 'tops_volontaires':
             return `Top-out volontaire ×${def.valeur ?? 3}`;
         default:

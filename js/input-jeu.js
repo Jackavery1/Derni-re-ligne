@@ -2,35 +2,11 @@ import { TOUCHES_DEFAUT } from './config.js';
 import { etat, touchesActives } from './store-jeu.js';
 import { reinitialiserDas } from './piece-jeu.js';
 import { obtenirActions } from './actions-jeu.js';
-import { coop } from './coop-logique.js';
-import { modeArchiActif } from './archi-logique.js';
+import { partieSpecialiseeActive } from './registre-modes.js';
+import { attacherRepetitionBouton } from './input-repetition.js';
 
 function attacher(idBouton, action, avecRepetition = false) {
-    const btn = document.getElementById(idBouton);
-    if (!btn) return;
-    let idInterval = null;
-    const debut = () => {
-        action();
-        if (avecRepetition) idInterval = setInterval(action, 110);
-    };
-    const fin = () => {
-        if (idInterval) {
-            clearInterval(idInterval);
-            idInterval = null;
-        }
-    };
-    btn.addEventListener(
-        'touchstart',
-        (e) => {
-            e.preventDefault();
-            debut();
-        },
-        { passive: false }
-    );
-    btn.addEventListener('touchend', fin, { passive: false });
-    btn.addEventListener('mousedown', debut);
-    btn.addEventListener('mouseup', fin);
-    btn.addEventListener('mouseleave', fin);
+    attacherRepetitionBouton(document.getElementById(idBouton), action, avecRepetition);
 }
 
 function traiterToucheClavier(code, actions) {
@@ -75,7 +51,7 @@ export function initialiserInput() {
     const actions = () => obtenirActions();
 
     document.addEventListener('keydown', (e) => {
-        if (coop.actif || modeArchiActif()) return;
+        if (partieSpecialiseeActive()) return;
         if (touchesActives[e.code]) return;
         touchesActives[e.code] = true;
 

@@ -58,5 +58,3 @@ export function appliquerTextesBiome(biomeId) {
         }
     }
 }
-
-export function appliquerThemeMascotte() {}

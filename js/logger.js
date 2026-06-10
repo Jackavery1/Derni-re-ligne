@@ -1,6 +1,23 @@
 const JOURNAL_ERREURS_CLE = 'derniereLigne_journalErreurs';
 const JOURNAL_ERREURS_MAX = 10;
 
+function genererSessionId() {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+    return `sess-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
+}
+
+export const sessionId =
+    typeof sessionStorage !== 'undefined'
+        ? (sessionStorage.getItem('derniereLigne_sessionId') ??
+          (() => {
+              const id = genererSessionId();
+              sessionStorage.setItem('derniereLigne_sessionId', id);
+              return id;
+          })())
+        : genererSessionId();
+
 function modeDebugActif() {
     const meta = /** @type {ImportMeta & { env?: { DEV?: boolean } }} */ (import.meta);
     if (typeof import.meta !== 'undefined' && meta.env?.DEV) return true;
@@ -18,7 +35,8 @@ function obtenirContexteLog() {
 
 function formaterArgs(args) {
     const ctx = obtenirContexteLog();
-    return ctx ? [ctx, ...args] : args;
+    const prefixe = ctx ? [sessionId, ctx] : [sessionId];
+    return [...prefixe, ...args];
 }
 
 function serialiserErreur(valeur) {
@@ -46,6 +64,7 @@ function enregistrerErreurJournal(niveau, args) {
         const journal = brut ? JSON.parse(brut) : [];
         journal.push({
             niveau,
+            sessionId,
             horodatage: new Date().toISOString(),
             ecran: obtenirContexteLog(),
             details: args.map(serialiserErreur),

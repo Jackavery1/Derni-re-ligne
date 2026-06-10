@@ -9,6 +9,7 @@ import {
     vitesseHistoireMs,
     fusionnerEtoilesPersistees,
     calculerEtoiles,
+    libelleEtoile,
 } from '../js/gestionnaire-difficulte.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 import { PALIERS_VITESSE_MS } from '../data/difficulte-mondes.js';
@@ -52,5 +53,28 @@ describe('gestionnaire-difficulte', () => {
         const etoiles = calculerEtoiles('monde_prologue');
         expect(etoiles[0]).toBe(true);
         expect(etoiles[1]).toBe(true);
+    });
+
+    it('libelleEtoile decrit attente_sans_effacer avec le seuil de remplissage', () => {
+        expect(libelleEtoile({ type: 'attente_sans_effacer', valeur: 30 })).toContain('≥50 %');
+        expect(libelleEtoile({ type: 'attente_sans_effacer', valeur: 30 })).toContain('30 s');
+    });
+
+    it('libelleEtoile couvre les types principaux', () => {
+        expect(libelleEtoile({ type: 'sans_topout' })).toContain('top-out');
+        expect(libelleEtoile({ type: 'tetris_triple', valeur: 3 })).toContain('3');
+        expect(libelleEtoile(null)).toBe('');
+    });
+
+    it('etoile 3 cyber basee sur les triples de la partie en cours', () => {
+        demarrerSuiviMonde('monde_cyber');
+        const etatHist = structuredClone(ETAT_HISTOIRE_VIDE);
+        etatHist.conditionsMiroir.tetrisTriplesCyber = 3;
+        expect(calculerEtoiles('monde_cyber', etatHist)[2]).toBe(false);
+        enregistrerProgression({ nbLignes: 3, estTetris: false, combo: 1 });
+        enregistrerProgression({ nbLignes: 3, estTetris: false, combo: 1 });
+        expect(calculerEtoiles('monde_cyber', etatHist)[2]).toBe(false);
+        enregistrerProgression({ nbLignes: 3, estTetris: false, combo: 1 });
+        expect(calculerEtoiles('monde_cyber', etatHist)[2]).toBe(true);
     });
 });

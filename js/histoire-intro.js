@@ -4,7 +4,7 @@
  * premier lancement du Mode Histoire, avant l'apparition de la carte.
  */
 import { lireStockage, ecrireStockage } from './progression.js';
-import { INTRO_HISTOIRE } from './histoire-textes.js';
+import { obtenirHistoireTextesSync, chargerHistoireTextes } from './charger-histoire-textes.js';
 import { ECRANS } from './ecrans-config.js';
 import { logger } from './logger.js';
 
@@ -20,7 +20,7 @@ export function marquerIntroHistoireVue() {
 }
 
 export function obtenirSequenceIntro() {
-    return INTRO_HISTOIRE;
+    return obtenirHistoireTextesSync().INTRO_HISTOIRE;
 }
 
 /** Point d'entrée unique depuis le menu titre (pas retournerACarte). */
@@ -38,7 +38,6 @@ export async function ouvrirModeHistoireDepuisMenu() {
     }
 
     try {
-        const { chargerHistoireTextes } = await import('./charger-histoire-textes.js');
         await chargerHistoireTextes();
         logger.debug('[intro] textes histoire charges');
 

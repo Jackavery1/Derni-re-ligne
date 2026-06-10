@@ -1,6 +1,5 @@
 import { AudioMoteur } from './audio.js';
 import { CONFIG } from './config.js';
-import { store } from './store-core.js';
 import { obtenirActions } from './actions-jeu.js';
 import { ecouter } from './bus-jeu.js';
 import { creerParticulesLigne } from './particules-jeu.js';
@@ -27,6 +26,7 @@ import { evaluerDecisionOracle } from './oracle-jeu.js';
 import { endommagerBoss, bossEstActif, bossEstVaincu } from './boss-jeu.js';
 import { mettreAJourIndicateurRelique } from './piece-jeu.js';
 import { enregistrerProgression } from './gestionnaire-difficulte.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
 
 let effetsInitialises = false;
 
@@ -56,7 +56,7 @@ export function initialiserEffetsPartie() {
         for (const l of lignesEffacees) creerParticulesLigne(l);
         const intensitesSecousse = { 1: 2, 2: 3.5, 3: 5, 4: 8 };
         declencherSecousse(intensitesSecousse[nbSupprimees] ?? 8);
-        if (store.histoire.actif && nbSupprimees > 0) {
+        if (modeHistoireEnCours() && nbSupprimees > 0) {
             const mec = biomeActuelMecanique();
             if (mec === 'eclipse') {
                 const lignesBasseCount = lignesEffacees.filter(
@@ -77,7 +77,7 @@ export function initialiserEffetsPartie() {
     });
 
     ecouter('score:maj', ({ nbLignes, result }) => {
-        if (store.histoire.actif && nbLignes > 0) {
+        if (modeHistoireEnCours() && nbLignes > 0) {
             enregistrerProgression({
                 nbLignes,
                 estTetris: !!result.tetris,
@@ -90,6 +90,12 @@ export function initialiserEffetsPartie() {
             flashGrimaceRobo();
         }
         verifierPlateauCritiqueRobo();
+
+        if (result.tSpin) {
+            const label = result.tSpin === 'full' ? 'T-SPIN !' : 'T-SPIN MINI !';
+            afficherTexteFlottant(label, '#b400ff', 14);
+            annoncer(label);
+        }
 
         if (nbLignes > 0) {
             if (result.tetris) {

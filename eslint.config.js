@@ -4,7 +4,13 @@ import globals from 'globals';
 export default [
     js.configs.recommended,
     {
-        ignores: ['node_modules/**', 'coverage/**', 'test-results/**', 'dist/**'],
+        ignores: [
+            'node_modules/**',
+            'coverage/**',
+            'test-results/**',
+            'dist/**',
+            'scripts/histoire-manager-ui.original.js',
+        ],
     },
     {
         files: ['**/*.{js,mjs}'],
@@ -29,6 +35,8 @@ export default [
             'js/histoire-textes.js',
             'js/histoire-manager-ui.js',
             'js/portraits-cutscene.js',
+            'js/portraits-cutscene-personnages.js',
+            'js/histoire-cutscene.js',
             'js/codex-donnees.js',
             'js/codex-illustrations.js',
             'js/codex-illustrations-histoire.js',

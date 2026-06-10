@@ -43,9 +43,6 @@ import {
     demarrerTransition,
 } from './rendu-jeu.js';
 import {
-    appliquerThemeBiome,
-    appliquerTextesBiome,
-    appliquerThemeMascotte,
     reinitialiserMascottePartie,
     rafraichirStats,
     afficherEcran,
@@ -54,7 +51,6 @@ import {
 } from './ecrans-ui.js';
 import { ECRANS } from './store-jeu.js';
 import { planifierBoucle } from './boucle-jeu.js';
-import { arreterAnimationMenu } from './menu-fond.js';
 import { reinitialiserMelodie, arreterLectureMelodie } from './melodie.js';
 import { initStatsPartie } from './achievements.js';
 import { verifierCodex } from './codex.js';
@@ -66,6 +62,9 @@ import {
 } from './profil-jeu.js';
 import { annoncerPieceCourante } from './annonces.js';
 import { store } from './store-core.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
+import { obtenirIdBiomeFond } from './biome-fond.js';
+import { initialiserAudioBiome } from './audio-partie.js';
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { demarrerBoss, arreterBoss } from './boss-jeu.js';
 import { initialiserMecaniquesHistoire, arreterMecaniquesHistoire } from './mecaniques-histoire.js';
@@ -81,13 +80,6 @@ import { demarrerFondBiome, arreterFondBiome } from './rendu-fond-biome.js';
 import { rafraichirHudObjectifsHistoire } from './ui-panneau-objectifs.js';
 export { initialiserCanvas } from './partie-canvas.js';
 export { terminerPartie } from './partie-fin.js';
-
-function obtenirIdBiomeFond() {
-    if (store.histoire.actif && store.histoire.mondeActuel) {
-        return store.histoire.mondeActuel;
-    }
-    return obtenirBiomeActif() || 'monde_prologue';
-}
 
 export function confirmerRecommencer() {
     if (window.confirm('Recommencer la partie ?')) demarrerJeu();
@@ -112,7 +104,7 @@ export function quitterVersMenu() {
 
 function initialiserFeaturesPartie() {
     reinitialiserOraclePartie();
-    if (store.histoire.actif) {
+    if (modeHistoireEnCours()) {
         reinitialiserConditionsRuntime();
     }
     afficherSectionOracle(oracle.actif);
@@ -164,7 +156,11 @@ function initialiserEtatPartie() {
     definirReliqueEnAttente(false);
     definirReliqueActive(null);
     initialiserMeteo();
-    initialiserVivant();
+    if (modeHistoireEnCours()) {
+        annulerTimersVivant();
+    } else {
+        initialiserVivant();
+    }
 
     etat.pieceActuelle = genererProchainePiece();
     activerReliqueSurPiece(etat.pieceActuelle);
@@ -174,18 +170,7 @@ function initialiserEtatPartie() {
 }
 
 function initialiserAudioPartie() {
-    appliquerThemeBiome(obtenirBiomeActif());
-    appliquerTextesBiome(obtenirBiomeActif());
-    appliquerThemeMascotte();
-    AudioMoteur.init();
-    if (AudioMoteur.ctx && AudioMoteur.actif) {
-        const biomeActif = obtenirBiomeActif();
-        const biomePrecedent = AudioMoteur.biomeMusique;
-        AudioMoteur.arreterMusique(0);
-        const delai = biomePrecedent && biomePrecedent !== biomeActif ? 350 : 50;
-        setTimeout(() => AudioMoteur.demarrerMusique(biomeActif), delai);
-    }
-    arreterAnimationMenu();
+    initialiserAudioBiome(obtenirBiomeActif());
 }
 
 function initialiserUIPartie() {
@@ -207,7 +192,7 @@ function initialiserUIPartie() {
 
     document.getElementById('btn-pause').textContent = '⏸ PAUSE';
 
-    if (store.histoire.actif) {
+    if (modeHistoireEnCours()) {
         rafraichirHudObjectifsHistoire();
     }
 
@@ -222,7 +207,7 @@ export function demarrerJeu() {
     initialiserAudioPartie();
     initialiserEtatPartie();
 
-    if (store.histoire.actif && store.histoire.mondeActuel) {
+    if (modeHistoireEnCours() && store.histoire.mondeActuel) {
         const monde = SEQUENCE_HISTOIRE.find((m) => m.id === store.histoire.mondeActuel);
         if (monde?.estBoss && monde?.bossId) {
             demarrerBoss(monde.bossId);

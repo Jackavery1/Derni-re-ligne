@@ -2,7 +2,9 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { BIOMES } from '../js/config.js';
 import { store } from '../js/store-core.js';
 import { etat, definirBiomeActif } from '../js/store-jeu.js';
+import { creerPlateau } from '../js/piece-jeu.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { supprimerLignesDuPlateauExcluantRouille } from '../js/logique-pure.js';
 import {
     biomeActuelMecanique,
     biomeActuelEstMiroir,
@@ -17,6 +19,8 @@ import {
     onGameOverHistoire,
     initialiserMecaniquesHistoire,
     arreterMecaniquesHistoire,
+    reinitialiserMatricesRouille,
+    obtenirLibelleModificateurBiomeHud,
 } from '../js/mecaniques-histoire.js';
 
 describe('mecaniques-histoire', () => {
@@ -32,6 +36,7 @@ describe('mecaniques-histoire', () => {
         store.histoire.etat = null;
         etat.estEnPause = false;
         etat.pieceActuelle = null;
+        etat.plateau = creerPlateau();
         definirBiomeActif('classique');
     });
 
@@ -79,6 +84,21 @@ describe('mecaniques-histoire', () => {
         expect(modifiee).toBeLessThan(vitesseBase);
     });
 
+    it('la rouille bloque l’effacement d’une ligne complète', () => {
+        store.histoire.actif = true;
+        definirBiomeActif('rouille');
+        initialiserMecaniquesHistoire();
+        const l = 19;
+        for (let c = 0; c < 10; c++) etat.plateau[l][c] = '#cd6839';
+        store.histoire.mecaniques.plateauRouille[19 * 10 + 3] = 1;
+
+        const { nbSupprimees } = supprimerLignesDuPlateauExcluantRouille(
+            etat.plateau,
+            celluleEstRouillee
+        );
+        expect(nbSupprimees).toBe(0);
+    });
+
     it('la rouille marque les cellules après le délai', () => {
         store.histoire.actif = true;
         definirBiomeActif('rouille');
@@ -117,5 +137,47 @@ describe('mecaniques-histoire', () => {
     it('obtenirLigneEclipse expose la ligne courante', () => {
         store.histoire.mecaniques.eclipseLigne = 7;
         expect(obtenirLigneEclipse()).toBe(7);
+    });
+
+    it('la rouille effrite les blocs après le double délai', () => {
+        store.histoire.actif = true;
+        definirBiomeActif('rouille');
+        initialiserMecaniquesHistoire();
+        etat.plateau[5][3] = '#cd6839';
+
+        const now = 1000;
+        vi.spyOn(performance, 'now').mockReturnValue(now);
+        enregistrerTimestampCellules([{ x: 3, y: 5 }]);
+
+        const seuilMs = (BIOMES.rouille?.secondesAvantRouille ?? 18) * 1000;
+        mettreAJourMecaniquesHistoire(16, now + seuilMs);
+        expect(celluleEstRouillee(3, 5)).toBe(true);
+
+        mettreAJourMecaniquesHistoire(16, now + seuilMs * 2);
+        expect(etat.plateau[5][3]).toBe(0);
+        expect(celluleEstRouillee(3, 5)).toBe(false);
+        vi.restoreAllMocks();
+    });
+
+    it('obtenirLibelleModificateurBiomeHud affiche éclipse et surtension', () => {
+        store.histoire.actif = true;
+        definirBiomeActif('eclipse');
+        store.histoire.mecaniques.eclipseLigne = 8;
+        store.surtensionActive = true;
+        expect(obtenirLibelleModificateurBiomeHud()).toBe('SURTENSION · ÉCLIPSE L8');
+    });
+
+    it('reinitialiserMatricesRouille vide les timestamps et flags', () => {
+        store.histoire.actif = true;
+        definirBiomeActif('rouille');
+        initialiserMecaniquesHistoire();
+        enregistrerTimestampCellules([{ x: 2, y: 4 }]);
+        store.histoire.mecaniques.plateauRouille[4 * 10 + 2] = 1;
+
+        reinitialiserMatricesRouille();
+
+        expect(store.histoire.mecaniques.plateauTimestamps[4 * 10 + 2]).toBe(0);
+        expect(store.histoire.mecaniques.plateauRouille[4 * 10 + 2]).toBe(0);
+        expect(celluleEstRouillee(2, 4)).toBe(false);
     });
 });

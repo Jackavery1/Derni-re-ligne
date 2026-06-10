@@ -24,7 +24,6 @@ export {
     verifierPlateauCritiqueRobo,
     appliquerThemeBiome,
     appliquerTextesBiome,
-    appliquerThemeMascotte,
 } from './themes-biome.js';
 export {
     chargerProgression,

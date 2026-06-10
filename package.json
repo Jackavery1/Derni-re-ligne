@@ -1,20 +1,29 @@
 {
     "name": "derniere-ligne",
-    "version": "2.5.5",
+    "version": "2.5.6",
     "type": "module",
     "description": "Dernière Ligne — Tetris narratif, PWA hors-ligne",
     "private": true,
+    "devServer": {
+        "url": "http://127.0.0.1:3000",
+        "config": "serve.json",
+        "cleanUrls": false,
+        "note": "Préférer 127.0.0.1 à localhost (HSTS). Rechargement forcé après MAJ du SW."
+    },
     "engines": {
         "node": ">=18"
     },
     "scripts": {
-        "start": "node scripts/exporter-donnees-json.mjs && serve . -p 3000",
+        "prestart": "node scripts/exporter-donnees-json.mjs",
+        "pretest": "node scripts/exporter-donnees-json.mjs",
+        "start": "serve . -c serve.json -l tcp://127.0.0.1:3000",
         "sync:data": "node scripts/exporter-donnees-json.mjs",
         "check:circular": "madge --circular --extensions js js/main.js",
-        "test": "node scripts/exporter-donnees-json.mjs && vitest run",
+        "test": "vitest run",
         "test:watch": "vitest",
-        "test:coverage": "node scripts/exporter-donnees-json.mjs && vitest run --coverage",
+        "test:coverage": "vitest run --coverage",
         "test:e2e": "playwright test",
+        "test:e2e:smoke": "playwright test e2e/smoke.spec.mjs",
         "lint": "eslint .",
         "format": "prettier --write \"**/*.{js,mjs,html,css,json,md}\"",
         "format:check": "prettier --check \"**/*.{js,mjs,html,css,json,md}\"",
