@@ -11,7 +11,6 @@ import {
     obtenirTransitionAlpha,
     obtenirLockDelayRestant,
     obtenirPieceAuSol,
-    obtenirPrefererMoinsAnimations,
     obtenirEffetsAccessibiliteReduits,
     obtenirFpsMoyen,
     obtenirIdFrame,

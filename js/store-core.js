@@ -100,20 +100,6 @@ export const store = {
     surtensionActive: false,
 };
 
-// Suivi runtime : si l'utilisateur change sa preference systeme pendant la session,
-// le jeu adapte ses animations sans necessiter de rechargement.
-if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
-    const mediaReduitAnims = window.matchMedia('(prefers-reduced-motion: reduce)');
-    mediaReduitAnims.addEventListener?.('change', (e) => {
-        store.prefererMoinsAnimations = e.matches;
-        import('./accessibilite.js').then(
-            ({ synchroniserReduireEffetsPrefererMoinsAnimations }) => {
-                synchroniserReduireEffetsPrefererMoinsAnimations();
-            }
-        );
-    });
-}
-
 export const etat = store.etat;
 export const particules = store.particules;
 export const particulesAmbiance = store.particulesAmbiance;

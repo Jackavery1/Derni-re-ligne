@@ -69,3 +69,11 @@ export function persisterReduireEffets(actif) {
     definirReduireEffetsAccessibilite(actif, true);
     ecrireStockage('derniereLigne_reduireEffets', actif.toString());
 }
+
+if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+    const mediaReduitAnims = window.matchMedia('(prefers-reduced-motion: reduce)');
+    mediaReduitAnims.addEventListener?.('change', (e) => {
+        store.prefererMoinsAnimations = e.matches;
+        synchroniserReduireEffetsPrefererMoinsAnimations();
+    });
+}

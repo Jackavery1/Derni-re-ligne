@@ -9,12 +9,7 @@ import {
     definirDaltonien,
     definirReduireEffetsAccessibilite,
 } from '../js/accessibilite.js';
-import {
-    estCleValide,
-    existeStockage,
-    ecrireStockage,
-    lireStockage,
-} from '../js/progression-stockage.js';
+import { estCleValide, existeStockage, lireStockage } from '../js/progression-stockage.js';
 
 describe('accessibilite', () => {
     beforeEach(() => {
