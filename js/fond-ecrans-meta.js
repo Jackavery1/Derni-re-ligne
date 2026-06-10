@@ -1,4 +1,5 @@
 import { logger } from './logger.js';
+import { planifierBoucleSecondaire, arreterBoucleSecondaire } from './planificateur-raf.js';
 
 /** @typedef {{ x: number, y: number, rx: number, ry: number, c1: string, c2: string }} NebuleuseMeta */
 /** @typedef {{ x: number, y: number, taille: number, couleur: string }} EtoileLointaine */
@@ -9,6 +10,10 @@ let resizeEcouteurActif = false;
 let compteurRaf = 0;
 
 const COULEURS_ANIM = ['#00ddc8', '#6644cc', '#ffffff', '#ffffff', '#00ddc8', '#6644cc'];
+
+function cleRafMeta(canvasId) {
+    return `fond-meta:${canvasId}`;
+}
 
 function creerRng(seed) {
     let s = seed >>> 0;
@@ -212,10 +217,6 @@ function dessinerFrame(timestamp) {
     }
 
     dessinerEtoilesAnimees(ctx, donnees, t, statique);
-
-    if (!statique) {
-        etatActif.rafId = requestAnimationFrame(dessinerFrame);
-    }
 }
 
 function attacherEcouteurResize() {
@@ -235,9 +236,8 @@ function reconstruireEtat() {
     const cacheStatique = genererCacheStatique(w, h, donnees);
     const statique = effetsReduitsActifs();
 
-    if (etatActif.rafId) {
-        cancelAnimationFrame(etatActif.rafId);
-        etatActif.rafId = 0;
+    if (etatActif.canvasId) {
+        arreterBoucleSecondaire(cleRafMeta(etatActif.canvasId));
     }
 
     etatActif = {
@@ -247,7 +247,6 @@ function reconstruireEtat() {
         donnees,
         cacheStatique,
         statique,
-        rafId: 0,
     };
 
     const ctx = canvas.getContext('2d');
@@ -256,7 +255,7 @@ function reconstruireEtat() {
     if (statique) {
         dessinerFrame(performance.now());
     } else {
-        etatActif.rafId = requestAnimationFrame(dessinerFrame);
+        planifierBoucleSecondaire(cleRafMeta(etatActif.canvasId), dessinerFrame);
     }
 }
 
@@ -287,7 +286,6 @@ export function demarrerFondMeta(canvasId, options = {}) {
         donnees: null,
         cacheStatique: null,
         statique: false,
-        rafId: 0,
     };
 
     reconstruireEtat();
@@ -301,9 +299,7 @@ export function demarrerFondMeta(canvasId, options = {}) {
 export function arreterFondMeta() {
     if (!etatActif) return;
 
-    if (etatActif.rafId) {
-        cancelAnimationFrame(etatActif.rafId);
-    }
+    arreterBoucleSecondaire(cleRafMeta(etatActif.canvasId));
 
     logger.debug('[fond-meta] fond arrêté', { canvasId: etatActif.canvasId });
     etatActif = null;

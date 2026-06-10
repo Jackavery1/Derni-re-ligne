@@ -1,4 +1,7 @@
 import { logger } from './logger.js';
+import { planifierBoucleSecondaire, arreterBoucleSecondaire } from './planificateur-raf.js';
+
+const CLE_RAF_ROBO = 'rendu-robo';
 
 const C = {
     ROUGE_VIF: '#d42b2b',
@@ -35,7 +38,6 @@ const C = {
 
 /** @type {'neutre'|'content'|'excite'|'triste'|'alerte'} */
 let _humeurActuelle = 'neutre';
-let _rafId = null;
 /** @type {HTMLCanvasElement|null} */
 let _canvas = null;
 let _arcEnCielActif = false;
@@ -618,15 +620,11 @@ export function definirCouronne(actif) {
 export function demarrerBoucleRobo() {
     _canvas = /** @type {HTMLCanvasElement|null} */ (document.getElementById('canvas-mascotte'));
     if (!_canvas) return;
-    if (_rafId !== null) cancelAnimationFrame(_rafId);
-    _boucle(performance.now());
+    planifierBoucleSecondaire(CLE_RAF_ROBO, _boucle);
 }
 
 export function arreterBoucleRobo() {
-    if (_rafId !== null) {
-        cancelAnimationFrame(_rafId);
-        _rafId = null;
-    }
+    arreterBoucleSecondaire(CLE_RAF_ROBO);
 }
 
 function _mascotteVisible() {
@@ -639,10 +637,7 @@ function _mascotteVisible() {
 
 function _boucle(timestamp) {
     if (!_canvas) return;
-    if (!_mascotteVisible()) {
-        _rafId = requestAnimationFrame(_boucle);
-        return;
-    }
+    if (!_mascotteVisible()) return;
     const ctx = _canvas.getContext('2d');
     if (!ctx) return;
     try {
@@ -654,7 +649,6 @@ function _boucle(timestamp) {
     } catch (err) {
         logger.warn('[rendu-robo] erreur boucle :', err);
     }
-    _rafId = requestAnimationFrame(_boucle);
 }
 
 /** @param {string} humeur */
