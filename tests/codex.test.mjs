@@ -66,16 +66,16 @@ describe('codex', () => {
         expect(entree.condition({ maxLignesUnCoup: 4 })).toBe(true);
     });
 
-    it('chronique_chaos_maitrise nécessite blizzard et inversion', () => {
+    it('chronique_chaos_maitrise nécessite blizzard et inversion (cumulés entre parties)', () => {
         const entree = CODEX.chronique_chaos_maitrise;
         expect(
             entree.condition({
-                meteosPartieActuelle: new Set(['blizzard']),
+                meteosVues: new Set(['blizzard']),
             })
         ).toBe(false);
         expect(
             entree.condition({
-                meteosPartieActuelle: new Set(['blizzard', 'inversion']),
+                meteosVues: new Set(['blizzard', 'inversion']),
             })
         ).toBe(true);
     });

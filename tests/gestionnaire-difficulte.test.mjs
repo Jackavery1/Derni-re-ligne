@@ -1,0 +1,56 @@
+import { describe, it, expect, beforeEach } from 'vitest';
+import { reinitialiserBusJeu } from '../js/bus-jeu.js';
+import { store } from '../js/store-core.js';
+import {
+    demarrerSuiviMonde,
+    arreterSuiviMonde,
+    enregistrerProgression,
+    enregistrerPosePiece,
+    vitesseHistoireMs,
+    fusionnerEtoilesPersistees,
+    calculerEtoiles,
+} from '../js/gestionnaire-difficulte.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { PALIERS_VITESSE_MS } from '../data/difficulte-mondes.js';
+
+describe('gestionnaire-difficulte', () => {
+    beforeEach(() => {
+        reinitialiserBusJeu();
+        store.histoire.actif = true;
+        arreterSuiviMonde();
+    });
+
+    it('demarre le prologue au palier 1 (800 ms)', () => {
+        demarrerSuiviMonde('monde_prologue');
+        expect(vitesseHistoireMs()).toBe(PALIERS_VITESSE_MS[1]);
+    });
+
+    it('montee de vague a 50% puis pose piece suivante', () => {
+        demarrerSuiviMonde('monde_prologue');
+        enregistrerProgression({ nbLignes: 4, estTetris: false, combo: 1 });
+        expect(store.histoire.difficulte?.palierCourant).toBe(1);
+        expect(store.histoire.difficulte?.palierEnAttente).toBe(2);
+        enregistrerPosePiece();
+        expect(store.histoire.difficulte?.palierCourant).toBe(2);
+    });
+
+    it('declenche victoire objectif a 8 lignes prologue', () => {
+        demarrerSuiviMonde('monde_prologue');
+        enregistrerProgression({ nbLignes: 8, estTetris: false, combo: 1 });
+        expect(store.histoire.difficulte?.victoireDeclenchee).toBe(true);
+    });
+
+    it('fusionne les etoiles persistees par OU logique', () => {
+        const etat = structuredClone(ETAT_HISTOIRE_VIDE);
+        fusionnerEtoilesPersistees(etat, 'monde_lave', [true, false, false]);
+        fusionnerEtoilesPersistees(etat, 'monde_lave', [true, true, false]);
+        expect(etat.etoilesParMonde.monde_lave).toEqual([true, true, false]);
+    });
+
+    it('calculerEtoiles sans topout', () => {
+        demarrerSuiviMonde('monde_prologue');
+        const etoiles = calculerEtoiles('monde_prologue');
+        expect(etoiles[0]).toBe(true);
+        expect(etoiles[1]).toBe(true);
+    });
+});

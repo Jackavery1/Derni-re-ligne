@@ -9,6 +9,8 @@ import {
     SEUILS_COMPLETION,
 } from './histoire-mondes.js';
 import { obtenirActionsHistoire } from './histoire-actions.js';
+import { modeDevActif } from './mode-dev-etat.js';
+import { obtenirEtoilesPersistees } from './gestionnaire-difficulte.js';
 
 export function mettreAJourSelectMondesClavier(etatCarte, traiterSelectionNoeud) {
     const select = /** @type {HTMLSelectElement | null} */ (
@@ -24,13 +26,14 @@ export function mettreAJourSelectMondesClavier(etatCarte, traiterSelectionNoeud)
 
     const etatHist = obtenirEtatHistoire();
     for (const monde of SEQUENCE_HISTOIRE) {
-        if (monde.estCache && !etatCarte.positionsNoeuds[monde.id]) continue;
+        const surCarte = Boolean(etatCarte.positionsNoeuds[monde.id]);
+        if (monde.estCache && !surCarte && !modeDevActif()) continue;
         const etatMonde = obtenirEtatMonde(monde.id, etatHist);
         const opt = document.createElement('option');
         opt.value = monde.id;
         opt.textContent =
-            etatMonde === 'verrouille' ? `${monde.nomAffiche} (verrouillé)` : monde.nomAffiche;
-        opt.disabled = etatMonde === 'verrouille';
+            etatMonde === 'verrouille' ? `${monde.nomAffiche} (verrouille)` : monde.nomAffiche;
+        opt.disabled = !modeDevActif() && etatMonde === 'verrouille';
         if (etatCarte.noeudSelectionne === monde.id) opt.selected = true;
         select.appendChild(opt);
     }
@@ -40,8 +43,7 @@ export function mettreAJourSelectMondesClavier(etatCarte, traiterSelectionNoeud)
         select.addEventListener('change', () => {
             const monde = SEQUENCE_HISTOIRE.find((m) => m.id === select.value);
             if (!monde) return;
-            const pos = etatCarte.positionsNoeuds[monde.id];
-            if (!pos) return;
+            const pos = etatCarte.positionsNoeuds[monde.id] ?? { x: 0, y: 0, rayon: 20 };
             traiterSelectionNoeud({ id: monde.id, monde, pos }, false);
         });
     }
@@ -153,8 +155,12 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
             elStatut.textContent = '✓ COMPLÉTÉ';
             elStatut.style.color = 'var(--vert)';
         } else if (etatMonde === 'disponible') {
-            const seuil = SEUILS_COMPLETION[monde.biomeId] ?? 10;
-            elStatut.textContent = `OBJECTIF : ${seuil} LIGNES`;
+            if (estBoss) {
+                elStatut.textContent = 'OBJECTIF : VAINCRE LE BOSS';
+            } else {
+                const seuil = SEUILS_COMPLETION[monde.biomeId] ?? 10;
+                elStatut.textContent = `OBJECTIF : ${seuil} LIGNES`;
+            }
             elStatut.style.color = 'var(--texte-dim)';
         } else {
             elStatut.textContent = '🔒 VERROUILLÉ';
@@ -162,13 +168,36 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
         }
     }
 
+    const elEtoiles = /** @type {HTMLElement | null} */ (
+        panneau.querySelector('.histoire-detail-etoiles')
+    );
+    if (elEtoiles) {
+        const etoiles = obtenirEtoilesPersistees(etatHist, monde.id);
+        elEtoiles.textContent = '';
+        etoiles.forEach((obtenue, i) => {
+            const span = document.createElement('span');
+            span.className = 'histoire-carte-etoile';
+            span.textContent = '★';
+            span.classList.toggle('histoire-carte-etoile-active', obtenue);
+            span.setAttribute('aria-label', `Étoile ${i + 1}${obtenue ? ' obtenue' : ''}`);
+            elEtoiles.appendChild(span);
+        });
+    }
+
     const elJournal = /** @type {HTMLElement | null} */ (
         panneau.querySelector('.histoire-detail-journal')
     );
     if (elJournal) {
-        const journalDispo = JOURNAUX_VERA.find(
-            (j) => j.biomeId === monde.biomeId && !etatHist.journauxTrouves.includes(j.id)
-        );
+        const journalDispo = JOURNAUX_VERA.find((j) => {
+            if (j.biomeId !== monde.biomeId) return false;
+            if (etatHist.journauxTrouves.includes(j.id)) return false;
+            // N'indique la transmission que sur le monde où elle est reellement obtenable.
+            if (j.condition === 'debloquer_apres_boss_sentinelle') {
+                return monde.bossId === 'sentinelle';
+            }
+            if (j.condition === 'trouver_laboratoire_vera') return monde.id === 'monde_cyber';
+            return true;
+        });
         elJournal.textContent = journalDispo ? '📔 TRANSMISSION CACHÉE' : '';
     }
 
@@ -176,7 +205,7 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
         panneau.querySelector('.bouton-jouer-monde')
     );
     if (btnJouer) {
-        const peutJouer = etatMonde !== 'verrouille';
+        const peutJouer = modeDevActif() || etatMonde !== 'verrouille';
         btnJouer.classList.toggle('element-masque', !peutJouer);
         btnJouer.textContent = etatMonde === 'complete' ? '↺ REJOUER' : '▶ JOUER';
         btnJouer.onclick = () => lancerMondeDepuisCarte(monde);

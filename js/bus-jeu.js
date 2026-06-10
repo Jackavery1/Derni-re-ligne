@@ -19,7 +19,7 @@ export function emettre(evenement, payload) {
     ecouteurs.get(evenement)?.forEach((fn) => fn(payload));
 }
 
-/** Réinitialise tous les écouteurs (tests uniquement). */
+/** Reinitialise tous les ecouteurs (tests uniquement). */
 export function reinitialiserBusJeu() {
     ecouteurs.clear();
 }

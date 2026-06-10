@@ -6,6 +6,8 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version   | Date       | En bref                                                                                |
 | --------- | ---------- | -------------------------------------------------------------------------------------- |
+| **2.5.5** | 2026-06-10 | Correctifs audit : intro Jour 2 554, cutscenes, dev, objectifs, rendu, E2E             |
+| **2.5.4** | 2026-06-09 | Carte histoire verticale : visibilité, mondes secrets, découpage modules, tests        |
 | **2.5.3** | 2026-06-09 | ROBO restauré, modes masqués, carte histoire, CI factorisée, a11y overlays             |
 | **2.5.2** | 2026-06-08 | Audit v2.5.2 : SW sync, E2E offline/gameplay, focus trap tutoriel                      |
 | **2.5.1** | 2026-06-07 | Corrections audit : ROBO canvas, portraits cutscene, CSP fonts, versions alignées      |
@@ -19,6 +21,42 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.0.0** | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                          |
 
 ---
+
+## [2.5.5] — 2026-06-10
+
+### Mode Histoire
+
+- Intro « Jour 2 554 » : point d'entrée unique `ouvrirModeHistoireDepuisMenu()`, écran cutscene activé avant la première ligne, logs `[intro]` (`?debug`), flag non écrit en cas d'échec
+- Cutscenes : affichage synchrone de l'écran, navigation statique (plus de race async), accumulation de texte corrigée
+- Outros post-épilogue : chaîne épilogue → outro → écran de fin confirmée et testée
+- Panneau objectifs : overlays sur `document.body`, CSS toujours chargé, skip en rejouer
+- `demarrerSuiviMonde` importé pour REJOUER après game over
+
+### UX & rendu
+
+- Ligne centrale parasite du canvas supprimée (grille + bordure bicolore Miroir)
+- Panneau ROBO : libellé et couleurs fixes, indépendants du biome
+
+### Mode développeur
+
+- Activation : `?dev=1`, Ctrl+Shift+D, 5 clics logo ; poignée DEV visible
+- Skip tutoriels ne marque plus l'intro histoire comme vue
+
+### Qualité
+
+- Dépendance circulaire `hud-jeu ↔ ui-panneau-objectifs` résolue
+- ESLint / TypeScript / madge : OK
+- Tests unitaires : 397 ; E2E : notifications boot silencieuses en tests (`__NEO_SILENT_NOTIFS__`)
+- Icônes PWA déplacées dans `img/`
+
+## [2.5.4] — 2026-06-09
+
+- Carte histoire : layout vertical scrollable avec caméra zoomée (1.6×) et focus automatique
+- Visibilité progressive restaurée (`mondesVisibles`, `mondesFantomes`, brouillard futur)
+- Mondes secrets repositionnés (`monde_miroir`, `monde_trame`, `monde_paradoxe`)
+- Découpage rendu : `histoire-map-fond.js`, `histoire-map-noeuds.js`, `histoire-map-camera.js`
+- Indicateur de scroll vertical sur la carte
+- Tests unitaires caméra + E2E scroll molette
 
 ## [2.5.3] — 2026-06-09
 

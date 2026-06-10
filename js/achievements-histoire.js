@@ -9,6 +9,25 @@ function etatH() {
     return store.histoire.etat;
 }
 
+let _timerFlushProuesses = 0;
+
+/** Persiste l'état histoire en différé pour éviter d'écrire dans localStorage à chaque ligne effacée. */
+function _planifierFlushProuesses() {
+    if (_timerFlushProuesses) return;
+    _timerFlushProuesses = setTimeout(() => {
+        _timerFlushProuesses = 0;
+        if (store.histoire.etat) sauvegarderEtatHistoire(store.histoire.etat);
+    }, 1500);
+}
+
+export function flushProuessesHistoire() {
+    if (_timerFlushProuesses) {
+        clearTimeout(_timerFlushProuesses);
+        _timerFlushProuesses = 0;
+    }
+    if (store.histoire.etat) sauvegarderEtatHistoire(store.histoire.etat);
+}
+
 /** @param {keyof typeof ETAT_HISTOIRE_VIDE.prouessesHistoire} champ @param {number} valeur */
 function _majProuesse(champ, valeur) {
     const e = etatH();
@@ -23,8 +42,8 @@ function _majProuesse(champ, valeur) {
     } else {
         e.prouessesHistoire[champ] = Math.max(e.prouessesHistoire[champ] ?? 0, valeur);
     }
-    sauvegarderEtatHistoire(e);
     store.histoire.etat = e;
+    _planifierFlushProuesses();
 }
 
 function _valeurProuesse(champ, sessionValue = 0) {
@@ -40,7 +59,7 @@ export const ACHIEVEMENTS_HISTOIRE = {
     premier_monde: {
         id: 'premier_monde',
         nom: "L'ÉVEIL",
-        description: 'Compléter le Prologue du Mode Histoire',
+        description: 'Completer le Prologue du Mode Histoire',
         icone: '🤖',
         categorie: 'histoire',
         decoration: 'trainee_simple',
@@ -49,7 +68,7 @@ export const ACHIEVEMENTS_HISTOIRE = {
     premier_chapitre: {
         id: 'premier_chapitre',
         nom: 'SURVIVANT DU FEU',
-        description: 'Compléter le Chapitre I',
+        description: 'Completer le Chapitre I',
         icone: '🔥',
         categorie: 'histoire',
         decoration: 'flammes_bords',
@@ -58,7 +77,7 @@ export const ACHIEVEMENTS_HISTOIRE = {
     tous_chapitres: {
         id: 'tous_chapitres',
         nom: 'TRAVERSÉE',
-        description: 'Compléter les quatre chapitres principaux',
+        description: 'Completer les quatre chapitres principaux',
         icone: '🗺',
         categorie: 'histoire',
         decoration: 'particules_biome',
@@ -71,7 +90,7 @@ export const ACHIEVEMENTS_HISTOIRE = {
     premier_boss: {
         id: 'premier_boss',
         nom: 'PREMIER ADVERSAIRE',
-        description: 'Vaincre un boss pour la première fois',
+        description: 'Vaincre un boss pour la premiere fois',
         icone: '⚔',
         categorie: 'histoire_boss',
         decoration: 'eclairs_bords',
@@ -150,7 +169,7 @@ export const ACHIEVEMENTS_HISTOIRE = {
     labo_vera: {
         id: 'labo_vera',
         nom: 'ADRESSE TROUVÉE',
-        description: 'Découvrir le laboratoire de VERA dans CYBER',
+        description: 'Decouvrir le laboratoire de VERA dans CYBER',
         icone: '🔬',
         categorie: 'histoire_vera',
         decoration: 'halo_oracle',
@@ -177,10 +196,10 @@ export const ACHIEVEMENTS_HISTOIRE = {
     fin_secrete_obtenue: {
         id: 'fin_secrete_obtenue',
         nom: 'LA LIGNE PARFAITE',
-        description: 'Obtenir la Fin Secrète du Mode Histoire',
+        description: 'Obtenir la Fin Secrete du Mode Histoire',
         icone: '✦',
         categorie: 'histoire_fins',
-        decoration: 'aura_dorée',
+        decoration: 'aura_doree',
         condition: () => (etatH().toutesFinObtenues ?? []).includes('fin_secrete'),
     },
     toutes_fins: {
@@ -200,7 +219,7 @@ export const ACHIEVEMENTS_HISTOIRE = {
     miroir_decouvert: {
         id: 'miroir_decouvert',
         nom: 'REFLET',
-        description: 'Découvrir LE MIROIR',
+        description: 'Decouvrir LE MIROIR',
         icone: '🪞',
         categorie: 'histoire_secrets',
         decoration: 'bordure_bicolore',
@@ -216,7 +235,7 @@ export const ACHIEVEMENTS_HISTOIRE = {
     miroir_complete: {
         id: 'miroir_complete',
         nom: 'AU-DELÀ DU REFLET',
-        description: 'Compléter LE MIROIR',
+        description: 'Completer LE MIROIR',
         icone: '✧',
         categorie: 'histoire_secrets',
         decoration: 'vortex_bords',
@@ -225,7 +244,7 @@ export const ACHIEVEMENTS_HISTOIRE = {
     trame_decouverte: {
         id: 'trame_decouverte',
         nom: 'FIL INVISIBLE',
-        description: 'Découvrir LA TRAME PRIMORDIALE',
+        description: 'Decouvrir LA TRAME PRIMORDIALE',
         icone: '✦',
         categorie: 'histoire_secrets',
         decoration: 'aura_cosmos',
@@ -243,7 +262,7 @@ export const ACHIEVEMENTS_HISTOIRE = {
     trame_complete: {
         id: 'trame_complete',
         nom: 'TISSEUR',
-        description: 'Compléter LA TRAME PRIMORDIALE',
+        description: 'Completer LA TRAME PRIMORDIALE',
         icone: '🌌',
         categorie: 'histoire_secrets',
         decoration: 'etoiles_trainee',
@@ -252,7 +271,7 @@ export const ACHIEVEMENTS_HISTOIRE = {
     rouille_maitrise: {
         id: 'rouille_maitrise',
         nom: 'FORGERON',
-        description: 'Effacer 20 blocs rouillés dans LA ROUILLE',
+        description: 'Effacer 20 blocs rouilles dans LA ROUILLE',
         icone: '⚙',
         categorie: 'histoire_prouesses',
         decoration: 'halo_relique',
@@ -281,7 +300,7 @@ export const ACHIEVEMENTS_HISTOIRE = {
     miroir_sans_erreur: {
         id: 'miroir_sans_erreur',
         nom: 'INVERSÉ PARFAIT',
-        description: 'Compléter LE MIROIR avec plus de 95% de précision',
+        description: 'Completer LE MIROIR pile au seuil, sans ligne superflue',
         icone: '💎',
         categorie: 'histoire_prouesses',
         decoration: 'gemmes_orbitales',
@@ -290,7 +309,7 @@ export const ACHIEVEMENTS_HISTOIRE = {
     patience_distorsion: {
         id: 'patience_distorsion',
         nom: "L'ART DE L'INACHÈVEMENT",
-        description: 'Tenir 30 secondes sans effacer face à La Distorsion',
+        description: 'Maintenir le plateau à moitie plein 30 secondes face à La Distorsion',
         icone: '⏳',
         categorie: 'histoire_prouesses',
         decoration: 'halo_oracle',

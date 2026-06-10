@@ -3,6 +3,9 @@ import { redimensionnerConstellation } from './constellation.js';
 import { redimensionnerCarteHistoire } from './histoire-map.js';
 import { obtenirCanvasMenuFond, menuAnimActif } from './menu-fond.js';
 import { archi } from './archi-logique.js';
+import { demarrerFondBiome, invaliderCacheFond } from './rendu-fond-biome.js';
+import { etat } from './store-jeu.js';
+import { store } from './store-core.js';
 
 const LAYOUT_ARCHI = {
     panneauLargeur: 120,
@@ -77,11 +80,22 @@ export function adapterInterfaceArchi() {
     iface.style.transformOrigin = 'top left';
 }
 
+function obtenirIdBiomeFond() {
+    if (store.histoire.actif && store.histoire.mondeActuel) {
+        return store.histoire.mondeActuel;
+    }
+    return store.biomeActif || 'monde_prologue';
+}
+
 export function initialiserLayout() {
     window.addEventListener('resize', () => {
         adapterInterface();
         if (archi.actif) adapterInterfaceArchi();
         redimensionnerConstellation();
         redimensionnerCarteHistoire();
+        invaliderCacheFond();
+        if (etat.estEnCours) {
+            demarrerFondBiome(obtenirIdBiomeFond());
+        }
     });
 }

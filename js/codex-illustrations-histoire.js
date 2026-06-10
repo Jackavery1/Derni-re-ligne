@@ -1,5 +1,5 @@
 // js/codex-illustrations-histoire.js
-// Illustrations pour les entrées Codex du Mode Histoire.
+// Illustrations pour les entrees Codex du Mode Histoire.
 
 function fondNoir(ctx, w, h) {
     ctx.fillStyle = '#04020a';
@@ -8,13 +8,13 @@ function fondNoir(ctx, w, h) {
 
 export function dessinerIllustRouille(ctx, w, h) {
     fondNoir(ctx, w, h);
-    // Fond rouille dégradé
+    // Fond rouille degrade
     const g = ctx.createLinearGradient(0, 0, w, h);
     g.addColorStop(0, '#1a0a04');
     g.addColorStop(1, '#2d1005');
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, w, h);
-    // Motif de grille métal
+    // Motif de grille metal
     ctx.strokeStyle = '#4a2010aa';
     ctx.lineWidth = 0.5;
     for (let x = 0; x < w; x += 14) {
@@ -29,7 +29,7 @@ export function dessinerIllustRouille(ctx, w, h) {
         ctx.lineTo(w, y);
         ctx.stroke();
     }
-    // Engrenage central rouillé
+    // Engrenage central rouille
     ctx.save();
     ctx.shadowColor = '#8b4513';
     ctx.shadowBlur = 8;
@@ -64,19 +64,19 @@ export function dessinerIllustRouille(ctx, w, h) {
 export function dessinerIllustEclipse(ctx, w, h) {
     fondNoir(ctx, w, h);
     const midY = h * 0.52;
-    // Moitié haute — doré
+    // Moitie haute — dore
     const gHaut = ctx.createLinearGradient(0, 0, 0, midY);
     gHaut.addColorStop(0, '#201500');
     gHaut.addColorStop(1, '#3a2800');
     ctx.fillStyle = gHaut;
     ctx.fillRect(0, 0, w, midY);
-    // Moitié basse — indigo
+    // Moitie basse — indigo
     const gBas = ctx.createLinearGradient(0, midY, 0, h);
     gBas.addColorStop(0, '#080820');
     gBas.addColorStop(1, '#030310');
     ctx.fillStyle = gBas;
     ctx.fillRect(0, midY, w, h - midY);
-    // Ligne de séparation
+    // Ligne de separation
     ctx.save();
     ctx.strokeStyle = 'rgba(255,200,50,0.5)';
     ctx.lineWidth = 1;
@@ -86,7 +86,7 @@ export function dessinerIllustEclipse(ctx, w, h) {
     ctx.lineTo(w, midY);
     ctx.stroke();
     ctx.setLineDash([]);
-    // Soleil partiellement caché
+    // Soleil partiellement cache
     ctx.shadowColor = '#ffd700';
     ctx.shadowBlur = 18;
     ctx.fillStyle = 'rgba(255,200,0,0.6)';
@@ -126,10 +126,10 @@ export function dessinerIllustVide(ctx, w, h) {
 
 export function dessinerIllustMiroir(ctx, w, h) {
     fondNoir(ctx, w, h);
-    // Fond clair (miroir inversé)
+    // Fond clair (miroir inverse)
     ctx.fillStyle = '#f0ead8';
     ctx.fillRect(0, 0, w, h);
-    // Réflexion de grille
+    // Reflexion de grille
     ctx.strokeStyle = 'rgba(200,160,0,0.2)';
     ctx.lineWidth = 0.5;
     for (let x = 0; x < w; x += 20) {
@@ -154,7 +154,7 @@ export function dessinerIllustMiroir(ctx, w, h) {
     ctx.moveTo(0, h / 2);
     ctx.lineTo(w, h / 2);
     ctx.stroke();
-    // Flèche inversée
+    // Fleche inversee
     const cx = w / 2;
     ctx.strokeStyle = '#ff8800';
     ctx.lineWidth = 1.5;
@@ -183,7 +183,7 @@ export function dessinerIllustTrame(ctx, w, h) {
         ctx.strokeStyle = coul;
         ctx.globalAlpha = alpha;
         ctx.lineWidth = 0.8;
-        // Fil horizontal ondulé
+        // Fil horizontal ondule
         ctx.beginPath();
         ctx.moveTo(0, t * h);
         for (let x = 0; x <= w; x += 6) {
@@ -213,7 +213,7 @@ export function dessinerIllustVera(ctx, w, h) {
     fondNoir(ctx, w, h);
     ctx.fillStyle = '#0a000a';
     ctx.fillRect(0, 0, w, h);
-    // Portrait stylisé de VERA
+    // Portrait stylise de VERA
     ctx.save();
     ctx.shadowColor = '#ff006e';
     ctx.shadowBlur = 14;
@@ -223,7 +223,7 @@ export function dessinerIllustVera(ctx, w, h) {
     ctx.beginPath();
     ctx.arc(w / 2, h * 0.4, 22, 0, Math.PI * 2);
     ctx.stroke();
-    // Silhouette corps (épaules)
+    // Silhouette corps (epaules)
     ctx.beginPath();
     ctx.moveTo(w * 0.18, h * 0.92);
     ctx.quadraticCurveTo(w * 0.3, h * 0.62, w / 2 - 22, h * 0.62);
@@ -244,7 +244,7 @@ export function dessinerIllustVera(ctx, w, h) {
     ctx.arc(w / 2, h * 0.43, 9, 0.15 * Math.PI, 0.85 * Math.PI);
     ctx.stroke();
     ctx.restore();
-    // Aura de données
+    // Aura de donnees
     ctx.save();
     ctx.font = '5px monospace';
     ctx.fillStyle = 'rgba(255,0,110,0.2)';
@@ -281,7 +281,7 @@ export function dessinerIllustDistorsion(ctx, w, h) {
     ctx.textBaseline = 'middle';
     ctx.fillText('∞', w / 2, h * 0.48);
     ctx.restore();
-    // Fragments de lignes incomplètes
+    // Fragments de lignes incompletes
     ctx.save();
     ctx.strokeStyle = 'rgba(255,255,255,0.06)';
     ctx.lineWidth = 1;
@@ -352,7 +352,7 @@ export function dessinerIllustSentinelle(ctx, w, h) {
     ctx.fillStyle = 'rgba(150,230,255,0.08)';
     ctx.fill();
     ctx.stroke();
-    // Yeux carrés
+    // Yeux carres
     ctx.fillStyle = '#aaeeff';
     ctx.fillRect(cx - 10, cy - 4, 7, 7);
     ctx.fillRect(cx + 3, cy - 4, 7, 7);
@@ -371,14 +371,14 @@ export function dessinerIllustArchiviste(ctx, w, h) {
         ctx.fillText('01@#', (i * 19) % (w - 20), ((i * 13) % (h - 8)) + 8);
     }
     ctx.restore();
-    // Rectangle glitché
+    // Rectangle glitche
     ctx.save();
     ctx.strokeStyle = '#aa00ff';
     ctx.shadowColor = '#ff00ff';
     ctx.shadowBlur = 12;
     ctx.lineWidth = 1.5;
     ctx.strokeRect(w * 0.2, h * 0.2, w * 0.6, h * 0.62);
-    // Œil glitché
+    // Œil glitche
     ctx.fillStyle = '#ff00ff';
     ctx.beginPath();
     ctx.arc(w / 2, h * 0.46, 8, 0, Math.PI * 2);
@@ -436,7 +436,7 @@ export function dessinerIllustTroisFins(ctx, w, h) {
         ctx.moveTo(w * 0.05, y);
         ctx.lineTo(w * 0.75, y);
         ctx.stroke();
-        // Emblème
+        // Embleme
         ctx.fillStyle = couleur;
         ctx.shadowColor = couleur;
         ctx.shadowBlur = 8;

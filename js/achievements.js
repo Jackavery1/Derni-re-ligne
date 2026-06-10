@@ -28,6 +28,7 @@ function creerStatsVides() {
         typesReliquesUtilises: new Set(),
         meteosSubies: 0,
         meteosPartieActuelle: new Set(),
+        meteosVues: new Set(),
         reactionsRobo: 0,
         maxNotesComposition: 0,
         nbAchievementsDebloques: 0,
@@ -42,6 +43,7 @@ function creerStatsVides() {
         archiScoreTotal: 0,
         archiNiveauxCompletes: new Set(),
         archiEtoilesMax: 0,
+        archiEtoilesParNiveau: {},
         archiPrecisionMax: 0,
         archiParAtteint: 0,
         evenementsVivantSubis: 0,
@@ -94,10 +96,12 @@ function _restaurerStatsJeu(parsed, base) {
     statsGlobales.meteosSubies = parsed.meteosSubies ?? 0;
     statsGlobales.reactionsRobo = parsed.reactionsRobo ?? 0;
     statsGlobales.maxNotesComposition = parsed.maxNotesComposition ?? 0;
-    statsGlobales.nbAchievementsDebloques = parsed.nbAchievementsDebloques ?? 0;
-    statsGlobales.debloqués = parsed.debloqués ?? {};
+    statsGlobales.debloqués = parsed.debloqués ?? parsed.debloques ?? {};
+    // Recalculé depuis la source de vérité pour éviter toute désynchronisation.
+    statsGlobales.nbAchievementsDebloques = Object.keys(statsGlobales.debloqués).length;
     statsGlobales.decorationsActives = parsed.decorationsActives ?? [];
     statsGlobales.meteosPartieActuelle = new Set();
+    statsGlobales.meteosVues = new Set(parsed.meteosVues || []);
 }
 
 /** @param {Record<string, any>} parsed @param {ReturnType<typeof creerStatsVides>} base */
@@ -111,6 +115,7 @@ function _restaurerStatsModes(parsed, base) {
     statsGlobales.archiScoreTotal = parsed.archiScoreTotal ?? base.archiScoreTotal;
     statsGlobales.archiNiveauxCompletes = new Set(parsed.archiNiveauxCompletes || []);
     statsGlobales.archiEtoilesMax = parsed.archiEtoilesMax ?? base.archiEtoilesMax;
+    statsGlobales.archiEtoilesParNiveau = parsed.archiEtoilesParNiveau ?? {};
     statsGlobales.archiPrecisionMax = parsed.archiPrecisionMax ?? base.archiPrecisionMax;
     statsGlobales.archiParAtteint = parsed.archiParAtteint ?? base.archiParAtteint;
     statsGlobales.evenementsVivantSubis =
@@ -176,6 +181,7 @@ export function sauvegarderStats() {
             reliquesUtilisees: statsGlobales.reliquesUtilisees,
             typesReliquesUtilises: [...statsGlobales.typesReliquesUtilises],
             meteosSubies: statsGlobales.meteosSubies,
+            meteosVues: [...statsGlobales.meteosVues],
             reactionsRobo: statsGlobales.reactionsRobo,
             maxNotesComposition: statsGlobales.maxNotesComposition,
             nbAchievementsDebloques: statsGlobales.nbAchievementsDebloques,
@@ -189,6 +195,7 @@ export function sauvegarderStats() {
             archiScoreTotal: statsGlobales.archiScoreTotal,
             archiNiveauxCompletes: [...statsGlobales.archiNiveauxCompletes],
             archiEtoilesMax: statsGlobales.archiEtoilesMax,
+            archiEtoilesParNiveau: statsGlobales.archiEtoilesParNiveau,
             archiPrecisionMax: statsGlobales.archiPrecisionMax,
             archiParAtteint: statsGlobales.archiParAtteint,
             evenementsVivantSubis: statsGlobales.evenementsVivantSubis,
@@ -240,7 +247,10 @@ export function majStatsRelique(effet) {
 
 export function majStatsMeteo(effet) {
     statsGlobales.meteosSubies++;
-    if (effet) statsGlobales.meteosPartieActuelle.add(effet);
+    if (effet) {
+        statsGlobales.meteosPartieActuelle.add(effet);
+        statsGlobales.meteosVues.add(effet);
+    }
 }
 
 export function majStatsReactionRobo(humeur) {
@@ -320,7 +330,7 @@ export function genererGalerieAchievements() {
 
         const descEl = document.createElement('div');
         descEl.className = 'ach-carte-desc';
-        descEl.textContent = debloque ? ach.description : 'Non débloqué';
+        descEl.textContent = debloque ? ach.description : 'Non debloque';
 
         carte.appendChild(iconeEl);
         carte.appendChild(nomEl);
@@ -339,6 +349,8 @@ export function genererGalerieAchievements() {
 
     const btnsFiltres = document.querySelectorAll('.ach-filtre-btn');
     btnsFiltres.forEach((btn) => {
+        if (!(btn instanceof HTMLElement) || btn.dataset.filtreInit === '1') return;
+        btn.dataset.filtreInit = '1';
         btn.addEventListener('click', () => {
             btnsFiltres.forEach((b) => b.classList.remove('actif'));
             btn.classList.add('actif');

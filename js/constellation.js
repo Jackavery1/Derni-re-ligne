@@ -31,7 +31,7 @@ let dernierTapTemps = 0;
 function compterBiomesDebloques() {
     let n = 0;
     for (const id of ORDRE_BIOMES) {
-        if (deps.biomeEstDebloque(deps.obtenirNiveauGlobal(), BIOMES[id].niveauDeblocage)) n++;
+        if (biomeEstDebloqueParHistoire(id)) n++;
     }
     return n;
 }
@@ -54,7 +54,7 @@ function mettreAJourInfoBiome(idBiome) {
     const biome = BIOMES[idBiome];
     if (!biome || !panneau) return;
 
-    const verrouille = !deps.biomeEstDebloque(deps.obtenirNiveauGlobal(), biome.niveauDeblocage);
+    const verrouille = !biomeEstDebloqueParHistoire(idBiome);
     const record = deps.obtenirRecordBiome(idBiome);
     const niveauRecord = deps.obtenirRecordNiveauBiome(idBiome);
     const etoiles = deps.formaterEtoiles(deps.calculerEtoiles(record, niveauRecord));
@@ -65,7 +65,7 @@ function mettreAJourInfoBiome(idBiome) {
     }
     if (elRecord) {
         elRecord.textContent = verrouille
-            ? `PROGRESSION ${biome.niveauDeblocage} REQUISE`
+            ? 'À DÉBLOQUER EN MODE HISTOIRE'
             : `RECORD : ${record.toLocaleString('fr-FR')} — ${etoiles}`;
     }
     if (elStatut) {
@@ -168,7 +168,7 @@ function mettreAJourSelectBiomesClavier() {
     for (const noeud of constellationNoeuds) {
         const opt = document.createElement('option');
         opt.value = noeud.id;
-        opt.textContent = noeud.verrouille ? `${noeud.biome.nom} (verrouillé)` : noeud.biome.nom;
+        opt.textContent = noeud.verrouille ? `${noeud.biome.nom} (verrouille)` : noeud.biome.nom;
         opt.disabled = noeud.verrouille;
         if (noeud.id === biomeChoisi) opt.selected = true;
         select.appendChild(opt);
@@ -354,8 +354,8 @@ export function redimensionnerConstellation() {
 
 export function lancerBiomeSelectionne() {
     if (!biomeChoisi || !BIOMES[biomeChoisi]) return;
-    const biome = BIOMES[biomeChoisi];
-    if (!deps.biomeEstDebloque(deps.obtenirNiveauGlobal(), biome.niveauDeblocage)) return;
+    // Même critère que les nœuds de la carte : déblocage par le Mode Histoire.
+    if (!biomeEstDebloqueParHistoire(biomeChoisi)) return;
     deps.definirBiomeActif(biomeChoisi);
     deps.sauvegarderBiomeActif(biomeChoisi);
     if (deps.modeCoopEstActif?.()) {

@@ -8,7 +8,7 @@ window.addEventListener('error', (ev) => {
 });
 
 window.addEventListener('unhandledrejection', (ev) => {
-    logger.error('Promesse rejetée:', ev.reason);
+    logger.error('Promesse rejetee:', ev.reason);
     afficherErreurUtilisateur('Erreur de chargement asynchrone. Rechargez la page.');
 });
 
@@ -16,9 +16,9 @@ async function demarrer() {
     try {
         await chargerEcrans();
     } catch (err) {
-        logger.error('Échec chargement écrans:', err);
+        logger.error('Échec chargement ecrans:', err);
         afficherErreurUtilisateur(
-            'Impossible de charger les écrans du jeu. Vérifiez votre connexion et rechargez.'
+            'Impossible de charger les ecrans du jeu. Verifiez votre connexion et rechargez.'
         );
         return;
     }
@@ -41,7 +41,7 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker
             .register('sw.js')
             .then((reg) => {
-                logger.info('Service Worker PWA enregistré');
+                logger.info('Service Worker PWA enregistre');
                 reg.addEventListener('updatefound', () => {
                     const nw = reg.installing;
                     nw?.addEventListener('statechange', () => {

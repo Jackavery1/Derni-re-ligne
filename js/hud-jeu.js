@@ -15,6 +15,7 @@ import {
 import { obtenirScoreAffiche } from './oracle-jeu.js';
 import { annoncer } from './annonces.js';
 import { afficherNotificationNiveau } from './ui-notifications.js';
+import { store } from './store-core.js';
 
 export function chargerProgression() {
     definirNiveauGlobal(chargerNiveauGlobal());
@@ -78,10 +79,28 @@ export function rafraichirStats() {
     const modNiveau = etat.lignes % 10;
     const lignesRestantes = modNiveau === 0 ? 10 : 10 - modNiveau;
     const elRestant = document.getElementById('affichage-restant');
-    if (elRestant) elRestant.textContent = `${lignesRestantes} ▸ NIV.${etat.niveau + 1}`;
+    if (elRestant) {
+        if (store.histoire.actif) {
+            elRestant.textContent = '';
+        } else {
+            elRestant.textContent = `${lignesRestantes} ▸ NIV.${etat.niveau + 1}`;
+        }
+    }
 
     const elBarre = document.getElementById('barre-progression-fill');
-    if (elBarre) elBarre.style.width = `${modNiveau * 10}%`;
+    if (elBarre) {
+        if (store.histoire.actif) {
+            elBarre.style.setProperty('--barre-progression-pct', '0%');
+        } else {
+            elBarre.style.setProperty('--barre-progression-pct', `${modNiveau * 10}%`);
+        }
+    }
+
+    if (store.histoire.actif) {
+        void import('./ui-panneau-objectifs.js').then(({ rafraichirHudObjectifsHistoire }) =>
+            rafraichirHudObjectifsHistoire()
+        );
+    }
 }
 
 export function afficherNotifNiveau() {

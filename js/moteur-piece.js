@@ -2,7 +2,7 @@ import { CONFIG, TETROMINOS } from './config.js';
 import { estPositionValidePlateau } from './logique-pure.js';
 
 /**
- * Extrait la matrice de forme d'une pièce (tétromino ou relique).
+ * Extrait la matrice de forme d'une piece (tetromino ou relique).
  * @param {{ type: string, rotation: number, reliqueForme?: number[][] }} piece
  * @param {number | null} [rotation]
  * @returns {number[][]}
@@ -18,7 +18,7 @@ export function extraireForme(piece, rotation = null) {
 }
 
 /**
- * Valide une position avec bornes horizontales personnalisées (mode coop).
+ * Valide une position avec bornes horizontales personnalisees (mode coop).
  * @param {(number | string)[][]} plateau
  * @param {{ x: number, y: number }} piece
  * @param {number[][]} forme
@@ -54,7 +54,7 @@ export function estPositionValideSurPlateau(plateau, piece, forme, dx = 0, dy = 
 }
 
 /**
- * Valide une pièce sur un plateau (solo, architecte, etc.).
+ * Valide une piece sur un plateau (solo, architecte, etc.).
  * @param {{ type: string, rotation: number, x: number, y: number, reliqueForme?: number[][] }} piece
  * @param {(number | string)[][]} plateau
  * @param {number} [dx]

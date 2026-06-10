@@ -10,7 +10,8 @@ export const meteo = {
     timerAlerte: 0,
     timerActif: 0,
     evenementActuel: null,
-    vitesseBase: null,
+    /** Multiplicateur de gravite applique en solo (1 = neutre). Ne mute jamais CONFIG. */
+    facteurVitesse: 1,
     controleInverse: false,
     masquerPlateau: false,
     masquerPiece: false,
@@ -95,8 +96,7 @@ function declencherEffetMeteo(evenement) {
 
     switch (evenement.effet) {
         case 'acceleration':
-            meteo.vitesseBase = CONFIG.vitesseBase;
-            CONFIG.vitesseBase = Math.floor(CONFIG.vitesseBase * 0.52);
+            meteo.facteurVitesse = 0.52;
             break;
 
         case 'eruption': {
@@ -169,8 +169,7 @@ function declencherEffetMeteo(evenement) {
         }
 
         case 'microgravite':
-            meteo.vitesseBase = CONFIG.vitesseBase;
-            CONFIG.vitesseBase = CONFIG.vitesseBase * 3;
+            meteo.facteurVitesse = 3;
             break;
     }
 }
@@ -181,10 +180,7 @@ function terminerEffetMeteo(evenement) {
     switch (evenement.effet) {
         case 'acceleration':
         case 'microgravite':
-            if (meteo.vitesseBase !== null) {
-                CONFIG.vitesseBase = meteo.vitesseBase;
-                meteo.vitesseBase = null;
-            }
+            meteo.facteurVitesse = 1;
             break;
         case 'courant':
             meteo.decalageForce = 0;
@@ -215,10 +211,7 @@ export function annulerMeteo() {
         terminerEffetMeteo(meteo.evenementActuel);
         return;
     }
-    if (meteo.vitesseBase !== null) {
-        CONFIG.vitesseBase = meteo.vitesseBase;
-        meteo.vitesseBase = null;
-    }
+    meteo.facteurVitesse = 1;
     meteo.etat = ETATS_METEO.REPOS;
     meteo.evenementActuel = null;
     meteo.timerAlerte = 0;

@@ -1,4 +1,4 @@
-/** État runtime du mode Histoire (boss, mécaniques spéciales, cutscenes). */
+/** État runtime du mode Histoire (boss, mecaniques speciales, cutscenes). */
 export function creerEtatHistoireRuntime() {
     return {
         actif: false,
@@ -46,5 +46,6 @@ export function creerEtatHistoireRuntime() {
             trameAlphaMorph: 1.0,
             trameEnTransition: false,
         },
+        difficulte: null,
     };
 }

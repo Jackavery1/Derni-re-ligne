@@ -658,9 +658,11 @@ function _dessinerPortraitCutsceneInterne(ctx, w, h, personnageId, t) {
             _portraitSentinelle(ctx, w, h, t, true);
             break;
         case 'archiviste':
+        case 'archiviste_voix':
             _portraitArchiviste(ctx, w, h, t);
             break;
         case 'avantgarde':
+        case 'avantgarde_voix':
             _portraitAvantgarde(ctx, w, h, t);
             break;
         default:

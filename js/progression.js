@@ -1,6 +1,7 @@
 ﻿import { BIOMES } from './config.js';
-import { ETAT_HISTOIRE_VIDE } from './histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE, JOURNAUX_VERA } from './histoire-donnees.js';
 import { logger } from './logger.js';
+import { modeDevActif } from './mode-dev-etat.js';
 
 export const SEUIL_ETOILE_2 = 5000;
 export const SEUIL_ETOILE_3 = 15000;
@@ -55,8 +56,8 @@ function cleLegacy(cle) {
 }
 
 /**
- * Migration des clés localStorage tetrisNeo_* → derniereLigne_*
- * Exécutée une seule fois au premier lancement post-renommage.
+ * Migration des cles localStorage tetrisNeo_* → derniereLigne_*
+ * Executee une seule fois au premier lancement post-renommage.
  * Conserve les sauvegardes existantes.
  */
 export function migrerClesLocalStorage() {
@@ -78,7 +79,7 @@ export function migrerClesLocalStorage() {
     }
 
     localStorage.setItem(MIGRATION_KEY, '1');
-    console.info('[DernièreLigne] migration localStorage effectuée');
+    console.info('[DerniereLigne] migration localStorage effectuee');
 }
 
 /** @param {string} cle */
@@ -89,6 +90,7 @@ function estCleValide(cle) {
     if (/^tetrisNeo_record_[a-z]+$/.test(cle)) return true;
     if (/^derniereLigne_record_[a-z]+$/.test(cle)) return true;
     if (/^derniereLigne_recniv_[a-z]+$/.test(cle)) return true;
+    if (/^derniereLigne_recordcoop_[a-z]+$/.test(cle)) return true;
     if (/^tetrisNeo_monde_histoire_[a-z_]+$/.test(cle)) return true;
     if (/^derniereLigne_monde_histoire_[a-z_]+$/.test(cle)) return true;
     if (/^tetrisNeo_archi_[a-z_]+$/.test(cle)) return true;
@@ -130,7 +132,7 @@ export function ecrireStockageJson(cle, valeur) {
     try {
         return ecrireStockage(cle, JSON.stringify(valeur));
     } catch (err) {
-        logger.warn('Sérialisation localStorage impossible:', cle, err);
+        logger.warn('Serialisation localStorage impossible:', cle, err);
         return false;
     }
 }
@@ -138,7 +140,7 @@ export function ecrireStockageJson(cle, valeur) {
 /** @param {string} cle @param {string} defaut @returns {string} */
 export function lireStockage(cle, defaut) {
     if (!estCleValide(cle)) {
-        logger.warn('Clé localStorage inconnue:', cle);
+        logger.warn('Cle localStorage inconnue:', cle);
         return defaut;
     }
     const cleN = cleCanonique(cle);
@@ -160,7 +162,7 @@ export function lireStockage(cle, defaut) {
 /** @param {string} cle @param {string} valeur @returns {boolean} */
 export function ecrireStockage(cle, valeur) {
     if (!estCleValide(cle)) {
-        logger.warn('Écriture localStorage refusée, clé inconnue:', cle);
+        logger.warn('Écriture localStorage refusee, cle inconnue:', cle);
         return false;
     }
     try {
@@ -182,6 +184,7 @@ export function calculerPointsProgression(score, lignes) {
 
 /** @param {number} niveauGlobal @param {number} niveauDeblocage @returns {boolean} */
 export function biomeEstDebloque(niveauGlobal, niveauDeblocage) {
+    if (modeDevActif()) return true;
     return niveauGlobal >= niveauDeblocage;
 }
 
@@ -252,6 +255,27 @@ export function sauvegarderRecordBiome(idBiome, score, niveauAtteint = 1) {
     return false;
 }
 
+/**
+ * Record du mode coop, stocke separement du record solo pour ne pas
+ * fausser les scores et etoiles affiches à l'ecran de selection.
+ * @param {string} idBiome @returns {number}
+ */
+export function obtenirRecordCoopBiome(idBiome) {
+    if (!BIOMES[idBiome]) return 0;
+    const brut = parseInt(lireStockage(`derniereLigne_recordcoop_${idBiome}`, '0'), 10);
+    return Number.isFinite(brut) && brut >= 0 ? brut : 0;
+}
+
+/** @param {string} idBiome @param {number} score @returns {boolean} */
+export function sauvegarderRecordCoopBiome(idBiome, score) {
+    if (!BIOMES[idBiome] || !Number.isFinite(score) || score < 0) return false;
+    if (score > obtenirRecordCoopBiome(idBiome)) {
+        ecrireStockage(`derniereLigne_recordcoop_${idBiome}`, Math.floor(score).toString());
+        return true;
+    }
+    return false;
+}
+
 /** @param {typeof ETAT_HISTOIRE_VIDE} etat */
 function _fusionnerLegacyHistoire(etat) {
     const clesLegacy = [
@@ -306,52 +330,128 @@ function _fusionnerLegacyHistoire(etat) {
     }
 }
 
+const TOUS_BOSS_HISTOIRE = ['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion'];
+
+/**
+ * Recalcule les flags derives (conditionsMiroir / conditionsTrame / conditionsParadoxe)
+ * depuis les tableaux sources (bossVaincus, journauxTrouves, mondesCompletes).
+ * Indispensable apres une fusion legacy ou une sauvegarde partiellement corrompue.
+ * @param {import('./histoire-donnees.js').EtatHistoire} etat
+ */
+const TOUS_BOSS_MONDES = [
+    'monde_boss_1',
+    'monde_boss_2',
+    'monde_boss_3',
+    'monde_boss_4',
+    'monde_finale',
+];
+
+function _reconcilierFlagsHistoire(etat) {
+    if (!Array.isArray(etat.bossVaincus)) etat.bossVaincus = [];
+    if (!Array.isArray(etat.journauxTrouves)) etat.journauxTrouves = [];
+    if (!Array.isArray(etat.mondesCompletes)) etat.mondesCompletes = [];
+    if (!Array.isArray(etat.toutesFinObtenues)) etat.toutesFinObtenues = [];
+    if (!Array.isArray(etat.mondesCachesDebloques)) etat.mondesCachesDebloques = [];
+    if (!etat.etoilesParMonde) etat.etoilesParMonde = {};
+    if (!etat.continuesParBoss) etat.continuesParBoss = {};
+
+    if (etat.bossVaincus.includes('archiviste')) {
+        etat.conditionsMiroir.bossArchivisteVaincu = true;
+    }
+    if (etat.journauxTrouves.length >= JOURNAUX_VERA.length) {
+        etat.conditionsTrame.tousJournauxTrouves = true;
+    }
+    if (etat.mondesCompletes.includes('monde_miroir')) {
+        etat.conditionsTrame.miroirComplete = true;
+    }
+
+    const continuesBossTotal = TOUS_BOSS_MONDES.reduce(
+        (sum, id) => sum + (etat.continuesParBoss[id] ?? 0),
+        0
+    );
+    if (continuesBossTotal > 0 || (etat.nbContinuesUtilises ?? 0) > 0) {
+        etat.conditionsTrame.tousBossSansContinue = false;
+    } else if (TOUS_BOSS_HISTOIRE.every((id) => etat.bossVaincus.includes(id))) {
+        etat.conditionsTrame.tousBossSansContinue = true;
+    }
+    if (etat.toutesFinObtenues.includes('fin_secrete')) {
+        etat.conditionsParadoxe.finSecreteObtenue = true;
+    }
+    if (
+        etat.conditionsMiroir.bossArchivisteVaincu &&
+        (etat.conditionsMiroir.tetrisTriplesCyber ?? 0) >= 3 &&
+        !etat.mondesCachesDebloques.includes('monde_miroir')
+    ) {
+        etat.mondesCachesDebloques.push('monde_miroir');
+    }
+}
+
 /** @returns {typeof ETAT_HISTOIRE_VIDE} */
 export function chargerEtatHistoire() {
     const parsed = /** @type {Partial<typeof ETAT_HISTOIRE_VIDE> | null} */ (
         lireStockageJson('derniereLigne_histoire', null)
     );
     if (!parsed || typeof parsed !== 'object') {
-        const etatVide = { ...ETAT_HISTOIRE_VIDE };
+        // Copie profonde : une copie superficielle partagerait les tableaux/objets
+        // imbriques avec la constante ETAT_HISTOIRE_VIDE, qui serait alors mutee.
+        const etatVide = structuredClone(ETAT_HISTOIRE_VIDE);
         _fusionnerLegacyHistoire(etatVide);
+        _reconcilierFlagsHistoire(etatVide);
         return etatVide;
     }
+    const base = structuredClone(ETAT_HISTOIRE_VIDE);
     const etat = {
-        ...ETAT_HISTOIRE_VIDE,
+        ...base,
         ...parsed,
         fragmentsVusIds: parsed.fragmentsVusIds ?? [],
+        interludesVusIds: parsed.interludesVusIds ?? [],
+        outroVue: parsed.outroVue ?? false,
+        etoilesParMonde: parsed.etoilesParMonde ?? {},
+        continuesParBoss: parsed.continuesParBoss ?? {},
         conditionsMiroir: {
-            ...ETAT_HISTOIRE_VIDE.conditionsMiroir,
+            ...base.conditionsMiroir,
             ...(parsed.conditionsMiroir ?? {}),
         },
         conditionsTrame: {
-            ...ETAT_HISTOIRE_VIDE.conditionsTrame,
+            ...base.conditionsTrame,
             ...(parsed.conditionsTrame ?? {}),
         },
         conditionsParadoxe: {
-            ...ETAT_HISTOIRE_VIDE.conditionsParadoxe,
+            ...base.conditionsParadoxe,
             ...(parsed.conditionsParadoxe ?? {}),
         },
         prouessesHistoire: {
-            ...ETAT_HISTOIRE_VIDE.prouessesHistoire,
+            ...base.prouessesHistoire,
             ...(parsed.prouessesHistoire ?? {}),
         },
     };
     _fusionnerLegacyHistoire(etat);
+    _reconcilierFlagsHistoire(etat);
     return etat;
 }
 
 /**
- * Retourne l'état de déblocage des fonctionnalités selon l'avancement histoire.
- * Les IDs de boss correspondent à ceux définis dans js/histoire-donnees.js.
+ * Retourne l'etat de deblocage des fonctionnalites selon l'avancement histoire.
+ * Les IDs de boss correspondent à ceux definis dans js/histoire-donnees.js.
  * @returns {{ codex: boolean, mondeLibre: boolean, profil: boolean, achievements: boolean, oracleCoop: boolean, architecte: boolean }}
  */
 export function obtenirEtatDeblocage() {
+    if (modeDevActif()) {
+        return {
+            codex: true,
+            mondeLibre: true,
+            profil: true,
+            achievements: true,
+            oracleCoop: true,
+            architecte: true,
+        };
+    }
+
     let etat = null;
     try {
         etat = chargerEtatHistoire();
     } catch {
-        // Pas encore d'historique → tout verrouillé sauf MODE HISTOIRE
+        // Pas encore d'historique → tout verrouille sauf MODE HISTOIRE
     }
     if (!etat) {
         return {
@@ -368,7 +468,7 @@ export function obtenirEtatDeblocage() {
     const mondesCompletes = Array.isArray(etat.mondesCompletes) ? etat.mondesCompletes : [];
 
     return {
-        codex: mondesCompletes.includes('classique') || mondesCompletes.includes('monde_prologue'),
+        codex: mondesCompletes.includes('monde_prologue'),
         mondeLibre: bossVaincus.includes('brasier'),
         profil: bossVaincus.includes('sentinelle'),
         achievements: bossVaincus.includes('archiviste'),
@@ -392,13 +492,14 @@ const BIOME_VERS_MONDE_HISTOIRE = {
 };
 
 /**
- * Retourne true si le biome est débloqué en Mode Libre.
- * Un biome est débloqué si son monde Histoire correspondant a été complété.
- * Le biome classique est toujours débloqué.
+ * Retourne true si le biome est debloque en Mode Libre.
+ * Un biome est debloque si son monde Histoire correspondant a ete complete.
+ * Le biome classique est toujours debloque.
  * @param {string} biomeId
  * @returns {boolean}
  */
 export function biomeEstDebloqueParHistoire(biomeId) {
+    if (modeDevActif()) return true;
     const mondeRequis = BIOME_VERS_MONDE_HISTOIRE[biomeId];
     if (mondeRequis === null) return true;
     if (mondeRequis === undefined) return false;

@@ -10,20 +10,20 @@ const CLES = {
 const CONTENU_PROLOGUE = {
     titre: 'BIENVENUE DANS DERNIÈRE LIGNE',
     lignes: [
-        'Parcourez la carte des mondes au clavier via la liste de sélection ou à la souris sur la carte.',
-        "Suivez l'histoire de ROBO contre son ennemi juré à travers les différents mondes où ils s'affronteront.",
+        'Parcourez la carte des mondes au clavier via la liste de selection ou à la souris sur la carte.',
+        "Suivez l'histoire de ROBO contre son ennemi jure à travers les differents mondes où ils s'affronteront.",
         'Aidez-le à atteindre son objectif et surtout… Amusez-vous !',
     ],
 };
 
 /** @type {{ touche: string, action: string }[]} */
 const CONTROLES_CLAVIER = [
-    { touche: '← →', action: 'Déplacer' },
+    { touche: '← →', action: 'Deplacer' },
     { touche: '↑ / Z', action: 'Tourner (horaire)' },
     { touche: 'X', action: 'Tourner (anti-horaire)' },
     { touche: '↓', action: 'Chute lente' },
     { touche: 'ESPACE', action: 'Chute rapide' },
-    { touche: 'C / ⇧', action: 'Réserve (hold)' },
+    { touche: 'C / ⇧', action: 'Reserve (hold)' },
     { touche: 'P / Échap', action: 'Pause' },
 ];
 
@@ -32,15 +32,17 @@ const CONTENUS = {
     coop: {
         titre: 'MODE COOPÉRATIF',
         lignes: [
-            'Deux joueurs partagent un plateau : J1 colonnes 1–5 (WASD + Shift), J2 colonnes 6–10 (flèches + Shift droit).',
-            'Utilisez les passerelles pour envoyer une pièce à l’autre joueur quand elles sont disponibles.',
+            'Deux joueurs partagent un plateau : J1 colonnes 1–5, J2 colonnes 6–10. Une ligne ne s’efface que si les deux moities sont remplies !',
+            'J1 : WASD deplacer, W/Q tourner, Shift gauche = chute rapide, E = reserve, R = passerelle.',
+            'J2 : fleches deplacer, ↑ / Pave num. 8 tourner, Shift droit = chute rapide, Pave num. 7 = reserve, 9 = passerelle.',
+            'La passerelle envoie votre prochaine piece à l’autre joueur (1 par niveau).',
         ],
     },
     architecte: {
         titre: 'MODE ARCHITECTE',
         lignes: [
-            'Placez les pièces sans gravité automatique pour remplir l’objectif du puzzle.',
-            'Backspace annule le dernier placement. Visez la précision et le nombre minimal de pièces pour les étoiles.',
+            'Placez les pieces sans gravite automatique pour remplir l’objectif du puzzle.',
+            'Backspace annule le dernier placement. Visez la precision et le nombre minimal de pieces pour les etoiles.',
         ],
     },
 };
@@ -94,7 +96,7 @@ function remplirContenu(contenu, avecControles = false) {
             const mobile = document.createElement('p');
             mobile.className = 'tutoriel-controles-mobile';
             mobile.textContent =
-                'Sur mobile : boutons tactiles en bas de l’écran et swipe sur le plateau.';
+                'Sur mobile : boutons tactiles en bas de l’ecran et swipe sur le plateau.';
             blocControles.appendChild(mobile);
         } else {
             blocControles.classList.add('element-masque');
@@ -150,7 +152,7 @@ function fermerTutoriel(cleStockage, onFermer) {
 }
 
 /**
- * Tutoriel d’accueil histoire : après la première cutscene du prologue, avant la partie.
+ * Tutoriel d’accueil histoire : apres la premiere cutscene du prologue, avant la partie.
  * @param {() => void} [onCompris]
  */
 export function afficherTutorielPrologueApresCutscene(onCompris) {

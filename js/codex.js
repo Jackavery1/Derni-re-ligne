@@ -15,13 +15,11 @@ let promesseCodex = null;
 export async function chargerDonneesCodex() {
     if (codexDonnees) return codexDonnees;
     if (!promesseCodex) {
-        promesseCodex = fetch('./data/codex-donnees.json')
-            .then(async (reponse) => {
-                if (!reponse.ok) {
-                    throw new Error('Impossible de charger data/codex-donnees.json');
-                }
-                const json = await reponse.json();
-                codexDonnees = json.CODEX;
+        // Import dynamique (chunk lazy) plutôt que fetch JSON : les fonctions
+        // `condition` ne survivent pas à une sérialisation JSON.
+        promesseCodex = import('./codex-donnees.js')
+            .then((module) => {
+                codexDonnees = module.CODEX;
                 return codexDonnees;
             })
             .catch((err) => {
@@ -96,14 +94,18 @@ export async function verifierCodex() {
             sauvegarderCodex();
         }
     } catch (err) {
-        logger.warn('[codex] vérification impossible :', err);
+        logger.warn('[codex] verification impossible :', err);
     }
 }
 
 export async function changerChapitreCodex(chapitre, btn) {
     chapitreCodexActif = chapitre;
-    document.querySelectorAll('.codex-onglet').forEach((b) => b.classList.remove('actif'));
+    document.querySelectorAll('.codex-onglet').forEach((b) => {
+        b.classList.remove('actif');
+        b.setAttribute('aria-selected', 'false');
+    });
     btn?.classList.add('actif');
+    btn?.setAttribute('aria-selected', 'true');
     fermerLecteurCodex();
     await genererListeCodex(chapitre);
 }
@@ -147,7 +149,7 @@ export async function genererListeCodex(chapitre) {
     const nbDebloques = entrees.filter((e) => codexDebloque.has(e.id)).length;
     const elProg = document.getElementById('codex-progression');
     if (elProg) {
-        elProg.textContent = `${nbDebloques} / ${nbTotal} ENTRÉES DÉBLOQUÉES`;
+        elProg.textContent = `${nbDebloques} / ${nbTotal} ENTREES DEBLOQUEES`;
     }
 }
 
@@ -201,7 +203,7 @@ export async function genererCodexComplet() {
     const total = Object.keys(CODEX).length;
     const debloques = codexDebloque.size;
     const elProg = document.getElementById('codex-progression');
-    if (elProg) elProg.textContent = `${debloques} / ${total} ENTRÉES`;
+    if (elProg) elProg.textContent = `${debloques} / ${total} ENTREES`;
     await genererListeCodex(chapitreCodexActif);
 }
 

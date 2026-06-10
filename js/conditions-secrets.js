@@ -41,7 +41,7 @@ export function verifierConditionMiroir(nbLignes, etatHist) {
         store.histoire.mecaniques.cyberTetrisConsecutifs =
             (store.histoire.mecaniques.cyberTetrisConsecutifs ?? 0) + 1;
         logger.info(
-            '[secrets] tetris CYBER consécutifs :',
+            '[secrets] tetris CYBER consecutifs :',
             store.histoire.mecaniques.cyberTetrisConsecutifs
         );
     } else if (nbLignes > 0) {
@@ -59,12 +59,27 @@ export function verifierConditionMiroir(nbLignes, etatHist) {
 function _debloquerMiroir(etatHist) {
     if (conditionsRuntime.notificationsMontrées.has('miroir')) return;
 
-    etatHist.conditionsMiroir.tetrisTriplesCyber = store.histoire.mecaniques.cyberTetrisConsecutifs;
+    etatHist.conditionsMiroir.tetrisTriplesCyber = Math.max(
+        etatHist.conditionsMiroir.tetrisTriplesCyber ?? 0,
+        store.histoire.mecaniques.cyberTetrisConsecutifs ?? 0
+    );
     _ajouterMondeCacheDebloque('monde_miroir', etatHist);
     conditionsRuntime.notificationsMontrées.add('miroir');
 
-    logger.info('[secrets] LE MIROIR débloqué');
+    logger.info('[secrets] LE MIROIR debloque');
     _afficherNotifDeblocageMonde('monde_miroir');
+}
+
+/**
+ * Cas differe : les 3 Tetris CYBER ont ete realises AVANT la victoire sur
+ * l'Archiviste. Verifie les conditions persistees et debloque avec notification.
+ * @param {typeof import('./histoire-donnees.js').ETAT_HISTOIRE_VIDE} etatHist
+ */
+export function verifierDeblocageMiroirDiffere(etatHist) {
+    if (etatHist.mondesCachesDebloques?.includes('monde_miroir')) return;
+    if (!etatHist.conditionsMiroir.bossArchivisteVaincu) return;
+    if ((etatHist.conditionsMiroir.tetrisTriplesCyber ?? 0) < 3) return;
+    _debloquerMiroir(etatHist);
 }
 
 export function tickConditionTrame(dt) {
@@ -91,7 +106,7 @@ export function tickConditionTrame(dt) {
             conditionsRuntime.trameAttenteActive = true;
             conditionsRuntime.timerAttenteTrameMs = 0;
             logger.info(
-                '[secrets] Trame : attente démarrée (plateau',
+                '[secrets] Trame : attente demarree (plateau',
                 Math.round(tauxRemplissage * 100) + '%)'
             );
         }
@@ -103,7 +118,7 @@ export function tickConditionTrame(dt) {
     } else if (conditionsRuntime.trameAttenteActive) {
         conditionsRuntime.trameAttenteActive = false;
         conditionsRuntime.timerAttenteTrameMs = 0;
-        logger.info('[secrets] Trame : attente annulée (joueur a effacé)');
+        logger.info('[secrets] Trame : attente annulee (joueur a efface)');
     }
 }
 
@@ -113,7 +128,7 @@ function _validerActionDistorsion(etatHist) {
     conditionsRuntime.trameAttenteActive = false;
     conditionsRuntime.timerAttenteTrameMs = 0;
     _sauvegarderEtat(etatHist);
-    logger.info('[secrets] Condition Trame validée — action distorsion');
+    logger.info('[secrets] Condition Trame validee — action distorsion');
     verifierDeblocageTrame(etatHist);
 }
 
@@ -137,7 +152,7 @@ export function verifierDeblocageTrame(etatHist) {
     if (ok) {
         _ajouterMondeCacheDebloque('monde_trame', etatHist);
         conditionsRuntime.notificationsMontrées.add('trame');
-        logger.info('[secrets] LA TRAME PRIMORDIALE débloquée');
+        logger.info('[secrets] LA TRAME PRIMORDIALE debloquee');
         _afficherNotifDeblocageMonde('monde_trame');
     }
 }
@@ -149,7 +164,7 @@ export function verifierConditionC3(topsCompteur, etatHist) {
 
     _ajouterMondeCacheDebloque('monde_paradoxe', etatHist);
     conditionsRuntime.notificationsMontrées.add('c3');
-    logger.info('[secrets] monde_c3 conditions réunies');
+    logger.info('[secrets] monde_c3 conditions reunies');
 }
 
 function _afficherNotifDeblocageMonde(mondeId) {
@@ -158,6 +173,7 @@ function _afficherNotifDeblocageMonde(mondeId) {
     const MESSAGES = {
         monde_miroir: "✦ UN NOUVEAU CHEMIN S'EST OUVERT",
         monde_trame: '✦ LA TRAME PRIMORDIALE RÉVÉLÉE',
+        monde_paradoxe: '✦ AU-DELÀ DE TOUTE LOGIQUE',
     };
     const msg = MESSAGES[mondeId];
     if (!msg) return;

@@ -3,7 +3,7 @@
 Jeu de Tetris narratif en Vanilla JS + Canvas 2D. PWA jouable hors-ligne.
 Mode Arcade et Mode Histoire « La Fragmentation ».
 
-**Version actuelle : 2.5.3** — voir [CHANGELOG.md](CHANGELOG.md) pour l'historique complet.
+**Version actuelle : 2.5.4** — voir [CHANGELOG.md](CHANGELOG.md) pour l'historique complet.
 
 ## Le jeu
 
@@ -96,17 +96,18 @@ Styles : `styles/main.css`. Cache offline : `sw.js`.
 
 ## Évolution du projet
 
-| Version | Changement principal                             |
-| ------- | ------------------------------------------------ |
-| 2.0     | Jeu Tetris complet (hold, SRS, biomes, FX)       |
-| 2.1     | Sprint, musique, PWA offline, accessibilité      |
-| 2.2     | Séparation `moteur.js`, logique pure, CI         |
-| 2.3     | Audio Web API, progression, étoiles, E2E         |
-| 2.4     | Outillage (Vitest, ESLint, CSP), CSS externalisé |
-| 2.4.1   | Découpage modulaire du moteur (14 fichiers)      |
-| 2.4.2   | Tests étendus, docs, alignement versions         |
-| 2.5     | Coop, build prod, mode Architecte, rendu découpé |
-| 2.5.3   | ROBO restauré, carte histoire, CI factorisée     |
+| Version | Changement principal                                 |
+| ------- | ---------------------------------------------------- |
+| 2.0     | Jeu Tetris complet (hold, SRS, biomes, FX)           |
+| 2.1     | Sprint, musique, PWA offline, accessibilité          |
+| 2.2     | Séparation `moteur.js`, logique pure, CI             |
+| 2.3     | Audio Web API, progression, étoiles, E2E             |
+| 2.4     | Outillage (Vitest, ESLint, CSP), CSS externalisé     |
+| 2.4.1   | Découpage modulaire du moteur (14 fichiers)          |
+| 2.4.2   | Tests étendus, docs, alignement versions             |
+| 2.5     | Coop, build prod, mode Architecte, rendu découpé     |
+| 2.5.4   | Carte histoire verticale, visibilité, mondes secrets |
+| 2.5.3   | ROBO restauré, carte histoire, CI factorisée         |
 
 Détails par version : [CHANGELOG.md](CHANGELOG.md).
 

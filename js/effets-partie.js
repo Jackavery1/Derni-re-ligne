@@ -26,8 +26,14 @@ import {
 import { evaluerDecisionOracle } from './oracle-jeu.js';
 import { endommagerBoss, bossEstActif, bossEstVaincu } from './boss-jeu.js';
 import { mettreAJourIndicateurRelique } from './piece-jeu.js';
+import { enregistrerProgression } from './gestionnaire-difficulte.js';
+
+let effetsInitialises = false;
 
 export function initialiserEffetsPartie() {
+    // Idempotence : une re-initialisation doublerait tous les ecouteurs du bus (sons, textes…).
+    if (effetsInitialises) return;
+    effetsInitialises = true;
     ecouter('piece:son', ({ type }) => AudioMoteur.son(type));
 
     ecouter('partie:stats', () => rafraichirStats());
@@ -45,8 +51,8 @@ export function initialiserEffetsPartie() {
         if (bossEstActif() && !bossEstVaincu() && nbSupprimees > 0) {
             endommagerBoss(nbSupprimees);
         }
-        // Condition Miroir (suivi tetris consécutifs CYBER) :
-        // centralisée dans mecaniques-histoire.js via le bus — pas de duplication ici.
+        // Condition Miroir (suivi tetris consecutifs CYBER) :
+        // centralisee dans mecaniques-histoire.js via le bus — pas de duplication ici.
         for (const l of lignesEffacees) creerParticulesLigne(l);
         const intensitesSecousse = { 1: 2, 2: 3.5, 3: 5, 4: 8 };
         declencherSecousse(intensitesSecousse[nbSupprimees] ?? 8);
@@ -71,6 +77,13 @@ export function initialiserEffetsPartie() {
     });
 
     ecouter('score:maj', ({ nbLignes, result }) => {
+        if (store.histoire.actif && nbLignes > 0) {
+            enregistrerProgression({
+                nbLignes,
+                estTetris: !!result.tetris,
+                combo: result.combo ?? etat.combo,
+            });
+        }
         if (nbLignes > 0) {
             reagirRoboAuxLignes(nbLignes, result.combo);
         } else {
@@ -81,7 +94,7 @@ export function initialiserEffetsPartie() {
         if (nbLignes > 0) {
             if (result.tetris) {
                 afficherTexteFlottant('TETRIS !', '#ffe600', 16);
-                annoncer('Tetris ! Quatre lignes effacées');
+                annoncer('Tetris ! Quatre lignes effacees');
                 if (result.backToBack) {
                     afficherTexteFlottant('BACK-TO-BACK !', '#ff006e', 13);
                     annoncer('Back-to-back Tetris');
@@ -108,7 +121,7 @@ export function initialiserEffetsPartie() {
                     }
                 );
                 annoncer(
-                    `${nbLignes} ligne${nbLignes > 1 ? 's' : ''} effacée${nbLignes > 1 ? 's' : ''}, plus ${result.points} points`
+                    `${nbLignes} ligne${nbLignes > 1 ? 's' : ''} effacee${nbLignes > 1 ? 's' : ''}, plus ${result.points} points`
                 );
             }
         }

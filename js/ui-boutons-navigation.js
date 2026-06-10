@@ -19,20 +19,8 @@ export function initialiserBoutonsNavigation() {
         archi_afficherSelection();
     });
     document.getElementById('btn-mode-histoire')?.addEventListener('click', () => {
-        void import('./histoire-intro.js').then(
-            ({ introHistoireDejaVue, marquerIntroHistoireVue, obtenirSequenceIntro }) => {
-                if (!introHistoireDejaVue()) {
-                    marquerIntroHistoireVue();
-                    void import('./histoire-manager-ui.js').then(({ afficherCutsceneHistoire }) => {
-                        const seq = obtenirSequenceIntro();
-                        afficherCutsceneHistoire(seq.lignes, seq.personnages, () => {
-                            afficherEcran(ECRANS.HISTOIRE_MAP);
-                        });
-                    });
-                } else {
-                    afficherEcran(ECRANS.HISTOIRE_MAP);
-                }
-            }
+        void import('./histoire-intro.js').then(({ ouvrirModeHistoireDepuisMenu }) =>
+            ouvrirModeHistoireDepuisMenu()
         );
     });
     document

@@ -11,15 +11,19 @@ Guide interne pour comprendre, tester et étendre la campagne narrative.
 
 ## Modules clés
 
-| Module                   | Rôle                                           |
-| ------------------------ | ---------------------------------------------- |
-| `histoire-manager.js`    | Navigation carte, lancement mondes, sauvegarde |
-| `histoire-map.js`        | Rendu et interaction carte canvas              |
-| `histoire-narratif.js`   | Cutscenes, journaux, transitions               |
-| `boss-jeu.js`            | Combats boss, mécaniques spéciales             |
-| `mecaniques-histoire.js` | Biomes spéciaux (rouille, éclipse, vide…)      |
-| `conditions-secrets.js`  | Déblocage mondes miroir, trame, paradoxe       |
-| `histoire-etat.js`       | Accès centralisé à l'état persisté             |
+| Module                   | Rôle                                             |
+| ------------------------ | ------------------------------------------------ |
+| `histoire-manager.js`    | Navigation carte, lancement mondes, sauvegarde   |
+| `histoire-map.js`        | État carte, layout vertical, caméra, scroll      |
+| `histoire-map-rendu.js`  | Orchestration rendu canvas (chemins, brouillard) |
+| `histoire-map-fond.js`   | Fond étoilé, nébuleuses, planètes                |
+| `histoire-map-noeuds.js` | Nœuds, fantômes, mondes secrets                  |
+| `histoire-map-camera.js` | Transform caméra, hit-test écran → monde         |
+| `histoire-narratif.js`   | Cutscenes, journaux, transitions                 |
+| `boss-jeu.js`            | Combats boss, mécaniques spéciales               |
+| `mecaniques-histoire.js` | Biomes spéciaux (rouille, éclipse, vide…)        |
+| `conditions-secrets.js`  | Déblocage mondes miroir, trame, paradoxe         |
+| `histoire-etat.js`       | Accès centralisé à l'état persisté               |
 
 ## Progression d'un monde
 
@@ -43,10 +47,27 @@ Logique détaillée : `js/conditions-secrets.js`, `js/monde-paradoxe.js`.
 
 Clé `derniereLigne_histoire` dans `localStorage`, gérée par `progression.js`. État runtime dans `store.histoire` (`store-histoire.js`).
 
+## Carte histoire (v2.5.4)
+
+- **Layout vertical** : 17 mondes principaux empilés (`PAS_Y = 140`), défilement molette/touch.
+- **Caméra** : zoom 1.6×, focus auto sur le premier monde jouable, `ecranVersMonde()` pour le hit-test.
+- **Visibilité** : mondes complétés + monde actuel visibles ; 2 suivants en fantômes ; brouillard au-delà.
+- **Secrets** : absents de la carte tant que `mondePeutEtreJoue()` est faux ; apparition uniquement quand toutes les conditions du monde sont remplies (miroir, trame, paradoxe).
+
+## Mode développeur (discret)
+
+Activation (session uniquement, non persistée) :
+
+- URL `?dev=1`
+- Raccourci `Ctrl+Shift+D`
+- 5 clics rapides sur le titre « Dernière Ligne » (écran titre)
+
+Indicateur : point cyan discret en bas à droite. Panneau : lancer/rejouer un monde, **valider + suivant** (complète le monde sélectionné avec la logique jeu — boss, journaux, secrets — puis sélectionne le monde suivant), reset histoire, tout compléter, conditions secrets, niveau global 99, skip tutoriels. Les mondes secrets restent masqués sur la carte même en mode dev — accès via le panneau ou le sélecteur clavier.
+
 ## Tests
 
-- Unitaires : `tests/histoire-manager.test.mjs`, `tests/mecaniques-histoire.test.mjs`, `tests/conditions-secrets.test.mjs`, `tests/boss-jeu.test.mjs`
-- E2E : `e2e/histoire.spec.mjs`
+- Unitaires : `tests/histoire-manager.test.mjs`, `tests/histoire-map-camera.test.mjs`, `tests/mecaniques-histoire.test.mjs`, `tests/conditions-secrets.test.mjs`, `tests/boss-jeu.test.mjs`
+- E2E : `e2e/histoire.spec.mjs` (scroll molette, sélection clavier, mobile)
 
 ## Ajouter un monde
 

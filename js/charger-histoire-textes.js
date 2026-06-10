@@ -21,7 +21,7 @@ export async function chargerHistoireTextes() {
 /** @returns {typeof import('./histoire-textes.js')} */
 export function obtenirHistoireTextesSync() {
     if (!cache) {
-        throw new Error('Textes histoire non chargés — appeler chargerHistoireTextes() avant');
+        throw new Error('Textes histoire non charges — appeler chargerHistoireTextes() avant');
     }
     return cache;
 }

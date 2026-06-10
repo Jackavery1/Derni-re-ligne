@@ -28,6 +28,7 @@ import {
     archi_reinitialiserEtatNiveau,
 } from './archi-logique.js';
 import { archi_rendreFrame } from './archi-rendu.js';
+import { modeDevActif } from './mode-dev-etat.js';
 import { adapterInterfaceArchi } from './layout-jeu.js';
 
 export { archi, modeArchiActif } from './archi-logique.js';
@@ -144,7 +145,7 @@ export function archi_mettreAJourInventaireUI() {
         }${item.qteDispo === 0 ? ' epuise' : ''}`;
 
         const label = document.createElement('span');
-        label.textContent = `${item.type}-pièce`;
+        label.textContent = `${item.type}-piece`;
         const qte = document.createElement('span');
         qte.className = 'archi-inv-qte';
         qte.textContent = String(item.qteDispo);
@@ -190,7 +191,7 @@ function archi_mettreAJourInfosNiveau() {
                   ? 'var(--jaune)'
                   : 'var(--vert)';
     }
-    if (elPar) elPar.textContent = `${niv.parPieces} pièces min`;
+    if (elPar) elPar.textContent = `${niv.parPieces} pieces min`;
 }
 
 export function archi_terminerNiveau() {
@@ -209,7 +210,17 @@ export function archi_terminerNiveau() {
         statsGlobales.archiNiveauxCompletes = new Set();
     }
     statsGlobales.archiNiveauxCompletes.add(archi.niveauActuel.id);
-    statsGlobales.archiEtoilesMax = (statsGlobales.archiEtoilesMax || 0) + etoiles;
+    // Meilleures etoiles PAR niveau (rejouer un même niveau ne cumule plus) :
+    // archiEtoilesMax = somme des meilleurs resultats, conforme à « ★★★ sur 5 niveaux ».
+    if (!statsGlobales.archiEtoilesParNiveau) statsGlobales.archiEtoilesParNiveau = {};
+    statsGlobales.archiEtoilesParNiveau[archi.niveauActuel.id] = Math.max(
+        statsGlobales.archiEtoilesParNiveau[archi.niveauActuel.id] || 0,
+        etoiles
+    );
+    statsGlobales.archiEtoilesMax = Object.values(statsGlobales.archiEtoilesParNiveau).reduce(
+        (somme, n) => somme + n,
+        0
+    );
 
     const precisionPct = Math.round(archi.precisionActuelle * 100);
     if (precisionPct > (statsGlobales.archiPrecisionMax || 0)) {
@@ -272,7 +283,7 @@ export function archi_afficherSelection() {
         const cle = `derniereLigne_archi_${niv.id}`;
         const meilleur = parseInt(lireStockage(cle, '0'), 10);
         const etoiles = archi_calculerEtoiles(meilleur);
-        const debloque = (statsGlobales.archiScoreTotal || 0) >= niv.deblocage;
+        const debloque = modeDevActif() || (statsGlobales.archiScoreTotal || 0) >= niv.deblocage;
         const biome = BIOMES[niv.biome];
         const diffStr = '●'.repeat(niv.difficulte) + '○'.repeat(3 - niv.difficulte);
         const couleurDiff =
@@ -330,13 +341,19 @@ export function archi_basculerPause() {
     archi.estEnPause = !archi.estEnPause;
 
     if (archi.estEnPause) {
+        // afficherEcran() remplit l'ecran pause avec les stats solo :
+        // on ecrit les valeurs et libelles archi APRES son appel.
+        afficherEcran(ECRANS.PAUSE);
         const elS = document.getElementById('pause-score');
         if (elS) elS.textContent = String(archi.scorePartie);
         const elL = document.getElementById('pause-lignes');
         if (elL) elL.textContent = `${Math.round(archi.precisionActuelle * 100)}%`;
         const elN = document.getElementById('pause-niveau');
         if (elN) elN.textContent = archi.niveauActuel?.nom ?? '';
-        afficherEcran(ECRANS.PAUSE);
+        const labelLignes = document.querySelector('#ecran-pause [data-label="lignes"]');
+        if (labelLignes) labelLignes.textContent = 'PRÉCISION';
+        const labelNiveau = document.querySelector('#ecran-pause [data-label="niveau"]');
+        if (labelNiveau) labelNiveau.textContent = 'PUZZLE';
     } else {
         cacherEcrans();
     }

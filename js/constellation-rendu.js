@@ -38,7 +38,7 @@ export function afficherPanneauVerrouille(noeud) {
     const elStatut = document.getElementById('sel-biome-statut');
     const elNom = document.getElementById('sel-biome-nom');
     if (elNom) elNom.textContent = `${noeud.biome.icone} ${noeud.biome.nom}`;
-    if (elStatut) elStatut.textContent = `🔒 Complète ${requis} en Mode Histoire pour débloquer`;
+    if (elStatut) elStatut.textContent = `🔒 Complete ${requis} en Mode Histoire pour debloquer`;
     const panneau = document.getElementById('sel-info-biome');
     if (panneau) panneau.style.display = 'flex';
 }

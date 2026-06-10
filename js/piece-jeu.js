@@ -25,7 +25,7 @@ export function obtenirCouleurPieceParType(type) {
     return biome.couleursBlocs[index] ?? biome.couleursBlocs[0];
 }
 
-/** @deprecated Utiliser obtenirCouleurPieceParType — alias conservé pour compatibilité tests */
+/** @deprecated Utiliser obtenirCouleurPieceParType — alias conserve pour compatibilite tests */
 export const getCouleurPiece = obtenirCouleurPieceParType;
 
 export function lierCouleursTetrominos() {
@@ -148,6 +148,7 @@ export function obtenirCouleurPiece(piece) {
 }
 
 export function estPositionValide(piece, dx = 0, dy = 0, rotation = null) {
+    if (!piece) return false;
     const forme = extraireForme(piece, rotation);
     return estPositionValideSurPlateau(etat.plateau, piece, forme, dx, dy);
 }

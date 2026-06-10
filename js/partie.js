@@ -77,14 +77,24 @@ import {
     afficherSectionOracle,
     mettreAJourStatsOracleUI,
 } from './oracle-jeu.js';
+import { demarrerFondBiome, arreterFondBiome } from './rendu-fond-biome.js';
+import { rafraichirHudObjectifsHistoire } from './ui-panneau-objectifs.js';
 export { initialiserCanvas } from './partie-canvas.js';
 export { terminerPartie } from './partie-fin.js';
+
+function obtenirIdBiomeFond() {
+    if (store.histoire.actif && store.histoire.mondeActuel) {
+        return store.histoire.mondeActuel;
+    }
+    return obtenirBiomeActif() || 'monde_prologue';
+}
 
 export function confirmerRecommencer() {
     if (window.confirm('Recommencer la partie ?')) demarrerJeu();
 }
 
 export function quitterVersMenu() {
+    arreterFondBiome();
     arreterLectureMelodie();
     annulerTimersVivant();
     etat.estEnCours = false;
@@ -197,6 +207,10 @@ function initialiserUIPartie() {
 
     document.getElementById('btn-pause').textContent = '⏸ PAUSE';
 
+    if (store.histoire.actif) {
+        rafraichirHudObjectifsHistoire();
+    }
+
     definirAccumulateur(0);
     rendreFrameJeu();
     declencherCalculOracle();
@@ -220,6 +234,7 @@ export function demarrerJeu() {
     }
 
     initialiserUIPartie();
+    demarrerFondBiome(obtenirIdBiomeFond());
     planifierBoucle();
 }
 

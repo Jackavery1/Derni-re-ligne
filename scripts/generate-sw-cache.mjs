@@ -8,10 +8,7 @@ const STATIQUES = [
     './index.html',
     './manifest.json',
     './styles/main.css',
-    './icon.svg',
-    './icon-192.png',
-    './icon-512.png',
-    './icon-maskable.png',
+    './styles/objectifs-histoire.css',
     './fonts/PressStart2P-Regular.ttf',
 ];
 

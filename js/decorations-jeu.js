@@ -184,7 +184,7 @@ function dessinerPoulsBordure() {
     obtenirCanvasPlateau().style.boxShadow = `0 0 ${intensite}px ${couleur}88`;
 }
 
-function dessinerAuraDorée() {
+function dessinerAuraDoree() {
     const w = obtenirCanvasPlateau().width;
     const h = obtenirCanvasPlateau().height;
     const grad = obtenirCtx().createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w * 0.7);
@@ -321,12 +321,22 @@ function dessinerBordureBicolore() {
     const h = obtenirCanvasPlateau().height;
     const xSep = 5 * CONFIG.taille;
     const ctx = obtenirCtx();
+    const lw = 2;
     ctx.save();
+    ctx.lineWidth = lw;
+    ctx.beginPath();
+    ctx.rect(0, 0, xSep, h);
+    ctx.clip();
     ctx.strokeStyle = 'rgba(0,245,255,0.35)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(1, 1, xSep - 2, h - 2);
+    ctx.strokeRect(lw / 2, lw / 2, w - lw, h - lw);
+    ctx.restore();
+    ctx.save();
+    ctx.lineWidth = lw;
+    ctx.beginPath();
+    ctx.rect(xSep, 0, w - xSep, h);
+    ctx.clip();
     ctx.strokeStyle = 'rgba(255,0,110,0.35)';
-    ctx.strokeRect(xSep + 1, 1, w - xSep - 2, h - 2);
+    ctx.strokeRect(lw / 2, lw / 2, w - lw, h - lw);
     ctx.restore();
 }
 
@@ -400,8 +410,8 @@ export function dessinerDecorations() {
             case 'pouls_bordure':
                 dessinerPoulsBordure();
                 break;
-            case 'aura_dorée':
-                dessinerAuraDorée();
+            case 'aura_doree':
+                dessinerAuraDoree();
                 break;
             case 'aura_cosmos':
                 dessinerAuraCosmos();

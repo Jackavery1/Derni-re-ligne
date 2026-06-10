@@ -1,7 +1,6 @@
-import { mkdirSync, writeFileSync } from 'fs';
+import { mkdirSync, writeFileSync, rmSync } from 'fs';
 
 const textes = await import('../js/histoire-textes.js');
-const codex = await import('../js/codex-donnees.js');
 
 mkdirSync('data', { recursive: true });
 
@@ -11,6 +10,8 @@ for (const [cle, valeur] of Object.entries(textes)) {
 }
 
 writeFileSync('data/histoire-textes.json', `${JSON.stringify(exportsTextes, null, 4)}\n`);
-writeFileSync('data/codex-donnees.json', `${JSON.stringify({ CODEX: codex.CODEX }, null, 4)}\n`);
+// Le codex n'est plus exporté en JSON : ses conditions sont des fonctions,
+// le runtime importe directement js/codex-donnees.js.
+rmSync('data/codex-donnees.json', { force: true });
 
-console.log('Données exportées → data/histoire-textes.json, data/codex-donnees.json');
+console.log('Données exportées → data/histoire-textes.json');

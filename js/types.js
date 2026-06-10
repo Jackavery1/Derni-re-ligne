@@ -12,6 +12,7 @@
  * @property {Set<string>} typesReliquesUtilises
  * @property {number} meteosSubies
  * @property {Set<string>} meteosPartieActuelle
+ * @property {Set<string>} meteosVues
  * @property {number} reactionsRobo
  * @property {number} maxNotesComposition
  * @property {number} nbAchievementsDebloques
@@ -26,6 +27,7 @@
  * @property {number} archiScoreTotal
  * @property {Set<string>} archiNiveauxCompletes
  * @property {number} archiEtoilesMax
+ * @property {Record<string, number>} archiEtoilesParNiveau
  * @property {number} archiPrecisionMax
  * @property {number} archiParAtteint
  * @property {number} evenementsVivantSubis

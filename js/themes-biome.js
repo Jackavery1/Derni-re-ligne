@@ -46,6 +46,7 @@ export function appliquerTextesBiome(biomeId) {
     for (const el of document.querySelectorAll('[data-label]')) {
         if (!(el instanceof HTMLElement)) continue;
         const cle = el.dataset.label;
+        if (cle === 'robo') continue;
         const valeur = textes[cle];
         if (!valeur) continue;
         if (el.classList.contains('pause-titre')) {

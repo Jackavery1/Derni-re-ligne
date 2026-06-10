@@ -32,7 +32,9 @@ function dessinerGrille() {
     ctx.save();
     ctx.strokeStyle = BIOMES[obtenirBiomeActif()]?.grilleCoul ?? 'rgba(255,255,255,0.038)';
     ctx.lineWidth = 0.5;
+    const colonneMilieu = CONFIG.colonnes / 2;
     for (let c = 0; c <= CONFIG.colonnes; c++) {
+        if (Number.isInteger(colonneMilieu) && c === colonneMilieu) continue;
         ctx.beginPath();
         ctx.moveTo(c * CONFIG.taille, 0);
         ctx.lineTo(c * CONFIG.taille, CONFIG.lignes * CONFIG.taille);

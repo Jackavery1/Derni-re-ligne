@@ -14,6 +14,7 @@ export {
     demarrerMondeHistoireCache,
     retournerACarte,
     retournerAuMondeActuel,
+    relancerMondeActuel,
 } from './histoire-session.js';
 
 export {

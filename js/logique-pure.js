@@ -47,7 +47,7 @@ export function compterLignesCompletes(plateau) {
 }
 
 /**
- * Supprime les lignes complètes et retourne un nouveau plateau.
+ * Supprime les lignes completes et retourne un nouveau plateau.
  * @param {(number | string)[][]} plateau
  * @returns {{ plateau: (number | string)[][], nbSupprimees: number, lignesEffacees: number[] }}
  */

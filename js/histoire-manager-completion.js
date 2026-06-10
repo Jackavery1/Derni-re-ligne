@@ -16,10 +16,21 @@ import { store } from './store-core.js';
 import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
 import { sauvegarderEtatHistoire } from './progression.js';
 import { statsGlobales, sauvegarderStats, verifierAchievements } from './achievements.js';
-import { onMiroirComplete, verifierDeblocageTrame } from './conditions-secrets.js';
-import { enregistrerPrecisionMiroir } from './achievements-histoire.js';
+import {
+    onMiroirComplete,
+    verifierDeblocageTrame,
+    verifierDeblocageMiroirDiffere,
+} from './conditions-secrets.js';
+import { enregistrerPrecisionMiroir, flushProuessesHistoire } from './achievements-histoire.js';
 import { definirExpressionVera } from './portraits-vera.js';
 import { logger } from './logger.js';
+import {
+    victoireObjectifDeclenchee,
+    calculerEtoiles,
+    fusionnerEtoilesPersistees,
+    estMondeZenActif,
+} from './gestionnaire-difficulte.js';
+import { afficherRecapAvantNarratif } from './ui-panneau-objectifs.js';
 
 export { SEUILS_COMPLETION } from './histoire-mondes.js';
 
@@ -58,11 +69,21 @@ function _enregistrerProgressionBoss(monde, etatHist) {
     }
     if (monde.bossId === 'archiviste') {
         etatHist.conditionsMiroir.bossArchivisteVaincu = true;
+        verifierDeblocageMiroirDiffere(etatHist);
     }
     const tousBoss = ['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion'];
+    const bossMondes = [
+        'monde_boss_1',
+        'monde_boss_2',
+        'monde_boss_3',
+        'monde_boss_4',
+        'monde_finale',
+    ];
+    const sansContinueBoss = bossMondes.every((id) => (etatHist.continuesParBoss?.[id] ?? 0) === 0);
     if (
         tousBoss.every((id) => etatHist.bossVaincus.includes(id)) &&
-        etatHist.nbContinuesUtilises === 0
+        (etatHist.nbContinuesUtilises ?? 0) === 0 &&
+        sansContinueBoss
     ) {
         etatHist.conditionsTrame.tousBossSansContinue = true;
     }
@@ -96,9 +117,68 @@ function _persisterCompletionMonde(monde, etatHist, journalDebloque) {
     }
 }
 
+function _obtenirMondeSuivant(mondeId) {
+    const triee = [...SEQUENCE_HISTOIRE].sort((a, b) => a.ordreGlobal - b.ordreGlobal);
+    const idx = triee.findIndex((m) => m.id === mondeId);
+    if (idx < 0 || idx >= triee.length - 1) return null;
+    return triee[idx + 1].id;
+}
+
+function _appliquerEffetsCyberDev(monde, etatHist) {
+    if (monde.biomeId !== 'cyber' || etatHist.laboDecouvert) return;
+    if ((etatHist.conditionsMiroir.tetrisTriplesCyber ?? 0) < 3) return;
+    etatHist.laboDecouvert = true;
+    const j7 = JOURNAUX_VERA.find((j) => j.id === 'journal_7');
+    if (j7 && !etatHist.journauxTrouves.includes('journal_7')) {
+        etatHist.journauxTrouves.push('journal_7');
+    }
+    sauvegarderEtatHistoire(etatHist);
+    store.histoire.etat = etatHist;
+}
+
+/**
+ * Complete un monde sans narratif (mode developpeur).
+ * @param {string} mondeId
+ * @returns {{ suivant: string | null, dejaComplete: boolean }}
+ */
+export function devCompleterMondeHistoire(mondeId) {
+    const monde = SEQUENCE_HISTOIRE.find((m) => m.id === mondeId);
+    if (!monde) return { suivant: null, dejaComplete: false };
+
+    const etatHist = obtenirEtatHistoire();
+    const dejaComplete = etatHist.mondesCompletes.includes(mondeId);
+    const seuil = SEUILS_COMPLETION[monde.biomeId] ?? 10;
+
+    if (monde.biomeId === 'cyber') {
+        store.histoire.mecaniques.cyberTetrisConsecutifs = 3;
+    }
+    if (monde.estBoss) {
+        store.histoire.boss.vaincu = true;
+    }
+
+    const { journalDebloque } = _enregistrerPremiereCompletion(
+        monde,
+        mondeId,
+        seuil,
+        etatHist,
+        seuil
+    );
+    _enregistrerProgressionBoss(monde, etatHist);
+    _persisterCompletionMonde(monde, etatHist, journalDebloque);
+    _appliquerEffetsCyberDev(monde, etatHist);
+
+    if (!dejaComplete) {
+        mettreAJourStatsCodexHistoire(monde);
+        verifierAchievements();
+    }
+
+    return { suivant: _obtenirMondeSuivant(mondeId), dejaComplete };
+}
+
 export function surFinDeMondeHistoire(lignes, score) {
     void score;
     if (!store.histoire.actif) return;
+    flushProuessesHistoire();
 
     const mondeId = store.histoire.mondeActuel;
     const monde = SEQUENCE_HISTOIRE.find((m) => m.id === mondeId);
@@ -106,12 +186,21 @@ export function surFinDeMondeHistoire(lignes, score) {
 
     const etatHist = obtenirEtatHistoire();
     const seuil = SEUILS_COMPLETION[monde.biomeId] ?? 10;
-    const estComplete = lignes >= seuil || (monde.estBoss && store.histoire.boss.vaincu);
+    const estComplete = monde.estBoss
+        ? store.histoire.boss.vaincu === true
+        : victoireObjectifDeclenchee() ||
+          lignes >= seuil ||
+          (estMondeZenActif() && lignes >= seuil);
 
     let journalDebloque = null;
     let premiereCompletionCeMonde = false;
 
     if (estComplete) {
+        const etoiles = calculerEtoiles(mondeId, etatHist);
+        fusionnerEtoilesPersistees(etatHist, mondeId, etoiles);
+        sauvegarderEtatHistoire(etatHist);
+        store.histoire.etat = etatHist;
+
         ({ journalDebloque, premiereCompletionCeMonde } = _enregistrerPremiereCompletion(
             monde,
             mondeId,
@@ -121,7 +210,9 @@ export function surFinDeMondeHistoire(lignes, score) {
         ));
         _enregistrerProgressionBoss(monde, etatHist);
         _persisterCompletionMonde(monde, etatHist, journalDebloque);
-    } else if (store.histoire.actif) {
+    } else if (store.histoire.actif && monde.estBoss) {
+        if (!etatHist.continuesParBoss) etatHist.continuesParBoss = {};
+        etatHist.continuesParBoss[mondeId] = (etatHist.continuesParBoss[mondeId] ?? 0) + 1;
         etatHist.nbContinuesUtilises = (etatHist.nbContinuesUtilises ?? 0) + 1;
         etatHist.conditionsTrame.tousBossSansContinue = false;
         sauvegarderEtatHistoire(etatHist);
@@ -134,7 +225,10 @@ export function surFinDeMondeHistoire(lignes, score) {
     verifierAchievements();
 
     if (estComplete) {
-        declencherNarratifPostMonde(monde, etatHist, premiereCompletionCeMonde);
+        const etoilesFin = calculerEtoiles(mondeId, etatHist);
+        afficherRecapAvantNarratif(monde, etoilesFin, () =>
+            declencherNarratifPostMonde(monde, etatHist, premiereCompletionCeMonde)
+        );
     } else {
         void import('./histoire-manager-ui.js').then(({ afficherBoutonCarteGameOver }) =>
             afficherBoutonCarteGameOver(true)
@@ -245,9 +339,11 @@ function suiteNarratifPostMonde(monde, etatHist, premiereCompletion) {
 function suiteTransitionChapitre(monde, premiereCompletion) {
     const afficherCarteAvecFragment = () => {
         _afficherFragmentVeraSiDisponible(monde.id, () => {
-            void import('./histoire-manager-ui.js').then(({ afficherBoutonCarteGameOver }) =>
-                afficherBoutonCarteGameOver(true)
-            );
+            _afficherInterludeSiDisponible(monde.id, premiereCompletion, () => {
+                void import('./histoire-manager-ui.js').then(({ afficherBoutonCarteGameOver }) =>
+                    afficherBoutonCarteGameOver(true)
+                );
+            });
         });
     };
 
@@ -276,6 +372,53 @@ function suiteTransitionChapitre(monde, premiereCompletion) {
     }
 
     afficherCarteAvecFragment();
+}
+
+function _afficherInterludeSiDisponible(mondeId, premiereCompletion, callback) {
+    if (!store.histoire.actif) {
+        callback?.();
+        return;
+    }
+    if (mondeId !== 'monde_eclipse' || !premiereCompletion) {
+        callback?.();
+        return;
+    }
+
+    const etatHist = obtenirEtatHistoire();
+    if (!etatHist.interludesVusIds) etatHist.interludesVusIds = [];
+    if (etatHist.interludesVusIds.includes('interlude_elle')) {
+        callback?.();
+        return;
+    }
+
+    const { INTERLUDES } = obtenirHistoireTextesSync();
+    const interlude = INTERLUDES?.interlude_elle;
+    if (!interlude?.length) {
+        callback?.();
+        return;
+    }
+
+    etatHist.interludesVusIds.push('interlude_elle');
+    sauvegarderEtatHistoire(etatHist);
+    store.histoire.etat = etatHist;
+
+    try {
+        void import('./histoire-manager-ui.js')
+            .then(({ afficherCutsceneHistoire }) => {
+                afficherCutsceneHistoire(
+                    interlude.map((l) => l.texte),
+                    interlude.map((l) => l.personnage),
+                    callback
+                );
+            })
+            .catch((err) => {
+                logger.warn('[histoire] interlude indisponible :', err);
+                callback?.();
+            });
+    } catch (err) {
+        logger.warn('[histoire] erreur interlude :', err);
+        callback?.();
+    }
 }
 
 function _afficherFragmentVeraSiDisponible(mondeId, callback) {

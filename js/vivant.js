@@ -25,7 +25,7 @@ export const COMPORTEMENTS_VIVANT = {
     ocean: {
         nom: 'COURANT MARIN',
         icone: '🌊',
-        description: "Un courant déplace tous les blocs d'une case",
+        description: "Un courant deplace tous les blocs d'une case",
         couleurAlerte: '#00cfff',
         intervalle: 18000,
         delaiMinimum: 25000,
@@ -46,7 +46,7 @@ export const COMPORTEMENTS_VIVANT = {
     glace: {
         nom: 'GIVRE',
         icone: '❄️',
-        description: 'Le givre remplit partiellement des rangées vides',
+        description: 'Le givre remplit partiellement des rangees vides',
         couleurAlerte: '#aaeeff',
         intervalle: 24000,
         delaiMinimum: 32000,
@@ -66,7 +66,7 @@ export const COMPORTEMENTS_VIVANT = {
     cyber: {
         nom: 'CORRUPTION',
         icone: '⚠',
-        description: 'Le virus efface des blocs aléatoirement',
+        description: 'Le virus efface des blocs aleatoirement',
         couleurAlerte: '#ff00ff',
         intervalle: 18500,
         delaiMinimum: 24000,
@@ -76,7 +76,7 @@ export const COMPORTEMENTS_VIVANT = {
     fuochi: {
         nom: 'EXPLOSION SPONTANÉE',
         icone: '💥',
-        description: 'Une zone du plateau explose sans prévenir',
+        description: 'Une zone du plateau explose sans prevenir',
         couleurAlerte: '#ffe600',
         intervalle: 28000,
         delaiMinimum: 38000,

@@ -2,7 +2,7 @@
     <canvas
         id="canvas-histoire-map"
         role="img"
-        aria-label="Carte des mondes de la campagne. Utilisez la liste de sélection pour choisir un monde au clavier."
+        aria-label="Carte des mondes de la campagne. Utilisez la liste de selection pour choisir un monde au clavier."
     ></canvas>
 
     <div id="histoire-map-overlay">
@@ -34,22 +34,23 @@
             </div>
         </div>
 
-        <label for="histoire-monde-clavier" class="sr-only">Sélection de monde au clavier</label>
+        <label for="histoire-monde-clavier" class="sr-only">Selection de monde au clavier</label>
         <select
             id="histoire-monde-clavier"
             class="sr-only"
-            aria-label="Sélection de monde"
+            aria-label="Selection de monde"
         ></select>
 
         <div id="histoire-monde-details" class="histoire-panneau-masque">
             <div class="histoire-detail-nom"></div>
             <div class="histoire-detail-type"></div>
             <div class="histoire-detail-statut"></div>
+            <div class="histoire-detail-etoiles" aria-label="Étoiles du monde"></div>
             <div class="histoire-detail-journal"></div>
             <button
                 class="bouton bouton-jouer-monde element-masque"
                 type="button"
-                aria-label="Lancer le monde sélectionné"
+                aria-label="Lancer le monde selectionne"
             >
                 ▶ JOUER
             </button>
@@ -62,28 +63,33 @@
 </div>
 
 <section id="ecran-histoire-cutscene" class="ecran" data-personnage="narrateur">
-    <div class="cutscene-fond-overlay"></div>
+    <canvas id="canvas-cutscene-bg" aria-hidden="true"></canvas>
 
-    <div class="cutscene-portrait-zone">
-        <canvas
-            id="canvas-cutscene-portrait"
-            width="96"
-            height="96"
-            class="cutscene-canvas-portrait"
-        ></canvas>
-        <span id="histoire-cutscene-nom" class="cutscene-nom"></span>
+    <div id="rangee-portraits-cutscene">
+        <canvas id="canvas-portrait-gauche" width="180" height="260" class="absent"></canvas>
+        <div id="boite-dialogue-cutscene" aria-live="polite" aria-atomic="true">
+            <div id="nom-perso-dialogue"></div>
+            <div id="texte-dialogue-cutscene"></div>
+            <span id="indicateur-suite-dialogue">▼</span>
+        </div>
+        <canvas id="canvas-portrait-droite" width="180" height="260" class="absent"></canvas>
     </div>
 
-    <div class="cutscene-texte-zone">
-        <div id="histoire-cutscene-lignes" class="cutscene-lignes"></div>
-        <div id="histoire-cutscene-progress" class="cutscene-progress"></div>
-    </div>
+    <div id="histoire-cutscene-progress" class="cutscene-progress"></div>
 
     <div class="cutscene-controles">
         <button id="btn-cutscene-suivant" class="btn-cutscene" type="button">
             CONTINUER <span class="btn-cutscene-hint">[ Espace / Clic ]</span>
         </button>
-        <button id="btn-cutscene-passer" class="btn-cutscene-passer" type="button">PASSER ›</button>
+        <button
+            id="btn-cutscene-passer"
+            class="btn-cutscene-passer"
+            type="button"
+            aria-keyshortcuts="Escape"
+            aria-label="Passer la scène entière"
+        >
+            PASSER › <span class="btn-cutscene-hint">[ Echap ]</span>
+        </button>
     </div>
 </section>
 

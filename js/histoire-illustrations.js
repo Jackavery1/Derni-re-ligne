@@ -1,6 +1,6 @@
 // js/histoire-illustrations.js
 // Illustrations canvas pour les journaux de VERA.
-// Fonctions pures — aucune dépendance vers le store ou la logique.
+// Fonctions pures — aucune dependance vers le store ou la logique.
 
 /**
  * Dessine un fond commun pour tous les journaux.
@@ -66,10 +66,10 @@ export function dessinerJournal1(ctx, w, h) {
     ctx.restore();
 }
 
-// ---- Journal 2 — La Rouille (machines abandonnées) ----
+// ---- Journal 2 — La Rouille (machines abandonnees) ----
 export function dessinerJournal2(ctx, w, h) {
     fondJournal(ctx, w, h, '#cd6839');
-    // Engrenage simplifié
+    // Engrenage simplifie
     ctx.save();
     ctx.shadowColor = '#8b4513';
     ctx.shadowBlur = 8;
@@ -109,7 +109,7 @@ export function dessinerJournal2(ctx, w, h) {
     ctx.restore();
 }
 
-// ---- Journal 3 — Abysses (La Distorsion répond) ----
+// ---- Journal 3 — Abysses (La Distorsion repond) ----
 export function dessinerJournal3(ctx, w, h) {
     fondJournal(ctx, w, h, '#00cfff');
     // Bulles montantes
@@ -126,7 +126,7 @@ export function dessinerJournal3(ctx, w, h) {
         ctx.arc(bx, by, br, 0, Math.PI * 2);
         ctx.stroke();
     }
-    // Onde de signal (La Distorsion répondant)
+    // Onde de signal (La Distorsion repondant)
     ctx.strokeStyle = '#00cfff44';
     ctx.lineWidth = 1;
     for (let ring = 1; ring <= 4; ring++) {
@@ -172,11 +172,11 @@ export function dessinerJournal4(ctx, w, h) {
     ctx.restore();
 }
 
-// ---- Journal 5 — Arctique (théorie des lignes) ----
+// ---- Journal 5 — Arctique (theorie des lignes) ----
 export function dessinerJournal5(ctx, w, h) {
     fondJournal(ctx, w, h, '#aaeeff');
     ctx.save();
-    // Cristaux de glace en étoile
+    // Cristaux de glace en etoile
     ctx.strokeStyle = '#aaeeff';
     ctx.shadowColor = '#aaeeff';
     ctx.shadowBlur = 12;
@@ -208,7 +208,7 @@ export function dessinerJournal5(ctx, w, h) {
             ctx.stroke();
         }
     }
-    // Ligne incomplète (symbole)
+    // Ligne incomplete (symbole)
     ctx.strokeStyle = '#ffe600';
     ctx.lineWidth = 2;
     ctx.setLineDash([4, 4]);
@@ -220,7 +220,7 @@ export function dessinerJournal5(ctx, w, h) {
     ctx.restore();
 }
 
-// ---- Journal 6 — Désert (fragment endommagé) ----
+// ---- Journal 6 — Desert (fragment endommage) ----
 export function dessinerJournal6(ctx, w, h) {
     fondJournal(ctx, w, h, '#ffbb44');
     ctx.save();
@@ -244,11 +244,11 @@ export function dessinerJournal6(ctx, w, h) {
     ctx.lineTo(w, h);
     ctx.closePath();
     ctx.fill();
-    // Texte brouillé
+    // Texte brouille
     ctx.shadowBlur = 0;
     ctx.fillStyle = 'rgba(255,180,50,0.4)';
     ctx.font = '5px monospace';
-    ctx.fillText('...pas la détruire...', 6, h * 0.22);
+    ctx.fillText('...pas la detruire...', 6, h * 0.22);
     ctx.globalAlpha = 0.3;
     ctx.fillText('com—prendre ce qu—elle res—', 6, h * 0.32);
     ctx.restore();
@@ -267,7 +267,7 @@ export function dessinerJournal7(ctx, w, h) {
             ctx.fillText(chars[(c2 + r2) % chars.length], c2 * 14 + 4, r2 * 16 + 14);
         }
     }
-    // Portrait VERA (simplifié)
+    // Portrait VERA (simplifie)
     ctx.shadowColor = '#ff006e';
     ctx.shadowBlur = 14;
     ctx.strokeStyle = '#ff006e';
@@ -305,13 +305,13 @@ export function dessinerJournal8(ctx, w, h) {
         ctx.fillStyle = `rgba(255,255,255,${0.1 + 0.2 * (i % 4)})`;
         ctx.fillRect((i * 41) % w, (i * 29) % h, 1 + (i % 2), 1 + (i % 2));
     }
-    // Nébuleuse
+    // Nebuleuse
     const gNeb = ctx.createRadialGradient(w * 0.4, h * 0.4, 0, w * 0.4, h * 0.4, 50);
     gNeb.addColorStop(0, 'rgba(119,0,255,0.3)');
     gNeb.addColorStop(1, 'transparent');
     ctx.fillStyle = gNeb;
     ctx.fillRect(0, 0, w, h);
-    // La ligne incomplète
+    // La ligne incomplete
     ctx.shadowColor = '#ffe600';
     ctx.shadowBlur = 10;
     ctx.strokeStyle = '#ffe600';
@@ -322,7 +322,7 @@ export function dessinerJournal8(ctx, w, h) {
     ctx.lineTo(w * 0.85, h * 0.75);
     ctx.stroke();
     ctx.setLineDash([]);
-    // Porte (rectangle tireté)
+    // Porte (rectangle tirete)
     ctx.strokeStyle = 'rgba(255,230,0,0.4)';
     ctx.lineWidth = 1;
     ctx.strokeRect(w * 0.3, h * 0.6, w * 0.4, h * 0.28);

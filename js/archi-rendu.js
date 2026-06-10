@@ -9,7 +9,9 @@ function archi_dessinerGrille(ctx2d, biomeId) {
     const biome = BIOMES[biomeId] ?? BIOMES.classique;
     ctx2d.strokeStyle = biome.grilleCoul;
     ctx2d.lineWidth = 0.5;
+    const colonneMilieu = CONFIG.colonnes / 2;
     for (let c = 0; c <= CONFIG.colonnes; c++) {
+        if (Number.isInteger(colonneMilieu) && c === colonneMilieu) continue;
         ctx2d.beginPath();
         ctx2d.moveTo(c * CONFIG.taille, 0);
         ctx2d.lineTo(c * CONFIG.taille, CONFIG.lignes * CONFIG.taille);

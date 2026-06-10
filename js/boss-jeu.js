@@ -11,7 +11,13 @@ import {
     obtenirSecondesRestantesAttenteTrame,
     conditionsRuntime,
 } from './conditions-secrets.js';
+import { obtenirEtatHistoire } from './histoire-mondes.js';
 import { enregistrerVictoireBossTimer } from './achievements-histoire.js';
+import {
+    notifierPhaseBoss,
+    notifierPhaseBossParPv,
+    victoireObjectifDeclenchee,
+} from './gestionnaire-difficulte.js';
 import {
     reagirRoboBossAttaque,
     reagirRoboBossDegats,
@@ -70,21 +76,21 @@ export function demarrerBoss(bossId) {
     store.histoire.boss.timerVaincu = 0;
     store.histoire.boss.timerDebut = performance.now();
     store.histoire.boss.timerPortrait = 0;
-    store.histoire.boss._textesMiAffichés = new Set();
+    store.histoire.boss._textesMiAffiches = new Set();
     store.histoire.boss._flashAttaque = false;
     _reinitialiserMecaniques();
 
     _afficherSectionBoss(true);
     _mettreAJourHPBar();
     _afficherTexteBoss(boss.texteApparition ?? '');
-    logger.info('[boss] démarré :', bossId, 'PV:', boss.pvMax);
+    logger.info('[boss] demarre :', bossId, 'PV:', boss.pvMax);
     reinitialiserConditionsRuntime();
 }
 
 export function arreterBoss() {
     if (!store.histoire.boss.actif) return;
     _reinitialiserMecaniques();
-    store.histoire.boss._textesMiAffichés = null;
+    store.histoire.boss._textesMiAffiches = null;
     store.histoire.boss._flashAttaque = false;
     store.histoire.boss.actif = null;
     store.histoire.boss.pv = 0;
@@ -186,7 +192,7 @@ function _declencherVictoireBoss() {
     }
 
     const boss = store.histoire.boss.actif;
-    const texte = boss?.texteDefaite ?? boss?.texteDefaite_normal ?? 'Défaite...';
+    const texte = boss?.texteDefaite ?? boss?.texteDefaite_normal ?? 'Defaite...';
     _afficherTexteBoss(texte);
     reagirRoboBossVaincu();
 
@@ -198,6 +204,7 @@ function _declencherVictoireBoss() {
     if (!AudioMoteur.muet) AudioMoteur.son('tetris');
 
     setTimeout(() => {
+        if (victoireObjectifDeclenchee()) return;
         import('./actions-jeu.js').then(({ obtenirActions }) => {
             obtenirActions().terminerPartie?.(true);
         });
@@ -262,6 +269,9 @@ function _appliquerAttaque(type, dureeMs) {
         case 'distorsion_plateau':
             _attaqueDistorsionPlateau(dureeMs || 6000);
             break;
+        case 'permutation_colonnes':
+            _attaquePermutationColonnes();
+            break;
         default:
             logger.warn("[boss] type d'attaque inconnu :", type);
     }
@@ -316,6 +326,28 @@ function _degelColonnes() {
     _afficherTexteBoss('');
 }
 
+/**
+ * Attaque exclusive de l'Avant-Garde : echange le contenu de deux colonnes
+ * du plateau, brouillant les empilements deja construits.
+ */
+function _attaquePermutationColonnes() {
+    if (CONFIG.colonnes < 2) return;
+    const [colA, colB] = _melangerTableau(
+        Array.from({ length: CONFIG.colonnes }, (_, i) => i)
+    ).slice(0, 2);
+
+    for (let lig = 0; lig < CONFIG.lignes; lig++) {
+        const ligne = etat.plateau[lig];
+        if (!ligne) continue;
+        const tmp = ligne[colA];
+        ligne[colA] = ligne[colB];
+        ligne[colB] = tmp;
+    }
+
+    _afficherTexteBoss(`🌀 PERMUTATION DES COLONNES ${colA + 1} ↔ ${colB + 1}`);
+    if (!AudioMoteur.muet) AudioMoteur.son('rotation');
+}
+
 /** @param {number} dureeMs */
 function _attaqueDistorsionPlateau(dureeMs) {
     const m = store.histoire.boss.effets;
@@ -346,19 +378,22 @@ function _verifierPhase() {
 
     const pctRestant = (store.histoire.boss.pv / boss.pvMax) * 100;
     const textesMi = TEXTES_MI_COMBAT[boss.id];
-    if (textesMi && !store.histoire.boss._textesMiAffichés) {
-        store.histoire.boss._textesMiAffichés = new Set();
+    if (textesMi && !store.histoire.boss._textesMiAffiches) {
+        store.histoire.boss._textesMiAffiches = new Set();
     }
     if (textesMi) {
         for (const [seuilStr, texte] of Object.entries(textesMi)) {
             const seuil = Number(seuilStr);
-            if (pctRestant <= seuil && !store.histoire.boss._textesMiAffichés.has(seuil)) {
-                store.histoire.boss._textesMiAffichés.add(seuil);
+            if (pctRestant <= seuil && !store.histoire.boss._textesMiAffiches.has(seuil)) {
+                store.histoire.boss._textesMiAffiches.add(seuil);
                 _afficherTexteBoss(texte);
                 if (!AudioMoteur.muet) AudioMoteur.son('rotation');
+                notifierPhaseBossParPv(boss.id, pctRestant);
             }
         }
     }
+
+    const phaseAvant = store.histoire.boss.phase;
 
     if (!boss.phases) return;
 
@@ -370,6 +405,9 @@ function _verifierPhase() {
             _afficherTexteBoss('⚠ NOUVELLE PHASE');
             if (!AudioMoteur.muet) AudioMoteur.son('niveau');
             setTimeout(_exectuterAttaque, 800);
+            if (store.histoire.boss.phase !== phaseAvant) {
+                notifierPhaseBoss(boss.id, store.histoire.boss.phase);
+            }
             break;
         }
     }
@@ -433,6 +471,20 @@ function _mettreAJourTimerUI() {
         }
         if (attaqueEl) attaqueEl.textContent = 'NE RIEN EFFACER…';
         return;
+    }
+
+    if (store.histoire.boss.actif?.id === 'distorsion' && attaqueEl) {
+        const etatHist = obtenirEtatHistoire();
+        const ct = etatHist?.conditionsTrame;
+        const prerequisOk =
+            ct &&
+            !ct.actionDistorsionFaite &&
+            ct.miroirComplete &&
+            ct.tousJournauxTrouves &&
+            ct.tousBossSansContinue;
+        if (prerequisOk) {
+            attaqueEl.textContent = "UN ÉCHO RÉSONNE… REMPLISSEZ LE PLATEAU SANS L'EFFACER";
+        }
     }
 
     if (el && store.histoire.boss.actif) {

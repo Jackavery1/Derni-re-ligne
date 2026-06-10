@@ -32,11 +32,24 @@ export function mettreAJourVisibilitePartie(idEcran) {
     }
 }
 
+/**
+ * Rend la zone de jeu (visible derriere les overlays comme la pause) inerte
+ * pour que la navigation clavier ne puisse pas atteindre ses boutons.
+ * @param {boolean} inerte
+ */
+function definirZoneJeuInerte(inerte) {
+    for (const id of ['conteneur-principal', 'conteneur-principal-coop']) {
+        const el = document.getElementById(id);
+        if (el) el.inert = inerte;
+    }
+}
+
 export function afficherEcran(idEcran) {
     definirEcranActuel(idEcran);
     document.querySelectorAll('.ecran').forEach((el) => el.classList.remove('actif'));
     const ecran = document.getElementById(idEcran);
     ecran?.classList.add('actif');
+    definirZoneJeuInerte(true);
     const focusable = ecran?.querySelector('button, [href], input');
     if (focusable instanceof HTMLElement) focusable.focus({ preventScroll: true });
 
@@ -93,11 +106,17 @@ export function afficherEcran(idEcran) {
         if (elS) elS.textContent = etat.score.toLocaleString('fr-FR');
         if (elL) elL.textContent = String(etat.lignes);
         if (elN) elN.textContent = String(etat.niveau);
+        // Restaure les libelles solo (le mode Architecte les remplace par les siens).
+        const labelLignes = document.querySelector('#ecran-pause [data-label="lignes"]');
+        if (labelLignes) labelLignes.textContent = 'LIGNES';
+        const labelNiveau = document.querySelector('#ecran-pause [data-label="niveau"]');
+        if (labelNiveau) labelNiveau.textContent = 'NIVEAU';
     }
 }
 
 export function cacherEcrans() {
     document.querySelectorAll('.ecran').forEach((el) => el.classList.remove('actif'));
+    definirZoneJeuInerte(false);
 }
 
 /** @param {() => void} [apresNavigation] */

@@ -1,5 +1,5 @@
 import { CONFIG, TETROMINOS } from './config.js';
-import { calculerPointsLignes } from './logique-pure.js';
+import { calculerPointsLignes, remplirSac } from './logique-pure.js';
 import { extraireForme, estPositionValideAvecBornes } from './moteur-piece.js';
 import { etat } from './store-jeu.js';
 import { creerPlateau, obtenirCouleurPieceParType } from './piece-jeu.js';
@@ -21,7 +21,7 @@ export const DEMI_LARGEUR = 5;
 export const COLONNES_J1 = [0, 1, 2, 3, 4];
 export const COLONNES_J2 = [5, 6, 7, 8, 9];
 
-/** Préférence sur l'écran sélection (avant lancement). `coop.actif` = partie coop en cours. */
+/** Preference sur l'ecran selection (avant lancement). `coop.actif` = partie coop en cours. */
 export let modeCoopActif = false;
 
 export function basculerModeCoop() {
@@ -84,9 +84,13 @@ function creerJoueurVide() {
     };
 }
 
+// Sac 7-bag par joueur : même distribution de pieces qu'en solo (evite les
+// longues sequences sans piece I du tirage uniforme).
+const sacsCoop = { j1: [], j2: [] };
+
 export function coop_nouvellePiece(joueur) {
-    const types = Object.keys(TETROMINOS);
-    const type = types[Math.floor(Math.random() * types.length)];
+    if (sacsCoop[joueur].length === 0) sacsCoop[joueur] = remplirSac();
+    const type = sacsCoop[joueur].pop();
     const forme = TETROMINOS[type].rotations[0];
     return {
         type,
@@ -272,7 +276,7 @@ export function coop_chuteRapide(joueur) {
 
 export function coop_utiliserReserve(joueur) {
     const jData = coop[joueur];
-    if (jData.reserveUtilisee || coop.estEnPause) return;
+    if (!jData.pieceActuelle || jData.reserveUtilisee || coop.estEnPause) return;
 
     const typeActuel = jData.pieceActuelle.type;
 
@@ -344,6 +348,8 @@ export function reinitialiserEtatCoop() {
 
     etat.plateau = creerPlateau();
 
+    sacsCoop.j1 = [];
+    sacsCoop.j2 = [];
     coop.j1 = creerJoueurVide();
     coop.j2 = creerJoueurVide();
 

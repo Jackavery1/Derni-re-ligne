@@ -253,7 +253,7 @@ export function basculerOracle() {
         label.textContent = 'ORACLE : ON';
         if (desc) {
             desc.textContent =
-                "Ignorez les suggestions avec succès pour multiplier votre score jusqu'à ×5.0";
+                "Ignorez les suggestions avec succes pour multiplier votre score jusqu'à ×5.0";
         }
     } else {
         btn.classList.remove('actif');
@@ -261,7 +261,7 @@ export function basculerOracle() {
         if (desc) {
             desc.textContent =
                 "Activez l'Oracle pour obtenir des suggestions de placement. " +
-                'Déviez avec succès pour multiplier votre score.';
+                'Deviez avec succes pour multiplier votre score.';
         }
     }
 }

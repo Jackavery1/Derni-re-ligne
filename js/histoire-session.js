@@ -15,7 +15,10 @@ import {
     mondePeutEtreJoue,
     masquerPanneauDetails,
 } from './histoire-mondes.js';
+import { modeDevActif } from './mode-dev-etat.js';
 import { obtenirActionsHistoire, configurerActionsHistoire } from './histoire-actions.js';
+import { arreterSuiviMonde, demarrerSuiviMonde } from './gestionnaire-difficulte.js';
+import { fermerOverlayObjectifsPre } from './ui-panneau-objectifs.js';
 
 /** @param {string} mondeId */
 export function demarrerMondeHistoire(mondeId) {
@@ -37,8 +40,8 @@ async function _demarrerMondeHistoireInterne(mondeId) {
     }
 
     const etat = obtenirEtatHistoire();
-    if (!mondePeutEtreJoue(mondeId, etat)) {
-        logger.warn('Monde verrouillé:', mondeId);
+    if (!modeDevActif() && !mondePeutEtreJoue(mondeId, etat)) {
+        logger.warn('Monde verrouille:', mondeId);
         return;
     }
 
@@ -47,9 +50,10 @@ async function _demarrerMondeHistoireInterne(mondeId) {
     const dejaJoue =
         etat.mondesCompletes.includes(mondeId) || (etat.mondesDejaMontres ?? []).includes(mondeId);
 
+    const premierePresentation = !dejaJoue || mondeId === 'monde_finale';
     const cutscene = (await import('./histoire-narratif.js')).obtenirCutsceneEntree(
         mondeId,
-        !dejaJoue
+        premierePresentation
     );
     const { afficherCutsceneHistoire } = await import('./histoire-manager-ui.js');
     if (cutscene) {
@@ -68,11 +72,17 @@ async function _demarrerMondeHistoireInterne(mondeId) {
 
 /** @param {typeof SEQUENCE_HISTOIRE[number]} monde */
 function _apresPresentationMonde(monde) {
-    if (monde.id === 'monde_prologue') {
-        afficherTutorielPrologueApresCutscene(() => _lancerPartieHistoire(monde));
-        return;
-    }
-    _lancerPartieHistoire(monde);
+    store.histoire.mondeActuel = monde.id;
+    const lancer = () => _lancerPartieHistoire(monde);
+    void import('./ui-panneau-objectifs.js').then(({ proposerPanneauObjectifsAvantPartie }) => {
+        if (monde.id === 'monde_prologue') {
+            afficherTutorielPrologueApresCutscene(() =>
+                proposerPanneauObjectifsAvantPartie(monde, lancer)
+            );
+            return;
+        }
+        proposerPanneauObjectifsAvantPartie(monde, lancer);
+    });
 }
 
 /** @param {typeof SEQUENCE_HISTOIRE[number]} monde */
@@ -94,6 +104,7 @@ function _lancerPartieHistoire(monde) {
 export async function retournerACarte() {
     store.histoire.actif = false;
     store.histoire.mondeActuel = null;
+    arreterSuiviMonde();
     store.histoire.etat = null;
     document.body.classList.remove('histoire-active');
     arreterBoss();
@@ -114,20 +125,49 @@ export async function retournerACarte() {
     }
 }
 
-export function retournerAuMondeActuel() {
+export function relancerMondeActuel() {
     const mondeId = store.histoire.mondeActuel;
-    if (mondeId) {
-        document.body.classList.remove('histoire-active');
-        demarrerMondeHistoire(mondeId);
-    } else {
+    if (!mondeId) {
         void retournerACarte();
+        return;
     }
+
+    if (mondeId === 'monde_paradoxe') {
+        void retournerACarte();
+        return;
+    }
+
+    const monde = SEQUENCE_HISTOIRE.find((m) => m.id === mondeId);
+    if (!monde) {
+        void retournerACarte();
+        return;
+    }
+
+    fermerOverlayObjectifsPre();
+
+    document.body.classList.remove('partie-active');
+    obtenirActionsHistoire().arreterCarte?.();
+    store.histoire.actif = true;
+    store.histoire.mondeActuel = mondeId;
+
+    definirBiomeActif(monde.biomeId);
+    sauvegarderBiomeActif(monde.biomeId);
+
+    void import('./navigation-ecrans.js').then(({ cacherEcrans }) => cacherEcrans());
+    document.body.classList.add('histoire-active');
+
+    demarrerSuiviMonde(mondeId);
+    obtenirActions().demarrerJeu?.();
+}
+
+export function retournerAuMondeActuel() {
+    relancerMondeActuel();
 }
 
 /** @param {string} mondeId */
 export function demarrerMondeHistoireCache(mondeId) {
     if (mondeId === 'monde_paradoxe') {
-        if (paradoxeEstDebloque()) demarrerParadoxe();
+        if (modeDevActif() || paradoxeEstDebloque()) demarrerParadoxe();
         return;
     }
     demarrerMondeHistoire(mondeId);
@@ -136,8 +176,8 @@ export function demarrerMondeHistoireCache(mondeId) {
 const _NOM_PARADOXE = 'monde_paradoxe';
 
 export function demarrerParadoxe() {
-    if (!paradoxeEstDebloque()) return;
-    logger.info('[paradoxe] entrée');
+    if (!modeDevActif() && !paradoxeEstDebloque()) return;
+    logger.info('[paradoxe] entree');
 
     store.histoire.actif = true;
     store.histoire.mondeActuel = _NOM_PARADOXE;

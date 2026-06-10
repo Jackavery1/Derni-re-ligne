@@ -5,17 +5,40 @@
             <div id="codex-progression" class="codex-progression"></div>
         </div>
 
-        <div class="codex-onglets">
-            <button class="codex-onglet actif" type="button" data-chapitre="mondes">
+        <div class="codex-onglets" role="tablist" aria-label="Chapitres du codex">
+            <button
+                class="codex-onglet actif"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-controls="codex-liste"
+                data-chapitre="mondes"
+            >
                 🌍 MONDES
             </button>
-            <button class="codex-onglet" type="button" data-chapitre="reliques">⊗ RELIQUES</button>
-            <button class="codex-onglet" type="button" data-chapitre="chroniques">
+            <button
+                class="codex-onglet"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="codex-liste"
+                data-chapitre="reliques"
+            >
+                ⊗ RELIQUES
+            </button>
+            <button
+                class="codex-onglet"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="codex-liste"
+                data-chapitre="chroniques"
+            >
                 📖 CHRONIQUES
             </button>
         </div>
 
-        <div id="codex-liste" class="codex-liste"></div>
+        <div id="codex-liste" class="codex-liste" role="tabpanel"></div>
 
         <div id="codex-lecteur" class="codex-lecteur element-masque">
             <button class="codex-btn-fermer" type="button" id="btn-codex-fermer">✕ FERMER</button>

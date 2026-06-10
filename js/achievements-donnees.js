@@ -13,7 +13,7 @@ export const ACHIEVEMENTS = {
     centenaire: {
         id: 'centenaire',
         nom: 'CENTENAIRE',
-        description: '100 lignes effacées au total (toutes parties)',
+        description: '100 lignes effacees au total (toutes parties)',
         icone: '💯',
         condition: (stats) => stats.lignesTotal >= 100,
         decoration: 'bordure_pulse',
@@ -22,10 +22,10 @@ export const ACHIEVEMENTS = {
     millenaire: {
         id: 'millenaire',
         nom: 'MILLÉNAIRE',
-        description: '1000 lignes effacées au total',
+        description: '1000 lignes effacees au total',
         icone: '🏆',
         condition: (stats) => stats.lignesTotal >= 1000,
-        decoration: 'aura_dorée',
+        decoration: 'aura_doree',
         categorie: 'lignes',
     },
     score_10k: {
@@ -76,7 +76,7 @@ export const ACHIEVEMENTS = {
     explorateur: {
         id: 'explorateur',
         nom: 'EXPLORATEUR',
-        description: 'Jouer une partie dans 3 biomes différents',
+        description: 'Jouer une partie dans 3 biomes differents',
         icone: '🗺',
         condition: (stats) => stats.biomesJoues.size >= 3,
         decoration: 'particules_biome',
@@ -130,7 +130,7 @@ export const ACHIEVEMENTS = {
     meteorologue: {
         id: 'meteorologue',
         nom: 'MÉTÉOROLOGUE',
-        description: 'Survivre à 5 événements météo',
+        description: 'Survivre à 5 evenements meteo',
         icone: '🌩',
         condition: (stats) => stats.meteosSubies >= 5,
         decoration: 'eclairs_bords',
@@ -139,11 +139,11 @@ export const ACHIEVEMENTS = {
     chaos_maitrise: {
         id: 'chaos_maitrise',
         nom: 'MAÎTRE DU CHAOS',
-        description: 'Survivre à un blizzard ET une inversion dans la même partie',
+        description: 'Survivre à un blizzard (Glace) et une inversion (Cyber)',
         icone: '🌀',
         condition: (stats) =>
-            stats.meteosPartieActuelle.has('blizzard') &&
-            stats.meteosPartieActuelle.has('inversion'),
+            (stats.meteosVues || new Set()).has('blizzard') &&
+            (stats.meteosVues || new Set()).has('inversion'),
         decoration: 'vortex_bords',
         categorie: 'meteo',
     },
@@ -159,7 +159,7 @@ export const ACHIEVEMENTS = {
     robo_ami: {
         id: 'robo_ami',
         nom: 'AMI DE ROBO',
-        description: 'Faire réagir la mascotte 20 fois',
+        description: 'Faire reagir la mascotte 20 fois',
         icone: '🤖',
         condition: (stats) => stats.reactionsRobo >= 20,
         decoration: 'robo_arc_en_ciel',
@@ -168,7 +168,7 @@ export const ACHIEVEMENTS = {
     compositeur: {
         id: 'compositeur',
         nom: 'COMPOSITEUR',
-        description: 'Composer une mélodie de 15 notes ou plus',
+        description: 'Composer une melodie de 15 notes ou plus',
         icone: '🎵',
         condition: (stats) => stats.maxNotesComposition >= 15,
         decoration: 'notes_flottantes',
@@ -177,7 +177,7 @@ export const ACHIEVEMENTS = {
     grand_maitre: {
         id: 'grand_maitre',
         nom: 'GRAND MAÎTRE',
-        description: 'Débloquer 10 achievements',
+        description: 'Debloquer 10 achievements',
         icone: '🎖',
         condition: (stats) => stats.nbAchievementsDebloques >= 10,
         decoration: 'couronne_lumineuse',
@@ -186,7 +186,7 @@ export const ACHIEVEMENTS = {
     oracle_debutant: {
         id: 'oracle_debutant',
         nom: 'APPRENTI',
-        description: "Ignorer l'Oracle 5 fois avec succès en une partie",
+        description: "Ignorer l'Oracle 5 fois avec succes en une partie",
         icone: '🔮',
         condition: (s) => (s.oracleDeviationsPartieActuelle || 0) >= 5,
         decoration: 'halo_oracle',
@@ -204,7 +204,7 @@ export const ACHIEVEMENTS = {
     premiers_pas_coop: {
         id: 'premiers_pas_coop',
         nom: 'PARTENAIRES',
-        description: 'Effacer 10 lignes en mode coopératif',
+        description: 'Effacer 10 lignes en mode cooperatif',
         icone: '👥',
         condition: (s) => (s.lignesCoopTotal || 0) >= 10,
         decoration: 'bordure_bicolore',
@@ -213,7 +213,7 @@ export const ACHIEVEMENTS = {
     synchro_parfaite: {
         id: 'synchro_parfaite',
         nom: 'SYMBIOSE',
-        description: 'Effacer 4 lignes simultanées en coop (Tetris Coop)',
+        description: 'Effacer 4 lignes simultanees en coop (Tetris Coop)',
         icone: '🔗',
         condition: (s) => (s.coopMaxLignesUnCoup || 0) >= 4,
         decoration: 'eclairs_bords',
@@ -222,7 +222,7 @@ export const ACHIEVEMENTS = {
     archi_premier: {
         id: 'archi_premier',
         nom: 'APPRENTI ARCHITECTE',
-        description: 'Compléter un niveau Architecte',
+        description: 'Completer un niveau Architecte',
         icone: '🏛',
         condition: (s) => (s.archiNiveauxCompletes?.size || 0) >= 1,
         decoration: 'bordure_pulse',
@@ -234,13 +234,13 @@ export const ACHIEVEMENTS = {
         description: 'Obtenir ★★★ sur 5 niveaux',
         icone: '⭐',
         condition: (s) => (s.archiEtoilesMax || 0) >= 15,
-        decoration: 'aura_dorée',
+        decoration: 'aura_doree',
         categorie: 'architecte',
     },
     archi_parfait: {
         id: 'archi_parfait',
         nom: 'PERFECTION',
-        description: 'Terminer un niveau avec 100% de précision',
+        description: 'Terminer un niveau avec 100% de precision',
         icone: '💎',
         condition: (s) => (s.archiPrecisionMax || 0) >= 100,
         decoration: 'gemmes_orbitales',
@@ -249,7 +249,7 @@ export const ACHIEVEMENTS = {
     archi_econome: {
         id: 'archi_econome',
         nom: 'ÉCONOME',
-        description: 'Terminer un niveau avec le nombre minimal de pièces',
+        description: 'Terminer un niveau avec le nombre minimal de pieces',
         icone: '✂',
         condition: (s) => (s.archiParAtteint || 0) >= 1,
         decoration: 'trainee_simple',
@@ -258,7 +258,7 @@ export const ACHIEVEMENTS = {
     vivant_premier: {
         id: 'vivant_premier',
         nom: 'LE MONDE RESPIRE',
-        description: 'Subir un premier événement du Vivant',
+        description: 'Subir un premier evenement du Vivant',
         icone: '🌱',
         condition: (s) => (s.evenementsVivantSubis || 0) >= 1,
         decoration: 'notes_flottantes',
@@ -267,7 +267,7 @@ export const ACHIEVEMENTS = {
     vivant_survivant: {
         id: 'vivant_survivant',
         nom: 'COEXISTENCE',
-        description: 'Survivre à 10 événements du Vivant en une partie',
+        description: 'Survivre à 10 evenements du Vivant en une partie',
         icone: '🌿',
         condition: (s) => (s.maxEvenementsUnePartie || 0) >= 10,
         decoration: 'halo_relique',
@@ -276,7 +276,7 @@ export const ACHIEVEMENTS = {
     vivant_tous_biomes: {
         id: 'vivant_tous_biomes',
         nom: 'NATURALISTE',
-        description: 'Subir un événement du Vivant dans 7 biomes différents',
+        description: 'Subir un evenement du Vivant dans 7 biomes differents',
         icone: '🌍',
         condition: (s) => (s.biomesVivantSubis?.size || 0) >= 7,
         decoration: 'aura_cosmos',
@@ -285,7 +285,7 @@ export const ACHIEVEMENTS = {
     vivant_maitre: {
         id: 'vivant_maitre',
         nom: 'MAÎTRE DU CHAOS NATUREL',
-        description: 'Effacer 50 lignes pendant un événement actif du Vivant',
+        description: 'Effacer 50 lignes pendant un evenement actif du Vivant',
         icone: '⚗',
         condition: (s) => (s.lignesPendantVivant || 0) >= 50,
         decoration: 'flammes_intenses',

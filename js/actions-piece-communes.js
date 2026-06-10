@@ -2,7 +2,7 @@ import { CONFIG, TETROMINOS } from './config.js';
 import { extraireForme } from './moteur-piece.js';
 
 /**
- * Pose les cellules d'une pièce active sur le plateau.
+ * Pose les cellules d'une piece active sur le plateau.
  * @param {(number|string)[][]} plateau
  * @param {{ x?: number, y?: number, rotation: number, type: string, reliqueForme?: number[][] }} piece
  * @param {number | string} couleur

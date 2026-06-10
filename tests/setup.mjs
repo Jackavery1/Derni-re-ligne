@@ -1,7 +1,6 @@
 import { beforeEach } from 'vitest';
 import { reinitialiserBusJeu } from '../js/bus-jeu.js';
 import * as textesHistoire from '../js/histoire-textes.js';
-import { CODEX } from '../js/codex-donnees.js';
 
 const stockage = new Map();
 
@@ -9,9 +8,6 @@ globalThis.fetch = async (url) => {
     const href = String(url);
     if (href.includes('histoire-textes.json')) {
         return { ok: true, json: async () => textesHistoire };
-    }
-    if (href.includes('codex-donnees.json')) {
-        return { ok: true, json: async () => ({ CODEX }) };
     }
     return { ok: false, status: 404, json: async () => ({}) };
 };

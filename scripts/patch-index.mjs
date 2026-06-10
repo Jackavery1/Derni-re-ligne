@@ -3,8 +3,8 @@ import fs from 'fs';
 let html = fs.readFileSync('index.html', 'utf8');
 
 html = html.replace(
-    /<link rel="apple-touch-icon" href="icon-512.png">\s*<style>[\s\S]*?<\/style>/,
-    `<link rel="apple-touch-icon" href="icon-512.png">
+    /<link rel="apple-touch-icon" href="[^"]+">\s*<style>[\s\S]*?<\/style>/,
+    `<link rel="apple-touch-icon" href="img/robo-favicon.png">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self';">
     <link rel="stylesheet" href="styles/main.css">`
 );

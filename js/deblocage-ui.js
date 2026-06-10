@@ -26,7 +26,7 @@ function mettreAJourSectionMenu(separateurId, blocId, idsBoutons) {
     definirVisibiliteMode(blocId, auMoinsUnVisible);
 }
 
-/** Masque les modes non débloqués (menu titre, liens croisés, oracle/coop, etc.). */
+/** Masque les modes non debloques (menu titre, liens croises, oracle/coop, etc.). */
 export function mettreAJourVisibiliteModesDebloques() {
     const deblocage = obtenirEtatDeblocage();
 

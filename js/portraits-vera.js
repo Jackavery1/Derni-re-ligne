@@ -1,6 +1,6 @@
 /**
  * Expressions VERA pour cutscenes et journaux.
- * Appliquées via data-expression sur le canvas portrait cutscene.
+ * Appliquees via data-expression sur le canvas portrait cutscene.
  */
 
 /** @type {string} */
@@ -11,7 +11,7 @@ export const EXPRESSIONS_VERA = {
     journal_decouvert: { nomStyle: 'italic', vitesseMs: 32, larme: true, fatigue: true },
     chapitre_complete: { nomStyle: 'italic', vitesseMs: 30, espoir: true },
     boss_vaincu: { nomStyle: 'italic', vitesseMs: 26, larme: true, contenue: true },
-    monde_cache: { nomStyle: 'italic', vitesseMs: 22, stupéfaite: true },
+    monde_cache: { nomStyle: 'italic', vitesseMs: 22, stupefaite: true },
     fin_normale: { nomStyle: 'italic', vitesseMs: 34, sereine: true },
     fin_vraie: { nomStyle: 'italic', vitesseMs: 36, paix: true },
     fin_secrete: { nomStyle: 'italic', vitesseMs: 24, joie: true },
@@ -69,7 +69,7 @@ export function enrichirPortraitVera(ctx, cx, cy, couleur, t) {
         ctx.restore();
     }
 
-    if (exp.stupéfaite) {
+    if (exp.stupefaite) {
         ctx.save();
         ctx.fillStyle = couleur;
         ctx.font = '10px serif';

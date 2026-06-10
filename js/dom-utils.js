@@ -1,5 +1,5 @@
 /**
- * Helpers DOM typés pour checkJs sur l’ensemble du projet.
+ * Helpers DOM types pour checkJs sur l’ensemble du projet.
  */
 
 /** @param {string} id @returns {HTMLElement | null} */

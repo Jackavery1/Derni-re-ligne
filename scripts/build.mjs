@@ -32,14 +32,6 @@ cpSync('html', `${dist}/html`, { recursive: true });
 cpSync('fonts', `${dist}/fonts`, { recursive: true });
 cpSync('manifest.json', `${dist}/manifest.json`);
 cpSync('img', `${dist}/img`, { recursive: true });
-cpSync('icon.svg', `${dist}/icon.svg`);
-for (const ic of ['icon-192.png', 'icon-512.png', 'icon-maskable.png']) {
-    try {
-        cpSync(ic, `${dist}/${ic}`);
-    } catch {
-        /* optionnel */
-    }
-}
 
 const html = readFileSync('index.html', 'utf8');
 writeFileSync(`${dist}/index.html`, html.replace(/js\/main\.js\?v=[^"']+/, 'js/bundle.js'));
@@ -55,16 +47,14 @@ const staticFiles = [
     './index.html',
     './manifest.json',
     './styles/main.css',
+    './styles/objectifs-histoire.css',
     './data/histoire-textes.json',
-    './data/codex-donnees.json',
     ...jsFiles,
     ...jsFiles.map((f) => `${f}.map`),
-    './icon.svg',
-    './icon-192.png',
-    './icon-512.png',
-    './icon-maskable.png',
     './img/robo-accueil.png',
-    './img/robo-favicon.png',
+    './img/icon-192.png',
+    './img/icon-512.png',
+    './img/icon-maskable-512.png',
     './fonts/PressStart2P-Regular.ttf',
     ...htmlFiles,
 ];
@@ -115,13 +105,22 @@ self.addEventListener('message', (evenement) => {
 
 self.addEventListener('fetch', (evenement) => {
     if (evenement.request.method !== 'GET') return;
+
+    const url = new URL(evenement.request.url);
+    // Les chunks ont un hash dans leur nom : contenu immuable, cache-first sans risque.
+    const estChunkHashe = /\\/js\\/chunk-[A-Z0-9]+\\.js/.test(url.pathname);
+    // Le reste (index.html, bundle.js, CSS, fragments html) n'est pas versionne :
+    // network-first pour ne pas servir une version perimee quand on est en ligne.
+    const estNonVersionne = /\\.(html|css|js)$/.test(url.pathname) && !estChunkHashe;
+
     evenement.respondWith(
         chercherDansCache(evenement.request).then((reponseCache) => {
-            if (reponseCache) return reponseCache;
+            const prefererReseau = estNonVersionne && navigator.onLine;
+            if (reponseCache && !prefererReseau) return reponseCache;
             return fetch(evenement.request)
                 .then((reponseReseau) => {
                     if (!reponseReseau || reponseReseau.status !== 200 || reponseReseau.type === 'error') {
-                        return reponseReseau;
+                        return reponseCache ?? reponseReseau;
                     }
                     if (evenement.request.url.startsWith(self.location.origin)) {
                         const copie = reponseReseau.clone();
@@ -130,6 +129,7 @@ self.addEventListener('fetch', (evenement) => {
                     return reponseReseau;
                 })
                 .catch(() => {
+                    if (reponseCache) return reponseCache;
                     if (evenement.request.destination === 'document') return caches.match('./index.html');
                 });
         })

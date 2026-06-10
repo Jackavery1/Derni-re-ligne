@@ -25,18 +25,22 @@ import { finaliserStatsPartie } from './achievements.js';
 import { verifierCodex } from './codex.js';
 import { sauvegarderSnapshotProfil } from './profil-jeu.js';
 import { store } from './store-core.js';
+import { enregistrerTopOut, arreterSuiviMonde } from './gestionnaire-difficulte.js';
 import { surFinDeMondeHistoire } from './histoire-manager.js';
 import { bossEstActif, arreterBoss } from './boss-jeu.js';
 import { onGameOverHistoire } from './mecaniques-histoire.js';
 import { oracle, obtenirScoreFinalOracle } from './oracle-jeu.js';
 import { statsGlobales } from './achievements.js';
+import { arreterFondBiome } from './rendu-fond-biome.js';
 
 export function terminerPartie(victoire = false) {
+    arreterFondBiome();
     if (bossEstActif() && !victoire) {
         arreterBoss();
     }
     etat.estEnCours = false;
     if (store.histoire.actif && !victoire) {
+        enregistrerTopOut();
         onGameOverHistoire(etat.lignes, store.histoire.mondeActuel ?? '');
     }
     annulerMeteo();
@@ -47,7 +51,7 @@ export function terminerPartie(victoire = false) {
         reagirRoboGameOver();
     }
     if (!victoire) setTimeout(() => AudioMoteur.son('game_over'), 250);
-    annoncer(victoire ? 'Sprint terminé ! Victoire' : 'Partie terminée');
+    annoncer(victoire ? 'Sprint termine ! Victoire' : 'Partie terminee');
 
     const textes = BIOMES[obtenirBiomeActif()]?.textes ?? BIOMES.classique.textes;
     const titreGo = document.querySelector('.go-titre');
@@ -119,6 +123,7 @@ function _afficherActionsFinHistoire() {
     if (!store.histoire.actif) {
         const btnCarte = document.getElementById('btn-histoire-carte');
         if (btnCarte) btnCarte.style.display = 'none';
+        arreterSuiviMonde();
     } else {
         surFinDeMondeHistoire(etat.lignes, etat.score);
     }

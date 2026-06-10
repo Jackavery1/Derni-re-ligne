@@ -60,9 +60,11 @@ import { initialiserInputArchi } from './archi-input.js';
 import { rechargerCodex, initialiserCodexUI } from './codex.js';
 import { initialiserEffetsPartie } from './effets-partie.js';
 import { rafraichirEtatHistoire } from './histoire-manager.js';
+import { initialiserUiObjectifs } from './ui-panneau-objectifs.js';
 import { initialiserTutoriel } from './tutoriel.js';
 import { obtenirActions } from './actions-jeu.js';
 import { demarrerBoucleRobo } from './rendu-robo.js';
+import { initialiserModeDeveloppeur } from './mode-developpeur.js';
 
 export { obtenirEcranActuel as ecranActuel };
 
@@ -141,6 +143,8 @@ export function initialiserApplication() {
     initialiserInputArchi();
     initialiserBoutons();
     initialiserCodexUI();
+    initialiserUiObjectifs();
+    initialiserModeDeveloppeur();
     afficherEcran(ECRANS.TITRE);
     initialiserTutoriel();
     planifierBoucle();

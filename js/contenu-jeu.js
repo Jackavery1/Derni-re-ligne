@@ -13,7 +13,7 @@ export const RELIQUES = {
     lave: {
         nom: 'MAGMA',
         icone: '💥',
-        description: "Détruit un rayon de 2 cases autour du point d'impact",
+        description: "Detruit un rayon de 2 cases autour du point d'impact",
         couleur: '#ff4500',
         forme: [
             [0, 1, 0],
@@ -25,7 +25,7 @@ export const RELIQUES = {
     ocean: {
         nom: 'BULLE',
         icone: '🫧',
-        description: "Remonte de 2 rangées après s'être posée",
+        description: "Remonte de 2 rangees apres s'être posee",
         couleur: '#00cfff',
         forme: [
             [0, 1, 0],
@@ -68,7 +68,7 @@ export const RELIQUES = {
     cyber: {
         nom: 'VIRUS',
         icone: '⚠',
-        description: "Efface une demi-ligne aléatoire (libère de l'espace)",
+        description: "Efface une demi-ligne aleatoire (libere de l'espace)",
         couleur: '#ff00ff',
         forme: [
             [1, 0, 1],
@@ -80,7 +80,7 @@ export const RELIQUES = {
     fuochi: {
         nom: 'FUSÉE',
         icone: '🚀',
-        description: "Détruit entièrement la colonne d'atterrissage",
+        description: "Detruit entierement la colonne d'atterrissage",
         couleur: '#ffe600',
         forme: [
             [0, 1, 0],

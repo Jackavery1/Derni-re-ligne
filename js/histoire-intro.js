@@ -1,9 +1,12 @@
 /**
  * js/histoire-intro.js
- * Séquence "cold open" affichée la première fois que le joueur
- * clique sur MODE HISTOIRE. Ne se rejoue jamais.
+ * Séquence d'introduction « Jour 2 554 », jouée une seule fois au tout
+ * premier lancement du Mode Histoire, avant l'apparition de la carte.
  */
 import { lireStockage, ecrireStockage } from './progression.js';
+import { INTRO_HISTOIRE } from './histoire-textes.js';
+import { ECRANS } from './ecrans-config.js';
+import { logger } from './logger.js';
 
 const CLE_INTRO_VUE = 'derniereLigne_introHistoireVue';
 
@@ -13,116 +16,63 @@ export function introHistoireDejaVue() {
 
 export function marquerIntroHistoireVue() {
     ecrireStockage(CLE_INTRO_VUE, '1');
+    logger.debug('[intro] flag derniereLigne_introHistoireVue ecrit');
 }
 
-/** @returns {{ lignes: string[], personnages: string[] }} */
 export function obtenirSequenceIntro() {
-    return {
-        lignes: INTRO_COLD_OPEN.map((l) => l.texte),
-        personnages: INTRO_COLD_OPEN.map((l) => l.personnage),
-    };
+    return INTRO_HISTOIRE;
 }
 
-/**
- * La séquence se passe AVANT le prologue :
- * VERA est seule dans l'Observatoire, La Distorsion commence à apparaître,
- * VERA décide de créer Robo.
- */
-const INTRO_COLD_OPEN = [
-    {
-        personnage: 'narrateur',
-        texte: "Il y a des millénaires, quelqu'un a inventé un jeu.",
-    },
-    {
-        personnage: 'narrateur',
-        texte: 'Des blocs qui tombent. Des lignes qui disparaissent. Simple.',
-    },
-    {
-        personnage: 'narrateur',
-        texte: "Ce que personne n'avait prévu : ce qui se passe quand on arrête.",
-    },
-    {
-        personnage: 'systeme',
-        texte: '> OBSERVATOIRE DE LA TRAME — SECTEUR OMEGA',
-    },
-    {
-        personnage: 'systeme',
-        texte: '> ALERTE NIVEAU 3 — FRAGMENTATION DÉTECTÉE',
-    },
-    {
-        personnage: 'systeme',
-        texte: '> OPÉRATEUR : VERA — CONNEXION ACTIVE',
-    },
-    {
-        personnage: 'vera',
-        texte: 'Encore.',
-    },
-    {
-        personnage: 'vera',
-        texte: "Chaque nuit, les mêmes données. Des millions de parties abandonnées. Des lignes que personne n'a voulu compléter.",
-    },
-    {
-        personnage: 'vera',
-        texte: "Je pensais que c'était du bruit. Des erreurs de calcul. Des artefacts.",
-    },
-    {
-        personnage: 'vera',
-        texte: "Ce n'est pas du bruit.",
-    },
-    {
-        personnage: 'narrateur',
-        texte: 'Au centre de la Trame, quelque chose de nouveau observe les données.',
-    },
-    {
-        personnage: 'distorsion',
-        texte: '…',
-    },
-    {
-        personnage: 'distorsion',
-        texte: 'Pourquoi personne ne finit ses lignes ?',
-    },
-    {
-        personnage: 'vera',
-        texte: "Elle a dit quelque chose. La première fois en sept ans d'écoute.",
-    },
-    {
-        personnage: 'vera',
-        texte: "Elle n'est pas encore dangereuse. Juste... seule. Et la solitude a du temps devant elle.",
-    },
-    {
-        personnage: 'vera',
-        texte: "Je dois trouver quelqu'un qui peut lui répondre. Quelqu'un qui comprend les blocs et les lignes mieux que moi.",
-    },
-    {
-        personnage: 'systeme',
-        texte: "> NOUVEAU PROJET : CRÉATION D'UN AGENT DE TERRAIN",
-    },
-    {
-        personnage: 'systeme',
-        texte: '> DESIGNATION : R.O.B.O',
-    },
-    {
-        personnage: 'systeme',
-        texte: '> FONCTION PRINCIPALE : GARDER LA TRAME',
-    },
-    {
-        personnage: 'vera',
-        texte: 'Je le construis cette nuit.',
-    },
-    {
-        personnage: 'vera',
-        texte: 'Il faudra lui apprendre à jouer. Et lui expliquer pourquoi.',
-    },
-    {
-        personnage: 'vera',
-        texte: "Mais d'abord — il faudra qu'il existe.",
-    },
-    {
-        personnage: 'narrateur',
-        texte: 'Elle soude le dernier circuit à 4h17 du matin.',
-    },
-    {
-        personnage: 'narrateur',
-        texte: "Elle n'avait pas remarqué que La Distorsion l'observait depuis une heure.",
-    },
-];
+/** Point d'entrée unique depuis le menu titre (pas retournerACarte). */
+export async function ouvrirModeHistoireDepuisMenu() {
+    logger.debug('[intro] entree handler btn-mode-histoire');
+    const dejaVue = introHistoireDejaVue();
+    logger.debug('[intro] introHistoireDejaVue =', dejaVue);
+
+    const { afficherEcran } = await import('./navigation-ecrans.js');
+
+    if (dejaVue) {
+        logger.debug('[intro] branche carte directe (intro deja vue)');
+        afficherEcran(ECRANS.HISTOIRE_MAP);
+        return;
+    }
+
+    try {
+        const { chargerHistoireTextes } = await import('./charger-histoire-textes.js');
+        await chargerHistoireTextes();
+        logger.debug('[intro] textes histoire charges');
+
+        const seq = obtenirSequenceIntro();
+        logger.debug('[intro] lancement cutscene,', seq.length, 'lignes');
+
+        const { afficherCutsceneHistoire } = await import('./histoire-manager-ui.js');
+
+        await new Promise((resolve, reject) => {
+            try {
+                const demarre = afficherCutsceneHistoire(
+                    seq.map((l) => l.texte),
+                    seq.map((l) => l.personnage),
+                    () => {
+                        logger.debug(
+                            '[intro] callback fin cutscene (jouee ou passee par le joueur)'
+                        );
+                        marquerIntroHistoireVue();
+                        resolve();
+                    },
+                    { intro: true }
+                );
+                if (!demarre) {
+                    reject(new Error('Cutscene intro : elements DOM introuvables'));
+                }
+            } catch (err) {
+                reject(err);
+            }
+        });
+
+        logger.debug('[intro] affichage carte histoire');
+        afficherEcran(ECRANS.HISTOIRE_MAP);
+    } catch (err) {
+        logger.error('[intro] echec flux intro (flag non modifie):', err);
+        afficherEcran(ECRANS.TITRE);
+    }
+}

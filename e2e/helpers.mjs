@@ -58,6 +58,7 @@ export async function preparerPremierLancement(page) {
 /** Désactive le cache stale en tests locaux et débloque le mode libre. */
 export async function preparerPageSansSw(page, etatHistoire = ETAT_DEBLOCAGE_MONDE_LIBRE) {
     await page.addInitScript((etat) => {
+        window.__NEO_SILENT_NOTIFS__ = true;
         localStorage.setItem('dl_migration_v1', '1');
         localStorage.setItem('derniereLigne_tutorielVu', '1');
         localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
@@ -87,16 +88,72 @@ export async function selectionnerBiomeClavier(page, option = { index: 1 }) {
 }
 
 /** @param {import('@playwright/test').Page} page */
+export async function attendrePartieVisible(page) {
+    await expect(page.locator('body')).toHaveClass(/partie-active/, { timeout: 15000 });
+    await expect(page.locator('#canvas-plateau')).toBeVisible();
+}
+
+/** @param {import('@playwright/test').Page} page */
+export async function attendreNotificationsInitiales(page) {
+    for (const sel of ['#notif-achievement', '#notif-niveau', '#notif-codex']) {
+        const el = page.locator(sel);
+        if (await el.isVisible().catch(() => false)) {
+            await expect(el).not.toHaveClass(/visible/, { timeout: 20000 });
+        }
+    }
+}
+
+/**
+ * Passe cutscenes, tutoriel et panneau objectifs jusqu'à la partie active.
+ * @param {import('@playwright/test').Page} page
+ */
+export async function passerFluxLancementMonde(page) {
+    for (let i = 0; i < 24; i++) {
+        if (await page.locator('body').evaluate((el) => el.classList.contains('partie-active'))) {
+            break;
+        }
+
+        const commencer = page.locator('#btn-objectifs-commencer');
+        if (await commencer.isVisible().catch(() => false)) {
+            await commencer.click();
+            continue;
+        }
+
+        const passer = page.locator('#btn-cutscene-passer');
+        if (await passer.isVisible().catch(() => false)) {
+            await passer.click({ force: true });
+            continue;
+        }
+
+        const suivant = page.locator('#btn-cutscene-suivant');
+        if (await suivant.isVisible().catch(() => false)) {
+            await suivant.click({ force: true });
+            continue;
+        }
+
+        const tutoriel = page.locator('#btn-tutoriel-fermer');
+        if (await tutoriel.isVisible().catch(() => false)) {
+            await tutoriel.click();
+            continue;
+        }
+
+        await page.waitForTimeout(200);
+    }
+
+    await attendrePartieVisible(page);
+}
+
+/** @param {import('@playwright/test').Page} page */
 export async function demarrerPartie(page) {
     await preparerPageSansSw(page);
     await page.goto('/');
     await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await selectionnerBiomeClavier(page, { index: 1 });
     await page.locator('#sel-btn-jouer').click();
-    await expect(page.locator('#interface-jeu')).toBeVisible();
-    await expect(page.locator('#canvas-plateau')).toBeVisible();
+    await attendrePartieVisible(page);
 }
 
 /** État histoire minimal pour jouer le boss Brasier (monde_boss_1). */
@@ -132,6 +189,7 @@ export const ETAT_HISTOIRE_BOSS_BRASIER = {
 /** @param {import('@playwright/test').Page} page @param {object} [etatHistoire] */
 export async function ouvrirCarteHistoire(page, etatHistoire = ETAT_HISTOIRE_BOSS_BRASIER) {
     await page.addInitScript((etat) => {
+        window.__NEO_SILENT_NOTIFS__ = true;
         localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
         localStorage.setItem('dl_migration_v1', '1');
         localStorage.setItem('derniereLigne_tutorielVu', '1');
@@ -140,6 +198,7 @@ export async function ouvrirCarteHistoire(page, etatHistoire = ETAT_HISTOIRE_BOS
     }, etatHistoire);
     await page.goto('/');
     await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
     await page.locator('#btn-mode-histoire').click();
     await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/);
 }
@@ -147,9 +206,13 @@ export async function ouvrirCarteHistoire(page, etatHistoire = ETAT_HISTOIRE_BOS
 /** @param {import('@playwright/test').Page} page */
 export async function lancerMondeBossBrasier(page) {
     await page.locator('#histoire-monde-clavier').selectOption('monde_boss_1', { force: true });
-    await page.locator('.bouton-jouer-monde').click();
-    await expect(page.locator('#interface-jeu')).toBeVisible({ timeout: 10000 });
-    await expect(page.locator('#canvas-plateau')).toBeVisible();
+    await expect(page.locator('#histoire-monde-details')).not.toHaveClass(
+        /histoire-panneau-masque/
+    );
+    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await passerFluxLancementMonde(page);
+    await expect(page.locator('#section-boss')).toBeVisible();
+    await expect(page.locator('#boss-nom-affiche')).not.toHaveText('BOSS');
 }
 
 /** @param {import('@playwright/test').Page} page */
@@ -161,12 +224,12 @@ export async function demarrerPartieViaClavier(page) {
         await fermerTutoriel.click();
     }
     await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await selectionnerBiomeClavier(page, { index: 1 });
     await page.locator('#sel-btn-jouer').click();
-    await expect(page.locator('#interface-jeu')).toBeVisible();
-    await expect(page.locator('#canvas-plateau')).toBeVisible();
+    await attendrePartieVisible(page);
 }
 
 /** @param {import('@playwright/test').Page} page */

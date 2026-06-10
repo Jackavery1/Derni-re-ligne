@@ -172,7 +172,8 @@ export function dessinerPieceFantome() {
             const x = xAffiche + c;
             const y = etat.pieceActuelle.y + l + distAffichee;
             if (y >= 0 && x >= 0 && x < CONFIG.colonnes) {
-                dessinerCellule(obtenirCtx(), x, y, couleur, CONFIG.taille, 0.09);
+                // 0.22 : assez visible pour servir de guide sans se confondre avec une piece posee.
+                dessinerCellule(obtenirCtx(), x, y, couleur, CONFIG.taille, 0.22);
             }
         }
     }

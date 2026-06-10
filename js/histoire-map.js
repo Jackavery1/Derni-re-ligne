@@ -1,5 +1,6 @@
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { obtenirCanvas } from './dom-utils.js';
+import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
 import { dessinerCarteHistoire, invaliderDonneesEtoilesHistoire } from './histoire-map-rendu.js';
 import { ecranVersMonde } from './histoire-map-camera.js';
 import {
@@ -23,6 +24,9 @@ const etatCarte = {
     dernierTapNoeud: null,
     dernierTapTemps: 0,
     positionsNoeuds: {},
+    mondesVisibles: new Set(),
+    mondesFantomes: new Set(),
+    mondeActuel: null,
     evenementsCarteAttaches: false,
     selectMondesOk: false,
     camera: {
@@ -41,6 +45,7 @@ const etatCarte = {
 export function initialiserCarteMonde() {
     etatCarte.canvasCarte = obtenirCanvas('canvas-histoire-map');
     if (!etatCarte.canvasCarte) return false;
+    etatCarte.camera.initialise = false;
     etatCarte.ctxCarte = etatCarte.canvasCarte.getContext('2d');
     redimensionnerCanvas();
     calculerPositionsNoeuds();
@@ -142,12 +147,83 @@ function calculerPositionsNoeuds() {
 
     etatCarte.positionsNoeuds = {};
     LAYOUT.forEach(([id, xFrac, rayon], index) => {
-        etatCarte.positionsNoeuds[id] = {
-            x: Math.round(w * xFrac),
-            y: Math.round(MARGE_Y + index * PAS_Y),
-            rayon,
-        };
+        placerNoeud(id, Math.round(w * xFrac), Math.round(MARGE_Y + index * PAS_Y), rayon);
     });
+
+    const etatHist = obtenirEtatHistoirePersiste();
+
+    if (mondePeutEtreJoue('monde_miroir', etatHist)) {
+        placerNoeud(
+            'monde_miroir',
+            Math.round(0.06 * w),
+            etatCarte.positionsNoeuds['monde_eclipse']?.y ?? MARGE_Y + 9 * PAS_Y,
+            Math.round(R * 0.85)
+        );
+    }
+
+    if (mondePeutEtreJoue('monde_trame', etatHist)) {
+        placerNoeud(
+            'monde_trame',
+            Math.round(0.94 * w),
+            etatCarte.positionsNoeuds['monde_foret']?.y ?? MARGE_Y + 5 * PAS_Y,
+            Math.round(R * 0.85)
+        );
+    }
+
+    if (mondePeutEtreJoue('monde_paradoxe', etatHist)) {
+        const yPrologue = etatCarte.positionsNoeuds['monde_prologue']?.y ?? MARGE_Y;
+        placerNoeud('monde_paradoxe', Math.round(0.12 * w), yPrologue - 55, Math.round(R * 0.45));
+    }
+}
+
+function placerNoeud(id, x, y, rayon) {
+    etatCarte.positionsNoeuds[id] = { x, y, rayon };
+}
+
+function _mettreAJourVisibiliteCarte() {
+    const etatHist = obtenirEtatHistoirePersiste();
+    const sequenceP = SEQUENCE_HISTOIRE.filter((m) => !m.estCache);
+
+    etatCarte.mondesVisibles.clear();
+    etatCarte.mondesFantomes.clear();
+    etatCarte.mondeActuel = null;
+
+    let dernierCompletIdx = -1;
+    let premierDispoIdx = -1;
+
+    for (let i = 0; i < sequenceP.length; i++) {
+        const m = sequenceP[i];
+        if (etatHist.mondesCompletes.includes(m.id)) {
+            etatCarte.mondesVisibles.add(m.id);
+            dernierCompletIdx = i;
+        } else if (mondePeutEtreJoue(m.id, etatHist) && premierDispoIdx === -1) {
+            etatCarte.mondesVisibles.add(m.id);
+            premierDispoIdx = i;
+            etatCarte.mondeActuel = m.id;
+        }
+    }
+
+    if (premierDispoIdx === -1 && sequenceP.length > 0) {
+        etatCarte.mondesVisibles.add(sequenceP[0].id);
+        etatCarte.mondeActuel = sequenceP[0].id;
+        premierDispoIdx = 0;
+    }
+
+    for (let j = premierDispoIdx + 1; j <= premierDispoIdx + 2 && j < sequenceP.length; j++) {
+        if (!etatCarte.mondesVisibles.has(sequenceP[j].id)) {
+            etatCarte.mondesFantomes.add(sequenceP[j].id);
+        }
+    }
+
+    for (const m of SEQUENCE_HISTOIRE.filter((mc) => mc.estCache)) {
+        if (mondePeutEtreJoue(m.id, etatHist) && etatCarte.positionsNoeuds[m.id]) {
+            etatCarte.mondesVisibles.add(m.id);
+        }
+    }
+
+    if (!etatCarte.mondeActuel && dernierCompletIdx >= 0) {
+        etatCarte.mondeActuel = sequenceP[dernierCompletIdx].id;
+    }
 }
 
 function _lerpCamera() {
@@ -229,6 +305,7 @@ export function arreterCarteHistoire() {
 
 function boucleCarte(timestamp) {
     if (!etatCarte.carteActive || !etatCarte.ctxCarte || !etatCarte.canvasCarte) return;
+    _mettreAJourVisibiliteCarte();
     _lerpCamera();
     dessinerCarteHistoire(etatCarte, timestamp);
     etatCarte.idFrameCarte = requestAnimationFrame(boucleCarte);
@@ -251,6 +328,7 @@ function noeudSousCurseur(cx, cy) {
     const h = cvs?.height ?? 0;
     const { mx, my } = ecranVersMonde(etatCarte.camera, cx, cy, w, h);
     for (const [id, pos] of Object.entries(etatCarte.positionsNoeuds)) {
+        if (!etatCarte.mondesVisibles.has(id)) continue;
         const dx = mx - pos.x;
         const dy = my - pos.y;
         const hitRadius = pos.rayon + 10;
@@ -273,3 +351,12 @@ export function redimensionnerCarteHistoire() {
 }
 
 configurerActionsHistoire({ arreterCarte: arreterCarteHistoire });
+
+window.addEventListener('dl-dev-refresh', () => {
+    if (!etatCarte.carteActive) return;
+    calculerPositionsNoeuds();
+    etatCarte.camera.initialise = false;
+    mettreAJourSelectMondesClavier(etatCarte, (noeud, doubleTap) =>
+        traiterSelectionNoeud(etatCarte, noeud, doubleTap, lancerMondeDepuisCarte)
+    );
+});

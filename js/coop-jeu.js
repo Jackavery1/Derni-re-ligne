@@ -22,7 +22,7 @@ import {
     retournerAuMenuTitre,
     mettreAJourAffichageRecord,
 } from './ecrans-ui.js';
-import { obtenirRecordBiome, sauvegarderRecordBiome } from './progression.js';
+import { obtenirRecordCoopBiome, sauvegarderRecordCoopBiome } from './progression.js';
 import { obtenirBouton } from './dom-utils.js';
 import { planifierBoucle } from './boucle-jeu.js';
 import { arreterAnimationMenu } from './menu-fond.js';
@@ -228,13 +228,14 @@ export function terminerCooperatif(joueurFautif) {
     if (elNiveau) elNiveau.textContent = String(coop.niveau);
     if (elFautif) {
         elFautif.textContent =
-            joueurFautif === 'j1' ? 'J1 a dépassé le sommet !' : 'J2 a dépassé le sommet !';
+            joueurFautif === 'j1' ? 'J1 a depasse le sommet !' : 'J2 a depasse le sommet !';
     }
 
-    sauvegarderRecordBiome(obtenirBiomeActif(), coop.score, coop.niveau);
+    // Record coop separe : ne doit pas ecraser le record solo du biome.
+    sauvegarderRecordCoopBiome(obtenirBiomeActif(), coop.score);
     mettreAJourAffichageRecord();
     if (elRecord) {
-        elRecord.textContent = obtenirRecordBiome(obtenirBiomeActif()).toLocaleString('fr-FR');
+        elRecord.textContent = obtenirRecordCoopBiome(obtenirBiomeActif()).toLocaleString('fr-FR');
     }
 
     setTimeout(() => afficherEcran(ECRANS.GAME_OVER_COOP), 400);

@@ -1,7 +1,8 @@
 <div id="conteneur-principal">
+    <canvas id="canvas-fond-biome" aria-hidden="true"></canvas>
     <div id="interface-echelle">
         <div id="interface-jeu">
-            <!-- Panneau gauche : réserve + statistiques -->
+            <!-- Panneau gauche : reserve + statistiques -->
             <aside class="panneau">
                 <div class="section">
                     <div class="section-titre" data-label="hold">HOLD</div>
@@ -54,6 +55,34 @@
                         <span class="stat-valeur oracle-dev-val" id="oracle-dev">0</span>
                     </div>
                 </div>
+                <div class="section element-masque" id="section-objectifs-histoire">
+                    <div class="section-titre objectif-hud-titre">OBJECTIFS</div>
+                    <div id="hud-objectif-lignes" class="objectif-hud-lignes">
+                        <span id="hud-objectif-lignes-val">LIGNES 0/0</span>
+                        <span id="hud-flash-vitesse" class="hud-flash-vitesse">VITESSE +</span>
+                    </div>
+                    <div id="hud-objectif-boss" class="objectif-hud-boss element-masque">
+                        <div id="hud-boss-jauge-wrap" class="hud-boss-jauge-wrap">
+                            <div id="hud-boss-jauge-fill" class="hud-boss-jauge-fill"></div>
+                        </div>
+                        <span id="hud-boss-phase" class="hud-boss-phase">PHASE 1</span>
+                    </div>
+                    <div id="hud-palier-val" class="objectif-hud-palier">VITESSE 1/1</div>
+                    <div class="objectif-hud-etoiles">
+                        <span
+                            id="hud-etoile-0"
+                            class="objectif-hud-etoile objectif-hud-etoile-active"
+                            aria-hidden="true"
+                            >★</span
+                        >
+                        <span id="hud-etoile-1" class="objectif-hud-etoile" aria-hidden="true"
+                            >★</span
+                        >
+                        <span id="hud-etoile-2" class="objectif-hud-etoile" aria-hidden="true"
+                            >★</span
+                        >
+                    </div>
+                </div>
                 <div class="section element-masque" id="indicateur-vide-actif">
                     <div class="section-titre section-vide-titre">LE VIDE</div>
                     <div class="section-vide-msg">SIGNAL PERDU</div>
@@ -68,11 +97,11 @@
                     height="640"
                     tabindex="0"
                     role="application"
-                    aria-label="Plateau de jeu Dernière Ligne, 10 colonnes sur 20 lignes. Utilisez le clavier ou les contrôles tactiles."
+                    aria-label="Plateau de jeu Derniere Ligne, 10 colonnes sur 20 lignes. Utilisez le clavier ou les contrôles tactiles."
                 ></canvas>
             </main>
 
-            <!-- Panneau droit : prochaine pièce + mascotte -->
+            <!-- Panneau droit : prochaine piece + mascotte -->
             <aside class="panneau">
                 <div class="section">
                     <div class="section-titre" data-label="next">NEXT</div>
@@ -134,5 +163,56 @@
                 </div>
             </aside>
         </div>
+    </div>
+</div>
+
+<div
+    id="overlay-objectifs-pre"
+    class="objectif-overlay element-masque"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="objectif-monde-nom"
+>
+    <div class="objectif-panneau">
+        <p class="objectif-chapitre" id="objectif-monde-chapitre">PROLOGUE</p>
+        <h2 class="objectif-monde-nom" id="objectif-monde-nom">L'ÉVEIL</h2>
+        <p class="objectif-principal-label">OBJECTIF</p>
+        <p class="objectif-principal-texte" id="objectif-principal-texte">EFFACEZ 8 LIGNES</p>
+        <div class="objectif-etoiles-liste">
+            <div class="objectif-etoile-slot" id="objectif-etoile-principale">
+                <span class="objectif-etoile-icone" aria-hidden="true">★</span>
+                <span class="objectif-etoile-libelle">Objectif principal</span>
+            </div>
+            <div class="objectif-etoile-slot" id="objectif-etoile-2">
+                <span class="objectif-etoile-icone" aria-hidden="true">★</span>
+                <span class="objectif-etoile-libelle"></span>
+            </div>
+            <div class="objectif-etoile-slot" id="objectif-etoile-3">
+                <span class="objectif-etoile-icone" aria-hidden="true">★</span>
+                <span class="objectif-etoile-libelle"></span>
+            </div>
+        </div>
+        <button type="button" class="bouton objectif-btn-commencer" id="btn-objectifs-commencer">
+            COMMENCER
+        </button>
+    </div>
+</div>
+
+<div
+    id="overlay-recap-monde"
+    class="objectif-overlay element-masque"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="recap-monde-nom"
+>
+    <div class="objectif-panneau objectif-recap">
+        <p class="objectif-recap-titre">MONDE COMPLÉTÉ</p>
+        <h2 class="objectif-monde-nom" id="recap-monde-nom">MONDE</h2>
+        <div class="objectif-recap-etoiles">
+            <span id="recap-etoile-0" class="objectif-recap-etoile" aria-hidden="true">★</span>
+            <span id="recap-etoile-1" class="objectif-recap-etoile" aria-hidden="true">★</span>
+            <span id="recap-etoile-2" class="objectif-recap-etoile" aria-hidden="true">★</span>
+        </div>
+        <p class="objectif-recap-revelation element-masque" id="recap-etoile-3-libelle"></p>
     </div>
 </div>

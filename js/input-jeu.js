@@ -66,7 +66,12 @@ function traiterToucheClavier(code, actions) {
     }
 }
 
+let inputInitialise = false;
+
 export function initialiserInput() {
+    // Idempotence : un second appel doublerait listeners clavier et boutons (double input).
+    if (inputInitialise) return;
+    inputInitialise = true;
     const actions = () => obtenirActions();
 
     document.addEventListener('keydown', (e) => {

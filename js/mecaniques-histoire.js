@@ -13,14 +13,19 @@ export function biomeActuelMecanique() {
 }
 
 export function biomeActuelEstMiroir() {
-    return biomeActuelMecanique() === 'miroir';
+    const mec = biomeActuelMecanique();
+    return mec === 'miroir' || mec === 'paradoxe';
 }
 
 export function biomeActuelEstVide() {
-    return biomeActuelMecanique() === 'vide';
+    const mec = biomeActuelMecanique();
+    return mec === 'vide' || mec === 'paradoxe';
 }
 
 let _desinscriptions = [];
+
+/** Indices (y*colonnes+x) des cellules avec timestamp pose mais pas encore rouillees. */
+const _celluleActivesRouille = new Set();
 
 export function initialiserMecaniquesHistoire() {
     if (!store.histoire.actif) return;
@@ -31,6 +36,7 @@ export function initialiserMecaniquesHistoire() {
     const N = CONFIG.lignes * CONFIG.colonnes;
     store.histoire.mecaniques.plateauTimestamps = new Float64Array(N).fill(0);
     store.histoire.mecaniques.plateauRouille = new Uint8Array(N).fill(0);
+    _celluleActivesRouille.clear();
 
     store.histoire.mecaniques.eclipseLigne = BIOMES.eclipse?.ligneEclipseBase ?? 10;
     store.histoire.mecaniques.eclipseDerniereMaj = performance.now();
@@ -45,13 +51,13 @@ export function initialiserMecaniquesHistoire() {
     store.histoire.mecaniques.trameAlphaMorph = 1.0;
     store.histoire.mecaniques.trameEnTransition = false;
 
-    if (mec === 'miroir') _appliquerCSSMiroir(true);
+    if (mec === 'miroir' || mec === 'paradoxe') _appliquerCSSMiroir(true);
 
     const off1 = ecouter('partie:nouvelle-piece', _surNouvellepiece);
     const off2 = ecouter('lignes:effacees', _surLignesEffacees);
     _desinscriptions = [off1, off2];
 
-    logger.info('[mecHistoire] initialisé :', mec);
+    logger.info('[mecHistoire] initialise :', mec);
 }
 
 export function arreterMecaniquesHistoire() {
@@ -65,8 +71,9 @@ export function arreterMecaniquesHistoire() {
     store.histoire.mecaniques.plateauTimestamps = null;
     store.histoire.mecaniques.plateauRouille = null;
     store.histoire.mecaniques.videInvisible = false;
+    _celluleActivesRouille.clear();
 
-    logger.info('[mecHistoire] arrêté');
+    logger.info('[mecHistoire] arrête');
 }
 
 export function mettreAJourMecaniquesHistoire(dt, timestamp) {
@@ -79,13 +86,16 @@ export function mettreAJourMecaniquesHistoire(dt, timestamp) {
             _tickRouille(timestamp);
             break;
         case 'eclipse':
-            _tickEclipse(dt, timestamp);
+            _tickEclipse(timestamp);
             break;
         case 'vide':
             _tickVide(timestamp);
             break;
         case 'trame':
-            _tickTrame(dt, timestamp);
+            _tickTrame(dt);
+            break;
+        case 'paradoxe':
+            _tickVide(timestamp);
             break;
     }
 }
@@ -127,20 +137,24 @@ export function enregistrerTimestampCellules(cellules) {
     const now = performance.now();
     for (const { x, y } of cellules) {
         if (y >= 0 && y < CONFIG.lignes && x >= 0 && x < CONFIG.colonnes) {
-            store.histoire.mecaniques.plateauTimestamps[y * CONFIG.colonnes + x] = now;
-            store.histoire.mecaniques.plateauRouille[y * CONFIG.colonnes + x] = 0;
+            const idx = y * CONFIG.colonnes + x;
+            store.histoire.mecaniques.plateauTimestamps[idx] = now;
+            store.histoire.mecaniques.plateauRouille[idx] = 0;
+            _celluleActivesRouille.add(idx);
         }
     }
 }
 
 function _tickRouille(timestamp) {
     if (!store.histoire.mecaniques.plateauTimestamps) return;
-    for (let i = 0; i < CONFIG.lignes * CONFIG.colonnes; i++) {
-        const ts = store.histoire.mecaniques.plateauTimestamps[i];
-        if (ts === 0) continue;
-        if (store.histoire.mecaniques.plateauRouille[i]) continue;
-        if (timestamp - ts >= SEUIL_ROUILLE_MS()) {
-            store.histoire.mecaniques.plateauRouille[i] = 1;
+    if (_celluleActivesRouille.size === 0) return;
+    const TS = store.histoire.mecaniques.plateauTimestamps;
+    const RO = store.histoire.mecaniques.plateauRouille;
+    const seuil = SEUIL_ROUILLE_MS();
+    for (const idx of _celluleActivesRouille) {
+        if (timestamp - TS[idx] >= seuil) {
+            RO[idx] = 1;
+            _celluleActivesRouille.delete(idx);
         }
     }
 }
@@ -164,6 +178,14 @@ function _decalerMatricesRouille(lignesEffacees) {
             RO[c] = 0;
         }
     }
+
+    // Les decalages invalident les indices stockes : on reconstruit l'ensemble
+    // des cellules actives (peu couteux, uniquement lors d'un effacement de ligne).
+    _celluleActivesRouille.clear();
+    for (let i = 0; i < TS.length; i++) {
+        if (TS[i] !== 0 && !RO[i]) _celluleActivesRouille.add(i);
+    }
+
     ajouterBlocksRouillesEffaces(sorted.length);
 }
 
@@ -173,8 +195,7 @@ export function celluleEstRouillee(x, y) {
     return store.histoire.mecaniques.plateauRouille[y * CONFIG.colonnes + x] === 1;
 }
 
-function _tickEclipse(dt, timestamp) {
-    void dt;
+function _tickEclipse(timestamp) {
     if (
         timestamp - store.histoire.mecaniques.eclipseDerniereMaj >=
         ECLIPSE_MONTEE_INTERVALLE_MS()
@@ -251,8 +272,7 @@ const TRAME_BIOMES_CYCLE = [
     'fuochi',
     'cosmos',
 ];
-function _tickTrame(dt, timestamp) {
-    void timestamp;
+function _tickTrame(dt) {
     store.histoire.mecaniques.trameTimerMorph += dt;
     if (
         !store.histoire.mecaniques.trameEnTransition &&

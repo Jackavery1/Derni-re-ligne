@@ -1,5 +1,5 @@
 /**
- * File d’affichage séquentielle pour notifications DOM (achievements, codex, etc.).
+ * File d’affichage sequentielle pour notifications DOM (achievements, codex, etc.).
  * @param {{ afficher: (item: any, terminer: () => void) => boolean | void }} config
  */
 export function creerFileNotifications({ afficher }) {
@@ -16,6 +16,10 @@ export function creerFileNotifications({ afficher }) {
             enCours = false;
             afficherProchaine();
         };
+        if (/** @type {any} */ (globalThis).__NEO_SILENT_NOTIFS__) {
+            terminer();
+            return;
+        }
         const ok = afficher(item, terminer);
         if (ok === false) enCours = false;
     }

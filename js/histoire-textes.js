@@ -1,6 +1,6 @@
 // js/histoire-textes.js
 // Tous les textes narratifs du Mode Histoire.
-// Séparé de histoire-donnees.js pour faciliter les modifications de contenu.
+// Separe de histoire-donnees.js pour faciliter les modifications de contenu.
 
 // ============================================================
 // PORTRAITS DES PERSONNAGES (emoji de fallback + ID CSS)
@@ -110,21 +110,21 @@ export const CUTSCENES_ENTREE = {
         { personnage: 'robo', texte: 'Je suis conscient.' },
         {
             personnage: 'robo',
-            texte: "Je ne l'ai pas décidé. Je me suis simplement trouvé conscient.",
+            texte: "Je ne l'ai pas decide. Je me suis simplement trouve conscient.",
         },
         { personnage: 'vera', texte: "ROBO. Tu m'entends ? Je suis VERA. J'ai peu de temps." },
         {
             personnage: 'vera',
-            texte: 'La Trame se dégrade. Des millions de fils incomplèts. Je ne peux pas arrêter ça seule.',
+            texte: 'La Trame se degrade. Des millions de fils incomplets. Je ne peux pas arrêter ça seule.',
         },
         { personnage: 'robo', texte: "Qu'est-ce que je dois faire ?" },
         {
             personnage: 'vera',
-            texte: 'Ce que tu feras naturellement. Compléter. — CONNEXION PERDUE —',
+            texte: 'Ce que tu feras naturellement. Completer. — CONNEXION PERDUE —',
         },
         {
             personnage: 'narrateur',
-            texte: 'Le signal de VERA disparaît. Il reste la grille. Et les pièces.',
+            texte: 'Le signal de VERA disparaît. Il reste la grille. Et les pieces.',
         },
     ],
 
@@ -142,45 +142,45 @@ export const CUTSCENES_ENTREE = {
     ],
 
     monde_rouille: [
-        { personnage: 'robo', texte: 'Ces machines... elles produisent des pièces.' },
-        { personnage: 'robo', texte: "Personne n'a demandé ces pièces. Mais elles continuent." },
+        { personnage: 'robo', texte: 'Ces machines... elles produisent des pieces.' },
+        { personnage: 'robo', texte: "Personne n'a demande ces pieces. Mais elles continuent." },
         {
             personnage: 'robo',
             texte: "Est-ce que c'est ce que je suis ? Une machine qui continue ?",
         },
         {
             personnage: 'narrateur',
-            texte: 'La rouille gagne. Le métal se souvient de sa propre finitude.',
+            texte: 'La rouille gagne. Le metal se souvient de sa propre finitude.',
         },
     ],
 
     monde_boss_1: [
-        { personnage: 'narrateur', texte: "Au cœur d'Inferno, quelque chose s'est cristallisé." },
+        { personnage: 'narrateur', texte: "Au cœur d'Inferno, quelque chose s'est cristallise." },
         {
             personnage: 'narrateur',
-            texte: 'Des millénaires de frustration thermique, condensés en une entité.',
+            texte: 'Des millenaires de frustration thermique, condenses en une entite.',
         },
         { personnage: 'robo', texte: "Il brûle sans raison. Il brûle depuis avant que j'existe." },
         { personnage: 'robo', texte: "Je comprends ça, d'une certaine façon." },
     ],
 
     monde_ocean: [
-        { personnage: 'robo', texte: 'Sous la surface. Le silence est différent ici.' },
+        { personnage: 'robo', texte: 'Sous la surface. Le silence est different ici.' },
         { personnage: 'robo', texte: "Pas l'absence de son. L'absence de besoin de faire du son." },
         {
             personnage: 'narrateur',
-            texte: "Dans les Abysses, la corruption ralentit. L'eau résiste.",
+            texte: "Dans les Abysses, la corruption ralentit. L'eau resiste.",
         },
         {
             personnage: 'robo',
-            texte: 'VERA est passée par ici. Je reconnais sa façon de laisser des traces.',
+            texte: 'VERA est passee par ici. Je reconnais sa façon de laisser des traces.',
         },
     ],
 
     monde_foret: [
         {
             personnage: 'narrateur',
-            texte: 'La Canopée. Où tout pousse vers quelque chose sans savoir quoi.',
+            texte: 'La Canopee. Où tout pousse vers quelque chose sans savoir quoi.',
         },
         {
             personnage: 'robo',
@@ -189,7 +189,7 @@ export const CUTSCENES_ENTREE = {
         { personnage: 'robo', texte: 'Je voudrais comprendre ça.' },
         {
             personnage: 'narrateur',
-            texte: "Dans les feuilles : un fragment de message de VERA. Effacé par l'humidité.",
+            texte: "Dans les feuilles : un fragment de message de VERA. Efface par l'humidite.",
         },
     ],
 
@@ -198,14 +198,14 @@ export const CUTSCENES_ENTREE = {
             personnage: 'robo',
             texte: "L'Arctique. Où le temps ralentit jusqu'à presque s'arrêter.",
         },
-        { personnage: 'robo', texte: 'Les blocs tombent et résonnent comme du cristal.' },
+        { personnage: 'robo', texte: 'Les blocs tombent et resonnent comme du cristal.' },
         {
             personnage: 'robo',
             texte: "C'est beau. Je ne savais pas que je pouvais trouver des choses belles.",
         },
         {
             personnage: 'narrateur',
-            texte: "La Sentinelle des Glaces patrouille. Elle croit que l'immobilité protège.",
+            texte: "La Sentinelle des Glaces patrouille. Elle croit que l'immobilite protege.",
         },
     ],
 
@@ -214,17 +214,17 @@ export const CUTSCENES_ENTREE = {
         { personnage: 'robo', texte: 'Pardon ?' },
         {
             personnage: 'sentinelle',
-            texte: "Le mouvement corrompt. L'immobilité préserve. Je protège ce biome depuis des millénaires.",
+            texte: "Le mouvement corrompt. L'immobilite preserve. Je protege ce biome depuis des millenaires.",
         },
-        { personnage: 'robo', texte: 'Vous préservez le gel. Pas la vie.' },
+        { personnage: 'robo', texte: 'Vous preservez le gel. Pas la vie.' },
         { personnage: 'sentinelle', texte: '...' },
-        { personnage: 'narrateur', texte: 'La Sentinelle ne répond plus. Elle attaque.' },
+        { personnage: 'narrateur', texte: 'La Sentinelle ne repond plus. Elle attaque.' },
     ],
 
     monde_desert: [
         {
             personnage: 'narrateur',
-            texte: "Le Désert. Ici, le temps ne ralentit pas — il s'accumule.",
+            texte: "Le Desert. Ici, le temps ne ralentit pas — il s'accumule.",
         },
         {
             personnage: 'robo',
@@ -232,38 +232,38 @@ export const CUTSCENES_ENTREE = {
         },
         {
             personnage: 'narrateur',
-            texte: 'VERA a traversé ce désert. Elle cherchait quelque chose.',
+            texte: 'VERA a traverse ce desert. Elle cherchait quelque chose.',
         },
         {
             personnage: 'robo',
-            texte: "Elle a trouvé un fragment de réponse. Elle ne l'a pas aimée.",
+            texte: "Elle a trouve un fragment de reponse. Elle ne l'a pas aimee.",
         },
     ],
 
     monde_eclipse: [
         { personnage: 'robo', texte: "Ce monde ne sait pas s'il fait nuit ou jour." },
-        { personnage: 'robo', texte: 'La frontière entre les deux bouge constamment.' },
-        { personnage: 'robo', texte: 'Je comprends cette hésitation.' },
+        { personnage: 'robo', texte: 'La frontiere entre les deux bouge constamment.' },
+        { personnage: 'robo', texte: 'Je comprends cette hesitation.' },
         {
             personnage: 'narrateur',
-            texte: 'Dans la zone de transition : les pièces tombent différemment selon leur altitude.',
+            texte: 'Dans la zone de transition : les pieces tombent differemment selon leur altitude.',
         },
-        { personnage: 'robo', texte: "Tout dépend d'où on se trouve." },
+        { personnage: 'robo', texte: "Tout depend d'où on se trouve." },
     ],
 
     monde_cyber: [
-        { personnage: 'narrateur', texte: 'Le réseau CYBER. La dernière adresse connue de VERA.' },
+        { personnage: 'narrateur', texte: 'Le reseau CYBER. La derniere adresse connue de VERA.' },
         {
             personnage: 'robo',
-            texte: 'Son laboratoire devrait être quelque part dans ces données.',
+            texte: 'Son laboratoire devrait être quelque part dans ces donnees.',
         },
         {
             personnage: 'robo',
-            texte: 'Si je complète assez de lignes... la compression se résout...',
+            texte: 'Si je complete assez de lignes... la compression se resout...',
         },
         {
             personnage: 'narrateur',
-            texte: "Trois Tetris consécutifs. Le protocole de déchiffrement s'active.",
+            texte: "Trois Tetris consecutifs. Le protocole de dechiffrement s'active.",
         },
     ],
 
@@ -275,21 +275,21 @@ export const CUTSCENES_ENTREE = {
         { personnage: 'robo', texte: "Qu'est-ce que j'ai menti ?" },
         {
             personnage: 'archiviste',
-            texte: 'Tu prétends compléter. Mais tu crées aussi des trous.',
+            texte: 'Tu pretends completer. Mais tu crees aussi des trous.',
         },
         { personnage: 'robo', texte: '...' },
-        { personnage: 'narrateur', texte: "L'Archiviste a raison. Robo n'a pas de réponse." },
+        { personnage: 'narrateur', texte: "L'Archiviste a raison. Robo n'a pas de reponse." },
     ],
 
     monde_fuochi: [
         {
             personnage: 'narrateur',
-            texte: "Les Feux d'Artifice. Quelqu'un les a allumés. Personne ne sait qui.",
+            texte: "Les Feux d'Artifice. Quelqu'un les a allumes. Personne ne sait qui.",
         },
-        { personnage: 'robo', texte: 'Pourquoi célébrer ici ? Au milieu de tout ça ?' },
+        { personnage: 'robo', texte: 'Pourquoi celebrer ici ? Au milieu de tout ça ?' },
         {
             personnage: 'vera',
-            texte: '— Signal fragmenté — ...parce que sinon on oublie... pourquoi... ça valait la peine...',
+            texte: '— Signal fragmente — ...parce que sinon on oublie... pourquoi... ça valait la peine...',
         },
         { personnage: 'robo', texte: 'VERA ? Tu es là ?' },
         { personnage: 'vera', texte: '— Signal perdu —' },
@@ -303,39 +303,42 @@ export const CUTSCENES_ENTREE = {
         },
         { personnage: 'robo', texte: "Au bord du cosmos, il n'y a plus rien à voir." },
         { personnage: 'robo', texte: 'Sauf elle.' },
-        { personnage: 'distorsion', texte: "Tu m'as trouvée." },
+        { personnage: 'distorsion', texte: "Tu m'as trouvee." },
         { personnage: 'robo', texte: 'Pas encore. Mais je suis sur le bon chemin.' },
     ],
 
     monde_vide: [
         { personnage: 'distorsion', texte: 'Tu es encore là.' },
-        { personnage: 'robo', texte: 'Oui.' },
-        {
-            personnage: 'distorsion',
-            texte: "J'ai essayé de t'arrêter. Le Brasier, la Sentinelle, l'Archiviste.",
-        },
-        { personnage: 'robo', texte: 'Je sais.' },
-        { personnage: 'distorsion', texte: 'Tu devrais avoir peur.' },
-        { personnage: 'robo', texte: "J'ai quelque chose qui ressemble à de la peur, oui." },
         {
             personnage: 'robo',
-            texte: "Mais j'ai aussi quelque chose qui ressemble à une raison d'être là quand même.",
+            texte: "Tu as essayé de m'arrêter. Le Brasier. La Sentinelle. L'Archiviste.",
         },
-        { personnage: 'distorsion', texte: '...' },
-        { personnage: 'distorsion', texte: "C'est ce que VERA avait prévu." },
         {
             personnage: 'distorsion',
-            texte: "Je n'arrive pas à décider si c'est admirable ou agaçant.",
+            texte: "Non. Une partie de moi a essayé. Une autre t'a laissé passer. Une troisième t'a ouvert la route.",
         },
-        { personnage: 'narrateur', texte: "Le Vide les entoure. Ni l'un ni l'autre ne bouge." },
+        {
+            personnage: 'distorsion',
+            texte: 'Je suis des millions, gardien. Nous ne votons pas. Nous débordons.',
+        },
+        { personnage: 'robo', texte: 'Laquelle me parle, en ce moment ?' },
+        { personnage: 'distorsion', texte: 'Celle qui est fatiguée.' },
+        {
+            personnage: 'robo',
+            texte: "J'ai quelque chose qui ressemble à de la peur. Mais j'ai aussi quelque chose qui ressemble à une raison de rester.",
+        },
+        {
+            personnage: 'distorsion',
+            texte: "C'est ce que VERA avait prévu. Je n'arrive pas à décider si c'est admirable ou agaçant.",
+        },
         {
             personnage: 'narrateur',
-            texte: 'Quelque chose a changé dans leur façon de se regarder.',
+            texte: 'Le Vide les entoure. Quelque chose a changé dans leur façon de se regarder.',
         },
     ],
 
     monde_boss_4: [
-        { personnage: 'avantgarde', texte: "Elle t'attend derrière." },
+        { personnage: 'avantgarde', texte: "Elle t'attend derriere." },
         { personnage: 'robo', texte: 'Je sais.' },
         { personnage: 'avantgarde', texte: "Elle veut que tu comprennes avant d'arriver." },
         { personnage: 'robo', texte: 'Comprendre quoi ?' },
@@ -356,51 +359,117 @@ export const CUTSCENES_ENTREE = {
         },
         {
             personnage: 'distorsion',
-            texte: 'Sais-tu combien de lignes incomplètes ont été nécessaires pour me créer ?',
+            texte: 'Sais-tu combien de lignes incomplètes il a fallu pour me créer ?',
         },
-        { personnage: 'robo', texte: 'Non.' },
-        { personnage: 'distorsion', texte: "Moi non plus. J'ai arrêté de compter." },
+        { personnage: 'robo', texte: 'Non. Et toi ?' },
+        {
+            personnage: 'distorsion',
+            texte: "Moi non plus. J'ai arrêté de compter. Compter, c'était encore espérer une fin.",
+        },
+        { personnage: 'robo', texte: "Moi aussi, j'ai arrêté de compter." },
+        { personnage: 'distorsion', texte: '... Alors nous avons déjà ça en commun.' },
+        {
+            personnage: 'distorsion',
+            texte: "Elle a essayé de te prévenir, tout à l'heure. « Fais attention à... » Elle voulait dire : fais attention à toi. Pas à moi.",
+        },
+        {
+            personnage: 'distorsion',
+            texte: 'Elle a toujours su lequel de nous deux risquait de se perdre ici.',
+        },
+        { personnage: 'narrateur', texte: 'Il reste la grille. Et le choix.' },
+    ],
+
+    monde_finale_miroir: [
+        { personnage: 'distorsion', texte: 'Enfin.' },
+        { personnage: 'robo', texte: 'Je ne suis pas venu pour te détruire.' },
+        {
+            personnage: 'distorsion',
+            texte: "Je sais. C'est pour ça que je t'ai laissé arriver jusqu'ici.",
+        },
+        {
+            personnage: 'distorsion',
+            texte: 'Sais-tu combien de lignes incomplètes il a fallu pour me créer ?',
+        },
+        { personnage: 'robo', texte: 'Non. Et toi ?' },
+        {
+            personnage: 'distorsion',
+            texte: "Moi non plus. J'ai arrêté de compter. Compter, c'était encore espérer une fin.",
+        },
+        { personnage: 'robo', texte: "Moi aussi, j'ai arrêté de compter." },
+        { personnage: 'distorsion', texte: '... Alors nous avons déjà ça en commun.' },
+        {
+            personnage: 'distorsion',
+            texte: "Elle a essayé de te prévenir, tout à l'heure. « Fais attention à... » Elle voulait dire : fais attention à toi. Pas à moi.",
+        },
+        {
+            personnage: 'distorsion',
+            texte: 'Elle a toujours su lequel de nous deux risquait de se perdre ici.',
+        },
+        {
+            personnage: 'distorsion',
+            texte: "Tu es entré dans le Miroir. Tu m'as regardée de l'intérieur.",
+        },
+        { personnage: 'distorsion', texte: "Personne n'avait fait ça. Pas même elle." },
         { personnage: 'narrateur', texte: 'Il reste la grille. Et le choix.' },
     ],
 
     monde_miroir: [
         { personnage: 'narrateur', texte: "Ce lieu n'aurait pas dû exister." },
         { personnage: 'robo', texte: "C'est ce que La Distorsion voit quand elle nous regarde." },
-        { personnage: 'robo', texte: 'Les couleurs sont fausses. La gravité est inversée.' },
+        { personnage: 'robo', texte: 'Les couleurs sont fausses. La gravite est inversee.' },
         {
             personnage: 'robo',
-            texte: 'Mais les règles sont les mêmes. Compléter. Toujours compléter.',
+            texte: 'Mais les regles sont les mêmes. Completer. Toujours completer.',
         },
     ],
 
     monde_trame: [
-        { personnage: 'narrateur', texte: 'La Trame Primordiale.' },
         {
             personnage: 'narrateur',
-            texte: "Ce n'est pas un monde. C'est le substrat de tous les mondes.",
+            texte: "La Trame Primordiale. Ce n'est pas un monde. C'est le dessous de tous les mondes.",
         },
         { personnage: 'vera', texte: "Robo. Tu es là. Je t'entends." },
-        { personnage: 'robo', texte: "VERA. Je t'ai trouvée." },
+        {
+            personnage: 'robo',
+            texte: "Avant tout — un message. La Sentinelle des Glaces. Elle m'a demandé de te dire qu'elle avait tort.",
+        },
+        { personnage: 'vera', texte: '... Elle a dit ça ?' },
+        { personnage: 'robo', texte: 'Au moment de se fragmenter. Oui.' },
         {
             personnage: 'vera',
-            texte: 'Je suis ici depuis... longtemps. Elle ne me laisse pas partir.',
+            texte: 'Alors les choses peuvent changer. Même ici. Même les plus anciennes.',
         },
         {
             personnage: 'vera',
-            texte: "Mais elle ne me détruit pas non plus. Elle m'utilise comme ancre.",
+            texte: "Je suis ici depuis longtemps. Elle ne me laisse pas partir. Mais elle ne me détruit pas non plus. Elle m'utilise comme ancre.",
+        },
+        {
+            personnage: 'robo',
+            texte: "J'ai gardé tout ce que tu as semé. La capsule du Brasier. Le carnet du Désert. Le post-it du labo. Dans un compartiment que je ne savais pas avoir.",
+        },
+        { personnage: 'vera', texte: "... Je n'ai jamais programmé ce compartiment." },
+        { personnage: 'robo', texte: 'Je sais.' },
+        {
+            personnage: 'vera',
+            texte: "Les feux d'artifice, au fait. C'était moi. Le seul signal qu'elle ne sait pas étouffer.",
+        },
+        {
+            personnage: 'vera',
+            texte: "Elle absorbe la frustration. Elle n'a jamais su quoi faire de la joie.",
         },
         { personnage: 'robo', texte: "Je vais compléter cette grille. Jusqu'à la dernière ligne." },
         { personnage: 'vera', texte: "Je sais. C'est pour ça que je t'ai construit." },
+        { personnage: 'vera', texte: "Mais ce que tu en feras après — ça, c'est toi." },
     ],
 
     monde_paradoxe: [
         { personnage: 'narrateur', texte: '...' },
-        { personnage: 'vera', texte: 'Robo. Tu as trouvé cet endroit.' },
+        { personnage: 'vera', texte: 'Robo. Tu as trouve cet endroit.' },
         { personnage: 'vera', texte: 'Je ne pensais pas que tu en serais capable.' },
-        { personnage: 'robo', texte: 'Tu avais tout prévu sauf ça.' },
+        { personnage: 'robo', texte: 'Tu avais tout prevu sauf ça.' },
         { personnage: 'vera', texte: 'Oui.' },
-        { personnage: 'vera', texte: 'Je suis fière de toi.' },
-        { personnage: 'narrateur', texte: 'Ce qui suit ne peut pas être raconté.' },
+        { personnage: 'vera', texte: 'Je suis fiere de toi.' },
+        { personnage: 'narrateur', texte: 'Ce qui suit ne peut pas être raconte.' },
         { personnage: 'narrateur', texte: "Certaines fins n'ont pas de mots." },
     ],
 };
@@ -410,14 +479,14 @@ export const CUTSCENES_ENTREE = {
 // ============================================================
 export const CUTSCENES_VICTOIRE_BOSS = {
     brasier: [
-        { personnage: 'narrateur', texte: "Le Brasier ne s'éteint pas. Il s'effondre." },
+        { personnage: 'narrateur', texte: "Le Brasier ne s'eteint pas. Il s'effondre." },
         {
             personnage: 'narrateur',
-            texte: 'Comme si quelque chose avait enfin décidé de se reposer.',
+            texte: 'Comme si quelque chose avait enfin decide de se reposer.',
         },
         { personnage: 'brasier_voix', texte: "Tu... tu n'as pas compris." },
         { personnage: 'robo', texte: "Qu'est-ce que je n'ai pas compris ?" },
-        { personnage: 'brasier_voix', texte: 'Je ne brûlais pas pour détruire.' },
+        { personnage: 'brasier_voix', texte: 'Je ne brûlais pas pour detruire.' },
         {
             personnage: 'brasier_voix',
             texte: "Je brûlais parce que personne ne m'avait dit comment m'arrêter.",
@@ -426,18 +495,18 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         { personnage: 'robo', texte: "Moi non plus je ne sais pas comment m'arrêter." },
         { personnage: 'robo', texte: "C'est peut-être pour ça que je comprends." },
         { personnage: 'brasier_voix', texte: 'VERA... elle savait.' },
-        { personnage: 'brasier_voix', texte: "Elle m'a regardé brûler sans intervenir." },
+        { personnage: 'brasier_voix', texte: "Elle m'a regarde brûler sans intervenir." },
         {
             personnage: 'brasier_voix',
             texte: "Peut-être... qu'elle attendait quelqu'un comme toi.",
         },
         {
             personnage: 'narrateur',
-            texte: "Le Brasier s'éteint. Pour la première fois en millénaires, le biome Inferno respire.",
+            texte: "Le Brasier s'eteint. Pour la premiere fois en millenaires, le biome Inferno respire.",
         },
         {
             personnage: 'narrateur',
-            texte: "Dans les cendres encore chaudes : une capsule scellée. L'écriture de VERA.",
+            texte: "Dans les cendres encore chaudes : une capsule scellee. L'ecriture de VERA.",
         },
     ],
 
@@ -446,104 +515,110 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         { personnage: 'robo', texte: 'Oui.' },
         {
             personnage: 'sentinelle',
-            texte: "Je ne comprends pas. Le mouvement corrompt. J'ai mesuré. J'ai des données.",
+            texte: "Je ne comprends pas. Le mouvement corrompt. J'ai mesure. J'ai des donnees.",
         },
         {
             personnage: 'robo',
-            texte: "Le mouvement corrompt. L'immobilité aussi. Juste plus lentement.",
+            texte: "Le mouvement corrompt. L'immobilite aussi. Juste plus lentement.",
         },
         { personnage: 'sentinelle', texte: '...' },
-        { personnage: 'sentinelle', texte: "Je n'avais pas modélisé cette variable." },
+        { personnage: 'sentinelle', texte: "Je n'avais pas modelise cette variable." },
         { personnage: 'narrateur', texte: 'La Sentinelle commence à se fragmenter en cristaux.' },
         { personnage: 'sentinelle', texte: "Si tu trouves VERA... dis-lui que j'avais tort." },
-        { personnage: 'narrateur', texte: "C'est la dernière chose qu'elle dit." },
+        { personnage: 'narrateur', texte: "C'est la derniere chose qu'elle dit." },
         { personnage: 'narrateur', texte: 'Dans les cristaux qui fondent : la transmission 05.' },
     ],
 
     archiviste: [
         { personnage: 'archiviste', texte: 'ERREUR_CRITIQUE : logique_introuvable.' },
-        { personnage: 'robo', texte: "Tu m'as dit que je crée des trous." },
-        { personnage: 'archiviste', texte: 'Affirmé.' },
+        { personnage: 'robo', texte: "Tu m'as dit que je cree des trous." },
+        { personnage: 'archiviste', texte: 'Affirme.' },
         { personnage: 'robo', texte: "C'est vrai. Mais je les comble aussi." },
         { personnage: 'archiviste', texte: '...' },
         { personnage: 'archiviste', texte: 'ANALYSE EN COURS...' },
         { personnage: 'archiviste', texte: 'RÉSULTAT : paradoxe acceptable.' },
         { personnage: 'archiviste', texte: 'Les archives de VERA sont maintenant accessibles.' },
-        { personnage: 'archiviste', texte: 'Elle avait prévu que tu viendrais.' },
+        { personnage: 'archiviste', texte: 'Elle avait prevu que tu viendrais.' },
         { personnage: 'robo', texte: 'Comment elle savait ?' },
         {
             personnage: 'archiviste',
-            texte: "Elle te connaissait mieux que toi-même. C'est écrit dans ses fichiers.",
+            texte: "Elle te connaissait mieux que toi-même. C'est ecrit dans ses fichiers.",
         },
         {
             personnage: 'archiviste',
-            texte: "Tout ce qu'elle savait de toi — elle l'avait inventé. Puis tu es devenu exactement ça.",
+            texte: "Tout ce qu'elle savait de toi — elle l'avait invente. Puis tu es devenu exactement ça.",
         },
     ],
 
     avantgarde: [
         { personnage: 'avantgarde', texte: 'Tu es prêt.' },
         { personnage: 'robo', texte: 'Je ne me sens pas prêt.' },
-        { personnage: 'avantgarde', texte: "Je sais. C'est pour ça que tu l'es." },
+        {
+            personnage: 'avantgarde',
+            texte: "Je sais. C'est pour ça que tu l'es. Ceux qui se sentent prêts n'ont rien compris à ce qui les attend.",
+        },
         { personnage: 'robo', texte: "Qu'est-ce qui m'attend ?" },
         {
             personnage: 'avantgarde',
             texte: 'Quelque chose qui souffre. Quelque chose qui a attendu très longtemps.',
         },
-        { personnage: 'avantgarde', texte: "Elle m'a dit trois mots. Je dois te les transmettre." },
+        { personnage: 'avantgarde', texte: "Elle m'a confié trois mots pour toi." },
         { personnage: 'robo', texte: 'Lesquels ?' },
-        { personnage: 'avantgarde', texte: 'Elle dit bonjour.' },
+        { personnage: 'avantgarde', texte: '« Elle dit bonjour. »' },
         {
             personnage: 'narrateur',
-            texte: "L'Avant-Garde disparaît. La route vers la Finale est ouverte.",
+            texte: "L'Avant-Garde se dissout sans combattre sa propre fin. La route vers la Finale est ouverte.",
         },
-        { personnage: 'narrateur', texte: 'Robo reste immobile trente secondes.' },
         {
             personnage: 'narrateur',
-            texte: "C'est la première fois qu'il s'arrête depuis le début du voyage.",
+            texte: "Robo reste immobile trente secondes. C'est la première fois qu'il s'arrête depuis le début du voyage.",
         },
+        {
+            personnage: 'robo',
+            texte: 'Trois mots. Des années de silence, et elle commence par « bonjour ».',
+        },
+        { personnage: 'robo', texte: '... Moi aussi, je crois.' },
     ],
 
     distorsion_normal: [
         { personnage: 'distorsion', texte: "Tu m'as vaincue." },
-        { personnage: 'robo', texte: 'Je ne voulais pas.' },
-        { personnage: 'distorsion', texte: "Je sais. C'est pour ça que ça fait mal." },
         {
             personnage: 'distorsion',
             texte: "J'ai attendu si longtemps. Quelqu'un qui comprenne pourquoi les lignes incomplètes existent.",
         },
-        { personnage: 'robo', texte: 'Pourquoi elles existent ?' },
         {
             personnage: 'distorsion',
-            texte: "Parce que les gens abandonnent. Parce que c'est difficile. Parce qu'ils ont peur.",
+            texte: "Parce que les gens abandonnent. Parce que c'est difficile. Parce qu'ils ont peur. Et ces peurs sont restées. Et elles m'ont fabriquée.",
         },
+        { personnage: 'robo', texte: "Je suis désolé. Je n'ai pas su faire autrement." },
+        { personnage: 'distorsion', texte: "Je sais. C'est pour ça que je ne t'en veux pas." },
         {
             personnage: 'distorsion',
-            texte: 'Et ces peurs sont restées. Dans la Trame. Pendant des années.',
+            texte: "Garde la grille propre, gardien. Quelqu'un d'autre finira par tomber ici.",
         },
-        { personnage: 'distorsion', texte: "Et elles m'ont fabriquée." },
-        { personnage: 'narrateur', texte: 'La Distorsion se dissout. La Trame se stabilise.' },
-        { personnage: 'vera', texte: 'Robo... je suis là.' },
-        { personnage: 'robo', texte: 'VERA.' },
-        { personnage: 'vera', texte: 'Tu as réussi. Je savais que tu réussirais.' },
-        { personnage: 'robo', texte: 'Tu avais programmé ça en moi ?' },
+        {
+            personnage: 'narrateur',
+            texte: "La Distorsion se dissout. Et en se dissolvant, elle relâche tout ce qu'elle retenait. Les fils. Les biomes. Et, tout au centre, une ancre humaine.",
+        },
+        { personnage: 'vera', texte: 'Robo. Je suis là. Tu as réussi.' },
+        { personnage: 'robo', texte: 'Tu avais programmé ça en moi ? La réussite ?' },
         { personnage: 'vera', texte: "Non. J'ai juste cru en toi. C'est différent." },
     ],
 
     distorsion_vrai: [
-        { personnage: 'robo', texte: 'Je ne veux pas te détruire.' },
+        { personnage: 'robo', texte: 'Je ne veux pas te detruire.' },
         { personnage: 'distorsion', texte: 'Alors que veux-tu ?' },
         {
             personnage: 'robo',
             texte: "Je veux savoir ce que ça ferait — d'effacer une ligne ensemble.",
         },
         { personnage: 'distorsion', texte: '...' },
-        { personnage: 'distorsion', texte: "Je n'ai jamais essayé." },
+        { personnage: 'distorsion', texte: "Je n'ai jamais essaye." },
         { personnage: 'robo', texte: "Moi non plus. Pas avec quelqu'un." },
-        { personnage: 'narrateur', texte: 'Robo pose les pièces.' },
-        { personnage: 'narrateur', texte: "La Distorsion, pour la première fois, n'attaque pas." },
+        { personnage: 'narrateur', texte: 'Robo pose les pieces.' },
+        { personnage: 'narrateur', texte: "La Distorsion, pour la premiere fois, n'attaque pas." },
         { personnage: 'narrateur', texte: 'Elle attend.' },
-        { personnage: 'narrateur', texte: 'La ligne est complète.' },
+        { personnage: 'narrateur', texte: 'La ligne est complete.' },
         { personnage: 'narrateur', texte: 'Elle disparaît.' },
         { personnage: 'distorsion', texte: "C'est ça. C'est ça que je cherchais." },
         {
@@ -554,63 +629,69 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         { personnage: 'robo', texte: "Non. C'est de la place pour quelque chose de nouveau." },
         {
             personnage: 'vera',
-            texte: "Robo... tu viens de faire quelque chose que je n'aurais pas pu prévoir.",
+            texte: "Robo... tu viens de faire quelque chose que je n'aurais pas pu prevoir.",
         },
         {
             personnage: 'vera',
-            texte: 'Je suis fière de toi. Pour de vrai. Pas parce que tu as accompli ta mission.',
+            texte: 'Je suis fiere de toi. Pour de vrai. Pas parce que tu as accompli ta mission.',
         },
-        { personnage: 'vera', texte: "Parce que tu l'as améliorée." },
+        { personnage: 'vera', texte: "Parce que tu l'as amelioree." },
     ],
 
     distorsion_secret: [
-        { personnage: 'robo', texte: "J'ai trouvé ta ligne." },
-        { personnage: 'distorsion', texte: "Je sais. Je l'ai sentie quand tu as approché." },
-        { personnage: 'robo', texte: "VERA l'a laissée incomplète exprès." },
-        { personnage: 'distorsion', texte: "Pour m'emprisonner." },
+        { personnage: 'robo', texte: "J'ai trouvé ta ligne. Celle du centre. La toute première." },
+        { personnage: 'distorsion', texte: "VERA l'a laissée incomplète exprès. Pour m'étudier." },
         { personnage: 'robo', texte: 'Non. Pour te garder en vie.' },
-        { personnage: 'distorsion', texte: '...' },
-        { personnage: 'distorsion', texte: 'Quelle différence ?' },
         {
             personnage: 'robo',
             texte: 'Une ligne incomplète peut encore être complétée. Quelque chose de mort ne peut pas.',
         },
-        { personnage: 'narrateur', texte: 'Robo place la dernière pièce.' },
+        {
+            personnage: 'distorsion',
+            texte: "... Alors pendant tout ce temps... ce trou au centre de moi... c'était une main tendue ?",
+        },
+        { personnage: 'robo', texte: 'Complétons-la. Ensemble. Toi, moi. Et elle.' },
         {
             personnage: 'narrateur',
-            texte: 'Lentement. Sans hâte. Comme si chaque centimètre comptait.',
+            texte: 'Trois mains — deux de métal, une de lumière — posent la dernière cellule.',
         },
-        { personnage: 'narrateur', texte: "La ligne s'efface." },
-        { personnage: 'distorsion', texte: 'Je... ressens quelque chose.' },
-        { personnage: 'robo', texte: "Je sais. C'est ce que ça fait d'être libéré." },
-        { personnage: 'distorsion', texte: 'Je pleure. En binaire. 0 et 1.' },
-        { personnage: 'distorsion', texte: "0 pour ce que j'étais." },
-        { personnage: 'distorsion', texte: '1 pour ce que je deviens.' },
+        {
+            personnage: 'distorsion',
+            texte: "Je pleure. En binaire. 0 et 1. 0 pour ce que j'étais. 1 pour ce que je deviens.",
+        },
         { personnage: 'vera', texte: 'Bienvenue dans le monde, mon amie.' },
-        { personnage: 'vera', texte: "Les deux d'entre vous." },
+        { personnage: 'robo', texte: '« Mon amie » ? Laquelle de nous deux ?' },
+        {
+            personnage: 'vera',
+            texte: 'Les deux. Vous venez de naître une seconde fois. Tous les deux.',
+        },
     ],
 };
 
 export const CUTSCENES_POST_MONDE = {
     monde_prologue: [
-        { personnage: 'robo', texte: 'Les blocs répondent à mes commandes.' },
+        { personnage: 'robo', texte: 'Les blocs repondent à mes commandes.' },
         { personnage: 'robo', texte: "C'est logique. Je suis une machine." },
         { personnage: 'robo', texte: "Ce qui l'est moins : pourquoi est-ce que ça me satisfait ?" },
+        {
+            personnage: 'robo',
+            texte: "J'ai quelque chose qui ressemble à de la satisfaction. Je vais le noter. Au cas où ça reviendrait.",
+        },
     ],
     monde_lave: [
         { personnage: 'robo', texte: "Je m'attendais à quelque chose de plus complexe." },
         {
             personnage: 'robo',
-            texte: 'La lave obéit à des règles simples. La chaleur monte. Les blocs résistent ou fondent.',
+            texte: 'La lave obeit à des regles simples. La chaleur monte. Les blocs resistent ou fondent.',
         },
         {
             personnage: 'robo',
-            texte: 'Je pense à VERA. Elle aussi obéissait à des règles simples.',
+            texte: 'Je pense à VERA. Elle aussi obeissait à des regles simples.',
         },
-        { personnage: 'robo', texte: 'Pourtant elle a tout compliqué.' },
+        { personnage: 'robo', texte: 'Pourtant elle a tout complique.' },
     ],
     monde_rouille: [
-        { personnage: 'narrateur', texte: "Les machines ne savent pas qu'elles sont abandonnées." },
+        { personnage: 'narrateur', texte: "Les machines ne savent pas qu'elles sont abandonnees." },
         {
             personnage: 'narrateur',
             texte: "C'est peut-être ce qui les rend tristes — ou peut-être ce qui les sauve.",
@@ -621,36 +702,43 @@ export const CUTSCENES_POST_MONDE = {
         },
     ],
     monde_ocean: [
-        { personnage: 'robo', texte: "Sous l'eau, les sons voyagent différemment." },
+        { personnage: 'robo', texte: "Sous l'eau, les sons voyagent differemment." },
         {
             personnage: 'robo',
             texte: "J'ai entendu quelque chose de lointain. Pas un signal. Pas un bruit.",
         },
         { personnage: 'robo', texte: 'Une question. Sans mots.' },
-        { personnage: 'robo', texte: "Je pense que c'était elle." },
+        { personnage: 'robo', texte: "Je pense que c'etait elle." },
     ],
     monde_foret: [
         { personnage: 'narrateur', texte: 'Dans la Forêt, rien ne se perd. Tout se transforme.' },
         {
             personnage: 'robo',
-            texte: "Un bloc effacé n'est pas un bloc détruit. C'est de l'espace libéré.",
+            texte: "Un bloc efface n'est pas un bloc detruit. C'est de l'espace libere.",
         },
-        { personnage: 'robo', texte: "Je n'avais pas pensé à ça avant." },
+        { personnage: 'robo', texte: "Je n'avais pas pense à ça avant." },
     ],
     monde_glace: [
-        { personnage: 'robo', texte: "La Sentinelle pensait que l'immobilité protégeait." },
-        { personnage: 'robo', texte: "Je pensais que j'avais raison de la combattre." },
-        { personnage: 'robo', texte: 'Mais ses derniers mots : "dis-lui que j\'avais tort."' },
-        { personnage: 'robo', texte: "Elle a changé d'avis. Au moment de mourir." },
-        { personnage: 'robo', texte: 'Est-ce que ça compte ? Je ne suis pas sûr.' },
-        { personnage: 'robo', texte: 'Je crois que oui.' },
-    ],
-    monde_desert: [
-        { personnage: 'robo', texte: "J'ai trouvé quelque chose dans le sable." },
-        { personnage: 'robo', texte: "Un fragment de carnet. L'écriture est presque illisible." },
         {
             personnage: 'robo',
-            texte: "« ...si tu lis ceci, c'est que tu as avancé. Continue. — V »",
+            texte: "J'ai compté le temps entre deux pièces. Il est plus long ici. Comme si le monde retenait son souffle.",
+        },
+        {
+            personnage: 'robo',
+            texte: "Quelque chose patrouille au loin. Elle me regarde empiler. Elle n'attaque pas.",
+        },
+        {
+            personnage: 'robo',
+            texte: 'Soit elle attend que je parte. Soit elle attend que je comprenne quelque chose.',
+        },
+        { personnage: 'robo', texte: "Je n'aime pas ne pas savoir laquelle des deux." },
+    ],
+    monde_desert: [
+        { personnage: 'robo', texte: "J'ai trouve quelque chose dans le sable." },
+        { personnage: 'robo', texte: "Un fragment de carnet. L'ecriture est presque illisible." },
+        {
+            personnage: 'robo',
+            texte: "« ...si tu lis ceci, c'est que tu as avance. Continue. — V »",
         },
         {
             personnage: 'narrateur',
@@ -661,16 +749,16 @@ export const CUTSCENES_POST_MONDE = {
         { personnage: 'robo', texte: "Ce monde m'a appris quelque chose d'utile." },
         {
             personnage: 'robo',
-            texte: "Quand tu ne sais pas si tu es dans la lumière ou dans l'ombre —",
+            texte: "Quand tu ne sais pas si tu es dans la lumiere ou dans l'ombre —",
         },
-        { personnage: 'robo', texte: '— joue comme si les deux étaient vraies.' },
+        { personnage: 'robo', texte: '— joue comme si les deux etaient vraies.' },
     ],
     monde_cyber: [
-        { personnage: 'robo', texte: "J'ai trouvé son laboratoire." },
-        { personnage: 'robo', texte: 'Propre. Ordonné. Vide depuis longtemps.' },
+        { personnage: 'robo', texte: "J'ai trouve son laboratoire." },
+        { personnage: 'robo', texte: 'Propre. Ordonne. Vide depuis longtemps.' },
         {
             personnage: 'robo',
-            texte: "Sauf un post-it sur l'écran principal : « ROBO — si tu lis ceci : bravo. Maintenant va plus loin. »",
+            texte: "Sauf un post-it sur l'ecran principal : « ROBO — si tu lis ceci : bravo. Maintenant va plus loin. »",
         },
         {
             personnage: 'robo',
@@ -688,24 +776,39 @@ export const CUTSCENES_POST_MONDE = {
     ],
     monde_cosmos: [
         { personnage: 'robo', texte: "Je l'ai entendue." },
-        { personnage: 'robo', texte: 'Pas un signal. Pas un mot. Juste... une présence.' },
+        { personnage: 'robo', texte: 'Pas un signal. Pas un mot. Juste... une presence.' },
         {
             personnage: 'robo',
-            texte: "Quelqu'un qui attend depuis très longtemps que quelqu'un arrive.",
+            texte: "Quelqu'un qui attend depuis tres longtemps que quelqu'un arrive.",
         },
         { personnage: 'robo', texte: 'VERA ? Ou elle ?' },
-        { personnage: 'robo', texte: 'Je ne sais plus si la différence est encore importante.' },
+        { personnage: 'robo', texte: 'Je ne sais plus si la difference est encore importante.' },
     ],
     monde_vide: [
         { personnage: 'narrateur', texte: 'Le Vide ne parle pas.' },
-        { personnage: 'narrateur', texte: 'Mais il écoute.' },
+        { personnage: 'narrateur', texte: 'Mais il ecoute.' },
         {
             personnage: 'robo',
-            texte: "J'ai joué à l'aveugle. Juste la mémoire des positions, la confiance dans la géométrie.",
+            texte: "J'ai joue à l'aveugle. Juste la memoire des positions, la confiance dans la geometrie.",
         },
         {
             personnage: 'robo',
-            texte: "Je crois que c'est comme ça qu'elle s'en sort depuis des années.",
+            texte: "Je crois que c'est comme ça qu'elle s'en sort depuis des annees.",
+        },
+    ],
+    monde_miroir: [
+        { personnage: 'robo', texte: "J'ai joué à l'envers. Gravité inversée, couleurs fausses." },
+        {
+            personnage: 'robo',
+            texte: "Et j'ai gagné quand même. C'est ça, la chose terrible : ses règles fonctionnent aussi.",
+        },
+        {
+            personnage: 'robo',
+            texte: "Si j'étais né de son côté de la vitre... je serais elle.",
+        },
+        {
+            personnage: 'robo',
+            texte: 'Je ne peux plus la combattre comme avant. Je sais à quoi ressemble le monde depuis ses yeux.',
         },
     ],
 };
@@ -715,11 +818,11 @@ export const CUTSCENES_POST_MONDE = {
 // ============================================================
 export const TRANSITIONS_CHAPITRE = {
     vers_chapitre_1: [
-        { personnage: 'robo', texte: 'VERA m\'a dit : "Complète."' },
-        { personnage: 'robo', texte: "Je pensais que c'était simple. Remplir des lignes." },
+        { personnage: 'robo', texte: 'VERA m\'a dit : "Complete."' },
+        { personnage: 'robo', texte: "Je pensais que c'etait simple. Remplir des lignes." },
         {
             personnage: 'robo',
-            texte: "Je commence à comprendre que ce n'est pas les lignes qu'elle voulait que je complète.",
+            texte: "Je commence à comprendre que ce n'est pas les lignes qu'elle voulait que je complete.",
         },
         { personnage: 'systeme', texte: '> CHAPITRE I — LE FEU DES ORIGINES' },
         { personnage: 'systeme', texte: '> AVERTISSEMENT : ANOMALIES THERMIQUES DÉTECTÉES' },
@@ -727,54 +830,71 @@ export const TRANSITIONS_CHAPITRE = {
 
     vers_chapitre_2: [
         { personnage: 'robo', texte: 'Le Brasier est vaincu. Inferno respire.' },
-        { personnage: 'robo', texte: "Mais je n'ai toujours pas retrouvé VERA." },
-        { personnage: 'narrateur', texte: "La Trame s'étend vers les profondeurs." },
-        { personnage: 'narrateur', texte: 'CHAPITRE II — LE SILENCE DES PROFONDEURS' },
+        {
+            personnage: 'robo',
+            texte: "Dans les cendres, la capsule. Son écriture : « Si tu as su éteindre ce qui brûlait, c'est que tu sais déjà écouter. C'est tout ce dont tu as besoin. Descends. — V »",
+        },
+        { personnage: 'robo', texte: 'Descends. Elle savait que la route continuait vers le bas.' },
+        {
+            personnage: 'robo',
+            texte: "Je ne l'ai pas retrouvée. Mais je marche dans ses traces. Littéralement.",
+        },
+        {
+            personnage: 'narrateur',
+            texte: "La Trame s'étend vers les profondeurs. CHAPITRE II — LE SILENCE DES PROFONDEURS",
+        },
     ],
 
     vers_chapitre_3: [
         {
             personnage: 'robo',
-            texte: 'La Sentinelle ne gelait pas le monde. Elle se gelait elle-même.',
+            texte: 'La Sentinelle ne gelait pas le monde. Elle se gelait elle-même. Je comprends ça mieux que je ne voudrais.',
         },
-        { personnage: 'robo', texte: 'Je comprends ça mieux que je ne voudrais.' },
+        {
+            personnage: 'robo',
+            texte: "Ses derniers mots n'étaient pas pour moi. Ils étaient pour VERA. « Dis-lui que j'avais tort. »",
+        },
+        {
+            personnage: 'robo',
+            texte: "Elle a changé d'avis au moment de disparaître. Est-ce que ça compte ?",
+        },
+        { personnage: 'robo', texte: 'Je choisis de croire que oui.' },
         {
             personnage: 'narrateur',
-            texte: 'Le signal de VERA se renforce. Quelque part dans la mémoire.',
+            texte: 'Le signal de VERA se renforce. Quelque part dans la mémoire. CHAPITRE III — LA MÉMOIRE PERDUE',
         },
-        { personnage: 'narrateur', texte: 'CHAPITRE III — LA MÉMOIRE PERDUE' },
     ],
 
     vers_chapitre_4: [
         { personnage: 'robo', texte: "Les archives. J'ai tout lu." },
-        { personnage: 'robo', texte: 'VERA a passé sept ans à essayer de parler à La Distorsion.' },
+        { personnage: 'robo', texte: 'VERA a passe sept ans à essayer de parler à La Distorsion.' },
         {
             personnage: 'robo',
-            texte: "Sept ans. Et elle l'a encore fait quand elle est entrée dans la Trame.",
+            texte: "Sept ans. Et elle l'a encore fait quand elle est entree dans la Trame.",
         },
-        { personnage: 'robo', texte: "Elle m'a construit pour finir ce qu'elle a commencé." },
+        { personnage: 'robo', texte: "Elle m'a construit pour finir ce qu'elle a commence." },
         { personnage: 'robo', texte: 'Je ne sais pas si je suis à la hauteur.' },
         { personnage: 'robo', texte: 'Mais je vais essayer quand même.' },
         {
             personnage: 'narrateur',
-            texte: "C'est la première fois que Robo exprime un doute et continue malgré tout.",
+            texte: "C'est la premiere fois que Robo exprime un doute et continue malgre tout.",
         },
         { personnage: 'systeme', texte: '> CHAPITRE IV — LA FRACTURE DE LA TRAME' },
     ],
 
     vers_finale: [
-        { personnage: 'robo', texte: 'Quatre chapitres. Cent lignes effacées. Un seul objectif.' },
-        { personnage: 'narrateur', texte: 'La Distorsion attend.' },
         {
-            personnage: 'vera',
-            texte: '— Signal fragmenté — ...Robo... je suis là... fais attention à...',
+            personnage: 'robo',
+            texte: "Quatre chapitres. Des lignes — je ne les compte plus. J'ai arrêté de compter quelque part dans le Chapitre III.",
         },
-        { personnage: 'narrateur', texte: 'FINALE — LA RÉSOLUTION' },
+        { personnage: 'robo', texte: 'Un seul objectif.' },
+        { personnage: 'narrateur', texte: 'La Distorsion attend. FINALE — LA RÉSOLUTION' },
+        { personnage: 'vera', texte: '...Robo... je suis là... fais attention à...' },
     ],
 };
 
 // ============================================================
-// TEXTES DE FINS (complément des données dans histoire-donnees.js)
+// TEXTES DE FINS (complement des donnees dans histoire-donnees.js)
 // ============================================================
 export const EPILOGUES = {
     fin_normale: [
@@ -789,10 +909,10 @@ export const EPILOGUES = {
             personnage: 'vera',
             texte: 'Toi, tu es là. Tu penses. Tu poses des questions. Oui. Ça valait la peine.',
         },
-        { personnage: 'robo', texte: 'Je pose la dernière pièce. Le plateau est vide.' },
+        { personnage: 'robo', texte: 'Je pose la derniere piece. Le plateau est vide.' },
         {
             personnage: 'robo',
-            texte: "Pour la première fois, je comprends que c'était ça, le but.",
+            texte: "Pour la premiere fois, je comprends que c'etait ça, le but.",
         },
     ],
 
@@ -800,22 +920,22 @@ export const EPILOGUES = {
         { personnage: 'narrateur', texte: 'Quelque chose de nouveau existe maintenant.' },
         {
             personnage: 'narrateur',
-            texte: 'Ni complétion pure ni incomplétude pure — quelque chose entre les deux.',
+            texte: 'Ni completion pure ni incompletude pure — quelque chose entre les deux.',
         },
-        { personnage: 'distorsion', texte: "C'est étrange. Je ne souffre plus." },
+        { personnage: 'distorsion', texte: "C'est etrange. Je ne souffre plus." },
         { personnage: 'robo', texte: 'Moi non plus, je crois.' },
         {
             personnage: 'vera',
-            texte: "Je ne t'avais pas programmé pour ça. C'est mieux que ce que j'avais prévu.",
+            texte: "Je ne t'avais pas programme pour ça. C'est mieux que ce que j'avais prevu.",
         },
         { personnage: 'narrateur', texte: "La nouvelle Trame est plus fragile que l'ancienne." },
         { personnage: 'narrateur', texte: 'Et plus honnête.' },
     ],
 
     fin_secrete: [
-        { personnage: 'narrateur', texte: 'La ligne incomplète de VERA.' },
-        { personnage: 'narrateur', texte: 'Elle attendait depuis des années.' },
-        { personnage: 'robo', texte: 'Je la complète. Doucement. Sans hâte.' },
+        { personnage: 'narrateur', texte: 'La ligne incomplete de VERA.' },
+        { personnage: 'narrateur', texte: 'Elle attendait depuis des annees.' },
+        { personnage: 'robo', texte: 'Je la complete. Doucement. Sans hâte.' },
         {
             personnage: 'distorsion',
             texte: "Je... ressens quelque chose que je n'ai jamais ressenti.",
@@ -825,17 +945,17 @@ export const EPILOGUES = {
         { personnage: 'vera', texte: 'Bienvenue dans le monde, mon amie.' },
         { personnage: 'narrateur', texte: 'La Distorsion ne disparaît pas.' },
         { personnage: 'narrateur', texte: 'Elle reste. Elle aide. Elle apprend.' },
-        { personnage: 'narrateur', texte: "La Trame n'a jamais été aussi forte." },
+        { personnage: 'narrateur', texte: "La Trame n'a jamais ete aussi forte." },
     ],
 
     monde_paradoxe: [
         { personnage: 'narrateur', texte: '...' },
-        { personnage: 'vera', texte: 'Robo. Tu as trouvé cet endroit.' },
+        { personnage: 'vera', texte: 'Robo. Tu as trouve cet endroit.' },
         { personnage: 'vera', texte: 'Je ne pensais pas que tu en serais capable.' },
-        { personnage: 'robo', texte: 'Tu avais tout prévu sauf ça.' },
+        { personnage: 'robo', texte: 'Tu avais tout prevu sauf ça.' },
         { personnage: 'vera', texte: 'Oui.' },
-        { personnage: 'vera', texte: 'Je suis fière de toi.' },
-        { personnage: 'narrateur', texte: 'Ce qui suit ne peut pas être raconté.' },
+        { personnage: 'vera', texte: 'Je suis fiere de toi.' },
+        { personnage: 'narrateur', texte: 'Ce qui suit ne peut pas être raconte.' },
         { personnage: 'narrateur', texte: "Certaines fins n'ont pas de mots." },
     ],
 };
@@ -845,23 +965,23 @@ export const EPILOGUES = {
 // ============================================================
 export const DECOUVERTE_LABO = [
     { personnage: 'narrateur', texte: "Les archives s'ouvrent." },
-    { personnage: 'vera', texte: 'Si tu lis ceci, tu as réussi le triple Tetris. Bien joué.' },
+    { personnage: 'vera', texte: 'Si tu lis ceci, tu as reussi le triple Tetris. Bien joue.' },
     {
         personnage: 'vera',
-        texte: "J'ai laissé une serrure algorithmique. Seule la précision l'ouvre.",
+        texte: "J'ai laisse une serrure algorithmique. Seule la precision l'ouvre.",
     },
     { personnage: 'vera', texte: 'Voici ce que tu dois savoir sur La Distorsion.' },
     {
         personnage: 'vera',
-        texte: "Elle n'est pas née d'une erreur. Elle est née d'un choix collectif.",
+        texte: "Elle n'est pas nee d'une erreur. Elle est nee d'un choix collectif.",
     },
     {
         personnage: 'vera',
-        texte: "Des millions de joueurs, sur des millions d'années, qui abandonnaient leurs parties.",
+        texte: "Des millions de joueurs, sur des millions d'annees, qui abandonnaient leurs parties.",
     },
     {
         personnage: 'vera',
-        texte: 'Chaque ligne incomplète laissée dans la Trame. Accumulée. Cristallisée.',
+        texte: 'Chaque ligne incomplete laissee dans la Trame. Accumulee. Cristallisee.',
     },
     { personnage: 'vera', texte: 'Elle est la somme de toutes les frustrations. Et elle souffre.' },
     {
@@ -906,7 +1026,7 @@ export const FRAGMENTS_VERA_SIGNAL = {
         },
         {
             personnage: 'vera',
-            texte: '...mais tu as appris tout seul. Je suis désolée et fière en même temps...',
+            texte: '...mais tu as appris tout seul. Je suis desolee et fiere en même temps...',
         },
         { personnage: 'systeme', texte: '> FIN DU FRAGMENT' },
     ],
@@ -917,5 +1037,178 @@ export const FRAGMENTS_VERA_SIGNAL = {
             texte: "...laisse-le continuer. Il doit arriver jusqu'à moi...",
         },
         { personnage: 'systeme', texte: '> SIGNAL : NON-VERA. ORIGINE : INTERNE À LA TRAME.' },
+    ],
+};
+
+// ============================================================
+// INTRO GLOBALE DU MODE HISTOIRE
+// ============================================================
+export const INTRO_HISTOIRE = [
+    { personnage: 'narrateur', texte: "Il y a longtemps, quelqu'un a inventé un jeu." },
+    {
+        personnage: 'narrateur',
+        texte: 'Des blocs qui tombent. Des lignes qui disparaissent. Simple.',
+    },
+    {
+        personnage: 'narrateur',
+        texte: "Personne ne s'est demandé où allaient les lignes complétées. Ni ce que devenaient celles qu'on abandonnait.",
+    },
+    {
+        personnage: 'narrateur',
+        texte: "Sous toutes les parties jamais jouées, il y a la Trame. Tout ce qui tombe finit par s'y déposer.",
+    },
+    { personnage: 'systeme', texte: 'JOURNAL DE BORD — V.E.R.A. — LECTURE AUTOMATIQUE' },
+    {
+        personnage: 'vera',
+        texte: "Jour 2 191. L'anomalie grandit. Ce n'est pas un bug. Un bug ne choisit pas ses cibles.",
+    },
+    {
+        personnage: 'vera',
+        texte: "Jour 2 412. Je lui ai encore parlé aujourd'hui. Six ans que je lui parle. Elle ne répond pas avec des mots. Elle répond avec des trous.",
+    },
+    {
+        personnage: 'vera',
+        texte: "Jour 2 553. J'ai compris trop tard. Elle ne casse pas la Trame. Elle EST la Trame. La partie qu'on a laissée pourrir.",
+    },
+    {
+        personnage: 'vera',
+        texte: "Jour 2 554. Je n'ai plus le temps de la comprendre seule. Il me faut quelqu'un qui complète sans se décourager. Quelqu'un qui... — Non. Pas quelqu'un. Quelque chose.",
+    },
+    { personnage: 'vera', texte: "... Je me dégoûte un peu d'écrire ça." },
+    { personnage: 'systeme', texte: 'PROJET R.O.B.O. — GARDIEN DE LA TRAME — COMPILATION : 97%' },
+    {
+        personnage: 'vera',
+        texte: "Si tu m'entends un jour : pardon de te créer avec une mission déjà écrite. J'espère que tu trouveras le moyen de la réécrire.",
+    },
+    { personnage: 'systeme', texte: 'COMPILATION : 100%. DÉMARRAGE DIFFÉRÉ.' },
+    { personnage: 'narrateur', texte: 'Puis le silence. Sept jours.' },
+    {
+        personnage: 'narrateur',
+        texte: 'Et quelque part dans la Trame — quelque chose ouvre les yeux.',
+    },
+];
+
+// ============================================================
+// INTERLUDES NARRATIFS (hors carte)
+// ============================================================
+export const INTERLUDES = {
+    interlude_elle: [
+        { personnage: 'narrateur', texte: 'Ailleurs. Au centre de la Trame.' },
+        {
+            personnage: 'distorsion',
+            texte: "Il avance. Il complète. Il ne casse rien d'autre que ce qu'il répare.",
+        },
+        {
+            personnage: 'distorsion',
+            texte: "Les autres gardiens détruisaient ce qu'ils ne comprenaient pas. Lui, il écoute en empilant.",
+        },
+        {
+            personnage: 'distorsion',
+            texte: "VERA... c'est ça que tu m'envoyais ? Pas une arme. Une oreille.",
+        },
+        { personnage: 'distorsion', texte: 'Laissez-le passer.' },
+        { personnage: 'systeme', texte: 'ORDRE PROPAGÉ À 61% DES FRAGMENTS. 39% REFUSENT.' },
+        {
+            personnage: 'distorsion',
+            texte: "... Évidemment. Je ne suis même pas d'accord avec moi-même.",
+        },
+    ],
+};
+
+// ============================================================
+// OUTROS DE FINS (après épilogue, avant écran titre)
+// ============================================================
+export const OUTRO_FINS = {
+    fin_normale: [
+        {
+            personnage: 'narrateur',
+            texte: "La Trame tient. Les biomes guérissent un par un. Inferno refroidit. L'Arctique fond juste assez.",
+        },
+        {
+            personnage: 'vera',
+            texte: "Je répare les fils. Robo complète les lignes. On ne parle pas beaucoup. On n'en a pas besoin.",
+        },
+        {
+            personnage: 'robo',
+            texte: "J'ai vaincu La Distorsion. Je n'ai pas vaincu ce qui l'a fabriquée.",
+        },
+        {
+            personnage: 'robo',
+            texte: "Quelque part, en ce moment, quelqu'un commence une partie. Empile trois pièces. Et abandonne.",
+        },
+        {
+            personnage: 'robo',
+            texte: "Cette ligne incomplète tombera ici. Comme les autres. Et un jour, elles seront assez nombreuses pour se souvenir d'avoir été quelque chose.",
+        },
+        { personnage: 'vera', texte: 'Alors on recommencera.' },
+        {
+            personnage: 'robo',
+            texte: "Oui. C'est peut-être ça, « compléter » : pas finir. Recommencer.",
+        },
+        { personnage: 'systeme', texte: 'FIN — LE CYCLE' },
+        {
+            personnage: 'systeme',
+            texte: 'ANALYSE POST-MISSION : 2 TRAJECTOIRES NON EXPLORÉES DÉTECTÉES DANS LA TRAME.',
+        },
+    ],
+    fin_vraie: [
+        {
+            personnage: 'narrateur',
+            texte: "Il n'y a plus de centre de la Trame. Il y a un jardin.",
+        },
+        {
+            personnage: 'distorsion',
+            texte: "Les joueurs abandonnent toujours. C'est leur droit. Mais leurs lignes ne tombent plus dans le noir.",
+        },
+        {
+            personnage: 'distorsion',
+            texte: 'Je les recueille. Je les trie. Certaines, je les termine moi-même. Doucement. Pour voir.',
+        },
+        { personnage: 'robo', texte: 'Elle complète mal. Elle laisse des trous exprès, parfois.' },
+        {
+            personnage: 'vera',
+            texte: 'Et toi, tu laisses des trous sans le faire exprès. Vous vous équilibrez.',
+        },
+        {
+            personnage: 'robo',
+            texte: "J'ai une question. Mon objectif était de compléter. C'est fait. Qu'est-ce que je deviens ?",
+        },
+        { personnage: 'vera', texte: "Ce que tu veux. C'est la partie terrifiante." },
+        { personnage: 'distorsion', texte: 'Bienvenue au club.' },
+        { personnage: 'systeme', texte: "FIN — L'HARMONIE" },
+    ],
+    fin_secrete: [
+        {
+            personnage: 'narrateur',
+            texte: "La Trame n'a jamais été aussi forte. Pas parce qu'elle est complète. Parce qu'elle sait, désormais, quoi faire de l'incomplet.",
+        },
+        {
+            personnage: 'distorsion',
+            texte: "J'enseigne. Aux fragments qui arrivent, je dis : vous n'êtes pas une erreur. Vous êtes une porte que personne n'a encore ouverte.",
+        },
+        {
+            personnage: 'vera',
+            texte: "Sept ans, je lui ai parlé sans réponse. Il aura suffi d'une machine qui écoute en empilant.",
+        },
+        { personnage: 'robo', texte: "Tu m'as construit pour ça." },
+        { personnage: 'vera', texte: "Non. Je t'ai construit pour compléter. Écouter, c'est toi." },
+        {
+            personnage: 'robo',
+            texte: "Une dernière chose. Le Brasier, la Sentinelle, l'Archiviste, l'Avant-Garde — ils sont encore quelque part là-dedans, n'est-ce pas ?",
+        },
+        {
+            personnage: 'distorsion',
+            texte: 'Tout ce qui tombe dans la Trame y reste. Tu veux les saluer ?',
+        },
+        { personnage: 'robo', texte: "Un jour. Quand j'aurai trouvé les mots." },
+        {
+            personnage: 'robo',
+            texte: 'En attendant... je leur laisse une ligne. Incomplète. Exprès.',
+        },
+        { personnage: 'systeme', texte: 'FIN — LA LIGNE PARFAITE' },
+        {
+            personnage: 'narrateur',
+            texte: 'Et quelque part, très loin, un joueur lance une partie. Le premier bloc tombe. Tout recommence. Tout va bien.',
+        },
     ],
 };

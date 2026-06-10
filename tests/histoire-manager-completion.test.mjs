@@ -2,10 +2,18 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { store } from '../js/store-core.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 import { persisterEtatHistoire } from '../js/histoire-etat.js';
-import { SEUILS_COMPLETION, surFinDeMondeHistoire } from '../js/histoire-manager-completion.js';
+import {
+    SEUILS_COMPLETION,
+    surFinDeMondeHistoire,
+    devCompleterMondeHistoire,
+} from '../js/histoire-manager-completion.js';
 
 vi.mock('../js/histoire-manager-ui.js', () => ({
     afficherBoutonCarteGameOver: vi.fn(),
+}));
+
+vi.mock('../js/ui-panneau-objectifs.js', () => ({
+    afficherRecapAvantNarratif: vi.fn((_monde, _etoiles, cb) => cb?.()),
 }));
 
 vi.mock('../js/histoire-narratif.js', () => ({
@@ -46,17 +54,41 @@ describe('histoire-manager-completion', () => {
         expect(store.histoire.etat.mondesCompletes).toContain('monde_prologue');
     });
 
-    it('incrémente les continues si le monde n est pas complété', async () => {
+    it('n incrémente pas les continues sur échec d un monde normal', async () => {
         surFinDeMondeHistoire(3, 400);
         expect(store.histoire.etat.mondesCompletes).not.toContain('monde_prologue');
-        expect(store.histoire.etat.nbContinuesUtilises).toBe(1);
+        expect(store.histoire.etat.nbContinuesUtilises).toBe(0);
+        expect(store.histoire.etat.continuesParBoss?.monde_prologue ?? 0).toBe(0);
         const ui = await import('../js/histoire-manager-ui.js');
         expect(ui.afficherBoutonCarteGameOver).toHaveBeenCalledWith(true);
+    });
+
+    it('incrémente les continues sur échec d un boss', () => {
+        store.histoire.mondeActuel = 'monde_boss_1';
+        store.histoire.boss.vaincu = false;
+        surFinDeMondeHistoire(5, 400);
+        expect(store.histoire.etat.mondesCompletes).not.toContain('monde_boss_1');
+        expect(store.histoire.etat.nbContinuesUtilises).toBe(1);
+        expect(store.histoire.etat.continuesParBoss.monde_boss_1).toBe(1);
+        expect(store.histoire.etat.conditionsTrame.tousBossSansContinue).toBe(false);
     });
 
     it('ignore les fins hors mode histoire', () => {
         store.histoire.actif = false;
         surFinDeMondeHistoire(20, 5000);
         expect(store.histoire.etat.mondesCompletes).toEqual([]);
+    });
+
+    it('devCompleterMondeHistoire valide un monde et retourne le suivant', () => {
+        const { suivant, dejaComplete } = devCompleterMondeHistoire('monde_prologue');
+        expect(dejaComplete).toBe(false);
+        expect(store.histoire.etat.mondesCompletes).toContain('monde_prologue');
+        expect(suivant).toBe('monde_lave');
+    });
+
+    it('devCompleterMondeHistoire enregistre un boss vaincu', () => {
+        devCompleterMondeHistoire('monde_boss_1');
+        expect(store.histoire.etat.mondesCompletes).toContain('monde_boss_1');
+        expect(store.histoire.etat.bossVaincus).toContain('brasier');
     });
 });

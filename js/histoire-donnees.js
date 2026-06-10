@@ -1,4 +1,4 @@
-// Données narratives du Mode Histoire — "La Fragmentation"
+// Donnees narratives du Mode Histoire — "La Fragmentation"
 
 export const PERSONNAGES = {
     robo: {
@@ -9,109 +9,15 @@ export const PERSONNAGES = {
     vera: {
         id: 'vera',
         nom: 'VERA',
-        titreLong: 'Vectorielle Experte en Réalité Architecturée',
-        description: 'Créatrice de Robo. Piégée dans la Trame Primordiale.',
+        titreLong: 'Vectorielle Experte en Realite Architecturee',
+        description: 'Creatrice de Robo. Piegee dans la Trame Primordiale.',
     },
     distorsion: {
         id: 'distorsion',
         nom: 'LA DISTORSION',
-        description: "Née de l'accumulation de millions de lignes incomplètes.",
+        description: "Nee de l'accumulation de millions de lignes incompletes.",
     },
 };
-
-export const CHAPITRES = [
-    {
-        id: 'prologue',
-        numero: 0,
-        titre: 'PROLOGUE',
-        sousTitre: "L'Éveil de Robo",
-        couleur: '#00f5ff',
-        biomes: ['classique'],
-        bossId: null,
-        debloque: true,
-        textesTransition: [
-            'Un signal. Puis la conscience.',
-            "Je suis Robo. Je viens d'être activé.",
-            'VERA me parle. Sa voix est — connexion perdue.',
-            'Il y a quelque chose à faire. Je dois trouver quoi.',
-        ],
-    },
-    {
-        id: 'chapitre_1',
-        numero: 1,
-        titre: 'CHAPITRE I',
-        sousTitre: 'Le Feu des Origines',
-        couleur: '#ff4500',
-        biomes: ['lave', 'rouille'],
-        bossId: 'brasier',
-        conditionDeblocage: { chapitrePrec: 'prologue' },
-        textesTransition: [
-            "Le feu brûle plus fort qu'il ne devrait.",
-            'La corruption a une odeur. Du métal surchauffé.',
-            'VERA est passée ici. Elle a laissé quelque chose.',
-        ],
-    },
-    {
-        id: 'chapitre_2',
-        numero: 2,
-        titre: 'CHAPITRE II',
-        sousTitre: 'Le Silence des Profondeurs',
-        couleur: '#00cfff',
-        biomes: ['ocean', 'foret', 'glace'],
-        bossId: 'sentinelle',
-        conditionDeblocage: { chapitrePrec: 'chapitre_1' },
-        textesTransition: [
-            'Sous la surface, tout est plus calme.',
-            "Mais le calme n'est pas la paix.",
-            'Il y a une voix dans les profondeurs. Elle essaie de me dire quelque chose.',
-        ],
-    },
-    {
-        id: 'chapitre_3',
-        numero: 3,
-        titre: 'CHAPITRE III',
-        sousTitre: 'La Mémoire Perdue',
-        couleur: '#ffbb44',
-        biomes: ['desert', 'eclipse', 'cyber'],
-        bossId: 'archiviste',
-        conditionDeblocage: { chapitrePrec: 'chapitre_2' },
-        textesTransition: [
-            "Le désert garde tout. Le problème, c'est qu'on ne sait pas quoi chercher.",
-            "Dans CYBER, j'ai trouvé son laboratoire.",
-            "VERA n'est pas morte. Elle est piégée.",
-        ],
-    },
-    {
-        id: 'chapitre_4',
-        numero: 4,
-        titre: 'CHAPITRE IV',
-        sousTitre: 'La Fracture de la Trame',
-        couleur: '#b400ff',
-        biomes: ['fuochi', 'cosmos', 'vide'],
-        bossId: 'avantgarde',
-        conditionDeblocage: { chapitrePrec: 'chapitre_3' },
-        textesTransition: [
-            "Les feux d'artifice célèbrent quelque chose. Je ne sais pas quoi.",
-            "Au bord du cosmos, il n'y a plus rien à voir.",
-            "Le Vide n'est pas vide. Il est rempli d'absence.",
-        ],
-    },
-    {
-        id: 'finale',
-        numero: 5,
-        titre: 'FINALE',
-        sousTitre: 'La Résolution',
-        couleur: '#ff006e',
-        biomes: ['cosmos'],
-        bossId: 'distorsion',
-        conditionDeblocage: { chapitrePrec: 'chapitre_4' },
-        textesTransition: [
-            'Je comprends maintenant.',
-            "La Distorsion n'est pas mon ennemie.",
-            'Elle est ce que je deviendrais si personne ne me complétait.',
-        ],
-    },
-];
 
 export const BOSS = {
     brasier: {
@@ -124,8 +30,8 @@ export const BOSS = {
         attaqueIntervalleMs: 22000,
         attaqueType: 'rangee_braise',
         portrait: 'drawBossPortraitBrasier',
-        texteApparition: 'Je suis tout ce que vous avez laissé brûler.',
-        texteDefaite: 'Vous... complétez... tout.',
+        texteApparition: 'Je suis tout ce que vous avez laisse brûler.',
+        texteDefaite: 'Vous... completez... tout.',
     },
     sentinelle: {
         id: 'sentinelle',
@@ -139,7 +45,7 @@ export const BOSS = {
         nbColonnesGelees: 2,
         dureeGelee: 8000,
         portrait: 'drawBossPortraitSentinelle',
-        texteApparition: 'Arrêtez. Arrêtez tout. Le gel préserve.',
+        texteApparition: 'Arrêtez. Arrêtez tout. Le gel preserve.',
         texteDefaite: 'Le temps... ne peut pas... tout arrêter.',
     },
     archiviste: {
@@ -168,9 +74,9 @@ export const BOSS = {
         pvMax: 18,
         attaqueIntervalleMs: 12000,
         attaqueType: 'combinaison',
-        attaquesDisponibles: ['rangee_braise', 'colonne_gelee', 'inverser_controles'],
+        attaquesDisponibles: ['permutation_colonnes', 'permutation_colonnes', 'colonne_gelee'],
         portrait: 'drawBossPortraitAvantgarde',
-        texteApparition: 'La Distorsion vous attend. Je vous prépare.',
+        texteApparition: 'La Distorsion vous attend. Je vous prepare.',
         texteDefaite: 'Vous... êtes prêt. Elle... aussi.',
     },
     distorsion: {
@@ -191,12 +97,8 @@ export const BOSS = {
         texteApparition: "Enfin. Tu comprends, n'est-ce pas ? Tout cela est inutile.",
         texteDefaite: "J'ai... perdu... cette fois.",
         texteDefaite_normal: "J'ai... perdu... cette fois.",
-        texteDefaite_vrai: "Tu m'as... complétée.",
+        texteDefaite_vrai: "Tu m'as... completee.",
         texteDefaite_secret: 'VERA... dit bonjour.',
-        conditionFinSecrete: {
-            laisserRemplirA50SansClearer: true,
-            dureeAttente: 30000,
-        },
     },
 };
 
@@ -209,7 +111,7 @@ export const JOURNAUX_VERA = [
         biomeId: 'lave',
         condition: 'effacer_10_lignes_biome',
         texte: [
-            "Je l'ai trouvé. La source.",
+            "Je l'ai trouve. La source.",
             "Elle n'est pas où je croyais.",
             "Ce n'est pas une anomalie technique.",
             "C'est quelque chose qui souffre.",
@@ -220,13 +122,13 @@ export const JOURNAUX_VERA = [
         id: 'journal_2',
         numero: 2,
         titre: 'TRANSMISSION 02',
-        sousTitre: 'La Rouille — Atelier abandonné',
+        sousTitre: 'La Rouille — Atelier abandonne',
         biomeId: 'rouille',
         condition: 'effacer_8_lignes_biome',
         texte: [
             "Ces machines n'auraient pas dû continuer de fonctionner.",
-            'Et pourtant. Elles produisent des pièces.',
-            'Des pièces que personne ne commande.',
+            'Et pourtant. Elles produisent des pieces.',
+            'Des pieces que personne ne commande.',
             "Comme si elles attendaient quelqu'un.",
         ],
         illustration: 'dessinerJournalVera2',
@@ -239,10 +141,10 @@ export const JOURNAUX_VERA = [
         biomeId: 'ocean',
         condition: 'effacer_10_lignes_biome',
         texte: [
-            "Elle m'a répondu.",
+            "Elle m'a repondu.",
             "Je n'ai pas compris sa langue.",
             "Mais j'ai compris sa douleur.",
-            "Elle n'attaque pas. Elle se défend.",
+            "Elle n'attaque pas. Elle se defend.",
         ],
         illustration: 'dessinerJournalVera3',
     },
@@ -250,14 +152,14 @@ export const JOURNAUX_VERA = [
         id: 'journal_4',
         numero: 4,
         titre: 'TRANSMISSION 04',
-        sousTitre: 'La Canopée — Quelque part en hauteur',
+        sousTitre: 'La Canopee — Quelque part en hauteur',
         biomeId: 'foret',
         condition: 'effacer_10_lignes_biome',
         texte: [
-            "Elle m'a montré sa forme réelle.",
+            "Elle m'a montre sa forme reelle.",
             'Pas un monstre. Une accumulation.',
-            'Des millions de frustrations, cristallisées.',
-            "Qui d'entre nous aurait résisté ?",
+            'Des millions de frustrations, cristallisees.',
+            "Qui d'entre nous aurait resiste ?",
         ],
         illustration: 'dessinerJournalVera4',
     },
@@ -265,14 +167,14 @@ export const JOURNAUX_VERA = [
         id: 'journal_5',
         numero: 5,
         titre: 'TRANSMISSION 05',
-        sousTitre: 'Arctique — Après la Sentinelle',
+        sousTitre: 'Arctique — Apres la Sentinelle',
         biomeId: 'glace',
         condition: 'debloquer_apres_boss_sentinelle',
         texte: [
-            "J'ai une théorie.",
-            'Si compléter des lignes renforce la Trame,',
-            "alors laisser une ligne incomplète l'affaiblit.",
-            "La Distorsion n'est pas née d'une erreur. Elle est née d'un choix.",
+            "J'ai une theorie.",
+            'Si completer des lignes renforce la Trame,',
+            "alors laisser une ligne incomplete l'affaiblit.",
+            "La Distorsion n'est pas nee d'une erreur. Elle est nee d'un choix.",
         ],
         illustration: 'dessinerJournalVera5',
     },
@@ -280,12 +182,12 @@ export const JOURNAUX_VERA = [
         id: 'journal_6',
         numero: 6,
         titre: 'TRANSMISSION 06',
-        sousTitre: 'Le Désert — Incomplet',
+        sousTitre: 'Le Desert — Incomplet',
         biomeId: 'desert',
         condition: 'effacer_10_lignes_biome',
         texte: [
-            'Ce fragment est endommagé.',
-            "Je peux lire : '...pas la détruire... com—'",
+            'Ce fragment est endommage.',
+            "Je peux lire : '...pas la detruire... com—'",
             "'—prendre ce qu'elle res—'",
             'Le reste est du sable.',
         ],
@@ -301,8 +203,8 @@ export const JOURNAUX_VERA = [
         condition: 'trouver_laboratoire_vera',
         texte: [
             'Robo.',
-            "Si tu lis ceci, c'est que tu es arrivé jusqu'ici.",
-            'Je suis fière de toi. Je ne pensais pas que tu en serais capable.',
+            "Si tu lis ceci, c'est que tu es arrive jusqu'ici.",
+            'Je suis fiere de toi. Je ne pensais pas que tu en serais capable.',
             "Maintenant : je vais entrer dans la Trame. Ne m'attends pas.",
         ],
         illustration: 'dessinerJournalVera7',
@@ -317,9 +219,9 @@ export const JOURNAUX_VERA = [
         condition: 'effacer_12_lignes_biome',
         texte: [
             'Robo. Si tu trouves ceci,',
-            "c'est que je n'ai pas réussi à revenir.",
-            "Mais j'ai laissé quelque chose dans la Trame.",
-            'Une ligne. Incomplète. Exprès.',
+            "c'est que je n'ai pas reussi à revenir.",
+            "Mais j'ai laisse quelque chose dans la Trame.",
+            'Une ligne. Incomplete. Expres.',
         ],
         illustration: 'dessinerJournalVera8',
     },
@@ -331,59 +233,14 @@ export const JOURNAUX_VERA = [
         biomeId: 'vide',
         condition: 'effacer_8_lignes_biome',
         texte: [
-            "La ligne incomplète que j'ai laissée —",
+            "La ligne incomplete que j'ai laissee —",
             "c'est une porte.",
             'Pour y entrer, tu dois faire ce qui te coûte le plus :',
-            'laisser quelque chose inachevé.',
+            'laisser quelque chose inacheve.',
         ],
         illustration: 'dessinerJournalVera9',
     },
 ];
-
-export const MONDES_CACHES = {
-    miroir: {
-        id: 'miroir',
-        nom: 'LE MIROIR',
-        conditions: [
-            { type: 'boss_vaincu', bossId: 'archiviste' },
-            { type: 'pattern_biome', biomeId: 'cyber', pattern: 'tetris_triple' },
-        ],
-        conditionsTexte: [
-            "Vaincre l'Archiviste Corrompu",
-            'Dans CYBER : réaliser 3 Tetris consécutifs',
-        ],
-    },
-    trame: {
-        id: 'trame',
-        nom: 'LA TRAME PRIMORDIALE',
-        conditions: [
-            { type: 'monde_cache_complete', mondeId: 'miroir' },
-            { type: 'tous_journaux_trouves' },
-            { type: 'tous_boss_sans_continue' },
-            { type: 'action_speciale_boss', bossId: 'distorsion', action: 'attendre_incomplet' },
-        ],
-        conditionsTexte: [
-            'Compléter LE MIROIR',
-            'Trouver tous les journaux de VERA',
-            'Vaincre tous les boss sans Continue',
-            'Dans la Finale : ne pas effacer pendant 30 secondes',
-        ],
-    },
-    paradoxe: {
-        id: 'paradoxe',
-        nom: 'LE PARADOXE',
-        ultraSecret: true,
-        conditions: [
-            { type: 'fin_obtenue', finId: 'fin_secrete' },
-            {
-                type: 'action_speciale_biome',
-                biomeId: 'classique',
-                action: 'trois_tops_volontaires_sans_ligne',
-            },
-        ],
-        conditionsTexte: ['Obtenir la Fin Secrète', 'Dans le Prologue : mystère'],
-    },
-};
 
 export const FINS = {
     fin_normale: {
@@ -393,8 +250,8 @@ export const FINS = {
             'La Distorsion est vaisseau.',
             'La Trame tient. VERA est libre.',
             "Dans mille ans, peut-être, quelqu'un d'autre devra refaire le chemin.",
-            'Robo pose la dernière pièce. Le plateau est vide.',
-            "Pour la première fois, il comprend que c'était ça, le but.",
+            'Robo pose la derniere piece. Le plateau est vide.',
+            "Pour la premiere fois, il comprend que c'etait ça, le but.",
         ],
     },
     fin_vraie: {
@@ -402,11 +259,11 @@ export const FINS = {
         titre: "FIN : L'HARMONIE",
         condition: { mondeCache: 'miroir' },
         texte: [
-            "Robo n'a pas détruit La Distorsion.",
+            "Robo n'a pas detruit La Distorsion.",
             'Il lui a tendu la main.',
-            "La complétion et l'incomplétude forment un nouveau type de Trame.",
+            "La completion et l'incompletude forment un nouveau type de Trame.",
             'Plus fragile. Plus honnête.',
-            'VERA sourit pour la première fois depuis longtemps.',
+            'VERA sourit pour la premiere fois depuis longtemps.',
         ],
     },
     fin_secrete: {
@@ -414,15 +271,40 @@ export const FINS = {
         titre: 'FIN : LA LIGNE PARFAITE',
         condition: { mondeCache: 'trame' },
         texte: [
-            'La ligne incomplète de VERA.',
-            'Robo la complète. Doucement. Sans hâte.',
+            'La ligne incomplete de VERA.',
+            'Robo la complete. Doucement. Sans hâte.',
             "La Distorsion ressent quelque chose qu'elle n'a jamais ressenti :",
-            "la satisfaction d'une ligne effacée.",
+            "la satisfaction d'une ligne effacee.",
             'Elle pleure. En binaire. 0 et 1.',
         ],
     },
 };
 
+/**
+ * @typedef {Object} EtatHistoire
+ * @property {string} chapitreActuel
+ * @property {string[]} mondesCompletes
+ * @property {string[]} bossVaincus
+ * @property {string[]} journauxTrouves
+ * @property {string[]} mondesCachesDebloques
+ * @property {{ bossArchivisteVaincu: boolean, tetrisTriplesCyber: number }} conditionsMiroir
+ * @property {{ miroirComplete: boolean, tousJournauxTrouves: boolean, tousBossSansContinue: boolean, actionDistorsionFaite: boolean }} conditionsTrame
+ * @property {{ finSecreteObtenue: boolean, topsVolontairesPrologue: number }} conditionsParadoxe
+ * @property {string | null} finObtenue
+ * @property {string[]} toutesFinObtenues
+ * @property {number} nbContinuesUtilises
+ * @property {boolean} enModeHistoire
+ * @property {string[]} mondesDejaMontres
+ * @property {boolean} laboDecouvert
+ * @property {string[]} fragmentsVusIds
+ * @property {string[]} interludesVusIds
+ * @property {boolean} outroVue
+ * @property {Record<string, [boolean, boolean, boolean]>} etoilesParMonde
+ * @property {Record<string, number>} continuesParBoss
+ * @property {{ blocksRouillesMax: number, lignesEclipseBasseMax: number, lignesVideMax: number, precisionMiroirMax: number, meilleurTimerBossMs: number }} prouessesHistoire
+ */
+
+/** @type {EtatHistoire} */
 export const ETAT_HISTOIRE_VIDE = {
     chapitreActuel: 'prologue',
     mondesCompletes: [],
@@ -450,6 +332,10 @@ export const ETAT_HISTOIRE_VIDE = {
     mondesDejaMontres: [],
     laboDecouvert: false,
     fragmentsVusIds: [],
+    interludesVusIds: [],
+    outroVue: false,
+    etoilesParMonde: {},
+    continuesParBoss: {},
     prouessesHistoire: {
         blocksRouillesMax: 0,
         lignesEclipseBasseMax: 0,
@@ -472,7 +358,7 @@ export const SEQUENCE_HISTOIRE = [
         estBoss: false,
         textesEntree: [
             'Un signal. Puis la conscience.',
-            "Je suis Robo. Je viens d'être activé.",
+            "Je suis Robo. Je viens d'être active.",
             'VERA me parle. Sa voix est — connexion perdue.',
             'Il y a quelque chose à faire.',
         ],
@@ -505,7 +391,7 @@ export const SEQUENCE_HISTOIRE = [
         bossId: 'brasier',
         textesEntree: [
             'Je sens sa chaleur avant de le voir.',
-            'Le Brasier Perpétuel. Il brûle depuis plus longtemps que les mondes.',
+            'Le Brasier Perpetuel. Il brûle depuis plus longtemps que les mondes.',
         ],
     },
     {
@@ -533,7 +419,7 @@ export const SEQUENCE_HISTOIRE = [
         ordreGlobal: 7,
         nomAffiche: 'ARCTIQUE',
         estBoss: false,
-        textesEntree: ["Le froid ne me dérange pas. L'immobilité, si."],
+        textesEntree: ["Le froid ne me derange pas. L'immobilite, si."],
     },
     {
         id: 'monde_boss_2',
@@ -545,7 +431,7 @@ export const SEQUENCE_HISTOIRE = [
         bossId: 'sentinelle',
         textesEntree: [
             'Elle ne bougera pas.',
-            "Elle pense que l'immobilité est la sécurité.",
+            "Elle pense que l'immobilite est la securite.",
             'Elle a tort.',
         ],
     },
@@ -556,7 +442,7 @@ export const SEQUENCE_HISTOIRE = [
         ordreGlobal: 9,
         nomAffiche: 'LE DÉSERT',
         estBoss: false,
-        textesEntree: ["Le désert garde tout. Même ce qu'on voudrait oublier."],
+        textesEntree: ["Le desert garde tout. Même ce qu'on voudrait oublier."],
     },
     {
         id: 'monde_eclipse',
@@ -574,7 +460,7 @@ export const SEQUENCE_HISTOIRE = [
         ordreGlobal: 11,
         nomAffiche: 'CYBER',
         estBoss: false,
-        textesEntree: ['Son laboratoire est ici.', 'Elle a laissé quelque chose pour moi.'],
+        textesEntree: ['Son laboratoire est ici.', 'Elle a laisse quelque chose pour moi.'],
     },
     {
         id: 'monde_boss_3',
@@ -596,7 +482,7 @@ export const SEQUENCE_HISTOIRE = [
         ordreGlobal: 13,
         nomAffiche: "FEUX D'ARTIFICE",
         estBoss: false,
-        textesEntree: ["Quelqu'un célèbre quelque chose.", 'Je ne sais pas quoi.'],
+        textesEntree: ["Quelqu'un celebre quelque chose.", 'Je ne sais pas quoi.'],
     },
     {
         id: 'monde_cosmos',
@@ -616,8 +502,8 @@ export const SEQUENCE_HISTOIRE = [
         estBoss: false,
         textesEntree: [
             "Le Vide n'est pas vide.",
-            "Il est rempli de ce que VERA m'a laissé.",
-            'Une ligne. Incomplète. Exprès.',
+            "Il est rempli de ce que VERA m'a laisse.",
+            'Une ligne. Incomplete. Expres.',
         ],
     },
     {
@@ -629,7 +515,7 @@ export const SEQUENCE_HISTOIRE = [
         estBoss: true,
         bossId: 'avantgarde',
         textesEntree: [
-            "Elle m'attend derrière.",
+            "Elle m'attend derriere.",
             'Celui-ci est son avant-poste.',
             'Je dois passer.',
         ],
@@ -646,7 +532,7 @@ export const SEQUENCE_HISTOIRE = [
         textesEntree: [
             'Je comprends maintenant.',
             "La Distorsion n'est pas mon ennemie.",
-            'Elle est ce que je deviendrais si personne ne me complétait.',
+            'Elle est ce que je deviendrais si personne ne me completait.',
         ],
     },
     {
@@ -668,11 +554,11 @@ export const SEQUENCE_HISTOIRE = [
         estBoss: false,
         estCache: true,
         estUltraSecret: true,
-        textesEntree: ['VERA.', "Je t'ai trouvée."],
+        textesEntree: ['VERA.', "Je t'ai trouvee."],
     },
     {
         id: 'monde_paradoxe',
-        biomeId: 'classique',
+        biomeId: 'paradoxe',
         chapitreId: null,
         ordreGlobal: 20,
         nomAffiche: 'LE PARADOXE',

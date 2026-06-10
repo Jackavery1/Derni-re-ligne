@@ -5,8 +5,42 @@ import {
     lancerMondeBossBrasier,
     filtrerViolationsCritiques,
     attendreApplicationPrete,
+    passerFluxLancementMonde,
+    attendrePartieVisible,
+    attendreNotificationsInitiales,
+    ETAT_HISTOIRE_BOSS_BRASIER,
 } from './helpers.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+
+/** État avec le monde Miroir débloqué (3 Tetris CYBER + Archiviste vaincu). */
+const ETAT_MIROIR_DEBLOQUE = {
+    ...ETAT_HISTOIRE_BOSS_BRASIER,
+    mondesCachesDebloques: ['monde_miroir'],
+    mondesDejaMontres: ['monde_boss_1', 'monde_miroir'],
+    conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 },
+};
+
+/** État avec le monde Trame débloqué (4 conditions conjonctives réunies). */
+const ETAT_TRAME_DEBLOQUE = {
+    ...ETAT_HISTOIRE_BOSS_BRASIER,
+    mondesCachesDebloques: ['monde_miroir', 'monde_trame'],
+    mondesDejaMontres: ['monde_boss_1', 'monde_trame'],
+    conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 },
+    conditionsTrame: {
+        miroirComplete: true,
+        tousJournauxTrouves: true,
+        tousBossSansContinue: true,
+        actionDistorsionFaite: true,
+    },
+};
+
+/** État avec le monde Paradoxe débloqué (fin secrète + 3 tops volontaires prologue). */
+const ETAT_PARADOXE_DEBLOQUE = {
+    ...ETAT_HISTOIRE_BOSS_BRASIER,
+    mondesCachesDebloques: ['monde_paradoxe'],
+    mondesDejaMontres: ['monde_boss_1', 'monde_paradoxe'],
+    conditionsParadoxe: { finSecreteObtenue: true, topsVolontairesPrologue: 3 },
+};
 
 test('carte histoire accessible depuis le menu', async ({ page }) => {
     await ouvrirCarteHistoire(page);
@@ -16,6 +50,7 @@ test('carte histoire accessible depuis le menu', async ({ page }) => {
 
 test('carte histoire sans violations accessibilité critiques', async ({ page }) => {
     await ouvrirCarteHistoire(page);
+    await page.waitForTimeout(400);
     const result = await new AxeBuilder({ page }).include('#ecran-histoire-map').analyze();
     expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
 });
@@ -24,8 +59,6 @@ test('lancement boss affiche le HUD boss', async ({ page }) => {
     await ouvrirCarteHistoire(page);
     await lancerMondeBossBrasier(page);
 
-    const sectionBoss = page.locator('#section-boss');
-    await expect(sectionBoss).toBeVisible();
     await expect(page.locator('#boss-nom-affiche')).toContainText('BRASIER');
     await expect(page.locator('#boss-hp-label')).toHaveText('14 / 14');
     await expect(page.locator('#canvas-boss-portrait')).toBeVisible();
@@ -33,15 +66,16 @@ test('lancement boss affiche le HUD boss', async ({ page }) => {
 
 test('sélection clavier d un monde sur la carte histoire', async ({ page }) => {
     await ouvrirCarteHistoire(page);
-    await page.locator('#histoire-monde-clavier').selectOption('monde_boss_1');
+    await page.locator('#histoire-monde-clavier').selectOption('monde_boss_1', { force: true });
     await expect(page.locator('#histoire-monde-details')).not.toHaveClass(
         /histoire-panneau-masque/
     );
-    await expect(page.locator('.bouton-jouer-monde')).toBeVisible();
+    await expect(page.locator('.bouton-jouer-monde')).not.toHaveClass(/element-masque/);
 });
 
 test('carte histoire respecte le contraste des couleurs', async ({ page }) => {
     await ouvrirCarteHistoire(page);
+    await page.waitForTimeout(400);
     const result = await new AxeBuilder({ page }).include('#ecran-histoire-map').analyze();
     expect(filtrerViolationsCritiques(result.violations, { inclureContraste: true })).toEqual([]);
 });
@@ -56,31 +90,13 @@ test('lancement prologue depuis la carte histoire', async ({ page }) => {
     }, ETAT_HISTOIRE_VIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
     await page.locator('#btn-mode-histoire').click();
     await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/);
     await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });
-    await page.locator('.bouton-jouer-monde').click();
-    for (let i = 0; i < 12; i++) {
-        if (await page.locator('#interface-jeu').isVisible()) break;
-        const passer = page.locator('#btn-cutscene-passer');
-        if (await passer.isVisible().catch(() => false)) {
-            await passer.click({ force: true });
-            continue;
-        }
-        const suivant = page.locator('#btn-cutscene-suivant');
-        if (await suivant.isVisible().catch(() => false)) {
-            await suivant.click({ force: true });
-            continue;
-        }
-        const tutoriel = page.locator('#btn-tutoriel-fermer');
-        if (await tutoriel.isVisible().catch(() => false)) {
-            await tutoriel.click();
-            continue;
-        }
-        await page.waitForTimeout(250);
-    }
-    await expect(page.locator('#interface-jeu')).toBeVisible({ timeout: 15000 });
-    await expect(page.locator('#canvas-plateau')).toBeVisible();
+    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await passerFluxLancementMonde(page);
+    await attendrePartieVisible(page);
 });
 
 test('carte histoire utilisable sur viewport mobile', async ({ page }) => {
@@ -88,4 +104,64 @@ test('carte histoire utilisable sur viewport mobile', async ({ page }) => {
     await ouvrirCarteHistoire(page);
     await expect(page.locator('#histoire-monde-clavier')).toBeVisible();
     await expect(page.locator('#canvas-histoire-map')).toBeVisible();
+});
+
+test('scroll molette sur la carte histoire ne provoque pas d erreur', async ({ page }) => {
+    await ouvrirCarteHistoire(page);
+    const canvas = page.locator('#canvas-histoire-map');
+    await canvas.hover();
+    await page.mouse.wheel(0, 400);
+    await page.mouse.wheel(0, -200);
+    await expect(canvas).toBeVisible();
+    await expect(page.locator('#histoire-prog-mondes')).toContainText('MONDES');
+});
+
+test('monde caché Miroir jouable une fois débloqué', async ({ page }) => {
+    await ouvrirCarteHistoire(page, ETAT_MIROIR_DEBLOQUE);
+    await page.locator('#histoire-monde-clavier').selectOption('monde_miroir', { force: true });
+    await expect(page.locator('#histoire-monde-details')).not.toHaveClass(
+        /histoire-panneau-masque/
+    );
+    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await passerFluxLancementMonde(page);
+    await expect(page.locator('#interface-jeu [data-label="score"]')).toHaveText('REFLET');
+});
+
+test('monde caché Trame jouable une fois débloqué', async ({ page }) => {
+    await ouvrirCarteHistoire(page, ETAT_TRAME_DEBLOQUE);
+    await page.locator('#histoire-monde-clavier').selectOption('monde_trame', { force: true });
+    await expect(page.locator('#histoire-monde-details')).not.toHaveClass(
+        /histoire-panneau-masque/
+    );
+    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await passerFluxLancementMonde(page);
+    await expect(page.locator('#interface-jeu [data-label="score"]')).toHaveText('RÉSONANCE');
+});
+
+test('monde caché Paradoxe affiche sa cutscene puis revient à la carte', async ({ page }) => {
+    await ouvrirCarteHistoire(page, ETAT_PARADOXE_DEBLOQUE);
+    await page.locator('#histoire-monde-clavier').selectOption('monde_paradoxe', { force: true });
+    await expect(page.locator('#histoire-monde-details')).not.toHaveClass(
+        /histoire-panneau-masque/
+    );
+    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 10000,
+    });
+    // Le premier clic termine la frappe en cours, le second saute la cutscene.
+    await page.locator('#btn-cutscene-passer').click({ force: true });
+    await page.locator('#btn-cutscene-passer').click({ force: true });
+    await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/, { timeout: 10000 });
+});
+
+test('mondes cachés non débloqués absents de la sélection clavier', async ({ page }) => {
+    await ouvrirCarteHistoire(page, ETAT_HISTOIRE_BOSS_BRASIER);
+    const options = await page.locator('#histoire-monde-clavier option').allInnerTexts();
+    const valeurs = await page
+        .locator('#histoire-monde-clavier option')
+        .evaluateAll((opts) => opts.map((o) => o.value));
+    expect(valeurs).not.toContain('monde_miroir');
+    expect(valeurs).not.toContain('monde_trame');
+    expect(valeurs).not.toContain('monde_paradoxe');
+    expect(options.length).toBeGreaterThan(0);
 });

@@ -11,7 +11,7 @@ function _obtenirEtatHistoire() {
 }
 
 export function executerFin(finId) {
-    logger.info('[fins] exécution fin :', finId);
+    logger.info('[fins] execution fin :', finId);
 
     const etatHist = _obtenirEtatHistoire();
     etatHist.finObtenue = finId;
@@ -184,10 +184,10 @@ export function reinitialiserHistoirePourReplay() {
     const topsC3 = etatHist.conditionsParadoxe.topsVolontairesPrologue ?? 0;
     const toutesFins = etatHist.toutesFinObtenues ?? [];
 
-    const nouvelEtat = {
-        ...ETAT_HISTOIRE_VIDE,
+    const nouvelEtat = structuredClone(ETAT_HISTOIRE_VIDE);
+    Object.assign(nouvelEtat, {
         conditionsTrame: {
-            ...ETAT_HISTOIRE_VIDE.conditionsTrame,
+            ...nouvelEtat.conditionsTrame,
             miroirComplete: miroirDebloque,
         },
         conditionsParadoxe: {
@@ -196,7 +196,7 @@ export function reinitialiserHistoirePourReplay() {
         },
         toutesFinObtenues: toutesFins,
         enModeHistoire: true,
-    };
+    });
 
     if (miroirDebloque) {
         nouvelEtat.conditionsMiroir.bossArchivisteVaincu = true;
@@ -207,5 +207,5 @@ export function reinitialiserHistoirePourReplay() {
     }
 
     persisterEtatHistoire(nouvelEtat);
-    logger.info('[fins] histoire réinitialisée pour replay');
+    logger.info('[fins] histoire reinitialisee pour replay');
 }

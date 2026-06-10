@@ -1,6 +1,6 @@
 import { coop, modeCoopActif } from './coop-logique.js';
 
-/** Préférence coop activée sur l'écran sélection (avant lancement). */
+/** Preference coop activee sur l'ecran selection (avant lancement). */
 export function coopEstPrefere() {
     return modeCoopActif;
 }

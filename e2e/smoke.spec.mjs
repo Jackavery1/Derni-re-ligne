@@ -7,6 +7,7 @@ import {
     filtrerViolationsCritiques,
     preparerPageSansSw,
     attendreApplicationPrete,
+    attendreNotificationsInitiales,
 } from './helpers.mjs';
 
 test('aucune bannière erreur au démarrage', async ({ page }) => {
@@ -21,6 +22,7 @@ test('écran titre et navigation vers la sélection', async ({ page }) => {
         timeout: 15000,
     });
     await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
+    await attendreNotificationsInitiales(page);
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await expect(page.locator('#canvas-constellation')).toBeVisible();

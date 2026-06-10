@@ -34,6 +34,7 @@ import {
     estPositionValide,
     calculerDistanceChute,
     creerPieceRelique,
+    creerPlateau,
     genererProchainePiece,
     activerReliqueSurPiece,
     reinitialiserLockDelay,
@@ -64,6 +65,13 @@ import {
     enregistrerTimestampCellules,
     actionMiroir,
 } from './mecaniques-histoire.js';
+import { store } from './store-core.js';
+import {
+    vitesseHistoireMs,
+    enregistrerPosePiece,
+    estMondeZenActif,
+    enregistrerTopOut,
+} from './gestionnaire-difficulte.js';
 
 function produireProchainePieceApresShift() {
     if (obtenirReliqueEnAttente()) {
@@ -76,6 +84,7 @@ function produireProchainePieceApresShift() {
 }
 
 export function verrouillerPiece() {
+    if (!etat.pieceActuelle) return;
     if (meteo.decalageForce !== 0) {
         if (estPositionValide(etat.pieceActuelle, meteo.decalageForce, 0)) {
             etat.pieceActuelle.x += meteo.decalageForce;
@@ -102,9 +111,28 @@ export function verrouillerPiece() {
     );
 
     if (gameOver) {
+        if (store.histoire.actif && estMondeZenActif()) {
+            enregistrerTopOut();
+            etat.plateau = creerPlateau();
+            etat.pieceActuelle = genererProchainePiece();
+            activerReliqueSurPiece(etat.pieceActuelle);
+            etat.filePieces = [
+                genererProchainePiece(),
+                genererProchainePiece(),
+                genererProchainePiece(),
+            ];
+            etat.reserveUtilisee = false;
+            definirPieceAuSol(false);
+            emettre('partie:nouvelle-piece');
+            signalerApparitionPiece();
+            annoncerPieceCourante();
+            return;
+        }
         obtenirActions().terminerPartie?.();
         return;
     }
+
+    enregistrerPosePiece();
 
     vivant_recompenserActivite();
 
@@ -145,7 +173,16 @@ export function verrouillerPiece() {
     annoncerPieceCourante();
     declencherCalculOracle();
 
-    if (!estPositionValide(etat.pieceActuelle)) obtenirActions().terminerPartie?.();
+    if (!estPositionValide(etat.pieceActuelle)) {
+        if (store.histoire.actif && estMondeZenActif()) {
+            enregistrerTopOut();
+            etat.plateau = creerPlateau();
+            etat.pieceActuelle = genererProchainePiece();
+            activerReliqueSurPiece(etat.pieceActuelle);
+            return;
+        }
+        obtenirActions().terminerPartie?.();
+    }
 }
 
 function supprimerLignesCompletes() {
@@ -315,6 +352,11 @@ export function tourner(sens) {
     }
 }
 
+/** Copie profonde de la forme relique : evite le partage de reference entre hold et piece active. */
+function copierReliqueForme(forme) {
+    return Array.isArray(forme) ? forme.map((ligne) => [...ligne]) : forme;
+}
+
 export function utiliserReserve() {
     if (!jouable()) return;
     if (etat.reserveUtilisee) return;
@@ -325,7 +367,7 @@ export function utiliserReserve() {
         etat.pieceEnReserve = {
             type: typeActuel,
             rotation: 0,
-            reliqueForme: etat.pieceActuelle.reliqueForme,
+            reliqueForme: copierReliqueForme(etat.pieceActuelle.reliqueForme),
             reliqueData: etat.pieceActuelle.reliqueData,
         };
         etat.pieceActuelle = etat.filePieces.shift();
@@ -338,7 +380,7 @@ export function utiliserReserve() {
         etat.pieceEnReserve = {
             type: typeActuel,
             rotation: 0,
-            reliqueForme: etat.pieceActuelle.reliqueForme,
+            reliqueForme: copierReliqueForme(etat.pieceActuelle.reliqueForme),
             reliqueData: etat.pieceActuelle.reliqueData,
         };
         etat.pieceActuelle = {
@@ -367,9 +409,12 @@ export function utiliserReserve() {
 }
 
 export function vitesseChute() {
+    if (store.histoire?.actif) {
+        return obtenirVitesseChuteModifiee(vitesseHistoireMs());
+    }
     const base = Math.max(
         CONFIG.vitesseBase - (etat.niveau - 1) * CONFIG.reductionParNiveau,
         CONFIG.vitesseMin
     );
-    return obtenirVitesseChuteModifiee(base);
+    return obtenirVitesseChuteModifiee(base * (meteo.facteurVitesse ?? 1));
 }
