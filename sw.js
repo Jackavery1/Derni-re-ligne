@@ -1,4 +1,4 @@
-const VERSION_CACHE = 'derniere-ligne-2.5.6-r2';
+const VERSION_CACHE = 'derniere-ligne-2.5.7-r2';
 
 const FICHIERS_A_CACHER = [
     './',
@@ -50,6 +50,7 @@ const FICHIERS_A_CACHER = [
     './js/biomes-histoire.js',
     './js/biomes.js',
     './js/boss-attaques.js',
+    './js/boss-dialogues.js',
     './js/boss-jeu.js',
     './js/boss-rendu.js',
     './js/boucle-jeu.js',
@@ -174,6 +175,7 @@ const FICHIERS_A_CACHER = [
     './js/store-histoire.js',
     './js/store-jeu.js',
     './js/store-refs-canvas.js',
+    './js/texte-jeu.js',
     './js/themes-biome.js',
     './js/tutoriel.js',
     './js/types.js',

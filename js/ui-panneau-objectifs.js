@@ -8,6 +8,7 @@ import { obtenirEtatHistoire } from './histoire-mondes.js';
 import { ecouter } from './bus-jeu.js';
 import { DIFFICULTE_MONDES } from '../data/difficulte-mondes.js';
 import { logger } from './logger.js';
+import { sansAccentsE } from './texte-jeu.js';
 import {
     demarrerSuiviMonde,
     obtenirEtoilesPersistees,
@@ -56,7 +57,7 @@ function _afficher(id) {
 
 function _texte(id, txt) {
     const el = _el(id);
-    if (el) el.textContent = txt;
+    if (el) el.textContent = sansAccentsE(txt);
 }
 
 function _ancrerOverlaysAuBody() {
@@ -89,7 +90,7 @@ function _majEtoileSlot(id, obtenue, cachee, libelle) {
     el.classList.toggle('objectif-etoile-obtenue', obtenue);
     el.classList.toggle('objectif-etoile-cachee', cachee && !obtenue);
     const lbl = el.querySelector('.objectif-etoile-libelle');
-    if (lbl) lbl.textContent = cachee && !obtenue ? '???' : libelle;
+    if (lbl) lbl.textContent = sansAccentsE(cachee && !obtenue ? '???' : libelle);
 }
 
 /** @param {MondeHistoire} monde */

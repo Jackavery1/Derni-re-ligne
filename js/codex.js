@@ -3,6 +3,7 @@ import { lireStockageJson, ecrireStockageJson, estTableauIds } from './progressi
 import { creerFileNotifications } from './notifications-file.js';
 import { obtenirCanvas } from './dom-utils.js';
 import { logger } from './logger.js';
+import { sansAccentsE } from './texte-jeu.js';
 
 const CLE_CODEX = 'derniereLigne_codex';
 const CLE_CODEX_VUS = 'derniereLigne_codexVus';
@@ -41,8 +42,8 @@ const fileCodexNotifs = creerFileNotifications({
         const titre = document.getElementById('codex-notif-titre');
         const chapitre = document.getElementById('codex-notif-chapitre');
         if (icone) icone.textContent = entree.icone;
-        if (titre) titre.textContent = entree.titre;
-        if (chapitre) chapitre.textContent = entree.chapitre.toUpperCase();
+        if (titre) titre.textContent = sansAccentsE(entree.titre);
+        if (chapitre) chapitre.textContent = sansAccentsE(entree.chapitre.toUpperCase());
         notif.classList.add('visible');
         setTimeout(() => {
             notif.classList.remove('visible');
@@ -130,11 +131,11 @@ export async function genererListeCodex(chapitre) {
 
         const titreEl = document.createElement('div');
         titreEl.className = 'codex-item-titre';
-        titreEl.textContent = debloque ? entree.titre : '???';
+        titreEl.textContent = sansAccentsE(debloque ? entree.titre : '???');
 
         const condEl = document.createElement('div');
         condEl.className = 'codex-item-cond';
-        condEl.textContent = debloque ? '' : entree.conditionTexte;
+        condEl.textContent = sansAccentsE(debloque ? '' : entree.conditionTexte);
 
         item.append(iconeEl, titreEl, condEl);
 
@@ -166,14 +167,14 @@ export function ouvrirEntreeCodex(entree) {
     const texteEl = document.getElementById('codex-entree-texte');
 
     if (iconeEl) iconeEl.textContent = entree.icone;
-    if (titreEl) titreEl.textContent = entree.titre;
-    if (sousTitreEl) sousTitreEl.textContent = entree.sousTitre;
+    if (titreEl) titreEl.textContent = sansAccentsE(entree.titre);
+    if (sousTitreEl) sousTitreEl.textContent = sansAccentsE(entree.sousTitre);
     if (texteEl) {
         texteEl.textContent = '';
         entree.texte.forEach((p) => {
             const para = document.createElement('div');
             para.className = 'codex-para';
-            para.textContent = p;
+            para.textContent = sansAccentsE(p);
             texteEl.appendChild(para);
         });
     }

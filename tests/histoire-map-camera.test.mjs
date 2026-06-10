@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { appliquerTransformCamera, ecranVersMonde } from '../js/histoire-map-camera.js';
+import {
+    appliquerTransformCamera,
+    ecranVersMonde,
+    mondeVersEcran,
+} from '../js/histoire-map-camera.js';
 
 describe('histoire-map-camera', () => {
     const cam = { y: 120, zoom: 1.6 };
@@ -20,6 +24,19 @@ describe('histoire-map-camera', () => {
         const zoom1 = ecranVersMonde({ y: 0, zoom: 1 }, 800, 300, 800, 600);
         const zoom2 = ecranVersMonde({ y: 0, zoom: 2 }, 800, 300, 800, 600);
         expect(zoom2.mx - 400).toBeLessThan(zoom1.mx - 400);
+    });
+
+    it('mondeVersEcran : x monde proche du bord sort de l ecran avec zoom', () => {
+        const { sx } = mondeVersEcran(cam, 12, 200, 800, 600);
+        expect(sx).toBeLessThan(0);
+    });
+
+    it('mondeVersEcran et ecranVersMonde sont inverses', () => {
+        const monde = { mx: 120, my: 480 };
+        const { sx, sy } = mondeVersEcran(cam, monde.mx, monde.my, 800, 600);
+        const retour = ecranVersMonde(cam, sx, sy, 800, 600);
+        expect(retour.mx).toBeCloseTo(monde.mx, 4);
+        expect(retour.my).toBeCloseTo(monde.my, 4);
     });
 
     it('appliquerTransformCamera ne lance pas d erreur', () => {

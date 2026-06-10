@@ -85,7 +85,7 @@ export function confirmerRecommencer() {
     if (window.confirm('Recommencer la partie ?')) demarrerJeu();
 }
 
-export function quitterVersMenu() {
+function _arreterPartieEnCours() {
     arreterFondBiome();
     arreterLectureMelodie();
     annulerTimersVivant();
@@ -97,9 +97,19 @@ export function quitterVersMenu() {
     arreterMecaniquesHistoire();
     AudioMoteur.arreterMusique();
     reinitialiserMascottePartie();
-    retournerAuMenuTitre();
     const btnPause = document.getElementById('btn-pause');
     if (btnPause) btnPause.textContent = '⏸ PAUSE';
+}
+
+export function quitterVersMenu() {
+    _arreterPartieEnCours();
+    retournerAuMenuTitre();
+}
+
+export function quitterVersCarteHistoire() {
+    if (!modeHistoireEnCours()) return;
+    _arreterPartieEnCours();
+    void import('./histoire-manager.js').then(({ retournerACarte }) => retournerACarte());
 }
 
 function initialiserFeaturesPartie() {

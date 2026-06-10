@@ -1,6 +1,7 @@
 import { obtenirHistoireTextesSync } from './charger-histoire-textes.js';
 import { ILLUSTRATIONS_JOURNAUX } from './histoire-illustrations.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
+import { logger } from './logger.js';
 
 function _obtenirEtatHistoireLocal() {
     return obtenirEtatHistoirePersiste();
@@ -48,13 +49,15 @@ export function afficherVictoireBoss(bossId, typeFin = 'normal', onFin) {
         onFin?.();
         return;
     }
-    void _importerUi().then(({ afficherCutsceneHistoire }) => {
-        afficherCutsceneHistoire(
-            _formaterLignes(lignesRaw),
-            _extrairePersonnages(lignesRaw),
-            onFin
-        );
-    });
+    void _importerUi()
+        .then(({ afficherCutsceneHistoire }) => {
+            afficherCutsceneHistoire(
+                _formaterLignes(lignesRaw),
+                _extrairePersonnages(lignesRaw),
+                onFin
+            );
+        })
+        .catch(() => onFin?.());
 }
 
 export function afficherTransitionChapitre(cleChapitre, onFin) {
@@ -77,8 +80,10 @@ export function afficherJournalVera(journalData, onFermer) {
         onFermer?.();
         return;
     }
+    const dialogues = _textes().JOURNAUX_VERA_DIALOGUES?.[journalData.id];
     const journalEnrichi = {
         ...journalData,
+        texte: dialogues ?? journalData.texte,
         _illustrerFn: ILLUSTRATIONS_JOURNAUX[journalData.id] ?? null,
     };
     void _importerUi().then(({ afficherJournalHistoire }) => {
@@ -93,14 +98,24 @@ export function declencherFin(finId) {
             void import('./fins-histoire.js').then(({ executerFin }) => executerFin(finId));
             return;
         }
-        void _importerUi().then(({ afficherCutsceneHistoire }) => {
-            afficherCutsceneHistoire(_formaterLignes(outro), _extrairePersonnages(outro), () => {
-                const etatHist = _obtenirEtatHistoireLocal();
-                etatHist.outroVue = true;
-                persisterEtatHistoire(etatHist);
+        void _importerUi()
+            .then(({ afficherCutsceneHistoire }) => {
+                afficherCutsceneHistoire(
+                    _formaterLignes(outro),
+                    _extrairePersonnages(outro),
+                    () => {
+                        const etatHist = _obtenirEtatHistoireLocal();
+                        etatHist.outroVue = true;
+                        persisterEtatHistoire(etatHist);
+                        void import('./fins-histoire.js').then(({ executerFin }) =>
+                            executerFin(finId)
+                        );
+                    }
+                );
+            })
+            .catch(() => {
                 void import('./fins-histoire.js').then(({ executerFin }) => executerFin(finId));
             });
-        });
     };
 
     const epilogue = _textes().EPILOGUES[finId] ?? [];
@@ -108,13 +123,18 @@ export function declencherFin(finId) {
         jouerOutroPuisFin();
         return;
     }
-    void _importerUi().then(({ afficherCutsceneHistoire }) => {
-        afficherCutsceneHistoire(
-            _formaterLignes(epilogue),
-            _extrairePersonnages(epilogue),
-            jouerOutroPuisFin
-        );
-    });
+    void _importerUi()
+        .then(({ afficherCutsceneHistoire }) => {
+            afficherCutsceneHistoire(
+                _formaterLignes(epilogue),
+                _extrairePersonnages(epilogue),
+                jouerOutroPuisFin
+            );
+        })
+        .catch((err) => {
+            logger.warn('[histoire] épilogue indisponible :', err);
+            jouerOutroPuisFin();
+        });
 }
 
 export function afficherDecouverteLabo(onFin) {

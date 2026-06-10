@@ -185,12 +185,7 @@ export const JOURNAUX_VERA = [
         sousTitre: 'Le Desert — Incomplet',
         biomeId: 'desert',
         condition: 'effacer_10_lignes_biome',
-        texte: [
-            'Ce fragment est endommage.',
-            "Je peux lire : '...pas la detruire... com—'",
-            "'—prendre ce qu'elle res—'",
-            'Le reste est du sable.',
-        ],
+        texte: [],
         illustration: 'dessinerJournalVera6',
         estEndommage: true,
     },

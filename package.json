@@ -1,6 +1,6 @@
 {
     "name": "derniere-ligne",
-    "version": "2.5.6",
+    "version": "2.5.7",
     "type": "module",
     "description": "Dernière Ligne — Tetris narratif, PWA hors-ligne",
     "private": true,

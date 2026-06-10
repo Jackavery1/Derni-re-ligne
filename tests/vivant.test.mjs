@@ -10,6 +10,9 @@ import {
     vivant_poserCellule,
     vivant_recompenserActivite,
     vivant_synchroniserApresLignes,
+    vivant_enregistrerDepot,
+    vivantPlateauTempsPret,
+    annulerTimersVivant,
     calculerCellulesAffectees,
     mettreAJourVivant,
     declencherComportementVivant,
@@ -116,5 +119,11 @@ describe('vivant', () => {
                 }
             }
         }
+    });
+
+    it('vivant_enregistrerDepot ignore si plateauTemps non initialisé', () => {
+        annulerTimersVivant();
+        expect(vivantPlateauTempsPret()).toBe(false);
+        expect(() => vivant_enregistrerDepot(4, 18)).not.toThrow();
     });
 });

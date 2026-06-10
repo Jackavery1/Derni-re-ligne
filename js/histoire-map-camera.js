@@ -12,3 +12,12 @@ export function ecranVersMonde(cam, sx, sy, w, h) {
         my: h / 2 + camY + (sy - h / 2) / zoom,
     };
 }
+
+export function mondeVersEcran(cam, mx, my, w, h) {
+    const zoom = cam?.zoom ?? 1;
+    const camY = cam?.y ?? 0;
+    return {
+        sx: (mx - w / 2) * zoom + w / 2,
+        sy: (my - (h / 2 + camY)) * zoom + h / 2,
+    };
+}

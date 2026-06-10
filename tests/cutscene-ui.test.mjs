@@ -65,10 +65,17 @@ describe('cutscene UI', () => {
     /** @type {Map<string, object>} */
     let elements;
     let texteEl;
+    let narrationEl;
+    let ecranCutscene;
 
     beforeEach(async () => {
         elements = new Map();
         texteEl = { textContent: '', className: '', style: {}, dataset: {} };
+        narrationEl = { textContent: '', className: '', style: {}, dataset: {} };
+        ecranCutscene = {
+            dataset: {},
+            classList: { add: vi.fn(), remove: vi.fn(), toggle: vi.fn() },
+        };
 
         const gauche = creerCanvas('canvas-portrait-gauche');
         const droite = creerCanvas('canvas-portrait-droite');
@@ -80,12 +87,15 @@ describe('cutscene UI', () => {
         elements.set('canvas-portrait-droite', droite);
         elements.set('canvas-cutscene-bg', bg);
         elements.set('texte-dialogue-cutscene', texteEl);
+        elements.set('texte-narration-cutscene', narrationEl);
+        elements.set('zone-narration-cutscene', {});
         elements.set('nom-perso-dialogue', { textContent: '', style: { setProperty: vi.fn() } });
         elements.set('histoire-cutscene-progress', { textContent: '' });
-        elements.set('ecran-histoire-cutscene', { dataset: {}, classList: { add: vi.fn() } });
+        elements.set('ecran-histoire-cutscene', ecranCutscene);
 
         globalThis.document = {
             getElementById: (id) => elements.get(id) ?? null,
+            querySelector: () => null,
             querySelectorAll: () => [],
             body: { classList: { add: vi.fn(), remove: vi.fn() } },
         };
@@ -117,4 +127,89 @@ describe('cutscene UI', () => {
         expect(texteEl.textContent).toBe('Ligne deux.');
         expect(texteEl.textContent).not.toContain('Ligne un.');
     }, 15_000);
+
+    it('affiche la narration en haut sans bulle de dialogue', async () => {
+        const { afficherCutsceneHistoire, avancerCutscene } =
+            await import('../js/histoire-manager-ui.js');
+
+        afficherCutsceneHistoire(['Une voix off.', 'ROBO parle.'], ['narrateur', 'robo'], null);
+        avancerCutscene();
+
+        expect(narrationEl.textContent).toBe('Une voix off.');
+        expect(texteEl.textContent).toBe('');
+        expect(ecranCutscene.classList.toggle).toHaveBeenCalledWith(
+            'cutscene-mode-narration',
+            true
+        );
+    }, 15_000);
+
+    it('passe toute la cutscene en un seul appel', async () => {
+        const { afficherCutsceneHistoire, passerCutscene } =
+            await import('../js/histoire-manager-ui.js');
+        const onFin = vi.fn();
+
+        afficherCutsceneHistoire(['A', 'B', 'C'], ['narrateur', 'robo', 'vera'], onFin);
+        passerCutscene();
+
+        expect(onFin).toHaveBeenCalledTimes(1);
+        expect(store.histoire.cutscene.enCours).toBe(false);
+    }, 15_000);
+
+    it('ignore les avances supplementaires apres la fin', async () => {
+        const { afficherCutsceneHistoire, avancerCutscene } =
+            await import('../js/histoire-manager-ui.js');
+        const onFin = vi.fn();
+
+        afficherCutsceneHistoire(['Fin.'], ['robo'], onFin);
+        avancerCutscene();
+        avancerCutscene();
+        avancerCutscene();
+
+        expect(onFin).toHaveBeenCalledTimes(1);
+    }, 15_000);
+
+    it('injecte la zone narration si le HTML cache est obsolete', async () => {
+        elements.delete('zone-narration-cutscene');
+        elements.delete('texte-narration-cutscene');
+
+        globalThis.document.createElement = (tag) => {
+            const el = {
+                tagName: tag.toUpperCase(),
+                id: '',
+                textContent: '',
+                childNodes: [],
+                setAttribute() {},
+                appendChild(child) {
+                    if (child.id) elements.set(child.id, child);
+                    this.childNodes.push(child);
+                },
+            };
+            return el;
+        };
+        ecranCutscene.prepend = (child) => {
+            if (child.id) elements.set(child.id, child);
+        };
+        ecranCutscene.insertBefore = (child) => {
+            if (child.id) elements.set(child.id, child);
+        };
+
+        const { afficherCutsceneHistoire } = await import('../js/histoire-manager-ui.js');
+        afficherCutsceneHistoire(['Voix off.'], ['narrateur'], null);
+
+        expect(elements.has('zone-narration-cutscene')).toBe(true);
+        expect(elements.get('texte-narration-cutscene')).toBeTruthy();
+    });
+
+    it('intro sans DOM cutscene : pas de callback fin (flag intro preserve)', async () => {
+        elements.delete('ecran-histoire-cutscene');
+        const { afficherCutsceneHistoire } = await import('../js/histoire-manager-ui.js');
+        const onFin = vi.fn();
+
+        const demarre = afficherCutsceneHistoire(['Jour 2 554.'], ['narrateur'], onFin, {
+            intro: true,
+        });
+
+        expect(demarre).toBe(false);
+        expect(onFin).not.toHaveBeenCalled();
+    });
 });

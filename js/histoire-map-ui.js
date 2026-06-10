@@ -11,6 +11,7 @@ import {
 import { obtenirActionsHistoire } from './histoire-actions.js';
 import { modeDevActif } from './mode-dev-etat.js';
 import { obtenirEtoilesPersistees } from './gestionnaire-difficulte.js';
+import { sansAccentsE } from './texte-jeu.js';
 
 export function mettreAJourSelectMondesClavier(etatCarte, traiterSelectionNoeud) {
     const select = /** @type {HTMLSelectElement | null} */ (
@@ -31,8 +32,9 @@ export function mettreAJourSelectMondesClavier(etatCarte, traiterSelectionNoeud)
         const etatMonde = obtenirEtatMonde(monde.id, etatHist);
         const opt = document.createElement('option');
         opt.value = monde.id;
-        opt.textContent =
-            etatMonde === 'verrouille' ? `${monde.nomAffiche} (verrouille)` : monde.nomAffiche;
+        opt.textContent = sansAccentsE(
+            etatMonde === 'verrouille' ? `${monde.nomAffiche} (verrouille)` : monde.nomAffiche
+        );
         opt.disabled = !modeDevActif() && etatMonde === 'verrouille';
         if (etatCarte.noeudSelectionne === monde.id) opt.selected = true;
         select.appendChild(opt);
@@ -134,7 +136,7 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
 
     const elNom = /** @type {HTMLElement | null} */ (panneau.querySelector('.histoire-detail-nom'));
     if (elNom) {
-        elNom.textContent = monde.nomAffiche;
+        elNom.textContent = sansAccentsE(monde.nomAffiche);
         elNom.style.setProperty('--detail-couleur', biome.lueurCoul);
     }
 
@@ -142,7 +144,9 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
         panneau.querySelector('.histoire-detail-type')
     );
     if (elType) {
-        elType.textContent = estBoss ? '⚔ COMBAT DE BOSS' : `${biome.icone} ${biome.nom}`;
+        elType.textContent = sansAccentsE(
+            estBoss ? '⚔ COMBAT DE BOSS' : `${biome.icone} ${biome.nom}`
+        );
         elType.style.setProperty('--detail-couleur', estBoss ? 'var(--rose)' : biome.lueurCoul);
     }
 
@@ -151,7 +155,7 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
     );
     if (elStatut) {
         if (etatMonde === 'complete') {
-            elStatut.textContent = '✓ COMPLÉTÉ';
+            elStatut.textContent = '✓ COMPLETE';
             elStatut.classList.add('histoire-detail-statut-complete');
             elStatut.classList.remove('histoire-detail-statut-dim');
         } else if (etatMonde === 'disponible') {
@@ -164,7 +168,7 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
             elStatut.classList.remove('histoire-detail-statut-complete');
             elStatut.classList.add('histoire-detail-statut-dim');
         } else {
-            elStatut.textContent = '🔒 VERROUILLÉ';
+            elStatut.textContent = '🔒 VERROUILLE';
             elStatut.classList.remove('histoire-detail-statut-complete');
             elStatut.classList.add('histoire-detail-statut-dim');
         }
@@ -181,7 +185,7 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
             span.className = 'histoire-carte-etoile';
             span.textContent = '★';
             span.classList.toggle('histoire-carte-etoile-active', obtenue);
-            span.setAttribute('aria-label', `Étoile ${i + 1}${obtenue ? ' obtenue' : ''}`);
+            span.setAttribute('aria-label', `Etoile ${i + 1}${obtenue ? ' obtenue' : ''}`);
             elEtoiles.appendChild(span);
         });
     }
@@ -200,7 +204,7 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
             if (j.condition === 'trouver_laboratoire_vera') return monde.id === 'monde_cyber';
             return true;
         });
-        elJournal.textContent = journalDispo ? '📔 TRANSMISSION CACHÉE' : '';
+        elJournal.textContent = journalDispo ? '📔 TRANSMISSION CACHEE' : '';
     }
 
     const btnJouer = /** @type {HTMLButtonElement | null} */ (

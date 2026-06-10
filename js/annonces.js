@@ -1,8 +1,9 @@
 import { etat } from './store-jeu.js';
+import { sansAccentsE } from './texte-jeu.js';
 
 const NOMS_PIECES = {
     I: 'barre',
-    O: 'carré',
+    O: 'carre',
     T: 'T',
     S: 'S',
     Z: 'Z',
@@ -12,7 +13,7 @@ const NOMS_PIECES = {
 
 export function annoncer(texte) {
     const el = document.getElementById('annonce-jeu');
-    if (el) el.textContent = texte;
+    if (el) el.textContent = sansAccentsE(texte);
 }
 
 /** @param {{ type: string, x?: number, y?: number } | null | undefined} piece */
@@ -22,10 +23,10 @@ export function annoncerPieceActive(piece) {
     const colonne = typeof piece.x === 'number' ? piece.x + 1 : null;
     const ligne = typeof piece.y === 'number' ? piece.y + 1 : null;
     if (colonne !== null && ligne !== null) {
-        annoncer(`Pièce ${nom}, colonne ${colonne}, ligne ${ligne}`);
+        annoncer(`Piece ${nom}, colonne ${colonne}, ligne ${ligne}`);
         return;
     }
-    annoncer(`Nouvelle pièce ${nom}`);
+    annoncer(`Nouvelle piece ${nom}`);
 }
 
 export function annoncerPieceCourante() {

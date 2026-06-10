@@ -21,17 +21,17 @@ describe('annonces', () => {
 
     it('annoncerPieceActive inclut colonne et ligne', () => {
         annoncerPieceActive({ type: 'T', x: 4, y: 2 });
-        expect(zone.textContent).toBe('Pièce T, colonne 5, ligne 3');
+        expect(zone.textContent).toBe('Piece T, colonne 5, ligne 3');
     });
 
     it('annoncerPieceActive sans position utilise le libellé générique', () => {
         annoncerPieceActive({ type: 'I' });
-        expect(zone.textContent).toBe('Nouvelle pièce barre');
+        expect(zone.textContent).toBe('Nouvelle piece barre');
     });
 
     it('annoncerPieceCourante lit la pièce active du store', () => {
         etat.pieceActuelle = { type: 'O', x: 0, y: 0 };
         annoncerPieceCourante();
-        expect(zone.textContent).toBe('Pièce carré, colonne 1, ligne 1');
+        expect(zone.textContent).toBe('Piece carre, colonne 1, ligne 1');
     });
 });

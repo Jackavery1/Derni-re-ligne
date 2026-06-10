@@ -16,6 +16,7 @@ import {
     quitterModeArchi,
 } from './archi-jeu.js';
 import { retournerAuMondeActuel } from './histoire-manager.js';
+import { quitterVersCarteHistoire } from './partie.js';
 import { coop_dessinerPreview } from './coop-rendu.js';
 
 export function initialiserBoutonsPartie() {
@@ -68,6 +69,9 @@ export function initialiserBoutonsPartie() {
     document.getElementById('btn-recommencer')?.addEventListener('click', () => {
         if (modeArchiActif()) archi_reinitialiserNiveau();
         else obtenirActions().confirmerRecommencer?.();
+    });
+    document.getElementById('btn-pause-carte')?.addEventListener('click', () => {
+        quitterVersCarteHistoire();
     });
     document.getElementById('btn-pause-quitter')?.addEventListener('click', () => {
         if (modeArchiActif()) quitterModeArchi();

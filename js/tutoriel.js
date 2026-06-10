@@ -1,4 +1,5 @@
 import { lireStockage, ecrireStockage } from './progression.js';
+import { sansAccentsE } from './texte-jeu.js';
 
 const CLES = {
     prologue: 'derniereLigne_tutorielHistoireVu',
@@ -61,13 +62,13 @@ function remplirContenu(contenu, avecControles = false) {
     const corps = document.getElementById('tutoriel-corps');
     const blocControles = document.getElementById('tutoriel-controles');
 
-    if (titre) titre.textContent = contenu.titre;
+    if (titre) titre.textContent = sansAccentsE(contenu.titre);
     if (corps) {
         corps.replaceChildren();
         for (const ligne of contenu.lignes) {
             const p = document.createElement('p');
             p.className = 'tutoriel-texte';
-            p.textContent = ligne;
+            p.textContent = sansAccentsE(ligne);
             corps.appendChild(p);
         }
     }
@@ -78,16 +79,16 @@ function remplirContenu(contenu, avecControles = false) {
             blocControles.classList.remove('element-masque');
             const intro = document.createElement('p');
             intro.className = 'tutoriel-controles-intro';
-            intro.textContent = 'CONTRÔLES';
+            intro.textContent = 'CONTROLES';
             blocControles.appendChild(intro);
 
             const dl = document.createElement('dl');
             dl.className = 'guide guide-options tutoriel-guide';
             for (const { touche, action } of CONTROLES_CLAVIER) {
                 const dt = document.createElement('dt');
-                dt.textContent = touche;
+                dt.textContent = sansAccentsE(touche);
                 const dd = document.createElement('dd');
-                dd.textContent = action;
+                dd.textContent = sansAccentsE(action);
                 dl.appendChild(dt);
                 dl.appendChild(dd);
             }
@@ -95,8 +96,9 @@ function remplirContenu(contenu, avecControles = false) {
 
             const mobile = document.createElement('p');
             mobile.className = 'tutoriel-controles-mobile';
-            mobile.textContent =
-                'Sur mobile : boutons tactiles en bas de l’ecran et swipe sur le plateau.';
+            mobile.textContent = sansAccentsE(
+                'Sur mobile : boutons tactiles en bas de l’ecran et swipe sur le plateau.'
+            );
             blocControles.appendChild(mobile);
         } else {
             blocControles.classList.add('element-masque');

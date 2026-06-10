@@ -1,5 +1,6 @@
 import { obtenirEtatHistoire, mondePeutEtreJoue } from './histoire-mondes.js';
-import { appliquerTransformCamera } from './histoire-map-camera.js';
+import { appliquerTransformCamera, mondeVersEcran } from './histoire-map-camera.js';
+import { sansAccentsE } from './texte-jeu.js';
 import { dessinerEtoilesFond, invaliderDonneesEtoilesHistoire } from './histoire-map-fond.js';
 import { dessinerTousLesNoeuds } from './histoire-map-noeuds.js';
 
@@ -19,20 +20,30 @@ export function dessinerCarteHistoire(etatCarte, timestamp) {
     appliquerTransformCamera(etatCarte.camera, ctx, w, h);
 
     _dessinerChemins(etatCarte, timestamp);
-    _dessinerEtiquettesChapitres(etatCarte);
     dessinerTousLesNoeuds(etatCarte, timestamp);
-    _dessinerBrouillardFutur(ctx, w, h, etatCarte);
 
     ctx.restore();
 
+    _dessinerBrouillardFutur(etatCarte, ctx, w, h);
+    _dessinerEtiquettesChapitres(etatCarte, w, h);
     _dessinerVignette(ctx, w, h);
     _dessinerIndicateurScroll(etatCarte, ctx, w, h);
     _dessinerPanelMondeSelectionne(etatCarte, ctx, w, h);
 }
 
-function _dessinerEtiquettesChapitres(etatCarte) {
-    const { ctxCarte, positionsNoeuds } = etatCarte;
-    if (!ctxCarte) return;
+function _chapitreEstRevele(ids, etatCarte) {
+    const etatHist = obtenirEtatHistoire();
+    return ids.some(
+        (id) =>
+            etatCarte.mondesVisibles.has(id) ||
+            etatCarte.mondesFantomes?.has(id) ||
+            etatHist.mondesCompletes?.includes(id)
+    );
+}
+
+function _dessinerEtiquettesChapitres(etatCarte, w, h) {
+    const { ctxCarte: ctx, positionsNoeuds, camera } = etatCarte;
+    if (!ctx || !camera) return;
 
     const chapitresCouleurs = {
         prologue: '#00f5ff',
@@ -46,7 +57,7 @@ function _dessinerEtiquettesChapitres(etatCarte) {
         prologue: 'PROLOGUE',
         chapitre_1: '— CHAPITRE I — LE FEU',
         chapitre_2: '— CHAPITRE II — LES PROFONDEURS',
-        chapitre_3: '— CHAPITRE III — LA MÉMOIRE',
+        chapitre_3: '— CHAPITRE III — LA MEMOIRE',
         chapitre_4: '— CHAPITRE IV — LA FRACTURE',
         finale: '— FINALE —',
     };
@@ -60,21 +71,39 @@ function _dessinerEtiquettesChapitres(etatCarte) {
         { chapId: 'finale', ids: ['monde_finale'] },
     ];
 
+    const margeHaut = 76;
+    const margeBas = 56;
+    const margeGauche = 22;
+
     for (const { chapId, ids } of rangees) {
+        if (!_chapitreEstRevele(ids, etatCarte)) continue;
+
         const ys = ids.map((id) => positionsNoeuds[id]?.y).filter((y) => y != null);
         if (!ys.length) continue;
 
         const yMoy = chapId === 'finale' ? ys[0] : ys.reduce((a, b) => a + b, 0) / ys.length;
+        const { sy } = mondeVersEcran(camera, w * 0.5, yMoy, w, h);
+        if (sy < margeHaut || sy > h - margeBas) continue;
+
         const couleur = chapitresCouleurs[chapId] ?? '#ffffff';
         const label = chapitresLabels[chapId] ?? '';
 
-        ctxCarte.save();
-        ctxCarte.font = '7px "Press Start 2P", monospace';
-        ctxCarte.textAlign = 'left';
-        ctxCarte.textBaseline = 'middle';
-        ctxCarte.fillStyle = couleur + '55';
-        ctxCarte.fillText(label, 12, yMoy);
-        ctxCarte.restore();
+        ctx.save();
+        ctx.font = '8px "Press Start 2P", monospace';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = couleur + 'cc';
+        ctx.shadowColor = couleur;
+        ctx.shadowBlur = 8;
+        ctx.fillText(sansAccentsE(label), margeGauche, sy - 10);
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = couleur + '35';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(margeGauche, sy + 6);
+        ctx.lineTo(Math.min(w - 24, margeGauche + 380), sy + 6);
+        ctx.stroke();
+        ctx.restore();
     }
 }
 
@@ -243,26 +272,28 @@ function _dessinerChemins(etatCarte, timestamp) {
     }
 }
 
-function _dessinerBrouillardFutur(ctx, w, h, etatCarte) {
-    const { positionsNoeuds, mondesVisibles, mondesFantomes } = etatCarte;
+function _dessinerBrouillardFutur(etatCarte, ctx, w, h) {
+    const { positionsNoeuds, mondesVisibles, camera } = etatCarte;
+    if (!camera) return;
 
-    let yFrontiere = -1;
+    let yFrontiereMonde = -1;
     for (const [id, pos] of Object.entries(positionsNoeuds)) {
-        const estRelevant = mondesVisibles.has(id) || mondesFantomes.has(id);
-        if (!estRelevant) continue;
-        if (pos.y > yFrontiere) yFrontiere = pos.y;
+        if (!mondesVisibles.has(id)) continue;
+        if (pos.y > yFrontiereMonde) yFrontiereMonde = pos.y;
     }
 
-    if (yFrontiere < 0) return;
+    if (yFrontiereMonde < 0) return;
 
-    const yDebut = yFrontiere + 50;
+    const { sy: yDebut } = mondeVersEcran(camera, w * 0.5, yFrontiereMonde + 50, w, h);
+    if (yDebut >= h) return;
 
-    const grad1 = ctx.createLinearGradient(0, yDebut - 80, 0, yDebut + 40);
+    const yGradHaut = Math.max(0, yDebut - 80);
+    const grad1 = ctx.createLinearGradient(0, yGradHaut, 0, yDebut + 40);
     grad1.addColorStop(0, 'transparent');
     grad1.addColorStop(1, 'rgba(2,2,14,0.78)');
     ctx.save();
     ctx.fillStyle = grad1;
-    ctx.fillRect(0, yDebut - 80, w, 120);
+    ctx.fillRect(0, yGradHaut, w, yDebut + 40 - yGradHaut);
     ctx.restore();
 
     if (yDebut + 40 < h) {
@@ -271,22 +302,6 @@ function _dessinerBrouillardFutur(ctx, w, h, etatCarte) {
         ctx.fillRect(0, yDebut + 40, w, h - yDebut - 40);
         ctx.restore();
     }
-
-    const couleurHorizon = '#ff006e';
-    const grad2 = ctx.createLinearGradient(0, yDebut - 5, w, yDebut - 5);
-    grad2.addColorStop(0, 'transparent');
-    grad2.addColorStop(0.2, couleurHorizon + '20');
-    grad2.addColorStop(0.5, couleurHorizon + '40');
-    grad2.addColorStop(0.8, couleurHorizon + '20');
-    grad2.addColorStop(1, 'transparent');
-    ctx.save();
-    ctx.strokeStyle = grad2;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(0, yDebut);
-    ctx.lineTo(w, yDebut);
-    ctx.stroke();
-    ctx.restore();
 }
 
 function _dessinerVignette(ctx, w, h) {

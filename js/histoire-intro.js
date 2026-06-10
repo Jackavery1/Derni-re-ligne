@@ -48,20 +48,27 @@ export async function ouvrirModeHistoireDepuisMenu() {
 
         await new Promise((resolve, reject) => {
             try {
+                let termine = false;
+                let cutsceneJouee = false;
                 const demarre = afficherCutsceneHistoire(
                     seq.map((l) => l.texte),
                     seq.map((l) => l.personnage),
                     () => {
+                        if (termine) return;
+                        termine = true;
                         logger.debug(
                             '[intro] callback fin cutscene (jouee ou passee par le joueur)'
                         );
-                        marquerIntroHistoireVue();
+                        if (cutsceneJouee && seq.length > 0) {
+                            marquerIntroHistoireVue();
+                        }
                         resolve();
                     },
                     { intro: true }
                 );
-                if (!demarre) {
-                    reject(new Error('Cutscene intro : elements DOM introuvables'));
+                cutsceneJouee = demarre;
+                if (!demarre && !termine) {
+                    reject(new Error('Cutscene intro : demarrage impossible'));
                 }
             } catch (err) {
                 reject(err);

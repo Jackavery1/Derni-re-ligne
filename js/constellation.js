@@ -1,4 +1,5 @@
 import { BIOMES, ORDRE_BIOMES } from './config.js';
+import { sansAccentsE } from './texte-jeu.js';
 import { obtenirCanvas } from './dom-utils.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 import { biomeEstDebloqueParHistoire } from './progression.js';
@@ -60,16 +61,20 @@ function mettreAJourInfoBiome(idBiome) {
     const etoiles = deps.formaterEtoiles(deps.calculerEtoiles(record, niveauRecord));
 
     if (elNom) {
-        elNom.textContent = `${biome.icone} ${biome.nom}`;
+        elNom.textContent = sansAccentsE(`${biome.icone} ${biome.nom}`);
         elNom.style.color = biome.ui?.couleurPrimaire ?? biome.lueurCoul;
     }
     if (elRecord) {
-        elRecord.textContent = verrouille
-            ? 'À DÉBLOQUER EN MODE HISTOIRE'
-            : `RECORD : ${record.toLocaleString('fr-FR')} — ${etoiles}`;
+        elRecord.textContent = sansAccentsE(
+            verrouille
+                ? 'A DEBLOQUER EN MODE HISTOIRE'
+                : `RECORD : ${record.toLocaleString('fr-FR')} — ${etoiles}`
+        );
     }
     if (elStatut) {
-        elStatut.textContent = verrouille ? '🔒 MONDE VERROUILLÉ' : "PRÊT POUR L'AVENTURE";
+        elStatut.textContent = sansAccentsE(
+            verrouille ? '🔒 MONDE VERROUILLE' : "PRET POUR L'AVENTURE"
+        );
     }
 
     panneau.classList.remove('element-masque');

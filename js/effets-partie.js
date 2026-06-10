@@ -23,7 +23,7 @@ import {
     afficherNotifNiveau,
 } from './ecrans-ui.js';
 import { evaluerDecisionOracle } from './oracle-jeu.js';
-import { endommagerBoss, bossEstActif, bossEstVaincu } from './boss-jeu.js';
+import { endommagerBoss, bossEstActif, bossEstVaincu, notifierTetrisBoss } from './boss-jeu.js';
 import { mettreAJourIndicateurRelique } from './piece-jeu.js';
 import { enregistrerProgression } from './gestionnaire-difficulte.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
@@ -99,6 +99,7 @@ export function initialiserEffetsPartie() {
 
         if (nbLignes > 0) {
             if (result.tetris) {
+                if (bossEstActif() && !bossEstVaincu()) notifierTetrisBoss();
                 afficherTexteFlottant('TETRIS !', '#ffe600', 16);
                 annoncer('Tetris ! Quatre lignes effacees');
                 if (result.backToBack) {

@@ -45,7 +45,7 @@
             <div class="histoire-detail-nom"></div>
             <div class="histoire-detail-type"></div>
             <div class="histoire-detail-statut"></div>
-            <div class="histoire-detail-etoiles" aria-label="Étoiles du monde"></div>
+            <div class="histoire-detail-etoiles" aria-label="Etoiles du monde"></div>
             <div class="histoire-detail-journal"></div>
             <button
                 class="bouton bouton-jouer-monde element-masque"
@@ -62,8 +62,17 @@
     </div>
 </div>
 
-<section id="ecran-histoire-cutscene" class="ecran" data-personnage="narrateur">
+<section
+    id="ecran-histoire-cutscene"
+    class="ecran cutscene-mode-dialogue"
+    data-personnage="narrateur"
+>
     <canvas id="canvas-cutscene-bg" aria-hidden="true"></canvas>
+
+    <div id="zone-narration-cutscene" aria-live="polite" aria-atomic="true">
+        <div id="texte-narration-cutscene"></div>
+        <span id="indicateur-suite-narration" aria-hidden="true">▼</span>
+    </div>
 
     <div id="rangee-portraits-cutscene">
         <canvas id="canvas-portrait-gauche" width="180" height="260" class="absent"></canvas>
@@ -75,21 +84,22 @@
         <canvas id="canvas-portrait-droite" width="180" height="260" class="absent"></canvas>
     </div>
 
-    <div id="histoire-cutscene-progress" class="cutscene-progress"></div>
-
-    <div class="cutscene-controles">
-        <button id="btn-cutscene-suivant" class="btn-cutscene" type="button">
-            CONTINUER <span class="btn-cutscene-hint">[ Espace / Clic ]</span>
-        </button>
-        <button
-            id="btn-cutscene-passer"
-            class="btn-cutscene-passer"
-            type="button"
-            aria-keyshortcuts="Escape"
-            aria-label="Passer la scène entière"
-        >
-            PASSER › <span class="btn-cutscene-hint">[ Echap ]</span>
-        </button>
+    <div class="cutscene-barre-bas">
+        <div id="histoire-cutscene-progress" class="cutscene-progress"></div>
+        <div class="cutscene-controles">
+            <button id="btn-cutscene-suivant" class="btn-cutscene" type="button">
+                CONTINUER <span class="btn-cutscene-hint">[ Espace / Clic ]</span>
+            </button>
+            <button
+                id="btn-cutscene-passer"
+                class="btn-cutscene-passer"
+                type="button"
+                aria-keyshortcuts="Escape"
+                aria-label="Passer la scene entiere"
+            >
+                PASSER › <span class="btn-cutscene-hint">[ Echap ]</span>
+            </button>
+        </div>
     </div>
 </section>
 
@@ -102,7 +112,7 @@
             class="histoire-journal-dommage element-masque"
             aria-hidden="true"
         >
-            ⚠ TRANSMISSION ENDOMMAGÉE
+            ⚠ TRANSMISSION ENDOMMAGEE
         </div>
         <div class="histoire-journal-titre" id="histoire-journal-titre"></div>
         <div class="histoire-journal-ss-titre" id="histoire-journal-soustitre"></div>

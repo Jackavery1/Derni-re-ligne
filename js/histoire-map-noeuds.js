@@ -1,6 +1,7 @@
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { BIOMES } from './config.js';
 import { obtenirEtatHistoire, mondePeutEtreJoue, obtenirEtatMonde } from './histoire-mondes.js';
+import { sansAccentsE } from './texte-jeu.js';
 
 function _positionLabel(pos, rayon, w) {
     const centreX = w * 0.5;
@@ -134,7 +135,7 @@ function _dessinerLabelNoeud(
     ctx.textAlign = lbl.align;
     ctx.textBaseline = 'middle';
     ctx.fillStyle = estComplete || estDisponible ? couleur + 'cc' : '#2a2a4a';
-    ctx.fillText(monde.nomAffiche, lbl.x, lbl.y);
+    ctx.fillText(sansAccentsE(monde.nomAffiche), lbl.x, lbl.y);
 }
 
 function dessinerNoeud(etatCarte, monde, pos, etatHist, timestamp) {
@@ -211,7 +212,7 @@ function dessinerNoeudCache(etatCarte, monde, pos, etatHist, timestamp) {
     if (noeudSelectionne === monde.id || noeudSurvole === monde.id) {
         ctxCarte.font = '5px "Press Start 2P", monospace';
         ctxCarte.fillStyle = '#ffe600';
-        ctxCarte.fillText(monde.nomAffiche, x, y + rayon + 11);
+        ctxCarte.fillText(sansAccentsE(monde.nomAffiche), x, y + rayon + 11);
     }
     ctxCarte.restore();
 }

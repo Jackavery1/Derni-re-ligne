@@ -8,7 +8,7 @@ import { creerPlateau, obtenirCouleurPieceParType } from './piece-jeu.js';
 import { creerParticulesLigne } from './particules-jeu.js';
 import { statsGlobales, verifierAchievements, sauvegarderStats } from './achievements.js';
 import { afficherNotificationNiveau } from './ui-notifications.js';
-import { reagirRoboAuxLignes } from './ecrans-ui.js';
+import { reagirRoboAuxLignes } from './mascotte-robo.js';
 import { obtenirBouton, obtenirElement } from './dom-utils.js';
 import {
     poserPieceSurPlateau,

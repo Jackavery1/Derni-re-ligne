@@ -24,10 +24,14 @@ export function afficherJournalHistoire(journal, onFermer) {
         journal.texte.forEach((para) => {
             const el = document.createElement('div');
             el.className = 'histoire-journal-para';
-            if (journal.estEndommage && Math.random() < 0.3) {
+            const ligne = typeof para === 'string' ? { personnage: null, texte: para } : para;
+            if (journal.estEndommage && ligne.personnage === 'vera' && Math.random() < 0.3) {
                 el.classList.add('histoire-journal-para-endommage');
             }
-            el.textContent = para;
+            if (ligne.personnage) {
+                el.classList.add(`histoire-journal-para--${ligne.personnage}`);
+            }
+            el.textContent = ligne.texte;
             elTexte.appendChild(el);
         });
     }

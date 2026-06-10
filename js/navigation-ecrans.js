@@ -8,6 +8,8 @@ import { cacherBanniereVivant } from './vivant.js';
 import { mettreAJourAffichageRecord } from './hud-jeu.js';
 import { annoncer } from './annonces.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
+import { modeArchiActif } from './registre-modes.js';
 
 export { annoncer };
 
@@ -111,6 +113,9 @@ export function afficherEcran(idEcran) {
         if (labelLignes) labelLignes.textContent = 'LIGNES';
         const labelNiveau = document.querySelector('#ecran-pause [data-label="niveau"]');
         if (labelNiveau) labelNiveau.textContent = 'NIVEAU';
+        document
+            .getElementById('btn-pause-carte')
+            ?.classList.toggle('element-masque', !modeHistoireEnCours() || modeArchiActif());
     }
 }
 

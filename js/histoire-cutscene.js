@@ -2,6 +2,8 @@
 import { obtenirHistoireTextesSync } from './charger-histoire-textes.js';
 import { store } from './store-core.js';
 import { ECRANS } from './ecrans-config.js';
+import { etat } from './store-jeu.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
 import { logger } from './logger.js';
 import { definirHumeurRoboCutscene, dessinerPortraitCutscene } from './portraits-cutscene.js';
 import { dessinerRobo } from './rendu-robo.js';
@@ -38,12 +40,126 @@ let cutsceneCallbackFin = null;
 let _typewriterTimeout = null;
 let _typewriterActif = false;
 let _fondPersonnageId = 'narrateur';
+let _finCutsceneEnCours = false;
 
 function _obtenirSequenceCutscene() {
     return cutsceneLignes.map((texte, i) => ({
         texte,
         personnage: cutscenePersonnages[i] ?? 'narrateur',
     }));
+}
+
+function _estLigneNarration(personnageId) {
+    return (POSITION_PERSONNAGE[personnageId] ?? 'droite') === 'centre';
+}
+
+function _obtenirElTexteLigneCourante() {
+    const personnageId = cutscenePersonnages[cutsceneIndex] ?? 'narrateur';
+    const estNarration = _estLigneNarration(personnageId);
+    const narrationEl = document.getElementById('texte-narration-cutscene');
+    const dialogueEl = document.getElementById('texte-dialogue-cutscene');
+    if (estNarration && narrationEl) return narrationEl;
+    return dialogueEl;
+}
+
+function _appliquerModeCutscene(estNarration) {
+    const ecran = document.getElementById('ecran-histoire-cutscene');
+    if (ecran) {
+        ecran.classList.toggle('cutscene-mode-narration', estNarration);
+        ecran.classList.toggle('cutscene-mode-dialogue', !estNarration);
+    }
+}
+
+function _viderTextesCutscene() {
+    const dialogueEl = document.getElementById('texte-dialogue-cutscene');
+    const narrationEl = document.getElementById('texte-narration-cutscene');
+    const nomEl = document.getElementById('nom-perso-dialogue');
+    if (dialogueEl) dialogueEl.textContent = '';
+    if (narrationEl) narrationEl.textContent = '';
+    if (nomEl) nomEl.textContent = '';
+    _appliquerModeCutscene(false);
+}
+
+function _overlayNarratifVisible() {
+    const tuto = document.getElementById('overlay-tutoriel');
+    if (tuto && !tuto.classList.contains('element-masque')) return true;
+    return Boolean(document.querySelector('.objectif-overlay-visible'));
+}
+
+function _restaurerEcranSiAucunActif() {
+    if (document.querySelector('.ecran.actif') || _overlayNarratifVisible()) return;
+    if (!modeHistoireEnCours() || etat.estEnCours) return;
+    void import('./navigation-ecrans.js').then(({ afficherEcran }) => {
+        if (document.querySelector('.ecran.actif') || _overlayNarratifVisible()) return;
+        afficherEcran(ECRANS.GAME_OVER);
+    });
+}
+
+function _terminerCutscene() {
+    if (_finCutsceneEnCours) return;
+    if (!store.histoire.cutscene.enCours && !cutsceneCallbackFin) return;
+    _finCutsceneEnCours = true;
+
+    _stopTypewriter();
+    _viderTextesCutscene();
+    const elProgress = document.getElementById('histoire-cutscene-progress');
+    if (elProgress) elProgress.textContent = '';
+    _stopBouclePortraits();
+    stopFondCutscene();
+    _reinitPersonnagesCutscene();
+
+    cutsceneLignes = [];
+    cutscenePersonnages = [];
+    cutsceneIndex = 0;
+
+    store.histoire.cutscene.enCours = false;
+    const cb = cutsceneCallbackFin;
+    cutsceneCallbackFin = null;
+    store.histoire.cutscene.onFin = null;
+
+    cacherEcransHistoire();
+
+    try {
+        cb?.();
+    } catch (err) {
+        logger.error('[cutscene] erreur callback fin :', err);
+        _restaurerEcranSiAucunActif();
+    } finally {
+        _finCutsceneEnCours = false;
+    }
+}
+
+function _assurerZoneNarrationCutscene() {
+    const ecran = document.getElementById('ecran-histoire-cutscene');
+    if (!ecran || document.getElementById('texte-narration-cutscene')) return;
+
+    let zone = document.getElementById('zone-narration-cutscene');
+    if (!zone) {
+        zone = document.createElement('div');
+        zone.id = 'zone-narration-cutscene';
+        zone.setAttribute('aria-live', 'polite');
+        zone.setAttribute('aria-atomic', 'true');
+        const ancre = document.getElementById('canvas-cutscene-bg');
+        if (ancre?.nextSibling) {
+            ecran.insertBefore(zone, ancre.nextSibling);
+        } else {
+            ecran.prepend(zone);
+        }
+    }
+
+    const texte = document.createElement('div');
+    texte.id = 'texte-narration-cutscene';
+    zone.appendChild(texte);
+
+    if (!document.getElementById('indicateur-suite-narration')) {
+        const indicateur = document.createElement('span');
+        indicateur.id = 'indicateur-suite-narration';
+        indicateur.setAttribute('aria-hidden', 'true');
+        indicateur.textContent = '▼';
+        zone.appendChild(indicateur);
+    }
+
+    logger.debug('[cutscene] zone narration injectee (HTML cache obsolete)');
 }
 
 function _initCutsceneUI() {
@@ -262,13 +378,15 @@ export function afficherCutsceneHistoire(textes, personnages, onFin, options = {
     }
 
     const ecranCutscene = document.getElementById('ecran-histoire-cutscene');
+    _assurerZoneNarrationCutscene();
     const texteEl = document.getElementById('texte-dialogue-cutscene');
     if (!ecranCutscene || !texteEl) {
         if (options.intro) {
             logger.error('[intro] moteur: conteneur cutscene introuvable dans le DOM');
-        } else {
-            logger.warn('[cutscene] conteneur cutscene introuvable dans le DOM');
+            return false;
         }
+        logger.warn('[cutscene] conteneur cutscene introuvable dans le DOM');
+        onFin?.();
         return false;
     }
 
@@ -280,19 +398,24 @@ export function afficherCutsceneHistoire(textes, personnages, onFin, options = {
     cutsceneLignes = textes;
     cutscenePersonnages = personnages ?? [];
     cutsceneIndex = 0;
-    _detecterParticipants(_obtenirSequenceCutscene());
     cutsceneCallbackFin = onFin ?? null;
+    store.histoire.cutscene.onFin = onFin ?? null;
+
+    if (!textes.length) {
+        store.histoire.cutscene.enCours = true;
+        _terminerCutscene();
+        return true;
+    }
+
+    _detecterParticipants(_obtenirSequenceCutscene());
     definirHumeurRoboCutscene(options.humeurRobo ?? 'content');
     store.histoire.cutscene.enCours = true;
-    store.histoire.cutscene.onFin = onFin ?? null;
 
     _stopTypewriter();
     _stopBouclePortraits();
     stopFondCutscene();
 
-    const nomEl = document.getElementById('nom-perso-dialogue');
-    texteEl.textContent = '';
-    if (nomEl) nomEl.textContent = '';
+    _viderTextesCutscene();
 
     const premiereLigne = cutscenePersonnages[0] ?? 'narrateur';
     demarrerFondCutscene(premiereLigne);
@@ -311,14 +434,20 @@ export function afficherCutsceneHistoire(textes, personnages, onFin, options = {
     } catch (err) {
         if (options.intro) {
             logger.error('[intro] moteur: erreur affichage ligne', err);
-        } else {
-            logger.error('[cutscene] erreur affichage ligne', err);
+            cacherEcransHistoire();
+            store.histoire.cutscene.enCours = false;
+            cutsceneCallbackFin = null;
+            store.histoire.cutscene.onFin = null;
+            return false;
         }
+        logger.error('[cutscene] erreur affichage ligne', err);
         cacherEcransHistoire();
         store.histoire.cutscene.enCours = false;
-        store.histoire.cutscene.onFin = null;
+        const cb = cutsceneCallbackFin ?? onFin;
         cutsceneCallbackFin = null;
-        throw err;
+        store.histoire.cutscene.onFin = null;
+        cb?.();
+        return false;
     }
 
     const elProgress = document.getElementById('histoire-cutscene-progress');
@@ -330,21 +459,18 @@ export function afficherCutsceneHistoire(textes, personnages, onFin, options = {
 }
 
 export function passerCutscene() {
-    if (_typewriterActif) {
-        _stopTypewriter();
-        const el = document.getElementById('texte-dialogue-cutscene');
-        if (el) el.textContent = cutsceneLignes[cutsceneIndex] ?? '';
-        _typewriterActif = false;
-        return;
-    }
+    if (!store.histoire.cutscene.enCours) return;
+    _stopTypewriter();
     cutsceneIndex = cutsceneLignes.length - 1;
     avancerCutscene();
 }
 
 export function avancerCutscene() {
+    if (!store.histoire.cutscene.enCours) return;
+
     if (_typewriterActif) {
         _stopTypewriter();
-        const el = document.getElementById('texte-dialogue-cutscene');
+        const el = _obtenirElTexteLigneCourante();
         if (el) el.textContent = cutsceneLignes[cutsceneIndex] ?? '';
         _typewriterActif = false;
         return;
@@ -353,37 +479,44 @@ export function avancerCutscene() {
     cutsceneIndex++;
     const elProgress = document.getElementById('histoire-cutscene-progress');
     if (cutsceneIndex >= cutsceneLignes.length) {
-        const texteEl = document.getElementById('texte-dialogue-cutscene');
-        const nomEl = document.getElementById('nom-perso-dialogue');
-        if (texteEl) texteEl.textContent = '';
-        if (nomEl) nomEl.textContent = '';
-        if (elProgress) elProgress.textContent = '';
-        _stopBouclePortraits();
-        stopFondCutscene();
-        _reinitPersonnagesCutscene();
-        cacherEcransHistoire();
-        const cb = cutsceneCallbackFin;
-        cutsceneCallbackFin = null;
-        store.histoire.cutscene.enCours = false;
-        store.histoire.cutscene.onFin = null;
-        cb?.();
+        _terminerCutscene();
         return;
     }
     if (elProgress && cutsceneLignes.length > 0) {
         elProgress.textContent = `${cutsceneIndex + 1} / ${cutsceneLignes.length}`;
     }
-    afficherProchaineLigneCutscene();
+    try {
+        afficherProchaineLigneCutscene();
+    } catch (err) {
+        logger.error('[cutscene] erreur affichage ligne :', err);
+        _terminerCutscene();
+    }
 }
 
 function afficherProchaineLigneCutscene() {
-    const texteEl = document.getElementById('texte-dialogue-cutscene');
-    if (!texteEl) return;
-
     const texte = cutsceneLignes[cutsceneIndex] ?? '';
     const personnageId = cutscenePersonnages[cutsceneIndex] ?? 'narrateur';
+    let estNarration = _estLigneNarration(personnageId);
+    const dialogueEl = document.getElementById('texte-dialogue-cutscene');
+    const narrationEl = document.getElementById('texte-narration-cutscene');
+    let texteEl = estNarration ? narrationEl : dialogueEl;
+    if (!texteEl && estNarration && dialogueEl) {
+        estNarration = false;
+        texteEl = dialogueEl;
+        logger.warn('[cutscene] zone narration absente, repli vers boite dialogue');
+    }
+    if (!texteEl) return;
+
     const { PORTRAITS } = obtenirHistoireTextesSync();
     const p =
         PORTRAITS[personnageId] ?? PORTRAITS[idPortraitMeta(personnageId)] ?? PORTRAITS.narrateur;
+
+    _appliquerModeCutscene(estNarration);
+    if (estNarration && dialogueEl) {
+        dialogueEl.textContent = '';
+    } else if (!estNarration && narrationEl) {
+        narrationEl.textContent = '';
+    }
 
     _personnageParlant = personnageId;
     const fondPrecedent = _fondPersonnageId;
@@ -396,8 +529,15 @@ function afficherProchaineLigneCutscene() {
 
     const nomEl = document.getElementById('nom-perso-dialogue');
     if (nomEl) {
-        nomEl.textContent = p.nom;
-        nomEl.style.setProperty('--couleur-perso', COULEUR_PERSONNAGE[personnageId] ?? p.couleur);
+        if (estNarration) {
+            nomEl.textContent = '';
+        } else {
+            nomEl.textContent = p.nom;
+            nomEl.style.setProperty(
+                '--couleur-perso',
+                COULEUR_PERSONNAGE[personnageId] ?? p.couleur
+            );
+        }
     }
 
     texteEl.className = `cutscene-police-${p.police}`;

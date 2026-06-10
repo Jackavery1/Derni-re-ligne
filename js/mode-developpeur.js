@@ -104,7 +104,6 @@ function _monterInterfaceDev() {
 
     const panneau = document.createElement('div');
     panneau.id = 'panneau-dev';
-    panneau.setAttribute('aria-hidden', 'true');
 
     const poignee = document.createElement('button');
     poignee.type = 'button';
@@ -112,6 +111,8 @@ function _monterInterfaceDev() {
     poignee.title = 'Outils developpeur';
     poignee.textContent = 'DEV';
     poignee.setAttribute('aria-label', 'Outils developpeur');
+    poignee.setAttribute('aria-expanded', 'false');
+    poignee.setAttribute('aria-controls', 'dev-corps');
 
     const corps = document.createElement('div');
     corps.id = 'dev-corps';
@@ -224,7 +225,9 @@ function _monterInterfaceDev() {
     poignee.addEventListener('click', () => {
         const ouvert = !corps.hidden;
         corps.hidden = ouvert;
+        corps.inert = ouvert;
         panneau.classList.toggle('dev-ouvert', !ouvert);
+        poignee.setAttribute('aria-expanded', String(!ouvert));
     });
 
     panneau.append(poignee, corps);

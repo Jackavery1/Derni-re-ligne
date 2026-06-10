@@ -1,6 +1,6 @@
 import { CONFIG } from './config.js';
 import { etat, obtenirBiomeActif, obtenirCanvasPlateau, obtenirCtx } from './store-jeu.js';
-import { COMPORTEMENTS_VIVANT, vivant } from './vivant.js';
+import { COMPORTEMENTS_VIVANT, vivant, vivantPlateauTempsPret } from './vivant.js';
 
 export function dessinerAvertissementsVivant() {
     if (vivant.phase !== 'alerte') return;
@@ -48,7 +48,7 @@ export function dessinerAvertissementsVivant() {
 export function dessinerSignesVie() {
     const biomeId = obtenirBiomeActif();
     const config = COMPORTEMENTS_VIVANT[biomeId];
-    if (!config) return;
+    if (!config || !vivantPlateauTempsPret()) return;
 
     const ctx = obtenirCtx();
     if (!ctx) return;

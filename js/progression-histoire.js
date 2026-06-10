@@ -76,6 +76,15 @@ function _reconcilierFlagsHistoire(etat) {
     if (!Array.isArray(etat.mondesCachesDebloques)) etat.mondesCachesDebloques = [];
     if (!etat.etoilesParMonde) etat.etoilesParMonde = {};
     if (!etat.continuesParBoss) etat.continuesParBoss = {};
+    if (!etat.conditionsMiroir) {
+        etat.conditionsMiroir = { ...ETAT_HISTOIRE_VIDE.conditionsMiroir };
+    }
+    if (!etat.conditionsTrame) {
+        etat.conditionsTrame = { ...ETAT_HISTOIRE_VIDE.conditionsTrame };
+    }
+    if (!etat.conditionsParadoxe) {
+        etat.conditionsParadoxe = { ...ETAT_HISTOIRE_VIDE.conditionsParadoxe };
+    }
 
     if (etat.bossVaincus.includes('archiviste')) {
         etat.conditionsMiroir.bossArchivisteVaincu = true;

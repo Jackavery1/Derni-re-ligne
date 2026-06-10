@@ -122,11 +122,14 @@ export function verrouillerPiece() {
     _poseApresRotation = false;
 
     const couleur = obtenirCouleurPiece(etat.pieceActuelle);
+    const optionsPose = modeHistoireEnCours()
+        ? {}
+        : { onCellule: (x, y) => vivant_enregistrerDepot(x, y) };
     const { gameOver, cellulesPosees } = poserPieceSurPlateau(
         etat.plateau,
         etat.pieceActuelle,
         couleur,
-        { onCellule: (x, y) => vivant_enregistrerDepot(x, y) }
+        optionsPose
     );
 
     if (gameOver) {

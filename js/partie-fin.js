@@ -26,7 +26,12 @@ import { store } from './store-core.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { enregistrerTopOut, arreterSuiviMonde } from './gestionnaire-difficulte.js';
 import { surFinDeMondeHistoire } from './histoire-manager.js';
-import { bossEstActif, arreterBoss } from './boss-jeu.js';
+import {
+    bossEstActif,
+    arreterBoss,
+    obtenirBossIdActif,
+    appliquerRepliqueGameOverBoss,
+} from './boss-jeu.js';
 import { onGameOverHistoire } from './mecaniques-histoire.js';
 import { oracle, obtenirScoreFinalOracle } from './oracle-jeu.js';
 import { statsGlobales } from './achievements.js';
@@ -35,6 +40,7 @@ import { arreterFondBiome } from './rendu-fond-biome.js';
 export function terminerPartie(victoire = false) {
     if (coop.actif) return;
     arreterFondBiome();
+    const bossIdDefaite = !victoire ? obtenirBossIdActif() : null;
     if (bossEstActif() && !victoire) {
         arreterBoss();
     }
@@ -78,10 +84,19 @@ export function terminerPartie(victoire = false) {
     });
     _afficherActionsFinHistoire();
 
-    setTimeout(() => {
-        afficherEcran(ECRANS.GAME_OVER);
-        planifierBoucle();
-    }, 350);
+    if (!victoire) {
+        appliquerRepliqueGameOverBoss(true, bossIdDefaite);
+    } else {
+        appliquerRepliqueGameOverBoss(false);
+    }
+
+    const afficherGameOver = !(modeHistoireEnCours() && victoire);
+    if (afficherGameOver) {
+        setTimeout(() => {
+            afficherEcran(ECRANS.GAME_OVER);
+            planifierBoucle();
+        }, 350);
+    }
 
     setTimeout(() => afficherMelodieGameOver(), 400);
 }

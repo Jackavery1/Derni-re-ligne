@@ -3,6 +3,7 @@ import { store } from './store-core.js';
 import { etat } from './store-jeu.js';
 import { BOSS } from './histoire-donnees.js';
 import { logger } from './logger.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
 import { AudioMoteur } from './audio.js';
 import { creerParticulesExplosion } from './particules-jeu.js';
 import {
@@ -29,32 +30,24 @@ import {
     degelColonnes,
     executerAttaqueBoss,
 } from './boss-attaques.js';
+import {
+    demarrerPresentationBoss,
+    mettreAJourDialoguesBoss,
+    enqueueDialogueBoss,
+    notifierTransitionPhaseBoss,
+    notifierSeuilsPvBoss,
+    notifierQuasiVaincuBoss,
+    dialogueBossActif,
+    reinitialiserDialoguesBoss,
+} from './boss-dialogues.js';
 
 export { COULEUR_BRAISE, COULEUR_GLACE_B };
+export {
+    notifierTetrisBoss,
+    obtenirRepliqueGameOverBoss,
+    appliquerRepliqueGameOverBoss,
+} from './boss-dialogues.js';
 export const DUREE_VICTOIRE_BOSS_MS = 2200;
-
-const TEXTES_MI_COMBAT = {
-    brasier: {
-        50: '🔥 IMPOSSIBLE. TU RÉSISTES ENCORE.',
-        25: '🔥 TOUT BRÛLE... MÊME LA DOUTE...',
-    },
-    sentinelle: {
-        50: '❄ CALCUL EN COURS. ADAPTATION NÉCESSAIRE.',
-        25: "❄ PROTOCOLE D'URGENCE... ACTIVÉ.",
-    },
-    archiviste: {
-        50: '⚠ MÉMOIRE_CORROMPUE : [37%] — REDÉMARRAGE PARTIEL',
-        25: '⚠ INTÉGRITÉ_SYSTÈME : CRITIQUE — 12% RESTANT',
-    },
-    avantgarde: {
-        50: '✦ TU AS SURVÉCU À TOUS LES AUTRES. BIEN.',
-        25: '✦ ELLE TE TESTAIT. JE TE TESTAIS. NOUS AVONS NOTRE RÉPONSE.',
-    },
-    distorsion: {
-        66: '∞ TU NE COMPRENDS PAS ENCORE.',
-        33: '∞ PEUT-ÊTRE QUE SI.',
-    },
-};
 
 /** @returns {import('./boss-attaques.js').ContexteAttaqueBoss} */
 function _ctxAttaque() {
@@ -81,6 +74,7 @@ export function demarrerBoss(bossId) {
         logger.warn('[boss] bossId inconnu :', bossId);
         return;
     }
+    reinitialiserDialoguesBoss();
     store.histoire.boss.actif = boss;
     store.histoire.boss.pv = boss.pvMax;
     store.histoire.boss.phase = 0;
@@ -90,13 +84,20 @@ export function demarrerBoss(bossId) {
     store.histoire.boss.timerVaincu = 0;
     store.histoire.boss.timerDebut = performance.now();
     store.histoire.boss.timerPortrait = 0;
-    store.histoire.boss._textesMiAffiches = new Set();
+    store.histoire.boss._textesMiAffiches = null;
     store.histoire.boss._flashAttaque = false;
     _reinitialiserMecaniques();
 
     _afficherSectionBoss(true);
     _mettreAJourHPBar();
-    _afficherTexteBoss(boss.texteApparition ?? '');
+
+    if (modeHistoireEnCours()) {
+        demarrerPresentationBoss(bossId);
+        _afficherTexteBoss('');
+    } else {
+        _afficherTexteBoss(boss.texteApparition ?? '');
+    }
+
     logger.info('[boss] demarre :', bossId, 'PV:', boss.pvMax);
     reinitialiserConditionsRuntime();
 }
@@ -104,6 +105,7 @@ export function demarrerBoss(bossId) {
 export function arreterBoss() {
     if (!store.histoire.boss.actif) return;
     _reinitialiserMecaniques();
+    reinitialiserDialoguesBoss();
     store.histoire.boss._textesMiAffiches = null;
     store.histoire.boss._flashAttaque = false;
     store.histoire.boss.actif = null;
@@ -133,6 +135,8 @@ function _reinitialiserMecaniques() {
 export function mettreAJourBoss(dt) {
     if (!store.histoire.boss.actif || store.histoire.boss.vaincu || etat.estEnPause) return;
 
+    mettreAJourDialoguesBoss(dt);
+
     const boss = store.histoire.boss.actif;
     const m = store.histoire.boss.effets;
 
@@ -141,7 +145,7 @@ export function mettreAJourBoss(dt) {
         if (m.timerControlesInverses <= 0) {
             m.bossControlesInverses = false;
             m.timerControlesInverses = 0;
-            _afficherTexteBoss('');
+            if (!dialogueBossActif()) _afficherTexteBoss('');
         }
     }
     if (m.timerFauxFantome > 0) {
@@ -149,7 +153,7 @@ export function mettreAJourBoss(dt) {
         if (m.timerFauxFantome <= 0) {
             m.bossFauxFantome = false;
             m.timerFauxFantome = 0;
-            _afficherTexteBoss('');
+            if (!dialogueBossActif()) _afficherTexteBoss('');
         }
     }
     if (m.timerDegelMs > 0) {
@@ -161,7 +165,7 @@ export function mettreAJourBoss(dt) {
         if (m.timerDistorsion <= 0) {
             m.decalageDistorsion = 0;
             m.timerDistorsion = 0;
-            _afficherTexteBoss('');
+            if (!dialogueBossActif()) _afficherTexteBoss('');
         }
     }
 
@@ -192,6 +196,12 @@ export function endommagerBoss(nbLignes) {
     _mettreAJourHPBar();
     reagirRoboBossDegats();
 
+    const boss = store.histoire.boss.actif;
+    const pctRestant = (store.histoire.boss.pv / boss.pvMax) * 100;
+    if (modeHistoireEnCours()) {
+        notifierQuasiVaincuBoss(pctRestant);
+    }
+
     if (store.histoire.boss.pv <= 0) {
         _declencherVictoireBoss();
     }
@@ -207,7 +217,7 @@ function _declencherVictoireBoss() {
 
     const boss = store.histoire.boss.actif;
     const texte = boss?.texteDefaite ?? boss?.texteDefaite_normal ?? 'Defaite...';
-    _afficherTexteBoss(texte);
+    enqueueDialogueBoss(texte);
     reagirRoboBossVaincu();
 
     for (let i = 0; i < 20; i++) {
@@ -247,36 +257,36 @@ function _afficherEffetAttaque(type, dureeMs, resultat) {
     switch (type) {
         case 'rangee_braise':
             if (resultat === false) {
-                _afficherTexteBoss('🔥 BRAISE CONTENUE');
+                enqueueDialogueBoss('🔥 BRAISE CONTENUE');
             } else {
-                _afficherTexteBoss('🔥 RANGÉE DE BRAISE');
+                enqueueDialogueBoss('🔥 RANGÉE DE BRAISE');
                 if (!AudioMoteur.muet) AudioMoteur.son('verrou');
             }
             break;
         case 'colonne_gelee': {
             const colonnes = /** @type {number[] | undefined} */ (resultat);
             if (colonnes?.length) {
-                _afficherTexteBoss(`❄ COLONNES ${colonnes.map((c) => c + 1).join(', ')} GELÉES`);
+                enqueueDialogueBoss(`❄ COLONNES ${colonnes.map((c) => c + 1).join(', ')} GELÉES`);
                 if (!AudioMoteur.muet) AudioMoteur.son('hold');
             }
             break;
         }
         case 'inverser_controles':
-            _afficherTexteBoss('⚠ CONTRÔLES INVERSÉS');
+            enqueueDialogueBoss('⚠ CONTRÔLES INVERSÉS');
             if (!AudioMoteur.muet) AudioMoteur.son('niveau');
             break;
         case 'faux_fantome':
-            _afficherTexteBoss('⚠ SIGNAL BROUILLÉ');
+            enqueueDialogueBoss('⚠ SIGNAL BROUILLÉ');
             if (!AudioMoteur.muet) AudioMoteur.son('rotation');
             break;
         case 'distorsion_plateau':
-            _afficherTexteBoss('∞ DISTORSION ACTIVE');
+            enqueueDialogueBoss('∞ DISTORSION ACTIVE');
             if (!AudioMoteur.muet) AudioMoteur.son('rotation');
             break;
         case 'permutation_colonnes': {
             const cols = /** @type {[number, number] | null | undefined} */ (resultat);
             if (cols) {
-                _afficherTexteBoss(`🌀 PERMUTATION DES COLONNES ${cols[0] + 1} ↔ ${cols[1] + 1}`);
+                enqueueDialogueBoss(`🌀 PERMUTATION DES COLONNES ${cols[0] + 1} ↔ ${cols[1] + 1}`);
                 if (!AudioMoteur.muet) AudioMoteur.son('rotation');
             }
             break;
@@ -288,7 +298,7 @@ function _afficherEffetAttaque(type, dureeMs, resultat) {
 
 function _degelColonnes() {
     degelColonnes(etat.plateau, store.histoire.boss.effets);
-    _afficherTexteBoss('');
+    if (!dialogueBossActif()) _afficherTexteBoss('');
 }
 
 export function obtenirDecalageDistorsionBoss() {
@@ -311,20 +321,10 @@ function _verifierPhase() {
     if (!boss) return;
 
     const pctRestant = (store.histoire.boss.pv / boss.pvMax) * 100;
-    const textesMi = TEXTES_MI_COMBAT[boss.id];
-    if (textesMi && !store.histoire.boss._textesMiAffiches) {
-        store.histoire.boss._textesMiAffiches = new Set();
-    }
-    if (textesMi) {
-        for (const [seuilStr, texte] of Object.entries(textesMi)) {
-            const seuil = Number(seuilStr);
-            if (pctRestant <= seuil && !store.histoire.boss._textesMiAffiches.has(seuil)) {
-                store.histoire.boss._textesMiAffiches.add(seuil);
-                _afficherTexteBoss(texte);
-                if (!AudioMoteur.muet) AudioMoteur.son('rotation');
-                notifierPhaseBossParPv(boss.id, pctRestant);
-            }
-        }
+
+    if (modeHistoireEnCours()) {
+        notifierSeuilsPvBoss(pctRestant);
+        notifierPhaseBossParPv(boss.id, pctRestant);
     }
 
     const phaseAvant = store.histoire.boss.phase;
@@ -336,7 +336,11 @@ function _verifierPhase() {
         const seuilPhase = phase.pvSeuil ?? boss.pvMax;
         if (store.histoire.boss.pv <= seuilPhase && store.histoire.boss.phase < i) {
             store.histoire.boss.phase = i;
-            _afficherTexteBoss('⚠ NOUVELLE PHASE');
+            if (modeHistoireEnCours()) {
+                notifierTransitionPhaseBoss(phaseAvant, store.histoire.boss.phase);
+            } else {
+                enqueueDialogueBoss('⚠ NOUVELLE PHASE');
+            }
             if (!AudioMoteur.muet) AudioMoteur.son('niveau');
             setTimeout(_exectuterAttaque, 800);
             if (store.histoire.boss.phase !== phaseAvant) {
@@ -397,11 +401,13 @@ function _mettreAJourTimerUI() {
         if (el) {
             el.textContent = secRestantes > 0 ? `ATTENTE : ${secRestantes}s` : 'CONDITION VALIDÉE';
         }
-        if (attaqueEl) attaqueEl.textContent = 'NE RIEN EFFACER…';
+        if (attaqueEl && !dialogueBossActif()) {
+            attaqueEl.textContent = 'NE RIEN EFFACER…';
+        }
         return;
     }
 
-    if (store.histoire.boss.actif?.id === 'distorsion' && attaqueEl) {
+    if (store.histoire.boss.actif?.id === 'distorsion' && attaqueEl && !dialogueBossActif()) {
         const etatHist = obtenirEtatHistoire();
         const ct = etatHist?.conditionsTrame;
         const prerequisOk =
@@ -427,4 +433,8 @@ export function bossEstActif() {
 
 export function bossEstVaincu() {
     return store.histoire.boss.vaincu;
+}
+
+export function obtenirBossIdActif() {
+    return store.histoire.boss.actif?.id ?? null;
 }

@@ -74,15 +74,20 @@ async function _demarrerMondeHistoireInterne(mondeId) {
 function _apresPresentationMonde(monde) {
     store.histoire.mondeActuel = monde.id;
     const lancer = () => _lancerPartieHistoire(monde);
-    void import('./ui-panneau-objectifs.js').then(({ proposerPanneauObjectifsAvantPartie }) => {
-        if (monde.id === 'monde_prologue') {
-            afficherTutorielPrologueApresCutscene(() =>
-                proposerPanneauObjectifsAvantPartie(monde, lancer)
-            );
-            return;
-        }
-        proposerPanneauObjectifsAvantPartie(monde, lancer);
-    });
+    void import('./ui-panneau-objectifs.js')
+        .then(({ proposerPanneauObjectifsAvantPartie }) => {
+            if (monde.id === 'monde_prologue') {
+                afficherTutorielPrologueApresCutscene(() =>
+                    proposerPanneauObjectifsAvantPartie(monde, lancer)
+                );
+                return;
+            }
+            proposerPanneauObjectifsAvantPartie(monde, lancer);
+        })
+        .catch((err) => {
+            logger.error('[histoire] panneau objectifs:', err);
+            lancer();
+        });
 }
 
 /** @param {typeof SEQUENCE_HISTOIRE[number]} monde */
@@ -98,7 +103,15 @@ function _lancerPartieHistoire(monde) {
     void import('./navigation-ecrans.js').then(({ cacherEcrans }) => cacherEcrans());
     document.body.classList.add('histoire-active');
 
-    obtenirActions().demarrerJeu?.();
+    if (!store.histoire.difficulte?.actif) {
+        demarrerSuiviMonde(monde.id);
+    }
+
+    try {
+        obtenirActions().demarrerJeu?.();
+    } catch (err) {
+        logger.error('[histoire] demarrerJeu:', err);
+    }
 }
 
 export async function retournerACarte() {

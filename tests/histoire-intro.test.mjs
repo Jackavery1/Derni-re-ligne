@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
     introHistoireDejaVue,
     marquerIntroHistoireVue,
@@ -29,5 +29,14 @@ describe('histoire-intro', () => {
         marquerIntroHistoireVue();
         expect(introHistoireDejaVue()).toBe(true);
         expect(localStorage.getItem('derniereLigne_introHistoireVue')).toBe('1');
+    });
+
+    it('obtenirHistoireTextesSync fonctionne sans chargement JSON prealable', async () => {
+        vi.resetModules();
+        const { obtenirHistoireTextesSync } = await import('../js/charger-histoire-textes.js');
+        const textes = obtenirHistoireTextesSync();
+        expect(textes.INTRO_HISTOIRE?.length).toBe(15);
+        expect(textes.INTERLUDES?.interlude_gardiens?.length).toBeGreaterThan(3);
+        expect(textes.OUTRO_FINS?.fin_normale?.length).toBeGreaterThan(0);
     });
 });

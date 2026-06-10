@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version   | Date       | En bref                                                                                |
 | --------- | ---------- | -------------------------------------------------------------------------------------- |
+| **2.5.7** | 2026-06-10 | Narration enrichie, dialogues boss, cutscenes narration, UI sans accents               |
 | **2.5.6** | 2026-06-10 | Audit gameplay, refactor archi, docs simplifiées                                       |
 | **2.5.5** | 2026-06-10 | Correctifs audit : intro Jour 2 554, cutscenes, dev, objectifs, rendu, E2E             |
 | **2.5.4** | 2026-06-09 | Carte histoire verticale : visibilité, mondes secrets, découpage modules, tests        |
@@ -22,6 +23,26 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.0.0** | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                          |
 
 ---
+
+## [2.5.7] — 2026-06-10
+
+### Mode Histoire & narration
+
+- Dialogues de combat boss extraits (`boss-dialogues.js`) : phases, réactions Tetris, quasi-vaincu
+- Contenu narratif enrichi : interludes gardiens/veille, transmissions VERA, épilogues réécrits
+- Cutscenes : mode narration distinct du dialogue, zone injectée si HTML obsolète, fin robuste
+- Journaux multi-voix (`JOURNAUX_VERA_DIALOGUES`) pour le journal 6
+
+### UX
+
+- `sansAccentsE()` (`texte-jeu.js`) : libellés UI sans accents (carte, codex, tutoriel, achievements)
+- Carte histoire : rendu et panneau latéral affinés, CSS cutscene narration/dialogue
+
+### Qualité
+
+- Cycle `ecrans-ui ↔ coop-logique` rompu (import direct `mascotte-robo.js`)
+- Tests : `boss-dialogues`, `texte-jeu`, `distorsion-entree` ; **459** tests unitaires
+- Cache SW synchronisé (187 fichiers)
 
 ## [2.5.6] — 2026-06-10
 

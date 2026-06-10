@@ -23,6 +23,7 @@ import {
 } from './conditions-secrets.js';
 import { enregistrerPrecisionMiroir, flushProuessesHistoire } from './achievements-histoire.js';
 import { definirExpressionVera } from './portraits-vera.js';
+import { ECRANS } from './ecrans-config.js';
 import { logger } from './logger.js';
 import {
     victoireObjectifDeclenchee,
@@ -343,6 +344,9 @@ function suiteTransitionChapitre(monde, premiereCompletion) {
                 void import('./histoire-manager-ui.js').then(({ afficherBoutonCarteGameOver }) =>
                     afficherBoutonCarteGameOver(true)
                 );
+                void import('./navigation-ecrans.js').then(({ afficherEcran }) =>
+                    afficherEcran(ECRANS.GAME_OVER)
+                );
             });
         });
     };
@@ -374,31 +378,44 @@ function suiteTransitionChapitre(monde, premiereCompletion) {
     afficherCarteAvecFragment();
 }
 
+const INTERLUDES_PAR_MONDE = {
+    monde_rouille: 'interlude_gardiens',
+    monde_eclipse: 'interlude_elle',
+    monde_vide: 'interlude_veille',
+};
+
 function _afficherInterludeSiDisponible(mondeId, premiereCompletion, callback) {
     if (!store.histoire.actif) {
         callback?.();
         return;
     }
-    if (mondeId !== 'monde_eclipse' || !premiereCompletion) {
+    const cleInterlude = INTERLUDES_PAR_MONDE[mondeId];
+    if (!cleInterlude || !premiereCompletion) {
         callback?.();
         return;
     }
 
     const etatHist = obtenirEtatHistoire();
     if (!etatHist.interludesVusIds) etatHist.interludesVusIds = [];
-    if (etatHist.interludesVusIds.includes('interlude_elle')) {
+    if (etatHist.interludesVusIds.includes(cleInterlude)) {
         callback?.();
         return;
     }
 
-    const { INTERLUDES } = obtenirHistoireTextesSync();
-    const interlude = INTERLUDES?.interlude_elle;
+    let interlude;
+    try {
+        interlude = obtenirHistoireTextesSync().INTERLUDES?.[cleInterlude];
+    } catch (err) {
+        logger.warn('[histoire] textes interlude indisponibles :', err);
+        callback?.();
+        return;
+    }
     if (!interlude?.length) {
         callback?.();
         return;
     }
 
-    etatHist.interludesVusIds.push('interlude_elle');
+    etatHist.interludesVusIds.push(cleInterlude);
     sauvegarderEtatHistoire(etatHist);
     store.histoire.etat = etatHist;
 

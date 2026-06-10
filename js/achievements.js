@@ -11,6 +11,7 @@ import { melodie } from './melodie.js';
 import { creerFileNotifications } from './notifications-file.js';
 import { reinitialiserStatsAchievementsHistoire } from './achievements-histoire.js';
 import { ACHIEVEMENTS } from './achievements-donnees.js';
+import { sansAccentsE } from './texte-jeu.js';
 
 export { ACHIEVEMENTS };
 
@@ -69,8 +70,8 @@ const fileAchievements = creerFileNotifications({
         const nom = document.getElementById('ach-nom');
         const desc = document.getElementById('ach-description');
         if (icone) icone.textContent = ach.icone;
-        if (nom) nom.textContent = ach.nom;
-        if (desc) desc.textContent = ach.description;
+        if (nom) nom.textContent = sansAccentsE(ach.nom);
+        if (desc) desc.textContent = sansAccentsE(ach.description);
         notif.classList.add('visible');
         setTimeout(() => {
             notif.classList.remove('visible');
@@ -312,7 +313,7 @@ export function genererGalerieAchievements() {
     const nb = Object.keys(statsGlobales.debloqués).length;
     const total = Object.keys(ACHIEVEMENTS).length;
     const compteur = document.getElementById('ach-compteur');
-    if (compteur) compteur.textContent = `${nb} / ${total} DÉBLOQUÉS`;
+    if (compteur) compteur.textContent = `${nb} / ${total} DEBLOQUES`;
 
     for (const [, ach] of Object.entries(ACHIEVEMENTS)) {
         const debloque = !!statsGlobales.debloqués[ach.id];
@@ -326,11 +327,11 @@ export function genererGalerieAchievements() {
 
         const nomEl = document.createElement('div');
         nomEl.className = 'ach-carte-nom';
-        nomEl.textContent = debloque ? ach.nom : '???';
+        nomEl.textContent = sansAccentsE(debloque ? ach.nom : '???');
 
         const descEl = document.createElement('div');
         descEl.className = 'ach-carte-desc';
-        descEl.textContent = debloque ? ach.description : 'Non debloque';
+        descEl.textContent = sansAccentsE(debloque ? ach.description : 'Non debloque');
 
         carte.appendChild(iconeEl);
         carte.appendChild(nomEl);

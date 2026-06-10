@@ -107,11 +107,16 @@ export const vivant = {
 
 let timeoutDeclenchementVivant = null;
 
+export function vivantPlateauTempsPret() {
+    return vivant.plateauTemps.length === CONFIG.lignes;
+}
+
 export function annulerTimersVivant() {
     if (timeoutDeclenchementVivant !== null) {
         clearTimeout(timeoutDeclenchementVivant);
         timeoutDeclenchementVivant = null;
     }
+    vivant.plateauTemps = [];
 }
 
 export function initialiserVivant() {
@@ -148,13 +153,13 @@ export function vivant_poserCellule(x, y, couleur) {
 }
 
 export function vivant_enregistrerDepot(x, y) {
+    if (!vivantPlateauTempsPret()) return;
     if (y < 0 || y >= CONFIG.lignes || x < 0 || x >= CONFIG.colonnes) return;
-    if (!vivant.plateauTemps[y]) return;
     vivant.plateauTemps[y][x] = Date.now();
 }
 
 export function vivant_synchroniserApresLignes(lignesEffacees) {
-    if (!lignesEffacees?.length) return;
+    if (!lignesEffacees?.length || !vivantPlateauTempsPret()) return;
     for (const l of [...lignesEffacees].sort((a, b) => b - a)) {
         vivant.plateauTemps.splice(l, 1);
         vivant.plateauTemps.unshift(Array(CONFIG.colonnes).fill(0));

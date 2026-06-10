@@ -304,5 +304,6 @@ export function obtenirYHautTas() {
             return l * CONFIG.taille;
         }
     }
-    return obtenirCanvasPlateau().height * 0.4;
+    const canvas = obtenirCanvasPlateau();
+    return canvas ? canvas.height * 0.4 : CONFIG.lignes * CONFIG.taille * 0.4;
 }

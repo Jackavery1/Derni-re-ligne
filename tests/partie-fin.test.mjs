@@ -76,6 +76,8 @@ vi.mock('../js/histoire-manager.js', () => ({
 vi.mock('../js/boss-jeu.js', () => ({
     bossEstActif: vi.fn(() => false),
     arreterBoss: vi.fn(),
+    obtenirBossIdActif: vi.fn(() => null),
+    appliquerRepliqueGameOverBoss: vi.fn(),
 }));
 
 vi.mock('../js/mecaniques-histoire.js', () => ({

@@ -269,8 +269,9 @@ function _lerpCamera() {
     if (!pos) return;
 
     const ZOOM = 1.6;
+    const RATIO_FOCUS_Y = 0.33;
 
-    const cibleY = pos.y - h / (ZOOM * 3.0);
+    const cibleY = pos.y - h / 2 + ((0.5 - RATIO_FOCUS_Y) * h) / ZOOM;
 
     const posFinale = etatCarte.positionsNoeuds['monde_finale'];
     const yMax = posFinale ? posFinale.y - h / (ZOOM * 1.8) : cibleY + 800;

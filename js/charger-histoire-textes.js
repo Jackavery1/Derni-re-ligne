@@ -1,5 +1,6 @@
 /** Chargement runtime des textes histoire depuis JSON (fallback module source en dev). */
 import { logger } from './logger.js';
+import * as textesSource from './histoire-textes.js';
 
 /** @type {typeof import('./histoire-textes.js') | null} */
 let cache = null;
@@ -38,8 +39,6 @@ export async function chargerHistoireTextes() {
 
 /** @returns {typeof import('./histoire-textes.js')} */
 export function obtenirHistoireTextesSync() {
-    if (!cache) {
-        throw new Error('Textes histoire non charges — appeler chargerHistoireTextes() avant');
-    }
-    return cache;
+    if (!cache) return textesSource;
+    return { ...textesSource, ...cache };
 }

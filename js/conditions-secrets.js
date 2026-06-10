@@ -2,6 +2,7 @@ import { store } from './store-core.js';
 import { etat } from './store-jeu.js';
 import { CONFIG } from './config.js';
 import { logger } from './logger.js';
+import { sansAccentsE } from './texte-jeu.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
 
 const SEUIL_PLATEAU_TRAME = 0.5;
@@ -88,9 +89,11 @@ export function tickConditionTrame(dt) {
     if (!store.histoire.boss.actif || store.histoire.boss.actif.id !== 'distorsion') return;
 
     const etatHist = _obtenirEtatHistoire();
-    if (etatHist.conditionsTrame.actionDistorsionFaite) return;
-    if (etatHist.conditionsTrame.tousBossSansContinue === false) return;
-    if (!etatHist.conditionsTrame.miroirComplete) return;
+    const ct = etatHist?.conditionsTrame;
+    if (!ct) return;
+    if (ct.actionDistorsionFaite) return;
+    if (ct.tousBossSansContinue === false) return;
+    if (!ct.miroirComplete) return;
 
     const total = CONFIG.lignes * CONFIG.colonnes;
     let occupees = 0;
@@ -123,6 +126,7 @@ export function tickConditionTrame(dt) {
 }
 
 function _validerActionDistorsion(etatHist) {
+    if (!etatHist.conditionsTrame) return;
     if (etatHist.conditionsTrame.actionDistorsionFaite) return;
     etatHist.conditionsTrame.actionDistorsionFaite = true;
     conditionsRuntime.trameAttenteActive = false;
@@ -172,7 +176,7 @@ function _afficherNotifDeblocageMonde(mondeId) {
 
     const MESSAGES = {
         monde_miroir: "✦ UN NOUVEAU CHEMIN S'EST OUVERT",
-        monde_trame: '✦ LA TRAME PRIMORDIALE RÉVÉLÉE',
+        monde_trame: '✦ LA TRAME PRIMORDIALE REVELEE',
         monde_paradoxe: '✦ AU-DELÀ DE TOUTE LOGIQUE',
     };
     const msg = MESSAGES[mondeId];
@@ -180,7 +184,7 @@ function _afficherNotifDeblocageMonde(mondeId) {
 
     const notif = document.createElement('div');
     notif.className = 'notif-deblocage-monde';
-    notif.textContent = msg;
+    notif.textContent = sansAccentsE(msg);
     document.body.appendChild(notif);
     setTimeout(() => notif.remove(), 4200);
 }
