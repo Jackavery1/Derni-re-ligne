@@ -24,6 +24,7 @@ import { sansAccentsE } from './texte-jeu.js';
  * @property {string} [conditionTexte]
  * @property {{ actuel: number, cible: number, formaterTexte?: (actuel: number, cible: number) => string }} [progression]
  * @property {{ libelle?: string, onAction: () => void }} [actionPrincipale]
+ * @property {{ libelle?: string, onAction: () => void }} [actionSecondaire]
  */
 
 /** @type {ConfigPanneauDetail | null} */
@@ -56,6 +57,7 @@ function obtenirRefs() {
         progressionTexte: document.getElementById('panneau-detail-progression-texte'),
         btnFermer: document.getElementById('btn-panneau-detail-fermer'),
         btnJouer: document.getElementById('btn-panneau-detail-jouer'),
+        btnSecondaire: document.getElementById('btn-panneau-detail-secondaire'),
     };
 }
 
@@ -199,6 +201,15 @@ function appliquerContenu(config) {
             refs.btnJouer.textContent = sansAccentsE(action?.libelle ?? '▶ JOUER');
         }
     }
+
+    if (refs.btnSecondaire) {
+        const action = config.actionSecondaire;
+        const visible = Boolean(action?.onAction);
+        refs.btnSecondaire.classList.toggle('element-masque', !visible);
+        if (visible) {
+            refs.btnSecondaire.textContent = sansAccentsE(action?.libelle ?? 'ACTION');
+        }
+    }
 }
 
 function retirerOuverture() {
@@ -235,6 +246,11 @@ function surClicDocument(e) {
 
     if (el.closest('#btn-panneau-detail-jouer')) {
         const action = configOuverte?.actionPrincipale?.onAction;
+        if (action) action();
+        return;
+    }
+    if (el.closest('#btn-panneau-detail-secondaire')) {
+        const action = configOuverte?.actionSecondaire?.onAction;
         if (action) action();
         return;
     }
@@ -291,13 +307,21 @@ export function fermerPanneauDetail() {
     for (const fn of ecouteursFermeture) fn();
 }
 
-/** @param {ConfigPanneauDetail} config */
-export function ouvrirPanneauDetail(config) {
+/**
+ * @param {ConfigPanneauDetail} config
+ * @param {{ basculerSiMemeId?: boolean }} [opts]
+ */
+export function ouvrirPanneauDetail(config, opts = {}) {
     initialiserPanneauDetail();
 
     if (config.id && configOuverte?.id === config.id) {
-        fermerPanneauDetail();
-        return false;
+        if (opts.basculerSiMemeId !== false) {
+            fermerPanneauDetail();
+            return false;
+        }
+        configOuverte = config;
+        appliquerContenu(config);
+        return true;
     }
 
     const actif = document.activeElement;

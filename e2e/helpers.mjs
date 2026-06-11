@@ -66,6 +66,11 @@ export async function preparerPageSansSw(page, etatHistoire = ETAT_DEBLOCAGE_MON
         localStorage.setItem('derniereLigne_tutorielArchitecteVu', '1');
         localStorage.setItem('derniereLigne_introHistoireVue', '1');
         localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
+        if ('serviceWorker' in navigator) {
+            void navigator.serviceWorker.getRegistrations().then((regs) => {
+                for (const reg of regs) void reg.unregister();
+            });
+        }
     }, etatHistoire);
 }
 
@@ -94,16 +99,17 @@ export async function selectionnerBiomeClavier(page, option = { value: 'classiqu
         el.value = id;
         el.dispatchEvent(new Event('change', { bubbles: true }));
     }, valeur);
-    await expect(page.locator('#sel-info-biome')).not.toHaveClass(/element-masque/, {
+    await expect(page.locator('#panneau-detail')).not.toHaveClass(/element-masque/, {
         timeout: 5000,
     });
-    await expect(page.locator('#sel-btn-jouer')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('#btn-panneau-detail-jouer')).toBeVisible({ timeout: 5000 });
 }
 
 /** @param {import('@playwright/test').Page} page */
 export async function attendrePartieVisible(page) {
     await expect(page.locator('body')).toHaveClass(/partie-active/, { timeout: 15000 });
-    await expect(page.locator('#canvas-plateau')).toBeVisible();
+    await expect(page.locator('#conteneur-principal')).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('#canvas-plateau')).toBeVisible({ timeout: 15000 });
 }
 
 /** @param {import('@playwright/test').Page} page */
@@ -165,13 +171,7 @@ export async function demarrerPartie(page) {
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await selectionnerBiomeClavier(page);
-    await page.evaluate((biome) => {
-        const demarrer = window.__NEO_TEST__?.demarrerPartieLibre;
-        if (typeof demarrer !== 'function') {
-            throw new Error('__NEO_TEST__.demarrerPartieLibre indisponible');
-        }
-        demarrer(biome);
-    }, 'classique');
+    await page.locator('#btn-panneau-detail-jouer').click({ force: true });
     await attendrePartieVisible(page);
 }
 
@@ -218,7 +218,12 @@ export async function ouvrirCarteHistoire(page, etatHistoire = ETAT_HISTOIRE_BOS
     await page.goto('/');
     await attendreApplicationPrete(page);
     await attendreNotificationsInitiales(page);
-    await page.locator('#btn-mode-histoire').click();
+    const continuer = page.locator('#btn-continuer');
+    if (await continuer.isVisible().catch(() => false)) {
+        await continuer.click();
+    } else {
+        await page.locator('#btn-nouvelle-partie').click();
+    }
     await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/);
 }
 
@@ -247,13 +252,7 @@ export async function demarrerPartieViaClavier(page) {
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await selectionnerBiomeClavier(page);
-    await page.evaluate((biome) => {
-        const demarrer = window.__NEO_TEST__?.demarrerPartieLibre;
-        if (typeof demarrer !== 'function') {
-            throw new Error('__NEO_TEST__.demarrerPartieLibre indisponible');
-        }
-        demarrer(biome);
-    }, 'classique');
+    await page.locator('#btn-panneau-detail-jouer').click({ force: true });
     await attendrePartieVisible(page);
 }
 
@@ -266,7 +265,7 @@ export async function demarrerPartieCoop(page) {
     await page.locator('#toggle-coop').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await selectionnerBiomeClavier(page);
-    await page.locator('#sel-btn-jouer').click({ force: true });
+    await page.locator('#btn-panneau-detail-jouer').click({ force: true });
     await expect(page.locator('#interface-jeu-coop')).toBeVisible({ timeout: 5000 });
 }
 

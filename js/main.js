@@ -1,6 +1,7 @@
 import { chargerEcrans } from './charger-ecrans.js';
 import { initialiserApplication } from './moteur.js';
 import { logger, afficherErreurUtilisateur } from './logger.js';
+import { lireStockage } from './progression-stockage.js';
 
 window.addEventListener('error', (ev) => {
     logger.error(ev.message, ev.filename, ev.lineno);
@@ -13,6 +14,10 @@ window.addEventListener('unhandledrejection', (ev) => {
 });
 
 async function demarrer() {
+    document.body?.classList.toggle(
+        'contraste-eleve',
+        lireStockage('derniereLigne_contraste', 'false') === 'true'
+    );
     try {
         await chargerEcrans();
     } catch (err) {

@@ -95,7 +95,11 @@ export function demarrerBoss(bossId) {
 
     if (modeHistoireEnCours()) {
         demarrerPresentationBoss(bossId);
-        _afficherTexteBoss('');
+        _afficherTexteBoss(
+            boss.entrainement
+                ? 'ENTRAINEMENT — attaques ralenties, apprenez le rythme avant la Distorsion.'
+                : ''
+        );
     } else {
         _afficherTexteBoss(boss.texteApparition ?? '');
     }

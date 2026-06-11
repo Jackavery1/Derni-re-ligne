@@ -8,7 +8,7 @@ import { logger } from './logger.js';
 import { arreterBoss } from './boss-jeu.js';
 import { paradoxeEstDebloque } from './monde-paradoxe-etat.js';
 import { arreterFondFin } from './fin-bg-rendu.js';
-import { afficherTutorielPrologueApresCutscene } from './tutoriel.js';
+import { afficherTutorielPrologueApresCutscene, afficherTutorielContextuel } from './tutoriel.js';
 import { chargerHistoireTextes } from './charger-histoire-textes.js';
 import {
     obtenirEtatHistoire,
@@ -79,6 +79,12 @@ function _apresPresentationMonde(monde) {
         .then(({ proposerPanneauObjectifsAvantPartie }) => {
             if (monde.id === 'monde_prologue') {
                 afficherTutorielPrologueApresCutscene(() =>
+                    proposerPanneauObjectifsAvantPartie(monde, lancer)
+                );
+                return;
+            }
+            if (monde.id === 'monde_finale') {
+                afficherTutorielContextuel('distorsion', () =>
                     proposerPanneauObjectifsAvantPartie(monde, lancer)
                 );
                 return;

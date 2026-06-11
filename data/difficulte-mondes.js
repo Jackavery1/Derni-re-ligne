@@ -140,11 +140,11 @@ export const DIFFICULTE_MONDES = {
     monde_fuochi: {
         objectifLignes: 12,
         profilVitesse: [
-            { a: 0, palier: 6 },
-            { a: 0.25, palier: 9 },
-            { a: 0.45, palier: 6 },
-            { a: 0.65, palier: 10 },
-            { a: 0.85, palier: 7 },
+            { a: 0, palier: 4 },
+            { a: 0.25, palier: 6 },
+            { a: 0.45, palier: 4 },
+            { a: 0.65, palier: 7 },
+            { a: 0.85, palier: 5 },
         ],
         etoile2: { type: 'combo', valeur: 5 },
         etoile3: { type: 'tetris', valeur: 2 },
@@ -152,9 +152,10 @@ export const DIFFICULTE_MONDES = {
     monde_cosmos: {
         objectifLignes: 12,
         profilVitesse: [
-            { a: 0, palier: 7 },
-            { a: 0.4, palier: 9 },
-            { a: 0.7, palier: 10 },
+            { a: 0, palier: 4 },
+            { a: 0.35, palier: 6 },
+            { a: 0.55, palier: 4 },
+            { a: 0.75, palier: 7 },
         ],
         etoile2: { type: 'tetris', valeur: 1 },
         etoile3: { type: 'pieces_max', valeur: 55 },
@@ -162,21 +163,23 @@ export const DIFFICULTE_MONDES = {
     monde_vide: {
         objectifLignes: 9,
         profilVitesse: [
-            { a: 0, palier: 9 },
-            { a: 0.6, palier: 11 },
+            { a: 0, palier: 5 },
+            { a: 0.4, palier: 7 },
+            { a: 0.7, palier: 5 },
         ],
         etoile2: { type: 'sans_topout' },
         etoile3: { type: 'combo', valeur: 5 },
     },
     monde_boss_4: {
         boss: true,
-        phasePaliers: [9, 10, 12],
+        entrainement: true,
+        phasePaliers: [5, 6, 7],
         etoile2: { type: 'sans_topout' },
         etoile3: { type: 'sans_continue' },
     },
     monde_finale: {
         boss: true,
-        phasePaliers: [10, 12, 9],
+        phasePaliers: [6, 8, 6],
         etoile2: { type: 'sans_topout' },
         etoile3: { type: 'attente_sans_effacer', valeur: 30 },
     },

@@ -34,6 +34,140 @@
     margin-bottom: 12px;
 }
 
+.menu-bloc-campagne {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: min(100%, 320px);
+}
+
+.btn-continuer,
+.btn-nouvelle-partie {
+    width: 100%;
+    padding: 16px 24px;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-continuer {
+    background: linear-gradient(135deg, #001a28 0%, #003850 50%, #001a28 100%);
+    border: 2px solid #00e5ff;
+    color: #aaf8ff;
+    box-shadow:
+        0 0 12px rgba(0, 229, 255, 0.45),
+        0 0 28px rgba(0, 229, 255, 0.15);
+    animation: continuer-pulse 2.2s ease-in-out infinite;
+}
+
+.btn-nouvelle-partie {
+    background: linear-gradient(135deg, #1a0030 0%, #3d0060 50%, #1a0030 100%);
+    border: 2px solid #dd00ff;
+    color: #ff88ff;
+    box-shadow:
+        0 0 12px rgba(221, 0, 255, 0.5),
+        0 0 28px rgba(221, 0, 255, 0.2),
+        inset 0 0 16px rgba(221, 0, 255, 0.08);
+}
+
+.btn-nouvelle-partie--seul {
+    animation: histoire-pulse 2s ease-in-out infinite;
+}
+
+.btn-nouvelle-partie--seul::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 80%;
+    height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255, 136, 255, 0.08), transparent);
+    animation: histoire-shimmer 3s linear infinite;
+    pointer-events: none;
+}
+
+.btn-options-titre {
+    width: 100%;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: var(--texte-dim);
+    gap: 6px;
+}
+
+.btn-options-titre:hover:not(.btn-verrouille) {
+    border-color: rgba(0, 245, 255, 0.45);
+    color: var(--cyan);
+    box-shadow: 0 0 12px rgba(0, 245, 255, 0.2);
+}
+
+@keyframes continuer-pulse {
+    0%,
+    100% {
+        box-shadow:
+            0 0 12px rgba(0, 229, 255, 0.45),
+            0 0 28px rgba(0, 229, 255, 0.15);
+    }
+    50% {
+        box-shadow:
+            0 0 20px rgba(0, 229, 255, 0.7),
+            0 0 40px rgba(0, 229, 255, 0.28);
+    }
+}
+
+.dialog-nouvelle-partie {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(4px);
+}
+
+.dialog-nouvelle-partie.element-masque {
+    display: none !important;
+}
+
+.dialog-nouvelle-partie-corps {
+    width: min(100%, 420px);
+    padding: 20px 22px;
+    border: 2px solid var(--rose);
+    background: linear-gradient(180deg, #120018 0%, #080010 100%);
+    box-shadow: 0 0 30px rgba(255, 45, 120, 0.25);
+}
+
+.dialog-nouvelle-partie-titre {
+    font-family: var(--font-titre);
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: var(--rose);
+    margin-bottom: 12px;
+}
+
+.dialog-nouvelle-partie-texte {
+    font-size: 0.42rem;
+    line-height: 1.7;
+    color: var(--texte-dim);
+    margin-bottom: 18px;
+}
+
+.dialog-nouvelle-partie-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.bouton-danger {
+    border-color: var(--rose) !important;
+    color: #ff9ec8 !important;
+    box-shadow: 0 0 12px rgba(255, 45, 120, 0.25);
+}
+
 .btn-histoire {
     width: 100%;
     padding: 16px 24px;

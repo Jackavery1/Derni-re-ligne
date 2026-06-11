@@ -3,6 +3,10 @@ import { creerContexteAudio } from './dom-utils.js';
 import { GAMMES, TONIQUES_BIOMES, MUSIQUE_BIOMES } from './audio-donnees.js';
 import { creerMethodesMusique } from './audio-musique.js';
 import { creerMethodesEffets } from './audio-effets.js';
+import {
+    obtenirMultiplicateurEffetsBiome,
+    obtenirMultiplicateurMusiqueBiome,
+} from './audio-mix-biome.js';
 
 let obtenirBiomeActifFn = () => 'classique';
 let obtenirNiveauFn = () => 1;
@@ -119,10 +123,15 @@ export const AudioMoteur = {
         onMuteChangeFn();
         if (!this.muet) this.son('deplacement');
     },
-    ...creerMethodesMusique({ calculerTempoActuel, noteVersFreq }),
+    ...creerMethodesMusique({
+        calculerTempoActuel,
+        noteVersFreq,
+        obtenirMultMusique: () => obtenirMultiplicateurMusiqueBiome(obtenirBiomeActifFn()),
+    }),
     ...creerMethodesEffets({
         noteVersFreq,
         obtenirBiomeActif: () => obtenirBiomeActifFn(),
+        obtenirMultEffets: () => obtenirMultiplicateurEffetsBiome(obtenirBiomeActifFn()),
     }),
 };
 

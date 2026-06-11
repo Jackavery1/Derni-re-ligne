@@ -83,6 +83,14 @@ export function initialiserSystemesMoteur() {
         demarrerCooperatif,
         modeCoopEstActif: coopEstPrefere,
         sonMenu: (type) => AudioMoteur.son(type),
+        ouvrirHistoireVersMonde: (mondeId) => {
+            void import('./histoire-navigation.js').then(({ definirMondeCibleCarte }) => {
+                definirMondeCibleCarte(mondeId);
+                void import('./histoire-intro.js').then(({ ouvrirModeHistoireDepuisMenu }) =>
+                    ouvrirModeHistoireDepuisMenu()
+                );
+            });
+        },
     });
 
     return true;

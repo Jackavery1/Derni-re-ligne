@@ -1,6 +1,7 @@
-import { SEQUENCE_HISTOIRE, ETAT_HISTOIRE_VIDE, JOURNAUX_VERA } from './histoire-donnees.js';
+import { SEQUENCE_HISTOIRE, JOURNAUX_VERA } from './histoire-donnees.js';
 import { chargerEtatHistoire, sauvegarderEtatHistoire, ecrireStockage } from './progression.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
+import { reinitialiserCampagneComplete } from './reinitialiser-campagne.js';
 import { afficherEcran } from './ecrans-ui.js';
 import { ECRANS } from './store-jeu.js';
 import { store } from './store-core.js';
@@ -32,8 +33,7 @@ export function rafraichirApresActionDev() {
 }
 
 function _reinitialiserHistoire() {
-    const etat = { ...ETAT_HISTOIRE_VIDE, enModeHistoire: true };
-    sauvegarderEtatHistoire(etat);
+    reinitialiserCampagneComplete();
     rafraichirApresActionDev();
 }
 

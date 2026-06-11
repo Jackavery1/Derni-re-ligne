@@ -3,8 +3,12 @@
     PREFIXE_LEGACY,
     CLES_STOCKAGE,
     CLES_LEGACY,
+    CLES_PREFERENCES,
     migrerClesLocalStorage,
     estCleValide,
+    estCleProgression,
+    estClePreference,
+    supprimerStockageProgression,
     estTableauIds,
     parserIdsStockage,
     lireStockageJson,
@@ -34,6 +38,8 @@ export {
     sauvegarderRecordSprintBiome,
     obtenirResumeRecordsLocaux,
     biomeEstDebloqueParHistoire,
+    obtenirMondeHistoirePourBiome,
+    BIOME_VERS_MONDE_HISTOIRE,
 } from './progression-records.js';
 
 export {

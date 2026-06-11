@@ -31,17 +31,38 @@
             aria-hidden="true"
         />
 
-        <!-- ========== BOUTON PRINCIPAL ========== -->
-        <div class="menu-bloc-principal">
+        <!-- ========== CAMPAGNE ========== -->
+        <div class="menu-bloc-principal menu-bloc-campagne">
             <button
-                id="btn-mode-histoire"
-                class="btn-menu btn-histoire"
+                id="btn-continuer"
+                class="btn-menu btn-continuer element-masque"
                 type="button"
-                aria-label="Ouvrir le mode Histoire"
+                hidden
+                aria-label="Continuer la campagne en cours"
+                aria-hidden="true"
+            >
+                <span class="btn-icone">▶</span>
+                <span class="btn-texte">CONTINUER</span>
+                <span id="btn-continuer-sous-titre" class="btn-sous-titre"></span>
+            </button>
+            <button
+                id="btn-nouvelle-partie"
+                class="btn-menu btn-nouvelle-partie btn-nouvelle-partie--seul"
+                type="button"
+                aria-label="Demarrer une nouvelle campagne"
             >
                 <span class="btn-icone">⚡</span>
-                <span class="btn-texte">MODE HISTOIRE</span>
+                <span class="btn-texte">NOUVELLE PARTIE</span>
                 <span class="btn-sous-titre">La Fragmentation</span>
+            </button>
+            <button
+                id="btn-options-titre"
+                class="btn-menu btn-options-titre"
+                type="button"
+                aria-label="Ouvrir les options"
+            >
+                <span class="btn-icone">⚙</span>
+                <span class="btn-texte">OPTIONS</span>
             </button>
         </div>
 

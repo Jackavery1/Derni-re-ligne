@@ -1,4 +1,5 @@
-export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif }) {
+export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif, obtenirMultEffets }) {
+    const multEffets = () => (typeof obtenirMultEffets === 'function' ? obtenirMultEffets() : 1);
     return {
         son(type) {
             if (!this.ctx || !this.gainEffets || this.muet) return;
@@ -14,7 +15,7 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif }) {
                     const g = ctx.createGain();
                     o.type = 'sine';
                     o.frequency.value = 440;
-                    g.gain.setValueAtTime(0.06 * this.volumeEffets, t);
+                    g.gain.setValueAtTime(0.06 * this.volumeEffets * multEffets(), t);
                     g.gain.linearRampToValueAtTime(0, t + 0.04);
                     o.connect(g);
                     g.connect(this.gainEffets);
@@ -28,7 +29,7 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif }) {
                     o.type = 'sine';
                     o.frequency.setValueAtTime(330, t);
                     o.frequency.linearRampToValueAtTime(550, t + 0.06);
-                    g.gain.setValueAtTime(0.08 * this.volumeEffets, t);
+                    g.gain.setValueAtTime(0.08 * this.volumeEffets * multEffets(), t);
                     g.gain.linearRampToValueAtTime(0, t + 0.07);
                     o.connect(g);
                     g.connect(this.gainEffets);
@@ -44,7 +45,7 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif }) {
                     o.frequency.value = 100;
                     f.type = 'lowpass';
                     f.frequency.value = 300;
-                    g.gain.setValueAtTime(0.18 * this.volumeEffets, t);
+                    g.gain.setValueAtTime(0.18 * this.volumeEffets * multEffets(), t);
                     g.gain.linearRampToValueAtTime(0, t + 0.09);
                     o.connect(f);
                     f.connect(g);
@@ -61,7 +62,7 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif }) {
                         o.frequency.value = freq;
                         g.gain.setValueAtTime(0, t + i * 0.02);
                         g.gain.linearRampToValueAtTime(
-                            0.14 * this.volumeEffets,
+                            0.14 * this.volumeEffets * multEffets(),
                             t + i * 0.02 + 0.02
                         );
                         g.gain.linearRampToValueAtTime(0, t + 0.3);
@@ -79,7 +80,7 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif }) {
                         o.frequency.value = freq;
                         g.gain.setValueAtTime(0, t + i * 0.02);
                         g.gain.linearRampToValueAtTime(
-                            0.16 * this.volumeEffets,
+                            0.16 * this.volumeEffets * multEffets(),
                             t + i * 0.02 + 0.02
                         );
                         g.gain.linearRampToValueAtTime(0, t + 0.4);
@@ -97,7 +98,7 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif }) {
                         o.frequency.value = freq;
                         g.gain.setValueAtTime(0, t + i * 0.025);
                         g.gain.linearRampToValueAtTime(
-                            0.18 * this.volumeEffets,
+                            0.18 * this.volumeEffets * multEffets(),
                             t + i * 0.025 + 0.02
                         );
                         g.gain.linearRampToValueAtTime(0, t + 0.5);
@@ -121,9 +122,12 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif }) {
                         o.frequency.value = freq;
                         const ti = t + i * 0.06;
                         g.gain.setValueAtTime(0, ti);
-                        g.gain.linearRampToValueAtTime(0.22 * this.volumeEffets, ti + 0.03);
                         g.gain.linearRampToValueAtTime(
-                            i === 3 ? 0.15 * this.volumeEffets : 0,
+                            0.22 * this.volumeEffets * multEffets(),
+                            ti + 0.03
+                        );
+                        g.gain.linearRampToValueAtTime(
+                            i === 3 ? 0.15 * this.volumeEffets * multEffets() : 0,
                             ti + 0.22
                         );
                         if (i === 3) g.gain.linearRampToValueAtTime(0, ti + 0.6);
@@ -146,7 +150,10 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif }) {
                         o.frequency.value = freq;
                         const ti = t + i * 0.1;
                         g.gain.setValueAtTime(0, ti);
-                        g.gain.linearRampToValueAtTime(0.2 * this.volumeEffets, ti + 0.02);
+                        g.gain.linearRampToValueAtTime(
+                            0.2 * this.volumeEffets * multEffets(),
+                            ti + 0.02
+                        );
                         g.gain.linearRampToValueAtTime(0, ti + 0.18);
                         o.connect(g);
                         g.connect(this.gainEffets);
@@ -168,7 +175,10 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif }) {
                         o.frequency.value = freq;
                         const ti = t + i * 0.15;
                         g.gain.setValueAtTime(0, ti);
-                        g.gain.linearRampToValueAtTime(0.18 * this.volumeEffets, ti + 0.02);
+                        g.gain.linearRampToValueAtTime(
+                            0.18 * this.volumeEffets * multEffets(),
+                            ti + 0.02
+                        );
                         g.gain.linearRampToValueAtTime(0, ti + 0.28);
                         o.connect(g);
                         g.connect(this.gainEffets);
@@ -182,7 +192,7 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif }) {
                     o.type = 'sine';
                     o.frequency.setValueAtTime(800, t);
                     o.frequency.linearRampToValueAtTime(300, t + 0.1);
-                    g.gain.setValueAtTime(0.1 * this.volumeEffets, t);
+                    g.gain.setValueAtTime(0.1 * this.volumeEffets * multEffets(), t);
                     g.gain.linearRampToValueAtTime(0, t + 0.12);
                     o.connect(g);
                     g.connect(this.gainEffets);
@@ -202,7 +212,10 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif }) {
                         o.frequency.value = freq;
                         const ti = t + i * 0.12;
                         g.gain.setValueAtTime(0, ti);
-                        g.gain.linearRampToValueAtTime(0.15 * this.volumeEffets, ti + 0.03);
+                        g.gain.linearRampToValueAtTime(
+                            0.15 * this.volumeEffets * multEffets(),
+                            ti + 0.03
+                        );
                         g.gain.linearRampToValueAtTime(0, ti + 0.25);
                         o.connect(g);
                         g.connect(this.gainEffets);
@@ -216,7 +229,7 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif }) {
                     const g = ctx.createGain();
                     o.type = 'sine';
                     o.frequency.value = 880;
-                    g.gain.setValueAtTime(0.06 * this.volumeEffets, t);
+                    g.gain.setValueAtTime(0.06 * this.volumeEffets * multEffets(), t);
                     g.gain.linearRampToValueAtTime(0, t + 0.03);
                     o.connect(g);
                     g.connect(this.gainEffets);
@@ -229,7 +242,7 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif }) {
                     const g = ctx.createGain();
                     o.type = 'sine';
                     o.frequency.value = 160;
-                    g.gain.setValueAtTime(0.08 * this.volumeEffets, t);
+                    g.gain.setValueAtTime(0.08 * this.volumeEffets * multEffets(), t);
                     g.gain.linearRampToValueAtTime(0, t + 0.06);
                     o.connect(g);
                     g.connect(this.gainEffets);

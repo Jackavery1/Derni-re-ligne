@@ -11,6 +11,8 @@ export const CLES_STOCKAGE = new Set([
     'derniereLigne_contraste',
     'derniereLigne_daltonien',
     'derniereLigne_reduireEffets',
+    'derniereLigne_constellationClicSeul',
+    'derniereLigne_mixBiomes',
     'derniereLigne_niveauGlobal',
     'derniereLigne_biomeActif',
     'derniereLigne_codex',
@@ -28,6 +30,7 @@ export const CLES_STOCKAGE = new Set([
     'derniereLigne_tutorielCoopVu',
     'derniereLigne_tutorielArchitecteVu',
     'derniereLigne_tutorielOracleVu',
+    'derniereLigne_tutorielDistorsionVu',
     'derniereLigne_touches',
     'derniereLigne_infobullesBiome',
     'derniereLigne_accentsUi',
@@ -35,6 +38,36 @@ export const CLES_STOCKAGE = new Set([
     'derniereLigne_defiJour',
     'derniereLigne_devActif',
 ]);
+
+/** Préférences conservées lors d'une nouvelle partie. */
+export const CLES_PREFERENCES = new Set([
+    'derniereLigne_volume',
+    'derniereLigne_volumeMusique',
+    'derniereLigne_muet',
+    'derniereLigne_contraste',
+    'derniereLigne_daltonien',
+    'derniereLigne_reduireEffets',
+    'derniereLigne_constellationClicSeul',
+    'derniereLigne_mixBiomes',
+    'derniereLigne_touches',
+    'derniereLigne_accentsUi',
+    'dl_migration_v1',
+]);
+
+const MOTIFS_CLES_PROGRESSION = [
+    /^derniereLigne_record_[a-z]+$/,
+    /^derniereLigne_recniv_[a-z]+$/,
+    /^derniereLigne_recordcoop_[a-z]+$/,
+    /^derniereLigne_sprint_[a-z]+$/,
+    /^derniereLigne_archi_[a-z_]+$/,
+    /^derniereLigne_monde_histoire_[a-z_]+$/,
+    /^tetrisNeo_record_[a-z]+$/,
+    /^tetrisNeo_recniv_[a-z]+$/,
+    /^tetrisNeo_recordcoop_[a-z]+$/,
+    /^tetrisNeo_sprint_[a-z]+$/,
+    /^tetrisNeo_archi_[a-z_]+$/,
+    /^tetrisNeo_monde_histoire_[a-z_]+$/,
+];
 
 export const CLES_LEGACY = new Set([
     'tetrisNeo_volume',
@@ -53,6 +86,46 @@ export const CLES_LEGACY = new Set([
     'tetrisNeo_histoireFin',
     'tetrisNeo_journalErreurs',
 ]);
+
+/** @param {string} cle */
+export function estClePreference(cle) {
+    return CLES_PREFERENCES.has(cle);
+}
+
+/** @param {string} cle */
+export function estCleProgression(cle) {
+    if (!cle || estClePreference(cle)) return false;
+    if (MOTIFS_CLES_PROGRESSION.some((re) => re.test(cle))) return true;
+    if (CLES_STOCKAGE.has(cle) && !estClePreference(cle)) return true;
+    if (CLES_LEGACY.has(cle)) return true;
+    return false;
+}
+
+/** Supprime toutes les clés de progression (conserve les préférences joueur). */
+export function supprimerStockageProgression() {
+    const aSupprimer = [];
+    try {
+        for (let i = 0; i < localStorage.length; i++) {
+            const cle = localStorage.key(i);
+            if (!cle) continue;
+            if (cle === 'dl_migration_v1') continue;
+            if (estClePreference(cle)) continue;
+            if (
+                cle.startsWith(PREFIXE_STOCKAGE) ||
+                cle.startsWith(PREFIXE_LEGACY) ||
+                estCleProgression(cle)
+            ) {
+                aSupprimer.push(cle);
+            }
+        }
+        for (const cle of aSupprimer) {
+            localStorage.removeItem(cle);
+        }
+    } catch (err) {
+        logger.warn('[progression] suppression stockage progression:', err);
+    }
+    return aSupprimer.length;
+}
 
 /** @param {string} cle */
 function cleCanonique(cle) {

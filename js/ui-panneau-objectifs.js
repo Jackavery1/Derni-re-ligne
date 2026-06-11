@@ -289,27 +289,40 @@ function _rafraichirHudTrame() {
 
     const etat = obtenirEtatHistoire();
     const trameComplete = etat.mondesCompletes?.includes('monde_trame');
+    const bandeau = _el('bandeau-trame-run');
     if (!modeHistoireEnCours() || trameComplete) {
-        wrap.classList.add('element-masque');
+        wrap?.classList.add('element-masque');
+        bandeau?.classList.add('element-masque');
         return;
     }
 
     const resume = obtenirResumeConditionsTrame(etat);
     if (resume.validees >= resume.total) {
-        wrap.classList.add('element-masque');
+        wrap?.classList.add('element-masque');
+        bandeau?.classList.add('element-masque');
         return;
     }
 
     wrap.classList.remove('element-masque');
-    _texte('hud-trame-resume', `TRAME ${resume.validees}/${resume.total}`);
-    const ul = _el('hud-trame-detail');
-    if (ul) {
+    const resumeTexte = `TRAME ${resume.validees}/${resume.total}`;
+    _texte('hud-trame-resume', resumeTexte);
+
+    const remplirListe = (ulId) => {
+        const ul = _el(ulId);
+        if (!ul) return;
         ul.replaceChildren();
         for (const d of resume.details) {
             const li = document.createElement('li');
             li.textContent = sansAccentsE(`${d.ok ? '✓' : '○'} ${d.libelle}`);
             ul.appendChild(li);
         }
+    };
+    remplirListe('hud-trame-detail');
+
+    if (bandeau) {
+        bandeau.classList.remove('element-masque');
+        _texte('bandeau-trame-resume', resumeTexte);
+        remplirListe('bandeau-trame-detail');
     }
 }
 

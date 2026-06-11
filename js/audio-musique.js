@@ -20,7 +20,8 @@ function genererSequenceBasse(config, biomeId, noteVersFreq) {
     });
 }
 
-export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq }) {
+export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq, obtenirMultMusique }) {
+    const multMusique = () => (typeof obtenirMultMusique === 'function' ? obtenirMultMusique() : 1);
     return {
         jouerNoteMusique(freq, config, volume) {
             if (!this.ctx || !this.gainMusique || this.muet) return;
@@ -129,7 +130,7 @@ export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq }) {
             const freqB = this.seqBasse?.[step];
 
             if (freq !== null && freq !== undefined) {
-                this.jouerNoteMusique(freq, config, config.volumeMelodie);
+                this.jouerNoteMusique(freq, config, config.volumeMelodie * multMusique());
             }
             if (freqB !== null && freqB !== undefined) {
                 this.jouerBasse(freqB, config, config.volumeBasse ?? 0.3);

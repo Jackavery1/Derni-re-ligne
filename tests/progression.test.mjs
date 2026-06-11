@@ -17,6 +17,8 @@ import {
     ecrireStockageJson,
     estTableauIds,
     parserIdsStockage,
+    supprimerStockageProgression,
+    estClePreference,
 } from '../js/progression.js';
 
 describe('progression', () => {
@@ -140,5 +142,16 @@ describe('progression', () => {
         expect(ecrireStockage('derniereLigne_introHistoireVue', '1')).toBe(true);
         expect(lireStockage('derniereLigne_introHistoireVue', '0')).toBe('1');
         expect(ecrireStockage('derniereLigne_tutorielHistoireVu', '1')).toBe(true);
+    });
+
+    it('supprimerStockageProgression conserve les préférences', () => {
+        ecrireStockage('derniereLigne_volume', '0.4');
+        ecrireStockage('derniereLigne_record_classique', '12000');
+        ecrireStockageJson('derniereLigne_histoire', { mondesCompletes: ['monde_lave'] });
+        expect(estClePreference('derniereLigne_volume')).toBe(true);
+        supprimerStockageProgression();
+        expect(lireStockage('derniereLigne_volume', '')).toBe('0.4');
+        expect(localStorage.getItem('derniereLigne_record_classique')).toBeNull();
+        expect(lireStockageJson('derniereLigne_histoire', null)).toBeNull();
     });
 });

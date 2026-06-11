@@ -20,42 +20,12 @@
             ← RETOUR
         </button>
     </div>
-    <div
-        id="sel-panneau-backdrop"
-        class="sel-panneau-backdrop element-masque"
-        aria-hidden="true"
-    ></div>
     <aside
-        id="sel-info-biome"
-        class="sel-info-biome panneau-meta element-masque"
+        id="sel-barre-modes"
+        class="sel-barre-modes element-masque"
         aria-hidden="true"
-        aria-labelledby="sel-biome-nom"
+        aria-label="Modes de jeu pour le biome selectionne"
     >
-        <button
-            type="button"
-            id="btn-sel-panneau-fermer"
-            class="sel-panneau-fermer"
-            aria-label="Fermer le panneau de selection"
-        >
-            ✕
-        </button>
-        <header class="sel-biome-entete">
-            <canvas
-                id="sel-biome-icone"
-                class="sel-biome-icone"
-                width="48"
-                height="48"
-                aria-hidden="true"
-            ></canvas>
-            <div
-                id="sel-biome-nom"
-                class="sel-biome-nom"
-                aria-live="polite"
-                aria-atomic="true"
-            ></div>
-        </header>
-        <div id="sel-biome-record" class="sel-biome-record"></div>
-        <div id="sel-biome-statut" class="sel-biome-statut"></div>
         <div id="toggle-coop-wrap" class="toggle-oracle-wrap element-masque" aria-hidden="true">
             <button
                 id="toggle-coop"
@@ -107,22 +77,6 @@
             </button>
             <div id="defi-jour-desc" class="oracle-toggle-desc"></div>
         </div>
-        <button
-            id="sel-btn-histoire"
-            class="bouton bouton-jouer sel-btn-histoire element-masque"
-            type="button"
-            aria-label="Ouvrir le mode Histoire pour debloquer ce monde"
-        >
-            ◈ MODE HISTOIRE
-        </button>
-        <button
-            id="sel-btn-jouer"
-            class="bouton bouton-jouer sel-btn-jouer"
-            type="button"
-            aria-label="Lancer la partie avec le biome selectionne"
-        >
-            ▶ JOUER
-        </button>
     </aside>
 </div>
 

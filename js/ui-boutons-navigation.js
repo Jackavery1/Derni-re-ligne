@@ -3,7 +3,6 @@ import { afficherEcran } from './ecrans-ui.js';
 import { afficherOngletOptions } from './options-ui.js';
 import { jouerMelodie } from './melodie.js';
 import { AudioMoteur } from './audio.js';
-import { lancerBiomeSelectionne } from './constellation.js';
 import { basculerOracle } from './oracle-jeu.js';
 import { basculerModeCoop } from './coop-jeu.js';
 import { basculerModeSprint, mettreAJourToggleSprint } from './mode-sprint.js';
@@ -11,8 +10,10 @@ import { basculerDefiJour, mettreAJourToggleDefiJour } from './mode-defi-jour.js
 import { archi_afficherSelection } from './archi-jeu.js';
 import { afficherTutorielContextuel } from './tutoriel.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
+import { initialiserBoutonsCampagne } from './ui-boutons-campagne.js';
 
 export function initialiserBoutonsNavigation() {
+    initialiserBoutonsCampagne();
     _lierBoutonsMenuPrincipal();
     _lierBoutonsRetour();
     _lierSelectionEtModes();
@@ -27,11 +28,6 @@ function _lierBoutonsMenuPrincipal() {
     document.getElementById('btn-architecte')?.addEventListener('click', () => {
         afficherTutorielContextuel('architecte');
         archi_afficherSelection();
-    });
-    document.getElementById('btn-mode-histoire')?.addEventListener('click', () => {
-        void import('./histoire-intro.js').then(({ ouvrirModeHistoireDepuisMenu }) =>
-            ouvrirModeHistoireDepuisMenu()
-        );
     });
     document
         .getElementById('btn-achievements')
@@ -78,12 +74,6 @@ function _lierBoutonsRetour() {
 }
 
 function _lierSelectionEtModes() {
-    document.getElementById('sel-btn-histoire')?.addEventListener('click', () => {
-        void import('./histoire-intro.js').then(({ ouvrirModeHistoireDepuisMenu }) =>
-            ouvrirModeHistoireDepuisMenu()
-        );
-    });
-    document.getElementById('sel-btn-jouer')?.addEventListener('click', lancerBiomeSelectionne);
     document.getElementById('toggle-oracle')?.addEventListener('click', basculerOracle);
     document.getElementById('toggle-coop')?.addEventListener('click', () => {
         basculerModeCoop();

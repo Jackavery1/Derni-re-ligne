@@ -75,6 +75,17 @@ export function rechargerCodex() {
     vus.forEach((id) => codexVus.add(id));
 }
 
+export function viderCodexPersiste() {
+    codexDebloque.clear();
+    codexVus.clear();
+    try {
+        localStorage.removeItem(CLE_CODEX);
+        localStorage.removeItem(CLE_CODEX_VUS);
+    } catch {
+        /* ignore */
+    }
+}
+
 function chargerCodexVus() {
     const brut = /** @type {unknown} */ (lireStockageJson(CLE_CODEX_VUS, []));
     return estTableauIds(brut) ? new Set(/** @type {string[]} */ (brut)) : new Set();

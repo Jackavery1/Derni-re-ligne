@@ -20,13 +20,21 @@ export function marquerIntroHistoireVue() {
     logger.debug('[intro] flag derniereLigne_introHistoireVue ecrit');
 }
 
+export function reinitialiserIntroHistoire() {
+    try {
+        localStorage.removeItem(CLE_INTRO_VUE);
+    } catch {
+        /* ignore */
+    }
+}
+
 export function obtenirSequenceIntro() {
     return obtenirHistoireTextesSync().INTRO_HISTOIRE;
 }
 
 /** Point d'entrée unique depuis le menu titre (pas retournerACarte). */
 export async function ouvrirModeHistoireDepuisMenu() {
-    logger.debug('[intro] entree handler btn-mode-histoire');
+    logger.debug('[intro] entree menu campagne');
     const dejaVue = introHistoireDejaVue();
     logger.debug('[intro] introHistoireDejaVue =', dejaVue);
 

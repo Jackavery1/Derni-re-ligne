@@ -11,5 +11,5 @@ test('application charge hors ligne après precache', async ({ page, context }) 
     await attendreApplicationPrete(page);
     await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
     await expect(page.locator('#banniere-erreur')).not.toHaveClass(/visible/);
-    await expect(page.locator('#btn-mode-histoire')).toBeVisible();
+    await expect(page.locator('#btn-nouvelle-partie')).toBeVisible();
 });

@@ -81,8 +81,11 @@ export function persisterConstellationClicSeul(actif) {
 }
 
 export function chargerConstellationClicSeulDepuisStockage() {
-    store.accessibilite.constellationClicSeul =
-        lireStockage('derniereLigne_constellationClicSeul', 'false') === 'true';
+    store.accessibilite.constellationClicSeul = existeStockage(
+        'derniereLigne_constellationClicSeul'
+    )
+        ? lireStockage('derniereLigne_constellationClicSeul', 'false') === 'true'
+        : true;
 }
 
 if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {

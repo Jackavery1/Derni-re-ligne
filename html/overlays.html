@@ -1,3 +1,31 @@
+<div
+    id="dialog-nouvelle-partie"
+    class="dialog-nouvelle-partie element-masque"
+    role="alertdialog"
+    aria-modal="true"
+    aria-labelledby="dialog-nouvelle-partie-titre"
+    aria-describedby="dialog-nouvelle-partie-texte"
+    aria-hidden="true"
+>
+    <div class="dialog-nouvelle-partie-corps">
+        <p id="dialog-nouvelle-partie-titre" class="dialog-nouvelle-partie-titre">
+            NOUVELLE PARTIE ?
+        </p>
+        <p id="dialog-nouvelle-partie-texte" class="dialog-nouvelle-partie-texte">
+            Toute la progression sera effacee : campagne, cutscenes, modes debloques, codex,
+            achievements et records. Vos reglages (volume, touches, accessibilite) seront conserves.
+        </p>
+        <div class="dialog-nouvelle-partie-actions">
+            <button type="button" id="btn-annuler-nouvelle-partie" class="bouton discret">
+                ANNULER
+            </button>
+            <button type="button" id="btn-confirm-nouvelle-partie" class="bouton bouton-danger">
+                OUI, RECOMMENCER
+            </button>
+        </div>
+    </div>
+</div>
+
 <div id="notif-niveau" role="status" aria-live="polite" aria-atomic="true">NIVEAU 2 !</div>
 
 <div id="notif-achievement" role="status" aria-live="polite" aria-atomic="true">
@@ -113,6 +141,13 @@
         </div>
         <ul id="panneau-detail-meta" class="panneau-detail-meta element-masque"></ul>
         <p id="panneau-detail-condition" class="panneau-detail-condition element-masque"></p>
+        <button
+            type="button"
+            id="btn-panneau-detail-secondaire"
+            class="bouton discret panneau-detail-secondaire element-masque"
+        >
+            ACTION
+        </button>
         <button
             type="button"
             id="btn-panneau-detail-jouer"

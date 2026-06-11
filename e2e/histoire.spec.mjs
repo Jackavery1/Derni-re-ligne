@@ -97,7 +97,7 @@ test('lancement prologue depuis la carte histoire', async ({ page }) => {
     await page.goto('/');
     await attendreApplicationPrete(page);
     await attendreNotificationsInitiales(page);
-    await page.locator('#btn-mode-histoire').click();
+    await page.locator('#btn-continuer').click();
     await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/);
     await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });
     await page.locator('.bouton-jouer-monde').click({ force: true });

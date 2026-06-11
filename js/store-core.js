@@ -73,7 +73,7 @@ export const store = {
         daltonien: false,
         reduireEffets: false,
         reduireEffetsConfigure: false,
-        constellationClicSeul: false,
+        constellationClicSeul: true,
     },
     fpsMoyen: 60,
     effetsReduits: false,

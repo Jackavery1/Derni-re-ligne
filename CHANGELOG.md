@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version    | Date       | En bref                                                                                   |
 | ---------- | ---------- | ----------------------------------------------------------------------------------------- |
+| **2.5.16** | 2026-06-11 | Menu Continuer / Nouvelle partie, remediations G6–G15, mix audio, reset campagne unifie   |
 | **2.5.15** | 2026-06-11 | Découpage CSS modulaire, HUD Trame en run, constellation au clic, liens histoire          |
 | **2.5.14** | 2026-06-11 | Remédiation audits : UX histoire, défi du jour, ESLint 0 warn, E2E contraste, doc OPT     |
 | **2.5.13** | 2026-06-11 | OPT poids : audit CI, pipeline médias, cache SW deux étages, polices woff2                |
@@ -29,6 +30,32 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.2.0**  | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                                |
 | **2.1.0**  | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                                |
 | **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                             |
+
+---
+
+## [2.5.16] — 2026-06-11
+
+### Menu titre — campagne
+
+- **Continuer** / **Nouvelle partie** / **Options** en tête de l'écran titre
+- **Nouvelle partie** : reset complet (campagne, intro, tutoriels, codex, achievements, records, modes) avec dialogue de confirmation ; préférences conservées
+- Module `reinitialiser-campagne.js` et `supprimerStockageProgression()` (source unique, réutilisé par le mode dev)
+
+### Gameplay / UX (audits G6–G15)
+
+- **G6** : courbes casual adoucies (fuochi, cosmos, vide, boss 4, finale)
+- **G7** : boss Avant-Garde en entraînement + tutoriel Distorsion avant la finale
+- **G8** : contraste appliqué avant chargement des écrans
+- **G9** : typographie secondaire Rajdhani (Press Start 2P réservé au logo)
+- **G11** : bandeau HUD Trame enrichi en run
+- **G14** : deep-link constellation → carte histoire
+- **G15** : filtre Architecte par défaut difficulté 1
+- Constellation : clic seul par défaut, panneau `panneau-detail` unifié
+- Mix audio par biome (profils + réglages Options)
+
+### Technique
+
+- **579** tests ; mock `localStorage` complet (`length` / `key`) ; E2E smoke 14/14 ; 0 cycle circulaire
 
 ---
 

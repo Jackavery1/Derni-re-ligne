@@ -282,6 +282,39 @@ body.histoire-active #section-objectifs-histoire {
     line-height: 1.45;
 }
 
+.bandeau-trame-run {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 12;
+    padding: 6px 12px;
+    background: rgba(12, 4, 24, 0.92);
+    border-bottom: 1px solid rgba(192, 68, 255, 0.45);
+    pointer-events: none;
+}
+
+.bandeau-trame-resume {
+    font-family: var(--font-ui);
+    font-size: var(--typo-corps);
+    color: #c044ff;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.bandeau-trame-detail {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    font-family: var(--font-ui);
+    font-size: clamp(11px, 1.1vw, 13px);
+    color: rgba(255, 255, 255, 0.75);
+}
+
 .hud-boss-jauge-wrap {
     --hud-jauge-ratio: 1;
     width: 100%;

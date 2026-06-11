@@ -181,14 +181,18 @@
 }
 
 .go-stat-label {
-    font-size: 0.33rem;
+    font-size: var(--typo-corps);
     color: var(--texte-dim);
-    letter-spacing: 2px;
+    letter-spacing: 0.08em;
 }
 
 .go-stat-valeur {
-    font-size: clamp(0.5rem, 2vw, 0.75rem);
-    letter-spacing: 1px;
+    font-size: var(--typo-stat);
+    letter-spacing: 0.04em;
+}
+
+.go-titre {
+    font-size: var(--typo-titre-ecran);
 }
 .go-stat-valeur.jaune {
     color: var(--jaune);

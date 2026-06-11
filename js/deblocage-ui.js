@@ -1,4 +1,5 @@
 import { obtenirEtatDeblocage } from './progression.js';
+import { mettreAJourMenuCampagneTitre } from './menu-titre-campagne.js';
 
 function definirVisibiliteMode(id, visible) {
     const el = document.getElementById(id);
@@ -53,4 +54,6 @@ export function mettreAJourVisibiliteModesDebloques() {
 
     definirVisibiliteMode('toggle-oracle-wrap', deblocage.oracleCoop);
     definirVisibiliteMode('toggle-coop-wrap', deblocage.oracleCoop);
+
+    mettreAJourMenuCampagneTitre();
 }

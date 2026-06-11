@@ -186,6 +186,27 @@ export function chargerStats() {
     }
 }
 
+export function reinitialiserStatsGlobales() {
+    const vide = creerStatsVides();
+    for (const [cle, valeur] of Object.entries(vide)) {
+        if (valeur instanceof Set) {
+            statsGlobales[cle] = new Set();
+        } else if (Array.isArray(valeur)) {
+            statsGlobales[cle] = [...valeur];
+        } else if (typeof valeur === 'object' && valeur !== null) {
+            statsGlobales[cle] = structuredClone(valeur);
+        } else {
+            statsGlobales[cle] = valeur;
+        }
+    }
+    try {
+        localStorage.removeItem(CLE_STATS);
+    } catch {
+        /* ignore */
+    }
+    sauvegarderStats();
+}
+
 export function sauvegarderStats() {
     try {
         const toSave = {

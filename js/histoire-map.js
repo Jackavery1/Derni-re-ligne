@@ -14,6 +14,7 @@ import {
 import { configurerActionsHistoire } from './histoire-actions.js';
 import { obtenirEtatHistoire, mondePeutEtreJoue } from './histoire-mondes.js';
 import { logger } from './logger.js';
+import { consommerMondeCibleCarte } from './histoire-navigation.js';
 import { annulerPrechargementMedias, demarrerPrechargementCarte } from './prechargement-medias.js';
 
 const etatCarte = {
@@ -288,11 +289,14 @@ function _lerpCamera() {
         'monde_boss_4',
         'monde_finale',
     ];
-    let idCible = 'monde_prologue';
-    for (const id of SEQUENCE) {
-        if (mondePeutEtreJoue(id, etatHist)) {
-            idCible = id;
-            break;
+    const navCible = consommerMondeCibleCarte();
+    let idCible = navCible ?? 'monde_prologue';
+    if (!navCible) {
+        for (const id of SEQUENCE) {
+            if (mondePeutEtreJoue(id, etatHist)) {
+                idCible = id;
+                break;
+            }
         }
     }
 
@@ -316,6 +320,19 @@ function _lerpCamera() {
     cam.initialise = true;
 
     logger.debug(`[carte] focus : ${idCible} y=${Math.round(cibleY)} zoom=${ZOOM}`);
+
+    if (navCible) {
+        const monde = SEQUENCE_HISTOIRE.find((m) => m.id === navCible);
+        if (monde) {
+            etatCarte.noeudSelectionne = navCible;
+            traiterSelectionNoeud(
+                etatCarte,
+                { id: navCible, monde },
+                false,
+                lancerMondeDepuisCarte
+            );
+        }
+    }
 }
 
 export async function demarrerCarteHistoire() {

@@ -9,7 +9,7 @@
 }
 
 .pause-titre {
-    font-size: clamp(0.9rem, 3.5vw, 1.3rem);
+    font-size: var(--typo-titre-ecran);
     color: var(--cyan);
     text-shadow:
         0 0 10px var(--cyan),
@@ -20,13 +20,13 @@
 .pause-stats-jeu {
     display: flex;
     gap: 28px;
-    font-size: 0.38rem;
+    font-size: var(--typo-corps);
     color: var(--texte-dim);
-    letter-spacing: 2px;
+    letter-spacing: 0.06em;
 }
 .pause-stats-jeu .val {
     display: block;
-    font-size: 0.6rem;
+    font-size: var(--typo-stat);
     color: var(--jaune);
     text-shadow: 0 0 8px var(--jaune);
     margin-top: 4px;

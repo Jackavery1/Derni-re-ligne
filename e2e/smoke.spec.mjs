@@ -55,7 +55,10 @@ test('écran titre respecte le contraste des couleurs', async ({ page }) => {
     await page.goto('/');
     await attendreApplicationPrete(page);
     await attendreNotificationsInitiales(page);
-    const result = await new AxeBuilder({ page }).analyze();
+    await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
+    const result = await new AxeBuilder({ page })
+        .disableRules(['region'])
+        .analyze({ includedImpacts: ['serious', 'critical'] });
     const contrast = result.violations.filter((v) => v.id === 'color-contrast');
     expect(contrast).toEqual([]);
 });
@@ -83,8 +86,8 @@ test('constellation affiche le panneau ancré avant JOUER', async ({ page }) => 
     await attendreApplicationPrete(page);
     await page.locator('#btn-jouer').click();
     await selectionnerBiomeClavier(page, { value: 'classique' });
-    await expect(page.locator('#sel-info-biome')).toHaveClass(/sel-panneau--visible/);
-    await expect(page.locator('#sel-btn-jouer')).toBeVisible();
+    await expect(page.locator('#panneau-detail')).not.toHaveClass(/element-masque/);
+    await expect(page.locator('#btn-panneau-detail-jouer')).toBeVisible();
 });
 
 test('sélection biome au clavier démarre une partie', async ({ page }) => {

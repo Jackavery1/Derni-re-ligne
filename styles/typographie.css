@@ -3,7 +3,10 @@
    ============================================ */
 
 .logo-titre,
-h1,
+.menu-logo {
+    font-family: var(--font-titre);
+}
+
 .titre-ecran,
 .nom-biome,
 .btn-menu,
@@ -11,8 +14,13 @@ h1,
 .pause-titre,
 .go-titre,
 .codex-entree-titre,
-.section-titre {
-    font-family: var(--font-titre);
+.section-titre,
+.codex-titre,
+.ach-titre,
+.panneau-detail-titre,
+.sel-titre-jeu {
+    font-family: var(--font-ui);
+    letter-spacing: 0.06em;
 }
 
 .label-score,

@@ -1,5 +1,17 @@
-let filtreDifficulteArchi = 'tous';
+let filtreDifficulteArchi = '1';
 let filtreDifficulteArchiOk = false;
+
+export function synchroniserUiFiltreDifficulteArchi() {
+    document.querySelectorAll('.archi-filtre-btn').forEach((b) => {
+        const btn = /** @type {HTMLElement} */ (b);
+        btn.classList.toggle('actif', btn.dataset.difficulte === filtreDifficulteArchi);
+    });
+}
+
+export function reinitialiserFiltreDifficulteArchiParDefaut() {
+    filtreDifficulteArchi = '1';
+    synchroniserUiFiltreDifficulteArchi();
+}
 
 export function appliquerFiltreDifficulteArchi() {
     document.querySelectorAll('.carte-niveau-archi').forEach((el) => {
@@ -11,6 +23,7 @@ export function appliquerFiltreDifficulteArchi() {
 }
 
 export function initialiserFiltreDifficulteArchi() {
+    synchroniserUiFiltreDifficulteArchi();
     if (filtreDifficulteArchiOk) return;
     filtreDifficulteArchiOk = true;
     document.getElementById('archi-filtre-difficulte')?.addEventListener('click', (e) => {

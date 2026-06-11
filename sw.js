@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v18';
+const VERSION_SHELL = 'dl-shell-v19';
 const VERSION_MEDIAS = 'dl-medias-v1';
 
 const MAX_PISTES_EN_CACHE = 12;
@@ -82,6 +82,7 @@ const FICHIERS_A_CACHER = [
     './js/audio-donnees.js',
     './js/audio-effets.js',
     './js/audio-fallback-biomes.js',
+    './js/audio-mix-biome.js',
     './js/audio-musique.js',
     './js/audio-partie.js',
     './js/audio.js',
@@ -106,6 +107,7 @@ const FICHIERS_A_CACHER = [
     './js/conditions-secrets.js',
     './js/config-jeu.js',
     './js/config.js',
+    './js/constellation-panneau.js',
     './js/constellation-rendu.js',
     './js/constellation-zone.js',
     './js/constellation.js',
@@ -115,6 +117,7 @@ const FICHIERS_A_CACHER = [
     './js/coop-input.js',
     './js/coop-jeu.js',
     './js/coop-logique.js',
+    './js/coop-preference.js',
     './js/coop-rendu.js',
     './js/deblocage-ui.js',
     './js/decorations-jeu.js',
@@ -153,6 +156,7 @@ const FICHIERS_A_CACHER = [
     './js/histoire-map.js',
     './js/histoire-mondes.js',
     './js/histoire-narratif.js',
+    './js/histoire-navigation.js',
     './js/histoire-session.js',
     './js/histoire-textes.js',
     './js/hud-jeu.js',
@@ -176,6 +180,7 @@ const FICHIERS_A_CACHER = [
     './js/mecaniques-histoire.js',
     './js/melodie.js',
     './js/menu-fond.js',
+    './js/menu-titre-campagne.js',
     './js/meteo.js',
     './js/mode-defi-jour.js',
     './js/mode-dev-etat.js',
@@ -215,6 +220,7 @@ const FICHIERS_A_CACHER = [
     './js/progression.js',
     './js/reactions-boss-portrait.js',
     './js/registre-modes.js',
+    './js/reinitialiser-campagne.js',
     './js/reliques.js',
     './js/rendu-accessibilite.js',
     './js/rendu-ambiance-fonds.js',
@@ -245,6 +251,7 @@ const FICHIERS_A_CACHER = [
     './js/touches-config.js',
     './js/tutoriel.js',
     './js/types.js',
+    './js/ui-boutons-campagne.js',
     './js/ui-boutons-histoire.js',
     './js/ui-boutons-navigation.js',
     './js/ui-boutons-partie.js',

@@ -1,4 +1,5 @@
-import { lireStockage, ecrireStockage } from './progression.js';
+import { lireStockage, ecrireStockage, chargerBiomeActif } from './progression.js';
+import { obtenirMixBiome, persisterMixBiome } from './audio-mix-biome.js';
 import { AudioMoteur } from './audio.js';
 import { obtenirInput, obtenirBouton } from './dom-utils.js';
 import {
@@ -23,6 +24,11 @@ import {
     reinitialiserTouches,
     formaterCodeTouche,
 } from './touches-config.js';
+
+export function appliquerContrasteDepuisStockage() {
+    const contraste = lireStockage('derniereLigne_contraste', 'false') === 'true';
+    document.body?.classList.toggle('contraste-eleve', contraste);
+}
 
 export function mettreAJourBoutonContraste(btn) {
     const actif = document.body.classList.contains('contraste-eleve');
@@ -147,11 +153,10 @@ export function initialiserOptions() {
     const vol = lireStockage('derniereLigne_volume', '1');
     const volMus = lireStockage('derniereLigne_volumeMusique', '1');
     const muet = lireStockage('derniereLigne_muet', 'false') === 'true';
-    const contraste = lireStockage('derniereLigne_contraste', 'false') === 'true';
     AudioMoteur.volumeEffets = parseFloat(vol) || 1;
     AudioMoteur.volumeMusique = parseFloat(volMus) || 1;
     AudioMoteur.muet = muet;
-    document.body.classList.toggle('contraste-eleve', contraste);
+    appliquerContrasteDepuisStockage();
     chargerAccessibiliteDepuisStockage();
     chargerAccentsUiDepuisStockage();
 
@@ -163,6 +168,8 @@ export function initialiserOptions() {
     const btnReduireEffets = obtenirBouton('btn-toggle-reduire-effets');
     const btnAccents = obtenirBouton('btn-toggle-accents');
     const btnConstellationClic = obtenirBouton('btn-toggle-constellation-clic');
+    const sliderMixMusBiome = obtenirInput('slider-mix-musique-biome');
+    const sliderMixEffBiome = obtenirInput('slider-mix-effets-biome');
     if (slider) slider.value = String(Math.round(AudioMoteur.volumeEffets * 100));
     if (sliderMus) sliderMus.value = String(Math.round(AudioMoteur.volumeMusique * 100));
     mettreAJourBoutonsMute();
@@ -171,6 +178,15 @@ export function initialiserOptions() {
     if (btnReduireEffets) mettreAJourBoutonReduireEffets(btnReduireEffets);
     if (btnAccents) mettreAJourBoutonAccents(btnAccents);
     if (btnConstellationClic) mettreAJourBoutonConstellationClic(btnConstellationClic);
+
+    const biomeMix = chargerBiomeActif();
+    const mix = obtenirMixBiome(biomeMix);
+    if (sliderMixMusBiome) {
+        sliderMixMusBiome.value = String(Math.round(mix.musique * 100));
+    }
+    if (sliderMixEffBiome) {
+        sliderMixEffBiome.value = String(Math.round(mix.effets * 100));
+    }
 
     slider?.addEventListener('input', (e) => {
         const cible = /** @type {HTMLInputElement} */ (e.target);
@@ -215,6 +231,19 @@ export function initialiserOptions() {
         const actif = !obtenirConstellationClicSeul();
         persisterConstellationClicSeul(actif);
         mettreAJourBoutonConstellationClic(btnConstellationClic);
+    });
+
+    sliderMixMusBiome?.addEventListener('input', (e) => {
+        const cible = /** @type {HTMLInputElement} */ (e.target);
+        const biomeId = chargerBiomeActif();
+        persisterMixBiome(biomeId, { musique: parseInt(cible.value, 10) / 100 });
+    });
+
+    sliderMixEffBiome?.addEventListener('input', (e) => {
+        const cible = /** @type {HTMLInputElement} */ (e.target);
+        const biomeId = chargerBiomeActif();
+        persisterMixBiome(biomeId, { effets: parseInt(cible.value, 10) / 100 });
+        AudioMoteur.son('deplacement');
     });
 
     initialiserRebindingControles();

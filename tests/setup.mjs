@@ -13,6 +13,12 @@ globalThis.fetch = async (url) => {
 };
 
 globalThis.localStorage = {
+    get length() {
+        return stockage.size;
+    },
+    key(index) {
+        return [...stockage.keys()][index] ?? null;
+    },
     getItem(cle) {
         return stockage.has(cle) ? stockage.get(cle) : null;
     },

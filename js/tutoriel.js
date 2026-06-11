@@ -6,6 +6,7 @@ const CLES = {
     coop: 'derniereLigne_tutorielCoopVu',
     architecte: 'derniereLigne_tutorielArchitecteVu',
     oracle: 'derniereLigne_tutorielOracleVu',
+    distorsion: 'derniereLigne_tutorielDistorsionVu',
 };
 
 /** @type {{ titre: string, lignes: string[], avecControles?: boolean }[]} */
@@ -70,7 +71,7 @@ const CONTROLES_CLAVIER = [
     { touche: 'P / Échap', action: 'Pause' },
 ];
 
-/** @type {Record<'coop' | 'architecte' | 'oracle', { titre: string, lignes: string[] }>} */
+/** @type {Record<'coop' | 'architecte' | 'oracle' | 'distorsion', { titre: string, lignes: string[] }>} */
 const CONTENUS = {
     coop: {
         titre: 'MODE COOPÉRATIF',
@@ -98,6 +99,15 @@ const CONTENUS = {
             'Disponible apres le boss Avant-Garde. Activez-le depuis le menu ou en partie.',
         ],
     },
+    distorsion: {
+        titre: 'ENTRAINEMENT — PUIS DISTORSION',
+        lignes: [
+            "L'Avant-Garde est un combat d'entrainement : PV reduits, attaques ralenties.",
+            'La Distorsion a 3 phases : rangees de braise, glace + glitch, puis distorsion du plateau.',
+            'Observez la jauge de vie et anticipez les changements de phase a 50 % et 25 % des PV.',
+            "Validez l'entrainement avant d'affronter la finale.",
+        ],
+    },
 };
 
 function tutorielDejaVu(cle) {
@@ -106,6 +116,21 @@ function tutorielDejaVu(cle) {
 
 function marquerTutorielVu(cle) {
     ecrireStockage(cle, '1');
+}
+
+export function reinitialiserTutoriels() {
+    for (const cle of Object.values(CLES)) {
+        try {
+            localStorage.removeItem(cle);
+        } catch {
+            /* ignore */
+        }
+    }
+    try {
+        localStorage.removeItem('derniereLigne_tutorielVu');
+    } catch {
+        /* ignore */
+    }
 }
 
 /** @param {{ titre: string, lignes: string[] }} contenu @param {boolean} [avecControles] */
@@ -270,12 +295,16 @@ export function afficherTutorielPrologueApresCutscene(onCompris) {
 }
 
 /**
- * @param {'coop' | 'architecte' | 'oracle'} contexte
+ * @param {'coop' | 'architecte' | 'oracle' | 'distorsion'} contexte
+ * @param {(() => void) | null} [onFerme]
  */
-export function afficherTutorielContextuel(contexte) {
+export function afficherTutorielContextuel(contexte, onFerme = null) {
     const cle = CLES[contexte];
     const contenu = CONTENUS[contexte];
-    if (!cle || !contenu || tutorielDejaVu(cle)) return;
+    if (!cle || !contenu || tutorielDejaVu(cle)) {
+        onFerme?.();
+        return;
+    }
 
     const overlay = document.getElementById('overlay-tutoriel');
     if (!overlay) return;
@@ -287,7 +316,10 @@ export function afficherTutorielContextuel(contexte) {
     const btnFermer = document.getElementById('btn-tutoriel-fermer');
     if (btnFermer) {
         btnFermer.textContent = 'COMPRIS';
-        btnFermer.onclick = () => fermerTutoriel(cle);
+        btnFermer.onclick = () => {
+            fermerTutoriel(cle);
+            onFerme?.();
+        };
     }
 }
 

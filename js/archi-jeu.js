@@ -44,6 +44,7 @@ import {
 import {
     appliquerFiltreDifficulteArchi,
     initialiserFiltreDifficulteArchi,
+    reinitialiserFiltreDifficulteArchiParDefaut,
 } from './archi-filtre-difficulte.js';
 
 export { archi, modeArchiActif } from './archi-logique.js';
@@ -394,6 +395,7 @@ export function archi_afficherSelection() {
     const grille = document.getElementById('archi-sel-grille');
     if (!grille) return;
     initialiserSelectionArchiListeners();
+    reinitialiserFiltreDifficulteArchiParDefaut();
     initialiserFiltreDifficulteArchi();
     fermerPanneauDetail();
     grille.textContent = '';

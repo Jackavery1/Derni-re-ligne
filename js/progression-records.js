@@ -136,7 +136,7 @@ export function obtenirResumeRecordsLocaux() {
     }));
 }
 
-const BIOME_VERS_MONDE_HISTOIRE = {
+export const BIOME_VERS_MONDE_HISTOIRE = {
     classique: null,
     lave: 'monde_lave',
     ocean: 'monde_ocean',
@@ -153,6 +153,14 @@ const BIOME_VERS_MONDE_HISTOIRE = {
     trame: 'monde_trame',
     paradoxe: 'monde_paradoxe',
 };
+
+/**
+ * @param {string} biomeId
+ * @returns {string | null | undefined}
+ */
+export function obtenirMondeHistoirePourBiome(biomeId) {
+    return BIOME_VERS_MONDE_HISTOIRE[biomeId];
+}
 
 /**
  * @param {string} biomeId
