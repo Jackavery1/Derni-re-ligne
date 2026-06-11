@@ -74,3 +74,32 @@
         </button>
     </div>
 </div>
+
+<div
+    id="panneau-detail"
+    class="panneau-detail element-masque"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="panneau-detail-titre"
+    aria-hidden="true"
+>
+    <div id="panneau-detail-backdrop" class="panneau-detail-backdrop" aria-hidden="true"></div>
+    <aside id="panneau-detail-corps" class="panneau-detail-corps panneau-meta">
+        <button
+            type="button"
+            id="btn-panneau-detail-fermer"
+            class="panneau-detail-fermer"
+            aria-label="Fermer le panneau de detail"
+        >
+            ✕
+        </button>
+        <div id="panneau-detail-icone-wrap" class="panneau-detail-icone-wrap">
+            <canvas id="panneau-detail-icone" width="160" height="160" aria-hidden="true"></canvas>
+        </div>
+        <h2 id="panneau-detail-titre" class="panneau-detail-titre"></h2>
+        <p id="panneau-detail-sous-titre" class="panneau-detail-sous-titre"></p>
+        <div id="panneau-detail-description" class="panneau-detail-description"></div>
+        <ul id="panneau-detail-meta" class="panneau-detail-meta element-masque"></ul>
+        <p id="panneau-detail-condition" class="panneau-detail-condition element-masque"></p>
+    </aside>
+</div>

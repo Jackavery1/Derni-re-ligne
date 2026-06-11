@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v13';
+const VERSION_SHELL = 'dl-shell-v14';
 const VERSION_MEDIAS = 'dl-medias-v1';
 
 const MAX_PISTES_EN_CACHE = 12;
@@ -223,6 +223,7 @@ const FICHIERS_A_CACHER = [
     './js/ui-boutons-partie.js',
     './js/ui-init.js',
     './js/ui-notifications.js',
+    './js/ui-panneau-detail.js',
     './js/ui-panneau-objectifs.js',
     './js/vivant-strategies.js',
     './js/vivant.js',

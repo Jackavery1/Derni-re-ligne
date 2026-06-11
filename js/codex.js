@@ -1,11 +1,17 @@
 import { statsGlobales } from './achievements.js';
 import { lireStockageJson, ecrireStockageJson, estTableauIds } from './progression.js';
 import { creerFileNotifications } from './notifications-file.js';
-import { obtenirCanvas } from './dom-utils.js';
 import { logger } from './logger.js';
 import { sansAccentsE } from './texte-jeu.js';
 import { rendreIconeSurCanvas } from './icones-pixel.js';
 import { obtenirIdIcone, obtenirAccentEntree } from './codex-icones-map.js';
+import {
+    ouvrirPanneauDetail,
+    fermerPanneauDetail,
+    obtenirPanneauDetailId,
+    abonnerFermeturePanneauDetail,
+    initialiserPanneauDetail,
+} from './ui-panneau-detail.js';
 
 const CLE_CODEX = 'derniereLigne_codex';
 const CLE_CODEX_VUS = 'derniereLigne_codexVus';
@@ -18,8 +24,6 @@ let promesseCodex = null;
 export async function chargerDonneesCodex() {
     if (codexDonnees) return codexDonnees;
     if (!promesseCodex) {
-        // Import dynamique (chunk lazy) plutôt que fetch JSON : les fonctions
-        // `condition` ne survivent pas à une sérialisation JSON.
         promesseCodex = import('./codex-donnees.js')
             .then((module) => {
                 codexDonnees = module.CODEX;
@@ -111,8 +115,36 @@ export async function changerChapitreCodex(chapitre, btn) {
     });
     btn?.classList.add('actif');
     btn?.setAttribute('aria-selected', 'true');
-    fermerLecteurCodex();
+    fermerPanneauDetail();
     await genererListeCodex(chapitre);
+}
+
+/**
+ * @param {import('./codex-donnees.js').CODEX[string]} entree
+ * @param {boolean} debloque
+ */
+export function ouvrirEntreeCodex(entree, debloque) {
+    if (debloque) {
+        codexVus.add(entree.id);
+        sauvegarderCodexVus();
+    }
+
+    ouvrirPanneauDetail({
+        id: entree.id,
+        icone: { id: obtenirIdIcone(entree.id), taillePixel: 10 },
+        accent: obtenirAccentEntree(entree.id),
+        titre: entree.titre,
+        sousTitre: entree.sousTitre,
+        description: debloque ? entree.texte : '',
+        typoDescription: entree.chapitre === 'chroniques' ? 'narratif' : 'ui',
+        verrouille: !debloque,
+        conditionTexte: entree.conditionTexte,
+    });
+    void genererListeCodex(chapitreCodexActif);
+}
+
+export function fermerLecteurCodex() {
+    fermerPanneauDetail();
 }
 
 export async function genererListeCodex(chapitre) {
@@ -122,6 +154,7 @@ export async function genererListeCodex(chapitre) {
     liste.textContent = '';
 
     const entrees = Object.values(CODEX).filter((e) => e.chapitre === chapitre);
+    const selectionId = obtenirPanneauDetailId();
 
     entrees.forEach((entree) => {
         const debloque = codexDebloque.has(entree.id);
@@ -129,9 +162,11 @@ export async function genererListeCodex(chapitre) {
         const accent = obtenirAccentEntree(entree.id);
         const idIcone = obtenirIdIcone(entree.id);
         const item = document.createElement('div');
-        item.className = `codex-item panneau-meta ${debloque ? 'debloque' : 'verrouille'} ${estNouveau ? 'nouveau' : ''}`;
+        item.className = `codex-item panneau-meta ${debloque ? 'debloque' : 'verrouille'} ${estNouveau ? 'nouveau' : ''} ${selectionId === entree.id ? 'selectionnee' : ''}`;
         item.dataset.id = entree.id;
         item.style.setProperty('--accent-carte', accent);
+        item.setAttribute('role', 'button');
+        item.tabIndex = 0;
 
         const iconeEl = document.createElement('canvas');
         iconeEl.className = 'icone-carte-codex';
@@ -150,9 +185,14 @@ export async function genererListeCodex(chapitre) {
 
         item.append(iconeEl, titreEl, condEl);
 
-        if (debloque) {
-            item.addEventListener('click', () => ouvrirEntreeCodex(entree));
-        }
+        const activer = () => ouvrirEntreeCodex(entree, debloque);
+        item.addEventListener('click', activer);
+        item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                activer();
+            }
+        });
 
         liste.appendChild(item);
     });
@@ -165,53 +205,6 @@ export async function genererListeCodex(chapitre) {
     }
 }
 
-export function ouvrirEntreeCodex(entree) {
-    const lecteur = document.getElementById('codex-lecteur');
-    if (!lecteur) return;
-
-    codexVus.add(entree.id);
-    sauvegarderCodexVus();
-
-    const iconeEl = document.getElementById('codex-entree-icone');
-    const titreEl = document.getElementById('codex-entree-titre');
-    const sousTitreEl = document.getElementById('codex-entree-sous-titre');
-    const texteEl = document.getElementById('codex-entree-texte');
-
-    if (iconeEl instanceof HTMLCanvasElement) {
-        rendreIconeSurCanvas(iconeEl, obtenirIdIcone(entree.id));
-    }
-    if (titreEl) titreEl.textContent = sansAccentsE(entree.titre);
-    if (sousTitreEl) sousTitreEl.textContent = sansAccentsE(entree.sousTitre);
-    if (texteEl) {
-        texteEl.textContent = '';
-        entree.texte.forEach((p) => {
-            const para = document.createElement('div');
-            para.className = 'codex-para';
-            para.textContent = sansAccentsE(p);
-            texteEl.appendChild(para);
-        });
-    }
-
-    const canvas = obtenirCanvas('canvas-illust-codex');
-    if (canvas && entree.illustration) {
-        const ctx2d = canvas.getContext('2d');
-        ctx2d.clearRect(0, 0, canvas.width, canvas.height);
-        import('./codex-illustrations.js').then(({ ILLUSTRATIONS_CODEX }) => {
-            const fn = ILLUSTRATIONS_CODEX[entree.illustration];
-            if (typeof fn === 'function') fn(ctx2d, canvas.width, canvas.height);
-        });
-    }
-
-    lecteur.style.display = 'flex';
-    lecteur.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    genererListeCodex(chapitreCodexActif);
-}
-
-export function fermerLecteurCodex() {
-    const lecteur = document.getElementById('codex-lecteur');
-    if (lecteur) lecteur.style.display = 'none';
-}
-
 export async function genererCodexComplet() {
     const CODEX = await chargerDonneesCodex();
     const total = Object.keys(CODEX).length;
@@ -222,13 +215,17 @@ export async function genererCodexComplet() {
 }
 
 export function initialiserCodexUI() {
+    initialiserPanneauDetail();
+    abonnerFermeturePanneauDetail(() => {
+        void genererListeCodex(chapitreCodexActif);
+    });
+
     document.querySelectorAll('.codex-onglet').forEach((btn) => {
         if (!(btn instanceof HTMLElement)) return;
         btn.addEventListener('click', () => {
             changerChapitreCodex(btn.dataset.chapitre, btn);
         });
     });
-    document.getElementById('btn-codex-fermer')?.addEventListener('click', fermerLecteurCodex);
 }
 
 export { chargerDonneesCodex as obtenirCodex };

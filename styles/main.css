@@ -2375,14 +2375,16 @@ body.contraste-eleve .bouton {
     flex-direction: column;
     align-items: center;
     gap: 14px;
-    padding: 24px 16px;
+    padding: 24px 16px 32px;
     max-height: 100vh;
     overflow-y: auto;
     scrollbar-width: none;
     position: relative;
     z-index: 2;
     width: 100%;
-    max-width: 480px;
+    max-width: min(1100px, 92vw);
+    margin-inline: auto;
+    box-sizing: border-box;
 }
 .codex-header {
     text-align: center;
@@ -2437,9 +2439,13 @@ body.contraste-eleve .bouton {
 
 .codex-liste {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(168px, 220px));
+    justify-content: center;
+    gap: 10px;
     width: 100%;
+    max-width: min(1100px, 92vw);
+    margin-inline: auto;
+    box-sizing: border-box;
 }
 .codex-item {
     --accent-carte: #6644cc;
@@ -2447,17 +2453,26 @@ body.contraste-eleve .bouton {
     box-shadow:
         0 0 10px color-mix(in srgb, var(--accent-carte) 22%, transparent),
         inset 0 0 24px rgba(0, 0, 0, 0.45);
-    padding: 12px 8px;
+    padding: 6px 6px 8px;
+    min-width: 0;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     text-align: center;
     cursor: pointer;
     transition:
         border-color 0.15s,
         box-shadow 0.15s,
         transform 0.15s;
+}
+.codex-item.selectionnee {
+    border-color: var(--accent-carte);
+    box-shadow:
+        0 0 22px color-mix(in srgb, var(--accent-carte) 55%, transparent),
+        inset 0 0 20px rgba(0, 0, 0, 0.5);
+    transform: translateY(-1px);
 }
 .codex-item.debloque:hover {
     border-color: color-mix(in srgb, var(--accent-carte) 75%, transparent);
@@ -2467,7 +2482,8 @@ body.contraste-eleve .bouton {
     transform: translateY(-2px);
 }
 .codex-item.verrouille {
-    cursor: not-allowed;
+    cursor: pointer;
+    border-style: dashed;
 }
 .codex-item.nouveau {
     border-color: color-mix(in srgb, var(--accent-carte) 80%, transparent);
@@ -2497,100 +2513,185 @@ body.contraste-eleve .bouton {
     font-size: var(--typo-nom-carte);
     color: var(--texte);
     letter-spacing: 1px;
-    line-height: 1.4;
+    line-height: 1.3;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .codex-item-cond {
     font-family: 'Rajdhani', var(--font-ui);
     font-size: var(--typo-corps);
     color: var(--texte-dim);
     letter-spacing: 0.5px;
-    line-height: 1.35;
+    line-height: 1.3;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    min-height: 3.9em;
 }
 
-.codex-lecteur {
-    width: 100%;
-    background: rgba(8, 8, 26, 0.97);
-    border: 2px solid var(--violet);
-    padding: 16px;
+.panneau-detail {
+    position: fixed;
+    inset: 0;
+    z-index: 8600;
+    pointer-events: none;
+}
+.panneau-detail:not(.element-masque) {
+    pointer-events: none;
+}
+.panneau-detail-backdrop {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 12, 0.55);
+    pointer-events: auto;
+}
+.panneau-detail-corps {
+    --accent-carte: #6644cc;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(380px, 92vw);
+    max-width: 100%;
+    padding: 16px 14px 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 0 30px rgba(180, 0, 255, 0.2);
-    animation: apparitionCodex 0.3s ease-out;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    border-radius: 6px 0 0 6px;
+    border-color: color-mix(in srgb, var(--accent-carte) 60%, transparent);
+    box-shadow:
+        -8px 0 32px rgba(0, 0, 0, 0.45),
+        0 0 24px color-mix(in srgb, var(--accent-carte) 28%, transparent);
+    transform: translateX(105%);
+    transition: transform 0.25s ease-out;
+    pointer-events: auto;
 }
-@keyframes apparitionCodex {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.panneau-detail-corps--ouvert {
+    transform: translateX(0);
 }
-.codex-btn-fermer {
+.panneau-detail-corps--instant {
+    transition: none;
+}
+body.effets-reduits .panneau-detail-corps {
+    transition: none;
+}
+.panneau-detail-fermer {
     align-self: flex-end;
     background: transparent;
-    border: none;
+    border: 1px solid var(--bordure);
     color: var(--texte-dim);
     font-family: var(--police);
-    font-size: 0.35rem;
+    font-size: 0.55rem;
     cursor: pointer;
+    padding: 6px 10px;
     letter-spacing: 1px;
-    padding: 4px 8px;
 }
-.codex-btn-fermer:hover {
+.panneau-detail-fermer:hover {
     color: var(--texte);
+    border-color: var(--accent-carte);
 }
-.codex-illust {
-    width: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+.panneau-detail-icone-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 0 28px color-mix(in srgb, var(--accent-carte) 45%, transparent);
 }
-.codex-entree-icone {
+.panneau-detail-icone-wrap canvas {
     display: block;
-    width: 80px;
-    height: 80px;
     image-rendering: pixelated;
 }
-.codex-entree-titre {
-    font-size: clamp(0.5rem, 2vw, 0.75rem);
-    color: var(--violet);
-    letter-spacing: 3px;
-    text-shadow: 0 0 10px var(--violet);
+.panneau-detail-titre {
+    font-family: var(--font-titre);
+    font-size: calc(var(--typo-nom-carte) * 1.3);
+    color: var(--accent-carte);
+    letter-spacing: 2px;
     text-align: center;
+    text-shadow: 0 0 12px color-mix(in srgb, var(--accent-carte) 50%, transparent);
+    line-height: 1.35;
+    width: 100%;
 }
-.codex-entree-sous-titre {
-    font-family: var(--font-ui);
-    font-size: var(--taille-ui-md);
+.panneau-detail-sous-titre {
+    font-family: 'Rajdhani', var(--font-ui);
+    font-size: var(--typo-corps);
     color: var(--texte-dim);
-    letter-spacing: 0.5px;
     text-align: center;
+    letter-spacing: 0.5px;
+    width: 100%;
 }
-.codex-entree-texte {
-    font-family: var(--font-narratif);
-    font-size: var(--taille-narratif);
-    color: var(--texte);
-    line-height: 1.75;
-    letter-spacing: 0.3px;
+.panneau-detail-description {
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 8px;
     text-align: left;
-    width: 100%;
-    max-height: 180px;
+    max-height: min(42vh, 320px);
     overflow-y: auto;
     scrollbar-width: thin;
 }
-.codex-para {
-    padding: 6px 0;
-    border-left: 2px solid rgba(180, 0, 255, 0.3);
-    padding-left: 10px;
+.panneau-detail-description--narratif {
+    font-family: var(--font-narratif);
+    font-size: var(--taille-narratif);
+    line-height: 1.7;
+}
+.panneau-detail-description--ui {
+    font-family: 'Rajdhani', var(--font-ui);
+    font-size: var(--typo-corps);
+    line-height: 1.45;
+}
+.panneau-detail-para {
+    margin: 0;
+    padding: 4px 0 4px 10px;
+    border-left: 2px solid color-mix(in srgb, var(--accent-carte) 35%, transparent);
+    color: var(--texte);
+}
+.panneau-detail-meta {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-family: 'Orbitron', var(--font-stats);
+    font-size: clamp(0.5rem, 1vw, 0.65rem);
+    color: var(--accent-carte);
+    letter-spacing: 1px;
+}
+.panneau-detail-meta li {
+    padding: 4px 0;
+}
+.panneau-detail-condition {
+    width: 100%;
+    font-family: 'Rajdhani', var(--font-ui);
+    font-size: var(--typo-corps);
+    color: var(--texte-dim);
+    font-style: italic;
+    text-align: center;
+    line-height: 1.4;
+    margin: 0;
 }
 
-@media (max-width: 480px) {
-    .codex-liste {
-        grid-template-columns: repeat(2, 1fr);
+@media (max-width: 719px) {
+    .panneau-detail-backdrop {
+        display: block;
+    }
+    .panneau-detail-corps {
+        top: auto;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        max-height: 55vh;
+        border-radius: 12px 12px 0 0;
+        transform: translateY(105%);
+    }
+    .panneau-detail-corps--ouvert {
+        transform: translateY(0);
     }
 }
 
