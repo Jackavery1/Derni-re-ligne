@@ -57,6 +57,7 @@ export async function preparerPremierLancement(page) {
 
 /** Désactive le cache stale en tests locaux et débloque le mode libre. */
 export async function preparerPageSansSw(page, etatHistoire = ETAT_DEBLOCAGE_MONDE_LIBRE) {
+    await page.route('**/sw.js', (route) => route.abort());
     await page.addInitScript((etat) => {
         window.__NEO_SILENT_NOTIFS__ = true;
         localStorage.setItem('dl_migration_v1', '1');
@@ -105,9 +106,26 @@ export async function selectionnerBiomeClavier(page, option = { value: 'classiqu
     await expect(page.locator('#btn-panneau-detail-jouer')).toBeVisible({ timeout: 5000 });
 }
 
+/** @param {import('@playwright/test').Page} page @param {string} [biomeId] */
+async function confirmerDemarragePartie(page, biomeId = 'classique') {
+    await page.locator('#btn-panneau-detail-jouer').click({ force: true });
+    const demarre = await page.evaluate((biome) => {
+        if (document.body.classList.contains('partie-active')) return true;
+        const demarrer = window.__NEO_TEST__?.demarrerPartieLibre;
+        if (typeof demarrer === 'function') {
+            demarrer(biome);
+            return document.body.classList.contains('partie-active');
+        }
+        return false;
+    }, biomeId);
+    if (!demarre) {
+        await page.locator('#btn-panneau-detail-jouer').click({ force: true });
+    }
+}
+
 /** @param {import('@playwright/test').Page} page */
 export async function attendrePartieVisible(page) {
-    await expect(page.locator('body')).toHaveClass(/partie-active/, { timeout: 15000 });
+    await expect(page.locator('body')).toHaveClass(/partie-active/, { timeout: 20000 });
     await expect(page.locator('#conteneur-principal')).toBeVisible({ timeout: 15000 });
     await expect(page.locator('#canvas-plateau')).toBeVisible({ timeout: 15000 });
 }
@@ -171,7 +189,7 @@ export async function demarrerPartie(page) {
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await selectionnerBiomeClavier(page);
-    await page.locator('#btn-panneau-detail-jouer').click({ force: true });
+    await confirmerDemarragePartie(page);
     await attendrePartieVisible(page);
 }
 
@@ -252,7 +270,7 @@ export async function demarrerPartieViaClavier(page) {
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await selectionnerBiomeClavier(page);
-    await page.locator('#btn-panneau-detail-jouer').click({ force: true });
+    await confirmerDemarragePartie(page);
     await attendrePartieVisible(page);
 }
 

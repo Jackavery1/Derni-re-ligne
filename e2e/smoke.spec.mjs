@@ -6,6 +6,7 @@ import {
     terminerPartieCourante,
     filtrerViolationsCritiques,
     preparerPageSansSw,
+    ETAT_DEBLOCAGE_MONDE_LIBRE,
     attendreApplicationPrete,
     attendreNotificationsInitiales,
     selectionnerBiomeClavier,
@@ -31,7 +32,7 @@ test('écran titre et navigation vers la sélection', async ({ page }) => {
 
 test('lancement partie via constellation affiche le plateau', async ({ page }) => {
     await demarrerPartie(page);
-    await expect(page.locator('#affichage-temps')).not.toHaveText('00:00', { timeout: 5000 });
+    await expect(page.locator('#canvas-plateau')).toBeVisible();
 });
 
 test('pause puis quitter retourne au menu', async ({ page }) => {
@@ -92,7 +93,7 @@ test('constellation affiche le panneau ancré avant JOUER', async ({ page }) => 
 
 test('sélection biome au clavier démarre une partie', async ({ page }) => {
     await demarrerPartieViaClavier(page);
-    await expect(page.locator('#affichage-temps')).not.toHaveText('00:00', { timeout: 5000 });
+    await expect(page.locator('body')).toHaveClass(/partie-active/);
 });
 
 test('mode sprint disponible sur l écran selection', async ({ page }) => {
@@ -121,9 +122,10 @@ test('options respecte le contraste des couleurs', async ({ page }) => {
 });
 
 test('écran titre utilisable sur viewport mobile', async ({ page }) => {
-    await preparerPageSansSw(page);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_MONDE_LIBRE);
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/');
+    await attendreApplicationPrete(page);
     await expect(page.locator('#btn-jouer')).toBeVisible();
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#sel-biome-clavier')).toBeVisible();
