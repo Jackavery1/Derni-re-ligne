@@ -9,6 +9,7 @@ import {
     SEUILS_COMPLETION,
 } from './histoire-mondes.js';
 import { obtenirActionsHistoire } from './histoire-actions.js';
+import { annulerPrechargementMedias } from './prechargement-medias.js';
 import { modeDevActif } from './mode-dev-etat.js';
 import { obtenirEtoilesPersistees } from './gestionnaire-difficulte.js';
 import { definirTexteUi } from './texte-jeu.js';
@@ -284,6 +285,7 @@ export function mettreAJourEnteteHistoire() {
 }
 
 export function lancerMondeDepuisCarte(monde) {
+    annulerPrechargementMedias();
     const actions = obtenirActionsHistoire();
     if (['monde_miroir', 'monde_trame', 'monde_paradoxe'].includes(monde.id)) {
         actions.demarrerMondeCache?.(monde.id);

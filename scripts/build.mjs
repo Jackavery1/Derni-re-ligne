@@ -1,6 +1,14 @@
 import { createHash } from 'crypto';
 import * as esbuild from 'esbuild';
-import { cpSync, mkdirSync, readFileSync, writeFileSync, rmSync, readdirSync } from 'fs';
+import {
+    cpSync,
+    mkdirSync,
+    readFileSync,
+    writeFileSync,
+    rmSync,
+    readdirSync,
+    existsSync,
+} from 'fs';
 import { execSync } from 'child_process';
 
 const dist = 'dist';
@@ -31,6 +39,7 @@ await esbuild.build({
 cpSync('styles', `${dist}/styles`, { recursive: true });
 cpSync('html', `${dist}/html`, { recursive: true });
 cpSync('fonts', `${dist}/fonts`, { recursive: true });
+if (existsSync('assets')) cpSync('assets', `${dist}/assets`, { recursive: true });
 cpSync('manifest.json', `${dist}/manifest.json`);
 cpSync('img', `${dist}/img`, { recursive: true });
 
@@ -47,108 +56,9 @@ writeFileSync(
     )
 );
 
-const jsFiles = readdirSync(`${dist}/js`)
-    .filter((f) => f.endsWith('.js') && !f.endsWith('.map'))
-    .map((f) => `./js/${f}`);
+cpSync('sw.js', `${dist}/sw.js`);
+execSync('node scripts/generer-precache.mjs --prod', { stdio: 'inherit' });
 
-const swDev = readFileSync('sw.js', 'utf8');
-const htmlFiles = [...swDev.matchAll(/\.\/html\/[^']+\.html/g)].map((m) => m[0]);
-const staticFiles = [
-    './',
-    './index.html',
-    './manifest.json',
-    './styles/main.css',
-    './styles/objectifs-histoire.css',
-    './data/histoire-textes.json',
-    ...jsFiles,
-    ...jsFiles.map((f) => `${f}.map`),
-    './img/robo-accueil.png',
-    './img/icon-192.png',
-    './img/icon-512.png',
-    './img/icon-maskable-512.png',
-    './fonts/PressStart2P-Regular.ttf',
-    ...htmlFiles,
-];
-const bloc = staticFiles.map((f) => `    '${f}',`).join('\n');
-writeFileSync(
-    `${dist}/sw.js`,
-    `const VERSION_CACHE = 'derniere-ligne-${pkg.version}-prod';
+const jsFiles = readdirSync(`${dist}/js`).filter((f) => f.endsWith('.js') && !f.endsWith('.map'));
 
-const FICHIERS_A_CACHER = [
-${bloc}
-];
-
-/** @param {Request} requete */
-async function chercherDansCache(requete) {
-    const cache = await caches.open(VERSION_CACHE);
-    const direct = await cache.match(requete);
-    if (direct) return direct;
-
-    const url = new URL(requete.url);
-    const chemins = [url.pathname, '.' + url.pathname];
-    for (const chemin of chemins) {
-        const hit = await cache.match(chemin);
-        if (hit) return hit;
-    }
-    return null;
-}
-
-self.addEventListener('install', (evenement) => {
-    evenement.waitUntil(
-        caches.open(VERSION_CACHE).then((cache) => cache.addAll(FICHIERS_A_CACHER)).then(() => self.skipWaiting())
-    );
-});
-
-self.addEventListener('activate', (evenement) => {
-    evenement.waitUntil(
-        caches
-            .keys()
-            .then((cles) =>
-                Promise.all(cles.filter((cle) => cle !== VERSION_CACHE).map((cle) => caches.delete(cle)))
-            )
-            .then(() => self.clients.claim())
-    );
-});
-
-self.addEventListener('message', (evenement) => {
-    if (evenement.data?.type === 'SKIP_WAITING') self.skipWaiting();
-});
-
-self.addEventListener('fetch', (evenement) => {
-    if (evenement.request.method !== 'GET') return;
-
-    const url = new URL(evenement.request.url);
-    // Les chunks ont un hash dans leur nom : contenu immuable, cache-first sans risque.
-    const estChunkHashe = /\\/js\\/chunk-[A-Z0-9]+\\.js/.test(url.pathname);
-    // Le reste (index.html, bundle.js, CSS, fragments html) n'est pas versionne :
-    // network-first pour ne pas servir une version perimee quand on est en ligne.
-    const estNonVersionne = /\\.(html|css|js)$/.test(url.pathname) && !estChunkHashe;
-
-    evenement.respondWith(
-        chercherDansCache(evenement.request).then((reponseCache) => {
-            const prefererReseau = estNonVersionne && navigator.onLine;
-            if (reponseCache && !prefererReseau) return reponseCache;
-            return fetch(evenement.request)
-                .then((reponseReseau) => {
-                    if (!reponseReseau || reponseReseau.status !== 200 || reponseReseau.type === 'error') {
-                        return reponseCache ?? reponseReseau;
-                    }
-                    if (evenement.request.url.startsWith(self.location.origin)) {
-                        const copie = reponseReseau.clone();
-                        caches.open(VERSION_CACHE).then((cache) => cache.put(evenement.request, copie));
-                    }
-                    return reponseReseau;
-                })
-                .catch(() => {
-                    if (reponseCache) return reponseCache;
-                    if (evenement.request.destination === 'document') return caches.match('./index.html');
-                });
-        })
-    );
-});
-`
-);
-
-console.log(
-    `Build prod → ${dist}/ (bundle + ${jsFiles.length - 1} chunks, ${staticFiles.length} entrées SW)`
-);
+console.log(`Build prod → ${dist}/ (bundle + ${jsFiles.length - 1} chunks, SW a deux etages)`);

@@ -30,6 +30,8 @@ jobs:
             - run: npm run test:coverage
             - run: npm audit --audit-level=moderate
             - run: npm run build
+            - run: node scripts/generer-precache.mjs --prod
+            - run: npm run audit:poids
             - run: npm run analyze
             - name: Budget taille bundle prod
               run: node scripts/verifier-bundle.mjs

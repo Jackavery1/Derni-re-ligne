@@ -14,6 +14,7 @@ import {
 import { configurerActionsHistoire } from './histoire-actions.js';
 import { obtenirEtatHistoire, mondePeutEtreJoue } from './histoire-mondes.js';
 import { logger } from './logger.js';
+import { annulerPrechargementMedias, demarrerPrechargementCarte } from './prechargement-medias.js';
 
 const etatCarte = {
     canvasCarte: null,
@@ -296,9 +297,11 @@ export async function demarrerCarteHistoire() {
     etatCarte.carteActive = true;
     mettreAJourAriaCarteHistoire(etatCarte);
     etatCarte.idFrameCarte = requestAnimationFrame(boucleCarte);
+    demarrerPrechargementCarte();
 }
 
 export function arreterCarteHistoire() {
+    annulerPrechargementMedias();
     etatCarte.carteActive = false;
     if (etatCarte.idFrameCarte) {
         cancelAnimationFrame(etatCarte.idFrameCarte);

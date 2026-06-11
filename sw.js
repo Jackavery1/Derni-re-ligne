@@ -1,17 +1,17 @@
-const VERSION_CACHE = 'derniere-ligne-2.5.12-r10';
+// Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
+const VERSION_SHELL = 'dl-shell-v12';
+const VERSION_MEDIAS = 'dl-medias-v1';
+
+const MAX_PISTES_EN_CACHE = 12;
+const META_ORDRE_MUSIQUE = './__meta_ordre_musique__';
 
 const FICHIERS_A_CACHER = [
+    /* PRECACHE:DEBUT */
     './',
     './index.html',
     './manifest.json',
     './styles/main.css',
     './styles/objectifs-histoire.css',
-    './fonts/PressStart2P-Regular.ttf',
-    './img/icon-192.png',
-    './img/icon-512.png',
-    './img/icon-maskable-512.png',
-    './img/robo-accueil.png',
-    './img/robo-favicon.png',
     './html/controles.html',
     './html/ecran-achievements.html',
     './html/ecran-archi-resultat.html',
@@ -30,6 +30,16 @@ const FICHIERS_A_CACHER = [
     './html/interface-jeu-coop.html',
     './html/interface-jeu.html',
     './html/overlays.html',
+    './data/histoire-textes.json',
+    './assets/polices/crimson-pro-latin-400-italic.woff2',
+    './assets/polices/crimson-pro-latin-400-normal.woff2',
+    './assets/polices/orbitron-latin-600-normal.woff2',
+    './assets/polices/orbitron-latin-700-normal.woff2',
+    './assets/polices/press-start-2p-latin-400-normal.woff2',
+    './assets/polices/rajdhani-latin-400-normal.woff2',
+    './assets/polices/rajdhani-latin-500-normal.woff2',
+    './assets/polices/rajdhani-latin-600-normal.woff2',
+    './assets/polices/rajdhani-latin-700-normal.woff2',
     './js/accessibilite.js',
     './js/achievements-donnees.js',
     './js/achievements-histoire.js',
@@ -167,6 +177,7 @@ const FICHIERS_A_CACHER = [
     './js/portraits-cutscene-utils.js',
     './js/portraits-cutscene.js',
     './js/portraits-vera.js',
+    './js/prechargement-medias.js',
     './js/profil-jeu.js',
     './js/profil-rendu.js',
     './js/progression-histoire.js',
@@ -213,12 +224,31 @@ const FICHIERS_A_CACHER = [
     './js/ui-panneau-objectifs.js',
     './js/vivant-strategies.js',
     './js/vivant.js',
-    './data/histoire-textes.json',
+    './img/icon-192.png',
+    './img/icon-512.png',
+    './img/icon-maskable-512.png',
+    './img/robo-accueil.png',
+    /* PRECACHE:FIN */
 ];
 
-/** @param {Request} requete */
-async function chercherDansCache(requete) {
-    const cache = await caches.open(VERSION_CACHE);
+/** @param {string} pathname */
+function estCheminMusique(pathname) {
+    return pathname.includes('/assets/musique/');
+}
+
+/** @param {string} pathname */
+function estCheminScene(pathname) {
+    return pathname.includes('/assets/cutscenes/');
+}
+
+/** @param {string} pathname */
+function estCheminMedia(pathname) {
+    return estCheminMusique(pathname) || estCheminScene(pathname);
+}
+
+/** @param {Request} requete @param {string} nomCache */
+async function chercherDansCache(requete, nomCache) {
+    const cache = await caches.open(nomCache);
     const direct = await cache.match(requete);
     if (direct) return direct;
 
@@ -231,22 +261,123 @@ async function chercherDansCache(requete) {
     return null;
 }
 
+/** @param {Cache} cache @param {string} urlAbsolue */
+async function evincerPistesMusique(cache, urlAbsolue) {
+    const metaReq = new Request(META_ORDRE_MUSIQUE);
+    /** @type {string[]} */
+    let ordre = [];
+    const metaRes = await cache.match(metaReq);
+    if (metaRes) {
+        try {
+            ordre = await metaRes.json();
+        } catch {
+            ordre = [];
+        }
+    }
+
+    ordre = ordre.filter((u) => u !== urlAbsolue);
+    ordre.push(urlAbsolue);
+
+    while (ordre.length > MAX_PISTES_EN_CACHE) {
+        const ancienne = ordre.shift();
+        if (!ancienne) break;
+        await cache.delete(new Request(ancienne));
+        await cache.delete(ancienne);
+    }
+
+    await cache.put(
+        metaReq,
+        new Response(JSON.stringify(ordre), {
+            headers: { 'Content-Type': 'application/json' },
+        })
+    );
+}
+
+/**
+ * Medias (musique, scenes) : cache-first dans dl-medias, mise en cache a la volee.
+ * Lecture audio prevue via fetch + decodeAudioData (Surtension) : pas de Range requests.
+ * Aucun element <audio> dans le jeu actuellement.
+ *
+ * @param {FetchEvent} evenement
+ */
+async function gererFetchMedia(evenement) {
+    const cache = await caches.open(VERSION_MEDIAS);
+    const reponseCache = await cache.match(evenement.request);
+
+    if (reponseCache) return reponseCache;
+
+    try {
+        const reponseReseau = await fetch(evenement.request);
+        if (reponseReseau && reponseReseau.status === 200 && reponseReseau.type !== 'error') {
+            const copie = reponseReseau.clone();
+            await cache.put(evenement.request, copie);
+            if (estCheminMusique(new URL(evenement.request.url).pathname)) {
+                await evincerPistesMusique(cache, evenement.request.url);
+            }
+            return reponseReseau;
+        }
+        return reponseCache ?? reponseReseau;
+    } catch {
+        return reponseCache ?? reponseErreurReseau();
+    }
+}
+
+/** @param {FetchEvent} evenement */
+async function gererFetchShell(evenement) {
+    const url = new URL(evenement.request.url);
+    const estChunkHashe = /\/js\/chunk-[A-Z0-9]+\.js/.test(url.pathname);
+    const estNonVersionne = /\.(html|css|js)$/.test(url.pathname) && !estChunkHashe;
+
+    const reponseCache = await chercherDansCache(evenement.request, VERSION_SHELL);
+    const prefererReseau = estNonVersionne && navigator.onLine;
+
+    if (reponseCache && !prefererReseau) return reponseCache;
+
+    try {
+        const reponseReseau = await fetch(evenement.request);
+        if (!reponseReseau || reponseReseau.status !== 200 || reponseReseau.type === 'error') {
+            return reponseCache ?? reponseReseau ?? reponseErreurReseau();
+        }
+
+        if (evenement.request.url.startsWith(self.location.origin)) {
+            const copie = reponseReseau.clone();
+            caches.open(VERSION_SHELL).then((c) => c.put(evenement.request, copie));
+        }
+
+        return reponseReseau;
+    } catch {
+        if (reponseCache) return reponseCache;
+        if (evenement.request.destination === 'document') {
+            return caches.match('./index.html');
+        }
+        return reponseErreurReseau();
+    }
+}
+
+function reponseErreurReseau() {
+    return new Response('', {
+        status: 503,
+        statusText: 'Network error',
+    });
+}
+
 self.addEventListener('install', (evenement) => {
     evenement.waitUntil(
         caches
-            .open(VERSION_CACHE)
+            .open(VERSION_SHELL)
             .then((cache) => cache.addAll(FICHIERS_A_CACHER))
             .then(() => self.skipWaiting())
     );
 });
 
 self.addEventListener('activate', (evenement) => {
+    const cachesValides = new Set([VERSION_SHELL, VERSION_MEDIAS]);
     evenement.waitUntil(
         caches
             .keys()
             .then((cles) =>
                 Promise.all(
-                    cles.filter((cle) => cle !== VERSION_CACHE).map((cle) => caches.delete(cle))
+                    cles.filter((cle) => !cachesValides.has(cle)).map((cle) => caches.delete(cle))
                 )
             )
             .then(() => self.clients.claim())
@@ -261,50 +392,12 @@ self.addEventListener('fetch', (evenement) => {
     if (evenement.request.method !== 'GET') return;
 
     const url = new URL(evenement.request.url);
-    const estModuleJeu = url.pathname.includes('/js/') && /\.js$/.test(url.pathname);
-    const estHtmlOuCss = /\.(html|css)$/.test(url.pathname);
+    if (!evenement.request.url.startsWith(self.location.origin)) return;
 
-    evenement.respondWith(
-        chercherDansCache(evenement.request).then((reponseCache) => {
-            const prefererReseau = (estModuleJeu || estHtmlOuCss) && navigator.onLine;
-            if (reponseCache && !prefererReseau) {
-                return reponseCache;
-            }
+    if (estCheminMedia(url.pathname)) {
+        evenement.respondWith(gererFetchMedia(evenement));
+        return;
+    }
 
-            return fetch(evenement.request)
-                .then((reponseReseau) => {
-                    if (
-                        !reponseReseau ||
-                        reponseReseau.status !== 200 ||
-                        reponseReseau.type === 'error'
-                    ) {
-                        return reponseCache ?? reponseReseau ?? reponseHorsLigne(evenement.request);
-                    }
-
-                    if (evenement.request.url.startsWith(self.location.origin)) {
-                        const copie = reponseReseau.clone();
-                        caches
-                            .open(VERSION_CACHE)
-                            .then((cache) => cache.put(evenement.request, copie));
-                    }
-
-                    return reponseReseau;
-                })
-                .catch(() => {
-                    if (reponseCache) return reponseCache;
-                    if (evenement.request.destination === 'document') {
-                        return caches.match('./index.html');
-                    }
-                    return reponseHorsLigne(evenement.request);
-                });
-        })
-    );
+    evenement.respondWith(gererFetchShell(evenement));
 });
-
-function reponseHorsLigne(_requete) {
-    return new Response('Ressource indisponible hors ligne', {
-        status: 503,
-        statusText: 'Service Unavailable',
-        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-    });
-}

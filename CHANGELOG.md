@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version    | Date       | En bref                                                                                   |
 | ---------- | ---------- | ----------------------------------------------------------------------------------------- |
+| **2.5.13** | 2026-06-11 | OPT poids : audit CI, pipeline médias, cache SW deux étages, polices woff2                |
 | **2.5.12** | 2026-06-11 | Audit gameplay UX dims 1–10 : Sprint 40L, tutoriel étendu, records locaux, fallback audio |
 | **2.5.11** | 2026-06-11 | Remédiation audit technique 12 dimensions (qualité, perf, sécurité, a11y, versioning)     |
 | **2.5.10** | 2026-06-11 | Memorial Trame, profil VERA synthwave, codex icônes pixel, socle visuel meta              |
@@ -28,6 +29,14 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                             |
 
 ---
+
+## [2.5.13] — 2026-06-11
+
+### Optimisation poids & cache (OPT-1 / OPT-2 / OPT-3)
+
+- **OPT-1** : script `audit:poids`, budgets CI, rapport JSON
+- **OPT-2** : pipeline `media:musique` / `media:scenes` / `media:polices` (ffmpeg, sharp), polices woff2 auto-hébergées
+- **OPT-3** : cache SW deux étages (`dl-shell` + `dl-medias`), precache généré, FIFO 12 pistes, préchargement carte histoire
 
 ## [2.5.12] — 2026-06-11
 
