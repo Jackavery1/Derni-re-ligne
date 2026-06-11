@@ -68,7 +68,14 @@ function mettreAJourInfoBiome(idBiome) {
     }
     if (elRecord) {
         if (verrouille) {
-            elRecord.textContent = sansAccentsE('A DEBLOQUER EN MODE HISTOIRE');
+            const nbVerrouilles = ORDRE_BIOMES_LIBRE.filter(
+                (id) => !biomeEstDebloqueParHistoire(id)
+            ).length;
+            elRecord.textContent = sansAccentsE(
+                nbVerrouilles > 0
+                    ? `${nbVerrouilles} MONDE(S) A DEBLOQUER EN HISTOIRE`
+                    : 'A DEBLOQUER EN MODE HISTOIRE'
+            );
         } else if (modeSprintActif) {
             const ms = obtenirRecordSprintBiome(idBiome);
             elRecord.textContent = sansAccentsE(

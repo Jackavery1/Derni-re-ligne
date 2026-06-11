@@ -12,7 +12,6 @@ import {
 import { execSync } from 'child_process';
 
 const dist = 'dist';
-const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
 
 execSync('node scripts/exporter-donnees-json.mjs', { stdio: 'inherit' });
 
@@ -38,7 +37,6 @@ await esbuild.build({
 
 cpSync('styles', `${dist}/styles`, { recursive: true });
 cpSync('html', `${dist}/html`, { recursive: true });
-cpSync('fonts', `${dist}/fonts`, { recursive: true });
 if (existsSync('assets')) cpSync('assets', `${dist}/assets`, { recursive: true });
 cpSync('manifest.json', `${dist}/manifest.json`);
 cpSync('img', `${dist}/img`, { recursive: true });

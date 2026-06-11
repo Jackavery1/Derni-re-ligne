@@ -12,8 +12,8 @@ import { obtenirActionsHistoire } from './histoire-actions.js';
 import { annulerPrechargementMedias } from './prechargement-medias.js';
 import { modeDevActif } from './mode-dev-etat.js';
 import { obtenirEtoilesPersistees } from './gestionnaire-difficulte.js';
-import { definirTexteUi } from './texte-jeu.js';
-import { obtenirResumeConditionsTrame } from './conditions-secrets.js';
+import { definirTexteUi, sansAccentsE } from './texte-jeu.js';
+import { obtenirResumeConditionsTrame, obtenirGuideMondeSecret } from './conditions-secrets.js';
 
 export function mettreAJourAriaCarteHistoire(etatCarte) {
     const canvas = etatCarte.canvasCarte;
@@ -163,6 +163,42 @@ export function traiterSelectionNoeud(etatCarte, noeud, doubleTap, lancerMondeDe
     }
 }
 
+function _mettreAJourGuideEtAvertissement(monde, etatMonde, estBoss) {
+    const elGuide = document.getElementById('histoire-detail-guide');
+    const guideSecret = obtenirGuideMondeSecret(monde.id);
+    if (elGuide) {
+        if (guideSecret && (etatMonde !== 'complete' || monde.estCache)) {
+            elGuide.textContent = sansAccentsE(guideSecret);
+            elGuide.classList.remove('element-masque');
+        } else {
+            elGuide.textContent = '';
+            elGuide.classList.add('element-masque');
+        }
+    }
+
+    const elAvert = document.getElementById('histoire-detail-avert');
+    const mondesDifficiles = [
+        'monde_miroir',
+        'monde_trame',
+        'monde_vide',
+        'monde_eclipse',
+        'monde_finale',
+    ];
+    if (elAvert) {
+        const afficherAvert =
+            etatMonde === 'disponible' && mondesDifficiles.includes(monde.id) && !estBoss;
+        if (afficherAvert) {
+            elAvert.textContent = sansAccentsE(
+                'Monde exigeant — prenez le temps de lire les objectifs et les mécaniques du biome.'
+            );
+            elAvert.classList.remove('element-masque');
+        } else {
+            elAvert.textContent = '';
+            elAvert.classList.add('element-masque');
+        }
+    }
+}
+
 function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuisCarte) {
     void etatCarte;
     const panneau = document.getElementById('histoire-monde-details');
@@ -253,6 +289,8 @@ function mettreAJourPanneauDetails(etatCarte, monde, etatHist, lancerMondeDepuis
         btnJouer.onclick = () => lancerMondeDepuisCarte(monde);
     }
 
+    _mettreAJourGuideEtAvertissement(monde, etatMonde, estBoss);
+
     panneau.classList.remove('histoire-panneau-masque');
 }
 
@@ -270,9 +308,12 @@ export function mettreAJourEnteteHistoire() {
     const etatHist = obtenirEtatHistoire();
     const resumeTrame = obtenirResumeConditionsTrame(etatHist);
     const trameDebloquee = etatHist.mondesCompletes?.includes('monde_trame');
+    const elDetail = document.getElementById('histoire-prog-trame-detail');
     if (elTrame && wrapTrame) {
         if (trameDebloquee) {
             wrapTrame.classList.add('element-masque');
+            elDetail?.replaceChildren();
+            elDetail?.classList.add('element-masque');
         } else {
             wrapTrame.classList.remove('element-masque');
             elTrame.textContent = `TRAME ${resumeTrame.validees}/${resumeTrame.total}`;
@@ -280,6 +321,15 @@ export function mettreAJourEnteteHistoire() {
                 .map((d) => `${d.ok ? '✓' : '○'} ${d.libelle}`)
                 .join(' · ');
             elTrame.title = detail;
+            if (elDetail) {
+                elDetail.classList.remove('element-masque');
+                elDetail.replaceChildren();
+                for (const d of resumeTrame.details) {
+                    const li = document.createElement('li');
+                    li.textContent = sansAccentsE(`${d.ok ? '✓' : '○'} ${d.libelle}`);
+                    elDetail.appendChild(li);
+                }
+            }
         }
     }
 }

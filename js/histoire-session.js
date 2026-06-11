@@ -19,7 +19,7 @@ import { modeDevActif } from './mode-dev-etat.js';
 import { obtenirActionsHistoire, configurerActionsHistoire } from './histoire-actions.js';
 import { arreterSuiviMonde, demarrerSuiviMonde } from './gestionnaire-difficulte.js';
 import { fermerOverlayObjectifsPre } from './ui-panneau-objectifs.js';
-import { activerModeHistoire, desactiverModeHistoire } from './mode-histoire.js';
+import { activerModeHistoire } from './mode-histoire.js';
 
 /** @param {string} mondeId */
 export function demarrerMondeHistoire(mondeId) {
@@ -116,7 +116,6 @@ function _lancerPartieHistoire(monde) {
 }
 
 export async function retournerACarte() {
-    desactiverModeHistoire();
     store.histoire.mondeActuel = null;
     arreterSuiviMonde();
     store.histoire.etat = null;
@@ -133,8 +132,12 @@ export async function retournerACarte() {
         const journal = store.histoire.dernierJournal;
         store.histoire.dernierJournal = null;
         const { afficherJournalVera } = await import('./histoire-narratif.js');
-        afficherJournalVera(journal, () => afficherEcran(ECRANS.HISTOIRE_MAP));
+        afficherJournalVera(journal, () => {
+            activerModeHistoire();
+            afficherEcran(ECRANS.HISTOIRE_MAP);
+        });
     } else {
+        activerModeHistoire();
         afficherEcran(ECRANS.HISTOIRE_MAP);
     }
 }

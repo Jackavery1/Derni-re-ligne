@@ -84,14 +84,17 @@
                     ◇ RÉDUIRE EFFETS
                 </button>
                 <button
-                    class="bouton discret"
+                    class="bouton option-accents-ui"
                     type="button"
                     id="btn-toggle-accents"
                     aria-pressed="false"
                 >
-                    É ACCENTS UI
+                    É ACCENTS UI (dialogues inchanges)
                 </button>
             </div>
+            <p class="options-hint-controles">
+                Personnaliser les touches : onglet <strong>CONTRÔLES</strong> ci-dessus.
+            </p>
             <p class="options-confidentialite">
                 Vos scores, preferences et progression sont enregistres localement sur cet appareil
                 (localStorage). Aucune donnee n’est transmise à un serveur.
@@ -105,7 +108,9 @@
             aria-labelledby="tab-controles"
             hidden
         >
-            <p class="options-controles-intro">Clavier, manette et rebinding</p>
+            <p class="options-controles-intro">
+                Reassignez chaque action — cliquez sur une touche puis appuyez sur la nouvelle.
+            </p>
             <div id="liste-controles-rebind" class="liste-controles-rebind"></div>
             <button class="bouton discret" type="button" id="btn-controles-defaut">
                 ↺ TOUCHES PAR DEFAUT

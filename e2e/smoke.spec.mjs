@@ -50,7 +50,10 @@ test('écran titre sans violations accessibilité critiques', async ({ page }) =
 });
 
 test('écran titre respecte le contraste des couleurs', async ({ page }) => {
+    await preparerPageSansSw(page);
     await page.goto('/');
+    await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
     const result = await new AxeBuilder({ page }).analyze();
     const contrast = result.violations.filter((v) => v.id === 'color-contrast');
     expect(contrast).toEqual([]);

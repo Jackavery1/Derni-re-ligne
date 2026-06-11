@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { store } from '../js/store-core.js';
 import {
     HUMEURS_PERSONNAGES,

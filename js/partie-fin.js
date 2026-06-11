@@ -25,6 +25,8 @@ import { finaliserPartieCommune } from './partie-fin-commun.js';
 import { coop } from './coop-logique.js';
 import { store } from './store-core.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
+import { defiJourActif } from './mode-defi-jour.js';
+import { obtenirDefiDuJour, enregistrerScoreDefiJour } from './defi-jour.js';
 import { enregistrerTopOut, arreterSuiviMonde } from './gestionnaire-difficulte.js';
 import {
     surFinDeMondeHistoire,
@@ -42,6 +44,18 @@ import { onGameOverHistoire } from './mecaniques-histoire.js';
 import { oracle, obtenirScoreFinalOracle } from './oracle-jeu.js';
 import { statsGlobales } from './achievements.js';
 import { arreterFondBiome } from './rendu-fond-biome.js';
+
+function _enregistrerRecordsFinPartie(victoire, scoreFinal) {
+    if (victoire && etat.modeJeu === 'sprint' && !modeHistoireEnCours()) {
+        sauvegarderRecordSprintBiome(obtenirBiomeActif(), obtenirTempsEcoule());
+    }
+    if (victoire && defiJourActif && !modeHistoireEnCours()) {
+        const defi = obtenirDefiDuJour();
+        if (obtenirBiomeActif() === defi.biomeId && etat.lignes >= defi.objectifLignes) {
+            enregistrerScoreDefiJour(defi.date, scoreFinal);
+        }
+    }
+}
 
 export function terminerPartie(victoire = false) {
     if (coop.actif) return;
@@ -77,9 +91,7 @@ export function terminerPartie(victoire = false) {
     _appliquerStatsOracleFinPartie(scoreFinal);
 
     const nouveauRecord = sauvegarderRecord(scoreFinal);
-    if (victoire && etat.modeJeu === 'sprint' && !modeHistoireEnCours()) {
-        sauvegarderRecordSprintBiome(obtenirBiomeActif(), obtenirTempsEcoule());
-    }
+    _enregistrerRecordsFinPartie(victoire, scoreFinal);
     _appliquerProgressionFinPartie(scoreFinal);
 
     mettreAJourAffichageRecord();

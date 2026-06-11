@@ -331,26 +331,11 @@ function afficherTableauRecordsLocaux() {
     }
 }
 
-export function afficherProfil() {
-    if (typeof document === 'undefined') return;
-
-    const donnees = obtenirDonneesAffichage();
-    const lignesPartie = donnees.lignesPartie || 0;
-    const profil =
-        donnees === donneesPartie && donneesPartie.timestampsVerrou.length > 0
-            ? calculerProfilStyle(donnees, lignesPartie || etat.lignes)
-            : dernierProfil.profil || calculerProfilStyle(donnees, lignesPartie);
-
-    const titre =
-        donnees === donneesPartie && donneesPartie.timestampsVerrou.length > 0
-            ? genererTitreStyle(profil)
-            : dernierProfil.titreStyle || genererTitreStyle(profil);
-
+function _remplirEnteteProfil(donnees, profil, titre, profilVide) {
     const elTitre = document.getElementById('profil-titre-style');
     const elBiome = document.getElementById('profil-biome-badge');
     const elNote = document.getElementById('profil-note-vera');
     const elVide = document.getElementById('profil-vide-msg');
-    const profilVide = donnees.timestampsVerrou.length === 0;
 
     if (elTitre) elTitre.textContent = profilVide ? '' : titre;
     if (elVide) elVide.classList.toggle('element-masque', !profilVide);
@@ -369,7 +354,9 @@ export function afficherProfil() {
         const b = BIOMES[biomeId];
         elBiome.textContent = b && !profilVide ? b.nom.toUpperCase() : '';
     }
+}
 
+function _remplirStatsProfil(donnees) {
     const nb = donnees.timestampsVerrou.length;
     const set = (id, val) => {
         const el = document.getElementById(id);
@@ -400,6 +387,26 @@ export function afficherProfil() {
             wrapOracle.classList.add('element-masque');
         }
     }
+}
+
+export function afficherProfil() {
+    if (typeof document === 'undefined') return;
+
+    const donnees = obtenirDonneesAffichage();
+    const lignesPartie = donnees.lignesPartie || 0;
+    const profil =
+        donnees === donneesPartie && donneesPartie.timestampsVerrou.length > 0
+            ? calculerProfilStyle(donnees, lignesPartie || etat.lignes)
+            : dernierProfil.profil || calculerProfilStyle(donnees, lignesPartie);
+
+    const titre =
+        donnees === donneesPartie && donneesPartie.timestampsVerrou.length > 0
+            ? genererTitreStyle(profil)
+            : dernierProfil.titreStyle || genererTitreStyle(profil);
+
+    const profilVide = donnees.timestampsVerrou.length === 0;
+    _remplirEnteteProfil(donnees, profil, titre, profilVide);
+    _remplirStatsProfil(donnees);
 
     afficherTableauRecordsLocaux();
 

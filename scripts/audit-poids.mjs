@@ -59,10 +59,6 @@ function filtrerParPrefixe(fichiers, prefixes) {
     return fichiers.filter((f) => prefixes.some((p) => f.cheminRelatif.startsWith(p)));
 }
 
-function filtrerParExtensions(fichiers, extensions) {
-    return fichiers.filter((f) => extensions.some((ext) => f.cheminRelatif.endsWith(ext)));
-}
-
 function sommeOctets(fichiers) {
     return fichiers.reduce((total, f) => total + f.octets, 0);
 }
@@ -118,10 +114,7 @@ function categoriser(fichiersProjet) {
             f.cheminRelatif.endsWith('.html')
         ),
     ];
-    const polices = [
-        ...filtrerParPrefixe(fichiersProjet, ['fonts/']),
-        ...filtrerParPrefixe(fichiersProjet, ['assets/polices/']),
-    ];
+    const polices = filtrerParPrefixe(fichiersProjet, ['assets/polices/']);
     const images = [
         ...filtrerParPrefixe(fichiersProjet, ['img/']),
         ...filtrerParPrefixe(fichiersProjet, ['assets/']).filter(
@@ -257,7 +250,7 @@ function afficherTableau(categories, jsMinifie, appShell, evaluations) {
             budget: null,
         },
         {
-            nom: 'Polices (fonts/ + assets/polices/)',
+            nom: 'Polices (assets/polices/)',
             fichiers: categories.polices.fichiers,
             octets: categories.polices.octets,
             budget: BUDGETS.policesKo,

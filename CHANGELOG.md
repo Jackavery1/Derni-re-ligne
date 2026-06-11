@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version    | Date       | En bref                                                                                   |
 | ---------- | ---------- | ----------------------------------------------------------------------------------------- |
+| **2.5.14** | 2026-06-11 | Remédiation audits : UX histoire, défi du jour, ESLint 0 warn, E2E contraste, doc OPT     |
 | **2.5.13** | 2026-06-11 | OPT poids : audit CI, pipeline médias, cache SW deux étages, polices woff2                |
 | **2.5.12** | 2026-06-11 | Audit gameplay UX dims 1–10 : Sprint 40L, tutoriel étendu, records locaux, fallback audio |
 | **2.5.11** | 2026-06-11 | Remédiation audit technique 12 dimensions (qualité, perf, sécurité, a11y, versioning)     |
@@ -29,6 +30,15 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                             |
 
 ---
+
+## [2.5.14] — 2026-06-11
+
+### Remédiation audits (hors contenu média G1–G3)
+
+- **Technique** : ESLint 0 warning, TTF retiré du build prod, test FIFO SW, doc `docs/optimisation-poids.md`, E2E contraste stabilisé
+- **Préchargement** : musique `.ogg` + `.m4a` sur la carte histoire ; mode histoire actif sur la carte
+- **UX** : tutoriel 6 slides, panneau Trame détaillé, guides mondes secrets, défi du jour local, légende Architecte
+- **547** tests unitaires, precache prod ~1665 Ko
 
 ## [2.5.13] — 2026-06-11
 

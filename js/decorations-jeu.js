@@ -374,6 +374,38 @@ function reinitialiserEffetsHorsCanvas() {
     }
 }
 
+/** @type {Record<string, (reduits: boolean) => void>} */
+const DESSINATEURS_DECO = {
+    trainee_simple: () => dessinerTrainee(1),
+    trainee_double: () => dessinerTrainee(2),
+    trainee_arc_en_ciel: () => dessinerTraineeArcEnCiel(),
+    trainee_combo: () => dessinerTraineeCombo(),
+    etoiles_trainee: () => dessinerEtoilesTrainee(),
+    flammes_bords: () => dessinerFlammesBords(0.6),
+    flammes_intenses: () => dessinerFlammesBords(1),
+    eclairs_bords: () => dessinerEclairsBords(),
+    bordure_pulse: (reduits) => {
+        if (!reduits) dessinerBordurePulse();
+    },
+    pouls_bordure: (reduits) => {
+        if (!reduits) dessinerPoulsBordure();
+    },
+    aura_doree: () => dessinerAuraDoree(),
+    aura_cosmos: () => dessinerAuraCosmos(),
+    vortex_bords: () => dessinerVortexBords(),
+    notes_flottantes: () => dessinerNotesFlottantes(),
+    gemmes_orbitales: () => dessinerGemmesOrbitales(),
+    flash_cyan: (reduits) => {
+        if (!reduits) dessinerFlashCyan();
+    },
+    particules_biome: () => dessinerParticulesBiome(),
+    halo_relique: () => dessinerHaloRelique(),
+    halo_oracle: () => dessinerHaloOracle(),
+    bordure_bicolore: () => dessinerBordureBicolore(),
+    couronne_lumineuse: () => {},
+    robo_arc_en_ciel: () => definirArcEnCiel(true),
+};
+
 export function dessinerDecorations() {
     const actives = statsGlobales.decorationsActives;
     if (!actives.length || !etat.estEnCours || etat.estEnPause) {
@@ -387,73 +419,7 @@ export function dessinerDecorations() {
         if (canvas) canvas.style.boxShadow = '';
     }
 
-    actives.forEach((deco) => {
-        switch (deco) {
-            case 'trainee_simple':
-                dessinerTrainee(1);
-                break;
-            case 'trainee_double':
-                dessinerTrainee(2);
-                break;
-            case 'trainee_arc_en_ciel':
-                dessinerTraineeArcEnCiel();
-                break;
-            case 'trainee_combo':
-                dessinerTraineeCombo();
-                break;
-            case 'etoiles_trainee':
-                dessinerEtoilesTrainee();
-                break;
-            case 'flammes_bords':
-                dessinerFlammesBords(0.6);
-                break;
-            case 'flammes_intenses':
-                dessinerFlammesBords(1);
-                break;
-            case 'eclairs_bords':
-                dessinerEclairsBords();
-                break;
-            case 'bordure_pulse':
-                if (!reduits) dessinerBordurePulse();
-                break;
-            case 'pouls_bordure':
-                if (!reduits) dessinerPoulsBordure();
-                break;
-            case 'aura_doree':
-                dessinerAuraDoree();
-                break;
-            case 'aura_cosmos':
-                dessinerAuraCosmos();
-                break;
-            case 'vortex_bords':
-                dessinerVortexBords();
-                break;
-            case 'notes_flottantes':
-                dessinerNotesFlottantes();
-                break;
-            case 'gemmes_orbitales':
-                dessinerGemmesOrbitales();
-                break;
-            case 'flash_cyan':
-                if (!reduits) dessinerFlashCyan();
-                break;
-            case 'particules_biome':
-                dessinerParticulesBiome();
-                break;
-            case 'halo_relique':
-                dessinerHaloRelique();
-                break;
-            case 'halo_oracle':
-                dessinerHaloOracle();
-                break;
-            case 'bordure_bicolore':
-                dessinerBordureBicolore();
-                break;
-            case 'couronne_lumineuse':
-                break;
-            case 'robo_arc_en_ciel':
-                definirArcEnCiel(true);
-                break;
-        }
-    });
+    for (const deco of actives) {
+        DESSINATEURS_DECO[deco]?.(reduits);
+    }
 }

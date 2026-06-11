@@ -204,6 +204,19 @@ export function obtenirSecondesRestantesAttenteTrame() {
  * Resume des 4 conditions pour debloquer la Trame Primordiale.
  * @param {typeof import('./histoire-donnees.js').ETAT_HISTOIRE_VIDE} etatHist
  */
+/** @param {string} mondeId @returns {string | null} */
+export function obtenirGuideMondeSecret(mondeId) {
+    const guides = {
+        monde_miroir:
+            'Apres le boss Archiviste : enchaîner 3 Tetris d’affilee dans le biome Cyber.',
+        monde_trame:
+            'Completez le Miroir, trouvez les 9 transmissions, battez tous les boss sans continue, puis l’action secrete dans Distorsion.',
+        monde_paradoxe:
+            'Obtenez la fin secrete de la campagne et realisez 3 tops volontaires au Prologue.',
+    };
+    return guides[mondeId] ?? null;
+}
+
 export function obtenirResumeConditionsTrame(etatHist) {
     const ct = etatHist?.conditionsTrame ?? ETAT_HISTOIRE_VIDE.conditionsTrame;
     const details = [

@@ -171,6 +171,30 @@ function _dessinerPortrait(canvas, ctx, personnageId, parle, ts, ligneCourante) 
     }
 }
 
+function _etatVisuelPortraits(personnageActuel, personnages, indexLigne, sequenceLignes) {
+    const { gauche, droite, parleGauche } = _portraitsPourLigne(
+        personnageActuel,
+        personnages,
+        indexLigne
+    );
+    const posActuel = POSITION_PERSONNAGE[personnageActuel] ?? 'droite';
+    const enEcoute = posActuel === 'centre';
+    const ligneCourante = sequenceLignes[indexLigne] ?? null;
+
+    return {
+        gauche,
+        droite,
+        parleGauche,
+        enEcoute,
+        ligneCourante,
+        clsG: !gauche ? 'absent' : enEcoute || !parleGauche ? 'ecoute' : 'parle',
+        clsD: !droite ? 'absent' : enEcoute || parleGauche ? 'ecoute' : 'parle',
+        ligneGauche: parleGauche && !enEcoute ? ligneCourante : null,
+        ligneDroite: !parleGauche && !enEcoute ? ligneCourante : null,
+        couleur: COULEUR_PERSONNAGE[personnageActuel] ?? '#ffffff',
+    };
+}
+
 export function mettreAJourPortraitsCutscene(
     personnageActuel,
     sequenceLignes,
@@ -195,48 +219,33 @@ export function mettreAJourPortraitsCutscene(
         _dernierIndexLigne = indexLigne;
     }
 
-    const ligneCourante = sequenceLignes[indexLigne] ?? null;
+    const visuel = _etatVisuelPortraits(personnageActuel, personnages, indexLigne, sequenceLignes);
+    canvasGauche.className = visuel.clsG;
+    canvasDroite.className = visuel.clsD;
 
-    const { gauche, droite, parleGauche } = _portraitsPourLigne(
-        personnageActuel,
-        personnages,
-        indexLigne
-    );
-    const posActuel = POSITION_PERSONNAGE[personnageActuel] ?? 'droite';
-    const enEcoute = posActuel === 'centre';
-
-    const clsG = !gauche ? 'absent' : enEcoute || !parleGauche ? 'ecoute' : 'parle';
-    const clsD = !droite ? 'absent' : enEcoute || parleGauche ? 'ecoute' : 'parle';
-    canvasGauche.className = clsG;
-    canvasDroite.className = clsD;
-
-    const ligneGauche = parleGauche && !enEcoute ? ligneCourante : null;
-    const ligneDroite = !parleGauche && !enEcoute ? ligneCourante : null;
-
-    if (gauche) {
+    if (visuel.gauche) {
         _dessinerPortrait(
             canvasGauche,
             ctxGauche,
-            gauche,
-            !enEcoute && parleGauche,
+            visuel.gauche,
+            !visuel.enEcoute && visuel.parleGauche,
             ts,
-            ligneGauche
+            visuel.ligneGauche
         );
     }
-    if (droite) {
+    if (visuel.droite) {
         _dessinerPortrait(
             canvasDroite,
             ctxDroite,
-            droite,
-            !enEcoute && !parleGauche,
+            visuel.droite,
+            !visuel.enEcoute && !visuel.parleGauche,
             ts,
-            ligneDroite
+            visuel.ligneDroite
         );
     }
 
-    const couleur = COULEUR_PERSONNAGE[personnageActuel] ?? '#ffffff';
     const nomEl = document.getElementById('nom-perso-dialogue');
-    if (nomEl) nomEl.style.setProperty('--couleur-perso', couleur);
+    if (nomEl) nomEl.style.setProperty('--couleur-perso', visuel.couleur);
 }
 
 export function stopBouclePortraitsCutscene() {

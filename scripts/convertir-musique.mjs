@@ -46,11 +46,6 @@ function validerNomPiste(nomBase) {
     return true;
 }
 
-function sortiesAttendues(nomBase) {
-    const modeles = SORTIES_PAR_FORMAT[FORMAT_CIBLE] ?? SORTIES_PAR_FORMAT.opus;
-    return modeles.map(({ ext }) => join(OUT_DIR, `${nomBase}${ext}`));
-}
-
 function doitReconvertir(cheminSource, cheminsSortie) {
     if (cheminsSortie.some((s) => !existsSync(s))) return true;
     const mtimeSource = statSync(cheminSource).mtimeMs;

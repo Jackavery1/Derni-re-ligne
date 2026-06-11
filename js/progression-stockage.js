@@ -31,6 +31,7 @@ export const CLES_STOCKAGE = new Set([
     'derniereLigne_touches',
     'derniereLigne_infobullesBiome',
     'derniereLigne_accentsUi',
+    'derniereLigne_defiJour',
     'derniereLigne_devActif',
 ]);
 

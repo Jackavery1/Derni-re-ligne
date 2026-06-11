@@ -1,4 +1,4 @@
-import { cpSync, existsSync, mkdirSync, readdirSync } from 'fs';
+import { cpSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
 const OUT_DIR = 'assets/polices';

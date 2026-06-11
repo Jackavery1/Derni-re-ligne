@@ -30,10 +30,11 @@ function obtenirProchainMondeJouable() {
 
 /**
  * @param {string} mondeId
- * @returns {string | null}
+ * @returns {string[]}
  */
-function urlMusiqueMonde(mondeId) {
-    return `assets/musique/${mondeId}.ogg`;
+function urlsMusiqueMonde(mondeId) {
+    const base = `assets/musique/${mondeId}`;
+    return [`${base}.ogg`, `${base}.m4a`];
 }
 
 /**
@@ -107,8 +108,9 @@ export function demarrerPrechargementCarte() {
     logger.debug('[precharge] prochain monde :', mondeId);
 
     void (async () => {
-        const musique = urlMusiqueMonde(mondeId);
-        if (musique) {
+        const pistes = urlsMusiqueMonde(mondeId);
+        for (const musique of pistes) {
+            if (signal.aborted) return;
             await fetchSilencieux(musique, signal);
         }
 

@@ -82,7 +82,7 @@ describe('tutoriel', () => {
     it('appelle onCompris directement si le tutoriel prologue a déjà été vu', () => {
         const cb = vi.fn();
         afficherTutorielPrologueApresCutscene();
-        for (let i = 0; i < 4; i++) btnFermer.onclick?.();
+        for (let i = 0; i < 6; i++) btnFermer.onclick?.();
         afficherTutorielPrologueApresCutscene(cb);
         expect(cb).toHaveBeenCalledTimes(1);
         expect(overlay.classList.contains('element-masque')).toBe(true);

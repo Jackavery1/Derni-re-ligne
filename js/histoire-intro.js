@@ -7,6 +7,7 @@ import { lireStockage, ecrireStockage } from './progression.js';
 import { obtenirHistoireTextesSync, chargerHistoireTextes } from './charger-histoire-textes.js';
 import { ECRANS } from './ecrans-config.js';
 import { logger } from './logger.js';
+import { activerModeHistoire } from './mode-histoire.js';
 
 const CLE_INTRO_VUE = 'derniereLigne_introHistoireVue';
 
@@ -33,6 +34,7 @@ export async function ouvrirModeHistoireDepuisMenu() {
 
     if (dejaVue) {
         logger.debug('[intro] branche carte directe (intro deja vue)');
+        activerModeHistoire();
         afficherEcran(ECRANS.HISTOIRE_MAP);
         return;
     }
@@ -77,6 +79,7 @@ export async function ouvrirModeHistoireDepuisMenu() {
         });
 
         logger.debug('[intro] affichage carte histoire');
+        activerModeHistoire();
         afficherEcran(ECRANS.HISTOIRE_MAP);
     } catch (err) {
         logger.error('[intro] echec flux intro (flag non modifie):', err);

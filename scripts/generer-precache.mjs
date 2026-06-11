@@ -102,5 +102,7 @@ if (octets > BUDGET_APP_SHELL_KO * 1024) {
         console.error(msg);
         process.exit(1);
     }
-    console.warn(`ATTENTION — ${msg}`);
+    if (modeProd) {
+        console.warn(`ATTENTION — ${msg}`);
+    }
 }

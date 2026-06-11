@@ -24,7 +24,10 @@ export function configurerAudioMoteur({
 
 export function calculerTempoActuel(tempoBase) {
     const niv = obtenirNiveauFn() || 1;
-    return Math.round(tempoBase * (1 + Math.min(niv - 1, 10) * 0.02));
+    const accel = Math.round(tempoBase * (1 + Math.min(niv - 1, 10) * 0.02));
+    const drift =
+        1 + Math.sin((typeof performance !== 'undefined' ? performance.now() : 0) / 45000) * 0.04;
+    return Math.round(accel * drift);
 }
 
 export function noteVersFreq(demiTon, octave = 0, biomeId) {

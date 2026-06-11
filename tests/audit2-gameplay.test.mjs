@@ -13,7 +13,6 @@ import {
     formaterCodeTouche,
 } from '../js/touches-config.js';
 import { store } from '../js/store-core.js';
-import { ecrireStockage } from '../js/progression.js';
 import { _reinitialiserInfobullesContexte } from '../js/infobulles-contexte.js';
 import { CODEX_HISTOIRE } from '../js/codex-histoire.js';
 import { obtenirEtatDeblocage } from '../js/progression-histoire.js';

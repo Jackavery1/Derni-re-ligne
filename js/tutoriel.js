@@ -41,6 +41,22 @@ const SLIDES_PROLOGUE = [
             "Lisez l'indicateur sous l'objectif — une info-bulle s'affiche à la première occurrence.",
         ],
     },
+    {
+        titre: 'RELIQUES, ORACLE ET MÉTÉO',
+        lignes: [
+            'Les reliques apparaissent après un nombre de pièces — choisissez-en une à chaque palier.',
+            "L'Oracle (débloqué en histoire) suggère un placement : suivez-le ou défiez-le pour multiplier le score.",
+            'La météo et la mélodie du biome influencent le rythme — consultez le HUD en partie.',
+        ],
+    },
+    {
+        titre: 'NAVIGUER SUR LA CARTE',
+        lignes: [
+            'Molette ou pincement pour zoomer, clic-glisser pour déplacer la vue.',
+            'Sur mobile : glissez avec un doigt. Au clavier : utilisez la liste de sélection des mondes.',
+            'Survolez un monde pour voir les conditions de déblocage et les objectifs.',
+        ],
+    },
 ];
 
 /** @type {{ touche: string, action: string }[]} */

@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v12';
+const VERSION_SHELL = 'dl-shell-v13';
 const VERSION_MEDIAS = 'dl-medias-v1';
 
 const MAX_PISTES_EN_CACHE = 12;
@@ -91,6 +91,7 @@ const FICHIERS_A_CACHER = [
     './js/coop-rendu.js',
     './js/deblocage-ui.js',
     './js/decorations-jeu.js',
+    './js/defi-jour.js',
     './js/dom-utils.js',
     './js/ecrans-config.js',
     './js/ecrans-ui.js',
@@ -149,6 +150,7 @@ const FICHIERS_A_CACHER = [
     './js/melodie.js',
     './js/menu-fond.js',
     './js/meteo.js',
+    './js/mode-defi-jour.js',
     './js/mode-dev-etat.js',
     './js/mode-developpeur.js',
     './js/mode-histoire.js',

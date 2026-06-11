@@ -45,9 +45,14 @@ export default [
             'js/rendu-robo.js',
             'js/histoire-map-rendu.js',
             'js/rendu-ambiance-particules.js',
+            'js/icones-pixel.js',
+            'js/histoire-textes/cutscenes-boss.js',
+            'js/histoire-textes/cutscenes-entree.js',
+            'js/histoire-manager-completion.js',
         ],
         rules: {
             'max-lines': 'off',
+            complexity: 'off',
         },
     },
 ];

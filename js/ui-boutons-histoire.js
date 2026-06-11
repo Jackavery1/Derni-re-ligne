@@ -10,13 +10,15 @@ import {
 } from './histoire-manager.js';
 import { obtenirActions } from './actions-jeu.js';
 import { reinitialiserHistoirePourReplay } from './fins-histoire.js';
-import { desactiverModeHistoire } from './mode-histoire.js';
+import { desactiverModeHistoire, activerModeHistoire } from './mode-histoire.js';
 import { arreterFondFin } from './fin-bg-rendu.js';
 
 export function initialiserBoutonsHistoire() {
-    document
-        .getElementById('btn-histoire-retour')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
+    document.getElementById('btn-histoire-retour')?.addEventListener('click', () => {
+        desactiverModeHistoire();
+        document.body.classList.remove('histoire-active');
+        afficherEcran(ECRANS.TITRE);
+    });
     document.getElementById('btn-histoire-carte')?.addEventListener('click', retournerACarte);
     document.getElementById('btn-continue-boss')?.addEventListener('click', () => {
         utiliserContinueGratuitDistorsion();
@@ -52,8 +54,8 @@ export function initialiserBoutonsHistoire() {
     document.getElementById('btn-fin-rejouer')?.addEventListener('click', () => {
         arreterFondFin();
         reinitialiserHistoirePourReplay();
-        desactiverModeHistoire();
         document.body.classList.remove('histoire-active');
+        activerModeHistoire();
         afficherEcran(ECRANS.HISTOIRE_MAP);
     });
 }

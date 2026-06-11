@@ -1,5 +1,4 @@
 import { execSync, spawnSync } from 'child_process';
-import { existsSync } from 'fs';
 
 /** @returns {string | null} */
 export function trouverFfmpeg() {
