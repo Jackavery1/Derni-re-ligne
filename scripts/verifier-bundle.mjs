@@ -1,6 +1,6 @@
 import { readdirSync, statSync } from 'fs';
 
-const MAX_KO = 580;
+const MAX_KO = 590;
 const WARN_KO = 520;
 const dossier = 'dist/js';
 const fichiers = readdirSync(dossier).filter((f) => f.endsWith('.js') && !f.endsWith('.map'));

@@ -6,8 +6,6 @@ import {
     demanderConfirmationNouvellePartie,
     mettreAJourMenuCampagneTitre,
 } from './menu-titre-campagne.js';
-import { reinitialiserCampagneComplete } from './reinitialiser-campagne.js';
-
 async function continuerCampagne() {
     const { ouvrirModeHistoireDepuisMenu } = await import('./histoire-intro.js');
     return ouvrirModeHistoireDepuisMenu();
@@ -17,6 +15,7 @@ async function demarrerNouvelleCampagne() {
     if (nouvellePartieNecessiteConfirmation()) {
         const confirme = await demanderConfirmationNouvellePartie();
         if (!confirme) return;
+        const { reinitialiserCampagneComplete } = await import('./reinitialiser-campagne.js');
         reinitialiserCampagneComplete();
     }
     const { ouvrirModeHistoireDepuisMenu } = await import('./histoire-intro.js');
