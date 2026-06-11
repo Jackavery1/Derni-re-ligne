@@ -48,6 +48,7 @@
 >
     <div class="overlay-tutoriel-contenu">
         <h2 id="tutoriel-titre" class="tutoriel-titre">BIENVENUE DANS DERNIERE LIGNE</h2>
+        <p id="tutoriel-indicateur" class="tutoriel-indicateur" aria-hidden="true"></p>
         <div id="tutoriel-corps"></div>
         <div id="tutoriel-controles" class="tutoriel-controles element-masque"></div>
         <div class="tutoriel-actions">
@@ -55,5 +56,21 @@
                 COMPRIS — COMMENCER
             </button>
         </div>
+    </div>
+</div>
+
+<div
+    id="overlay-infobulle-contexte"
+    class="overlay-infobulle-contexte element-masque"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="infobulle-contexte-titre"
+>
+    <div class="overlay-infobulle-contenu">
+        <h3 id="infobulle-contexte-titre" class="infobulle-contexte-titre"></h3>
+        <p id="infobulle-contexte-texte" class="infobulle-contexte-texte"></p>
+        <button class="bouton discret" type="button" id="btn-infobulle-contexte-fermer">
+            COMPRIS
+        </button>
     </div>
 </div>

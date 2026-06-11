@@ -1,6 +1,15 @@
 import { ACHIEVEMENTS_HISTOIRE } from './achievements-histoire.js';
 
 export const ACHIEVEMENTS = {
+    premiere_ligne: {
+        id: 'premiere_ligne',
+        nom: 'PREMIÈRE LIGNE',
+        description: 'Effacer votre premiere ligne',
+        icone: '▬',
+        condition: (stats) => stats.lignesTotal >= 1,
+        decoration: 'trainee_simple',
+        categorie: 'lignes',
+    },
     premier_tetris: {
         id: 'premier_tetris',
         nom: 'PREMIER CHOC',

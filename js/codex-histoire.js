@@ -182,6 +182,24 @@ export const CODEX_HISTOIRE = {
         ],
     },
 
+    chemins_caches: {
+        id: 'chemins_caches',
+        chapitre: 'chroniques',
+        titre: 'CHEMINS CACHÉS',
+        sousTitre: 'Indices pour les mondes secrets',
+        icone: '🗝',
+        condition: (s) => (s.bossHistoireVaincus ?? []).includes('archiviste'),
+        conditionTexte: "Vaincre L'Archiviste Corrompu",
+        illustration: 'dessinerIllustTroisFins',
+        texte: [
+            "Trois mondes n'apparaissent pas sur la carte principale. Voici comment les retrouver — indices progressifs, du plus accessible au plus exigeant.",
+            "INDICE 1 — LE MIROIR : en biome CYBER, realisez 3 Tetris (4 lignes) au total apres avoir vaincu l'Archiviste. Un nouveau chemin s'ouvrira sur la carte.",
+            "INDICE 2 — LA TRAME PRIMORDIALE : quatre conditions cumulees — completer le Miroir, trouver les 9 transmissions VERA, vaincre tous les boss sans Continue (sauf le premier gratuit face a La Distorsion), puis accomplir l'action secrete lors du combat final.",
+            'INDICE 3 — LE PARADOXE : obtenez la fin secrete, puis imposez-vous 3 T-Spins volontaires au Prologue. La logique cèdera.',
+            'Suivez le compteur TRAME (0/4) en haut de la carte histoire pour mesurer votre progression vers la Trame.',
+        ],
+    },
+
     chronique_avantgarde: {
         id: 'chronique_avantgarde',
         chapitre: 'chroniques',

@@ -1,8 +1,10 @@
-import { BIOMES, ORDRE_BIOMES } from './config.js';
+import { BIOMES, ORDRE_BIOMES_LIBRE } from './config.js';
 import { sansAccentsE } from './texte-jeu.js';
 import { obtenirCanvas } from './dom-utils.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
-import { biomeEstDebloqueParHistoire } from './progression.js';
+import { biomeEstDebloqueParHistoire, obtenirRecordSprintBiome } from './progression.js';
+import { modeSprintActif } from './mode-sprint.js';
+import { formaterTemps } from './hud-jeu.js';
 export { FONDS_BIOME, NOMS_MONDES_REQUIS } from './constellation-rendu.js';
 import {
     afficherPanneauVerrouille,
@@ -10,9 +12,7 @@ import {
     dessinerLignesConstellation as dessinerLignesRendu,
     dessinerNoeudBiome as dessinerNoeudRendu,
 } from './constellation-rendu.js';
-import { planifierBoucleSecondaire, arreterBoucleSecondaire } from './planificateur-raf.js';
-
-const CLE_RAF_CONSTELLATION = 'constellation';
+import { abonnerBoucleMenuUnifiee, desabonnerBoucleMenuUnifiee } from './planificateur-raf.js';
 
 let deps = {};
 
@@ -33,7 +33,7 @@ let dernierTapTemps = 0;
 
 function compterBiomesDebloques() {
     let n = 0;
-    for (const id of ORDRE_BIOMES) {
+    for (const id of ORDRE_BIOMES_LIBRE) {
         if (biomeEstDebloqueParHistoire(id)) n++;
     }
     return n;
@@ -45,7 +45,7 @@ function mettreAJourEnteteSelection() {
     if (titre) titre.textContent = 'CHOISIR UN MONDE';
     if (sousTitre) {
         const nb = compterBiomesDebloques();
-        sousTitre.textContent = `NIVEAU GLOBAL : ${deps.obtenirNiveauGlobal()} — ${nb}/9 MONDES`;
+        sousTitre.textContent = `NIVEAU GLOBAL : ${deps.obtenirNiveauGlobal()} — ${nb}/${ORDRE_BIOMES_LIBRE.length} MONDES`;
     }
 }
 
@@ -67,11 +67,18 @@ function mettreAJourInfoBiome(idBiome) {
         elNom.style.color = biome.ui?.couleurPrimaire ?? biome.lueurCoul;
     }
     if (elRecord) {
-        elRecord.textContent = sansAccentsE(
-            verrouille
-                ? 'A DEBLOQUER EN MODE HISTOIRE'
-                : `RECORD : ${record.toLocaleString('fr-FR')} — ${etoiles}`
-        );
+        if (verrouille) {
+            elRecord.textContent = sansAccentsE('A DEBLOQUER EN MODE HISTOIRE');
+        } else if (modeSprintActif) {
+            const ms = obtenirRecordSprintBiome(idBiome);
+            elRecord.textContent = sansAccentsE(
+                ms > 0 ? `MEILLEUR TEMPS : ${formaterTemps(ms)} (40L)` : 'SPRINT 40 LIGNES — CHRONO'
+            );
+        } else {
+            elRecord.textContent = sansAccentsE(
+                `RECORD : ${record.toLocaleString('fr-FR')} — ${etoiles}`
+            );
+        }
     }
     if (elStatut) {
         elStatut.textContent = sansAccentsE(
@@ -132,7 +139,7 @@ function initConstellation() {
     const croissance = base * 0.06;
     const angleIncr = 2.4;
 
-    ORDRE_BIOMES.forEach((id, index) => {
+    ORDRE_BIOMES_LIBRE.forEach((id, index) => {
         const biome = BIOMES[id];
         const angle = index * angleIncr;
         const rayonSpirale = rayonInit + index * croissance;
@@ -341,11 +348,12 @@ export function demarrerConstellation() {
     arreterConstellation();
     initConstellation();
     masquerOracleCoopSiNecessaire();
-    planifierBoucleSecondaire(CLE_RAF_CONSTELLATION, boucleConstellation);
+    import('./mode-sprint.js').then(({ mettreAJourToggleSprint }) => mettreAJourToggleSprint());
+    abonnerBoucleMenuUnifiee(boucleConstellation);
 }
 
 export function arreterConstellation() {
-    arreterBoucleSecondaire(CLE_RAF_CONSTELLATION);
+    desabonnerBoucleMenuUnifiee(boucleConstellation);
 }
 
 export function redimensionnerConstellation() {

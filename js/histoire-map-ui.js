@@ -12,6 +12,7 @@ import { obtenirActionsHistoire } from './histoire-actions.js';
 import { modeDevActif } from './mode-dev-etat.js';
 import { obtenirEtoilesPersistees } from './gestionnaire-difficulte.js';
 import { definirTexteUi } from './texte-jeu.js';
+import { obtenirResumeConditionsTrame } from './conditions-secrets.js';
 
 export function mettreAJourAriaCarteHistoire(etatCarte) {
     const canvas = etatCarte.canvasCarte;
@@ -258,9 +259,27 @@ export function mettreAJourEnteteHistoire() {
     const prog = obtenirProgressionGlobale();
     const elMondes = document.getElementById('histoire-prog-mondes');
     const elJournaux = document.getElementById('histoire-prog-journaux');
+    const elTrame = document.getElementById('histoire-prog-trame');
+    const wrapTrame = document.getElementById('histoire-prog-trame-wrap');
     if (elMondes) elMondes.textContent = `${prog.nbCompletes}/${prog.nbTotal} MONDES`;
     if (elJournaux) {
         elJournaux.textContent = `${prog.nbJournaux}/${prog.nbJournauxTotal} TRANSMISSIONS`;
+    }
+
+    const etatHist = obtenirEtatHistoire();
+    const resumeTrame = obtenirResumeConditionsTrame(etatHist);
+    const trameDebloquee = etatHist.mondesCompletes?.includes('monde_trame');
+    if (elTrame && wrapTrame) {
+        if (trameDebloquee) {
+            wrapTrame.classList.add('element-masque');
+        } else {
+            wrapTrame.classList.remove('element-masque');
+            elTrame.textContent = `TRAME ${resumeTrame.validees}/${resumeTrame.total}`;
+            const detail = resumeTrame.details
+                .map((d) => `${d.ok ? '✓' : '○'} ${d.libelle}`)
+                .join(' · ');
+            elTrame.title = detail;
+        }
     }
 }
 

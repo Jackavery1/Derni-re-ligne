@@ -3,7 +3,9 @@ import { etat } from './store-jeu.js';
 import { obtenirForme } from './piece-jeu.js';
 import { logger } from './logger.js';
 import { obtenirCanvas } from './dom-utils.js';
-import { lireStockageJson, ecrireStockageJson } from './progression.js';
+import { lireStockageJson, ecrireStockageJson, obtenirResumeRecordsLocaux } from './progression.js';
+import { formaterTemps } from './hud-jeu.js';
+import { sansAccentsE } from './texte-jeu.js';
 import { statsGlobales } from './achievements.js';
 import { oracle } from './oracle-jeu.js';
 import { dessinerHeatmap, dessinerGrapheRythme, dessinerRadar } from './profil-rendu.js';
@@ -289,6 +291,46 @@ export function chargerProfilDernier() {
     }
 }
 
+function afficherTableauRecordsLocaux() {
+    const conteneur = document.getElementById('profil-records-table');
+    if (!conteneur) return;
+
+    conteneur.replaceChildren();
+    const entetes = document.createElement('div');
+    entetes.className = 'profil-records-ligne profil-records-entete';
+    entetes.setAttribute('role', 'row');
+    for (const label of ['MONDE', 'MARATHON', 'SPRINT 40L']) {
+        const cell = document.createElement('span');
+        cell.className = 'profil-records-cell';
+        cell.setAttribute('role', 'columnheader');
+        cell.textContent = sansAccentsE(label);
+        entetes.appendChild(cell);
+    }
+    conteneur.appendChild(entetes);
+
+    for (const ligne of obtenirResumeRecordsLocaux()) {
+        if (!ligne.debloque) continue;
+        const row = document.createElement('div');
+        row.className = 'profil-records-ligne';
+        row.setAttribute('role', 'row');
+
+        const nom = document.createElement('span');
+        nom.className = 'profil-records-cell profil-records-nom';
+        nom.textContent = sansAccentsE(ligne.nom);
+
+        const marathon = document.createElement('span');
+        marathon.className = 'profil-records-cell';
+        marathon.textContent = ligne.record > 0 ? ligne.record.toLocaleString('fr-FR') : '—';
+
+        const sprint = document.createElement('span');
+        sprint.className = 'profil-records-cell';
+        sprint.textContent = ligne.sprintMs > 0 ? formaterTemps(ligne.sprintMs) : '—';
+
+        row.append(nom, marathon, sprint);
+        conteneur.appendChild(row);
+    }
+}
+
 export function afficherProfil() {
     if (typeof document === 'undefined') return;
 
@@ -358,6 +400,8 @@ export function afficherProfil() {
             wrapOracle.classList.add('element-masque');
         }
     }
+
+    afficherTableauRecordsLocaux();
 
     requestAnimationFrame(() => {
         const cHeat = obtenirCanvas('canvas-heatmap');

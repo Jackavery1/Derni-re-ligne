@@ -17,7 +17,7 @@ import { arreterConstellation } from './constellation.js';
 import { arreterAnimationMenu } from './menu-fond.js';
 import { basculerOracle, oracle } from './oracle-jeu.js';
 import { statsGlobales, sauvegarderStats, verifierAchievements } from './achievements.js';
-import { NIVEAUX_ARCHI } from './archi-donnees.js';
+import { obtenirTousNiveauxArchi } from './archi-generateur.js';
 import {
     archi,
     historiqueArchi,
@@ -76,7 +76,7 @@ function afficherInterfaceArchi(visible) {
 }
 
 export function demarrerArchi(niveauId) {
-    const niveau = NIVEAUX_ARCHI.find((n) => n.id === niveauId);
+    const niveau = obtenirTousNiveauxArchi().find((n) => n.id === niveauId);
     if (!niveau) return;
 
     if (oracle.actif) basculerOracle();
@@ -253,8 +253,8 @@ export function archi_afficherResultat(score, etoiles) {
         elPieces.textContent = `${archi.piecesUtilisees} / ${archi.niveauActuel.parPieces} min`;
     }
 
-    const idxActuel = NIVEAUX_ARCHI.findIndex((n) => n.id === archi.niveauActuel.id);
-    const suivant = NIVEAUX_ARCHI[idxActuel + 1];
+    const idxActuel = obtenirTousNiveauxArchi().findIndex((n) => n.id === archi.niveauActuel.id);
+    const suivant = obtenirTousNiveauxArchi()[idxActuel + 1];
     const btnSuivant = document.getElementById('archi-res-btn-suivant');
     if (btnSuivant) {
         if (suivant) {
@@ -274,12 +274,13 @@ export function archi_afficherSelection() {
     if (!grille) return;
     grille.textContent = '';
 
-    const total = NIVEAUX_ARCHI.length;
+    const niveaux = obtenirTousNiveauxArchi();
+    const total = niveaux.length;
     const completes = statsGlobales.archiNiveauxCompletes?.size ?? 0;
     const elProg = document.getElementById('archi-sel-progression');
     if (elProg) elProg.textContent = `${completes} / ${total} NIVEAUX`;
 
-    NIVEAUX_ARCHI.forEach((niv) => {
+    niveaux.forEach((niv) => {
         const cle = `derniereLigne_archi_${niv.id}`;
         const meilleur = parseInt(lireStockage(cle, '0'), 10);
         const etoiles = archi_calculerEtoiles(meilleur);

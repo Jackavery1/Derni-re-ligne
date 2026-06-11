@@ -50,7 +50,7 @@ describe('conditions-secrets', () => {
         etat.plateau = creerPlateau();
     });
 
-    it('verifierConditionMiroir incrémente les tétris consécutifs en monde cyber', () => {
+    it('verifierConditionMiroir cumule les tetris CYBER sans reset sur lignes partielles', () => {
         store.histoire.actif = true;
         store.histoire.mondeActuel = 'monde_cyber';
         const etatHist = etatHistoireTest();
@@ -60,7 +60,7 @@ describe('conditions-secrets', () => {
         expect(store.histoire.mecaniques.cyberTetrisConsecutifs).toBe(2);
 
         verifierConditionMiroir(2, etatHist);
-        expect(store.histoire.mecaniques.cyberTetrisConsecutifs).toBe(0);
+        expect(store.histoire.mecaniques.cyberTetrisConsecutifs).toBe(2);
     });
 
     it('verifierConditionMiroir débloque le monde miroir après 3 tétris', () => {

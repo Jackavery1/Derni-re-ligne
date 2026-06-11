@@ -17,6 +17,7 @@ import { obtenirBouton } from './dom-utils.js';
 import { mettreAJourParticules } from './particules-jeu.js';
 import { initialiserAudioBiome } from './audio-partie.js';
 import { basculerOracle, oracle } from './oracle-jeu.js';
+import { afficherTutorielContextuel } from './tutoriel.js';
 import {
     coop,
     reinitialiserEtatCoop,
@@ -131,6 +132,7 @@ export function demarrerCooperatif() {
     }
 
     changerHumeur('neutre');
+    afficherTutorielContextuel('coop');
     dernierTimestampCoop = 0;
     arreterBoucleCoop();
     idFrameCoop = requestAnimationFrame(boucleCooperatif);

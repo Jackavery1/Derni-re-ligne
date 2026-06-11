@@ -6,6 +6,7 @@ import { AudioMoteur } from './audio.js';
 import { lancerBiomeSelectionne } from './constellation.js';
 import { basculerOracle } from './oracle-jeu.js';
 import { basculerModeCoop } from './coop-jeu.js';
+import { basculerModeSprint, mettreAJourToggleSprint } from './mode-sprint.js';
 import { archi_afficherSelection } from './archi-jeu.js';
 import { afficherTutorielContextuel } from './tutoriel.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
@@ -60,10 +61,12 @@ export function initialiserBoutonsNavigation() {
     document.getElementById('toggle-oracle')?.addEventListener('click', basculerOracle);
     document.getElementById('toggle-coop')?.addEventListener('click', () => {
         basculerModeCoop();
+        mettreAJourToggleSprint();
         if (document.getElementById('toggle-coop')?.classList.contains('actif')) {
             afficherTutorielContextuel('coop');
         }
     });
+    document.getElementById('toggle-sprint')?.addEventListener('click', basculerModeSprint);
     document.getElementById('btn-options')?.addEventListener('click', () => {
         afficherOngletOptions('reglages');
         afficherEcran(ECRANS.OPTIONS);

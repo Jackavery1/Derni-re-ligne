@@ -1,7 +1,5 @@
 import { logger } from './logger.js';
-import { planifierBoucleSecondaire, arreterBoucleSecondaire } from './planificateur-raf.js';
-
-const CLE_RAF_ROBO = 'rendu-robo';
+import { abonnerBoucleMenuUnifiee, desabonnerBoucleMenuUnifiee } from './planificateur-raf.js';
 
 const C = {
     ROUGE_VIF: '#d42b2b',
@@ -620,11 +618,11 @@ export function definirCouronne(actif) {
 export function demarrerBoucleRobo() {
     _canvas = /** @type {HTMLCanvasElement|null} */ (document.getElementById('canvas-mascotte'));
     if (!_canvas) return;
-    planifierBoucleSecondaire(CLE_RAF_ROBO, _boucle);
+    abonnerBoucleMenuUnifiee(_boucle);
 }
 
 export function arreterBoucleRobo() {
-    arreterBoucleSecondaire(CLE_RAF_ROBO);
+    desabonnerBoucleMenuUnifiee(_boucle);
 }
 
 function _mascotteVisible() {

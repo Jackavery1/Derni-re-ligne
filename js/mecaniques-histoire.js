@@ -263,13 +263,17 @@ export function obtenirLigneEclipse() {
     return store.histoire.mecaniques.eclipseLigne;
 }
 
-/** Libellé HUD des modificateurs de vitesse (éclipse, surtension). */
+/** Libellé HUD des modificateurs de vitesse (éclipse, surtension, miroir). */
 export function obtenirLibelleModificateurBiomeHud() {
     if (!modeHistoireEnCours()) return '';
     const parties = [];
     if (store.surtensionActive) parties.push('SURTENSION');
     if (biomeActuelMecanique() === 'eclipse') {
         parties.push(`ÉCLIPSE L${obtenirLigneEclipse()}`);
+    }
+    if (store.histoire.mondeActuel === 'monde_cyber') {
+        const n = store.histoire.mecaniques.cyberTetrisConsecutifs ?? 0;
+        parties.push(`TETRIS CYBER ${n}/3`);
     }
     return parties.join(' · ');
 }

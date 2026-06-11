@@ -1,4 +1,4 @@
-import { CONFIG, TETROMINOS, TOUCHES_DEFAUT, BIOMES, RELIQUES } from './config.js';
+import { CONFIG, TETROMINOS, BIOMES, RELIQUES } from './config.js';
 import { remplirSac as genererSac } from './logique-pure.js';
 import { extraireForme, estPositionValideSurPlateau } from './moteur-piece.js';
 import { obtenirActions } from './actions-jeu.js';
@@ -16,6 +16,7 @@ import {
     definirLockDelayRestant,
     definirNbLockResets,
 } from './store-jeu.js';
+import { obtenirTouches } from './touches-config.js';
 
 const INDEX_COULEUR_PIECE = { I: 0, O: 1, T: 2, S: 3, Z: 4, J: 5, L: 6 };
 
@@ -110,21 +111,22 @@ export function reinitialiserLockDelay() {
 }
 
 export function reinitialiserDas(code) {
-    if (dasEtat[code]) {
-        dasEtat[code].moment = 0;
-        dasEtat[code].repete = false;
-    }
+    if (!dasEtat[code]) dasEtat[code] = { moment: 0, repete: false };
+    dasEtat[code].moment = 0;
+    dasEtat[code].repete = false;
 }
 
 export function mettreAJourDas(deltaTemps) {
     const actions = obtenirActions();
+    const touches = obtenirTouches();
     const actionMap = {
-        [TOUCHES_DEFAUT.gauche]: actions.deplacerGauche,
-        [TOUCHES_DEFAUT.droite]: actions.deplacerDroite,
-        [TOUCHES_DEFAUT.bas]: actions.deplacerBas,
+        [touches.gauche]: actions.deplacerGauche,
+        [touches.droite]: actions.deplacerDroite,
+        [touches.bas]: actions.deplacerBas,
     };
     for (const [code, action] of Object.entries(actionMap)) {
-        if (!touchesActives[code] || !action) continue;
+        if (!code || code === 'undefined' || !touchesActives[code] || !action) continue;
+        if (!dasEtat[code]) dasEtat[code] = { moment: 0, repete: false };
         const das = dasEtat[code];
         das.moment += deltaTemps;
         if (!das.repete && das.moment >= CONFIG.dasDelai) {

@@ -3,6 +3,7 @@ import { estPositionValidePlateau, obtenirEssaisKick } from './logique-pure.js';
 import { extraireForme } from './moteur-piece.js';
 import { etat, obtenirCtx } from './store-jeu.js';
 import { estPositionValide } from './piece-jeu.js';
+import { afficherTutorielContextuel } from './tutoriel.js';
 
 export const oracle = {
     actif: false,
@@ -278,6 +279,7 @@ export function basculerOracle() {
     if (oracle.actif) {
         btn.classList.add('actif');
         label.textContent = 'ORACLE : ON';
+        afficherTutorielContextuel('oracle');
         if (desc) {
             desc.textContent =
                 "Ignorez les suggestions avec succes pour multiplier votre score jusqu'à ×5.0";

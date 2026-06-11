@@ -39,6 +39,7 @@ export const ICONE_PAR_ENTREE = {
     chronique_brasier: 'monde_boss_1',
     chronique_sentinelle: 'monde_boss_2',
     chronique_archiviste: 'monde_boss_3',
+    chemins_caches: 'ach_secrets',
     chronique_avantgarde: 'monde_boss_4',
     chronique_fins: 'chronique_fins',
 };
@@ -84,6 +85,7 @@ export const ACCENT_PAR_ENTREE = {
     chronique_brasier: '#ff6a00',
     chronique_sentinelle: '#00cfff',
     chronique_archiviste: '#ffbb44',
+    chemins_caches: '#b400ff',
     chronique_avantgarde: '#b400ff',
     chronique_fins: '#ffffff',
 };

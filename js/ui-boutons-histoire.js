@@ -5,7 +5,10 @@ import {
     avancerCutscene,
     passerCutscene,
     fermerJournalHistoire,
+    relancerMondeActuel,
+    utiliserContinueGratuitDistorsion,
 } from './histoire-manager.js';
+import { obtenirActions } from './actions-jeu.js';
 import { reinitialiserHistoirePourReplay } from './fins-histoire.js';
 import { desactiverModeHistoire } from './mode-histoire.js';
 import { arreterFondFin } from './fin-bg-rendu.js';
@@ -15,6 +18,13 @@ export function initialiserBoutonsHistoire() {
         .getElementById('btn-histoire-retour')
         ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
     document.getElementById('btn-histoire-carte')?.addEventListener('click', retournerACarte);
+    document.getElementById('btn-continue-boss')?.addEventListener('click', () => {
+        utiliserContinueGratuitDistorsion();
+        document.getElementById('btn-continue-boss')?.classList.add('element-masque');
+        document.getElementById('btn-histoire-carte')?.classList.remove('element-masque');
+        relancerMondeActuel();
+        obtenirActions().demarrerJeu?.();
+    });
     document.getElementById('btn-cutscene-suivant')?.addEventListener('click', avancerCutscene);
     document.getElementById('btn-cutscene-passer')?.addEventListener('click', passerCutscene);
 

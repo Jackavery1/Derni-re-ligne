@@ -1,5 +1,5 @@
 /** Records solo/coop et déblocage des biomes en mode libre. */
-import { BIOMES } from './config.js';
+import { BIOMES, ORDRE_BIOMES_LIBRE } from './config.js';
 import { modeDevActif } from './mode-dev-etat.js';
 import { lireStockage, ecrireStockage } from './progression-stockage.js';
 import { chargerEtatHistoire } from './progression-histoire.js';
@@ -105,6 +105,37 @@ export function sauvegarderRecordCoopBiome(idBiome, score) {
     return false;
 }
 
+/** @param {string} idBiome @returns {number} Meilleur temps sprint en ms (0 si aucun). */
+export function obtenirRecordSprintBiome(idBiome) {
+    if (!BIOMES[idBiome]) return 0;
+    const brut = parseInt(lireStockage(`derniereLigne_sprint_${idBiome}`, '0'), 10);
+    return Number.isFinite(brut) && brut > 0 ? brut : 0;
+}
+
+/** @param {string} idBiome @param {number} tempsMs @returns {boolean} */
+export function sauvegarderRecordSprintBiome(idBiome, tempsMs) {
+    if (!BIOMES[idBiome] || !Number.isFinite(tempsMs) || tempsMs <= 0) return false;
+    const actuel = obtenirRecordSprintBiome(idBiome);
+    if (actuel === 0 || tempsMs < actuel) {
+        ecrireStockage(`derniereLigne_sprint_${idBiome}`, Math.floor(tempsMs).toString());
+        return true;
+    }
+    return false;
+}
+
+/**
+ * @returns {{ id: string, nom: string, record: number, sprintMs: number, debloque: boolean }[]}
+ */
+export function obtenirResumeRecordsLocaux() {
+    return ORDRE_BIOMES_LIBRE.filter((id) => BIOMES[id]).map((id) => ({
+        id,
+        nom: BIOMES[id].nom,
+        record: obtenirRecordBiome(id),
+        sprintMs: obtenirRecordSprintBiome(id),
+        debloque: biomeEstDebloqueParHistoire(id),
+    }));
+}
+
 const BIOME_VERS_MONDE_HISTOIRE = {
     classique: null,
     lave: 'monde_lave',
@@ -115,6 +146,12 @@ const BIOME_VERS_MONDE_HISTOIRE = {
     cyber: 'monde_cyber',
     fuochi: 'monde_fuochi',
     cosmos: 'monde_cosmos',
+    rouille: 'monde_rouille',
+    eclipse: 'monde_eclipse',
+    vide: 'monde_vide',
+    miroir: 'monde_miroir',
+    trame: 'monde_trame',
+    paradoxe: 'monde_paradoxe',
 };
 
 /**

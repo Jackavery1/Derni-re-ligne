@@ -78,10 +78,14 @@ test('sélection biome au clavier démarre une partie', async ({ page }) => {
     await expect(page.locator('#affichage-temps')).not.toHaveText('00:00', { timeout: 5000 });
 });
 
-test('toggle marathon sprint retiré de l écran titre', async ({ page }) => {
+test('mode sprint disponible sur l écran selection', async ({ page }) => {
+    await preparerPageSansSw(page);
     await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-jouer').click();
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    await expect(page.locator('#toggle-sprint')).toBeVisible();
     await expect(page.locator('#btn-mode-sprint')).toHaveCount(0);
-    await expect(page.locator('#btn-mode-marathon')).toHaveCount(0);
 });
 
 test('game over affiche l écran dédié', async ({ page }) => {

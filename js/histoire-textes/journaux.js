@@ -12,6 +12,11 @@ export const JOURNAUX_VERA_DIALOGUES = {
             texte: 'SEGMENTS MANQUANTS. RECONSTRUCTION IMPOSSIBLE.',
             humeur: 'alerte',
         },
+        {
+            personnage: 'robo',
+            texte: 'Transmission endommagee — fragments manquants. La corruption a efface une partie du message.',
+            humeur: 'inquiet',
+        },
         { personnage: 'robo', texte: 'Le reste est du sable.', humeur: 'triste' },
     ],
 };

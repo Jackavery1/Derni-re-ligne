@@ -3,6 +3,8 @@ import {
     planifierBoucleSecondaire,
     arreterBoucleSecondaire,
     boucleSecondaireActive,
+    abonnerBoucleMenuUnifiee,
+    desabonnerBoucleMenuUnifiee,
     _reinitialiserPlanificateurRaf,
 } from '../js/planificateur-raf.js';
 
@@ -48,5 +50,20 @@ describe('planificateur-raf', () => {
         prochaineFrame?.(0);
         expect(tick1).not.toHaveBeenCalled();
         expect(tick2).toHaveBeenCalled();
+    });
+
+    it('boucle menu unifiee partage une seule RAF', () => {
+        const tickA = vi.fn();
+        const tickB = vi.fn();
+        abonnerBoucleMenuUnifiee(tickA);
+        abonnerBoucleMenuUnifiee(tickB);
+        expect(boucleSecondaireActive('menu-unifie')).toBe(true);
+        prochaineFrame?.(32);
+        expect(tickA).toHaveBeenCalledWith(32);
+        expect(tickB).toHaveBeenCalledWith(32);
+        desabonnerBoucleMenuUnifiee(tickA);
+        expect(boucleSecondaireActive('menu-unifie')).toBe(true);
+        desabonnerBoucleMenuUnifiee(tickB);
+        expect(boucleSecondaireActive('menu-unifie')).toBe(false);
     });
 });

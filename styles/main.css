@@ -3634,6 +3634,148 @@ body.archi-active #conteneur-principal-archi {
     margin-bottom: 3px;
 }
 
+.boss-trame-attente-aide {
+    font-size: 0.18rem;
+    color: var(--texte-discret);
+    text-align: center;
+    line-height: 1.4;
+    margin-bottom: 4px;
+    padding: 0 4px;
+}
+
+.overlay-infobulle-contexte {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.72);
+}
+
+.overlay-infobulle-contenu {
+    max-width: min(92vw, 420px);
+    padding: 1.25rem;
+    background: var(--fond-panneau, #0d1117);
+    border: 2px solid var(--cyan);
+    box-shadow: 0 0 24px rgba(0, 255, 255, 0.25);
+}
+
+.infobulle-contexte-titre {
+    font-size: 0.75rem;
+    color: var(--cyan);
+    margin-bottom: 0.75rem;
+}
+
+.infobulle-contexte-texte {
+    font-size: 0.65rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.liste-controles-rebind {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+}
+
+.controle-rebind-ligne {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.controle-rebind-label {
+    font-size: 0.55rem;
+}
+
+.controle-rebind-bouton {
+    min-width: 5rem;
+    font-size: 0.5rem;
+}
+
+.options-controles-gamepad {
+    font-size: 0.5rem;
+    color: var(--texte-discret);
+    margin: 0.5rem 0;
+    line-height: 1.4;
+}
+
+.histoire-prog-trame span:last-child {
+    cursor: help;
+}
+
+.bouton-continue-boss {
+    border-color: var(--vert);
+    color: var(--vert);
+}
+
+.go-avertissement-trame {
+    font-size: 0.55rem;
+    color: var(--orange, #ffaa44);
+    text-align: center;
+    line-height: 1.45;
+    max-width: 22rem;
+    margin: 0.5rem auto 0;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid rgba(255, 170, 68, 0.35);
+    background: rgba(255, 170, 68, 0.08);
+}
+
+.go-continues-campagne {
+    font-size: 0.5rem;
+    color: var(--gris-clair, #aaa);
+    text-align: center;
+    line-height: 1.4;
+    max-width: 22rem;
+    margin: 0.35rem auto 0;
+}
+
+.objectif-hud-paradoxe {
+    font-size: 0.45rem;
+    color: var(--orange, #ffaa44);
+    line-height: 1.35;
+    margin-top: 0.25rem;
+    opacity: 0.9;
+}
+
+.tutoriel-indicateur {
+    font-size: 0.5rem;
+    color: var(--texte-dim, #888);
+    text-align: center;
+    margin: 0.25rem 0 0.5rem;
+}
+
+.profil-records-table {
+    display: grid;
+    gap: 0.2rem;
+    font-size: 0.48rem;
+    max-height: 10rem;
+    overflow-y: auto;
+}
+
+.profil-records-ligne {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 0.8fr;
+    gap: 0.35rem;
+    padding: 0.2rem 0.35rem;
+    border-bottom: 1px solid rgba(0, 221, 200, 0.12);
+}
+
+.profil-records-entete {
+    color: var(--cyan, #00ddc8);
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    background: rgba(8, 12, 20, 0.92);
+}
+
+.profil-records-nom {
+    color: var(--texte-principal, #eee);
+}
+
 .boss-trame-attente-barre {
     height: 6px;
     background: rgba(0, 245, 255, 0.15);

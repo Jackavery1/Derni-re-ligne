@@ -2,7 +2,7 @@
 
 Tetris narratif en Vanilla JS + Canvas 2D. PWA hors-ligne.
 
-**Version : 2.5.11** — détails dans [CHANGELOG.md](CHANGELOG.md).
+**Version : 2.5.12** — détails dans [CHANGELOG.md](CHANGELOG.md).
 
 ## Contenu
 

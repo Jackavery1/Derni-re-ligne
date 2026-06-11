@@ -6,6 +6,6 @@ export {
     TETROMINOS,
     TOUCHES_DEFAUT,
 } from './config-jeu.js';
-export { BIOMES, ORDRE_BIOMES } from './biomes.js';
+export { BIOMES, ORDRE_BIOMES, ORDRE_BIOMES_LIBRE } from './biomes.js';
 export { BIOMES_HISTOIRE, ORDRE_BIOMES_HISTOIRE } from './biomes-histoire.js';
 export { RELIQUES, METEO_BIOMES } from './contenu-jeu.js';

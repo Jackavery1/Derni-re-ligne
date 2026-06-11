@@ -295,6 +295,7 @@ export const FINS = {
  * @property {string[]} interludesVusIds
  * @property {boolean} outroVue
  * @property {Record<string, [boolean, boolean, boolean]>} etoilesParMonde
+ * @property {boolean} continueGratuitDistorsionUtilise
  * @property {Record<string, number>} continuesParBoss
  * @property {{ blocksRouillesMax: number, lignesEclipseBasseMax: number, lignesVideMax: number, precisionMiroirMax: number, meilleurTimerBossMs: number }} prouessesHistoire
  */
@@ -331,6 +332,7 @@ export const ETAT_HISTOIRE_VIDE = {
     outroVue: false,
     etoilesParMonde: {},
     continuesParBoss: {},
+    continueGratuitDistorsionUtilise: false,
     prouessesHistoire: {
         blocksRouillesMax: 0,
         lignesEclipseBasseMax: 0,

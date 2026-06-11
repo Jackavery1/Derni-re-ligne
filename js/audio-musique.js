@@ -1,4 +1,5 @@
-import { GAMMES, MUSIQUE_BIOMES } from './audio-donnees.js';
+import { GAMMES } from './audio-donnees.js';
+import { obtenirConfigMusiqueBiome } from './audio-fallback-biomes.js';
 
 function genererSequence(config, biomeId, noteVersFreq) {
     const gamme = GAMMES[config.gamme] ?? GAMMES.dorien;
@@ -150,7 +151,7 @@ export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq }) {
             if (!this.initialise || !this.ctx) return;
             if (this.ctx.state === 'suspended') this.ctx.resume();
 
-            const config = MUSIQUE_BIOMES[biomeId];
+            const config = obtenirConfigMusiqueBiome(biomeId);
             if (!config) return;
 
             if (!conserverPosition) {
@@ -205,6 +206,14 @@ export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq }) {
             }
             this.arreterMusique(300);
             setTimeout(() => this.demarrerMusique(biomeId), 350);
+        },
+
+        jouerStingerBoss() {
+            if (!this.ctx || !this.gainEffets || this.muet) return;
+            const notes = [196, 247, 294];
+            notes.forEach((freq, i) => {
+                setTimeout(() => this.jouerNoteSimple(freq, 'square', 0.12, 0.22), i * 110);
+            });
         },
 
         arreterMusique(fadeDuree = 0) {

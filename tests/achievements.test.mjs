@@ -29,8 +29,8 @@ describe('achievements', () => {
         statsGlobales.meteosPartieActuelle = new Set();
     });
 
-    it('contient 56 achievements (32 arcade + 24 histoire)', () => {
-        expect(Object.keys(ACHIEVEMENTS)).toHaveLength(56);
+    it('contient 57 achievements (33 arcade + 24 histoire)', () => {
+        expect(Object.keys(ACHIEVEMENTS)).toHaveLength(57);
     });
 
     it('majStatsScorePartie met à jour maxLignesUnCoup et maxCombo', () => {
@@ -157,6 +157,6 @@ describe('achievements', () => {
         });
         genererGalerieAchievements();
         expect(grille.appendChild).toHaveBeenCalledTimes(Object.keys(ACHIEVEMENTS).length);
-        expect(compteur.textContent).toContain('/ 56');
+        expect(compteur.textContent).toContain('/ 57');
     });
 });

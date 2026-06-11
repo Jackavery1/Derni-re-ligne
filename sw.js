@@ -1,4 +1,4 @@
-const VERSION_CACHE = 'derniere-ligne-2.5.11-r10';
+const VERSION_CACHE = 'derniere-ligne-2.5.12-r10';
 
 const FICHIERS_A_CACHER = [
     './',
@@ -39,12 +39,14 @@ const FICHIERS_A_CACHER = [
     './js/actions-piece-communes.js',
     './js/annonces.js',
     './js/archi-donnees.js',
+    './js/archi-generateur.js',
     './js/archi-input.js',
     './js/archi-jeu.js',
     './js/archi-logique.js',
     './js/archi-rendu.js',
     './js/audio-donnees.js',
     './js/audio-effets.js',
+    './js/audio-fallback-biomes.js',
     './js/audio-musique.js',
     './js/audio-partie.js',
     './js/audio.js',
@@ -117,6 +119,8 @@ const FICHIERS_A_CACHER = [
     './js/histoire-textes.js',
     './js/hud-jeu.js',
     './js/icones-pixel.js',
+    './js/infobulles-contexte.js',
+    './js/input-gamepad.js',
     './js/input-jeu.js',
     './js/input-repetition.js',
     './js/layout-calcul.js',
@@ -138,6 +142,7 @@ const FICHIERS_A_CACHER = [
     './js/mode-dev-etat.js',
     './js/mode-developpeur.js',
     './js/mode-histoire.js',
+    './js/mode-sprint.js',
     './js/monde-paradoxe-etat.js',
     './js/monde-paradoxe.js',
     './js/moteur-config-actions.js',
@@ -197,6 +202,7 @@ const FICHIERS_A_CACHER = [
     './js/store-refs-canvas.js',
     './js/texte-jeu.js',
     './js/themes-biome.js',
+    './js/touches-config.js',
     './js/tutoriel.js',
     './js/types.js',
     './js/ui-boutons-histoire.js',

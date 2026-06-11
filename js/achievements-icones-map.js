@@ -21,6 +21,7 @@ export const ICONE_PAR_CATEGORIE = {
 
 /** @type {Record<string, string>} */
 export const ICONE_PAR_ACHIEVEMENT = {
+    premiere_ligne: 'ach_score',
     premier_tetris: 'chronique_eclair',
     centenaire: 'ach_score',
     millenaire: 'chronique_trophee',

@@ -30,6 +30,8 @@ import {
     definirAccumulateur,
 } from './store-jeu.js';
 import { mettreAJourDas, mettreAJourIndicateurRelique, estPositionValide } from './piece-jeu.js';
+import { mettreAJourGamepad } from './input-gamepad.js';
+import { obtenirActions } from './actions-jeu.js';
 import { partieSpecialiseeActive } from './registre-modes.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import {
@@ -199,6 +201,7 @@ function boucleJeu(timestamp) {
                 mettreAJourVivant(deltaTemps);
             }
             mettreAJourDas(deltaTemps);
+            if (!partieSpecialiseeActive()) mettreAJourGamepad(obtenirActions);
             _mettreAJourGravitePiece(deltaTemps);
 
             mettreAJourParticules(deltaTemps);

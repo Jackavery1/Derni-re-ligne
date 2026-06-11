@@ -3,7 +3,7 @@ import { etat, obtenirBiomeActif } from './store-jeu.js';
 import { obtenirDaltonien } from './accessibilite.js';
 import { obtenirForme, calculerDistanceChute } from './piece-jeu.js';
 import { obtenirFauxFantomeActif } from './boss-jeu.js';
-import { ghostEstDesactive } from './mecaniques-histoire.js';
+import { ghostEstDesactive, pieceEstInvisible } from './mecaniques-histoire.js';
 
 const TYPES_PIECE = ['I', 'O', 'T', 'S', 'Z', 'J', 'L'];
 const INDEX_COULEUR_PIECE = { I: 0, O: 1, T: 2, S: 3, Z: 4, J: 5, L: 6 };
@@ -172,4 +172,28 @@ export function dessinerMotifsCoopPieces(ctx, pieces, obtenirFormeFn) {
         }
         dessinerMotifsForme(ctx, forme, piece.type, piece.x, piece.y, CONFIG.taille, OPACITE_MOTIF);
     }
+}
+
+export function dessinerPulsePieceActive(ctx) {
+    const daltonien = obtenirDaltonien();
+    const contrasteEleve =
+        typeof document !== 'undefined' && document.body?.classList?.contains('contraste-eleve');
+    if ((!daltonien && !contrasteEleve) || !etat.pieceActuelle || pieceEstInvisible()) return;
+
+    const forme = obtenirForme(etat.pieceActuelle);
+    const pulse = 0.45 + 0.55 * Math.sin(performance.now() / 180);
+    const alpha = 0.2 + pulse * 0.35;
+
+    ctx.save();
+    ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+    ctx.lineWidth = 2;
+    for (let l = 0; l < forme.length; l++) {
+        for (let c = 0; c < forme[l].length; c++) {
+            if (!forme[l][c]) continue;
+            const x = (etat.pieceActuelle.x + c) * CONFIG.taille;
+            const y = (etat.pieceActuelle.y + l) * CONFIG.taille;
+            ctx.strokeRect(x + 1, y + 1, CONFIG.taille - 2, CONFIG.taille - 2);
+        }
+    }
+    ctx.restore();
 }

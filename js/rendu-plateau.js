@@ -20,7 +20,11 @@ import { dessinerCelluleStyle } from './rendu-blocs.js';
 import { dessinerFondBiome } from './rendu-ambiance.js';
 import { dessinerSignesVie } from './rendu-vivant.js';
 import { celluleEstRouillee, pieceEstInvisible, ghostEstDesactive } from './mecaniques-histoire.js';
-import { dessinerMotifsAccessibilite, dessinerMotifsPieceCourante } from './rendu-accessibilite.js';
+import {
+    dessinerMotifsAccessibilite,
+    dessinerMotifsPieceCourante,
+    dessinerPulsePieceActive,
+} from './rendu-accessibilite.js';
 
 /** @type {HTMLCanvasElement | OffscreenCanvas | null} */
 let cacheVignette = null;
@@ -311,6 +315,8 @@ export function dessinerPieceActive() {
     }
 
     if (meteo.masquerPiece) obtenirCtx().globalAlpha = 1;
+
+    dessinerPulsePieceActive(obtenirCtx());
 
     if (relique) {
         obtenirCtx().restore();

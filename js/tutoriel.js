@@ -5,17 +5,43 @@ const CLES = {
     prologue: 'derniereLigne_tutorielHistoireVu',
     coop: 'derniereLigne_tutorielCoopVu',
     architecte: 'derniereLigne_tutorielArchitecteVu',
+    oracle: 'derniereLigne_tutorielOracleVu',
 };
 
-/** @type {{ titre: string, lignes: string[] }} */
-const CONTENU_PROLOGUE = {
-    titre: 'BIENVENUE DANS DERNIÈRE LIGNE',
-    lignes: [
-        'Parcourez la carte des mondes au clavier via la liste de selection ou à la souris sur la carte.',
-        "Suivez l'histoire de ROBO contre son ennemi jure à travers les differents mondes où ils s'affronteront.",
-        'Aidez-le à atteindre son objectif et surtout… Amusez-vous !',
-    ],
-};
+/** @type {{ titre: string, lignes: string[], avecControles?: boolean }[]} */
+const SLIDES_PROLOGUE = [
+    {
+        titre: 'BIENVENUE DANS DERNIÈRE LIGNE',
+        lignes: [
+            'Parcourez la carte des mondes au clavier via la liste de selection ou à la souris sur la carte.',
+            "Suivez l'histoire de ROBO contre son ennemi juré à travers les mondes où ils s'affronteront.",
+            'Aidez-le à atteindre son objectif et surtout… Amusez-vous !',
+        ],
+        avecControles: true,
+    },
+    {
+        titre: 'OBJECTIFS ET ÉTOILES',
+        lignes: [
+            'Chaque monde se termine après un nombre de lignes ou un combat de boss.',
+            'Les étoiles récompensent vitesse et performance — visez ★★★ pour les secrets.',
+            'Le palier de vitesse monte au fil de la partie : surveillez le HUD.',
+        ],
+    },
+    {
+        titre: 'COMBATS DE BOSS',
+        lignes: [
+            'Les boss ont plusieurs phases : leurs attaques changent quand leur jauge baisse.',
+            'Observez la barre de vie et adaptez-vous aux mécaniques du biome.',
+        ],
+    },
+    {
+        titre: 'MÉCANIQUES DES BIOMES',
+        lignes: [
+            'Chaque biome modifie les règles : météo, cellules vivantes, reliques temporaires…',
+            "Lisez l'indicateur sous l'objectif — une info-bulle s'affiche à la première occurrence.",
+        ],
+    },
+];
 
 /** @type {{ touche: string, action: string }[]} */
 const CONTROLES_CLAVIER = [
@@ -28,15 +54,16 @@ const CONTROLES_CLAVIER = [
     { touche: 'P / Échap', action: 'Pause' },
 ];
 
-/** @type {Record<'coop' | 'architecte', { titre: string, lignes: string[] }>} */
+/** @type {Record<'coop' | 'architecte' | 'oracle', { titre: string, lignes: string[] }>} */
 const CONTENUS = {
     coop: {
         titre: 'MODE COOPÉRATIF',
         lignes: [
-            'Deux joueurs partagent un plateau : J1 colonnes 1–5, J2 colonnes 6–10. Une ligne ne s’efface que si les deux moities sont remplies !',
+            'Deux joueurs partagent UN SEUL plateau : J1 colonnes 1–5 (gauche), J2 colonnes 6–10 (droite).',
+            'Schema : [ J1 | J1 | J1 | J1 | J1 | J2 | J2 | J2 | J2 | J2 ] — une ligne ne s’efface que si les DEUX moities sont remplies.',
             'J1 : WASD deplacer, W/Q tourner, Shift gauche = chute rapide, E = reserve, R = passerelle.',
             'J2 : fleches deplacer, ↑ / Pave num. 8 tourner, Shift droit = chute rapide, Pave num. 7 = reserve, 9 = passerelle.',
-            'La passerelle envoie votre prochaine piece à l’autre joueur (1 par niveau).',
+            'La passerelle envoie votre prochaine piece à l’autre joueur (1 par niveau). Coordonnez-vous !',
         ],
     },
     architecte: {
@@ -44,6 +71,15 @@ const CONTENUS = {
         lignes: [
             'Placez les pieces sans gravite automatique pour remplir l’objectif du puzzle.',
             'Backspace annule le dernier placement. Visez la precision et le nombre minimal de pieces pour les etoiles.',
+        ],
+    },
+    oracle: {
+        titre: 'MODE ORACLE',
+        lignes: [
+            'L’Oracle suggere un placement optimal pour la piece en cours (fantome cyan).',
+            'Suivez la suggestion : bonus de score. Ignorez-la avec succes : multiplicateur jusqu’a ×5.0.',
+            'Echouez en ignorant : le multiplicateur retombe a ×1.0. Ideal pour les joueurs avances !',
+            'Disponible apres le boss Avant-Garde. Activez-le depuis le menu ou en partie.',
         ],
     },
 };
@@ -109,6 +145,12 @@ function remplirContenu(contenu, avecControles = false) {
 /** @type {(() => void) | null} */
 let desactiverFocusTrap = null;
 
+/** @type {number} */
+let indexSlidePrologue = 0;
+
+/** @type {(() => void) | null} */
+let callbackPrologue = null;
+
 /** @param {HTMLElement} overlay */
 function activerFocusTrap(overlay) {
     if (!overlay?.querySelectorAll) return;
@@ -149,8 +191,36 @@ function activerFocusTrap(overlay) {
 function fermerTutoriel(cleStockage, onFermer) {
     marquerTutorielVu(cleStockage);
     desactiverFocusTrap?.();
+    indexSlidePrologue = 0;
+    callbackPrologue = null;
     document.getElementById('overlay-tutoriel')?.classList.add('element-masque');
     onFermer?.();
+}
+
+function afficherSlidePrologue(index) {
+    const slide = SLIDES_PROLOGUE[index];
+    if (!slide) return;
+    remplirContenu(slide, !!slide.avecControles);
+
+    const indicateur = document.getElementById('tutoriel-indicateur');
+    if (indicateur) {
+        indicateur.textContent = sansAccentsE(`${index + 1} / ${SLIDES_PROLOGUE.length}`);
+    }
+
+    const btnFermer = document.getElementById('btn-tutoriel-fermer');
+    if (btnFermer) {
+        btnFermer.textContent =
+            index < SLIDES_PROLOGUE.length - 1 ? 'SUIVANT' : 'COMPRIS — COMMENCER';
+    }
+}
+
+function avancerSlidePrologue() {
+    if (indexSlidePrologue < SLIDES_PROLOGUE.length - 1) {
+        indexSlidePrologue++;
+        afficherSlidePrologue(indexSlidePrologue);
+        return;
+    }
+    fermerTutoriel(CLES.prologue, callbackPrologue ?? undefined);
 }
 
 /**
@@ -164,25 +234,27 @@ export function afficherTutorielPrologueApresCutscene(onCompris) {
         return;
     }
 
+    indexSlidePrologue = 0;
+    callbackPrologue = onCompris ?? null;
+
     const overlay = document.getElementById('overlay-tutoriel');
     if (!overlay) {
         onCompris?.();
         return;
     }
 
-    remplirContenu(CONTENU_PROLOGUE, true);
+    afficherSlidePrologue(0);
     overlay.classList.remove('element-masque');
     activerFocusTrap(overlay);
 
     const btnFermer = document.getElementById('btn-tutoriel-fermer');
     if (btnFermer) {
-        btnFermer.textContent = 'COMPRIS — COMMENCER';
-        btnFermer.onclick = () => fermerTutoriel(cle, onCompris);
+        btnFermer.onclick = () => avancerSlidePrologue();
     }
 }
 
 /**
- * @param {'coop' | 'architecte'} contexte
+ * @param {'coop' | 'architecte' | 'oracle'} contexte
  */
 export function afficherTutorielContextuel(contexte) {
     const cle = CLES[contexte];

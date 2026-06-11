@@ -1,7 +1,28 @@
 /** Normalise e accentues pour l'affichage UI (hors bulles dialogue / narration). */
+import { lireStockage, ecrireStockage } from './progression-stockage.js';
+
+const CLE_ACCENTS_UI = 'derniereLigne_accentsUi';
+
+let accentsUiActifs = false;
+
+export function obtenirAccentsUi() {
+    return accentsUiActifs;
+}
+
+export function chargerAccentsUiDepuisStockage() {
+    accentsUiActifs = lireStockage(CLE_ACCENTS_UI, 'false') === 'true';
+}
+
+export function persisterAccentsUi(actif) {
+    accentsUiActifs = actif;
+    ecrireStockage(CLE_ACCENTS_UI, actif.toString());
+}
+
 export function sansAccentsE(texte) {
     if (texte == null) return texte;
-    return String(texte).replace(/[éèê]/g, 'e').replace(/[ÉÈÊ]/g, 'E');
+    const source = String(texte);
+    if (accentsUiActifs) return source;
+    return source.replace(/[éèê]/g, 'e').replace(/[ÉÈÊ]/g, 'E');
 }
 
 /** Affichage sans accents visuels, nom accessible avec accents pour lecteurs d'ecran. */

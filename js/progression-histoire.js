@@ -196,7 +196,7 @@ export function obtenirEtatDeblocage() {
         codex: mondesCompletes.includes('monde_prologue'),
         mondeLibre: bossVaincus.includes('brasier'),
         profil: bossVaincus.includes('sentinelle'),
-        achievements: bossVaincus.includes('archiviste'),
+        achievements: mondesCompletes.includes('monde_prologue'),
         oracleCoop: bossVaincus.includes('avantgarde'),
         architecte:
             bossVaincus.includes('distorsion') ||

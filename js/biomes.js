@@ -377,6 +377,9 @@ export const ORDRE_BIOMES = [
     'cosmos',
 ];
 
-import { BIOMES_HISTOIRE } from './biomes-histoire.js';
+import { BIOMES_HISTOIRE, ORDRE_BIOMES_HISTOIRE } from './biomes-histoire.js';
 
 Object.assign(BIOMES, BIOMES_HISTOIRE);
+
+/** Biomes visibles en mode libre (solo + histoire debloques par campagne). */
+export const ORDRE_BIOMES_LIBRE = [...ORDRE_BIOMES, ...ORDRE_BIOMES_HISTOIRE];

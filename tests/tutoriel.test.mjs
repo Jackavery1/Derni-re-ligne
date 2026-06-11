@@ -55,6 +55,7 @@ describe('tutoriel', () => {
             if (id === 'tutoriel-titre') return creerElement([]);
             if (id === 'tutoriel-corps') return corps;
             if (id === 'tutoriel-controles') return blocControles;
+            if (id === 'tutoriel-indicateur') return creerElement([]);
             return null;
         });
 
@@ -81,7 +82,7 @@ describe('tutoriel', () => {
     it('appelle onCompris directement si le tutoriel prologue a déjà été vu', () => {
         const cb = vi.fn();
         afficherTutorielPrologueApresCutscene();
-        btnFermer.onclick?.();
+        for (let i = 0; i < 4; i++) btnFermer.onclick?.();
         afficherTutorielPrologueApresCutscene(cb);
         expect(cb).toHaveBeenCalledTimes(1);
         expect(overlay.classList.contains('element-masque')).toBe(true);

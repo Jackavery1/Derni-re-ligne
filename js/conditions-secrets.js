@@ -1,10 +1,11 @@
 import { store } from './store-core.js';
 import { etat } from './store-jeu.js';
 import { CONFIG } from './config.js';
-import { logger } from './logger.js';
+import { ETAT_HISTOIRE_VIDE } from './histoire-donnees.js';
 import { sansAccentsE } from './texte-jeu.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
+import { logger } from './logger.js';
 
 const SEUIL_PLATEAU_TRAME = 0.5;
 export const DUREE_ATTENTE_TRAME_MS = 30000;
@@ -43,11 +44,9 @@ export function verifierConditionMiroir(nbLignes, etatHist) {
         store.histoire.mecaniques.cyberTetrisConsecutifs =
             (store.histoire.mecaniques.cyberTetrisConsecutifs ?? 0) + 1;
         logger.info(
-            '[secrets] tetris CYBER consecutifs :',
+            '[secrets] tetris CYBER cumules :',
             store.histoire.mecaniques.cyberTetrisConsecutifs
         );
-    } else if (nbLignes > 0) {
-        store.histoire.mecaniques.cyberTetrisConsecutifs = 0;
     }
 
     if (
@@ -199,6 +198,34 @@ export function obtenirSecondesRestantesAttenteTrame() {
     if (!conditionsRuntime.trameAttenteActive) return -1;
     const restantes = DUREE_ATTENTE_TRAME_MS - conditionsRuntime.timerAttenteTrameMs;
     return Math.max(0, Math.ceil(restantes / 1000));
+}
+
+/**
+ * Resume des 4 conditions pour debloquer la Trame Primordiale.
+ * @param {typeof import('./histoire-donnees.js').ETAT_HISTOIRE_VIDE} etatHist
+ */
+export function obtenirResumeConditionsTrame(etatHist) {
+    const ct = etatHist?.conditionsTrame ?? ETAT_HISTOIRE_VIDE.conditionsTrame;
+    const details = [
+        { cle: 'miroirComplete', libelle: 'Monde Miroir complete', ok: !!ct.miroirComplete },
+        {
+            cle: 'tousJournauxTrouves',
+            libelle: '9 transmissions trouvees',
+            ok: !!ct.tousJournauxTrouves,
+        },
+        {
+            cle: 'tousBossSansContinue',
+            libelle: 'Tous les boss sans continue',
+            ok: !!ct.tousBossSansContinue,
+        },
+        {
+            cle: 'actionDistorsionFaite',
+            libelle: 'Action secrete Distorsion',
+            ok: !!ct.actionDistorsionFaite,
+        },
+    ];
+    const validees = details.filter((d) => d.ok).length;
+    return { validees, total: 4, details };
 }
 
 export function reinitialiserConditionsRuntime() {

@@ -27,6 +27,10 @@ export const CLES_STOCKAGE = new Set([
     'derniereLigne_tutorielHistoireVu',
     'derniereLigne_tutorielCoopVu',
     'derniereLigne_tutorielArchitecteVu',
+    'derniereLigne_tutorielOracleVu',
+    'derniereLigne_touches',
+    'derniereLigne_infobullesBiome',
+    'derniereLigne_accentsUi',
     'derniereLigne_devActif',
 ]);
 
@@ -88,6 +92,7 @@ export function estCleValide(cle) {
     if (/^derniereLigne_record_[a-z]+$/.test(cle)) return true;
     if (/^derniereLigne_recniv_[a-z]+$/.test(cle)) return true;
     if (/^derniereLigne_recordcoop_[a-z]+$/.test(cle)) return true;
+    if (/^derniereLigne_sprint_[a-z]+$/.test(cle)) return true;
     if (/^tetrisNeo_monde_histoire_[a-z_]+$/.test(cle)) return true;
     if (/^derniereLigne_monde_histoire_[a-z_]+$/.test(cle)) return true;
     if (/^tetrisNeo_archi_[a-z_]+$/.test(cle)) return true;

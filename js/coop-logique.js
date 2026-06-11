@@ -38,6 +38,10 @@ export function basculerModeCoop() {
         btn?.classList.add('actif');
         if (label) label.textContent = 'COOP : ON';
         if (oracleBtn) oracleBtn.disabled = true;
+        import('./mode-sprint.js').then(({ desactiverModeSprint, mettreAJourToggleSprint }) => {
+            desactiverModeSprint();
+            mettreAJourToggleSprint();
+        });
         import('./oracle-jeu.js').then(({ oracle, basculerOracle }) => {
             if (oracle.actif) basculerOracle();
         });

@@ -215,10 +215,15 @@ export function surFinDeMondeHistoire(lignes, score) {
         _enregistrerProgressionBoss(monde, etatHist);
         _persisterCompletionMonde(monde, etatHist, journalDebloque);
     } else if (modeHistoireEnCours() && monde.estBoss) {
-        if (!etatHist.continuesParBoss) etatHist.continuesParBoss = {};
-        etatHist.continuesParBoss[mondeId] = (etatHist.continuesParBoss[mondeId] ?? 0) + 1;
-        etatHist.nbContinuesUtilises = (etatHist.nbContinuesUtilises ?? 0) + 1;
-        etatHist.conditionsTrame.tousBossSansContinue = false;
+        const estDistorsion = mondeId === 'monde_finale';
+        const gratuitDejaUtilise = etatHist.continueGratuitDistorsionUtilise === true;
+
+        if (!(estDistorsion && !gratuitDejaUtilise)) {
+            if (!etatHist.continuesParBoss) etatHist.continuesParBoss = {};
+            etatHist.continuesParBoss[mondeId] = (etatHist.continuesParBoss[mondeId] ?? 0) + 1;
+            etatHist.nbContinuesUtilises = (etatHist.nbContinuesUtilises ?? 0) + 1;
+            etatHist.conditionsTrame.tousBossSansContinue = false;
+        }
         sauvegarderEtatHistoire(etatHist);
         store.histoire.etat = etatHist;
         reagirRoboContinueBoss();
@@ -237,6 +242,20 @@ export function surFinDeMondeHistoire(lignes, score) {
             afficherBoutonCarteGameOver(true)
         );
     }
+}
+
+export function peutContinuerBossGratuit() {
+    if (!modeHistoireEnCours()) return false;
+    if (store.histoire.mondeActuel !== 'monde_finale') return false;
+    const etatHist = obtenirEtatHistoire();
+    return etatHist.continueGratuitDistorsionUtilise !== true;
+}
+
+export function utiliserContinueGratuitDistorsion() {
+    const etatHist = obtenirEtatHistoire();
+    etatHist.continueGratuitDistorsionUtilise = true;
+    sauvegarderEtatHistoire(etatHist);
+    store.histoire.etat = etatHist;
 }
 
 function verifierJournalBiome(biomeId, lignes, etatHist) {

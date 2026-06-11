@@ -8,6 +8,19 @@ import {
     persisterDaltonien,
     persisterReduireEffets,
 } from './accessibilite.js';
+import {
+    chargerAccentsUiDepuisStockage,
+    obtenirAccentsUi,
+    persisterAccentsUi,
+} from './texte-jeu.js';
+import {
+    ACTIONS_TOUCHES,
+    LIBELLES_ACTIONS,
+    obtenirTouches,
+    sauvegarderTouches,
+    reinitialiserTouches,
+    formaterCodeTouche,
+} from './touches-config.js';
 
 export function mettreAJourBoutonContraste(btn) {
     const actif = document.body.classList.contains('contraste-eleve');
@@ -24,6 +37,12 @@ export function mettreAJourBoutonDaltonien(btn) {
 export function mettreAJourBoutonReduireEffets(btn) {
     const actif = obtenirReduireEffetsAccessibilite();
     btn.textContent = actif ? '◇ EFFETS RÉDUITS ON' : '◇ RÉDUIRE EFFETS';
+    btn.setAttribute('aria-pressed', actif ? 'true' : 'false');
+}
+
+export function mettreAJourBoutonAccents(btn) {
+    const actif = obtenirAccentsUi();
+    btn.textContent = actif ? 'É ACCENTS ON' : 'É ACCENTS UI';
     btn.setAttribute('aria-pressed', actif ? 'true' : 'false');
 }
 
@@ -57,6 +76,63 @@ export function afficherOngletOptions(onglet) {
     panneauCtrl?.classList.toggle('actif', !estReglages);
     if (panneauReg) panneauReg.hidden = !estReglages;
     if (panneauCtrl) panneauCtrl.hidden = estReglages;
+    if (!estReglages) rafraichirPanneauControles();
+}
+
+/** @type {keyof ReturnType<typeof obtenirTouches> | null} */
+let actionEnAttente = null;
+
+function rafraichirPanneauControles() {
+    const liste = document.getElementById('liste-controles-rebind');
+    if (!liste) return;
+    liste.replaceChildren();
+    const touches = obtenirTouches();
+
+    for (const action of ACTIONS_TOUCHES) {
+        const row = document.createElement('div');
+        row.className = 'controle-rebind-ligne';
+
+        const label = document.createElement('span');
+        label.className = 'controle-rebind-label';
+        label.textContent = LIBELLES_ACTIONS[action];
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'bouton discret controle-rebind-bouton';
+        btn.dataset.action = action;
+        btn.textContent =
+            actionEnAttente === action
+                ? 'Appuyez sur une touche…'
+                : formaterCodeTouche(touches[action]);
+        btn.setAttribute('aria-pressed', actionEnAttente === action ? 'true' : 'false');
+        btn.addEventListener('click', () => {
+            actionEnAttente = action;
+            rafraichirPanneauControles();
+        });
+
+        row.appendChild(label);
+        row.appendChild(btn);
+        liste.appendChild(row);
+    }
+}
+
+function initialiserRebindingControles() {
+    document.getElementById('btn-controles-defaut')?.addEventListener('click', () => {
+        reinitialiserTouches();
+        actionEnAttente = null;
+        rafraichirPanneauControles();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (!actionEnAttente) return;
+        const panneau = document.getElementById('panneau-controles');
+        if (!panneau?.classList.contains('actif')) return;
+        e.preventDefault();
+        e.stopPropagation();
+        sauvegarderTouches({ [actionEnAttente]: e.code });
+        actionEnAttente = null;
+        rafraichirPanneauControles();
+    });
 }
 
 export function initialiserOptions() {
@@ -69,6 +145,7 @@ export function initialiserOptions() {
     AudioMoteur.muet = muet;
     document.body.classList.toggle('contraste-eleve', contraste);
     chargerAccessibiliteDepuisStockage();
+    chargerAccentsUiDepuisStockage();
 
     const slider = obtenirInput('slider-volume');
     const sliderMus = obtenirInput('slider-musique');
@@ -76,12 +153,14 @@ export function initialiserOptions() {
     const btnContraste = obtenirBouton('btn-toggle-contraste');
     const btnDaltonien = obtenirBouton('btn-toggle-daltonien');
     const btnReduireEffets = obtenirBouton('btn-toggle-reduire-effets');
+    const btnAccents = obtenirBouton('btn-toggle-accents');
     if (slider) slider.value = String(Math.round(AudioMoteur.volumeEffets * 100));
     if (sliderMus) sliderMus.value = String(Math.round(AudioMoteur.volumeMusique * 100));
     mettreAJourBoutonsMute();
     if (btnContraste) mettreAJourBoutonContraste(btnContraste);
     if (btnDaltonien) mettreAJourBoutonDaltonien(btnDaltonien);
     if (btnReduireEffets) mettreAJourBoutonReduireEffets(btnReduireEffets);
+    if (btnAccents) mettreAJourBoutonAccents(btnAccents);
 
     slider?.addEventListener('input', (e) => {
         const cible = /** @type {HTMLInputElement} */ (e.target);
@@ -115,4 +194,13 @@ export function initialiserOptions() {
         persisterReduireEffets(actif);
         mettreAJourBoutonReduireEffets(btnReduireEffets);
     });
+
+    btnAccents?.addEventListener('click', () => {
+        const actif = !obtenirAccentsUi();
+        persisterAccentsUi(actif);
+        mettreAJourBoutonAccents(btnAccents);
+    });
+
+    initialiserRebindingControles();
+    rafraichirPanneauControles();
 }

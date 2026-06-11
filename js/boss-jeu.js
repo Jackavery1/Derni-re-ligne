@@ -2,9 +2,9 @@ import { CONFIG } from './config.js';
 import { store } from './store-core.js';
 import { etat } from './store-jeu.js';
 import { BOSS } from './histoire-donnees.js';
+import { AudioMoteur } from './audio.js';
 import { logger } from './logger.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
-import { AudioMoteur } from './audio.js';
 import { creerParticulesExplosion } from './particules-jeu.js';
 import {
     tickConditionTrame,
@@ -101,6 +101,7 @@ export function demarrerBoss(bossId) {
     }
 
     logger.info('[boss] demarre :', bossId, 'PV:', boss.pvMax);
+    if (!AudioMoteur.muet) AudioMoteur.jouerStingerBoss?.();
     reinitialiserConditionsRuntime();
 }
 

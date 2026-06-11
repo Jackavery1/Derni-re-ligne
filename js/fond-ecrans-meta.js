@@ -1,5 +1,5 @@
 import { logger } from './logger.js';
-import { planifierBoucleSecondaire, arreterBoucleSecondaire } from './planificateur-raf.js';
+import { abonnerBoucleMenuUnifiee, desabonnerBoucleMenuUnifiee } from './planificateur-raf.js';
 
 /** @typedef {{ x: number, y: number, rx: number, ry: number, c1: string, c2: string }} NebuleuseMeta */
 /** @typedef {{ x: number, y: number, taille: number, couleur: string }} EtoileLointaine */
@@ -8,12 +8,17 @@ import { planifierBoucleSecondaire, arreterBoucleSecondaire } from './planificat
 let etatActif = null;
 let resizeEcouteurActif = false;
 let compteurRaf = 0;
+/** @type {((timestamp: number) => void) | null} */
+let callbackRafMeta = null;
+
+function arretRafMeta() {
+    if (callbackRafMeta) {
+        desabonnerBoucleMenuUnifiee(callbackRafMeta);
+        callbackRafMeta = null;
+    }
+}
 
 const COULEURS_ANIM = ['#00ddc8', '#6644cc', '#ffffff', '#ffffff', '#00ddc8', '#6644cc'];
-
-function cleRafMeta(canvasId) {
-    return `fond-meta:${canvasId}`;
-}
 
 function creerRng(seed) {
     let s = seed >>> 0;
@@ -236,9 +241,7 @@ function reconstruireEtat() {
     const cacheStatique = genererCacheStatique(w, h, donnees);
     const statique = effetsReduitsActifs();
 
-    if (etatActif.canvasId) {
-        arreterBoucleSecondaire(cleRafMeta(etatActif.canvasId));
-    }
+    arretRafMeta();
 
     etatActif = {
         ...etatActif,
@@ -255,7 +258,8 @@ function reconstruireEtat() {
     if (statique) {
         dessinerFrame(performance.now());
     } else {
-        planifierBoucleSecondaire(cleRafMeta(etatActif.canvasId), dessinerFrame);
+        callbackRafMeta = dessinerFrame;
+        abonnerBoucleMenuUnifiee(callbackRafMeta);
     }
 }
 
@@ -299,7 +303,7 @@ export function demarrerFondMeta(canvasId, options = {}) {
 export function arreterFondMeta() {
     if (!etatActif) return;
 
-    arreterBoucleSecondaire(cleRafMeta(etatActif.canvasId));
+    arretRafMeta();
 
     logger.debug('[fond-meta] fond arrêté', { canvasId: etatActif.canvasId });
     etatActif = null;

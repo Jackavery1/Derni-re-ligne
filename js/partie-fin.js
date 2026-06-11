@@ -5,6 +5,7 @@ import {
     calculerPointsProgression,
     obtenirRecordBiome,
     sauvegarderNiveauGlobal,
+    sauvegarderRecordSprintBiome,
 } from './progression.js';
 import { etat, obtenirBiomeActif, obtenirNiveauGlobal, ajouterNiveauGlobal } from './store-jeu.js';
 import {
@@ -25,7 +26,12 @@ import { coop } from './coop-logique.js';
 import { store } from './store-core.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { enregistrerTopOut, arreterSuiviMonde } from './gestionnaire-difficulte.js';
-import { surFinDeMondeHistoire } from './histoire-manager.js';
+import {
+    surFinDeMondeHistoire,
+    peutContinuerBossGratuit,
+    obtenirEtatHistoire,
+} from './histoire-manager.js';
+import { sansAccentsE } from './texte-jeu.js';
 import {
     bossEstActif,
     arreterBoss,
@@ -59,7 +65,9 @@ export function terminerPartie(victoire = false) {
     if (!victoire) setTimeout(() => AudioMoteur.son('game_over'), 250);
     const annonceVictoire = modeHistoireEnCours()
         ? 'Monde termine ! Victoire'
-        : 'Sprint termine ! Victoire';
+        : etat.modeJeu === 'sprint'
+          ? 'Sprint termine ! Victoire'
+          : 'Partie terminee ! Victoire';
 
     const textes = BIOMES[obtenirBiomeActif()]?.textes ?? BIOMES.classique.textes;
     const titreGo = document.querySelector('.go-titre');
@@ -69,6 +77,9 @@ export function terminerPartie(victoire = false) {
     _appliquerStatsOracleFinPartie(scoreFinal);
 
     const nouveauRecord = sauvegarderRecord(scoreFinal);
+    if (victoire && etat.modeJeu === 'sprint' && !modeHistoireEnCours()) {
+        sauvegarderRecordSprintBiome(obtenirBiomeActif(), obtenirTempsEcoule());
+    }
     _appliquerProgressionFinPartie(scoreFinal);
 
     mettreAJourAffichageRecord();
@@ -140,12 +151,66 @@ function _remplirEcranGameOver(scoreFinal, nouveauRecord) {
     if (nouveauRecord) reagirRoboNouveauRecord();
 }
 
-function _afficherActionsFinHistoire() {
+function _afficherContinuesCampagneGameOver() {
+    const el = document.getElementById('go-continues-campagne');
+    if (!el) return;
+
     if (!modeHistoireEnCours()) {
-        const btnCarte = document.getElementById('btn-histoire-carte');
+        el.classList.add('element-masque');
+        return;
+    }
+
+    const nb = obtenirEtatHistoire()?.nbContinuesUtilises ?? 0;
+    if (nb <= 0) {
+        el.classList.add('element-masque');
+        return;
+    }
+
+    el.textContent = sansAccentsE(
+        `Continues campagne utilises : ${nb} — peut affecter la fin Trame.`
+    );
+    el.classList.remove('element-masque');
+}
+
+function _afficherActionsFinHistoire() {
+    const btnContinue = document.getElementById('btn-continue-boss');
+    const btnCarte = document.getElementById('btn-histoire-carte');
+    if (!modeHistoireEnCours()) {
         btnCarte?.classList.add('element-masque');
+        btnContinue?.classList.add('element-masque');
+        document.getElementById('go-avertissement-trame')?.classList.add('element-masque');
+        document.getElementById('go-continues-campagne')?.classList.add('element-masque');
         arreterSuiviMonde();
     } else {
         surFinDeMondeHistoire(etat.lignes, etat.score);
+        const continueGratuit = peutContinuerBossGratuit();
+        btnContinue?.classList.toggle('element-masque', !continueGratuit);
+        if (continueGratuit) btnCarte?.classList.add('element-masque');
+        _afficherAvertissementTrameGameOver(continueGratuit);
+        _afficherContinuesCampagneGameOver();
     }
+}
+
+function _afficherAvertissementTrameGameOver(continueGratuit) {
+    const el = document.getElementById('go-avertissement-trame');
+    if (!el) return;
+
+    if (continueGratuit) {
+        el.textContent = sansAccentsE(
+            'Continue gratuit disponible — sans impact sur la fin Trame (condition 3/4).'
+        );
+        el.classList.remove('element-masque');
+        return;
+    }
+
+    const etatHist = obtenirEtatHistoire();
+    if (etatHist.conditionsTrame?.tousBossSansContinue === false) {
+        el.textContent = sansAccentsE(
+            "Un Continue empeche la fin Trame. La condition « Tous les boss sans continue » n'est plus remplie."
+        );
+        el.classList.remove('element-masque');
+        return;
+    }
+
+    el.classList.add('element-masque');
 }

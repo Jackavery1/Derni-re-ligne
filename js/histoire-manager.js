@@ -27,4 +27,8 @@ export {
     afficherBoutonCarteGameOver,
 } from './histoire-manager-ui.js';
 
-export { surFinDeMondeHistoire } from './histoire-manager-completion.js';
+export {
+    surFinDeMondeHistoire,
+    peutContinuerBossGratuit,
+    utiliserContinueGratuitDistorsion,
+} from './histoire-manager-completion.js';

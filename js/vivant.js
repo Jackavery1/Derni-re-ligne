@@ -7,6 +7,7 @@ import {
     REGISTRE_DECLENCHEMENT_VIVANT,
     configurerStrategiesVivant,
 } from './vivant-strategies.js';
+import { proposerInfobulleVivant } from './infobulles-contexte.js';
 
 export const COMPORTEMENTS_VIVANT = {
     classique: null,
@@ -303,6 +304,7 @@ export function mettreAJourVivant(dt) {
                 vivant.couleurAlerte = config.couleurAlerte;
                 vivant.cellulesAlerte = calculerCellulesAffectees(biomeId);
                 afficherNotifVivant(config);
+                proposerInfobulleVivant(biomeId, config);
             }
             break;
 

@@ -3,6 +3,7 @@ import { BOSS } from './histoire-donnees.js';
 /** @typedef {import('./histoire-donnees.js').SEQUENCE_HISTOIRE[number]} MondeHistoire */
 import { store } from './store-core.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
+import { obtenirBiomeActif } from './store-jeu.js';
 import { obtenirLibelleModificateurBiomeHud } from './mecaniques-histoire.js';
 import { obtenirEtatHistoire } from './histoire-mondes.js';
 import { ecouter } from './bus-jeu.js';
@@ -272,6 +273,11 @@ export function rafraichirHudObjectifsHistoire() {
         elMod.textContent = modificateur;
         elMod.classList.toggle('element-masque', !modificateur);
     }
+
+    _el('hud-paradoxe-aide')?.classList.toggle(
+        'element-masque',
+        obtenirBiomeActif() !== 'paradoxe'
+    );
 }
 
 function _flashVague(montee) {
@@ -315,6 +321,10 @@ export function initialiserUiObjectifs() {
     ecouter('boss:phase', () => rafraichirHudObjectifsHistoire());
 
     ecouter('partie:stats', () => {
+        if (modeHistoireEnCours()) rafraichirHudObjectifsHistoire();
+    });
+
+    ecouter('lignes:effacees', () => {
         if (modeHistoireEnCours()) rafraichirHudObjectifsHistoire();
     });
 }

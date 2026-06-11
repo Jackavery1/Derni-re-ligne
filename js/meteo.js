@@ -1,6 +1,7 @@
 import { CONFIG, METEO_BIOMES } from './config.js';
 import { majStatsMeteo } from './achievements.js';
 import { reagirRoboMeteoActive } from './mascotte-robo.js';
+import { proposerInfobulleMeteo } from './infobulles-contexte.js';
 
 export const ETATS_METEO = { REPOS: 'repos', ALERTE: 'alerte', ACTIF: 'actif' };
 
@@ -61,6 +62,8 @@ function afficherAlerteMeteo(evenement) {
         barre.style.animation = '';
     }
     banniere.classList.add('visible');
+    const biomeId = deps.obtenirBiomeActif?.() ?? 'classique';
+    proposerInfobulleMeteo(biomeId, evenement);
     meteo.timeoutAlerteTexte = setTimeout(() => {
         if (texteEl) texteEl.textContent = evenement.actif;
         meteo.timeoutBanniere = setTimeout(cacherBanniereMeteo, evenement.duree || 1500);

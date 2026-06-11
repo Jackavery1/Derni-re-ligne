@@ -30,6 +30,9 @@ export {
     sauvegarderRecordBiome,
     obtenirRecordCoopBiome,
     sauvegarderRecordCoopBiome,
+    obtenirRecordSprintBiome,
+    sauvegarderRecordSprintBiome,
+    obtenirResumeRecordsLocaux,
     biomeEstDebloqueParHistoire,
 } from './progression-records.js';
 
