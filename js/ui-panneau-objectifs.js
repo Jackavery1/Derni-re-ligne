@@ -6,6 +6,7 @@ import { modeHistoireEnCours } from './mode-histoire.js';
 import { obtenirBiomeActif } from './store-jeu.js';
 import { obtenirLibelleModificateurBiomeHud } from './mecaniques-histoire.js';
 import { obtenirEtatHistoire } from './histoire-mondes.js';
+import { obtenirResumeConditionsTrame } from './conditions-secrets.js';
 import { ecouter } from './bus-jeu.js';
 import { DIFFICULTE_MONDES } from '../data/difficulte-mondes.js';
 import { logger } from './logger.js';
@@ -278,6 +279,38 @@ export function rafraichirHudObjectifsHistoire() {
         'element-masque',
         obtenirBiomeActif() !== 'paradoxe'
     );
+
+    _rafraichirHudTrame();
+}
+
+function _rafraichirHudTrame() {
+    const wrap = _el('hud-trame-conditions');
+    if (!wrap) return;
+
+    const etat = obtenirEtatHistoire();
+    const trameComplete = etat.mondesCompletes?.includes('monde_trame');
+    if (!modeHistoireEnCours() || trameComplete) {
+        wrap.classList.add('element-masque');
+        return;
+    }
+
+    const resume = obtenirResumeConditionsTrame(etat);
+    if (resume.validees >= resume.total) {
+        wrap.classList.add('element-masque');
+        return;
+    }
+
+    wrap.classList.remove('element-masque');
+    _texte('hud-trame-resume', `TRAME ${resume.validees}/${resume.total}`);
+    const ul = _el('hud-trame-detail');
+    if (ul) {
+        ul.replaceChildren();
+        for (const d of resume.details) {
+            const li = document.createElement('li');
+            li.textContent = sansAccentsE(`${d.ok ? '✓' : '○'} ${d.libelle}`);
+            ul.appendChild(li);
+        }
+    }
 }
 
 function _flashVague(montee) {

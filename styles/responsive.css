@@ -1,0 +1,132 @@
+/* ================================================
+           RESPONSIVE
+        ================================================ */
+body.contraste-eleve {
+    --fond: #000000;
+    --fond-panneau: rgba(255, 255, 255, 0.08);
+    --bordure: rgba(255, 255, 255, 0.55);
+    --texte: #ffffff;
+    --texte-dim: rgba(255, 255, 255, 0.75);
+}
+body.contraste-eleve .bouton {
+    border-width: 3px;
+}
+
+@media (max-width: 768px), (max-height: 600px) {
+    body.partie-active #controles-mobile {
+        display: flex;
+    }
+    .btn-tactile {
+        width: 72px;
+        height: 56px;
+        min-width: 72px;
+        min-height: 56px;
+        font-size: 0.75rem;
+    }
+    .btn-tactile.large {
+        width: 100px;
+    }
+    #canvas-mascotte {
+        max-width: 80px;
+    }
+    #section-mascotte {
+        padding: 6px 4px;
+        gap: 4px;
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    #controles-mobile {
+        display: none !important;
+    }
+
+    #conteneur-principal {
+        align-items: stretch;
+    }
+
+    #interface-jeu {
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+        justify-content: center;
+    }
+
+    .panneau {
+        width: 90px;
+        gap: 6px;
+        justify-content: center;
+    }
+    .section {
+        padding: 6px 4px;
+        gap: 4px;
+    }
+    .section-titre {
+        font-size: 0.3rem;
+    }
+    .stat-label {
+        font-size: 0.28rem;
+        margin-bottom: 2px;
+    }
+    .stat-valeur {
+        font-size: 0.5rem;
+    }
+    #canvas-mascotte {
+        max-width: 56px;
+    }
+    #section-mascotte {
+        padding: 4px 2px;
+        gap: 2px;
+    }
+    #section-mascotte .section-titre {
+        font-size: 0.26rem;
+    }
+}
+
+#controles-paysage {
+    display: none;
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+}
+#controles-paysage .ctrl-col {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: auto;
+}
+.ctrl-gauche {
+    left: 8px;
+}
+.ctrl-droite {
+    right: 8px;
+}
+#controles-paysage .btn-tactile {
+    width: 52px;
+    height: 44px;
+    font-size: 0.9rem;
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    body.partie-active #controles-paysage {
+        display: block;
+    }
+}
+
+/* Robot menu : masquer uniquement sur très petits écrans */
+@media (max-height: 420px) and (max-width: 520px) {
+    .menu-robot {
+        display: none;
+    }
+}
+@media (max-height: 480px) {
+    .guide {
+        display: none;
+    }
+    .menu-contenu {
+        gap: 8px;
+    }
+}

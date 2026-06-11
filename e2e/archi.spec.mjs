@@ -46,13 +46,19 @@ test('sélection architecte sans violations critiques', async ({ page }) => {
     expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
 });
 
+async function ouvrirPremierNiveauArchitecte(page) {
+    await page.locator('.carte-niveau-archi').first().click();
+    await expect(page.locator('#panneau-detail-corps')).toHaveClass(/panneau-detail-corps--ouvert/);
+    await page.locator('#btn-panneau-detail-jouer').click();
+}
+
 test('lancement niveau architecte affiche le plateau', async ({ page }) => {
     await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-architecte').click();
     await expect(page.locator('#ecran-archi-selection')).toHaveClass(/actif/);
-    await page.locator('.carte-niveau-archi').first().click();
+    await ouvrirPremierNiveauArchitecte(page);
     await expect(page.locator('#interface-jeu-archi')).toBeVisible({ timeout: 5000 });
     await expect(page.locator('#zone-jeu-archi canvas')).toBeVisible();
 });
@@ -71,7 +77,7 @@ test('undo architecte restaure un placement', async ({ page }) => {
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-architecte').click();
-    await page.locator('.carte-niveau-archi').first().click();
+    await ouvrirPremierNiveauArchitecte(page);
     await expect(page.locator('#interface-jeu-archi')).toBeVisible({ timeout: 5000 });
 
     const piecesAvant = await page.locator('#archi-pieces-used').textContent();

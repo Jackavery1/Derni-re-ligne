@@ -151,6 +151,9 @@ describe('achievements', () => {
                     style: { setProperty: vi.fn() },
                     appendChild: vi.fn(),
                     append: vi.fn(),
+                    addEventListener: vi.fn(),
+                    setAttribute: vi.fn(),
+                    tabIndex: 0,
                     textContent: '',
                 };
             },

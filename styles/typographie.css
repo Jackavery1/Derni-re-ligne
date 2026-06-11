@@ -1,0 +1,148 @@
+/* ============================================
+   HIÉRARCHIE TYPOGRAPHIQUE
+   ============================================ */
+
+.logo-titre,
+h1,
+.titre-ecran,
+.nom-biome,
+.btn-menu,
+.bouton,
+.pause-titre,
+.go-titre,
+.codex-entree-titre,
+.section-titre {
+    font-family: var(--font-titre);
+}
+
+.label-score,
+.label-lignes,
+.label-niveau,
+.label-temps,
+.label-oracle,
+.label-reserve,
+.label-suivant,
+.stat-label,
+.go-stat-label,
+#label-progression,
+#affichage-restant,
+.boss-hp-label,
+.boss-timer-label,
+.stats-numero,
+.combo-compteur {
+    font-family: var(--font-stats);
+    font-weight: 600;
+    letter-spacing: var(--espacement-label-stats);
+}
+
+.btn-sous-titre,
+.menu-separateur,
+.description-biome,
+.achievement-texte,
+.oracle-texte,
+.tooltip-condition,
+.info-controles,
+.btn-verrouille--actif::before,
+.codex-entree-sous-titre,
+.profil-label,
+.section-vide-msg,
+.vivant-sous-titre,
+.tutoriel-texte {
+    font-family: var(--font-ui);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.texte-cutscene,
+.texte-journal,
+.histoire-cutscene-ligne,
+.codex-entree-texte,
+.codex-para,
+.epilogue-texte,
+.dialogue-texte,
+.lore-description,
+.fin-histoire-texte,
+.vera-journal-contenu,
+.histoire-journal-texte {
+    font-family: var(--font-narratif);
+    font-size: var(--taille-narratif);
+    line-height: 1.7;
+    letter-spacing: 0.3px;
+}
+
+.vera-journal-contenu,
+.histoire-journal-texte {
+    font-style: italic;
+}
+
+#affichage-score,
+#affichage-lignes,
+#affichage-niveau,
+#score-valeur,
+#lignes-valeur,
+#niveau-valeur {
+    font-family: var(--font-stats);
+    font-size: var(--taille-stats-lg);
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+#affichage-temps,
+#timer-valeur {
+    font-family: var(--font-stats);
+    font-size: var(--taille-stats-md);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.stat-label,
+.label-score,
+.label-lignes,
+.label-niveau,
+.label-temps,
+.label-oracle,
+.label-reserve,
+.label-suivant {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    opacity: 0.75;
+    text-transform: uppercase;
+}
+
+.texte-cutscene,
+.texte-journal,
+.histoire-cutscene-ligne,
+.codex-entree-texte {
+    line-height: 1.75;
+    max-width: 65ch;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Surcharges typographiques par biome */
+[data-biome='cyber'] {
+    --font-stats: 'Courier New', 'Share Tech Mono', monospace;
+}
+
+[data-biome='cosmos'] {
+    --font-stats: 'Orbitron', sans-serif;
+    --font-narratif: 'Crimson Pro', Georgia, serif;
+    --taille-narratif: clamp(16px, 1.7vw, 20px);
+}
+
+[data-biome='lave'] {
+    --font-stats: 'Orbitron', sans-serif;
+    --espacement-label-stats: 2px;
+}
+
+@media (max-width: 480px) {
+    .logo-titre,
+    h1,
+    .titre-ecran,
+    .go-titre,
+    .pause-titre {
+        font-family: var(--font-ui);
+        letter-spacing: 0.06em;
+    }
+}

@@ -1,4 +1,4 @@
-import { rendreIconeSurCanvas } from './icones-pixel.js';
+import { rendreIconeSurCanvas, rendreIconeGlitchSurCanvas } from './icones-pixel.js';
 import { sansAccentsE } from './texte-jeu.js';
 
 /**
@@ -6,6 +6,8 @@ import { sansAccentsE } from './texte-jeu.js';
  * @property {string} [id]
  * @property {number} [taillePixel]
  * @property {(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => void} [canvasPersonnalise]
+ * @property {boolean} [glitch]
+ * @property {string} [seedId]
  */
 
 /**
@@ -20,6 +22,8 @@ import { sansAccentsE } from './texte-jeu.js';
  * @property {string[]} [lignesMeta]
  * @property {boolean} [verrouille]
  * @property {string} [conditionTexte]
+ * @property {{ actuel: number, cible: number, formaterTexte?: (actuel: number, cible: number) => string }} [progression]
+ * @property {{ libelle?: string, onAction: () => void }} [actionPrincipale]
  */
 
 /** @type {ConfigPanneauDetail | null} */
@@ -47,14 +51,19 @@ function obtenirRefs() {
         description: document.getElementById('panneau-detail-description'),
         meta: document.getElementById('panneau-detail-meta'),
         condition: document.getElementById('panneau-detail-condition'),
+        progression: document.getElementById('panneau-detail-progression'),
+        progressionFill: document.getElementById('panneau-detail-progression-fill'),
+        progressionTexte: document.getElementById('panneau-detail-progression-texte'),
         btnFermer: document.getElementById('btn-panneau-detail-fermer'),
+        btnJouer: document.getElementById('btn-panneau-detail-jouer'),
     };
 }
 
+/** @param {HTMLElement | null} el @returns {el is HTMLCanvasElement} */
 function estCanvas(el) {
-    return Boolean(
-        el && typeof (/** @type {{ getContext?: unknown }} */ (el).getContext) === 'function'
-    );
+    if (!el) return false;
+    if (typeof HTMLCanvasElement !== 'undefined' && el instanceof HTMLCanvasElement) return true;
+    return typeof (/** @type {HTMLCanvasElement} */ (el).getContext) === 'function';
 }
 
 function rendreIcone(config) {
@@ -78,10 +87,17 @@ function rendreIcone(config) {
     }
 
     if (config.icone.id) {
-        rendreIconeSurCanvas(icone, config.icone.id, {
-            silhouette: !!config.verrouille,
-            accent: config.accent,
-        });
+        if (config.verrouille && config.icone.glitch) {
+            rendreIconeGlitchSurCanvas(icone, config.icone.id, {
+                accent: config.accent,
+                seedId: config.icone.seedId ?? config.id,
+            });
+        } else {
+            rendreIconeSurCanvas(icone, config.icone.id, {
+                silhouette: !!config.verrouille,
+                accent: config.accent,
+            });
+        }
     }
 }
 
@@ -104,6 +120,22 @@ function remplirDescription(el, description, typo) {
             el.appendChild(p);
         }
     }
+}
+
+function remplirProgression(refs, progression) {
+    if (!refs.progression) return;
+    if (!progression || progression.cible <= 0) {
+        refs.progression.classList.add('element-masque');
+        return;
+    }
+    refs.progression.classList.remove('element-masque');
+    const ratio = Math.min(1, Math.max(0, progression.actuel / progression.cible));
+    const pct = `${Math.round(ratio * 100)}%`;
+    refs.progressionFill?.style.setProperty('--panneau-progression-pct', pct);
+    const texte = progression.formaterTexte
+        ? progression.formaterTexte(progression.actuel, progression.cible)
+        : `${progression.actuel} / ${progression.cible}`;
+    if (refs.progressionTexte) refs.progressionTexte.textContent = sansAccentsE(texte);
 }
 
 function remplirMeta(el, lignes) {
@@ -149,14 +181,24 @@ function appliquerContenu(config) {
     );
 
     remplirMeta(refs.meta, config.lignesMeta);
+    remplirProgression(refs, config.verrouille ? config.progression : null);
 
     if (refs.condition) {
-        const cond = config.verrouille ? (config.conditionTexte ?? '') : '';
+        const cond = config.conditionTexte ?? '';
         refs.condition.textContent = sansAccentsE(cond);
         refs.condition.classList.toggle('element-masque', !cond);
     }
 
     refs.racine.classList.toggle('panneau-detail--verrouille', !!config.verrouille);
+
+    if (refs.btnJouer) {
+        const action = config.actionPrincipale;
+        const visible = Boolean(action?.onAction) && !config.verrouille;
+        refs.btnJouer.classList.toggle('element-masque', !visible);
+        if (visible) {
+            refs.btnJouer.textContent = sansAccentsE(action?.libelle ?? '▶ JOUER');
+        }
+    }
 }
 
 function retirerOuverture() {
@@ -191,6 +233,11 @@ function surClicDocument(e) {
     if (!cible || typeof cible !== 'object' || !('closest' in cible)) return;
     const el = /** @type {Element} */ (cible);
 
+    if (el.closest('#btn-panneau-detail-jouer')) {
+        const action = configOuverte?.actionPrincipale?.onAction;
+        if (action) action();
+        return;
+    }
     if (el.closest('#btn-panneau-detail-fermer')) {
         fermerPanneauDetail();
         return;

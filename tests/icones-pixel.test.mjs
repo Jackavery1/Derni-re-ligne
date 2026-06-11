@@ -1,9 +1,20 @@
-import { describe, it, expect } from 'vitest';
-import { ICONES_PIXEL, dessinerIconePixel } from '../js/icones-pixel.js';
+import { describe, it, expect, beforeAll, vi } from 'vitest';
+import { chargerIconesPixel, dessinerIconePixel } from '../js/icones-pixel.js';
 import { ICONE_PAR_ENTREE, ACCENT_PAR_ENTREE } from '../js/codex-icones-map.js';
 import { CODEX } from '../js/codex-donnees.js';
+import ICONES_PIXEL from '../data/icones-pixel.json';
 
 describe('icones-pixel', () => {
+    beforeAll(async () => {
+        vi.stubGlobal(
+            'fetch',
+            vi.fn().mockResolvedValue({
+                ok: true,
+                json: () => Promise.resolve(ICONES_PIXEL),
+            })
+        );
+        await chargerIconesPixel();
+    });
     it('contient toutes les icônes référencées par le codex', () => {
         for (const entree of Object.values(CODEX)) {
             const idIcone = ICONE_PAR_ENTREE[entree.id];

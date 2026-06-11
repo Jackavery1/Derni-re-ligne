@@ -42,6 +42,7 @@ export function appliquerClasseEffetsReduits() {
 }
 
 export function chargerAccessibiliteDepuisStockage() {
+    chargerConstellationClicSeulDepuisStockage();
     store.accessibilite.daltonien = lireStockage('derniereLigne_daltonien', 'false') === 'true';
     const configure = existeStockage('derniereLigne_reduireEffets');
     store.accessibilite.reduireEffetsConfigure = configure;
@@ -68,6 +69,20 @@ export function persisterDaltonien(actif) {
 export function persisterReduireEffets(actif) {
     definirReduireEffetsAccessibilite(actif, true);
     ecrireStockage('derniereLigne_reduireEffets', actif.toString());
+}
+
+export function obtenirConstellationClicSeul() {
+    return store.accessibilite.constellationClicSeul;
+}
+
+export function persisterConstellationClicSeul(actif) {
+    store.accessibilite.constellationClicSeul = actif;
+    ecrireStockage('derniereLigne_constellationClicSeul', actif.toString());
+}
+
+export function chargerConstellationClicSeulDepuisStockage() {
+    store.accessibilite.constellationClicSeul =
+        lireStockage('derniereLigne_constellationClicSeul', 'false') === 'true';
 }
 
 if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {

@@ -1,0 +1,274 @@
+/* ================================================
+           ÉCRAN GAME OVER — Redesigné
+        ================================================ */
+.go-contenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: clamp(18px, 3vw, 28px) clamp(20px, 4vw, 36px);
+    border: 2px solid rgba(255, 0, 110, 0.5);
+    background: rgba(8, 8, 26, 0.9);
+    position: relative;
+    max-width: min(90vw, 460px);
+    width: 100%;
+    box-shadow:
+        0 0 30px rgba(255, 0, 110, 0.15),
+        0 0 80px rgba(255, 0, 110, 0.08),
+        inset 0 0 30px rgba(255, 0, 110, 0.04);
+}
+
+/* Barre supérieure dégradée */
+.go-contenu::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 8%;
+    right: 8%;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--rose),
+        var(--violet),
+        var(--rose),
+        transparent
+    );
+}
+
+/* Coins décoratifs */
+.go-contenu::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 8%;
+    right: 8%;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--violet),
+        var(--rose),
+        var(--violet),
+        transparent
+    );
+}
+
+.go-coins {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+.go-coins::before,
+.go-coins::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--rose);
+}
+.go-coins::before {
+    top: -2px;
+    left: -2px;
+    border-right: none;
+    border-bottom: none;
+}
+.go-coins::after {
+    bottom: -2px;
+    right: -2px;
+    border-left: none;
+    border-top: none;
+}
+
+/* Titre GAME OVER avec glitch */
+.go-titre {
+    font-size: clamp(1.1rem, 4.5vw, 1.8rem);
+    color: var(--rose);
+    text-align: center;
+    line-height: 1.5;
+    letter-spacing: 4px;
+    animation: glitch 5s ease-in-out infinite;
+}
+@keyframes glitch {
+    0%,
+    85%,
+    100% {
+        transform: translate(0);
+        text-shadow:
+            0 0 20px var(--rose),
+            0 0 50px rgba(255, 0, 110, 0.3);
+    }
+    87% {
+        transform: translate(-4px, 1px);
+        text-shadow:
+            4px 0 var(--cyan),
+            -4px 0 var(--rose),
+            0 0 20px var(--rose);
+    }
+    89% {
+        transform: translate(4px, -1px);
+        text-shadow:
+            -4px 0 var(--violet),
+            4px 0 var(--rose),
+            0 0 20px var(--rose);
+    }
+    91% {
+        transform: translate(-2px, 2px);
+        text-shadow:
+            2px 0 var(--vert),
+            -2px 0 var(--rose),
+            0 0 20px var(--rose);
+    }
+    93% {
+        transform: translate(2px, -2px);
+        text-shadow:
+            -2px 0 var(--cyan),
+            2px 0 var(--violet);
+    }
+    95% {
+        transform: translate(0);
+        text-shadow:
+            0 0 20px var(--rose),
+            0 0 50px rgba(255, 0, 110, 0.3);
+    }
+}
+
+/* Pièces décoratives en haut du game over */
+.go-deco {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 1.2rem;
+    line-height: 1;
+    opacity: 0.6;
+}
+
+/* Séparateur néon */
+.go-separateur {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--rose),
+        var(--violet),
+        var(--rose),
+        transparent
+    );
+    opacity: 0.7;
+}
+
+/* Grille des statistiques */
+.go-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+}
+
+.go-stat {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--bordure);
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    transition: border-color 0.3s;
+}
+.go-stat:hover {
+    border-color: rgba(0, 245, 255, 0.5);
+}
+
+.go-stat-label {
+    font-size: 0.33rem;
+    color: var(--texte-dim);
+    letter-spacing: 2px;
+}
+
+.go-stat-valeur {
+    font-size: clamp(0.5rem, 2vw, 0.75rem);
+    letter-spacing: 1px;
+}
+.go-stat-valeur.jaune {
+    color: var(--jaune);
+    text-shadow: 0 0 8px var(--jaune);
+}
+.go-stat-valeur.cyan {
+    color: var(--cyan);
+    text-shadow: 0 0 8px var(--cyan);
+}
+.go-stat-valeur.vert {
+    color: var(--vert);
+    text-shadow: 0 0 8px var(--vert);
+}
+.go-stat-valeur.violet {
+    color: var(--violet);
+    text-shadow: 0 0 8px var(--violet);
+}
+
+#bloc-melodie {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.melodie-titre-label {
+    font-size: 0.3rem;
+    color: var(--texte-dim);
+    letter-spacing: 3px;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.melodie-titre-oeuvre {
+    font-size: clamp(0.35rem, 1.4vw, 0.5rem);
+    color: var(--jaune);
+    text-shadow: 0 0 8px var(--jaune);
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+#canvas-melodie {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.bouton-melodie {
+    font-size: 0.5rem;
+}
+
+/* Badge nouveau record */
+#badge-record {
+    background: rgba(255, 230, 0, 0.1);
+    border: 1px solid var(--jaune);
+    color: var(--jaune);
+    font-size: clamp(0.38rem, 1.5vw, 0.5rem);
+    padding: 10px 20px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px var(--jaune);
+    animation: recordPulse 1.5s ease-in-out infinite;
+    display: none;
+}
+@keyframes recordPulse {
+    0%,
+    100% {
+        box-shadow: 0 0 8px rgba(255, 230, 0, 0.3);
+    }
+    50% {
+        box-shadow:
+            0 0 22px rgba(255, 230, 0, 0.7),
+            0 0 45px rgba(255, 230, 0, 0.3);
+    }
+}
+
+.go-boutons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}

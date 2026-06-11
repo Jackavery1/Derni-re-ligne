@@ -1,4 +1,5 @@
 import { LISTE_ECRANS_CHARGEMENT } from './ecrans-config.js';
+import { chargerIconesPixel } from './icones-pixel.js';
 import { logger } from './logger.js';
 
 const parseur = new DOMParser();
@@ -47,4 +48,6 @@ export async function chargerEcrans() {
         const doc = parseur.parseFromString(html, 'text/html');
         conteneur.append(...doc.body.childNodes);
     }
+
+    await chargerIconesPixel();
 }

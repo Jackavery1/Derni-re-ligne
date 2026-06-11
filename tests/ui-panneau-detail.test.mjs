@@ -74,9 +74,37 @@ function installerDomPanneau() {
         id: 'panneau-detail-condition',
         className: 'element-masque',
     });
+    const btnJouer = creerNoeud('button', {
+        id: 'btn-panneau-detail-jouer',
+        className: 'element-masque',
+    });
+    const progression = creerNoeud('div', {
+        id: 'panneau-detail-progression',
+        className: 'panneau-detail-progression element-masque',
+    });
+    const progressionFill = creerNoeud('div', {
+        id: 'panneau-detail-progression-fill',
+        className: 'panneau-detail-progression-fill',
+    });
+    const progressionTexte = creerNoeud('div', {
+        id: 'panneau-detail-progression-texte',
+        className: 'panneau-detail-progression-texte',
+    });
+    progression.appendChild(progressionFill);
+    progression.appendChild(progressionTexte);
 
     iconeWrap.appendChild(icone);
-    for (const el of [btnFermer, iconeWrap, titre, sousTitre, description, meta, condition]) {
+    for (const el of [
+        btnFermer,
+        iconeWrap,
+        titre,
+        sousTitre,
+        description,
+        progression,
+        meta,
+        condition,
+        btnJouer,
+    ]) {
         corps.appendChild(el);
     }
     racine.appendChild(backdrop);
@@ -147,5 +175,47 @@ describe('ui-panneau-detail', () => {
         expect(noeuds.get('panneau-detail-description')?.textContent).toBe('');
         expect(noeuds.get('panneau-detail-titre')?.textContent).toBe('???');
         expect(noeuds.get('panneau-detail-condition')?.textContent).toContain('Miroir');
+    });
+
+    it('affiche la barre de progression si verrouille', () => {
+        const { ouvrirPanneauDetail } = globalThis.__panneauDetail;
+        ouvrirPanneauDetail({
+            id: 'test_prog',
+            accent: '#00ddc8',
+            titre: 'CENTENAIRE',
+            verrouille: true,
+            conditionTexte: '100 lignes',
+            progression: { actuel: 42, cible: 100 },
+        });
+        const bloc = noeuds.get('panneau-detail-progression');
+        expect(bloc?.classList.contains('element-masque')).toBe(false);
+        expect(noeuds.get('panneau-detail-progression-texte')?.textContent).toBe('42 / 100');
+    });
+
+    it('affiche le bouton jouer quand une action est fournie', () => {
+        const { ouvrirPanneauDetail } = globalThis.__panneauDetail;
+        ouvrirPanneauDetail({
+            id: 'test_jouer',
+            accent: '#ffbb44',
+            titre: 'LE CARRE',
+            actionPrincipale: { libelle: '▶ JOUER', onAction: vi.fn() },
+        });
+        expect(noeuds.get('btn-panneau-detail-jouer')?.classList.contains('element-masque')).toBe(
+            false
+        );
+    });
+
+    it('masque le bouton jouer si verrouille', () => {
+        const { ouvrirPanneauDetail } = globalThis.__panneauDetail;
+        ouvrirPanneauDetail({
+            id: 'test_lock',
+            accent: '#ffbb44',
+            titre: 'SECRET',
+            verrouille: true,
+            actionPrincipale: { onAction: vi.fn() },
+        });
+        expect(noeuds.get('btn-panneau-detail-jouer')?.classList.contains('element-masque')).toBe(
+            true
+        );
     });
 });

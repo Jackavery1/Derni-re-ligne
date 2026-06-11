@@ -316,6 +316,10 @@ export function mettreAJourEnteteHistoire() {
             elDetail?.classList.add('element-masque');
         } else {
             wrapTrame.classList.remove('element-masque');
+            wrapTrame.classList.toggle(
+                'histoire-prog-trame--en-cours',
+                resumeTrame.validees < resumeTrame.total
+            );
             elTrame.textContent = `TRAME ${resumeTrame.validees}/${resumeTrame.total}`;
             const detail = resumeTrame.details
                 .map((d) => `${d.ok ? '✓' : '○'} ${d.libelle}`)

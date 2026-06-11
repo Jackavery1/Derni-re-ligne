@@ -1,14 +1,39 @@
 <div id="ecran-archi-selection" class="ecran">
+    <canvas class="canvas-fond-meta" id="fond-meta-architecte"></canvas>
     <div class="codex-contenu">
         <div class="codex-header">
             <div class="codex-titre jaune">MODE ARCHITECTE</div>
             <div id="archi-sel-progression" class="codex-progression"></div>
         </div>
+        <div
+            id="archi-filtre-difficulte"
+            class="archi-filtre-difficulte"
+            role="group"
+            aria-label="Filtrer par difficulte"
+        >
+            <button
+                type="button"
+                class="bouton discret archi-filtre-btn actif"
+                data-difficulte="tous"
+            >
+                Tous
+            </button>
+            <button type="button" class="bouton discret archi-filtre-btn" data-difficulte="1">
+                ●○○ Facile
+            </button>
+            <button type="button" class="bouton discret archi-filtre-btn" data-difficulte="2">
+                ●●○ Moyen
+            </button>
+            <button type="button" class="bouton discret archi-filtre-btn" data-difficulte="3">
+                ●●● Expert
+            </button>
+        </div>
         <div id="archi-sel-grille" class="archi-selection-grille"></div>
         <p class="archi-legende-difficulte">
-            Difficulte : <span style="color: var(--vert)">●○○</span> facile ·
-            <span style="color: var(--jaune)">●●○</span> moyen ·
-            <span style="color: var(--rose)">●●●</span> expert
+            Difficulte :
+            <span class="archi-diff-legende archi-diff-legende--1">●○○</span> facile ·
+            <span class="archi-diff-legende archi-diff-legende--2">●●○</span> moyen ·
+            <span class="archi-diff-legende archi-diff-legende--3">●●●</span> expert
         </p>
         <button id="archi-sel-retour" class="bouton discret" type="button">← RETOUR</button>
     </div>

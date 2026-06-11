@@ -1,0 +1,108 @@
+/* ================================================
+           VARIABLES ET RÉINITIALISATION
+        ================================================ */
+:root {
+    --fond: #08081a;
+    --fond-panneau: rgba(0, 245, 255, 0.04);
+    --bordure: rgba(0, 245, 255, 0.2);
+    --cyan: #00f5ff;
+    --rose: #ff006e;
+    --vert: #00ff88;
+    --jaune: #ffe600;
+    --violet: #b400ff;
+    --orange: #ff8800;
+    --bleu: #4488ff;
+    --texte: #e0e0ff;
+    --texte-dim: rgba(224, 224, 255, 0.68);
+    --police: 'Press Start 2P', monospace;
+
+    /* ===== FONTS ===== */
+    --font-titre: 'Press Start 2P', monospace;
+    --font-stats: 'Orbitron', system-ui, 'Segoe UI', sans-serif;
+    --font-ui: 'Rajdhani', system-ui, 'Segoe UI', sans-serif;
+    --font-narratif: 'Crimson Pro', Georgia, 'Times New Roman', serif;
+
+    /* ===== TAILLES TYPOGRAPHIQUES ===== */
+    --taille-titre-xl: clamp(16px, 2.5vw, 28px);
+    --taille-titre-lg: clamp(12px, 1.8vw, 20px);
+    --taille-titre-md: clamp(9px, 1.2vw, 14px);
+    --taille-stats-lg: clamp(14px, 1.5vw, 18px);
+    --taille-stats-md: clamp(11px, 1.2vw, 14px);
+    --taille-ui-lg: clamp(15px, 1.6vw, 18px);
+    --taille-ui-md: clamp(13px, 1.3vw, 15px);
+    --taille-narratif: clamp(15px, 1.5vw, 18px);
+    --typo-titre-ecran: clamp(1.6rem, 3.5vw, 2.6rem);
+    --typo-sous-titre: clamp(0.85rem, 1.6vw, 1.05rem);
+    --typo-nom-carte: clamp(0.78rem, 1.4vw, 0.95rem);
+    --typo-corps: clamp(1rem, 1.5vw, 1.15rem);
+    --typo-stat: clamp(1.05rem, 1.8vw, 1.3rem);
+    --typo-narratif: clamp(1.05rem, 1.6vw, 1.2rem);
+    --espacement-label-stats: 1px;
+
+    --theme-primaire: var(--cyan);
+    --theme-score: var(--jaune);
+    --theme-accent: var(--cyan);
+    --theme-fond: var(--fond-panneau);
+    --theme-bordure: var(--bordure);
+    --theme-canvas: var(--cyan);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    background: var(--fond);
+    color: var(--texte);
+    font-family: var(--police);
+    overflow: hidden;
+    touch-action: none;
+}
+
+/* Grille de fond animée */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+        linear-gradient(rgba(0, 245, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 245, 255, 0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+    animation: defiGrille 20s linear infinite;
+}
+@keyframes defiGrille {
+    from {
+        background-position:
+            0 0,
+            0 0;
+    }
+    to {
+        background-position:
+            0 40px,
+            40px 0;
+    }
+}
+
+/* Lueur globale pulsante */
+@keyframes pulseLueur {
+    0%,
+    100% {
+        text-shadow:
+            0 0 10px currentColor,
+            0 0 40px currentColor;
+    }
+    50% {
+        text-shadow:
+            0 0 6px currentColor,
+            0 0 18px currentColor;
+    }
+}

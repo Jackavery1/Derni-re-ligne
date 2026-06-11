@@ -1,0 +1,190 @@
+/* ================================================
+   MÉCANIQUES BIOMES HISTOIRE
+================================================ */
+
+#canvas-plateau.biome-miroir {
+    transition: transform 0.4s ease;
+    transform: scaleY(-1);
+    transform-origin: 50% 50%;
+}
+
+body.histoire-active [data-biome='miroir'] #canvas-plateau {
+    border-color: #ff8800 !important;
+    box-shadow:
+        0 0 10px #ff8800,
+        0 0 25px rgba(255, 136, 0, 0.35) !important;
+}
+
+body.histoire-active [data-biome='vide'] #affichage-score::after {
+    content: ' [?]';
+    color: rgba(255, 255, 255, 0.18);
+    font-size: 0.3em;
+}
+
+body.histoire-active [data-biome='eclipse'] .section {
+    background: linear-gradient(180deg, rgba(255, 200, 0, 0.04) 0%, rgba(50, 30, 120, 0.06) 100%);
+}
+
+body.histoire-active [data-biome='rouille'] #canvas-plateau {
+    border-color: #cd6839 !important;
+    box-shadow:
+        0 0 10px #cd6839,
+        0 0 25px rgba(180, 80, 20, 0.3),
+        inset 0 0 15px rgba(120, 50, 10, 0.08) !important;
+}
+
+body.histoire-active [data-biome='trame'] #canvas-plateau {
+    border-color: #7700ff !important;
+    animation: tramePulse 2.5s ease-in-out infinite;
+}
+@keyframes tramePulse {
+    0%,
+    100% {
+        box-shadow:
+            0 0 15px #7700ff,
+            0 0 40px rgba(119, 0, 255, 0.3);
+    }
+    33% {
+        box-shadow:
+            0 0 15px #ff006e,
+            0 0 40px rgba(255, 0, 110, 0.3);
+    }
+    66% {
+        box-shadow:
+            0 0 15px #00f5ff,
+            0 0 40px rgba(0, 245, 255, 0.3);
+    }
+}
+
+#indicateur-vide-actif {
+    font-size: 0.28rem;
+    color: rgba(255, 255, 255, 0.15);
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 3px 0;
+    display: none;
+}
+body.histoire-active #indicateur-vide-actif {
+    display: block;
+}
+
+#ecran-histoire-cutscene {
+    background: rgba(0, 0, 0, 0.96);
+}
+
+#histoire-cutscene-contenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 28px 20px;
+    max-width: min(92vw, 560px);
+    width: 100%;
+}
+
+#histoire-cutscene-portrait-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.histoire-cs-portrait-icon {
+    width: 60px;
+    height: 60px;
+    border: 2px solid var(--rose);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    background: rgba(255, 0, 110, 0.06);
+    box-shadow: 0 0 16px rgba(255, 0, 110, 0.2);
+    transition:
+        border-color 0.3s,
+        box-shadow 0.3s;
+    flex-shrink: 0;
+}
+.histoire-cs-nom {
+    font-size: 0.3rem;
+    letter-spacing: 3px;
+    color: var(--rose);
+    text-shadow: 0 0 8px var(--rose);
+    transition:
+        color 0.3s,
+        text-shadow 0.3s;
+    text-align: center;
+    min-height: 1.2em;
+}
+
+#histoire-cutscene-lignes {
+    min-height: 90px;
+    max-height: 220px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+#histoire-cutscene-lignes::-webkit-scrollbar {
+    display: none;
+}
+.histoire-cutscene-ligne {
+    font-family: var(--font-narratif);
+    font-size: var(--taille-narratif);
+    color: var(--texte);
+    letter-spacing: 0.3px;
+    line-height: 1.75;
+    max-width: 65ch;
+    opacity: 0;
+    animation: apparitionLigneCutscene 0.45s ease forwards;
+    padding-left: 10px;
+    border-left: 2px solid rgba(255, 255, 255, 0.08);
+}
+.histoire-cutscene-ligne:last-child {
+    border-left-color: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+}
+@keyframes apparitionLigneCutscene {
+    from {
+        opacity: 0;
+        transform: translateX(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+#btn-cutscene-passer {
+    font-size: 0.28rem;
+    padding: 4px 12px;
+    opacity: 0.45;
+    margin-top: -8px;
+}
+#btn-cutscene-passer:hover {
+    opacity: 0.8;
+}
+
+.histoire-cs-progress {
+    font-size: 0.25rem;
+    color: rgba(255, 255, 255, 0.2);
+    letter-spacing: 2px;
+    text-align: center;
+    min-height: 1em;
+}
+
+.histoire-journal-dommage {
+    font-size: 0.28rem;
+    color: var(--jaune);
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 4px 8px;
+    border: 1px solid rgba(255, 230, 0, 0.3);
+    background: rgba(255, 230, 0, 0.04);
+    animation: clignoteBoss 1.5s ease-in-out infinite;
+}

@@ -1,0 +1,292 @@
+/* ================================================
+           INTERFACE DE JEU PRINCIPALE
+        ================================================ */
+#conteneur-principal {
+    position: relative;
+    z-index: 1;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    overflow: visible;
+}
+
+body.partie-active #conteneur-principal {
+    display: flex;
+}
+
+#interface-echelle,
+#interface-echelle-archi {
+    width: var(--iface-echelle-w, auto);
+    height: var(--iface-echelle-h, auto);
+}
+
+#interface-echelle {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    overflow: visible;
+}
+
+#interface-jeu,
+#interface-jeu-archi {
+    width: var(--iface-w, auto);
+    transform: scale(var(--iface-scale, 1));
+    transform-origin: top left;
+}
+
+#interface-jeu {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.panneau {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 128px;
+}
+
+.section {
+    background: var(--theme-fond, var(--fond-panneau));
+    border: 1px solid var(--theme-bordure, var(--bordure));
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-titre {
+    font-size: 0.42rem;
+    color: var(--theme-primaire, var(--cyan));
+    letter-spacing: 2px;
+    text-shadow: 0 0 6px var(--theme-primaire, var(--cyan));
+}
+
+.canvas-preview {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.canvas-preview.relique-imminente {
+    border: 2px solid var(--jaune);
+    animation: pulseLueur 1s ease-in-out infinite;
+    box-shadow: 0 0 12px var(--jaune);
+}
+
+#indicateur-relique {
+    font-size: 0.32rem;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-top: 4px;
+    animation: pulseLueur 1s ease-in-out infinite;
+    color: var(--jaune);
+}
+
+.stat {
+    width: 100%;
+    text-align: center;
+}
+.stat-label {
+    display: block;
+    font-family: var(--font-stats);
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--texte-dim);
+    letter-spacing: var(--espacement-label-stats);
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-bottom: 5px;
+}
+.stat-valeur {
+    display: block;
+    font-family: var(--font-stats);
+    font-size: var(--taille-stats-lg);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--theme-score, var(--jaune));
+    text-shadow: 0 0 8px var(--theme-score, var(--jaune));
+    transition: transform 0.1s;
+}
+.stat-valeur.anime {
+    transform: scale(1.3);
+}
+
+.stat-valeur.vert {
+    color: var(--vert);
+    text-shadow: 0 0 8px var(--vert);
+}
+
+.stat-valeur.jaune {
+    color: var(--jaune);
+    text-shadow: 0 0 8px var(--jaune);
+}
+
+.stat-valeur.cyan {
+    color: var(--cyan);
+    text-shadow: 0 0 8px var(--cyan);
+}
+
+#section-progression {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+    padding-top: 8px;
+    border-top: 1px solid var(--bordure);
+}
+
+#affichage-restant {
+    font-size: 0.32rem;
+    color: var(--vert);
+    letter-spacing: 1px;
+    text-align: center;
+    text-shadow: 0 0 6px var(--vert);
+}
+
+#barre-progression-wrapper {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.25);
+}
+
+#barre-progression-fill {
+    height: 100%;
+    width: var(--barre-progression-pct, 0%);
+    background: var(--vert);
+    box-shadow: 0 0 8px var(--vert);
+    transition: width 0.2s;
+}
+
+#zone-jeu {
+    position: relative;
+    flex-shrink: 0;
+}
+
+#canvas-plateau {
+    position: relative;
+    z-index: 1;
+    display: block;
+    border: 2px solid var(--theme-canvas, var(--cyan));
+    box-shadow:
+        0 0 15px var(--theme-canvas, var(--cyan)),
+        0 0 40px color-mix(in srgb, var(--theme-canvas, var(--cyan)) 27%, transparent),
+        inset 0 0 20px color-mix(in srgb, var(--theme-canvas, var(--cyan)) 4%, transparent);
+}
+
+#canvas-fond-biome {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    display: block;
+}
+
+/* Mascotte canvas ROBO — palette et panneau fixes, indépendants du biome */
+#section-mascotte {
+    --mascotte-lueur: #00ddc8;
+    flex-shrink: 0;
+    background: rgba(0, 221, 200, 0.04);
+    border-color: rgba(0, 221, 200, 0.22);
+}
+
+#section-mascotte .section-titre {
+    color: #00ddc8;
+    text-shadow: 0 0 8px rgba(0, 221, 200, 0.35);
+}
+
+/* ═══ ISOLATION COULEUR CANVAS ROBO ═══ */
+/* Le canvas dessine sa propre palette hardcodée.
+   Aucun filtre biome ne doit modifier ses couleurs. */
+#canvas-mascotte {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 130px;
+    image-rendering: pixelated;
+    filter: none !important;
+    -webkit-filter: none !important;
+}
+
+#section-mascotte,
+#section-mascotte canvas {
+    color-scheme: normal;
+}
+
+#canvas-boss-portrait.etat-calme {
+    filter: none;
+}
+#canvas-boss-portrait.etat-irrite {
+    filter: saturate(1.4) brightness(1.1);
+}
+#canvas-boss-portrait.etat-enrage {
+    animation: boss-portrait-tremble 0.12s linear infinite;
+}
+#canvas-boss-portrait.etat-attaque {
+    animation: boss-portrait-flash 0.25s ease-out;
+}
+#canvas-boss-portrait.etat-vaincu {
+    opacity: 0.85;
+}
+@keyframes boss-portrait-tremble {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+    25% {
+        transform: translate(2px, -1px);
+    }
+    75% {
+        transform: translate(-2px, 1px);
+    }
+}
+@keyframes boss-portrait-flash {
+    0% {
+        filter: brightness(2.5);
+    }
+    100% {
+        filter: brightness(1);
+    }
+}
+
+#btn-pause {
+    background: transparent;
+    border: 1px solid var(--theme-bordure, var(--bordure));
+    color: var(--theme-primaire, var(--texte-dim));
+    font-family: var(--police);
+    font-size: 0.42rem;
+    padding: 8px 10px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+}
+#btn-pause:hover {
+    border-color: var(--theme-accent, var(--cyan));
+    color: var(--theme-accent, var(--cyan));
+}
+
+#btn-mute {
+    background: transparent;
+    border: 1px solid var(--bordure);
+    color: var(--texte-dim);
+    font-family: var(--police);
+    font-size: 0.55rem;
+    padding: 8px 10px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+    margin-top: 6px;
+}
+#btn-mute:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+}

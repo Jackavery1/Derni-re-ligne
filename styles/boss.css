@@ -1,0 +1,544 @@
+/* ================================================
+   BOSS — Interface en jeu
+================================================ */
+
+#section-boss {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 6px;
+    background: var(--theme-fond, rgba(255, 0, 110, 0.04));
+    border: 1px solid rgba(255, 0, 110, 0.3);
+    box-shadow: 0 0 12px rgba(255, 0, 110, 0.08);
+    animation: apparitionBoss 0.4s ease-out;
+}
+@keyframes apparitionBoss {
+    from {
+        opacity: 0;
+        transform: scaleY(0.6);
+    }
+    to {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}
+
+.boss-nom {
+    font-size: 0.3rem;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+#boss-hp-wrapper {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 0, 110, 0.35);
+    overflow: hidden;
+}
+#boss-hp-fill {
+    height: 100%;
+    background: var(--rose);
+    transition:
+        width 0.25s ease,
+        background 0.4s ease;
+    box-shadow: 0 0 6px var(--rose);
+}
+.boss-hp-label {
+    font-size: 0.28rem;
+    color: var(--texte-dim);
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+#canvas-boss-portrait {
+    width: 100%;
+    max-width: 108px;
+    image-rendering: pixelated;
+    border: 1px solid rgba(255, 0, 110, 0.2);
+    background: #000;
+}
+
+.boss-attaque-label {
+    --boss-dialogue-lh: 1.25em;
+    font-size: 0.26rem;
+    color: var(--rose);
+    text-align: center;
+    letter-spacing: 1px;
+    line-height: var(--boss-dialogue-lh);
+    max-height: calc(var(--boss-dialogue-lh) * 2);
+    overflow: hidden;
+    word-break: break-word;
+    min-height: 1em;
+    text-shadow: 0 0 6px var(--rose);
+    animation: clignoteBoss 0.8s ease-in-out infinite;
+}
+
+.boss-attaque-label.boss-attaque-defile {
+    animation:
+        clignoteBoss 0.8s ease-in-out infinite,
+        bossDialogueDefile 7s ease-in-out infinite alternate;
+}
+
+@keyframes bossDialogueDefile {
+    from {
+        margin-top: 0;
+    }
+    to {
+        margin-top: calc(-1 * var(--boss-defile-distance, 0px));
+    }
+}
+@keyframes clignoteBoss {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.boss-timer-label {
+    font-size: 0.24rem;
+    color: var(--texte-dim);
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.boss-trame-attente-wrap {
+    margin-top: 4px;
+    width: 100%;
+}
+
+.boss-trame-attente-libelle {
+    font-size: 0.22rem;
+    color: var(--cyan);
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+}
+
+.boss-trame-attente-aide {
+    font-size: 0.18rem;
+    color: var(--texte-discret);
+    text-align: center;
+    line-height: 1.4;
+    margin-bottom: 4px;
+    padding: 0 4px;
+}
+
+.overlay-infobulle-contexte {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.72);
+}
+
+.overlay-infobulle-contenu {
+    max-width: min(92vw, 420px);
+    padding: 1.25rem;
+    background: var(--fond-panneau, #0d1117);
+    border: 2px solid var(--cyan);
+    box-shadow: 0 0 24px rgba(0, 255, 255, 0.25);
+}
+
+.infobulle-contexte-titre {
+    font-size: 0.75rem;
+    color: var(--cyan);
+    margin-bottom: 0.75rem;
+}
+
+.infobulle-contexte-texte {
+    font-size: 0.65rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.liste-controles-rebind {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+}
+
+.controle-rebind-ligne {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.controle-rebind-label {
+    font-size: 0.55rem;
+}
+
+.controle-rebind-bouton {
+    min-width: 5rem;
+    font-size: 0.5rem;
+}
+
+.options-controles-gamepad {
+    font-size: 0.5rem;
+    color: var(--texte-discret);
+    margin: 0.5rem 0;
+    line-height: 1.4;
+}
+
+.histoire-prog-trame span:last-child {
+    cursor: help;
+}
+
+.histoire-prog-trame--en-cours {
+    color: var(--rose, #ff2d78);
+    animation: pulse-trame 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse-trame {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.72;
+    }
+}
+
+.menu-actions-secondaires {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 0.35rem;
+}
+
+.archi-filtre-difficulte {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    justify-content: center;
+    margin: 0.5rem 0 0.75rem;
+}
+
+.archi-filtre-btn.actif {
+    border-color: var(--jaune, #ffbb44);
+    color: var(--jaune, #ffbb44);
+}
+
+button.options-hint-controles {
+    display: block;
+    width: 100%;
+    margin: 0.65rem 0 0;
+    padding: 0.45rem 0.5rem;
+    font-family: 'Rajdhani', var(--font-ui);
+    font-size: 0.55rem;
+    text-align: left;
+    color: var(--cyan, #00ddc8);
+    background: rgba(0, 221, 200, 0.06);
+    border: 1px solid rgba(0, 221, 200, 0.25);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button.options-hint-controles:hover {
+    background: rgba(0, 221, 200, 0.12);
+}
+
+.option-accents-ui.actif {
+    border-color: var(--jaune, #ffbb44);
+    color: var(--jaune, #ffbb44);
+}
+
+.histoire-prog-trame-detail {
+    list-style: none;
+    margin: 0.25rem 0 0;
+    padding: 0;
+    font-size: 0.42rem;
+    line-height: 1.45;
+    color: var(--gris-clair, #bbb);
+    max-width: 18rem;
+}
+
+.histoire-prog-trame-detail li {
+    margin: 0.1rem 0;
+}
+
+.histoire-map-aide {
+    font-size: 0.42rem;
+    color: var(--gris-clair, #aaa);
+    text-align: center;
+    margin: 0.35rem 0 0;
+    line-height: 1.4;
+}
+
+.histoire-detail-guide,
+.histoire-detail-avertissement {
+    font-size: 0.45rem;
+    line-height: 1.45;
+    margin-top: 0.35rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 2px;
+}
+
+.histoire-detail-guide {
+    color: var(--cyan, #00ddc8);
+    border: 1px solid rgba(0, 221, 200, 0.25);
+    background: rgba(0, 221, 200, 0.06);
+}
+
+.histoire-detail-avertissement {
+    color: var(--orange, #ffaa44);
+    border: 1px solid rgba(255, 170, 68, 0.35);
+    background: rgba(255, 170, 68, 0.08);
+}
+
+.option-accents-ui {
+    border-color: var(--cyan, #00ddc8);
+    color: var(--cyan, #00ddc8);
+}
+
+.options-hint-controles {
+    font-size: 0.48rem;
+    color: var(--gris-clair, #aaa);
+    margin-top: 0.75rem;
+    line-height: 1.45;
+}
+
+.archi-legende-difficulte {
+    font-size: 0.48rem;
+    color: var(--gris-clair, #bbb);
+    margin: 0.5rem 0;
+    text-align: center;
+}
+
+.profil-records-sous-titre {
+    font-size: 0.45rem;
+    color: var(--gris-clair, #aaa);
+    margin-bottom: 0.35rem;
+}
+
+@media (max-width: 480px) {
+    .histoire-prog-item,
+    .histoire-map-aide,
+    .histoire-prog-trame-detail {
+        font-size: 0.48rem;
+    }
+
+    .menu-titre-dl .dl-mot-2,
+    .histoire-titre-principale .dl-mot-2 {
+        font-size: clamp(0.55rem, 2.8vw, 0.7rem);
+    }
+
+    .sel-biome-nom,
+    .histoire-detail-nom {
+        font-size: clamp(0.5rem, 3vw, 0.65rem);
+    }
+}
+
+.bouton-continue-boss {
+    border-color: var(--vert);
+    color: var(--vert);
+}
+
+.go-avertissement-trame {
+    font-size: 0.55rem;
+    color: var(--orange, #ffaa44);
+    text-align: center;
+    line-height: 1.45;
+    max-width: 22rem;
+    margin: 0.5rem auto 0;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid rgba(255, 170, 68, 0.35);
+    background: rgba(255, 170, 68, 0.08);
+}
+
+.go-continues-campagne {
+    font-size: 0.5rem;
+    color: var(--gris-clair, #aaa);
+    text-align: center;
+    line-height: 1.4;
+    max-width: 22rem;
+    margin: 0.35rem auto 0;
+}
+
+.objectif-hud-paradoxe {
+    font-size: 0.45rem;
+    color: var(--orange, #ffaa44);
+    line-height: 1.35;
+    margin-top: 0.25rem;
+    opacity: 0.9;
+}
+
+.tutoriel-indicateur {
+    font-size: 0.5rem;
+    color: var(--texte-dim, #888);
+    text-align: center;
+    margin: 0.25rem 0 0.5rem;
+}
+
+.profil-records-table {
+    display: grid;
+    gap: 0.2rem;
+    font-size: 0.48rem;
+    max-height: 10rem;
+    overflow-y: auto;
+}
+
+.profil-records-ligne {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 0.8fr;
+    gap: 0.35rem;
+    padding: 0.2rem 0.35rem;
+    border-bottom: 1px solid rgba(0, 221, 200, 0.12);
+}
+
+.profil-records-entete {
+    color: var(--cyan, #00ddc8);
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    background: rgba(8, 12, 20, 0.92);
+}
+
+.profil-records-nom {
+    color: var(--texte-principal, #eee);
+}
+
+.boss-trame-attente-barre {
+    height: 6px;
+    background: rgba(0, 245, 255, 0.15);
+    border: 1px solid rgba(0, 245, 255, 0.35);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.boss-trame-attente-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--cyan), var(--vert));
+    transition: width 0.15s linear;
+}
+
+.overlay-boss-presentation {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.overlay-boss-presentation.boss-presentation-visible {
+    opacity: 1;
+}
+
+.overlay-boss-presentation.boss-presentation-sortie {
+    opacity: 0;
+}
+
+.boss-presentation-contenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    max-width: 90%;
+    text-align: center;
+    padding: 24px;
+}
+
+.boss-presentation-nom {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    line-height: 1.6;
+    text-shadow: 0 0 12px currentColor;
+}
+
+.boss-presentation-epithete {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-style: italic;
+    font-size: clamp(0.72rem, 2.4vw, 0.9rem);
+    color: var(--texte-dim);
+    max-width: min(28em, 92vw);
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+}
+
+@media (max-width: 768px), (max-height: 600px) {
+    .overlay-boss-presentation {
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: max(10vh, calc(env(safe-area-inset-top, 0px) + 40px));
+        padding-bottom: calc(132px + env(safe-area-inset-bottom, 0px));
+        box-sizing: border-box;
+    }
+
+    .boss-presentation-contenu {
+        max-width: min(92vw, 360px);
+        padding: 16px 12px;
+        gap: 10px;
+    }
+
+    .boss-presentation-nom {
+        font-size: clamp(0.38rem, 3.2vw, 0.55rem);
+        line-height: 1.5;
+        max-width: 100%;
+        word-break: break-word;
+    }
+
+    body.histoire-active.partie-active #section-boss:not(.element-masque) .boss-attaque-label {
+        position: fixed;
+        left: 50%;
+        bottom: calc(128px + env(safe-area-inset-bottom, 0px));
+        transform: translateX(-50%);
+        width: min(92vw, 300px);
+        z-index: 55;
+        margin: 0;
+        padding: 6px 8px;
+        box-sizing: border-box;
+        background: rgba(8, 8, 26, 0.94);
+        border: 1px solid rgba(255, 0, 110, 0.35);
+        border-radius: 4px;
+        max-height: calc(var(--boss-dialogue-lh, 1.25em) * 2 + 12px);
+    }
+
+    body.histoire-active.partie-active
+        #section-boss:not(.element-masque)
+        .boss-attaque-label.boss-attaque-defile {
+        animation:
+            clignoteBoss 0.8s ease-in-out infinite,
+            bossDialogueDefile 7s ease-in-out infinite alternate;
+    }
+}
+
+.go-boss-replique {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-style: italic;
+    font-size: 0.75rem;
+    color: var(--texte-dim);
+    text-align: center;
+    max-width: 28em;
+    margin: 8px auto 0;
+    line-height: 1.5;
+    letter-spacing: 0.5px;
+}
+
+#indicateur-boss-attaque {
+    padding: 5px 3px;
+    text-align: center;
+    border: 1px solid rgba(255, 0, 110, 0.3);
+    font-size: 0.28rem;
+    letter-spacing: 1px;
+    color: var(--rose);
+    background: rgba(255, 0, 110, 0.04);
+}

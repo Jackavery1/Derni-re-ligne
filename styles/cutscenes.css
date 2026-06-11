@@ -1,0 +1,643 @@
+/* ════════════════════════════════════════════════════════════
+   MODE HISTOIRE — CUTSCENES CINÉMATIQUES
+   ════════════════════════════════════════════════════════════ */
+
+#ecran-histoire-cutscene {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    cursor: pointer;
+    transition: background 0.8s ease;
+}
+
+.cutscene-bg-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* S'assurer que le contenu existant (portrait + texte) passe au-dessus */
+.cutscene-contenu,
+.cutscene-nom,
+#canvas-cutscene-portrait,
+.histoire-cutscene-lignes,
+.cutscene-controles,
+.cutscene-portrait-zone,
+.cutscene-texte-zone,
+.cutscene-lignes,
+.cutscene-progress {
+    position: relative;
+    z-index: 2;
+}
+
+.cutscene-fond-overlay {
+    z-index: 1;
+}
+
+#ecran-histoire-cutscene:has(.cutscene-bg-canvas) {
+    background: transparent !important;
+    animation: none;
+}
+
+#ecran-histoire-cutscene:has(.cutscene-bg-canvas) .cutscene-fond-overlay {
+    background: transparent !important;
+}
+
+#ecran-histoire-cutscene.ecran.actif {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: stretch;
+    overflow: hidden;
+    padding: 0 0 16px;
+    gap: 8px;
+}
+
+#canvas-cutscene-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+}
+
+#rangee-portraits-cutscene {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 4% 0;
+    position: relative;
+    z-index: 1;
+}
+
+#canvas-portrait-gauche,
+#canvas-portrait-droite {
+    width: 180px;
+    height: 260px;
+    flex-shrink: 0;
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+#canvas-portrait-gauche.parle,
+#canvas-portrait-droite.parle {
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+#canvas-portrait-gauche.ecoute,
+#canvas-portrait-droite.ecoute {
+    opacity: 0.4;
+    transform: translateY(14px);
+}
+
+#canvas-portrait-gauche.absent,
+#canvas-portrait-droite.absent {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#boite-dialogue-cutscene {
+    flex: 1;
+    background: rgba(4, 4, 18, 0.9);
+    border: 1px solid rgba(0, 221, 200, 0.45);
+    border-radius: 3px;
+    padding: 14px 20px 12px;
+    margin: 0 16px 24px;
+    position: relative;
+    min-height: 110px;
+    box-shadow:
+        0 0 24px rgba(0, 0, 0, 0.8),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+#nom-perso-dialogue {
+    font-family: var(--font-stats, 'Orbitron', sans-serif);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding: 3px 12px 3px 10px;
+    border-left: 3px solid currentColor;
+    display: inline-block;
+    color: var(--couleur-perso, #ffffff);
+}
+
+#texte-dialogue-cutscene {
+    font-family: var(--font-narratif, 'Crimson Pro', Georgia, serif);
+    font-size: 19px;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.92);
+    min-height: 58px;
+}
+
+#indicateur-suite-dialogue {
+    position: absolute;
+    bottom: 8px;
+    right: 14px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+    animation: clignoter-suite 1.3s ease-in-out infinite;
+}
+
+@keyframes clignoter-suite {
+    0%,
+    100% {
+        opacity: 0.2;
+    }
+    50% {
+        opacity: 0.9;
+    }
+}
+
+#zone-narration-cutscene {
+    position: absolute;
+    top: clamp(32px, 8vh, 72px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(82vw, 760px);
+    text-align: center;
+    z-index: 3;
+    padding: 0 24px;
+    pointer-events: none;
+}
+
+#ecran-histoire-cutscene.cutscene-mode-dialogue #zone-narration-cutscene {
+    display: none !important;
+}
+
+#ecran-histoire-cutscene.cutscene-mode-narration #zone-narration-cutscene {
+    display: block !important;
+}
+
+#texte-narration-cutscene {
+    font-family: var(--font-narratif, 'Crimson Pro', Georgia, serif);
+    font-size: clamp(22px, 2.6vw, 28px);
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.88);
+    min-height: 2.8em;
+    letter-spacing: 0.02em;
+}
+
+#indicateur-suite-narration {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.35);
+    animation: clignoter-suite 1.3s ease-in-out infinite;
+}
+
+#ecran-histoire-cutscene.cutscene-mode-narration #boite-dialogue-cutscene {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#ecran-histoire-cutscene.cutscene-mode-narration #rangee-portraits-cutscene {
+    margin-top: auto;
+}
+
+.letterbox-haut,
+.letterbox-bas {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: clamp(48px, 9vh, 90px);
+    background: #000;
+    z-index: 4;
+    pointer-events: none;
+    transition: transform 500ms ease;
+}
+
+.letterbox-haut {
+    top: 0;
+    transform: translateY(-100%);
+}
+
+.letterbox-bas {
+    bottom: 0;
+    transform: translateY(100%);
+}
+
+#ecran-histoire-cutscene.mode-narrateur .letterbox-haut,
+#ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
+    transform: translateY(0);
+}
+
+#ecran-histoire-cutscene.mode-narrateur #canvas-portrait-gauche,
+#ecran-histoire-cutscene.mode-narrateur #canvas-portrait-droite {
+    opacity: 0 !important;
+    pointer-events: none;
+}
+
+#ecran-histoire-cutscene.mode-narrateur #zone-narration-cutscene {
+    display: none !important;
+}
+
+#ecran-histoire-cutscene.mode-narrateur #rangee-portraits-cutscene {
+    position: absolute;
+    inset: 0;
+    align-items: stretch;
+    justify-content: center;
+    padding: 0;
+    z-index: 3;
+    pointer-events: none;
+}
+
+#ecran-histoire-cutscene.mode-narrateur #boite-dialogue-cutscene {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(72px, 16vh, 140px);
+    transform: translateX(-50%);
+    width: min(84vw, 780px);
+    margin: 0;
+    padding: 0 20px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    min-height: 0;
+    text-align: center;
+    visibility: visible;
+    pointer-events: none;
+}
+
+#ecran-histoire-cutscene.mode-narrateur #nom-perso-dialogue {
+    display: none;
+}
+
+#ecran-histoire-cutscene.mode-narrateur .cutscene-texte-narrateur-cinematique,
+#ecran-histoire-cutscene.mode-narrateur #texte-dialogue-cutscene {
+    font-family: var(--font-ui, 'Rajdhani', sans-serif);
+    font-size: clamp(1.15rem, var(--typo-narratif, 1.4rem), 1.85rem);
+    line-height: 1.55;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.92);
+    min-height: 2.4em;
+}
+
+#ecran-histoire-cutscene.mode-narrateur #indicateur-suite-dialogue {
+    position: static;
+    display: inline-block;
+    margin-top: 12px;
+}
+
+body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-haut,
+body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
+    transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #ecran-histoire-cutscene.mode-narrateur .letterbox-haut,
+    #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
+        transition: none;
+    }
+}
+
+.cutscene-barre-bas {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
+    width: 100%;
+    padding: 0 4%;
+    gap: 8px;
+}
+
+#ecran-histoire-cutscene .cutscene-progress {
+    justify-self: start;
+    padding-bottom: 4px;
+}
+
+#ecran-histoire-cutscene .cutscene-controles {
+    justify-self: center;
+    grid-column: 2;
+}
+
+.cutscene-fond-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transition:
+        background 0.8s ease,
+        opacity 0.6s ease;
+}
+
+#ecran-histoire-cutscene[data-personnage='robo'] {
+    background: radial-gradient(ellipse at 25% 60%, #001a2e 0%, #010a14 60%, #000 100%);
+}
+#ecran-histoire-cutscene[data-personnage='robo'] .cutscene-fond-overlay {
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(0, 245, 255, 0.015) 3px,
+        rgba(0, 245, 255, 0.015) 4px
+    );
+}
+
+#ecran-histoire-cutscene[data-personnage='vera'] {
+    background: radial-gradient(ellipse at 75% 30%, #1a0010 0%, #0a0005 55%, #000 100%);
+}
+#ecran-histoire-cutscene[data-personnage='vera'] .cutscene-fond-overlay {
+    background: radial-gradient(ellipse at 80% 20%, rgba(255, 0, 110, 0.08) 0%, transparent 60%);
+}
+
+#ecran-histoire-cutscene[data-personnage='distorsion'] {
+    background: #000000;
+    animation: distorsion-fond-cycle 5s linear infinite;
+}
+#ecran-histoire-cutscene[data-personnage='distorsion'] .cutscene-fond-overlay {
+    background: radial-gradient(
+        ellipse at 50% 50%,
+        rgba(180, 0, 255, 0.1) 0%,
+        rgba(255, 0, 110, 0.05) 50%,
+        transparent 80%
+    );
+}
+
+@keyframes distorsion-fond-cycle {
+    0%,
+    88%,
+    100% {
+        filter: none;
+    }
+    89% {
+        filter: hue-rotate(120deg) brightness(1.2);
+        transform: translateX(1px);
+    }
+    90% {
+        filter: hue-rotate(0deg);
+        transform: translateX(-1px);
+    }
+    91% {
+        filter: hue-rotate(240deg);
+        transform: translateX(0);
+    }
+    92% {
+        filter: none;
+    }
+}
+
+#ecran-histoire-cutscene[data-personnage='systeme'] {
+    background: #000d00;
+}
+#ecran-histoire-cutscene[data-personnage='systeme'] .cutscene-fond-overlay {
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(0, 255, 68, 0.02) 2px,
+        rgba(0, 255, 68, 0.02) 3px
+    );
+}
+
+#ecran-histoire-cutscene[data-personnage='narrateur'],
+#ecran-histoire-cutscene[data-personnage='sentinelle'],
+#ecran-histoire-cutscene[data-personnage='archiviste'],
+#ecran-histoire-cutscene[data-personnage='avantgarde'] {
+    background: #020210;
+}
+
+.cutscene-portrait-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-height: 120px;
+}
+
+.cutscene-canvas-portrait {
+    width: 96px;
+    height: 96px;
+    border: 1px solid var(--portrait-couleur, rgba(255, 255, 255, 0.2));
+    border-radius: 4px;
+    box-shadow: 0 0 12px var(--portrait-couleur, rgba(255, 255, 255, 0.1));
+    transition:
+        border-color 0.4s ease,
+        box-shadow 0.4s ease;
+}
+
+.cutscene-nom {
+    font-family: var(--font-stats);
+    font-size: clamp(8px, 1vw, 11px);
+    letter-spacing: 3px;
+    color: var(--portrait-couleur, rgba(255, 255, 255, 0.6));
+    text-shadow: 0 0 8px var(--portrait-couleur, transparent);
+    text-transform: uppercase;
+    min-height: 16px;
+    transition: color 0.4s ease;
+}
+
+.cutscene-nom-italic {
+    font-style: italic;
+}
+
+.cutscene-nom-glitch {
+    animation: glitch-nom 4s infinite;
+}
+@keyframes glitch-nom {
+    0%,
+    90%,
+    100% {
+        text-shadow: 0 0 8px #b400ff;
+        transform: translateX(0);
+    }
+    91% {
+        transform: translateX(3px);
+        text-shadow:
+            2px 0 #00ffff,
+            -2px 0 #ff006e;
+    }
+    92% {
+        transform: translateX(-2px);
+    }
+    93% {
+        transform: translateX(0);
+    }
+}
+
+.cutscene-texte-zone {
+    max-width: min(700px, 88vw);
+    width: 100%;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.cutscene-lignes {
+    width: 100%;
+    text-align: center;
+}
+
+.histoire-cutscene-ligne {
+    animation: cutscene-ligne-in 0.3s ease forwards;
+    line-height: 1.8;
+}
+@keyframes cutscene-ligne-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cutscene-police-pixel {
+    font-family: var(--font-titre);
+    font-size: clamp(9px, 1.3vw, 14px);
+    letter-spacing: 1px;
+    color: #e0f8ff;
+}
+.cutscene-police-narratif {
+    font-family: var(--font-narratif);
+    font-size: clamp(17px, 2vw, 22px);
+    font-style: italic;
+    color: rgba(255, 200, 220, 0.92);
+    line-height: 1.9;
+}
+.cutscene-police-stats {
+    font-family: var(--font-stats);
+    font-size: clamp(12px, 1.4vw, 16px);
+    letter-spacing: 2px;
+    color: rgba(200, 180, 255, 0.9);
+}
+.cutscene-police-terminal {
+    font-family: 'Courier New', monospace;
+    font-size: clamp(11px, 1.3vw, 14px);
+    letter-spacing: 1px;
+    color: #aaffaa;
+}
+.cutscene-police-ui {
+    font-family: var(--font-ui);
+    font-size: clamp(16px, 1.8vw, 20px);
+    color: rgba(255, 255, 255, 0.65);
+    font-weight: 400;
+}
+
+.cutscene-police-stats[data-glitch] {
+    animation: glitch-texte 6s infinite;
+}
+@keyframes glitch-texte {
+    0%,
+    85%,
+    100% {
+        filter: none;
+    }
+    86% {
+        filter: hue-rotate(90deg);
+        transform: translateX(2px);
+    }
+    87% {
+        filter: none;
+        transform: translateX(-1px);
+    }
+    88% {
+        transform: translateX(0);
+    }
+}
+
+.cutscene-progress {
+    font-family: var(--font-stats);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.cutscene-controles {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-cutscene {
+    font-family: var(--font-stats);
+    font-size: clamp(9px, 1vw, 11px);
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 8px 20px;
+    cursor: pointer;
+    transition:
+        background 0.2s,
+        border-color 0.2s;
+}
+.btn-cutscene:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.35);
+}
+.btn-cutscene-hint {
+    font-size: 0.75em;
+    opacity: 0.5;
+    margin-left: 6px;
+}
+
+.btn-cutscene-passer {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.45);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 8px;
+}
+.btn-cutscene-passer:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.histoire-journal-para-endommage {
+    opacity: 0.5;
+    filter: blur(0.5px);
+}
+
+.histoire-journal-para--systeme {
+    font-family: var(--font-terminal);
+    font-style: normal;
+    color: rgba(255, 230, 0, 0.85);
+    border-left-color: rgba(255, 230, 0, 0.35);
+}
+
+.histoire-journal-para--robo {
+    font-family: var(--font-pixel);
+    font-style: normal;
+    color: rgba(0, 245, 255, 0.9);
+    border-left-color: rgba(0, 245, 255, 0.35);
+}
+
+.histoire-journal-para--vera {
+    border-left-color: rgba(255, 0, 110, 0.45);
+}
+
+#ecran-histoire-journal .histoire-journal-para {
+    font-family: var(--font-narratif);
+    font-size: clamp(15px, 1.6vw, 18px);
+    font-style: italic;
+    line-height: 1.85;
+    color: rgba(255, 200, 220, 0.9);
+    margin-bottom: 12px;
+    animation: journal-para-in 0.5s ease forwards;
+}
+@keyframes journal-para-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

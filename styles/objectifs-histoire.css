@@ -260,6 +260,28 @@ body.histoire-active #section-objectifs-histoire {
     text-shadow: 0 0 6px rgba(192, 68, 255, 0.7);
 }
 
+.objectif-hud-trame {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(180, 0, 255, 0.25);
+}
+
+.objectif-hud-trame-resume {
+    font-size: 0.38rem;
+    color: #c044ff;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.objectif-hud-trame-detail {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.32rem;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.45;
+}
+
 .hud-boss-jauge-wrap {
     --hud-jauge-ratio: 1;
     width: 100%;

@@ -1,4 +1,6 @@
 import { eclaircir, assombrir } from './rendu-blocs-utils.js';
+import { rendreIconeSurCanvas } from './icones-pixel.js';
+import { obtenirIdIconeBiome } from './biome-icones-map.js';
 
 export const FONDS_BIOME = {
     classique: ['#030412', '#010208'],
@@ -21,6 +23,12 @@ export const NOMS_MONDES_REQUIS = {
     cyber: 'CYBER (Ch. III)',
     fuochi: "FEUX D'ARTIFICE (Ch. IV)",
     cosmos: 'COSMOS (Ch. IV)',
+    rouille: 'LA ROUILLE (Histoire Ch. I)',
+    eclipse: "L'ÉCLIPSE (Histoire Ch. III)",
+    vide: 'LE VIDE (Histoire Ch. IV)',
+    miroir: 'MONDE MIROIR (secret)',
+    trame: 'TRAME PRIMORDIALE (secret)',
+    paradoxe: 'PARADOXE (secret)',
 };
 
 export function dessinerFondBiome(ctx, w, h, biomeId) {
@@ -33,14 +41,29 @@ export function dessinerFondBiome(ctx, w, h, biomeId) {
     ctx.fillRect(0, 0, w, h);
 }
 
-export function afficherPanneauVerrouille(noeud) {
-    const requis = NOMS_MONDES_REQUIS[noeud.id] ?? 'monde Histoire';
-    const elStatut = document.getElementById('sel-biome-statut');
-    const elNom = document.getElementById('sel-biome-nom');
-    if (elNom) elNom.textContent = `${noeud.biome.icone} ${noeud.biome.nom}`;
-    if (elStatut) elStatut.textContent = `🔒 Complete ${requis} en Mode Histoire pour debloquer`;
-    const panneau = document.getElementById('sel-info-biome');
-    if (panneau) panneau.style.display = 'flex';
+/** @type {Map<string, HTMLCanvasElement>} */
+const cacheIconesNoeud = new Map();
+
+/**
+ * @param {string} biomeId
+ * @param {number} taille
+ */
+function obtenirCanvasIconeNoeud(biomeId, taille) {
+    const cle = `${biomeId}_${taille}`;
+    const existant = cacheIconesNoeud.get(cle);
+    if (existant) return existant;
+    const canvas = document.createElement('canvas');
+    canvas.width = taille;
+    canvas.height = taille;
+    rendreIconeSurCanvas(canvas, obtenirIdIconeBiome(biomeId), { taillePixel: 2 });
+    cacheIconesNoeud.set(cle, canvas);
+    return canvas;
+}
+
+function dessinerIconeNoeud(ctx, noeud, rayon) {
+    const taille = Math.max(20, Math.floor(rayon * 1.1));
+    const icone = obtenirCanvasIconeNoeud(noeud.id, taille);
+    ctx.drawImage(icone, noeud.x - taille / 2, noeud.y - taille / 2, taille, taille);
 }
 
 function dessinerNoeudVerrouille(ctx, noeud, rayon) {
@@ -56,12 +79,10 @@ function dessinerNoeudVerrouille(ctx, noeud, rayon) {
     ctx.beginPath();
     ctx.arc(noeud.x, noeud.y, rayon, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = 'rgba(100,80,140,0.6)';
-    ctx.font = `${Math.floor(rayon * 0.7)}px serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('🔒', noeud.x, noeud.y);
-    ctx.font = '6px "Press Start 2P", monospace';
+    ctx.globalAlpha = 0.55;
+    dessinerIconeNoeud(ctx, noeud, rayon * 0.85);
+    ctx.globalAlpha = 1;
+    ctx.font = '7px "Press Start 2P", monospace';
     ctx.fillStyle = 'rgba(80,70,100,0.55)';
     ctx.fillText(noeud.biome.nom, noeud.x, noeud.y + rayon + 13);
     ctx.restore();
@@ -182,10 +203,9 @@ export function dessinerNoeudBiome(ctx, noeud, timestamp, biomeHover, biomeChois
     ctx.fill();
 
     ctx.shadowBlur = 0;
-    ctx.font = '20px serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(noeud.biome.icone, noeud.x, noeud.y);
+    dessinerIconeNoeud(ctx, noeud, rayon);
 
     ctx.font = '7px "Press Start 2P", monospace';
     ctx.fillStyle = couleur + '99';

@@ -9,7 +9,10 @@ import { creerParticulesLigne } from './particules-jeu.js';
 import { statsGlobales, verifierAchievements, sauvegarderStats } from './achievements.js';
 import { afficherNotificationNiveau } from './ui-notifications.js';
 import { reagirRoboAuxLignes } from './mascotte-robo.js';
-import { obtenirBouton, obtenirElement } from './dom-utils.js';
+import { obtenirBouton } from './dom-utils.js';
+import { modeCoopActif, basculerPreferenceCoop } from './coop-preference.js';
+
+export { modeCoopActif } from './coop-preference.js';
 import {
     poserPieceSurPlateau,
     vitesseChuteDepuisNiveau,
@@ -23,21 +26,12 @@ export const DEMI_LARGEUR = 5;
 export const COLONNES_J1 = [0, 1, 2, 3, 4];
 export const COLONNES_J2 = [5, 6, 7, 8, 9];
 
-/** Preference sur l'ecran selection (avant lancement). `coop.actif` = partie coop en cours. */
-export let modeCoopActif = false;
-
+/** `coop.actif` = partie coop en cours. */
 export function basculerModeCoop() {
-    modeCoopActif = !modeCoopActif;
+    basculerPreferenceCoop();
     if (typeof document === 'undefined') return;
 
-    const btn = obtenirBouton('toggle-coop');
-    const label = obtenirElement('coop-toggle-label');
-    const oracleBtn = obtenirBouton('toggle-oracle');
-
     if (modeCoopActif) {
-        btn?.classList.add('actif');
-        if (label) label.textContent = 'COOP : ON';
-        if (oracleBtn) oracleBtn.disabled = true;
         import('./mode-sprint.js').then(({ desactiverModeSprint, mettreAJourToggleSprint }) => {
             desactiverModeSprint();
             mettreAJourToggleSprint();
@@ -45,10 +39,6 @@ export function basculerModeCoop() {
         import('./oracle-jeu.js').then(({ oracle, basculerOracle }) => {
             if (oracle.actif) basculerOracle();
         });
-    } else {
-        btn?.classList.remove('actif');
-        if (label) label.textContent = 'COOP : OFF';
-        if (oracleBtn) oracleBtn.disabled = false;
     }
 }
 

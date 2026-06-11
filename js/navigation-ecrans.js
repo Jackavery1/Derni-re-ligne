@@ -16,6 +16,7 @@ const FONDS_META = {
     [ECRANS.CODEX]: { canvasId: 'fond-meta-codex', teinte: '#ff2d78' },
     [ECRANS.PROFIL]: { canvasId: 'fond-meta-profil', teinte: '#00ddc8' },
     [ECRANS.ACHIEVEMENTS]: { canvasId: 'fond-meta-memorial', teinte: '#ffbb44' },
+    [ECRANS.ARCHI_SELECTION]: { canvasId: 'fond-meta-architecte', teinte: '#ffbb44' },
 };
 
 export { annoncer };

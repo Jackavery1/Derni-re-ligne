@@ -1,0 +1,46 @@
+/* ============================================
+   BOUTONS VERROUILLÉS
+   ============================================ */
+
+.btn-verrouille {
+    opacity: 0.3 !important;
+    filter: grayscale(80%) brightness(0.6) !important;
+    cursor: not-allowed !important;
+    position: relative;
+}
+
+.btn-verrouille .btn-texte::after {
+    content: '🔒';
+    margin-left: 6px;
+    font-size: 0.8em;
+}
+
+.btn-verrouille--actif::before {
+    content: '🔒 ' attr(data-condition);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.95);
+    color: #aaaaaa;
+    font-family: var(--font-ui);
+    font-size: var(--taille-ui-md);
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #444;
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
+    animation: fadeInUp 0.2s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}

@@ -19,6 +19,11 @@ import { obtenirEtatDeblocage } from '../js/progression-histoire.js';
 import { biomeEstDebloqueParHistoire } from '../js/progression-records.js';
 import { ACHIEVEMENTS } from '../js/achievements-donnees.js';
 import { ORDRE_BIOMES_LIBRE } from '../js/config.js';
+import { NOMS_MONDES_REQUIS } from '../js/constellation-rendu.js';
+import {
+    obtenirTexteVerrouillePanneau,
+    obtenirTexteVerrouille,
+} from '../js/achievements-icones-map.js';
 
 vi.mock('../js/mode-histoire.js', () => ({
     modeHistoireEnCours: vi.fn(() => true),
@@ -174,6 +179,21 @@ describe('audit 2 — gameplay UX', () => {
         it('inclut les biomes histoire dans la constellation libre', () => {
             expect(ORDRE_BIOMES_LIBRE).toContain('rouille');
             expect(ORDRE_BIOMES_LIBRE.length).toBe(15);
+        });
+    });
+
+    describe('UX constellation et modes (audit gameplay)', () => {
+        it('teaser les biomes histoire verrouilles', () => {
+            expect(NOMS_MONDES_REQUIS.rouille).toContain('ROUILLE');
+            expect(NOMS_MONDES_REQUIS.eclipse).toContain('CLIPSE');
+            expect(NOMS_MONDES_REQUIS.miroir).toContain('MIROIR');
+        });
+
+        it('oriente vers le mode histoire pour exploits verrouilles', () => {
+            expect(obtenirTexteVerrouillePanneau('histoire_boss', 'Spoiler')).toContain(
+                'MODE HISTOIRE'
+            );
+            expect(obtenirTexteVerrouille('histoire_boss', 'Spoiler')).toContain('Histoire');
         });
     });
 

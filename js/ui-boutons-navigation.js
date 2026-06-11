@@ -78,6 +78,11 @@ function _lierBoutonsRetour() {
 }
 
 function _lierSelectionEtModes() {
+    document.getElementById('sel-btn-histoire')?.addEventListener('click', () => {
+        void import('./histoire-intro.js').then(({ ouvrirModeHistoireDepuisMenu }) =>
+            ouvrirModeHistoireDepuisMenu()
+        );
+    });
     document.getElementById('sel-btn-jouer')?.addEventListener('click', lancerBiomeSelectionne);
     document.getElementById('toggle-oracle')?.addEventListener('click', basculerOracle);
     document.getElementById('toggle-coop')?.addEventListener('click', () => {
@@ -89,6 +94,16 @@ function _lierSelectionEtModes() {
     });
     document.getElementById('toggle-sprint')?.addEventListener('click', basculerModeSprint);
     document.getElementById('toggle-defi-jour')?.addEventListener('click', basculerDefiJour);
+    const ouvrirOptionsControles = () => {
+        afficherOngletOptions('controles');
+        afficherEcran(ECRANS.OPTIONS);
+    };
+    document
+        .getElementById('btn-controles-rapides')
+        ?.addEventListener('click', ouvrirOptionsControles);
+    document
+        .getElementById('btn-aller-controles')
+        ?.addEventListener('click', ouvrirOptionsControles);
     document.getElementById('btn-options')?.addEventListener('click', () => {
         afficherOngletOptions('reglages');
         afficherEcran(ECRANS.OPTIONS);

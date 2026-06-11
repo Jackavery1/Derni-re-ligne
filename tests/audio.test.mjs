@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
     noteVersFreq,
     calculerTempoActuel,
@@ -24,12 +24,14 @@ describe('audio', () => {
     });
 
     it('calculerTempoActuel accélère avec le niveau (max +20%)', () => {
+        const now = vi.spyOn(performance, 'now').mockReturnValue(0);
         configurerAudioMoteur({ obtenirNiveau: () => 1 });
         expect(calculerTempoActuel(100)).toBe(100);
         configurerAudioMoteur({ obtenirNiveau: () => 6 });
         expect(calculerTempoActuel(100)).toBe(110);
         configurerAudioMoteur({ obtenirNiveau: () => 20 });
         expect(calculerTempoActuel(100)).toBe(120);
+        now.mockRestore();
     });
 
     it('chaque biome a une config musicale procédurale', () => {

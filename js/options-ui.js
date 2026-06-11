@@ -5,8 +5,10 @@ import {
     chargerAccessibiliteDepuisStockage,
     obtenirDaltonien,
     obtenirReduireEffetsAccessibilite,
+    obtenirConstellationClicSeul,
     persisterDaltonien,
     persisterReduireEffets,
+    persisterConstellationClicSeul,
 } from './accessibilite.js';
 import {
     chargerAccentsUiDepuisStockage,
@@ -43,6 +45,12 @@ export function mettreAJourBoutonReduireEffets(btn) {
 export function mettreAJourBoutonAccents(btn) {
     const actif = obtenirAccentsUi();
     btn.textContent = actif ? 'É ACCENTS ON' : 'É ACCENTS UI';
+    btn.setAttribute('aria-pressed', actif ? 'true' : 'false');
+}
+
+export function mettreAJourBoutonConstellationClic(btn) {
+    const actif = obtenirConstellationClicSeul();
+    btn.textContent = actif ? '◎ CONSTELLATION AU CLIC ON' : '◎ CONSTELLATION AU CLIC';
     btn.setAttribute('aria-pressed', actif ? 'true' : 'false');
 }
 
@@ -154,6 +162,7 @@ export function initialiserOptions() {
     const btnDaltonien = obtenirBouton('btn-toggle-daltonien');
     const btnReduireEffets = obtenirBouton('btn-toggle-reduire-effets');
     const btnAccents = obtenirBouton('btn-toggle-accents');
+    const btnConstellationClic = obtenirBouton('btn-toggle-constellation-clic');
     if (slider) slider.value = String(Math.round(AudioMoteur.volumeEffets * 100));
     if (sliderMus) sliderMus.value = String(Math.round(AudioMoteur.volumeMusique * 100));
     mettreAJourBoutonsMute();
@@ -161,6 +170,7 @@ export function initialiserOptions() {
     if (btnDaltonien) mettreAJourBoutonDaltonien(btnDaltonien);
     if (btnReduireEffets) mettreAJourBoutonReduireEffets(btnReduireEffets);
     if (btnAccents) mettreAJourBoutonAccents(btnAccents);
+    if (btnConstellationClic) mettreAJourBoutonConstellationClic(btnConstellationClic);
 
     slider?.addEventListener('input', (e) => {
         const cible = /** @type {HTMLInputElement} */ (e.target);
@@ -199,6 +209,12 @@ export function initialiserOptions() {
         const actif = !obtenirAccentsUi();
         persisterAccentsUi(actif);
         mettreAJourBoutonAccents(btnAccents);
+    });
+
+    btnConstellationClic?.addEventListener('click', () => {
+        const actif = !obtenirConstellationClicSeul();
+        persisterConstellationClicSeul(actif);
+        mettreAJourBoutonConstellationClic(btnConstellationClic);
     });
 
     initialiserRebindingControles();

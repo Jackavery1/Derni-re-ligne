@@ -96,6 +96,22 @@ export function proposerInfobulleRelique(biomeId, relique) {
     });
 }
 
+const CLE_ORACLE_COOP = 'derniereLigne_infobulleOracleCoop';
+
+export function proposerInfobulleOracleCoopExclusif() {
+    if (lireStockage(CLE_ORACLE_COOP, '0') === '1') return;
+    const wrapOracle = document.getElementById('toggle-oracle-wrap');
+    if (!wrapOracle?.classList.contains('mode-debloque')) return;
+    ecrireStockage(CLE_ORACLE_COOP, '1');
+    afficherInfobulle({
+        titre: 'ORACLE ET COOP',
+        texte:
+            "L'Oracle (solo) et le mode Coop ne peuvent pas etre actifs en meme temps. " +
+            'Choisissez l’un des deux avant de lancer la partie.',
+    });
+}
+
 export function _reinitialiserInfobullesContexte() {
     ecrireStockage(CLE_STOCKAGE, '{}');
+    ecrireStockage(CLE_ORACLE_COOP, '0');
 }

@@ -98,6 +98,30 @@ const CATEGORIES_INDICE_MASQUE = new Set([
 ]);
 
 const FRAGMENT_NON_GRAVE = 'Fragment non gravé';
+const FRAGMENT_PANNEAU = 'Fragment non gravé. La Trame ne révèle pas encore ce souvenir.';
+const FRAGMENT_PANNEAU_HISTOIRE =
+    'Fragment non gravé. Progressez en MODE HISTOIRE pour révéler cet exploit.';
+
+/** @type {Record<string, string>} */
+const LIBELLE_CATEGORIE_FILTRE = {
+    score: 'SCORE',
+    lignes: 'SCORE',
+    survie: 'SCORE',
+    meteo: 'SCORE',
+    coop: 'SCORE',
+    oracle: 'SCORE',
+    biomes: 'BIOMES',
+    reliques: 'BIOMES',
+    vivant: 'BIOMES',
+    histoire: 'HISTOIRE',
+    histoire_boss: 'BOSS',
+    histoire_vera: 'VERA',
+    histoire_fins: 'FINS',
+    histoire_secrets: 'SECRETS',
+    histoire_prouesses: 'PROUESSES',
+    maitrise: 'PROUESSES',
+    architecte: 'FINS',
+};
 
 /**
  * @param {string} achievementId
@@ -126,10 +150,33 @@ export function obtenirAccentFiltre(filtre) {
 
 /**
  * @param {string} categorie
+ * @returns {boolean}
+ */
+export function estCategorieIndiceMasque(categorie) {
+    return CATEGORIES_INDICE_MASQUE.has(categorie);
+}
+
+/**
+ * @param {string} categorie
+ * @returns {string}
+ */
+export function obtenirLibelleCategorieFiltre(categorie) {
+    return LIBELLE_CATEGORIE_FILTRE[categorie] ?? categorie.toUpperCase();
+}
+
+export function obtenirTexteVerrouille(categorie, description) {
+    if (CATEGORIES_INDICE_MASQUE.has(categorie)) return FRAGMENT_NON_GRAVE;
+    if (categorie.startsWith('histoire')) return 'Fragment non gravé (Mode Histoire)';
+    return description;
+}
+
+/**
+ * @param {string} categorie
  * @param {string} description
  * @returns {string}
  */
-export function obtenirTexteVerrouille(categorie, description) {
-    if (CATEGORIES_INDICE_MASQUE.has(categorie)) return FRAGMENT_NON_GRAVE;
+export function obtenirTexteVerrouillePanneau(categorie, description) {
+    if (CATEGORIES_INDICE_MASQUE.has(categorie)) return FRAGMENT_PANNEAU;
+    if (categorie.startsWith('histoire')) return FRAGMENT_PANNEAU_HISTOIRE;
     return description;
 }

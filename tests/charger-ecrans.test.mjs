@@ -16,10 +16,21 @@ vi.mock('../js/ecrans-config.js', () => ({
 }));
 
 import { chargerEcrans } from '../js/charger-ecrans.js';
+import { reinitialiserIconesPixel } from '../js/icones-pixel.js';
+import ICONES_PIXEL from '../data/icones-pixel.json';
+
+/** @param {string} url */
+function reponseFetch(url) {
+    if (url.includes('icones-pixel.json')) {
+        return { ok: true, json: () => Promise.resolve(ICONES_PIXEL) };
+    }
+    return { ok: true, text: () => Promise.resolve('<div id="test-ecran">OK</div>') };
+}
 
 describe('charger-ecrans', () => {
     beforeEach(() => {
         vi.useFakeTimers();
+        reinitialiserIconesPixel();
     });
 
     afterEach(() => {
@@ -43,15 +54,13 @@ describe('charger-ecrans', () => {
         });
         vi.stubGlobal(
             'fetch',
-            vi.fn().mockResolvedValue({
-                ok: true,
-                text: () => Promise.resolve('<div id="test-ecran">OK</div>'),
-            })
+            vi.fn((url) => Promise.resolve(reponseFetch(url)))
         );
 
         await chargerEcrans();
 
         expect(fetch).toHaveBeenCalledWith('html/ecran-test.html');
+        expect(fetch).toHaveBeenCalledWith('./data/icones-pixel.json');
         expect(conteneur.replaceChildren).toHaveBeenCalled();
         expect(conteneur.append).toHaveBeenCalled();
     });
@@ -66,17 +75,14 @@ describe('charger-ecrans', () => {
         const fetchMock = vi
             .fn()
             .mockRejectedValueOnce(new Error('network'))
-            .mockResolvedValueOnce({
-                ok: true,
-                text: () => Promise.resolve('<div>OK</div>'),
-            });
+            .mockImplementation((url) => Promise.resolve(reponseFetch(url)));
         vi.stubGlobal('fetch', fetchMock);
 
         const promesse = chargerEcrans();
         await vi.advanceTimersByTimeAsync(300);
         await promesse;
 
-        expect(fetchMock).toHaveBeenCalledTimes(2);
+        expect(fetchMock).toHaveBeenCalledTimes(3);
     });
 
     it('echoue apres 3 tentatives', async () => {

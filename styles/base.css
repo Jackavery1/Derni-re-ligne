@@ -1,0 +1,205 @@
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    body::before {
+        animation: none;
+    }
+    .ecran {
+        backdrop-filter: none;
+    }
+}
+
+body.effets-reduits .titre-neo,
+body.effets-reduits .titre-lettre,
+body.effets-reduits .titre-robot,
+body.effets-reduits .btn-jouer,
+body.effets-reduits .record-badge,
+body.effets-reduits .niveau-notif,
+body.effets-reduits .vivant-alerte,
+body.effets-reduits .vivant-panneau-actif,
+body.effets-reduits .codex-carte-nouvelle,
+body.effets-reduits .boss-portrait-cadre,
+body.effets-reduits .hud-flash-vitesse-actif,
+body.effets-reduits .hud-flash-vitesse-descente {
+    animation: none !important;
+    transition: none !important;
+}
+
+body.effets-reduits .boss-portrait-cadre.tremble {
+    animation: none !important;
+}
+
+body.effets-reduits .boss-portrait-cadre.flash {
+    animation: none !important;
+}
+
+.element-masque,
+[hidden] {
+    display: none !important;
+}
+
+.go-deco-rose {
+    color: var(--rose);
+}
+
+.go-deco-cyan {
+    color: var(--cyan);
+}
+
+.go-deco-violet {
+    color: var(--violet);
+}
+
+.vivant-sous-titre {
+    font-size: 0.3rem;
+    color: var(--texte-dim);
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.vivant-barre-piste {
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    margin-top: 4px;
+    overflow: hidden;
+}
+
+.vivant-barre-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.5s linear;
+}
+
+.section-vide-titre {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.section-vide-msg {
+    font-size: 0.26rem;
+    color: rgba(255, 255, 255, 0.15);
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.boss-hp-fill-init {
+    width: 100%;
+}
+
+.histoire-panneau-masque {
+    display: none;
+}
+
+#histoire-monde-details.histoire-panneau-masque {
+    display: none;
+}
+
+.histoire-fin-sep-fin {
+    margin: 4px 0;
+    opacity: 0.4;
+}
+
+.canvas-fin-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bouton-architecte-titre {
+    font-size: 0.5rem;
+    padding: 10px 24px;
+    border-color: var(--jaune);
+    color: var(--jaune);
+    text-shadow: 0 0 8px var(--jaune);
+    box-shadow: 0 0 10px rgba(255, 230, 0, 0.2);
+}
+
+.bouton-histoire-titre {
+    font-size: 0.5rem;
+    padding: 10px 24px;
+    border-color: var(--rose);
+    color: var(--rose);
+    text-shadow: 0 0 8px var(--rose);
+    box-shadow: 0 0 10px rgba(255, 0, 110, 0.2);
+}
+
+@font-face {
+    font-family: 'Press Start 2P';
+    src: url('../assets/polices/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Orbitron';
+    src: url('../assets/polices/orbitron-latin-600-normal.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Orbitron';
+    src: url('../assets/polices/orbitron-latin-700-normal.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    src: url('../assets/polices/rajdhani-latin-400-normal.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    src: url('../assets/polices/rajdhani-latin-500-normal.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    src: url('../assets/polices/rajdhani-latin-600-normal.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    src: url('../assets/polices/rajdhani-latin-700-normal.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Crimson Pro';
+    src: url('../assets/polices/crimson-pro-latin-400-normal.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Crimson Pro';
+    src: url('../assets/polices/crimson-pro-latin-400-italic.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}

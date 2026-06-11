@@ -1,0 +1,55 @@
+/* ================================================
+           ÉCRAN PAUSE
+        ================================================ */
+.pause-contenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.pause-titre {
+    font-size: clamp(0.9rem, 3.5vw, 1.3rem);
+    color: var(--cyan);
+    text-shadow:
+        0 0 10px var(--cyan),
+        0 0 30px rgba(0, 245, 255, 0.4);
+    letter-spacing: 5px;
+}
+
+.pause-stats-jeu {
+    display: flex;
+    gap: 28px;
+    font-size: 0.38rem;
+    color: var(--texte-dim);
+    letter-spacing: 2px;
+}
+.pause-stats-jeu .val {
+    display: block;
+    font-size: 0.6rem;
+    color: var(--jaune);
+    text-shadow: 0 0 8px var(--jaune);
+    margin-top: 4px;
+    text-align: center;
+}
+
+.pause-boutons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: min(280px, 85vw);
+}
+
+.bouton-pause-quitter {
+    width: 100%;
+    border-color: var(--texte-dim) !important;
+    color: var(--texte-dim) !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    font-size: clamp(0.5rem, 2vw, 0.65rem) !important;
+}
+.bouton-pause-quitter:hover {
+    background: var(--texte-dim) !important;
+    color: var(--fond) !important;
+}

@@ -1,5 +1,6 @@
 import { BIOMES, ORDRE_BIOMES_LIBRE } from './config.js';
 import { sansAccentsE } from './texte-jeu.js';
+import { obtenirConstellationClicSeul } from './accessibilite.js';
 import { obtenirCanvas } from './dom-utils.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 import { biomeEstDebloqueParHistoire, obtenirRecordSprintBiome } from './progression.js';
@@ -7,12 +8,19 @@ import { modeSprintActif } from './mode-sprint.js';
 import { formaterTemps } from './hud-jeu.js';
 export { FONDS_BIOME, NOMS_MONDES_REQUIS } from './constellation-rendu.js';
 import {
-    afficherPanneauVerrouille,
     dessinerFondBiome,
     dessinerLignesConstellation as dessinerLignesRendu,
     dessinerNoeudBiome as dessinerNoeudRendu,
+    NOMS_MONDES_REQUIS,
 } from './constellation-rendu.js';
+import {
+    obtenirDecalageCentreConstellation,
+    SEUIL_PANNEAU_SEL_MOBILE,
+} from './constellation-zone.js';
+import { rendreIconeSurCanvas } from './icones-pixel.js';
+import { obtenirIdIconeBiome } from './biome-icones-map.js';
 import { abonnerBoucleMenuUnifiee, desabonnerBoucleMenuUnifiee } from './planificateur-raf.js';
+import { proposerInfobulleOracleCoopExclusif } from './infobulles-contexte.js';
 
 let deps = {};
 
@@ -28,8 +36,105 @@ let canvasConst = null;
 let ctxConst = null;
 let evenementsOk = false;
 let selectBiomesOk = false;
-let dernierTapBiome = null;
-let dernierTapTemps = 0;
+let fermeturePanneauTimer = 0;
+let evenementsPanneauOk = false;
+let evenementEscapeOk = false;
+
+function panneauBiomeEstOuvert() {
+    const panneau = document.getElementById('sel-info-biome');
+    return Boolean(panneau && !panneau.classList.contains('element-masque'));
+}
+
+function obtenirDecalageZoneActuel() {
+    return obtenirDecalageCentreConstellation(panneauBiomeEstOuvert(), window.innerWidth);
+}
+
+function repositionnerNoeudsConstellation() {
+    if (!canvasConst || !constellationNoeuds.length) return;
+    const w = canvasConst.width;
+    const h = canvasConst.height;
+    const centreX = w / 2 + obtenirDecalageZoneActuel();
+    const centreY = h / 2;
+    const base = Math.min(w, h);
+    const rayonInit = base * 0.12;
+    const croissance = base * 0.06;
+    const angleIncr = 2.4;
+
+    ORDRE_BIOMES_LIBRE.forEach((id, index) => {
+        const noeud = constellationNoeuds.find((n) => n.id === id);
+        if (!noeud) return;
+        const angle = index * angleIncr;
+        const rayonSpirale = rayonInit + index * croissance;
+        noeud.x = centreX + Math.cos(angle) * rayonSpirale;
+        noeud.y = centreY + Math.sin(angle) * rayonSpirale;
+    });
+}
+
+function afficherPanneauBiome() {
+    const panneau = document.getElementById('sel-info-biome');
+    const backdrop = document.getElementById('sel-panneau-backdrop');
+    if (!panneau) return;
+
+    const etaitVisible = panneau.classList.contains('sel-panneau--visible');
+    if (fermeturePanneauTimer) {
+        clearTimeout(fermeturePanneauTimer);
+        fermeturePanneauTimer = 0;
+    }
+
+    panneau.classList.remove('element-masque');
+    panneau.setAttribute('aria-hidden', 'false');
+
+    if (window.innerWidth < SEUIL_PANNEAU_SEL_MOBILE && backdrop) {
+        backdrop.classList.remove('element-masque');
+        backdrop.setAttribute('aria-hidden', 'false');
+    }
+
+    if (!etaitVisible) {
+        requestAnimationFrame(() => {
+            panneau.classList.add('sel-panneau--visible');
+            repositionnerNoeudsConstellation();
+            document.getElementById('btn-sel-panneau-fermer')?.focus({ preventScroll: true });
+        });
+    }
+}
+
+function masquerInfoBiome() {
+    const panneau = document.getElementById('sel-info-biome');
+    const backdrop = document.getElementById('sel-panneau-backdrop');
+    if (!panneau || panneau.classList.contains('element-masque')) return;
+
+    panneau.classList.remove('sel-panneau--visible');
+    backdrop?.classList.add('element-masque');
+    backdrop?.setAttribute('aria-hidden', 'true');
+
+    if (fermeturePanneauTimer) clearTimeout(fermeturePanneauTimer);
+    fermeturePanneauTimer = setTimeout(() => {
+        fermeturePanneauTimer = 0;
+        panneau.classList.add('element-masque');
+        panneau.setAttribute('aria-hidden', 'true');
+        repositionnerNoeudsConstellation();
+    }, 250);
+}
+
+function attacherEvenementsPanneauBiome() {
+    if (evenementsPanneauOk) return;
+    evenementsPanneauOk = true;
+
+    document.getElementById('btn-sel-panneau-fermer')?.addEventListener('click', masquerInfoBiome);
+    document.getElementById('sel-panneau-backdrop')?.addEventListener('click', masquerInfoBiome);
+}
+
+function attacherEvenementEscapeSelection() {
+    if (evenementEscapeOk) return;
+    evenementEscapeOk = true;
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        if (!document.getElementById('ecran-selection')?.classList.contains('actif')) return;
+        if (!panneauBiomeEstOuvert()) return;
+        e.preventDefault();
+        masquerInfoBiome();
+    });
+}
 
 function compterBiomesDebloques() {
     let n = 0;
@@ -62,9 +167,19 @@ function mettreAJourInfoBiome(idBiome) {
     const niveauRecord = deps.obtenirRecordNiveauBiome(idBiome);
     const etoiles = deps.formaterEtoiles(deps.calculerEtoiles(record, niveauRecord));
 
+    const accent = biome.lueurCoul ?? biome.ui?.couleurPrimaire ?? '#00f5ff';
+    panneau.style.setProperty('--accent-carte', accent);
+
+    const canvasIcone = /** @type {HTMLCanvasElement | null} */ (
+        document.getElementById('sel-biome-icone')
+    );
+    if (canvasIcone?.getContext) {
+        canvasIcone.width = 48;
+        canvasIcone.height = 48;
+        rendreIconeSurCanvas(canvasIcone, obtenirIdIconeBiome(idBiome), { taillePixel: 3 });
+    }
     if (elNom) {
-        elNom.textContent = sansAccentsE(`${biome.icone} ${biome.nom}`);
-        elNom.style.color = biome.ui?.couleurPrimaire ?? biome.lueurCoul;
+        elNom.textContent = sansAccentsE(biome.nom);
     }
     if (elRecord) {
         if (verrouille) {
@@ -88,18 +203,26 @@ function mettreAJourInfoBiome(idBiome) {
         }
     }
     if (elStatut) {
-        elStatut.textContent = sansAccentsE(
-            verrouille ? '🔒 MONDE VERROUILLE' : "PRET POUR L'AVENTURE"
-        );
+        if (verrouille) {
+            const requis = NOMS_MONDES_REQUIS[idBiome];
+            elStatut.textContent = sansAccentsE(
+                requis ? `Complete ${requis} en Mode Histoire pour debloquer` : 'MONDE VERROUILLE'
+            );
+        } else if (idBiome === 'cosmos' || idBiome === 'fuochi') {
+            elStatut.textContent = sansAccentsE('MONDE EXIGEANT — rythme soutenu');
+        } else {
+            elStatut.textContent = sansAccentsE("PRET POUR L'AVENTURE");
+        }
     }
 
-    panneau.classList.remove('element-masque');
-    deps.appliquerThemeBiome(idBiome);
-}
+    const btnHistoire = document.getElementById('sel-btn-histoire');
+    const btnJouer = document.getElementById('sel-btn-jouer');
+    const teaserHistoire = verrouille && !!NOMS_MONDES_REQUIS[idBiome];
+    btnHistoire?.classList.toggle('element-masque', !teaserHistoire);
+    btnJouer?.classList.toggle('element-masque', verrouille);
 
-function masquerInfoBiome() {
-    const panneau = document.getElementById('sel-info-biome');
-    if (panneau) panneau.classList.add('element-masque');
+    afficherPanneauBiome();
+    deps.appliquerThemeBiome(idBiome);
 }
 
 function noeudSousCurseur(cx, cy) {
@@ -139,7 +262,7 @@ function initConstellation() {
         });
     }
 
-    const centreX = w / 2;
+    const centreX = w / 2 + obtenirDecalageZoneActuel();
     const centreY = h / 2;
     const base = Math.min(w, h);
     const rayonInit = base * 0.12;
@@ -171,6 +294,8 @@ function initConstellation() {
     }
 
     attacherEvenementsConstellation();
+    attacherEvenementsPanneauBiome();
+    attacherEvenementEscapeSelection();
     mettreAJourSelectBiomesClavier();
 }
 
@@ -235,7 +360,7 @@ function boucleConstellation(timestamp) {
     ctxConst.restore();
 }
 
-function traiterSelectionNoeud(noeud, doubleTap = false) {
+function traiterSelectionNoeud(noeud, _doubleTap = false) {
     if (!noeud) {
         biomeHover = null;
         masquerInfoBiome();
@@ -245,7 +370,7 @@ function traiterSelectionNoeud(noeud, doubleTap = false) {
     if (noeud.verrouille) {
         noeud.flashRejet = performance.now();
         deps.sonMenu?.('menu_hover');
-        afficherPanneauVerrouille(noeud);
+        mettreAJourInfoBiome(noeud.id);
         return;
     }
 
@@ -258,10 +383,6 @@ function traiterSelectionNoeud(noeud, doubleTap = false) {
     );
     if (select && select.value !== noeud.id) select.value = noeud.id;
     deps.sonMenu?.('menu_hover');
-
-    if (doubleTap) {
-        lancerBiomeSelectionne();
-    }
 }
 
 function coordonneesCanvas(clientX, clientY) {
@@ -285,10 +406,12 @@ function attacherEvenementsConstellation() {
         const noeud = noeudSousCurseur(x, y);
         if (noeud?.id !== biomeHover) {
             biomeHover = noeud?.id ?? null;
-            if (noeud && !noeud.verrouille) {
-                mettreAJourInfoBiome(noeud.id);
-            } else if (!noeud && !biomeChoisi) {
-                masquerInfoBiome();
+            if (!obtenirConstellationClicSeul()) {
+                if (noeud && !noeud.verrouille) {
+                    mettreAJourInfoBiome(noeud.id);
+                } else if (!noeud && !biomeChoisi) {
+                    masquerInfoBiome();
+                }
             }
         }
         canvasConst.style.cursor = noeud ? 'pointer' : 'default';
@@ -332,12 +455,7 @@ function attacherEvenementsConstellation() {
             if (!touch) return;
             const { x, y } = coordonneesCanvas(touch.clientX, touch.clientY);
             const noeud = noeudSousCurseur(x, y);
-            const maintenant = Date.now();
-            const doubleTap =
-                noeud && noeud.id === dernierTapBiome && maintenant - dernierTapTemps < 450;
-            dernierTapBiome = noeud?.id ?? null;
-            dernierTapTemps = maintenant;
-            traiterSelectionNoeud(noeud, doubleTap);
+            traiterSelectionNoeud(noeud, false);
         },
         { passive: false }
     );
@@ -355,6 +473,7 @@ export function demarrerConstellation() {
     arreterConstellation();
     initConstellation();
     masquerOracleCoopSiNecessaire();
+    proposerInfobulleOracleCoopExclusif();
     import('./mode-sprint.js').then(({ mettreAJourToggleSprint }) => mettreAJourToggleSprint());
     abonnerBoucleMenuUnifiee(boucleConstellation);
 }
@@ -366,8 +485,16 @@ export function arreterConstellation() {
 export function redimensionnerConstellation() {
     if (!canvasConst || !document.getElementById('ecran-selection')?.classList.contains('actif'))
         return;
+    const choix = biomeChoisi;
+    const panneauOuvert = panneauBiomeEstOuvert();
     initConstellation();
+    if (choix && panneauOuvert && BIOMES[choix]) {
+        biomeChoisi = choix;
+        mettreAJourInfoBiome(choix);
+    }
 }
+
+export { obtenirDecalageCentreConstellation } from './constellation-zone.js';
 
 export function lancerBiomeSelectionne() {
     if (!biomeChoisi || !BIOMES[biomeChoisi]) return;

@@ -124,6 +124,26 @@ describe('oracle-jeu', () => {
         expect(oracle.piecesIgnorees).toBe(0);
     });
 
+    it('basculerOracle verrouille le bouton coop quand actif', () => {
+        const coopBtn = { disabled: false, classList: { add: () => {}, remove: () => {} } };
+        const label = { textContent: '' };
+        const desc = { textContent: '' };
+        document.getElementById = (id) => {
+            if (id === 'toggle-oracle') return { classList: { add: () => {}, remove: () => {} } };
+            if (id === 'oracle-toggle-label') return label;
+            if (id === 'oracle-toggle-desc') return desc;
+            if (id === 'toggle-coop') return coopBtn;
+            if (id === 'coop-toggle-label') return { textContent: '' };
+            return null;
+        };
+        oracle.actif = false;
+        basculerOracle();
+        expect(oracle.actif).toBe(true);
+        expect(coopBtn.disabled).toBe(true);
+        basculerOracle();
+        expect(coopBtn.disabled).toBe(false);
+    });
+
     it('basculerOracle met à jour le libellé du bouton', () => {
         const label = { textContent: '' };
         const desc = { textContent: '' };

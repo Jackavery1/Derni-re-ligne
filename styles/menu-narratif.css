@@ -1,0 +1,251 @@
+/* ============================================
+   MENU TITRE — HIÉRARCHIE NARRATIVE
+   ============================================ */
+
+.btn-menu {
+    font-family: var(--font-titre);
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    padding: 10px 14px;
+    border: 2px solid;
+    border-radius: 4px;
+    cursor: pointer;
+    transition:
+        box-shadow 0.3s ease,
+        transform 0.15s ease,
+        opacity 0.2s ease,
+        filter 0.15s ease;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-menu:hover:not(.btn-verrouille) {
+    filter: brightness(1.15);
+}
+
+.btn-menu:active:not(.btn-verrouille) {
+    transform: translateY(1px) scale(0.98);
+}
+
+.menu-bloc-principal {
+    margin-bottom: 12px;
+}
+
+.btn-histoire {
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #1a0030 0%, #3d0060 50%, #1a0030 100%);
+    border: 2px solid #dd00ff;
+    color: #ff88ff;
+    box-shadow:
+        0 0 12px rgba(221, 0, 255, 0.5),
+        0 0 28px rgba(221, 0, 255, 0.2),
+        inset 0 0 16px rgba(221, 0, 255, 0.08);
+    animation: histoire-pulse 2s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.btn-histoire::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 80%;
+    height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255, 136, 255, 0.08), transparent);
+    animation: histoire-shimmer 3s linear infinite;
+    pointer-events: none;
+}
+
+.btn-sous-titre {
+    display: block;
+    font-size: 0.45em;
+    color: #cc88ff;
+    letter-spacing: 3px;
+    font-style: italic;
+    opacity: 0.85;
+}
+
+.btn-icone {
+    margin-right: 6px;
+}
+
+@keyframes histoire-pulse {
+    0%,
+    100% {
+        box-shadow:
+            0 0 12px rgba(221, 0, 255, 0.5),
+            0 0 28px rgba(221, 0, 255, 0.2);
+    }
+    50% {
+        box-shadow:
+            0 0 22px rgba(221, 0, 255, 0.8),
+            0 0 45px rgba(221, 0, 255, 0.35),
+            0 0 70px rgba(221, 0, 255, 0.1);
+    }
+}
+
+@keyframes histoire-shimmer {
+    0% {
+        left: -150%;
+    }
+    100% {
+        left: 150%;
+    }
+}
+
+.menu-separateur {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 0.42em;
+    letter-spacing: 4px;
+    margin: 10px 0 6px;
+}
+
+.menu-separateur::before,
+.menu-separateur::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.menu-bloc-libre {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.menu-bloc-collection {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+}
+
+/* Modes progressifs : masqués par défaut, visibles uniquement avec .mode-debloque */
+#ecran-titre #btn-jouer:not(.mode-debloque),
+#ecran-titre #btn-architecte:not(.mode-debloque),
+#ecran-titre #btn-codex:not(.mode-debloque),
+#ecran-titre #btn-profil:not(.mode-debloque),
+#ecran-titre #btn-achievements:not(.mode-debloque),
+#ecran-titre #menu-separateur-libre:not(.mode-debloque),
+#ecran-titre #menu-separateur-collection:not(.mode-debloque),
+#ecran-titre #menu-bloc-libre:not(.mode-debloque),
+#ecran-titre #menu-bloc-collection:not(.mode-debloque),
+#toggle-oracle-wrap:not(.mode-debloque),
+#toggle-coop-wrap:not(.mode-debloque),
+#btn-profil-codex:not(.mode-debloque),
+#btn-profil-achievements:not(.mode-debloque),
+#btn-achievements-codex:not(.mode-debloque),
+#btn-profil-gameover:not(.mode-debloque) {
+    display: none !important;
+}
+
+.btn-menu.element-masque,
+.menu-separateur.element-masque,
+.menu-bloc-libre.element-masque,
+.menu-bloc-collection.element-masque,
+.toggle-oracle-wrap.element-masque,
+.bouton.discret.element-masque {
+    display: none !important;
+}
+
+.btn-jouer {
+    background: linear-gradient(135deg, #001525 0%, #002a4a 50%, #001525 100%);
+    border: 2px solid #00ccff;
+    color: #88eeff;
+    box-shadow:
+        0 0 10px rgba(0, 204, 255, 0.3),
+        0 0 20px rgba(0, 204, 255, 0.1);
+}
+
+.btn-jouer:hover:not(.btn-verrouille) {
+    box-shadow:
+        0 0 18px rgba(0, 204, 255, 0.6),
+        0 0 35px rgba(0, 204, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn-architecte {
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(136, 153, 204, 0.04) 0px,
+            rgba(136, 153, 204, 0.04) 1px,
+            transparent 1px,
+            transparent 20px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(136, 153, 204, 0.04) 0px,
+            rgba(136, 153, 204, 0.04) 1px,
+            transparent 1px,
+            transparent 20px
+        ),
+        linear-gradient(135deg, #0a1020, #1a2840);
+    border: 2px solid #8899cc;
+    color: #aabbdd;
+    box-shadow: 0 0 8px rgba(136, 153, 204, 0.25);
+}
+
+.btn-architecte:hover:not(.btn-verrouille) {
+    box-shadow: 0 0 16px rgba(136, 153, 204, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-codex {
+    background: linear-gradient(135deg, #1a1000, #2e1f00, #1a1000);
+    border: 2px solid #cc9900;
+    color: #ffcc44;
+    box-shadow: 0 0 8px rgba(204, 153, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-codex::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-top: 12px solid rgba(204, 153, 0, 0.5);
+}
+
+.btn-codex:hover:not(.btn-verrouille) {
+    box-shadow: 0 0 16px rgba(204, 153, 0, 0.5);
+}
+
+.btn-profil {
+    background: linear-gradient(135deg, #000f22, #001844, #000f22);
+    border: 2px solid #0066ff;
+    color: #88aaff;
+    box-shadow: 0 0 8px rgba(0, 102, 255, 0.3);
+}
+
+.btn-profil:hover:not(.btn-verrouille) {
+    box-shadow: 0 0 18px rgba(0, 102, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+.btn-achievements {
+    background: linear-gradient(135deg, #1a0e00, #2e1800, #1a0e00);
+    border: 2px solid #ff9900;
+    color: #ffbb44;
+    box-shadow: 0 0 8px rgba(255, 153, 0, 0.3);
+}
+
+.btn-achievements:hover:not(.btn-verrouille) {
+    box-shadow: 0 0 18px rgba(255, 153, 0, 0.6);
+    transform: translateY(-2px);
+}

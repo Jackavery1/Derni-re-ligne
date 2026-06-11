@@ -4,7 +4,7 @@ import { extraireForme } from './moteur-piece.js';
 import { etat, obtenirCtx } from './store-jeu.js';
 import { estPositionValide } from './piece-jeu.js';
 import { afficherTutorielContextuel } from './tutoriel.js';
-
+import { desactiverPreferenceCoop, modeCoopActif } from './coop-preference.js';
 export const oracle = {
     actif: false,
     suggestion: null,
@@ -276,21 +276,29 @@ export function basculerOracle() {
     const desc = document.getElementById('oracle-toggle-desc');
     if (!btn || !label) return;
 
+    const coopBtn = /** @type {HTMLButtonElement | null} */ (
+        document.getElementById('toggle-coop')
+    );
+
     if (oracle.actif) {
         btn.classList.add('actif');
         label.textContent = 'ORACLE : ON';
         afficherTutorielContextuel('oracle');
+        desactiverPreferenceCoop();
+        if (coopBtn) coopBtn.disabled = true;
         if (desc) {
             desc.textContent =
-                "Ignorez les suggestions avec succes pour multiplier votre score jusqu'à ×5.0";
+                "Ignorez les suggestions avec succes pour multiplier votre score jusqu'a x5.0. " +
+                'Incompatible avec le mode Coop.';
         }
     } else {
         btn.classList.remove('actif');
         label.textContent = 'ORACLE : OFF';
+        if (coopBtn && !modeCoopActif) coopBtn.disabled = false;
         if (desc) {
             desc.textContent =
                 "Activez l'Oracle pour obtenir des suggestions de placement. " +
-                'Deviez avec succes pour multiplier votre score.';
+                'Deviez avec succes pour multiplier votre score. Incompatible avec le mode Coop.';
         }
     }
 }

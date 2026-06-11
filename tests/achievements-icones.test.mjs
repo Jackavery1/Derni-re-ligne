@@ -1,10 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { ACHIEVEMENTS } from '../js/achievements-donnees.js';
-import { ICONES_PIXEL } from '../js/icones-pixel.js';
+import ICONES_PIXEL from '../data/icones-pixel.json';
 import {
     obtenirIdIconeAchievement,
     obtenirAccentCategorie,
     obtenirTexteVerrouille,
+    obtenirTexteVerrouillePanneau,
+    obtenirLibelleCategorieFiltre,
+    estCategorieIndiceMasque,
 } from '../js/achievements-icones-map.js';
 
 describe('achievements-icones-map', () => {
@@ -20,5 +23,13 @@ describe('achievements-icones-map', () => {
         expect(obtenirTexteVerrouille('histoire_secrets', 'Spoiler')).toBe('Fragment non gravé');
         expect(obtenirTexteVerrouille('histoire_fins', 'Spoiler')).toBe('Fragment non gravé');
         expect(obtenirTexteVerrouille('score', 'Atteindre 10 000 points')).toContain('10 000');
+    });
+
+    it('expose le texte panneau et les libelles de filtre', () => {
+        expect(estCategorieIndiceMasque('histoire_vera')).toBe(true);
+        expect(estCategorieIndiceMasque('histoire_boss')).toBe(false);
+        expect(obtenirTexteVerrouillePanneau('histoire', 'Spoiler')).toContain('La Trame');
+        expect(obtenirLibelleCategorieFiltre('lignes')).toBe('SCORE');
+        expect(obtenirLibelleCategorieFiltre('histoire_prouesses')).toBe('PROUESSES');
     });
 });

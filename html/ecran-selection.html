@@ -11,79 +11,6 @@
             <span id="sel-titre-jeu" class="sel-titre-jeu"></span>
             <span id="sel-sous-titre" class="sel-sous-titre"></span>
         </div>
-        <div id="sel-info-biome" class="sel-info-biome element-masque">
-            <div id="sel-biome-nom"></div>
-            <div id="sel-biome-record"></div>
-            <div id="sel-biome-statut"></div>
-            <div id="toggle-coop-wrap" class="toggle-oracle-wrap element-masque" aria-hidden="true">
-                <button
-                    id="toggle-coop"
-                    class="toggle-oracle"
-                    type="button"
-                    aria-label="Activer ou desactiver le mode cooperatif"
-                >
-                    <span>👥</span>
-                    <span id="coop-toggle-label">COOP : OFF</span>
-                </button>
-                <div class="oracle-toggle-desc">
-                    J1 : WASD + Shift. J2 : Fleches + Shift droit. Coop : deux joueurs, un plateau
-                    partage — voir le tutoriel au premier lancement.
-                </div>
-            </div>
-            <div
-                id="toggle-oracle-wrap"
-                class="toggle-oracle-wrap element-masque"
-                aria-hidden="true"
-            >
-                <button
-                    id="toggle-oracle"
-                    class="toggle-oracle"
-                    type="button"
-                    aria-label="Activer ou desactiver l'Oracle"
-                >
-                    <span id="oracle-toggle-icone">🔮</span>
-                    <span id="oracle-toggle-label">ORACLE : OFF</span>
-                </button>
-                <div id="oracle-toggle-desc" class="oracle-toggle-desc">
-                    Activez l'Oracle pour obtenir des suggestions de placement. Deviez avec succes
-                    pour multiplier votre score.
-                </div>
-            </div>
-            <div id="toggle-sprint-wrap" class="toggle-oracle-wrap">
-                <button
-                    id="toggle-sprint"
-                    class="toggle-oracle"
-                    type="button"
-                    aria-label="Activer ou desactiver le mode Sprint 40 lignes"
-                >
-                    <span>⏱</span>
-                    <span id="sprint-toggle-label">SPRINT 40L : OFF</span>
-                </button>
-                <div class="oracle-toggle-desc">
-                    Effacez 40 lignes le plus vite possible — meilleur temps enregistre par biome.
-                </div>
-            </div>
-            <div id="toggle-defi-jour-wrap" class="toggle-oracle-wrap element-masque">
-                <button
-                    id="toggle-defi-jour"
-                    class="toggle-oracle"
-                    type="button"
-                    aria-label="Activer le defi du jour"
-                >
-                    <span>☀</span>
-                    <span id="defi-jour-label">DEFI DU JOUR : OFF</span>
-                </button>
-                <div id="defi-jour-desc" class="oracle-toggle-desc"></div>
-            </div>
-            <button
-                id="sel-btn-jouer"
-                class="bouton bouton-jouer"
-                type="button"
-                aria-label="Lancer la partie avec le biome selectionne"
-            >
-                ▶ JOUER
-            </button>
-        </div>
         <button
             class="bouton discret sel-retour"
             type="button"
@@ -93,6 +20,110 @@
             ← RETOUR
         </button>
     </div>
+    <div
+        id="sel-panneau-backdrop"
+        class="sel-panneau-backdrop element-masque"
+        aria-hidden="true"
+    ></div>
+    <aside
+        id="sel-info-biome"
+        class="sel-info-biome panneau-meta element-masque"
+        aria-hidden="true"
+        aria-labelledby="sel-biome-nom"
+    >
+        <button
+            type="button"
+            id="btn-sel-panneau-fermer"
+            class="sel-panneau-fermer"
+            aria-label="Fermer le panneau de selection"
+        >
+            ✕
+        </button>
+        <header class="sel-biome-entete">
+            <canvas
+                id="sel-biome-icone"
+                class="sel-biome-icone"
+                width="48"
+                height="48"
+                aria-hidden="true"
+            ></canvas>
+            <div
+                id="sel-biome-nom"
+                class="sel-biome-nom"
+                aria-live="polite"
+                aria-atomic="true"
+            ></div>
+        </header>
+        <div id="sel-biome-record" class="sel-biome-record"></div>
+        <div id="sel-biome-statut" class="sel-biome-statut"></div>
+        <div id="toggle-coop-wrap" class="toggle-oracle-wrap element-masque" aria-hidden="true">
+            <button
+                id="toggle-coop"
+                class="toggle-oracle"
+                type="button"
+                aria-label="Activer ou desactiver le mode cooperatif"
+            >
+                <span id="coop-toggle-label">COOP : OFF</span>
+            </button>
+            <div class="oracle-toggle-desc">
+                J1 : WASD + Shift. J2 : Fleches + Shift droit. Deux joueurs, un plateau partage.
+                Incompatible avec l'Oracle — voir le tutoriel au premier lancement.
+            </div>
+        </div>
+        <div id="toggle-oracle-wrap" class="toggle-oracle-wrap element-masque" aria-hidden="true">
+            <button
+                id="toggle-oracle"
+                class="toggle-oracle"
+                type="button"
+                aria-label="Activer ou desactiver l'Oracle"
+            >
+                <span id="oracle-toggle-label">ORACLE : OFF</span>
+            </button>
+            <div id="oracle-toggle-desc" class="oracle-toggle-desc">
+                Suggestions de placement et multiplicateur de score. Incompatible avec le mode Coop.
+            </div>
+        </div>
+        <div id="toggle-sprint-wrap" class="toggle-oracle-wrap">
+            <button
+                id="toggle-sprint"
+                class="toggle-oracle"
+                type="button"
+                aria-label="Activer ou desactiver le mode Sprint 40 lignes"
+            >
+                <span id="sprint-toggle-label">SPRINT 40L : OFF</span>
+            </button>
+            <div class="oracle-toggle-desc">
+                Effacez 40 lignes le plus vite possible — meilleur temps enregistre par biome.
+            </div>
+        </div>
+        <div id="toggle-defi-jour-wrap" class="toggle-oracle-wrap element-masque">
+            <button
+                id="toggle-defi-jour"
+                class="toggle-oracle"
+                type="button"
+                aria-label="Activer le defi du jour"
+            >
+                <span id="defi-jour-label">DEFI DU JOUR : OFF</span>
+            </button>
+            <div id="defi-jour-desc" class="oracle-toggle-desc"></div>
+        </div>
+        <button
+            id="sel-btn-histoire"
+            class="bouton bouton-jouer sel-btn-histoire element-masque"
+            type="button"
+            aria-label="Ouvrir le mode Histoire pour debloquer ce monde"
+        >
+            ◈ MODE HISTOIRE
+        </button>
+        <button
+            id="sel-btn-jouer"
+            class="bouton bouton-jouer sel-btn-jouer"
+            type="button"
+            aria-label="Lancer la partie avec le biome selectionne"
+        >
+            ▶ JOUER
+        </button>
+    </aside>
 </div>
 
 <!-- ========================================================

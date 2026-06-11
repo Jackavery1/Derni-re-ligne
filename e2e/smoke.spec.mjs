@@ -8,6 +8,7 @@ import {
     preparerPageSansSw,
     attendreApplicationPrete,
     attendreNotificationsInitiales,
+    selectionnerBiomeClavier,
 } from './helpers.mjs';
 
 test('aucune bannière erreur au démarrage', async ({ page }) => {
@@ -74,6 +75,16 @@ test('options affiche l’onglet contrôles', async ({ page }) => {
     await page.locator('#tab-controles').click();
     await expect(page.locator('#panneau-controles')).toBeVisible();
     await expect(page.locator('#panneau-controles')).not.toHaveAttribute('hidden');
+});
+
+test('constellation affiche le panneau ancré avant JOUER', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-jouer').click();
+    await selectionnerBiomeClavier(page, { value: 'classique' });
+    await expect(page.locator('#sel-info-biome')).toHaveClass(/sel-panneau--visible/);
+    await expect(page.locator('#sel-btn-jouer')).toBeVisible();
 });
 
 test('sélection biome au clavier démarre une partie', async ({ page }) => {

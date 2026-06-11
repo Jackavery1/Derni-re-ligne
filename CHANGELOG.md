@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version    | Date       | En bref                                                                                   |
 | ---------- | ---------- | ----------------------------------------------------------------------------------------- |
+| **2.5.15** | 2026-06-11 | Découpage CSS modulaire, HUD Trame en run, constellation au clic, liens histoire          |
 | **2.5.14** | 2026-06-11 | Remédiation audits : UX histoire, défi du jour, ESLint 0 warn, E2E contraste, doc OPT     |
 | **2.5.13** | 2026-06-11 | OPT poids : audit CI, pipeline médias, cache SW deux étages, polices woff2                |
 | **2.5.12** | 2026-06-11 | Audit gameplay UX dims 1–10 : Sprint 40L, tutoriel étendu, records locaux, fallback audio |
@@ -28,6 +29,24 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.2.0**  | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                                |
 | **2.1.0**  | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                                |
 | **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                             |
+
+---
+
+## [2.5.15] — 2026-06-11
+
+### Architecture CSS
+
+- **`styles/main.css`** : agrégateur `@import` (~20 modules) au lieu d’un fichier monolithique ~5800 lignes
+- Script `scripts/decouper-main-css.mjs` pour régénérer le découpage
+- Suppression du doublon `objectifs-histoire.css` dans `index.html`
+
+### Gameplay / UX (suite audits)
+
+- **G11** : conditions Trame visibles dans le HUD pendant une run histoire
+- **G14** : bouton « MODE HISTOIRE » sur biomes verrouillés (constellation)
+- **G15** : tri Architecte par difficulté à l’ouverture
+- **Constellation au clic** : option accessibilité (désactive l’ouverture au survol)
+- Titres mobile : Rajdhani sous 480px (lisibilité vs Press Start 2P)
 
 ---
 

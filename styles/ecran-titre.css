@@ -1,0 +1,282 @@
+/* ================================================
+           ÉCRAN TITRE — Menu principal redesigné
+        ================================================ */
+#ecran-titre {
+    overflow: hidden;
+}
+#ecran-titre.ecran {
+    background: transparent;
+    backdrop-filter: none;
+}
+
+#canvas-menu-fond {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Overlay scanlines subtil */
+#ecran-titre::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(0, 0, 0, 0.06) 3px,
+        rgba(0, 0, 0, 0.06) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+.menu-contenu {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 28px 24px;
+    max-height: 100vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+.menu-contenu::-webkit-scrollbar {
+    display: none;
+}
+
+/* Logo titre */
+.menu-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+}
+
+.menu-etoiles {
+    font-size: clamp(0.4rem, 1.5vw, 0.55rem);
+    color: var(--texte-dim);
+    letter-spacing: 12px;
+    margin-bottom: 4px;
+}
+
+.menu-titre-1 {
+    font-size: clamp(1.3rem, 6vw, 2.4rem);
+    letter-spacing: 8px;
+}
+
+.lettre-titre {
+    display: inline-block;
+    color: var(--couleur-lettre);
+    text-shadow:
+        0 0 12px var(--couleur-lettre),
+        0 0 30px color-mix(in srgb, var(--couleur-lettre) 40%, transparent);
+    animation: flotterLettre 2s ease-in-out infinite;
+}
+.lettre-t {
+    --couleur-lettre: #ff2a2a;
+}
+.lettre-e {
+    --couleur-lettre: #ff8800;
+}
+.lettre-t2 {
+    --couleur-lettre: #ffe600;
+}
+.lettre-r {
+    --couleur-lettre: #00d840;
+}
+.lettre-i {
+    --couleur-lettre: #00b8ff;
+}
+.lettre-s {
+    --couleur-lettre: #aa00ff;
+}
+.menu-titre-1 .lettre-titre:nth-child(1) {
+    animation-delay: 0s;
+}
+.menu-titre-1 .lettre-titre:nth-child(2) {
+    animation-delay: 0.15s;
+}
+.menu-titre-1 .lettre-titre:nth-child(3) {
+    animation-delay: 0.3s;
+}
+.menu-titre-1 .lettre-titre:nth-child(4) {
+    animation-delay: 0.45s;
+}
+.menu-titre-1 .lettre-titre:nth-child(5) {
+    animation-delay: 0.6s;
+}
+.menu-titre-1 .lettre-titre:nth-child(6) {
+    animation-delay: 0.75s;
+}
+.menu-titre-1 .lettre-titre:nth-child(7) {
+    animation-delay: 0.9s;
+}
+.menu-titre-1 .lettre-titre:nth-child(8) {
+    animation-delay: 1.05s;
+}
+
+@keyframes flotterLettre {
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-5px) scale(1.05);
+    }
+}
+
+.menu-titre-2 {
+    font-size: clamp(2.2rem, 11vw, 4.5rem);
+    color: var(--rose);
+    letter-spacing: 4px;
+    line-height: 1;
+    animation: pulseLueur 2.5s ease-in-out infinite 0.6s;
+}
+
+.menu-titre-dl {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    line-height: 1;
+}
+.dl-mot-1 {
+    letter-spacing: 6px;
+}
+.dl-mot-2 {
+    font-size: clamp(2rem, 10vw, 4rem);
+    letter-spacing: 4px;
+    color: var(--cyan);
+    text-shadow:
+        0 0 14px var(--cyan),
+        0 0 35px rgba(0, 245, 255, 0.4);
+    animation: pulseLueur 2.5s ease-in-out infinite 0.4s;
+}
+
+.menu-titre-sous {
+    display: none;
+}
+
+/* Mascotte menu */
+.menu-robot {
+    display: block;
+    width: clamp(84px, 15vw, 108px);
+    height: auto;
+    object-fit: contain;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0 8px rgba(0, 245, 255, 0.35));
+    animation: flotterRobot 3s ease-in-out infinite;
+    flex-shrink: 0;
+}
+@keyframes flotterRobot {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+/* Affichage du record */
+.menu-record {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 28px;
+    border: 1px solid rgba(255, 230, 0, 0.3);
+    background: rgba(255, 230, 0, 0.04);
+    box-shadow:
+        0 0 12px rgba(255, 230, 0, 0.08),
+        inset 0 0 12px rgba(255, 230, 0, 0.04);
+}
+.menu-record-label {
+    font-size: 0.38rem;
+    color: var(--texte-dim);
+    letter-spacing: 3px;
+}
+.menu-record-valeur {
+    font-size: clamp(0.55rem, 2vw, 0.8rem);
+    color: var(--jaune);
+    text-shadow: 0 0 10px var(--jaune);
+}
+
+/* Bouton JOUER — plus proéminent */
+.bouton-jouer {
+    font-size: clamp(0.7rem, 2.5vw, 0.95rem) !important;
+    padding: 18px 48px !important;
+    letter-spacing: 5px;
+    animation: pulseBordureJouer 3s ease-in-out infinite;
+}
+@keyframes pulseBordureJouer {
+    0%,
+    100% {
+        box-shadow:
+            0 0 10px rgba(0, 245, 255, 0.3),
+            inset 0 0 10px rgba(0, 245, 255, 0.08);
+    }
+    50% {
+        box-shadow:
+            0 0 28px rgba(0, 245, 255, 0.7),
+            inset 0 0 20px rgba(0, 245, 255, 0.18);
+    }
+}
+
+.menu-modes {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.bouton-mode {
+    font-size: 0.38rem;
+    padding: 10px 14px;
+    letter-spacing: 1px;
+}
+
+.bouton-mode.actif {
+    background: var(--cyan);
+    color: var(--fond);
+    text-shadow: none;
+    box-shadow:
+        0 0 18px rgba(0, 245, 255, 0.55),
+        inset 0 0 10px rgba(0, 245, 255, 0.12);
+}
+
+.bouton-mode:not(.actif):hover {
+    background: rgba(0, 245, 255, 0.12);
+}
+
+/* Guide des touches (options) */
+.guide {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 6px 24px;
+    font-size: 0.38rem;
+    color: var(--texte-dim);
+    padding: 12px 20px;
+    border: 1px solid var(--bordure);
+    background: rgba(0, 0, 0, 0.2);
+}
+.guide dt {
+    color: var(--cyan);
+    letter-spacing: 1px;
+}
+.guide dd {
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.guide-options {
+    width: 100%;
+    margin: 0;
+}
