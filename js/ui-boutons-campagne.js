@@ -1,6 +1,4 @@
 import { afficherEcran } from './ecrans-ui.js';
-import { afficherOngletOptions } from './options-ui.js';
-import { ECRANS } from './store-jeu.js';
 import {
     nouvellePartieNecessiteConfirmation,
     demanderConfirmationNouvellePartie,
@@ -28,10 +26,6 @@ export function initialiserBoutonsCampagne() {
     });
     document.getElementById('btn-nouvelle-partie')?.addEventListener('click', () => {
         void demarrerNouvelleCampagne();
-    });
-    document.getElementById('btn-options-titre')?.addEventListener('click', () => {
-        afficherOngletOptions('reglages');
-        afficherEcran(ECRANS.OPTIONS);
     });
     mettreAJourMenuCampagneTitre();
 }

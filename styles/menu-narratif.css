@@ -44,11 +44,30 @@
 .btn-continuer,
 .btn-nouvelle-partie {
     width: 100%;
-    padding: 16px 24px;
+    padding: 10px 18px;
     flex-direction: column;
     gap: 4px;
     position: relative;
     overflow: hidden;
+    font-size: clamp(0.72rem, 3.4vw, 0.9rem);
+}
+
+.btn-continuer .btn-texte,
+.btn-nouvelle-partie .btn-texte {
+    font-size: 1em;
+    letter-spacing: 3px;
+}
+
+.btn-continuer .btn-icone,
+.btn-nouvelle-partie .btn-icone {
+    margin-right: 0;
+    font-size: 1.1em;
+}
+
+.btn-continuer .btn-sous-titre,
+.btn-nouvelle-partie .btn-sous-titre {
+    font-size: 0.48em;
+    letter-spacing: 2px;
 }
 
 .btn-continuer {

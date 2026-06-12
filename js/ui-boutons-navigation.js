@@ -89,9 +89,6 @@ function _lierSelectionEtModes() {
         afficherEcran(ECRANS.OPTIONS);
     };
     document
-        .getElementById('btn-controles-rapides')
-        ?.addEventListener('click', ouvrirOptionsControles);
-    document
         .getElementById('btn-aller-controles')
         ?.addEventListener('click', ouvrirOptionsControles);
     document.getElementById('btn-options')?.addEventListener('click', () => {
