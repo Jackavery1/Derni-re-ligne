@@ -28,9 +28,15 @@ des constantes à coder en dur (leçon du premier renderer ROBO cassé).
   larges bleu-canard sombre `#1a3c46`, point de brillance blanc en haut à
   gauche de chaque œil + micro-reflet secondaire, léger écart asymétrique
   des pupilles qui donne la vie, contour d'œil fin sombre `#5a1010`.
+  **ANTI-REGARD-VIDE (défaut constaté sur le rendu actuel, 13 juin)** :
+  pupilles GRANDES (≈ 45–55 % du diamètre de l'œil, pas des billes) et
+  CENTRÉES vers le joueur en humeur neutre — jamais petites et fuyantes
+  vers le côté. Les yeux occupent une part généreuse de la tête (chaque
+  œil ≈ 30 % de la largeur du visage).
 - Bouche : grille de dents cyan `#35e0e6` sur fond sombre `#0d2b2e`,
-  6×2 dents, coins du sourire remontants (TOUJOURS souriant en humeur
-  neutre)
+  6×2 dents, coins du sourire NETTEMENT remontants — le rendu actuel a
+  une bouche plate et sombre qui éteint le personnage : le sourire large
+  est obligatoire en humeur neutre
 - Antenne : tige grise `#9aa3ad`, lumière verte `#4bff5a` avec halo de
   3–4 pixels satellites
 - Torse : violet `#7a4fc0`, panneau central sombre `#2a1840` avec circuits
@@ -50,26 +56,42 @@ table d'états.
 
 ---
 
-## 2. VERA — créatrice (référence : buste combinaison blanche, halo)
+## 2. VERA — créatrice (référence : buste DE FACE, casque arrondi, halo)
+
+⚠️ Référence mise à jour (13 juin) : l'image « looking at us » remplace la
+première (regard levé). VERA regarde le joueur — c'est la bonne pose pour
+le dialogue.
+
+**Silhouette — consignes ANTI-DALLE (le rendu actuel en jeu est une
+plaque rectangulaire à corriger)** :
+
+- Le buste N'EST PAS un rectangle : épaules tombantes distinctes, cou
+  visible, tête détachée du tronc.
+- Proportions à l'échelle du portrait : tête (casque compris) ≈ 40 % de
+  la hauteur du buste ; largeur d'épaules ≈ 2,2× la largeur du cou.
+- Le visage est STRUCTURÉ : sourcils, yeux, nez (2–3 px d'ombre), lèvres,
+  menton/mâchoire. Pas de visage-bille.
 
 **Palette**
 
-- Combinaison : blanc cassé `#e8edf5`, liserés bleus `#3da8e0`, ombres
-  plis `#b8c4d6`, col haut fermé
-- Visière : cyan translucide `#7fd4f0` (simuler la translucidité par
-  2 tons : reflet clair `#c8ecf8` en diagonale, teinte sombre `#3a7a96`),
-  monture fine blanche
-- Yeux : visibles À TRAVERS la visière, bleus `#4a90c8`, stylisés simples
-  (2–3 pixels + reflet) — cohérents avec le style "yeux stylisés" du jeu
-- Peau : `#e8b9a8`, ombre `#c89484`
-- Cheveux : auburn `#8a4a3a`, tresses/mèches tombantes de part et d'autre
-  du cou, reflets `#a8604a`
-- Halo : anneau magenta `#ff2d78` incomplet (arc ~300°) derrière la tête,
+- Casque : coque arrondie bleu clair `#9ecde8`, reflets `#d4ecf8`,
+  écouteurs latéraux `#7ab4d8`
+- Visière : translucide — reflet diagonal clair `#c8ecf8`, teinte
+  `#7fd4f0`, ombre `#3a7a96` ; les DEUX yeux restent lisibles à travers
+- Yeux : bleus `#4a90c8`, stylisés (iris 2–3 px + point de brillance
+  blanc), sourcils fins `#6a4a3a`
+- Peau : `#e8b9a8`, ombres `#c89484`, lèvres `#c8786a`
+- Cheveux : mèches auburn `#8a4a3a` qui dépassent du casque de part et
+  d'autre du cou, reflets `#a8604a`
+- Combinaison : blanc cassé `#e8edf5`, ombres de plis `#b8c4d6`, col haut
+  zippé (fermeture `#8a98ac` centrale), liserés bleus `#3da8e0` suivant
+  les coutures d'épaules
+- Halo : anneau orbital magenta `#ff2d78` derrière la tête, passant
+  devant ET derrière (deux arcs, comme l'anneau de l'Archiviste),
   particules magenta dispersées
 
-**Pose canonique** : buste de face, tête légèrement levée (espoir). En
-dialogue, ramener le regard vers l'interlocuteur (pupilles centrées) mais
-garder le port de tête.
+**Pose canonique** : buste de face, regard vers le joueur, expression
+calme et attentive.
 
 **Humeurs (vocabulaire PROMPT A)** :
 
