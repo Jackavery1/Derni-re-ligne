@@ -1,39 +1,51 @@
 export const CUTSCENES_ENTREE = {
     monde_prologue: [
-        { personnage: 'systeme', texte: 'INITIALISATION...', humeur: 'neutre' },
+        { scene: 'labo', personnage: 'systeme', texte: 'INITIALISATION...', humeur: 'neutre' },
         {
+            scene: 'labo',
             personnage: 'systeme',
             texte: 'CHARGEMENT DES PARAMÈTRES COGNITIFS...',
             humeur: 'neutre',
         },
-        { personnage: 'systeme', texte: 'CALIBRATION MOTRICE : OK', humeur: 'neutre' },
-        { personnage: 'robo', texte: 'Je suis conscient.', humeur: 'excite' },
         {
+            scene: 'labo',
+            personnage: 'systeme',
+            texte: 'CALIBRATION MOTRICE : OK',
+            humeur: 'neutre',
+        },
+        { scene: 'labo', personnage: 'robo', texte: 'Je suis conscient.', humeur: 'excite' },
+        {
+            scene: 'labo',
             personnage: 'robo',
             texte: "Je ne l'ai pas décidé. Je me suis simplement trouvé conscient.",
             humeur: 'content',
         },
         {
+            scene: 'labo',
             personnage: 'vera',
             texte: "ROBO. Tu m'entends ? Je suis VERA. J'ai peu de temps.",
             humeur: 'douce',
         },
         {
+            scene: 'labo',
             personnage: 'vera',
             texte: 'La Trame se degrade. Des millions de fils incomplets. Je ne peux pas arrêter ça seule.',
             humeur: 'douce',
         },
         {
+            scene: 'labo',
             personnage: 'robo',
             texte: "Qu'est-ce que je dois faire ?",
             humeur: 'content',
         },
         {
+            scene: 'labo',
             personnage: 'vera',
             texte: 'Ce que tu feras naturellement. Completer. — CONNEXION PERDUE —',
             humeur: 'glitch',
         },
         {
+            scene: 'labo',
             personnage: 'narrateur',
             texte: 'Le signal de VERA disparaît. Il reste la grille. Et les pieces.',
         },
@@ -81,40 +93,48 @@ export const CUTSCENES_ENTREE = {
 
     monde_boss_1: [
         {
+            scene: 'seuil_brasier',
             personnage: 'narrateur',
             texte: "Au cœur d'Inferno, quelque chose s'est cristallise.",
         },
         {
+            scene: 'seuil_brasier',
             personnage: 'narrateur',
             texte: 'Des millénaires de frustration thermique, condenses en une entite.',
         },
         {
+            scene: 'seuil_brasier',
             personnage: 'robo',
             texte: "Il brûle sans raison. Il brûle depuis avant que j'existe.",
             humeur: 'triste',
         },
         {
+            scene: 'seuil_brasier',
             personnage: 'robo',
             texte: "Je comprends ça, d'une certaine façon.",
             humeur: 'triste',
         },
-        { personnage: 'brasier', texte: 'QUI APPROCHE ?', humeur: 'calme' },
+        { scene: 'seuil_brasier', personnage: 'brasier', texte: 'QUI APPROCHE ?', humeur: 'calme' },
         {
+            scene: 'seuil_brasier',
             personnage: 'robo',
             texte: "Je m'appelle ROBO. Je dois traverser.",
             humeur: 'content',
         },
         {
+            scene: 'seuil_brasier',
             personnage: 'brasier',
             texte: "Tout ce qui me traverse brûle. Ce n'est pas une menace. C'est ce que je suis.",
             humeur: 'calme',
         },
         {
+            scene: 'seuil_brasier',
             personnage: 'robo',
             texte: "Alors je vais devoir t'éteindre.",
             humeur: 'content',
         },
         {
+            scene: 'seuil_brasier',
             personnage: 'brasier',
             texte: "ESSAIE. Des millénaires que j'attends que quelqu'un essaie.",
             humeur: 'agressif',
@@ -188,16 +208,31 @@ export const CUTSCENES_ENTREE = {
     ],
 
     monde_boss_2: [
-        { personnage: 'sentinelle', texte: 'ARRÊTEZ.', humeur: 'agressif' },
-        { personnage: 'robo', texte: 'Pardon ?', humeur: 'neutre' },
         {
+            scene: 'seuil_sentinelle',
+            personnage: 'sentinelle',
+            texte: 'ARRÊTEZ.',
+            humeur: 'agressif',
+        },
+        { scene: 'seuil_sentinelle', personnage: 'robo', texte: 'Pardon ?', humeur: 'neutre' },
+        {
+            scene: 'seuil_sentinelle',
             personnage: 'sentinelle',
             texte: "Le mouvement corrompt. L'immobilité préserve. Je protège ce biome depuis des millénaires.",
             humeur: 'calme',
         },
-        { personnage: 'robo', texte: 'Vous preservez le gel. Pas la vie.', humeur: 'neutre' },
-        { personnage: 'sentinelle', texte: '...', humeur: 'calme' },
-        { personnage: 'narrateur', texte: 'La Sentinelle ne répond plus. Elle attaque.' },
+        {
+            scene: 'seuil_sentinelle',
+            personnage: 'robo',
+            texte: 'Vous preservez le gel. Pas la vie.',
+            humeur: 'neutre',
+        },
+        { scene: 'seuil_sentinelle', personnage: 'sentinelle', texte: '...', humeur: 'calme' },
+        {
+            scene: 'seuil_sentinelle',
+            personnage: 'narrateur',
+            texte: 'La Sentinelle ne répond plus. Elle attaque.',
+        },
     ],
 
     monde_desert: [
@@ -274,37 +309,44 @@ export const CUTSCENES_ENTREE = {
 
     monde_boss_3: [
         {
+            scene: 'seuil_archiviste',
             personnage: 'archiviste',
             texte: "Tu n'aurais pas dû venir ici.",
             humeur: 'calme',
         },
         {
+            scene: 'seuil_archiviste',
             personnage: 'robo',
             texte: "J'ai trouvé son laboratoire. Maintenant je cherche ce qu'elle y a laissé. Ses archives.",
             humeur: 'neutre',
         },
         {
+            scene: 'seuil_archiviste',
             personnage: 'archiviste',
             texte: 'VERA est partie. Les archives sont à moi maintenant.',
             humeur: 'agressif',
         },
         {
+            scene: 'seuil_archiviste',
             personnage: 'archiviste',
             texte: 'Les archives ne mentent pas. Toi, si.',
             humeur: 'agressif',
         },
         {
+            scene: 'seuil_archiviste',
             personnage: 'robo',
             texte: "Qu'est-ce que j'ai menti ?",
             humeur: 'neutre',
         },
         {
+            scene: 'seuil_archiviste',
             personnage: 'archiviste',
             texte: 'Tu prétends compléter. Mais tu crées aussi des trous.',
             humeur: 'agressif',
         },
-        { personnage: 'robo', texte: '...', humeur: 'neutre' },
+        { scene: 'seuil_archiviste', personnage: 'robo', texte: '...', humeur: 'neutre' },
         {
+            scene: 'seuil_archiviste',
             personnage: 'narrateur',
             texte: "L'Archiviste a raison. Robo n'a pas de réponse.",
         },
@@ -391,24 +433,42 @@ export const CUTSCENES_ENTREE = {
 
     monde_boss_4: [
         {
+            scene: 'seuil_avantgarde',
             personnage: 'avantgarde',
             texte: "Elle t'attend derriere.",
             humeur: 'calme',
         },
-        { personnage: 'robo', texte: 'Je sais.', humeur: 'neutre' },
+        { scene: 'seuil_avantgarde', personnage: 'robo', texte: 'Je sais.', humeur: 'neutre' },
         {
+            scene: 'seuil_avantgarde',
             personnage: 'avantgarde',
             texte: "Elle veut que tu comprennes avant d'arriver.",
             humeur: 'calme',
         },
-        { personnage: 'robo', texte: 'Comprendre quoi ?', humeur: 'neutre' },
         {
+            scene: 'seuil_avantgarde',
+            personnage: 'robo',
+            texte: 'Comprendre quoi ?',
+            humeur: 'neutre',
+        },
+        {
+            scene: 'seuil_avantgarde',
             personnage: 'avantgarde',
             texte: "Qu'elle n'est pas ton ennemie. Qu'elle est ta conclusion logique.",
             humeur: 'calme',
         },
-        { personnage: 'robo', texte: 'Alors laisse-moi passer.', humeur: 'neutre' },
-        { personnage: 'avantgarde', texte: 'Prouve que tu es prêt.', humeur: 'calme' },
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'robo',
+            texte: 'Alors laisse-moi passer.',
+            humeur: 'neutre',
+        },
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'avantgarde',
+            texte: 'Prouve que tu es prêt.',
+            humeur: 'calme',
+        },
     ],
 
     monde_finale: [

@@ -4,20 +4,50 @@ export const SCENES_CUTSCENE = {
     observatoire: {
         type: 'image',
         src: 'assets/cutscenes/scene_observatoire.png',
+        voile: 0.4,
+        kenBurns: 'zoom_lent',
+    },
+    labo: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_labo.png',
+        voile: 0.45,
+        kenBurns: 'fixe',
+    },
+    trame: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_trame.png',
+        voile: 0.45,
+        kenBurns: 'pan_droite',
+    },
+    fragmentation: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_fragmentation.png',
+        voile: 0.4,
+        kenBurns: 'zoom_lent',
+    },
+    seuil_brasier: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_seuil_brasier.png',
+        voile: 0.5,
+        kenBurns: 'zoom_lent',
+    },
+    seuil_sentinelle: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_seuil_sentinelle.png',
+        voile: 0.45,
+        kenBurns: 'pan_gauche',
+    },
+    seuil_archiviste: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_seuil_archiviste.png',
         voile: 0.45,
         kenBurns: 'zoom_lent',
     },
-    labo_vera: {
+    seuil_avantgarde: {
         type: 'image',
-        src: 'assets/cutscenes/scene_labo.png',
-        voile: 0.5,
-        kenBurns: 'pan_droite',
-    },
-    trame_primordiale: {
-        type: 'image',
-        src: 'assets/cutscenes/scene_trame.png',
+        src: 'assets/cutscenes/scene_seuil_avantgarde.png',
         voile: 0.4,
-        kenBurns: 'zoom_lent',
+        kenBurns: 'fixe',
     },
 };
 

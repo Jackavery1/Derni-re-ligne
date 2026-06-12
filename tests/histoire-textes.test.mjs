@@ -12,13 +12,18 @@ import { ACHIEVEMENTS_HISTOIRE } from '../js/achievements-histoire.js';
 
 function extrairePersonnagesCutscenes(objet) {
     const ids = new Set();
-    for (const lignes of Object.values(objet)) {
+    for (const entree of Object.values(objet)) {
+        const lignes = Array.isArray(entree) ? entree : (entree?.lignes ?? []);
         if (!Array.isArray(lignes)) continue;
         for (const ligne of lignes) {
             if (ligne?.personnage) ids.add(ligne.personnage);
         }
     }
     return [...ids];
+}
+
+function extraireLignesCutscene(entree) {
+    return Array.isArray(entree) ? entree : (entree?.lignes ?? []);
 }
 
 describe('histoire-textes — cohérence portraits', () => {
@@ -64,10 +69,11 @@ describe('histoire-textes — cohérence portraits', () => {
     });
 
     it('monde_boss_1 inclut le dialogue du Brasier', () => {
-        const lignes = CUTSCENES_ENTREE.monde_boss_1 ?? [];
+        const lignes = extraireLignesCutscene(CUTSCENES_ENTREE.monde_boss_1);
         expect(lignes.some((l) => l.personnage === 'brasier' && l.texte.includes('APPROCHE'))).toBe(
             true
         );
+        expect(lignes[0]?.scene).toBe('seuil_brasier');
     });
 
     it('CUTSCENES_POST_MONDE.monde_trame existe avec au moins 8 lignes', () => {
@@ -93,7 +99,7 @@ describe('histoire-textes — cohérence portraits', () => {
     });
 
     it('CUTSCENES_ENTREE.monde_paradoxe differe de EPILOGUES.monde_paradoxe', () => {
-        const entree = CUTSCENES_ENTREE.monde_paradoxe ?? [];
+        const entree = extraireLignesCutscene(CUTSCENES_ENTREE.monde_paradoxe);
         const epilogue = EPILOGUES.monde_paradoxe ?? [];
         expect(JSON.stringify(entree)).not.toBe(JSON.stringify(epilogue));
         expect(entree.length).toBeGreaterThan(epilogue.length);

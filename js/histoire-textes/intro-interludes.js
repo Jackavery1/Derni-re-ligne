@@ -15,10 +15,12 @@ export const INTRO_HISTOIRE = {
         },
         {
             personnage: 'narrateur',
+            scene: 'trame',
             texte: "Sous toutes les parties jamais jouées, il y a la Trame. Tout ce qui tombe finit par s'y déposer.",
         },
         {
             personnage: 'systeme',
+            scene: 'observatoire',
             texte: 'JOURNAL DE BORD — V.E.R.A. — LECTURE AUTOMATIQUE',
             humeur: 'neutre',
         },

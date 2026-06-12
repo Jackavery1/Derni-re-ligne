@@ -14,7 +14,8 @@ describe('scenes-cutscene', () => {
 
     it('expose le registre des scènes image', () => {
         expect(obtenirScene('observatoire')?.type).toBe('image');
-        expect(obtenirScene('labo_vera')?.src).toContain('scene_labo.png');
+        expect(obtenirScene('labo')?.src).toContain('scene_labo.png');
+        expect(obtenirScene('seuil_brasier')?.voile).toBe(0.5);
         expect(obtenirScene('inconnue')).toBeNull();
     });
 
@@ -38,9 +39,9 @@ describe('scenes-cutscene', () => {
         }
         vi.stubGlobal('Image', FakeImage);
 
-        const img = await precharger('trame_primordiale');
+        const img = await precharger('trame');
         expect(img).toBeTruthy();
-        expect(obtenirImageScenePrechargee('trame_primordiale')).toBe(img);
-        expect(SCENES_CUTSCENE.trame_primordiale.kenBurns).toBe('zoom_lent');
+        expect(obtenirImageScenePrechargee('trame')).toBe(img);
+        expect(SCENES_CUTSCENE.trame.kenBurns).toBe('pan_droite');
     });
 });
