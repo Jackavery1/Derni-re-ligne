@@ -2,11 +2,11 @@ export const CUTSCENES_VICTOIRE_BOSS = {
     brasier: [
         {
             personnage: 'narrateur',
-            texte: "Le Brasier ne s'eteint pas. Il s'effondre.",
+            texte: "Le Brasier ne s'éteint pas. Il s'effondre.",
         },
         {
             personnage: 'narrateur',
-            texte: 'Comme si quelque chose avait enfin decide de se reposer.',
+            texte: 'Comme si quelque chose avait enfin décidé de se reposer.',
         },
         {
             personnage: 'brasier_voix',
@@ -51,11 +51,11 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         },
         {
             personnage: 'narrateur',
-            texte: "Le Brasier s'eteint. Pour la premiere fois en millenaires, le biome Inferno respire.",
+            texte: "Le Brasier s'éteint. Pour la première fois en millénaires, le biome Inferno respire.",
         },
         {
             personnage: 'narrateur',
-            texte: "Dans les cendres encore chaudes : une capsule scellee. L'ecriture de VERA.",
+            texte: "Dans les cendres encore chaudes : une capsule scellée. L'écriture de VERA.",
         },
     ],
 
@@ -69,7 +69,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         },
         {
             personnage: 'robo',
-            texte: "Le mouvement corrompt. L'immobilite aussi. Juste plus lentement.",
+            texte: "Le mouvement corrompt. L'immobilité aussi. Juste plus lentement.",
             humeur: 'neutre',
         },
         { personnage: 'sentinelle', texte: '...', humeur: 'vacillant' },
@@ -81,12 +81,12 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         { personnage: 'narrateur', texte: 'La Sentinelle commence à se fragmenter en cristaux.' },
         {
             personnage: 'sentinelle',
-            texte: "Si tu trouves VERA... dis-lui que j'avais tort.",
+            texte: "Si tu trouvés VERA... dis-lui que j'avais tort.",
             humeur: 'vacillant',
         },
         {
             personnage: 'narrateur',
-            texte: "C'est la derniere chose qu'elle dit.",
+            texte: "C'est la dernière chose qu'elle dit.",
         },
         { personnage: 'narrateur', texte: 'Dans les cristaux qui fondent : la transmission 05.' },
     ],
@@ -99,7 +99,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         },
         {
             personnage: 'robo',
-            texte: "Tu m'as dit que je cree des trous.",
+            texte: "Tu m'as dit que je crée des trous.",
             humeur: 'neutre',
         },
         { personnage: 'archiviste', texte: 'Affirme.', humeur: 'calme' },
@@ -116,11 +116,11 @@ export const CUTSCENES_VICTOIRE_BOSS = {
             texte: 'Les archives de VERA sont maintenant accessibles.',
             humeur: 'calme',
         },
-        { personnage: 'archiviste', texte: 'Elle avait prevu que tu viendrais.', humeur: 'calme' },
+        { personnage: 'archiviste', texte: 'Elle avait prévu que tu viendrais.', humeur: 'calme' },
         { personnage: 'robo', texte: 'Comment elle savait ?', humeur: 'neutre' },
         {
             personnage: 'archiviste',
-            texte: "Elle te connaissait mieux que toi-même. C'est ecrit dans ses fichiers.",
+            texte: "Elle te connaissait mieux que toi-même. C'est écrit dans ses fichiers.",
             humeur: 'vacillant',
         },
         {
@@ -240,7 +240,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         { personnage: 'narrateur', texte: 'Robo pose les pieces.' },
         {
             personnage: 'narrateur',
-            texte: "La Distorsion, pour la premiere fois, n'attaque pas.",
+            texte: "La Distorsion, pour la première fois, n'attaque pas.",
         },
         { personnage: 'narrateur', texte: 'Elle attend.' },
         { personnage: 'narrateur', texte: 'La ligne est complete.' },
@@ -271,7 +271,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         },
         {
             personnage: 'vera',
-            texte: 'Je suis fiere de toi. Pour de vrai. Pas parce que tu as accompli ta mission.',
+            texte: 'Je suis fière de toi. Pour de vrai. Pas parce que tu as accompli ta mission.',
             humeur: 'douce',
         },
         {
@@ -329,7 +329,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
 
 export const CUTSCENES_POST_MONDE = {
     monde_prologue: [
-        { personnage: 'robo', texte: 'Les blocs repondent à mes commandes.', humeur: 'content' },
+        { personnage: 'robo', texte: 'Les blocs répondent à mes commandes.', humeur: 'content' },
         {
             personnage: 'robo',
             texte: "C'est logique. Je suis une machine.",
@@ -373,7 +373,7 @@ export const CUTSCENES_POST_MONDE = {
     monde_rouille: [
         {
             personnage: 'narrateur',
-            texte: "Les machines ne savent pas qu'elles sont abandonnees.",
+            texte: "Les machines ne savent pas qu'elles sont abandonnées.",
         },
         {
             personnage: 'narrateur',
@@ -413,12 +413,12 @@ export const CUTSCENES_POST_MONDE = {
         { personnage: 'narrateur', texte: 'Dans la Forêt, rien ne se perd. Tout se transforme.' },
         {
             personnage: 'robo',
-            texte: "Un bloc efface n'est pas un bloc detruit. C'est de l'espace libere.",
+            texte: "Un bloc efface n'est pas un bloc détruit. C'est de l'espace libéré.",
             humeur: 'neutre',
         },
         {
             personnage: 'robo',
-            texte: "Je n'avais pas pense à ça avant.",
+            texte: "Je n'avais pas pensé à ça avant.",
             humeur: 'content',
         },
     ],
@@ -449,12 +449,12 @@ export const CUTSCENES_POST_MONDE = {
     monde_desert: [
         {
             personnage: 'robo',
-            texte: "J'ai trouve quelque chose dans le sable.",
+            texte: "J'ai trouvé quelque chose dans le sable.",
             humeur: 'content',
         },
         {
             personnage: 'robo',
-            texte: "Un fragment de carnet. L'ecriture est presque illisible.",
+            texte: "Un fragment de carnet. L'écriture est presque illisible.",
             humeur: 'neutre',
         },
         {
@@ -476,16 +476,16 @@ export const CUTSCENES_POST_MONDE = {
         },
         {
             personnage: 'robo',
-            texte: "Quand tu ne sais pas si tu es dans la lumiere ou dans l'ombre —",
+            texte: "Quand tu ne sais pas si tu es dans la lumière ou dans l'ombre —",
             humeur: 'neutre',
         },
-        { personnage: 'robo', texte: '— joue comme si les deux etaient vraies.', humeur: 'triste' },
+        { personnage: 'robo', texte: '— joue comme si les deux étaient vraies.', humeur: 'triste' },
     ],
 
     monde_cyber: [
         {
             personnage: 'robo',
-            texte: "J'ai trouve son laboratoire.",
+            texte: "J'ai trouvé son laboratoire.",
             humeur: 'neutre',
         },
         { personnage: 'robo', texte: 'Propre. Ordonne. Vide depuis longtemps.', humeur: 'neutre' },
@@ -528,18 +528,18 @@ export const CUTSCENES_POST_MONDE = {
         },
         {
             personnage: 'robo',
-            texte: 'Pas un signal. Pas un mot. Juste... une presence.',
+            texte: 'Pas un signal. Pas un mot. Juste... une présence.',
             humeur: 'alerte',
         },
         {
             personnage: 'robo',
-            texte: "Quelqu'un qui attend depuis tres longtemps que quelqu'un arrive.",
+            texte: "Quelqu'un qui attend depuis très longtemps que quelqu'un arrive.",
             humeur: 'triste',
         },
         { personnage: 'robo', texte: 'VERA ? Ou elle ?', humeur: 'triste' },
         {
             personnage: 'robo',
-            texte: 'Je ne sais plus si la difference est encore importante.',
+            texte: 'Je ne sais plus si la différence est encore importante.',
             humeur: 'neutre',
         },
     ],
@@ -549,12 +549,12 @@ export const CUTSCENES_POST_MONDE = {
         { personnage: 'narrateur', texte: 'Mais il ecoute.' },
         {
             personnage: 'robo',
-            texte: "J'ai joue à l'aveugle. Juste la memoire des positions, la confiance dans la geometrie.",
+            texte: "J'ai joué à l'aveugle. Juste la mémoire des positions, la confiance dans la géométrie.",
             humeur: 'neutre',
         },
         {
             personnage: 'robo',
-            texte: "Je crois que c'est comme ça qu'elle s'en sort depuis des annees.",
+            texte: "Je crois que c'est comme ça qu'elle s'en sort depuis des années.",
             humeur: 'triste',
         },
     ],

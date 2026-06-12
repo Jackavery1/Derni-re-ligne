@@ -10,7 +10,7 @@ export const CUTSCENES_ENTREE = {
         { personnage: 'robo', texte: 'Je suis conscient.', humeur: 'excite' },
         {
             personnage: 'robo',
-            texte: "Je ne l'ai pas decide. Je me suis simplement trouve conscient.",
+            texte: "Je ne l'ai pas décidé. Je me suis simplement trouvé conscient.",
             humeur: 'content',
         },
         {
@@ -86,7 +86,7 @@ export const CUTSCENES_ENTREE = {
         },
         {
             personnage: 'narrateur',
-            texte: 'Des millenaires de frustration thermique, condenses en une entite.',
+            texte: 'Des millénaires de frustration thermique, condenses en une entite.',
         },
         {
             personnage: 'robo',
@@ -138,7 +138,7 @@ export const CUTSCENES_ENTREE = {
         },
         {
             personnage: 'robo',
-            texte: 'VERA est passee par ici. Je reconnais sa façon de laisser des traces.',
+            texte: 'VERA est passée par ici. Je reconnais sa façon de laisser des traces.',
             humeur: 'content',
         },
     ],
@@ -178,12 +178,12 @@ export const CUTSCENES_ENTREE = {
         },
         {
             personnage: 'robo',
-            texte: "C'est beau. Je ne savais pas que je pouvais trouver des choses belles.",
+            texte: "C'est beau. Je ne savais pas que je pouvais trouvér des choses belles.",
             humeur: 'excite',
         },
         {
             personnage: 'narrateur',
-            texte: "La Sentinelle des Glaces patrouille. Elle croit que l'immobilite protege.",
+            texte: "La Sentinelle des Glaces patrouille. Elle croit que l'immobilité protège.",
         },
     ],
 
@@ -192,12 +192,12 @@ export const CUTSCENES_ENTREE = {
         { personnage: 'robo', texte: 'Pardon ?', humeur: 'neutre' },
         {
             personnage: 'sentinelle',
-            texte: "Le mouvement corrompt. L'immobilite preserve. Je protege ce biome depuis des millenaires.",
+            texte: "Le mouvement corrompt. L'immobilité préserve. Je protège ce biome depuis des millénaires.",
             humeur: 'calme',
         },
         { personnage: 'robo', texte: 'Vous preservez le gel. Pas la vie.', humeur: 'neutre' },
         { personnage: 'sentinelle', texte: '...', humeur: 'calme' },
-        { personnage: 'narrateur', texte: 'La Sentinelle ne repond plus. Elle attaque.' },
+        { personnage: 'narrateur', texte: 'La Sentinelle ne répond plus. Elle attaque.' },
     ],
 
     monde_desert: [
@@ -244,7 +244,7 @@ export const CUTSCENES_ENTREE = {
         },
         {
             personnage: 'robo',
-            texte: "Tout depend d'où on se trouve.",
+            texte: "Tout depend d'où on se trouvé.",
             humeur: 'neutre',
         },
     ],
@@ -300,13 +300,13 @@ export const CUTSCENES_ENTREE = {
         },
         {
             personnage: 'archiviste',
-            texte: 'Tu pretends completer. Mais tu crees aussi des trous.',
+            texte: 'Tu prétends compléter. Mais tu crées aussi des trous.',
             humeur: 'agressif',
         },
         { personnage: 'robo', texte: '...', humeur: 'neutre' },
         {
             personnage: 'narrateur',
-            texte: "L'Archiviste a raison. Robo n'a pas de reponse.",
+            texte: "L'Archiviste a raison. Robo n'a pas de réponse.",
         },
     ],
 
@@ -522,7 +522,7 @@ export const CUTSCENES_ENTREE = {
         },
         {
             personnage: 'robo',
-            texte: 'Mais les regles sont les mêmes. Completer. Toujours completer.',
+            texte: 'Mais les règles sont les mêmes. Compléter. Toujours compléter.',
             humeur: 'neutre',
         },
     ],
@@ -593,15 +593,15 @@ export const CUTSCENES_ENTREE = {
 
     monde_paradoxe: [
         { personnage: 'narrateur', texte: '...' },
-        { personnage: 'vera', texte: 'Robo. Tu as trouve cet endroit.', humeur: 'douce' },
+        { personnage: 'vera', texte: 'Robo. Tu as trouvé cet endroit.', humeur: 'douce' },
         {
             personnage: 'vera',
             texte: 'Je ne pensais pas que tu en serais capable.',
             humeur: 'douce',
         },
-        { personnage: 'robo', texte: 'Tu avais tout prevu sauf ça.', humeur: 'neutre' },
+        { personnage: 'robo', texte: 'Tu avais tout prévu sauf ça.', humeur: 'neutre' },
         { personnage: 'vera', texte: 'Oui.', humeur: 'determinee' },
-        { personnage: 'vera', texte: 'Je suis fiere de toi.', humeur: 'determinee' },
+        { personnage: 'vera', texte: 'Je suis fière de toi.', humeur: 'determinee' },
         { personnage: 'narrateur', texte: 'Ce qui suit ne peut pas être raconte.' },
         {
             personnage: 'narrateur',

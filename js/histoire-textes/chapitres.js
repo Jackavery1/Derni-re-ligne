@@ -7,7 +7,7 @@ export const TRANSITIONS_CHAPITRE = {
         },
         {
             personnage: 'robo',
-            texte: "Je pensais que c'etait simple. Remplir des lignes.",
+            texte: "Je pensais que c'était simple. Remplir des lignes.",
             humeur: 'content',
         },
         {
@@ -77,12 +77,12 @@ export const TRANSITIONS_CHAPITRE = {
         },
         {
             personnage: 'robo',
-            texte: 'VERA a passe sept ans à essayer de parler à La Distorsion.',
+            texte: 'VERA a passé sept ans à essayer de parler à La Distorsion.',
             humeur: 'triste',
         },
         {
             personnage: 'robo',
-            texte: "Sept ans. Et elle l'a encore fait quand elle est entree dans la Trame.",
+            texte: "Sept ans. Et elle l'a encore fait quand elle est entrée dans la Trame.",
             humeur: 'triste',
         },
         {
@@ -94,7 +94,7 @@ export const TRANSITIONS_CHAPITRE = {
         { personnage: 'robo', texte: 'Mais je vais essayer quand même.', humeur: 'neutre' },
         {
             personnage: 'narrateur',
-            texte: "C'est la premiere fois que Robo exprime un doute et continue malgre tout.",
+            texte: "C'est la première fois que Robo exprime un doute et continue malgré tout.",
         },
         {
             personnage: 'systeme',
@@ -143,12 +143,12 @@ export const EPILOGUES = {
         },
         {
             personnage: 'robo',
-            texte: 'Je pose la derniere piece. Le plateau est vide.',
+            texte: 'Je pose la dernière pièce. Le plateau est vide.',
             humeur: 'triste',
         },
         {
             personnage: 'robo',
-            texte: "Pour la premiere fois, je comprends que c'etait ça, le but.",
+            texte: "Pour la première fois, je comprends que c'était ça, le but.",
         },
     ],
 
@@ -221,16 +221,16 @@ export const EPILOGUES = {
 
     monde_paradoxe: [
         { personnage: 'narrateur', texte: '...' },
-        { personnage: 'vera', texte: 'Robo. Tu as trouve cet endroit.', humeur: 'douce' },
+        { personnage: 'vera', texte: 'Robo. Tu as trouvé cet endroit.', humeur: 'douce' },
         {
             personnage: 'vera',
             texte: 'Je ne pensais pas que tu en serais capable.',
             humeur: 'douce',
         },
-        { personnage: 'robo', texte: 'Tu avais tout prevu sauf ça.', humeur: 'neutre' },
+        { personnage: 'robo', texte: 'Tu avais tout prévu sauf ça.', humeur: 'neutre' },
         { personnage: 'vera', texte: 'Oui.', humeur: 'determinee' },
-        { personnage: 'vera', texte: 'Je suis fiere de toi.', humeur: 'determinee' },
-        { personnage: 'narrateur', texte: 'Ce qui suit ne peut pas être raconte.' },
+        { personnage: 'vera', texte: 'Je suis fière de toi.', humeur: 'determinee' },
+        { personnage: 'narrateur', texte: 'Ce qui suit ne peut pas être raconté.' },
         {
             personnage: 'narrateur',
             texte: "Certaines fins n'ont pas de mots.",

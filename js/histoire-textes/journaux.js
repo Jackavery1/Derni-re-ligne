@@ -14,7 +14,7 @@ export const JOURNAUX_VERA_DIALOGUES = {
         },
         {
             personnage: 'robo',
-            texte: 'Transmission endommagee — fragments manquants. La corruption a efface une partie du message.',
+            texte: 'Transmission endommagée — fragments manquants. La corruption a effacé une partie du message.',
             humeur: 'inquiet',
         },
         { personnage: 'robo', texte: 'Le reste est du sable.', humeur: 'triste' },
@@ -31,12 +31,12 @@ export const DECOUVERTE_LABO = [
     },
     {
         personnage: 'vera',
-        texte: 'Si tu lis ceci, tu as reussi le triple Tetris. Bien joue.',
+        texte: 'Si tu lis ceci, tu as réussi le triple Tetris. Bien joué.',
         humeur: 'douce',
     },
     {
         personnage: 'vera',
-        texte: "J'ai laisse une serrure algorithmique. Seule la precision l'ouvre.",
+        texte: "J'ai laissé une serrure algorithmique. Seule la précision l'ouvre.",
         humeur: 'determinee',
     },
     {
@@ -46,17 +46,17 @@ export const DECOUVERTE_LABO = [
     },
     {
         personnage: 'vera',
-        texte: "Elle n'est pas nee d'une erreur. Elle est nee d'un choix collectif.",
+        texte: "Elle n'est pas née d'une erreur. Elle est née d'un choix collectif.",
         humeur: 'determinee',
     },
     {
         personnage: 'vera',
-        texte: "Des millions de joueurs, sur des millions d'annees, qui abandonnaient leurs parties.",
+        texte: "Des millions de joueurs, sur des millions d'années, qui abandonnaient leurs parties.",
         humeur: 'determinee',
     },
     {
         personnage: 'vera',
-        texte: 'Chaque ligne incomplete laissee dans la Trame. Accumulee. Cristallisee.',
+        texte: 'Chaque ligne incomplète laissée dans la Trame. Accumulée. Cristallisée.',
         humeur: 'inquiete',
     },
     {
@@ -141,7 +141,7 @@ export const FRAGMENTS_VERA_SIGNAL = {
         },
         {
             personnage: 'vera',
-            texte: '...mais tu as appris tout seul. Je suis desolee et fiere en même temps...',
+            texte: '...mais tu as appris tout seul. Je suis désolée et fière en même temps...',
             humeur: 'glitch',
         },
         { personnage: 'systeme', texte: '> FIN DU FRAGMENT', humeur: 'alerte' },
