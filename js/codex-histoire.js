@@ -233,4 +233,21 @@ export const CODEX_HISTOIRE = {
             'La troisieme resolution ne peut être decrite ici. Certaines choses doivent être decouvertes, pas lues.',
         ],
     },
+
+    chronique_paradoxe: {
+        id: 'chronique_paradoxe',
+        chapitre: 'chroniques',
+        titre: 'LE PARADOXE',
+        sousTitre: 'Ce que la Trame se garde',
+        icone: '∅',
+        condition: (s) => (s.mondesHistoireCompletes ?? []).includes('monde_paradoxe'),
+        conditionTexte: 'Atteindre LE PARADOXE',
+        illustration: 'dessinerIllustVide',
+        texte: [
+            'Il existe des fins qui ne laissent pas de transcript. La Trame les connait malgre tout — elle les sent comme des trous dans le recit, des espaces ou le langage refuse d entrer.',
+            'Le Paradoxe n est pas un monde. C est un contretemps : le moment ou le joueur choisit de ne pas completer pour completer autrement. Trois pieces volontaires la ou d autres auraient force la ligne.',
+            'VERA n y a rien ecrit. Robo non plus. Pourtant quelqu un est passe, et la Trame a note : « present, malgre l absence de mots ».',
+            'Les chroniques s arretent ici non par manque de curiosite, mais par respect. Certaines verites ne se decrivent pas. Elles se vivent — puis se taisent.',
+        ],
+    },
 };

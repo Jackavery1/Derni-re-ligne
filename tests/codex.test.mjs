@@ -27,14 +27,14 @@ describe('codex', () => {
         statsGlobales.nbAchievementsDebloques = 0;
     });
 
-    it('contient 42 entrées réparties en 3 chapitres', () => {
-        expect(Object.keys(CODEX)).toHaveLength(42);
+    it('contient 43 entrées réparties en 3 chapitres', () => {
+        expect(Object.keys(CODEX)).toHaveLength(43);
         const mondes = Object.values(CODEX).filter((e) => e.chapitre === 'mondes');
         const reliques = Object.values(CODEX).filter((e) => e.chapitre === 'reliques');
         const chroniques = Object.values(CODEX).filter((e) => e.chapitre === 'chroniques');
         expect(mondes).toHaveLength(14);
         expect(reliques).toHaveLength(9);
-        expect(chroniques).toHaveLength(19);
+        expect(chroniques).toHaveLength(20);
     });
 
     it('chaque illustration référencée existe', () => {

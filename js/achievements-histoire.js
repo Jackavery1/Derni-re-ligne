@@ -269,6 +269,15 @@ export const ACHIEVEMENTS_HISTOIRE = {
         decoration: 'etoiles_trainee',
         condition: () => etatH().mondesCompletes?.includes('monde_trame'),
     },
+    paradoxe_atteint: {
+        id: 'paradoxe_atteint',
+        nom: 'SILENCE',
+        description: 'Atteindre LE PARADOXE du Mode Histoire',
+        icone: '∅',
+        categorie: 'histoire_secrets',
+        decoration: 'vortex_bords',
+        condition: () => etatH().mondesCompletes?.includes('monde_paradoxe'),
+    },
     rouille_maitrise: {
         id: 'rouille_maitrise',
         nom: 'FORGERON',

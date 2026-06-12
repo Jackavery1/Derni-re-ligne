@@ -42,6 +42,7 @@ export const ICONE_PAR_ENTREE = {
     chemins_caches: 'ach_secrets',
     chronique_avantgarde: 'monde_boss_4',
     chronique_fins: 'chronique_fins',
+    chronique_paradoxe: 'monde_vide',
 };
 
 /** @type {Record<string, string>} */
@@ -88,6 +89,7 @@ export const ACCENT_PAR_ENTREE = {
     chemins_caches: '#b400ff',
     chronique_avantgarde: '#b400ff',
     chronique_fins: '#ffffff',
+    chronique_paradoxe: '#ffffff',
 };
 
 const ACCENT_DEFAUT = '#6644cc';

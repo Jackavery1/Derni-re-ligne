@@ -3,9 +3,12 @@ import {
     PORTRAITS,
     CUTSCENES_ENTREE,
     CUTSCENES_POST_MONDE,
+    EPILOGUES,
     DIALOGUES_COMBAT_BOSS,
     INTERLUDES,
 } from '../js/histoire-textes.js';
+import { CODEX_HISTOIRE } from '../js/codex-histoire.js';
+import { ACHIEVEMENTS_HISTOIRE } from '../js/achievements-histoire.js';
 
 function extrairePersonnagesCutscenes(objet) {
     const ids = new Set();
@@ -69,5 +72,23 @@ describe('histoire-textes — cohérence portraits', () => {
 
     it('CUTSCENES_POST_MONDE.monde_trame existe avec au moins 8 lignes', () => {
         expect(CUTSCENES_POST_MONDE.monde_trame?.length).toBeGreaterThanOrEqual(8);
+    });
+
+    it('entree Codex Paradoxe sans accents dans le corps', () => {
+        const entree = CODEX_HISTOIRE.chronique_paradoxe;
+        expect(entree).toBeDefined();
+        expect(entree.titre).toBe('LE PARADOXE');
+        expect(entree.texte.length).toBeGreaterThanOrEqual(3);
+        for (const paragraphe of entree.texte) {
+            expect(paragraphe).not.toMatch(/[éèêëàâùûôîï]/);
+        }
+    });
+
+    it('achievement Paradoxe en categorie secrets avec description definie', () => {
+        const ach = ACHIEVEMENTS_HISTOIRE.paradoxe_atteint;
+        expect(ach).toBeDefined();
+        expect(ach.categorie).toBe('histoire_secrets');
+        expect(ach.description).toBeTruthy();
+        expect(typeof ach.condition).toBe('function');
     });
 });
