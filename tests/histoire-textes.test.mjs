@@ -91,4 +91,11 @@ describe('histoire-textes — cohérence portraits', () => {
         expect(ach.description).toBeTruthy();
         expect(typeof ach.condition).toBe('function');
     });
+
+    it('CUTSCENES_ENTREE.monde_paradoxe differe de EPILOGUES.monde_paradoxe', () => {
+        const entree = CUTSCENES_ENTREE.monde_paradoxe ?? [];
+        const epilogue = EPILOGUES.monde_paradoxe ?? [];
+        expect(JSON.stringify(entree)).not.toBe(JSON.stringify(epilogue));
+        expect(entree.length).toBeGreaterThan(epilogue.length);
+    });
 });

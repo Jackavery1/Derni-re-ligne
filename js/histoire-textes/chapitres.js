@@ -221,19 +221,19 @@ export const EPILOGUES = {
 
     monde_paradoxe: [
         { personnage: 'narrateur', texte: '...' },
-        { personnage: 'vera', texte: 'Robo. Tu as trouvé cet endroit.', humeur: 'douce' },
-        {
-            personnage: 'vera',
-            texte: 'Je ne pensais pas que tu en serais capable.',
-            humeur: 'douce',
-        },
-        { personnage: 'robo', texte: 'Tu avais tout prévu sauf ça.', humeur: 'neutre' },
-        { personnage: 'vera', texte: 'Oui.', humeur: 'determinee' },
-        { personnage: 'vera', texte: 'Je suis fière de toi.', humeur: 'determinee' },
-        { personnage: 'narrateur', texte: 'Ce qui suit ne peut pas être raconté.' },
         {
             personnage: 'narrateur',
-            texte: "Certaines fins n'ont pas de mots.",
+            texte: 'Robo est revenu. La carte ne note rien de plus.',
+        },
+        {
+            personnage: 'robo',
+            texte: "Je n'ai rien à rapporter. Et pourtant, quelque chose a changé.",
+            humeur: 'neutre',
+        },
+        { personnage: 'vera', texte: "C'est suffisant.", humeur: 'douce' },
+        {
+            personnage: 'narrateur',
+            texte: "Certaines fins n'ont pas de mots. Celles-ci non plus — mais elles laissent une place libre.",
         },
     ],
 };
