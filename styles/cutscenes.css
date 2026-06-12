@@ -48,11 +48,101 @@
 
 #ecran-histoire-cutscene.ecran.actif {
     display: grid;
-    grid-template-rows: 1fr auto;
+    grid-template-rows:
+        clamp(96px, 18vh, 180px)
+        minmax(0, 1fr)
+        clamp(120px, 22vh, 200px)
+        auto;
+    grid-template-areas:
+        'narrateur'
+        'portraits'
+        'dialogue'
+        'barre';
     align-content: stretch;
     overflow: hidden;
-    padding: 0 0 16px;
-    gap: 8px;
+    padding: 0 0 clamp(8px, 1.5vh, 16px);
+    gap: 0;
+}
+
+#zone-narration-cutscene {
+    grid-area: narrateur;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 0;
+    text-align: center;
+    z-index: 3;
+    padding: 0 clamp(16px, 4vw, 24px);
+    pointer-events: none;
+}
+
+#ecran-histoire-cutscene.cutscene-mode-dialogue #zone-narration-cutscene {
+    visibility: hidden;
+}
+
+#ecran-histoire-cutscene.cutscene-mode-narration #zone-narration-cutscene {
+    visibility: visible;
+}
+
+#rangee-portraits-cutscene {
+    grid-area: portraits;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    align-self: stretch;
+    min-height: 0;
+    padding: clamp(12px, 2vh, 24px) 4% clamp(8px, 1vh, 16px);
+    position: relative;
+    z-index: 2;
+}
+
+#zone-dialogue-cutscene {
+    grid-area: dialogue;
+    display: grid;
+    grid-template-columns: minmax(0, 180px) minmax(0, 1fr) minmax(0, 180px);
+    gap: 0 16px;
+    align-items: start;
+    align-self: stretch;
+    min-height: 0;
+    padding: 0 4%;
+    position: relative;
+    z-index: 2;
+}
+
+#boite-dialogue-cutscene {
+    grid-column: 2;
+    background: rgba(4, 4, 18, 0.9);
+    border: 1px solid rgba(0, 221, 200, 0.45);
+    border-radius: 3px;
+    padding: 14px 20px 12px;
+    position: relative;
+    min-height: 110px;
+    max-width: min(640px, 52vw);
+    width: 100%;
+    justify-self: center;
+    box-shadow:
+        0 0 24px rgba(0, 0, 0, 0.8),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+#ecran-histoire-cutscene[data-personnage='robo'] #boite-dialogue-cutscene {
+    grid-column: 1 / 3;
+    justify-self: stretch;
+    max-width: min(640px, calc(52vw + 180px));
+}
+
+#ecran-histoire-cutscene[data-personnage='vera'] #boite-dialogue-cutscene,
+#ecran-histoire-cutscene[data-personnage='distorsion'] #boite-dialogue-cutscene,
+#ecran-histoire-cutscene[data-personnage='systeme'] #boite-dialogue-cutscene,
+#ecran-histoire-cutscene[data-personnage='brasier'] #boite-dialogue-cutscene,
+#ecran-histoire-cutscene[data-personnage='sentinelle'] #boite-dialogue-cutscene,
+#ecran-histoire-cutscene[data-personnage='archiviste'] #boite-dialogue-cutscene,
+#ecran-histoire-cutscene[data-personnage='avantgarde'] #boite-dialogue-cutscene {
+    grid-column: 2 / 4;
+    justify-self: stretch;
+    max-width: min(640px, calc(52vw + 180px));
 }
 
 #canvas-cutscene-bg {
@@ -62,17 +152,6 @@
     pointer-events: none;
     width: 100%;
     height: 100%;
-}
-
-#rangee-portraits-cutscene {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    align-self: stretch;
-    min-height: 0;
-    padding: clamp(20px, 5vh, 56px) 4% clamp(10px, 2vh, 20px);
-    position: relative;
-    z-index: 1;
 }
 
 #canvas-portrait-gauche,
@@ -101,22 +180,6 @@
 #canvas-portrait-droite.absent {
     opacity: 0;
     pointer-events: none;
-}
-
-#boite-dialogue-cutscene {
-    flex: 1;
-    background: rgba(4, 4, 18, 0.9);
-    border: 1px solid rgba(0, 221, 200, 0.45);
-    border-radius: 3px;
-    padding: 14px 20px 12px;
-    margin: 0 16px 8px;
-    position: relative;
-    min-height: 110px;
-    max-width: min(640px, 52vw);
-    align-self: flex-end;
-    box-shadow:
-        0 0 24px rgba(0, 0, 0, 0.8),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
 #nom-perso-dialogue {
@@ -159,26 +222,6 @@
     }
 }
 
-#zone-narration-cutscene {
-    position: absolute;
-    top: clamp(40px, 7vh, 96px);
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(82vw, 760px);
-    text-align: center;
-    z-index: 3;
-    padding: 0 24px;
-    pointer-events: none;
-}
-
-#ecran-histoire-cutscene.cutscene-mode-dialogue #zone-narration-cutscene {
-    display: none !important;
-}
-
-#ecran-histoire-cutscene.cutscene-mode-narration #zone-narration-cutscene {
-    display: block !important;
-}
-
 #texte-narration-cutscene {
     font-family: var(--font-narratif, 'Crimson Pro', Georgia, serif);
     font-size: clamp(22px, 2.6vw, 28px);
@@ -201,9 +244,8 @@
     pointer-events: none;
 }
 
-#ecran-histoire-cutscene.cutscene-mode-narration #rangee-portraits-cutscene {
-    align-items: center;
-    padding-top: clamp(48px, 12vh, 120px);
+#ecran-histoire-cutscene.cutscene-mode-dialogue #boite-dialogue-cutscene {
+    visibility: visible;
 }
 
 #ecran-histoire-cutscene.cutscene-mode-narration #canvas-portrait-gauche,
@@ -245,15 +287,16 @@
 }
 
 #ecran-histoire-cutscene.mode-narrateur #zone-narration-cutscene {
-    display: none !important;
+    visibility: hidden;
 }
 
 #ecran-histoire-cutscene.mode-narrateur #rangee-portraits-cutscene {
-    position: absolute;
-    inset: 0;
-    align-items: stretch;
-    justify-content: center;
-    padding: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#ecran-histoire-cutscene.mode-narrateur #zone-dialogue-cutscene {
+    position: relative;
     z-index: 3;
     pointer-events: none;
 }
@@ -263,7 +306,9 @@
     left: 50%;
     bottom: clamp(72px, 16vh, 140px);
     transform: translateX(-50%);
+    grid-column: 1 / -1;
     width: min(84vw, 780px);
+    max-width: none;
     margin: 0;
     padding: 0 20px;
     background: transparent;
@@ -308,6 +353,7 @@ body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
 }
 
 .cutscene-barre-bas {
+    grid-area: barre;
     position: relative;
     z-index: 2;
     display: grid;
@@ -608,94 +654,65 @@ body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
     color: rgba(255, 255, 255, 0.75);
 }
 
-/* Mobile : portraits côte à côte au-dessus de la bulle de dialogue */
+/* Mobile : même grille à zones fixes, portraits compacts */
 @media (max-width: 600px) {
-    #ecran-histoire-cutscene.cutscene-mode-dialogue #rangee-portraits-cutscene {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-areas:
-            'portrait-gauche portrait-droite'
-            'dialogue dialogue';
-        align-items: end;
-        justify-items: center;
-        gap: 8px 12px;
-        flex: 1;
-        min-height: 0;
-        padding: clamp(8px, 2vh, 16px) 12px 0;
+    #ecran-histoire-cutscene.ecran.actif {
+        grid-template-rows:
+            clamp(72px, 14vh, 140px)
+            minmax(0, 1fr)
+            clamp(96px, 18vh, 160px)
+            auto;
     }
 
-    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-gauche {
-        grid-area: portrait-gauche;
-        justify-self: end;
+    #rangee-portraits-cutscene {
+        justify-content: center;
+        gap: clamp(8px, 3vw, 16px);
+        padding: clamp(8px, 1.5vh, 16px) 12px clamp(6px, 1vh, 12px);
     }
 
-    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-droite {
-        grid-area: portrait-droite;
-        justify-self: start;
-    }
-
-    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-gauche,
-    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-droite {
-        position: static;
+    #canvas-portrait-gauche,
+    #canvas-portrait-droite {
         width: min(42vw, 148px);
         height: min(58vw, 204px);
-        flex-shrink: 0;
-        transition:
-            opacity 0.25s ease,
-            transform 0.25s ease;
     }
 
-    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-gauche.parle,
-    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-droite.parle {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-gauche.ecoute,
-    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-droite.ecoute {
-        opacity: 0.45;
+    #canvas-portrait-gauche.ecoute,
+    #canvas-portrait-droite.ecoute {
         transform: translateY(6px);
     }
 
-    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-gauche.absent,
-    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-droite.absent {
-        opacity: 0;
+    #canvas-portrait-gauche.absent,
+    #canvas-portrait-droite.absent {
         visibility: hidden;
-        pointer-events: none;
     }
 
-    #ecran-histoire-cutscene.cutscene-mode-dialogue:has(#canvas-portrait-gauche.absent):not(
-            :has(#canvas-portrait-droite.absent)
-        )
-        #canvas-portrait-droite {
-        grid-column: 1 / -1;
-        justify-self: center;
+    #zone-dialogue-cutscene {
+        grid-template-columns: minmax(0, min(42vw, 148px)) minmax(0, 1fr) minmax(
+                0,
+                min(42vw, 148px)
+            );
+        gap: 0 8px;
+        padding: 0 12px;
     }
 
-    #ecran-histoire-cutscene.cutscene-mode-dialogue:has(#canvas-portrait-droite.absent):not(
-            :has(#canvas-portrait-gauche.absent)
-        )
-        #canvas-portrait-gauche {
-        grid-column: 1 / -1;
-        justify-self: center;
-    }
-
-    #ecran-histoire-cutscene.cutscene-mode-dialogue #boite-dialogue-cutscene {
-        grid-area: dialogue;
-        position: static;
-        width: 100%;
-        max-width: none;
-        margin: 0;
+    #boite-dialogue-cutscene {
         min-height: 96px;
-        align-self: end;
+        max-width: none;
     }
 
-    #ecran-histoire-cutscene.cutscene-mode-narration #zone-narration-cutscene {
-        top: clamp(32px, 6vh, 72px);
-        width: min(92vw, 520px);
+    #ecran-histoire-cutscene[data-personnage='robo'] #boite-dialogue-cutscene,
+    #ecran-histoire-cutscene[data-personnage='vera'] #boite-dialogue-cutscene,
+    #ecran-histoire-cutscene[data-personnage='distorsion'] #boite-dialogue-cutscene,
+    #ecran-histoire-cutscene[data-personnage='systeme'] #boite-dialogue-cutscene,
+    #ecran-histoire-cutscene[data-personnage='brasier'] #boite-dialogue-cutscene,
+    #ecran-histoire-cutscene[data-personnage='sentinelle'] #boite-dialogue-cutscene,
+    #ecran-histoire-cutscene[data-personnage='archiviste'] #boite-dialogue-cutscene,
+    #ecran-histoire-cutscene[data-personnage='avantgarde'] #boite-dialogue-cutscene {
+        grid-column: 1 / -1;
+        max-width: none;
     }
 
-    #ecran-histoire-cutscene.cutscene-mode-narration #texte-narration-cutscene {
+    #texte-narration-cutscene {
         font-size: clamp(18px, 4.8vw, 24px);
     }
 }

@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v30';
+const VERSION_SHELL = 'dl-shell-v32';
 const VERSION_MEDIAS = 'dl-medias-v1';
 
 const MAX_PISTES_EN_CACHE = 12;
@@ -206,6 +206,12 @@ const FICHIERS_A_CACHER = [
     './js/partie.js',
     './js/piece-jeu.js',
     './js/planificateur-raf.js',
+    './js/portrait-archiviste-rendu.js',
+    './js/portrait-avantgarde-rendu.js',
+    './js/portrait-brasier-rendu.js',
+    './js/portrait-rendu-utils.js',
+    './js/portrait-sentinelle-rendu.js',
+    './js/portrait-vera-rendu.js',
     './js/portraits-cutscene-etat.js',
     './js/portraits-cutscene-personnages.js',
     './js/portraits-cutscene-utils.js',

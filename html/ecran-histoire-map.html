@@ -89,7 +89,12 @@
     <div class="letterbox-haut" aria-hidden="true"></div>
     <div class="letterbox-bas" aria-hidden="true"></div>
 
-    <div id="zone-narration-cutscene" aria-live="polite" aria-atomic="true">
+    <div
+        id="zone-narration-cutscene"
+        class="cutscene-grille-narrateur"
+        aria-live="polite"
+        aria-atomic="true"
+    >
         <p id="cutscene-instructions-clavier" class="sr-only">
             Espace ou Entree pour avancer. Echap pour passer toute la scene.
         </p>
@@ -97,14 +102,17 @@
         <span id="indicateur-suite-narration" aria-hidden="true">▼</span>
     </div>
 
-    <div id="rangee-portraits-cutscene">
+    <div id="rangee-portraits-cutscene" class="cutscene-grille-portraits">
         <canvas id="canvas-portrait-gauche" width="180" height="260" class="absent"></canvas>
+        <canvas id="canvas-portrait-droite" width="180" height="260" class="absent"></canvas>
+    </div>
+
+    <div id="zone-dialogue-cutscene" class="cutscene-grille-dialogue">
         <div id="boite-dialogue-cutscene" aria-live="polite" aria-atomic="true">
             <div id="nom-perso-dialogue"></div>
             <div id="texte-dialogue-cutscene"></div>
             <span id="indicateur-suite-dialogue">▼</span>
         </div>
-        <canvas id="canvas-portrait-droite" width="180" height="260" class="absent"></canvas>
     </div>
 
     <div class="cutscene-barre-bas">
