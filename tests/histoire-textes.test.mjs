@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
     PORTRAITS,
     CUTSCENES_ENTREE,
+    CUTSCENES_POST_MONDE,
     DIALOGUES_COMBAT_BOSS,
     INTERLUDES,
 } from '../js/histoire-textes.js';
@@ -64,5 +65,9 @@ describe('histoire-textes — cohérence portraits', () => {
         expect(lignes.some((l) => l.personnage === 'brasier' && l.texte.includes('APPROCHE'))).toBe(
             true
         );
+    });
+
+    it('CUTSCENES_POST_MONDE.monde_trame existe avec au moins 8 lignes', () => {
+        expect(CUTSCENES_POST_MONDE.monde_trame?.length).toBeGreaterThanOrEqual(8);
     });
 });

@@ -581,4 +581,43 @@ export const CUTSCENES_POST_MONDE = {
             humeur: 'triste',
         },
     ],
+
+    monde_trame: [
+        {
+            personnage: 'narrateur',
+            texte: "La Trame Primordiale n'attend personne. Elle accumule — depuis toujours — ce que les joueurs laissent tomber.",
+        },
+        {
+            personnage: 'narrateur',
+            texte: "Pourtant, quelque chose change quand un visiteur ne s'arrête pas à moitié chemin.",
+        },
+        {
+            personnage: 'robo',
+            texte: "Je croyais chercher VERA. Je comprends maintenant que je complétais ce qu'elle avait commencé le Jour 2 191.",
+            humeur: 'neutre',
+        },
+        {
+            personnage: 'robo',
+            texte: "Chaque ligne que j'ai tenue jusqu'au bout est restée ici. Pas comme un abandon. Comme un dépôt.",
+            humeur: 'content',
+        },
+        {
+            personnage: 'narrateur',
+            texte: "Dans le tissu, une phrase — pas une voix. Une trace qu'elle a laissée il y a longtemps :",
+        },
+        {
+            personnage: 'vera',
+            texte: "« Si tu lis ceci dans la Trame, c'est que tu as tout gardé. Tu peux partir. Ou tu peux rester. Les deux comptent. »",
+            humeur: 'douce',
+        },
+        {
+            personnage: 'robo',
+            texte: "Elle savait que quelqu'un finirait par arriver avec des lignes complètes. Pas des mots.",
+            humeur: 'triste',
+        },
+        {
+            personnage: 'narrateur',
+            texte: "Au-dessus, quelque part, une fin attend encore celui qui osera ne pas l'effacer.",
+        },
+    ],
 };
