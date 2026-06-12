@@ -1,6 +1,6 @@
 # Mode Histoire
 
-Campagne « La Fragmentation » : 17 mondes visibles + 3 secrets, 4 boss, 9 journaux VERA, 3 fins.
+Campagne « La Fragmentation » : 17 mondes visibles + 3 secrets, 5 boss (Brasier, Sentinelle, Archiviste, Avant-Garde, La Distorsion), 9 journaux VERA, 3 fins.
 
 ## Fichiers clés
 

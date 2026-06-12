@@ -98,4 +98,13 @@ export const PORTRAITS = {
         vitesseMs: 70,
         nomStyle: 'normal',
     },
+    archiviste_voix: {
+        emoji: '📚',
+        couleur: '#ff00ff',
+        nom: 'ARCHIVISTE',
+        fondId: 'archiviste',
+        police: 'terminal',
+        vitesseMs: 22,
+        nomStyle: 'normal',
+    },
 };

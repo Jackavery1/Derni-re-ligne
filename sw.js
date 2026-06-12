@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v19';
+const VERSION_SHELL = 'dl-shell-v20';
 const VERSION_MEDIAS = 'dl-medias-v1';
 
 const MAX_PISTES_EN_CACHE = 12;

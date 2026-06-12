@@ -36,6 +36,7 @@ describe('histoire-textes — cohérence portraits', () => {
     it('PORTRAITS contient les voix de boss', () => {
         expect(PORTRAITS.brasier_voix).toBeDefined();
         expect(PORTRAITS.sentinelle_voix).toBeDefined();
+        expect(PORTRAITS.archiviste_voix).toBeDefined();
         expect(PORTRAITS.brasier).toBeDefined();
     });
 
