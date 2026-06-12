@@ -1,38 +1,39 @@
 import { logger } from './logger.js';
 import { abonnerBoucleMenuUnifiee, desabonnerBoucleMenuUnifiee } from './planificateur-raf.js';
 
-const C = {
-    ROUGE_VIF: '#d42b2b',
-    ROUGE_MID: '#b32020',
-    ROUGE_OMB: '#8c1010',
-    ROUGE_REF: '#e84040',
-    VIOLET_VIF: '#6644cc',
-    VIOLET_MID: '#5533aa',
-    VIOLET_OMB: '#3d2280',
-    VIOLET_REF: '#7755dd',
-    CYAN_EXT: '#00ddc8',
-    CYAN_INT: '#00b8a8',
-    BLANC_REF: '#ddfff8',
-    NOIR_PUP: '#081820',
-    CYAN_DENT: '#00d4c0',
-    NOIR_ECART: '#091a18',
-    GRIS_TIGE: '#8899aa',
-    GRIS_BASE: '#667788',
-    VERT_LED: '#00ff44',
-    VERT_LED_OMB: '#007722',
-    VERT_ETINCELLE: '#aaff88',
-    GRIS_CLR: '#99aabb',
-    GRIS_OMB: '#445566',
-    GRIS_COIL_A: '#8899aa',
-    GRIS_COIL_B: '#445566',
-    ROUGE_PIED: '#cc2222',
-    ROUGE_PIED_OMB: '#991515',
-    VIOLET_SOURCIL: '#5533aa',
-    CIRCUIT_FOND: '#2a1a55',
-    CIRCUIT_LIGNE: '#00ddc8',
-    CIRCUIT_NODE: '#cc44ff',
-    CIRCUIT_NODE2: '#ff44aa',
+export const PALETTE_ROBO = {
+    TETE: '#d62b2b',
+    TETE_BAND: '#a81f1f',
+    RIVETS: '#7a1515',
+    TETE_REF: '#e84040',
+    SCLERE: '#eaf6ff',
+    PUPILLE: '#1a3c46',
+    OEIL_CONTOUR: '#5a1010',
+    REFLET: '#ffffff',
+    REFLET_SEC: '#b8e8ff',
+    BOUCHE_FOND: '#0d2b2e',
+    DENTS: '#35e0e6',
+    TORSE: '#7a4fc0',
+    TORSE_OMB: '#5533aa',
+    TORSE_REF: '#7755dd',
+    PANNEAU: '#2a1840',
+    CIRCUIT_MAG: '#ff2d78',
+    CIRCUIT_CYAN: '#35e0e6',
+    PINCE: '#5a3a8a',
+    RESSORT: '#9aa3ad',
+    RESSORT_OMB: '#445566',
+    BOTTE: '#d62b2b',
+    BOTTE_OMB: '#991515',
+    ANTENNE: '#9aa3ad',
+    ANTENNE_BASE: '#667788',
+    LED: '#4bff5a',
+    LED_OMB: '#007722',
+    ETINCELLE: '#aaff88',
+    ALERTE_LED: '#ffaa00',
+    OMBRE_PIED: '#991515',
 };
+
+const C = PALETTE_ROBO;
 
 /** @type {'neutre'|'content'|'excite'|'triste'|'alerte'} */
 let _humeurActuelle = 'neutre';
@@ -69,7 +70,7 @@ function _calculerAnimRobo(humeur, t, E) {
     const anim = {
         offsetY: 0,
         antenneLedAlpha: 0,
-        antenneLedCouleur: C.VERT_LED,
+        antenneLedCouleur: C.LED,
         antenneLedR: 0,
         inclinaisonTete: 0,
         angleBrasG: 0,
@@ -81,15 +82,16 @@ function _calculerAnimRobo(humeur, t, E) {
         case 'content':
             anim.offsetY = Math.sin(t * 2.5) * 3 * E;
             anim.antenneLedAlpha = 0.7 + Math.sin(t * 3) * 0.3;
-            anim.antenneLedCouleur = C.VERT_LED;
+            anim.antenneLedCouleur = C.LED;
             anim.antenneLedR = 7 * E;
             anim.angleBrasG = (-35 * Math.PI) / 180;
             anim.angleBrasD = (35 * Math.PI) / 180;
+            anim.ressortOsc = Math.sin(t * 2) * 2 * E;
             break;
         case 'excite':
             anim.offsetY = -Math.abs(Math.sin(t * 5)) * 6 * E;
             anim.antenneLedAlpha = 1;
-            anim.antenneLedCouleur = C.VERT_LED;
+            anim.antenneLedCouleur = C.LED;
             anim.antenneLedR = 9 * E;
             anim.angleBrasG = (-65 * Math.PI) / 180 + Math.sin(t * 5) * ((10 * Math.PI) / 180);
             anim.angleBrasD = (65 * Math.PI) / 180 - Math.sin(t * 5) * ((10 * Math.PI) / 180);
@@ -104,13 +106,18 @@ function _calculerAnimRobo(humeur, t, E) {
         case 'alerte':
             anim.offsetY = Math.sin(t * 1.8) * 2 * E;
             anim.antenneLedAlpha = 0.5 + Math.sin(t * 6) * 0.5;
-            anim.antenneLedCouleur = '#ffaa00';
+            anim.antenneLedCouleur = C.ALERTE_LED;
             anim.antenneLedR = 6 * E;
             anim.angleBrasG = (-15 * Math.PI) / 180 + Math.sin(t * 8) * ((5 * Math.PI) / 180);
             anim.angleBrasD = (15 * Math.PI) / 180 - Math.sin(t * 8) * ((5 * Math.PI) / 180);
             break;
         default:
             anim.offsetY = Math.sin(t * 1.5) * 2 * E;
+            anim.antenneLedAlpha = 0.55 + Math.sin(t * 2.2) * 0.25;
+            anim.antenneLedR = 6 * E;
+            anim.angleBrasG = (-10 * Math.PI) / 180;
+            anim.angleBrasD = (10 * Math.PI) / 180;
+            anim.ressortOsc = Math.sin(t * 2) * 2 * E;
             break;
     }
 
@@ -141,7 +148,8 @@ function _dessinerPieds(ctx, cx, E, offsetY, h) {
     const hP = 11 * E;
 
     ctx.save();
-    ctx.fillStyle = `rgba(153, 21, 21, 0.6)`;
+    ctx.globalAlpha = 0.6;
+    ctx.fillStyle = C.OMBRE_PIED;
     ctx.beginPath();
     ctx.ellipse(xG + wP / 2, yG + hP + 2 * E, 10 * E, 3 * E, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -150,7 +158,7 @@ function _dessinerPieds(ctx, cx, E, offsetY, h) {
     ctx.fill();
     ctx.restore();
 
-    ctx.fillStyle = C.ROUGE_PIED;
+    ctx.fillStyle = C.BOTTE;
     _rectArrondi(ctx, xG, yG, wP, hP, 6 * E);
     ctx.fill();
     _rectArrondi(ctx, xD, yG, wP, hP, 6 * E);
@@ -165,14 +173,14 @@ function _dessinerSegmentRessort(ctx, x, y, w, h, couleur) {
 
 let E_GLOBAL = 1;
 
-function _dessinerJambes(ctx, cx, E, offsetY, h) {
+function _dessinerJambes(ctx, cx, E, offsetY, h, ressortOsc = 0) {
     const cols = [
         { refX: 38, w: 12 },
         { refX: 70, w: 12 },
     ];
     cols.forEach(({ refX, w }) => {
         const x = _px(cx, refX, E);
-        const y0 = _py(131, E, offsetY, h);
+        const y0 = _py(131, E, offsetY + ressortOsc, h);
         const segH = 4 * E;
         const segW = w * E;
         for (let i = 0; i < 4; i++) {
@@ -182,7 +190,7 @@ function _dessinerJambes(ctx, cx, E, offsetY, h) {
                 y0 + i * (segH + 1 * E),
                 segW,
                 segH,
-                i % 2 === 0 ? C.GRIS_COIL_A : C.GRIS_COIL_B
+                i % 2 === 0 ? C.RESSORT : C.RESSORT_OMB
             );
         }
     });
@@ -194,11 +202,11 @@ function _dessinerPanneauCircuit(ctx, cx, E, offsetY, h) {
     const pw = 58 * E;
     const ph = 32 * E;
 
-    ctx.fillStyle = C.CIRCUIT_FOND;
+    ctx.fillStyle = C.PANNEAU;
     _rectArrondi(ctx, x, y, pw, ph, 4 * E);
     ctx.fill();
 
-    ctx.strokeStyle = C.CIRCUIT_LIGNE;
+    ctx.strokeStyle = C.CIRCUIT_CYAN;
     ctx.lineWidth = Math.max(1, 1.5 * E);
     const midY = y + ph / 2;
     ctx.beginPath();
@@ -215,10 +223,10 @@ function _dessinerPanneauCircuit(ctx, cx, E, offsetY, h) {
     });
 
     const nodes = [
-        { nx: x + pw * 0.28, ny: midY, c: C.CIRCUIT_NODE },
-        { nx: x + pw * 0.72, ny: midY, c: C.CIRCUIT_NODE2 },
-        { nx: x + 4 * E, ny: midY, c: C.CIRCUIT_NODE },
-        { nx: x + pw - 4 * E, ny: midY, c: C.CIRCUIT_NODE2 },
+        { nx: x + pw * 0.28, ny: midY, c: C.CIRCUIT_MAG },
+        { nx: x + pw * 0.72, ny: midY, c: C.CIRCUIT_CYAN },
+        { nx: x + 4 * E, ny: midY, c: C.CIRCUIT_MAG },
+        { nx: x + pw - 4 * E, ny: midY, c: C.CIRCUIT_CYAN },
     ];
     nodes.forEach(({ nx, ny, c }) => {
         ctx.fillStyle = c;
@@ -246,9 +254,9 @@ function _dessinerCorps(ctx, cx, E, offsetY, h) {
     const bh = 44 * E;
 
     const grad = ctx.createLinearGradient(x, y, x, y + bh);
-    grad.addColorStop(0, C.VIOLET_VIF);
-    grad.addColorStop(0.5, C.VIOLET_MID);
-    grad.addColorStop(1, C.VIOLET_OMB);
+    grad.addColorStop(0, C.TORSE);
+    grad.addColorStop(0.5, C.TORSE_OMB);
+    grad.addColorStop(1, C.PINCE);
     ctx.fillStyle = grad;
     _rectArrondi(ctx, x, y, bw, bh, 7 * E);
     ctx.fill();
@@ -256,11 +264,11 @@ function _dessinerCorps(ctx, cx, E, offsetY, h) {
     _dessinerPanneauCircuit(ctx, cx, E, offsetY, h);
 }
 
-function _dessinerBras(ctx, cx, E, offsetY, h, cote, angle, _humeur) {
+function _dessinerBras(ctx, cx, E, offsetY, h, cote, angle, _humeur, ressortOsc = 0) {
     const isGauche = cote === 'g';
     const attacheRefX = isGauche ? 16.5 : 103.5;
     const attacheX = _px(cx, attacheRefX, E);
-    const attacheY = _py(91, E, offsetY, h);
+    const attacheY = _py(91, E, offsetY + ressortOsc, h);
     const segW = 14 * E;
     const segH = 5 * E;
     const nbSeg = 6;
@@ -269,7 +277,7 @@ function _dessinerBras(ctx, cx, E, offsetY, h, cote, angle, _humeur) {
     ctx.translate(attacheX, attacheY);
     ctx.rotate(angle);
 
-    ctx.fillStyle = C.VIOLET_MID;
+    ctx.fillStyle = C.TORSE_OMB;
     _rectArrondi(ctx, -6 * E, -2 * E, 12 * E, 8 * E, 3 * E);
     ctx.fill();
 
@@ -280,12 +288,12 @@ function _dessinerBras(ctx, cx, E, offsetY, h, cote, angle, _humeur) {
             i * (segH + 1 * E),
             segW,
             segH,
-            i % 2 === 0 ? C.GRIS_COIL_A : C.GRIS_COIL_B
+            i % 2 === 0 ? C.RESSORT : C.RESSORT_OMB
         );
     }
 
     const mainY = nbSeg * (segH + 1 * E);
-    ctx.fillStyle = C.VIOLET_VIF;
+    ctx.fillStyle = C.PINCE;
     _rectArrondi(ctx, -6 * E, mainY, 12 * E, 8 * E, 3 * E);
     ctx.fill();
 
@@ -295,18 +303,18 @@ function _dessinerBras(ctx, cx, E, offsetY, h, cote, angle, _humeur) {
 function _dessinerCou(ctx, cx, E, offsetY, h) {
     const x = _px(cx, 50, E);
     const y = _py(80, E, offsetY, h);
-    ctx.fillStyle = C.GRIS_BASE;
+    ctx.fillStyle = C.ANTENNE_BASE;
     ctx.fillRect(x, y, 20 * E, 7 * E);
 }
 
 function _dessinerVis(ctx, cx, E, offsetY, h, refX, refY) {
     const x = _px(cx, refX, E);
     const y = _py(refY, E, offsetY, h);
-    ctx.fillStyle = C.GRIS_CLR;
+    ctx.fillStyle = C.ANTENNE;
     ctx.beginPath();
     ctx.arc(x, y, 3.5 * E, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = C.GRIS_OMB;
+    ctx.fillStyle = C.RESSORT_OMB;
     ctx.beginPath();
     ctx.arc(x, y, 1.5 * E, 0, Math.PI * 2);
     ctx.fill();
@@ -319,10 +327,10 @@ function _dessinerTete(ctx, cx, E, offsetY, h) {
     const th = 58 * E;
 
     const grad = ctx.createLinearGradient(x, y, x, y + th);
-    grad.addColorStop(0, C.ROUGE_REF);
-    grad.addColorStop(0.25, C.ROUGE_VIF);
-    grad.addColorStop(0.65, C.ROUGE_MID);
-    grad.addColorStop(1, C.ROUGE_OMB);
+    grad.addColorStop(0, C.TETE_REF);
+    grad.addColorStop(0.25, C.TETE);
+    grad.addColorStop(0.65, C.TETE_BAND);
+    grad.addColorStop(1, C.RIVETS);
     ctx.fillStyle = grad;
     _rectArrondi(ctx, x, y, tw, th, 9 * E);
     ctx.fill();
@@ -336,7 +344,7 @@ function _dessinerTete(ctx, cx, E, offsetY, h) {
 }
 
 function _dessinerOreilles(ctx, cx, E, offsetY, h) {
-    ctx.fillStyle = C.ROUGE_MID;
+    ctx.fillStyle = C.TETE_BAND;
     const og = { x: _px(cx, 11, E), y: _py(40, E, offsetY, h), w: 9 * E, h: 18 * E };
     const od = { x: _px(cx, 100, E), y: _py(40, E, offsetY, h), w: 9 * E, h: 18 * E };
     _rectArrondi(ctx, og.x, og.y, og.w, og.h, 3 * E);
@@ -347,57 +355,62 @@ function _dessinerOreilles(ctx, cx, E, offsetY, h) {
 
 function _dessinerOeil(ctx, cx, cy, E, humeur, cote, fermer = false) {
     if (fermer) {
-        ctx.fillStyle = C.NOIR_PUP;
+        ctx.fillStyle = C.OEIL_CONTOUR;
         ctx.fillRect(cx - 14 * E, cy - 2 * E, 28 * E, 4 * E);
         return;
     }
     const dir = cote === 'g' ? -1 : 1;
-    let irisR = 12 * E;
-    let irisIntR = 9 * E;
-    let pupR = 4 * E;
+    let sclereR = 13 * E;
+    let pupR = 5.5 * E;
+    let pupDx = dir * 0.6 * E;
     let pupDy = 0;
 
-    if (humeur === 'content') {
-        irisR = 13 * E;
-        pupR = 3 * E;
-        pupDy = -2 * E;
+    if (humeur === 'content' || humeur === 'neutre') {
+        sclereR = 13.5 * E;
+        pupR = 5 * E;
+        pupDy = -1 * E;
     } else if (humeur === 'excite') {
-        irisR = 14 * E;
-        irisIntR = 11 * E;
-        pupR = 2 * E;
+        sclereR = 14.5 * E;
+        pupR = 4 * E;
         pupDy = -2 * E;
+    } else if (humeur === 'triste') {
+        sclereR = 12 * E;
+        pupR = 4 * E;
+        pupDy = 2 * E;
+    } else if (humeur === 'alerte') {
+        sclereR = 14 * E;
+        pupR = 6 * E;
+        pupDy = 0;
     }
 
-    ctx.fillStyle = C.NOIR_PUP;
+    ctx.strokeStyle = C.OEIL_CONTOUR;
+    ctx.lineWidth = Math.max(1, 1.2 * E);
+    ctx.fillStyle = C.SCLERE;
     ctx.beginPath();
-    ctx.arc(cx, cy, 14 * E, 0, Math.PI * 2);
+    ctx.arc(cx, cy, sclereR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = C.PUPILLE;
+    ctx.beginPath();
+    ctx.arc(cx + pupDx, cy + pupDy, pupR, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = humeur === 'excite' ? C.BLANC_REF : C.CYAN_EXT;
+    ctx.fillStyle = C.REFLET;
     ctx.beginPath();
-    ctx.arc(cx, cy, irisR, 0, Math.PI * 2);
+    ctx.arc(cx - 3.5 * E * dir, cy - 4 * E, 2.2 * E, 0, Math.PI * 2);
     ctx.fill();
-
-    ctx.fillStyle = C.CYAN_INT;
+    ctx.fillStyle = C.REFLET_SEC;
     ctx.beginPath();
-    ctx.arc(cx, cy, irisIntR, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = C.NOIR_PUP;
-    ctx.beginPath();
-    ctx.arc(cx, cy + pupDy, pupR, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = C.BLANC_REF;
-    ctx.beginPath();
-    ctx.arc(cx - 3 * E * dir, cy - 4 * E, 3 * E, Math.PI, Math.PI * 1.5);
+    ctx.arc(cx + 2 * E * dir, cy + 2 * E, 1 * E, 0, Math.PI * 2);
     ctx.fill();
 
     if (humeur === 'triste') {
         ctx.save();
-        ctx.fillStyle = 'rgba(140, 16, 16, 0.6)';
+        ctx.fillStyle = C.TETE_BAND;
+        ctx.globalAlpha = 0.55;
         ctx.beginPath();
-        ctx.arc(cx, cy - 6 * E, 12 * E, Math.PI, 0);
+        ctx.arc(cx, cy - 6 * E, sclereR * 0.9, Math.PI, 0);
         ctx.fill();
         ctx.restore();
     }
@@ -406,80 +419,84 @@ function _dessinerOeil(ctx, cx, cy, E, humeur, cote, fermer = false) {
         ctx.save();
         ctx.translate(cx, cy - 16 * E);
         ctx.rotate((dir * -8 * Math.PI) / 180);
-        ctx.fillStyle = C.VIOLET_SOURCIL;
+        ctx.fillStyle = C.TORSE_OMB;
         ctx.fillRect(-9 * E, 0, 18 * E, 6 * E);
         ctx.restore();
         ctx.save();
-        ctx.fillStyle = 'rgba(179, 32, 32, 0.4)';
+        ctx.fillStyle = C.TETE_BAND;
+        ctx.globalAlpha = 0.4;
         ctx.fillRect(cx - 12 * E, cy - 12 * E, 24 * E, 8 * E);
         ctx.restore();
     }
 }
 
+function _clignerYeux(humeur, t) {
+    if (humeur !== 'neutre' && humeur !== 'content') return false;
+    const cycle = 4.2;
+    const phase = (t % cycle) / cycle;
+    return phase > 0.9 && phase < 0.96;
+}
+
 function _dessinerYeux(ctx, cx, E, offsetY, h, humeur, t) {
     const y = _py(52, E, offsetY, h);
-    const fermer = humeur === 'neutre' && _clignementInactif && Math.sin(t * 2.2) > 0.92;
+    const fermer = _clignerYeux(humeur, t);
     _dessinerOeil(ctx, _px(cx, 38, E), y, E, humeur, 'g', fermer);
     _dessinerOeil(ctx, _px(cx, 82, E), y, E, humeur, 'd', fermer);
 }
 
 function _dessinerBouche(ctx, cx, E, offsetY, h, humeur) {
-    let zoneW = 40 * E;
-    let zoneH = 14 * E;
-    let nbDents = 8;
-    let dentCouleur = C.CYAN_DENT;
-    let dentH = 8 * E;
-    const dentW = 3 * E;
-    const espacement = 1 * E;
+    const sourire = humeur === 'neutre' || humeur === 'content' || humeur === 'excite';
+    let zoneW = sourire ? 42 * E : 36 * E;
+    let zoneH = sourire ? 16 * E : 12 * E;
+    const cols = sourire ? 6 : 4;
+    const rows = sourire ? 2 : 1;
+    let dentCouleur = C.DENTS;
+    let dentH = sourire ? 5 * E : 7 * E;
+    const dentW = 2.8 * E;
+    const espacement = 0.8 * E;
 
-    if (humeur === 'content') {
-        zoneH = 16 * E;
-        dentH = 9 * E;
-    } else if (humeur === 'excite') {
+    if (humeur === 'excite') {
         zoneH = 18 * E;
         zoneW = 44 * E;
-        nbDents = 9;
-        dentH = 10 * E;
+        dentH = 6 * E;
     } else if (humeur === 'triste') {
-        zoneH = 12 * E;
-        nbDents = 6;
-        dentCouleur = C.CYAN_INT;
-        dentH = 7 * E;
+        zoneH = 11 * E;
+        dentH = 5 * E;
     } else if (humeur === 'alerte') {
-        zoneH = 12 * E;
-        zoneW = 36 * E;
+        zoneW = 34 * E;
+        zoneH = 11 * E;
     }
 
     const x = cx - zoneW / 2;
     const y = _py(68, E, offsetY, h);
 
-    ctx.fillStyle = C.NOIR_ECART;
+    ctx.fillStyle = C.BOUCHE_FOND;
     _rectArrondi(ctx, x, y, zoneW, zoneH, 4 * E);
     ctx.fill();
 
-    const totalDentsW = nbDents * dentW + (nbDents - 1) * espacement;
+    const totalDentsW = cols * dentW + (cols - 1) * espacement;
     let dx = cx - totalDentsW / 2;
-    const dentY = y + (zoneH - dentH) / 2;
+    const rowGap = 1.2 * E;
 
-    for (let i = 0; i < nbDents; i++) {
-        let dy = dentY;
-        let dh = dentH;
-        if (humeur === 'content' && (i === 0 || i === nbDents - 1)) dy += 2 * E;
-        if (humeur === 'triste' && (i === 0 || i === nbDents - 1)) dy -= 2 * E;
-        ctx.fillStyle = dentCouleur;
-        if ((i === 0 || i === nbDents - 1) && humeur !== 'triste') {
-            _rectArrondi(ctx, dx, dy, dentW, dh, 2 * E);
+    for (let row = 0; row < rows; row++) {
+        let rowDx = dx;
+        const rowY = y + (zoneH - rows * dentH - (rows - 1) * rowGap) / 2 + row * (dentH + rowGap);
+        for (let i = 0; i < cols; i++) {
+            let dy = rowY;
+            if (sourire && row === 0 && (i === 0 || i === cols - 1)) dy += 1.5 * E;
+            if (sourire && row === rows - 1 && (i === 0 || i === cols - 1)) dy -= 1 * E;
+            if (humeur === 'triste' && (i === 0 || i === cols - 1)) dy -= 1.5 * E;
+            ctx.fillStyle = dentCouleur;
+            _rectArrondi(ctx, rowDx, dy, dentW, dentH, 1.2 * E);
             ctx.fill();
-        } else {
-            ctx.fillRect(dx, dy, dentW, dh);
+            rowDx += dentW + espacement;
         }
-        dx += dentW + espacement;
     }
 }
 
 function _dessinerAntenne(ctx, cx, E, offsetY, h, anim, t, _humeur) {
     const tigeY = _py(4, E, offsetY, h);
-    ctx.strokeStyle = C.GRIS_TIGE;
+    ctx.strokeStyle = C.ANTENNE;
     ctx.lineWidth = Math.max(1, 4 * E);
     ctx.lineCap = 'round';
     ctx.beginPath();
@@ -488,7 +505,7 @@ function _dessinerAntenne(ctx, cx, E, offsetY, h, anim, t, _humeur) {
     ctx.stroke();
 
     const baseY = _py(24, E, offsetY, h);
-    ctx.fillStyle = C.GRIS_BASE;
+    ctx.fillStyle = C.ANTENNE_BASE;
     ctx.beginPath();
     ctx.ellipse(cx, baseY, 7 * E, 5 * E, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -511,13 +528,13 @@ function _dessinerAntenne(ctx, cx, E, offsetY, h, anim, t, _humeur) {
                 const sy = bouleY + Math.sin(angle) * dist;
                 ctx.save();
                 ctx.globalAlpha = 0.4 + Math.sin(t * 10 + i) * 0.3;
-                ctx.fillStyle = C.VERT_ETINCELLE;
+                ctx.fillStyle = C.ETINCELLE;
                 ctx.fillRect(sx - E, sy - E, 2 * E, 2 * E);
                 ctx.restore();
             }
         }
     } else {
-        ctx.fillStyle = C.GRIS_CLR;
+        ctx.fillStyle = C.ANTENNE;
         ctx.beginPath();
         ctx.arc(cx, bouleY, 6 * E, 0, Math.PI * 2);
         ctx.fill();
@@ -568,11 +585,13 @@ export function dessinerRobo(ctx, w, h, humeur, t, options = {}) {
         _dessinerRingsExcite(ctx, cx, cyCorps, E, t);
     }
 
+    const ressortOsc = anim.ressortOsc ?? 0;
+
     _dessinerPieds(ctx, cx, E, offsetY, h);
-    _dessinerJambes(ctx, cx, E, offsetY, h);
+    _dessinerJambes(ctx, cx, E, offsetY, h, ressortOsc);
     _dessinerCorps(ctx, cx, E, offsetY, h);
-    _dessinerBras(ctx, cx, E, offsetY, h, 'g', anim.angleBrasG, humeur);
-    _dessinerBras(ctx, cx, E, offsetY, h, 'd', anim.angleBrasD, humeur);
+    _dessinerBras(ctx, cx, E, offsetY, h, 'g', anim.angleBrasG, humeur, ressortOsc);
+    _dessinerBras(ctx, cx, E, offsetY, h, 'd', anim.angleBrasD, humeur, ressortOsc);
     _dessinerCou(ctx, cx, E, offsetY, h);
 
     const teteCx = cx;

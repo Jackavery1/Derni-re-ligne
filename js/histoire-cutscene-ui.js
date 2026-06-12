@@ -17,9 +17,13 @@ export function estLigneNarration(personnageId) {
 }
 
 export function obtenirElTexteLigneCourante(personnageId) {
-    const dialogueEl = document.getElementById('texte-dialogue-cutscene');
-    if (estLigneNarration(personnageId)) return dialogueEl;
-    return dialogueEl;
+    if (estLigneNarration(personnageId)) {
+        return (
+            document.getElementById('texte-narration-cutscene') ??
+            document.getElementById('texte-dialogue-cutscene')
+        );
+    }
+    return document.getElementById('texte-dialogue-cutscene');
 }
 
 export function appliquerModeCutscene(estNarration) {
@@ -172,11 +176,13 @@ export function preparerTexteLigneCutscene({
     if (!dialogueEl) return null;
 
     const estNarrationEffective = estNarration;
-    const texteEl = dialogueEl;
 
     if (estNarrationEffective) {
-        appliquerModeNarrateurCinematique(true);
-        if (narrationEl) narrationEl.textContent = '';
+        appliquerModeNarrateurCinematique(false);
+        appliquerModeCutscene(true);
+        dialogueEl.textContent = '';
+        dialogueEl.className = '';
+        delete dialogueEl.dataset.glitch;
     } else {
         appliquerModeNarrateurCinematique(false);
         appliquerModeCutscene(false);
@@ -193,10 +199,11 @@ export function preparerTexteLigneCutscene({
         }
     }
 
+    const texteEl = estNarrationEffective ? (narrationEl ?? dialogueEl) : dialogueEl;
     texteEl.className = estNarrationEffective
-        ? 'cutscene-texte-narrateur-cinematique'
+        ? `cutscene-police-${police}`
         : `cutscene-police-${police}`;
-    if (personnageId === 'distorsion') texteEl.dataset.glitch = '';
+    if (personnageId === 'distorsion' && !estNarrationEffective) texteEl.dataset.glitch = '';
     else delete texteEl.dataset.glitch;
 
     return { texteEl, estNarration: estNarrationEffective };

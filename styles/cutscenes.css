@@ -47,10 +47,9 @@
 }
 
 #ecran-histoire-cutscene.ecran.actif {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: stretch;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    align-content: stretch;
     overflow: hidden;
     padding: 0 0 16px;
     gap: 8px;
@@ -69,7 +68,9 @@
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    padding: 0 4% 0;
+    align-self: stretch;
+    min-height: 0;
+    padding: clamp(20px, 5vh, 56px) 4% clamp(10px, 2vh, 20px);
     position: relative;
     z-index: 1;
 }
@@ -108,9 +109,11 @@
     border: 1px solid rgba(0, 221, 200, 0.45);
     border-radius: 3px;
     padding: 14px 20px 12px;
-    margin: 0 16px 24px;
+    margin: 0 16px 8px;
     position: relative;
     min-height: 110px;
+    max-width: min(640px, 52vw);
+    align-self: flex-end;
     box-shadow:
         0 0 24px rgba(0, 0, 0, 0.8),
         inset 0 0 0 1px rgba(255, 255, 255, 0.04);
@@ -158,7 +161,7 @@
 
 #zone-narration-cutscene {
     position: absolute;
-    top: clamp(32px, 8vh, 72px);
+    top: clamp(40px, 7vh, 96px);
     left: 50%;
     transform: translateX(-50%);
     width: min(82vw, 760px);
@@ -199,7 +202,13 @@
 }
 
 #ecran-histoire-cutscene.cutscene-mode-narration #rangee-portraits-cutscene {
-    margin-top: auto;
+    align-items: center;
+    padding-top: clamp(48px, 12vh, 120px);
+}
+
+#ecran-histoire-cutscene.cutscene-mode-narration #canvas-portrait-gauche,
+#ecran-histoire-cutscene.cutscene-mode-narration #canvas-portrait-droite {
+    opacity: 0.35;
 }
 
 .letterbox-haut,
@@ -597,6 +606,98 @@ body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
 }
 .btn-cutscene-passer:hover {
     color: rgba(255, 255, 255, 0.75);
+}
+
+/* Mobile : portraits côte à côte au-dessus de la bulle de dialogue */
+@media (max-width: 600px) {
+    #ecran-histoire-cutscene.cutscene-mode-dialogue #rangee-portraits-cutscene {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            'portrait-gauche portrait-droite'
+            'dialogue dialogue';
+        align-items: end;
+        justify-items: center;
+        gap: 8px 12px;
+        flex: 1;
+        min-height: 0;
+        padding: clamp(8px, 2vh, 16px) 12px 0;
+    }
+
+    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-gauche {
+        grid-area: portrait-gauche;
+        justify-self: end;
+    }
+
+    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-droite {
+        grid-area: portrait-droite;
+        justify-self: start;
+    }
+
+    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-gauche,
+    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-droite {
+        position: static;
+        width: min(42vw, 148px);
+        height: min(58vw, 204px);
+        flex-shrink: 0;
+        transition:
+            opacity 0.25s ease,
+            transform 0.25s ease;
+    }
+
+    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-gauche.parle,
+    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-droite.parle {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-gauche.ecoute,
+    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-droite.ecoute {
+        opacity: 0.45;
+        transform: translateY(6px);
+    }
+
+    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-gauche.absent,
+    #ecran-histoire-cutscene.cutscene-mode-dialogue #canvas-portrait-droite.absent {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    #ecran-histoire-cutscene.cutscene-mode-dialogue:has(#canvas-portrait-gauche.absent):not(
+            :has(#canvas-portrait-droite.absent)
+        )
+        #canvas-portrait-droite {
+        grid-column: 1 / -1;
+        justify-self: center;
+    }
+
+    #ecran-histoire-cutscene.cutscene-mode-dialogue:has(#canvas-portrait-droite.absent):not(
+            :has(#canvas-portrait-gauche.absent)
+        )
+        #canvas-portrait-gauche {
+        grid-column: 1 / -1;
+        justify-self: center;
+    }
+
+    #ecran-histoire-cutscene.cutscene-mode-dialogue #boite-dialogue-cutscene {
+        grid-area: dialogue;
+        position: static;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        min-height: 96px;
+        align-self: end;
+    }
+
+    #ecran-histoire-cutscene.cutscene-mode-narration #zone-narration-cutscene {
+        top: clamp(32px, 6vh, 72px);
+        width: min(92vw, 520px);
+    }
+
+    #ecran-histoire-cutscene.cutscene-mode-narration #texte-narration-cutscene {
+        font-size: clamp(18px, 4.8vw, 24px);
+    }
 }
 
 .histoire-journal-para-endommage {

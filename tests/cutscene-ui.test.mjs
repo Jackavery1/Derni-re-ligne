@@ -135,14 +135,22 @@ describe('cutscene UI', () => {
         expect(texteEl.textContent).not.toContain('Ligne un.');
     });
 
-    it('active le mode narrateur cinématique (texte centré, letterbox)', () => {
+    it('active le mode narration (texte en haut centre)', () => {
         const { afficherCutsceneHistoire, avancerCutscene } = managerUi;
 
         afficherCutsceneHistoire(['Une voix off.', 'ROBO parle.'], ['narrateur', 'robo'], null);
         avancerCutscene();
 
-        expect(texteEl.textContent).toBe('Une voix off.');
-        expect(ecranCutscene.classList.toggle).toHaveBeenCalledWith('mode-narrateur', true);
+        expect(narrationEl.textContent).toBe('Une voix off.');
+        expect(ecranCutscene.classList.toggle).toHaveBeenCalledWith(
+            'cutscene-mode-narration',
+            true
+        );
+        expect(ecranCutscene.classList.toggle).toHaveBeenCalledWith(
+            'cutscene-mode-dialogue',
+            false
+        );
+        expect(ecranCutscene.classList.toggle).toHaveBeenCalledWith('mode-narrateur', false);
     });
 
     it('passe toute la cutscene en un seul appel', () => {

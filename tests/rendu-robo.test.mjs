@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { dessinerRobo, definirHumeurRobo } from '../js/rendu-robo.js';
+import { dessinerRobo, definirHumeurRobo, PALETTE_ROBO } from '../js/rendu-robo.js';
 import { convertirHumeurVersCanvas } from '../js/mascotte-robo.js';
 
 function creerCtxMock() {
@@ -63,5 +63,19 @@ describe('rendu-robo', () => {
 
     it('definirHumeurRobo accepte les humeurs canvas', () => {
         expect(() => definirHumeurRobo('content')).not.toThrow();
+    });
+
+    it('expose PALETTE_ROBO canon', () => {
+        expect(PALETTE_ROBO.SCLERE).toBe('#eaf6ff');
+        expect(PALETTE_ROBO.PUPILLE).toBe('#1a3c46');
+        expect(PALETTE_ROBO.DENTS).toBe('#35e0e6');
+    });
+
+    it('dessine chaque humeur canvas sans erreur', () => {
+        for (const humeur of ['neutre', 'content', 'excite', 'triste', 'alerte']) {
+            const ctx = creerCtxMock();
+            dessinerRobo(ctx, 120, 150, humeur, 2);
+            expect(ctx.arc.mock.calls.length).toBeGreaterThan(0);
+        }
     });
 });
