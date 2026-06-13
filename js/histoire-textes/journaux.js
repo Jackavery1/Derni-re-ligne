@@ -160,4 +160,54 @@ export const FRAGMENTS_VERA_SIGNAL = {
             humeur: 'alerte',
         },
     ],
+
+    apres_lave: [
+        { personnage: 'systeme', texte: '> BRUIT THERMIQUE — CANAL 7', humeur: 'alerte' },
+        {
+            personnage: 'vera',
+            texte: "...la chaleur ici... ce n'est pas du feu normal... c'est de la colère solidifiée...",
+            humeur: 'inquiete',
+        },
+        { personnage: 'systeme', texte: '> SATURATION DU CAPTEUR', humeur: 'alerte' },
+    ],
+
+    apres_cyber: [
+        { personnage: 'systeme', texte: '> PAQUET CHIFFRÉ — CLÉ VERA', humeur: 'neutre' },
+        {
+            personnage: 'vera',
+            texte: '...si tu lis ceci dans le réseau : ne fais pas confiance aux scores parfaits. Ils mentent par omission.',
+            humeur: 'determinee',
+        },
+        { personnage: 'systeme', texte: '> DÉCHIFFREMENT INTERROMPU', humeur: 'alerte' },
+    ],
+
+    apres_fuochi: [
+        { personnage: 'systeme', texte: '> ÉCHO SONORE — 0.7 SECONDES', humeur: 'alerte' },
+        {
+            personnage: 'vera',
+            texte: '...ces feux... je les ai allumés pour toi... pour que tu saches que la joie existe encore...',
+            humeur: 'douce',
+        },
+        { personnage: 'systeme', texte: "> FIN DE L'ÉCHO", humeur: 'alerte' },
+    ],
+
+    apres_cosmos: [
+        { personnage: 'systeme', texte: '> SIGNAL FAIBLE — DISTANCE : INCONNUE', humeur: 'neutre' },
+        {
+            personnage: 'vera',
+            texte: '...de si loin... je vois encore ta grille... ne lâche pas quand tout devient silence...',
+            humeur: 'inquiete',
+        },
+        { personnage: 'systeme', texte: '> DÉRIVE ORBITALE DU MESSAGE', humeur: 'alerte' },
+    ],
+
+    apres_vide: [
+        { personnage: 'systeme', texte: '> SILENCE ABSOLU — 2.0 SECONDES', humeur: 'alerte' },
+        {
+            personnage: 'vera',
+            texte: "...ici il n'y a rien... c'est le pire endroit... et pourtant tu avances...",
+            humeur: 'glitch',
+        },
+        { personnage: 'systeme', texte: '> REPRISE DU BRUIT DE FOND', humeur: 'alerte' },
+    ],
 };

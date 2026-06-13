@@ -107,4 +107,13 @@ export const PORTRAITS = {
         vitesseMs: 22,
         nomStyle: 'normal',
     },
+    avantgarde_voix: {
+        emoji: '⚡',
+        couleur: '#7700ff',
+        nom: 'AVANT-GARDE',
+        fondId: 'avantgarde',
+        police: 'stats',
+        vitesseMs: 30,
+        nomStyle: 'normal',
+    },
 };

@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version    | Date       | En bref                                                                                   |
 | ---------- | ---------- | ----------------------------------------------------------------------------------------- |
+| **2.5.17** | 2026-06-13 | ROBO arc neon, audits A/C/D, pont scènes cutscene, SW v33, responsive 768, bundle 605 Ko  |
 | **2.5.16** | 2026-06-11 | Menu Continuer / Nouvelle partie, remediations G6–G15, mix audio, reset campagne unifie   |
 | **2.5.15** | 2026-06-11 | Découpage CSS modulaire, HUD Trame en run, constellation au clic, liens histoire          |
 | **2.5.14** | 2026-06-11 | Remédiation audits : UX histoire, défi du jour, ESLint 0 warn, E2E contraste, doc OPT     |
@@ -30,6 +31,34 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.2.0**  | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                                |
 | **2.1.0**  | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                                |
 | **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                             |
+
+---
+
+## [2.5.17] — 2026-06-13
+
+### ROBO — canon bouche arc neon
+
+- Grille de dents supprimée ; bouche en arc neon (neutre), sourire ouvert (content/excite), arc inversé (triste), trait horizontal (alerte)
+- Pupilles recentrées (~48 % sclère) pour éviter le regard vide
+- Canon mis à jour dans `docs/canon-personnages.md` ; tests `rendu-robo.test.mjs`
+
+### Narration / histoire (audit D)
+
+- Pont metadata scènes : cutscenes passent les lignes brutes avec `scene:` / `humeur:` jusqu'au moteur
+- Annotations SCENES-1 complétées (intro fragmentation, trame monde, avantgarde_voix)
+- Fragments VERA par monde ; accent « être raconté » cutscene entrée
+- Tests `histoire-narratif-cutscene.test.mjs`, `scenes-cutscene.test.mjs`
+
+### Responsive (audit C)
+
+- Mode Architecte tactile (`#controles-archi`), seuils paysage 768 px, safe-area viewport-fit
+- Breakpoints harmonisés (constellation, sélection, panneaux)
+- Cibles tactiles coop / panneau / `.bouton-mode`
+
+### Technique (audit A)
+
+- CSP `frame-ancestors 'none'` ; SW `dl-shell-v33` + precache scènes `dl-medias-v2`
+- Plafond bundle CI 605 Ko ; docs architecture / optimisation alignées
 
 ---
 

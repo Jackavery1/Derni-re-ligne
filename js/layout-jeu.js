@@ -10,6 +10,8 @@ import { obtenirIdBiomeFond } from './biome-fond.js';
 import { demarrerFondBiome, invaliderCacheFond } from './rendu-fond-biome.js';
 import { etat } from './store-jeu.js';
 
+const SEUIL_PAYSAGE_COMPACT = 768;
+
 const LAYOUT_ARCHI = {
     panneauLargeur: 120,
     gap: 10,
@@ -17,8 +19,20 @@ const LAYOUT_ARCHI = {
     plateauHauteur: LAYOUT.plateauHauteur,
     paddingVertical: 16,
     margeScale: 20,
-    hauteurControles: 0,
+    hauteurControles: LAYOUT.hauteurControles,
 };
+
+function estPaysageCompact() {
+    return window.innerHeight <= SEUIL_PAYSAGE_COMPACT && window.innerWidth > window.innerHeight;
+}
+
+function hauteurControlesTactiles() {
+    if (estPaysageCompact()) return 0;
+    if (window.innerWidth <= SEUIL_PAYSAGE_COMPACT || window.innerHeight <= 600) {
+        return LAYOUT.hauteurControles;
+    }
+    return 0;
+}
 
 /**
  * @param {HTMLElement} echelle
@@ -35,7 +49,7 @@ function appliquerEchelleInterface(echelle, iface, largeurTotale, hauteurTotale,
 }
 
 export function obtenirHauteurInterface() {
-    const estPaysageMobile = window.innerHeight < 500 && window.innerWidth > window.innerHeight;
+    const estPaysageMobile = estPaysageCompact();
     const hGauche = LAYOUT.holdHauteur + 20 + LAYOUT.statsHauteur + 30;
     const hMascotte = estPaysageMobile ? 72 : LAYOUT.mascotteHauteur;
     const hDroite = 210 + 20 + hMascotte + 20 + LAYOUT.pauseHauteur + 20;
@@ -47,17 +61,14 @@ export function adapterInterface() {
     const iface = document.getElementById('interface-jeu');
     if (!echelle || !iface) return;
 
-    const estPaysageMobile = window.innerHeight < 500 && window.innerWidth > window.innerHeight;
+    const estPaysageMobile = estPaysageCompact();
 
     const largeurTotale = LAYOUT.panneauLargeur * 2 + LAYOUT.gap * 2 + LAYOUT.plateauLargeur;
     const hauteurTotale = estPaysageMobile
         ? Math.max(LAYOUT.plateauHauteur, LAYOUT.mascotteHauteur + 280) + LAYOUT.paddingVertical
         : obtenirHauteurInterface();
 
-    let mobileControles = 0;
-    if (!estPaysageMobile && (window.innerWidth <= 768 || window.innerHeight <= 600)) {
-        mobileControles = LAYOUT.hauteurControles;
-    }
+    const mobileControles = hauteurControlesTactiles();
 
     const scale = calculerEchelleInterface(
         window.innerWidth,
@@ -89,12 +100,18 @@ export function adapterInterfaceArchi() {
         LAYOUT_ARCHI.panneauLargeur * 2 + LAYOUT_ARCHI.gap * 2 + LAYOUT_ARCHI.plateauLargeur;
     const hauteurTotale = LAYOUT_ARCHI.plateauHauteur + LAYOUT_ARCHI.paddingVertical;
 
+    const mobileControles = hauteurControlesTactiles();
+
     const scale = calculerEchelleInterface(
         window.innerWidth,
         window.innerHeight,
         largeurTotale,
         hauteurTotale,
-        { margeScale: LAYOUT_ARCHI.margeScale, scaleMax: 2.2 }
+        {
+            margeScale: LAYOUT_ARCHI.margeScale,
+            hauteurControles: mobileControles,
+            scaleMax: 2.2,
+        }
     );
 
     appliquerEchelleInterface(echelle, iface, largeurTotale, hauteurTotale, scale);

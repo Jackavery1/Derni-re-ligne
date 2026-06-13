@@ -46,7 +46,7 @@ export function obtenirCoucheStatique(cache, cle, w, h, dessiner) {
     const ctx = surface.getContext('2d');
     if (!ctx) return null;
 
-    dessiner(ctx, w, h);
+    dessiner(/** @type {CanvasRenderingContext2D} */ (ctx), w, h);
     cache.set(cle, surface);
     return surface;
 }

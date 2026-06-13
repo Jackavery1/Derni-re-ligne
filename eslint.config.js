@@ -49,6 +49,8 @@ export default [
             'js/histoire-textes/cutscenes-boss.js',
             'js/histoire-textes/cutscenes-entree.js',
             'js/histoire-manager-completion.js',
+            'js/achievements.js',
+            'js/archi-jeu.js',
         ],
         rules: {
             'max-lines': 'off',

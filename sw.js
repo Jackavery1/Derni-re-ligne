@@ -1,6 +1,17 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v32';
-const VERSION_MEDIAS = 'dl-medias-v1';
+const VERSION_SHELL = 'dl-shell-v33';
+const VERSION_MEDIAS = 'dl-medias-v2';
+
+const SCENES_CUTSCENE_PRECACHE = [
+    './assets/cutscenes/scene_observatoire.png',
+    './assets/cutscenes/scene_labo.png',
+    './assets/cutscenes/scene_trame.png',
+    './assets/cutscenes/scene_fragmentation.png',
+    './assets/cutscenes/scene_seuil_brasier.png',
+    './assets/cutscenes/scene_seuil_sentinelle.png',
+    './assets/cutscenes/scene_seuil_archiviste.png',
+    './assets/cutscenes/scene_seuil_avantgarde.png',
+];
 
 const MAX_PISTES_EN_CACHE = 12;
 const META_ORDRE_MUSIQUE = './__meta_ordre_musique__';
@@ -406,10 +417,10 @@ function reponseErreurReseau() {
 
 self.addEventListener('install', (evenement) => {
     evenement.waitUntil(
-        caches
-            .open(VERSION_SHELL)
-            .then((cache) => cache.addAll(FICHIERS_A_CACHER))
-            .then(() => self.skipWaiting())
+        Promise.all([
+            caches.open(VERSION_SHELL).then((cache) => cache.addAll(FICHIERS_A_CACHER)),
+            caches.open(VERSION_MEDIAS).then((cache) => cache.addAll(SCENES_CUTSCENE_PRECACHE)),
+        ]).then(() => self.skipWaiting())
     );
 });
 

@@ -12,6 +12,8 @@ export const PALETTE_ROBO = {
     REFLET: '#ffffff',
     REFLET_SEC: '#b8e8ff',
     BOUCHE_FOND: '#0d2b2e',
+    BOUCHE_NEON: '#35e0e6',
+    /** @deprecated alias canon — préférer BOUCHE_NEON */
     DENTS: '#35e0e6',
     TORSE: '#7a4fc0',
     TORSE_OMB: '#5533aa',
@@ -360,27 +362,15 @@ function _dessinerOeil(ctx, cx, cy, E, humeur, cote, fermer = false) {
         return;
     }
     const dir = cote === 'g' ? -1 : 1;
-    let sclereR = 13 * E;
-    let pupR = 5.5 * E;
-    let pupDx = dir * 0.6 * E;
+    const sclereR = 13.5 * E;
+    const pupR = 6.5 * E;
+    let pupDx = dir * 0.35 * E;
     let pupDy = 0;
 
-    if (humeur === 'content' || humeur === 'neutre') {
-        sclereR = 13.5 * E;
-        pupR = 5 * E;
+    if (humeur === 'excite') {
         pupDy = -1 * E;
-    } else if (humeur === 'excite') {
-        sclereR = 14.5 * E;
-        pupR = 4 * E;
-        pupDy = -2 * E;
     } else if (humeur === 'triste') {
-        sclereR = 12 * E;
-        pupR = 4 * E;
-        pupDy = 2 * E;
-    } else if (humeur === 'alerte') {
-        sclereR = 14 * E;
-        pupR = 6 * E;
-        pupDy = 0;
+        pupDy = 1 * E;
     }
 
     ctx.strokeStyle = C.OEIL_CONTOUR;
@@ -430,7 +420,76 @@ function _dessinerOeil(ctx, cx, cy, E, humeur, cote, fermer = false) {
     }
 }
 
+function _dessinerArcNeon(ctx, cx, cy, halfW, courbe, E, epaisseur) {
+    ctx.strokeStyle = C.BOUCHE_NEON;
+    ctx.lineWidth = epaisseur;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(cx - halfW, cy);
+    ctx.quadraticCurveTo(cx, cy - courbe, cx + halfW, cy);
+    ctx.stroke();
+}
+
+function _dessinerSourireOuvert(ctx, cx, cy, E) {
+    const halfW = 18 * E;
+    const profondeur = 10 * E;
+
+    ctx.fillStyle = C.BOUCHE_FOND;
+    ctx.beginPath();
+    ctx.moveTo(cx - halfW, cy);
+    ctx.quadraticCurveTo(cx, cy + profondeur, cx + halfW, cy);
+    ctx.quadraticCurveTo(cx, cy + profondeur * 0.35, cx - halfW, cy);
+    ctx.fill();
+
+    ctx.strokeStyle = C.BOUCHE_NEON;
+    ctx.lineWidth = Math.max(1.5, 2 * E);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(cx - halfW, cy);
+    ctx.quadraticCurveTo(cx, cy + profondeur, cx + halfW, cy);
+    ctx.stroke();
+
+    ctx.fillStyle = C.BOUCHE_NEON;
+    ctx.globalAlpha = 0.75;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy + profondeur * 0.72, 4 * E, 2.5 * E, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+}
+
+function _dessinerBouche(ctx, cx, E, offsetY, h, humeur) {
+    const cy = _py(72, E, offsetY, h);
+    const tw = 86 * E;
+    const traitEpais = Math.max(2, tw * 0.07);
+
+    if (humeur === 'excite' || humeur === 'content') {
+        _dessinerSourireOuvert(ctx, cx, cy, E);
+        return;
+    }
+
+    if (humeur === 'neutre') {
+        _dessinerArcNeon(ctx, cx, cy, 20 * E, 7 * E, traitEpais);
+        return;
+    }
+
+    if (humeur === 'triste') {
+        _dessinerArcNeon(ctx, cx, cy, 14 * E, -4 * E, Math.max(1.5, traitEpais * 0.75));
+        return;
+    }
+
+    if (humeur === 'alerte') {
+        ctx.strokeStyle = C.BOUCHE_NEON;
+        ctx.lineWidth = Math.max(1.5, traitEpais * 0.85);
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(cx - 12 * E, cy);
+        ctx.lineTo(cx + 12 * E, cy);
+        ctx.stroke();
+    }
+}
+
 function _clignerYeux(humeur, t) {
+    if (_clignementInactif) return false;
     if (humeur !== 'neutre' && humeur !== 'content') return false;
     const cycle = 4.2;
     const phase = (t % cycle) / cycle;
@@ -442,56 +501,6 @@ function _dessinerYeux(ctx, cx, E, offsetY, h, humeur, t) {
     const fermer = _clignerYeux(humeur, t);
     _dessinerOeil(ctx, _px(cx, 38, E), y, E, humeur, 'g', fermer);
     _dessinerOeil(ctx, _px(cx, 82, E), y, E, humeur, 'd', fermer);
-}
-
-function _dessinerBouche(ctx, cx, E, offsetY, h, humeur) {
-    const sourire = humeur === 'neutre' || humeur === 'content' || humeur === 'excite';
-    let zoneW = sourire ? 42 * E : 36 * E;
-    let zoneH = sourire ? 16 * E : 12 * E;
-    const cols = sourire ? 6 : 4;
-    const rows = sourire ? 2 : 1;
-    let dentCouleur = C.DENTS;
-    let dentH = sourire ? 5 * E : 7 * E;
-    const dentW = 2.8 * E;
-    const espacement = 0.8 * E;
-
-    if (humeur === 'excite') {
-        zoneH = 18 * E;
-        zoneW = 44 * E;
-        dentH = 6 * E;
-    } else if (humeur === 'triste') {
-        zoneH = 11 * E;
-        dentH = 5 * E;
-    } else if (humeur === 'alerte') {
-        zoneW = 34 * E;
-        zoneH = 11 * E;
-    }
-
-    const x = cx - zoneW / 2;
-    const y = _py(68, E, offsetY, h);
-
-    ctx.fillStyle = C.BOUCHE_FOND;
-    _rectArrondi(ctx, x, y, zoneW, zoneH, 4 * E);
-    ctx.fill();
-
-    const totalDentsW = cols * dentW + (cols - 1) * espacement;
-    let dx = cx - totalDentsW / 2;
-    const rowGap = 1.2 * E;
-
-    for (let row = 0; row < rows; row++) {
-        let rowDx = dx;
-        const rowY = y + (zoneH - rows * dentH - (rows - 1) * rowGap) / 2 + row * (dentH + rowGap);
-        for (let i = 0; i < cols; i++) {
-            let dy = rowY;
-            if (sourire && row === 0 && (i === 0 || i === cols - 1)) dy += 1.5 * E;
-            if (sourire && row === rows - 1 && (i === 0 || i === cols - 1)) dy -= 1 * E;
-            if (humeur === 'triste' && (i === 0 || i === cols - 1)) dy -= 1.5 * E;
-            ctx.fillStyle = dentCouleur;
-            _rectArrondi(ctx, rowDx, dy, dentW, dentH, 1.2 * E);
-            ctx.fill();
-            rowDx += dentW + espacement;
-        }
-    }
 }
 
 function _dessinerAntenne(ctx, cx, E, offsetY, h, anim, t, _humeur) {

@@ -683,10 +683,12 @@
         ],
         "monde_trame": [
             {
+                "scene": "trame",
                 "personnage": "narrateur",
                 "texte": "La Trame Primordiale. Ce n'est pas un monde. C'est le dessous de tous les mondes."
             },
             {
+                "scene": "trame",
                 "personnage": "vera",
                 "texte": "Robo. Tu es là. Je t'entends.",
                 "humeur": "inquiete"
@@ -788,7 +790,7 @@
             },
             {
                 "personnage": "narrateur",
-                "texte": "Ce qui suit ne peut pas être raconte."
+                "texte": "Ce qui suit ne peut pas être raconté."
             },
             {
                 "personnage": "narrateur",
@@ -1073,10 +1075,12 @@
         ],
         "monde_trame": [
             {
+                "scene": "trame",
                 "personnage": "narrateur",
                 "texte": "La Trame Primordiale n'attend personne. Elle accumule — depuis toujours — ce que les joueurs laissent tomber."
             },
             {
+                "scene": "trame",
                 "personnage": "narrateur",
                 "texte": "Pourtant, quelque chose change quand un visiteur ne s'arrête pas à moitié chemin."
             },
@@ -1889,6 +1893,91 @@
                 "texte": "> SIGNAL : NON-VERA. ORIGINE : INTERNE À LA TRAME.",
                 "humeur": "alerte"
             }
+        ],
+        "apres_lave": [
+            {
+                "personnage": "systeme",
+                "texte": "> BRUIT THERMIQUE — CANAL 7",
+                "humeur": "alerte"
+            },
+            {
+                "personnage": "vera",
+                "texte": "...la chaleur ici... ce n'est pas du feu normal... c'est de la colère solidifiée...",
+                "humeur": "inquiete"
+            },
+            {
+                "personnage": "systeme",
+                "texte": "> SATURATION DU CAPTEUR",
+                "humeur": "alerte"
+            }
+        ],
+        "apres_cyber": [
+            {
+                "personnage": "systeme",
+                "texte": "> PAQUET CHIFFRÉ — CLÉ VERA",
+                "humeur": "neutre"
+            },
+            {
+                "personnage": "vera",
+                "texte": "...si tu lis ceci dans le réseau : ne fais pas confiance aux scores parfaits. Ils mentent par omission.",
+                "humeur": "determinee"
+            },
+            {
+                "personnage": "systeme",
+                "texte": "> DÉCHIFFREMENT INTERROMPU",
+                "humeur": "alerte"
+            }
+        ],
+        "apres_fuochi": [
+            {
+                "personnage": "systeme",
+                "texte": "> ÉCHO SONORE — 0.7 SECONDES",
+                "humeur": "alerte"
+            },
+            {
+                "personnage": "vera",
+                "texte": "...ces feux... je les ai allumés pour toi... pour que tu saches que la joie existe encore...",
+                "humeur": "douce"
+            },
+            {
+                "personnage": "systeme",
+                "texte": "> FIN DE L'ÉCHO",
+                "humeur": "alerte"
+            }
+        ],
+        "apres_cosmos": [
+            {
+                "personnage": "systeme",
+                "texte": "> SIGNAL FAIBLE — DISTANCE : INCONNUE",
+                "humeur": "neutre"
+            },
+            {
+                "personnage": "vera",
+                "texte": "...de si loin... je vois encore ta grille... ne lâche pas quand tout devient silence...",
+                "humeur": "inquiete"
+            },
+            {
+                "personnage": "systeme",
+                "texte": "> DÉRIVE ORBITALE DU MESSAGE",
+                "humeur": "alerte"
+            }
+        ],
+        "apres_vide": [
+            {
+                "personnage": "systeme",
+                "texte": "> SILENCE ABSOLU — 2.0 SECONDES",
+                "humeur": "alerte"
+            },
+            {
+                "personnage": "vera",
+                "texte": "...ici il n'y a rien... c'est le pire endroit... et pourtant tu avances...",
+                "humeur": "glitch"
+            },
+            {
+                "personnage": "systeme",
+                "texte": "> REPRISE DU BRUIT DE FOND",
+                "humeur": "alerte"
+            }
         ]
     },
     "INTERLUDES": {
@@ -2022,41 +2111,49 @@
             },
             {
                 "personnage": "vera",
+                "scene": "fragmentation",
                 "texte": "Jour 2 191. L'anomalie grandit. Ce n'est pas un bug. Un bug ne choisit pas ses cibles.",
                 "humeur": "douce"
             },
             {
                 "personnage": "vera",
+                "scene": "fragmentation",
                 "texte": "Jour 2 412. Je lui ai encore parlé aujourd'hui. Six ans que je lui parle. Elle ne répond pas avec des mots. Elle répond avec des trous.",
                 "humeur": "douce"
             },
             {
                 "personnage": "vera",
+                "scene": "fragmentation",
                 "texte": "Jour 2 553. J'ai compris trop tard. Elle ne casse pas la Trame. Elle EST la Trame. La partie qu'on a laissée pourrir.",
                 "humeur": "inquiete"
             },
             {
                 "personnage": "vera",
+                "scene": "fragmentation",
                 "texte": "Jour 2 554. Je n'ai plus le temps de la comprendre seule. Il me faut quelqu'un qui complète sans se décourager. Quelqu'un qui... — Non. Pas quelqu'un. Quelque chose.",
                 "humeur": "inquiete"
             },
             {
                 "personnage": "vera",
+                "scene": "fragmentation",
                 "texte": "... Je me dégoûte un peu d'écrire ça.",
                 "humeur": "inquiete"
             },
             {
                 "personnage": "systeme",
+                "scene": "fragmentation",
                 "texte": "PROJET R.O.B.O. — GARDIEN DE LA TRAME — COMPILATION : 97%",
                 "humeur": "neutre"
             },
             {
                 "personnage": "vera",
+                "scene": "fragmentation",
                 "texte": "Si tu m'entends un jour : pardon de te créer avec une mission déjà écrite. J'espère que tu trouveras le moyen de la réécrire.",
                 "humeur": "determinee"
             },
             {
                 "personnage": "systeme",
+                "scene": "fragmentation",
                 "texte": "COMPILATION : 100%. DÉMARRAGE DIFFÉRÉ.",
                 "humeur": "alerte"
             },
@@ -2358,6 +2455,15 @@
             "fondId": "archiviste",
             "police": "terminal",
             "vitesseMs": 22,
+            "nomStyle": "normal"
+        },
+        "avantgarde_voix": {
+            "emoji": "⚡",
+            "couleur": "#7700ff",
+            "nom": "AVANT-GARDE",
+            "fondId": "avantgarde",
+            "police": "stats",
+            "vitesseMs": 30,
             "nomStyle": "normal"
         }
     },

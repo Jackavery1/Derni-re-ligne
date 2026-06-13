@@ -164,7 +164,7 @@
     margin-bottom: 8px;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 769px) {
     #sel-info-biome {
         top: 0;
         right: 0;
@@ -182,7 +182,7 @@
     }
 }
 
-@media (max-width: 899px) {
+@media (max-width: 768px) {
     #sel-info-biome {
         left: 0;
         right: 0;
@@ -635,7 +635,9 @@ body.effets-reduits .panneau-detail-corps {
     font-family: var(--police);
     font-size: 0.55rem;
     cursor: pointer;
-    padding: 6px 10px;
+    padding: 10px 14px;
+    min-width: 44px;
+    min-height: 44px;
     letter-spacing: 1px;
 }
 .panneau-detail-fermer:hover {
@@ -768,7 +770,7 @@ body.effets-reduits .panneau-detail-progression-fill {
     margin: 0;
 }
 
-@media (max-width: 719px) {
+@media (max-width: 768px) {
     .panneau-detail-backdrop {
         display: block;
     }
@@ -1094,7 +1096,9 @@ body.coop-active #conteneur-principal {
     font-family: var(--police);
     font-size: 0.6rem;
     width: 44px;
-    height: 40px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
     cursor: pointer;
     border-radius: 4px;
     display: flex;

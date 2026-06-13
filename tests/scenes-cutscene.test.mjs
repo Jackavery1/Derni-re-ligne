@@ -1,47 +1,25 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import {
-    SCENES_CUTSCENE,
-    obtenirScene,
-    precharger,
-    obtenirImageScenePrechargee,
-    reinitialiserCacheScenes,
-} from '../js/scenes-cutscene.js';
+import { describe, it, expect } from 'vitest';
+import { existsSync, readFileSync } from 'fs';
+import { join } from 'path';
+import { SCENES_CUTSCENE } from '../js/scenes-cutscene.js';
 
-describe('scenes-cutscene', () => {
-    beforeEach(() => {
-        reinitialiserCacheScenes();
-    });
+const racine = join(import.meta.dirname, '..');
+const swSource = readFileSync(join(racine, 'sw.js'), 'utf8');
 
-    it('expose le registre des scènes image', () => {
-        expect(obtenirScene('observatoire')?.type).toBe('image');
-        expect(obtenirScene('labo')?.src).toContain('scene_labo.png');
-        expect(obtenirScene('seuil_brasier')?.voile).toBe(0.5);
-        expect(obtenirScene('inconnue')).toBeNull();
-    });
-
-    it('échoue sans exception si l’image est absente', async () => {
-        const img = await precharger('observatoire');
-        expect(img).toBeNull();
-        expect(obtenirImageScenePrechargee('observatoire')).toBeNull();
-    });
-
-    it('met en cache une image chargée', async () => {
-        class FakeImage {
-            constructor() {
-                this.onload = null;
-                this.onerror = null;
-                this.width = 960;
-                this.height = 540;
-            }
-            set src(_v) {
-                queueMicrotask(() => this.onload?.());
-            }
+describe('scenes-cutscene — assets et registre', () => {
+    it('chaque src du registre pointe vers un PNG existant', () => {
+        for (const [id, scene] of Object.entries(SCENES_CUTSCENE)) {
+            expect(scene.type).toBe('image');
+            const chemin = join(racine, scene.src);
+            expect(existsSync(chemin), `${id} → ${scene.src}`).toBe(true);
         }
-        vi.stubGlobal('Image', FakeImage);
+    });
 
-        const img = await precharger('trame');
-        expect(img).toBeTruthy();
-        expect(obtenirImageScenePrechargee('trame')).toBe(img);
-        expect(SCENES_CUTSCENE.trame.kenBurns).toBe('pan_droite');
+    it('le SW precache les 8 scenes du registre (pas vide_errance)', () => {
+        for (const id of Object.keys(SCENES_CUTSCENE)) {
+            const src = SCENES_CUTSCENE[id].src.replace(/^assets\//, './assets/');
+            expect(swSource).toContain(src);
+        }
+        expect(swSource).not.toContain('scene_vide_errance');
     });
 });

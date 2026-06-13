@@ -311,6 +311,11 @@ const CLE_FRAGMENT_PAR_MONDE = {
     monde_glace: 'apres_glace',
     monde_desert: 'apres_desert',
     monde_eclipse: 'apres_eclipse',
+    monde_lave: 'apres_lave',
+    monde_cyber: 'apres_cyber',
+    monde_fuochi: 'apres_fuochi',
+    monde_cosmos: 'apres_cosmos',
+    monde_vide: 'apres_vide',
 };
 
 function _conditionLaboCyber(monde, etatHist) {
@@ -361,11 +366,7 @@ function _executerFragmentVera(mondeId, suivant) {
     try {
         void import('./histoire-manager-ui.js')
             .then(({ afficherCutsceneHistoire }) => {
-                afficherCutsceneHistoire(
-                    fragment.map((l) => l.texte),
-                    fragment.map((l) => l.personnage),
-                    suivant
-                );
+                afficherCutsceneHistoire(fragment, null, suivant);
             })
             .catch((err) => {
                 logger.warn('[histoire] fragment VERA indisponible :', err);
@@ -403,11 +404,7 @@ function _executerInterlude(mondeId, suivant) {
     try {
         void import('./histoire-manager-ui.js')
             .then(({ afficherCutsceneHistoire }) => {
-                afficherCutsceneHistoire(
-                    interlude.map((l) => l.texte),
-                    interlude.map((l) => l.personnage),
-                    suivant
-                );
+                afficherCutsceneHistoire(interlude, null, suivant);
             })
             .catch((err) => {
                 logger.warn('[histoire] interlude indisponible :', err);
@@ -494,7 +491,7 @@ function declencherNarratifPostMonde(monde, etatHist, premiereCompletion, etoile
             const postMonde = obtenirCutscenePostMonde(monde.id, premiereCompletion);
             void import('./histoire-manager-ui.js')
                 .then(({ afficherCutsceneHistoire }) => {
-                    afficherCutsceneHistoire(postMonde.lignes, postMonde.personnages, suivant);
+                    afficherCutsceneHistoire(postMonde.lignes, null, suivant);
                 })
                 .catch((err) => {
                     logger.warn('[histoire] cutscene post-monde indisponible :', err);

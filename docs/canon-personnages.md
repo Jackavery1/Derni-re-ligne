@@ -33,10 +33,17 @@ des constantes à coder en dur (leçon du premier renderer ROBO cassé).
   CENTRÉES vers le joueur en humeur neutre — jamais petites et fuyantes
   vers le côté. Les yeux occupent une part généreuse de la tête (chaque
   œil ≈ 30 % de la largeur du visage).
-- Bouche : grille de dents cyan `#35e0e6` sur fond sombre `#0d2b2e`,
-  6×2 dents, coins du sourire NETTEMENT remontants — le rendu actuel a
-  une bouche plate et sombre qui éteint le personnage : le sourire large
-  est obligatoire en humeur neutre
+- Bouche : **GRILLE DE DENTS SUPPRIMÉE** (décision Joris, 13 juin — elle
+  éteignait le visage). Nouveau système :
+    - Repos / neutre : ARC NÉON cyan `#35e0e6`, trait épais (~6–8 % de la
+      largeur de la tête) à bouts arrondis, coins nettement remontants —
+      un sourire franc, lisible même à la taille mascotte.
+    - Joie / excitation : SOURIRE OUVERT — demi-lune sombre `#0d2b2e`
+      bordée de cyan `#35e0e6`, petite langue cyan en bas. Réservé aux
+      humeurs joyeuses (Tetris, victoire, achievement).
+    - Les autres humeurs déclinent l'arc : tristesse = arc inversé court,
+      surprise = petit « o », alerte = trait court horizontal, etc. —
+      adapter chaque humeur existante de rendu-robo.js à ce vocabulaire.
 - Antenne : tige grise `#9aa3ad`, lumière verte `#4bff5a` avec halo de
   3–4 pixels satellites
 - Torse : violet `#7a4fc0`, panneau central sombre `#2a1840` avec circuits
@@ -223,10 +230,10 @@ est ESSENTIEL), trapèze doré au centre exact, rayons sur les axes.
 ## 7. LE NARRATEUR / LA TRAME — identité visuelle (PAS un portrait)
 
 Décision actée et CONFIRMÉE (12 juin) : le narrateur n'a ni portrait ni
-humeur. Mode
-narrateur = letterbox + texte centré. Ce qui suit lui donne une PRÉSENCE
-sans visage : un motif de la Trame utilisable en (a) texture subtile des
-bandes letterbox, (b) scène d'intro/key art, (c) fond du Mémorial.
+humeur. Mode narrateur = letterbox + texte centré. Ce qui suit lui donne
+une PRÉSENCE sans visage : un motif de la Trame utilisable en (a) texture
+subtile des bandes letterbox, (b) scène d'intro/key art, (c) fond du
+Mémorial.
 
 **Concept** : un tissage horizontal de lignes lumineuses — toutes les
 lignes jamais complétées, déposées en strates. Des fils convergent depuis
@@ -256,11 +263,8 @@ observatoire, comme pour les 18 scènes.)
 
 ---
 
-## Manquants (références à générer plus tard, prompts déjà dans
+## Manquants (références à générer plus tard, prompts déjà dans prompts-images-personnages.md)
 
-prompts-images-personnages.md)
-
-- La Distorsion (mélancolie imposée — humeurs menacante/souffrante/
-  curieuse/apaisee)
+- La Distorsion (mélancolie imposée — humeurs menacante/souffrante/curieuse/apaisee)
 - Le Système (neutre/alerte)
 - Variantes d'humeur ROBO si besoin de références supplémentaires

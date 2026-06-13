@@ -2,7 +2,7 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <title>Dernière Ligne</title>
         <link rel="manifest" href="manifest.json" />
         <meta name="theme-color" content="#08081a" />
@@ -14,7 +14,7 @@
         <!-- CSP stricte : pas de style/script inline — utiliser classes CSS et fichiers externes -->
         <meta
             http-equiv="Content-Security-Policy"
-            content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests;"
+            content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; upgrade-insecure-requests;"
         />
         <link
             rel="preload"
@@ -54,6 +54,6 @@
 
         <div id="conteneur-ecrans" tabindex="-1"></div>
 
-        <script type="module" src="js/main.js?v=2.5.16"></script>
+        <script type="module" src="js/main.js?v=2.5.17"></script>
     </body>
 </html>

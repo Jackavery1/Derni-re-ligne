@@ -589,10 +589,12 @@ export const CUTSCENES_ENTREE = {
 
     monde_trame: [
         {
+            scene: 'trame',
             personnage: 'narrateur',
             texte: "La Trame Primordiale. Ce n'est pas un monde. C'est le dessous de tous les mondes.",
         },
         {
+            scene: 'trame',
             personnage: 'vera',
             texte: "Robo. Tu es là. Je t'entends.",
             humeur: 'inquiete',
@@ -662,7 +664,7 @@ export const CUTSCENES_ENTREE = {
         { personnage: 'robo', texte: 'Tu avais tout prévu sauf ça.', humeur: 'neutre' },
         { personnage: 'vera', texte: 'Oui.', humeur: 'determinee' },
         { personnage: 'vera', texte: 'Je suis fière de toi.', humeur: 'determinee' },
-        { personnage: 'narrateur', texte: 'Ce qui suit ne peut pas être raconte.' },
+        { personnage: 'narrateur', texte: 'Ce qui suit ne peut pas être raconté.' },
         {
             personnage: 'narrateur',
             texte: "Certaines fins n'ont pas de mots.",

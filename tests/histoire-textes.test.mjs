@@ -9,6 +9,9 @@ import {
 } from '../js/histoire-textes.js';
 import { CODEX_HISTOIRE } from '../js/codex-histoire.js';
 import { ACHIEVEMENTS_HISTOIRE } from '../js/achievements-histoire.js';
+import { INTRO_HISTOIRE } from '../js/histoire-textes/intro-interludes.js';
+import { SCENES_CUTSCENE } from '../js/scenes-cutscene.js';
+import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
 
 function extrairePersonnagesCutscenes(objet) {
     const ids = new Set();
@@ -46,6 +49,7 @@ describe('histoire-textes — cohérence portraits', () => {
         expect(PORTRAITS.brasier_voix).toBeDefined();
         expect(PORTRAITS.sentinelle_voix).toBeDefined();
         expect(PORTRAITS.archiviste_voix).toBeDefined();
+        expect(PORTRAITS.avantgarde_voix).toBeDefined();
         expect(PORTRAITS.brasier).toBeDefined();
     });
 
@@ -103,5 +107,30 @@ describe('histoire-textes — cohérence portraits', () => {
         const epilogue = EPILOGUES.monde_paradoxe ?? [];
         expect(JSON.stringify(entree)).not.toBe(JSON.stringify(epilogue));
         expect(entree.length).toBeGreaterThan(epilogue.length);
+    });
+
+    it('intro et monde_trame referencent des scenes du registre', () => {
+        const ids = new Set(Object.keys(SCENES_CUTSCENE));
+        const lignesIntro = INTRO_HISTOIRE.lignes ?? [];
+        expect(lignesIntro.some((l) => l.scene === 'fragmentation' && ids.has(l.scene))).toBe(true);
+        const entreeTrame = extraireLignesCutscene(CUTSCENES_ENTREE.monde_trame);
+        expect(entreeTrame.some((l) => l.scene === 'trame')).toBe(true);
+    });
+
+    it('FRAGMENTS_VERA_SIGNAL couvre les mondes narratifs principaux', () => {
+        for (const cle of [
+            'apres_ocean',
+            'apres_foret',
+            'apres_glace',
+            'apres_desert',
+            'apres_eclipse',
+            'apres_lave',
+            'apres_cyber',
+            'apres_fuochi',
+            'apres_cosmos',
+            'apres_vide',
+        ]) {
+            expect(FRAGMENTS_VERA_SIGNAL[cle]?.length, cle).toBeGreaterThan(0);
+        }
     });
 });

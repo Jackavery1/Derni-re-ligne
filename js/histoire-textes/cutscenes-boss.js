@@ -584,10 +584,12 @@ export const CUTSCENES_POST_MONDE = {
 
     monde_trame: [
         {
+            scene: 'trame',
             personnage: 'narrateur',
             texte: "La Trame Primordiale n'attend personne. Elle accumule — depuis toujours — ce que les joueurs laissent tomber.",
         },
         {
+            scene: 'trame',
             personnage: 'narrateur',
             texte: "Pourtant, quelque chose change quand un visiteur ne s'arrête pas à moitié chemin.",
         },

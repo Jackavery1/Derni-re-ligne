@@ -1,4 +1,5 @@
 import { rectArrondiPortrait } from './portraits-cutscene-utils.js';
+import { obtenirCoucheStatique, seedFraction } from './portrait-rendu-utils.js';
 
 export const PALETTE_VERA = {
     COMBINAISON: '#e8edf5',
@@ -38,35 +39,6 @@ export const PALETTE_VERA_DESAT = {
 
 /** @type {Map<string, OffscreenCanvas | HTMLCanvasElement>} */
 const _cacheStatique = new Map();
-
-function _seedFraction(index) {
-    return Math.abs(Math.sin(index * 12.9898 + 78.233) * 43758.5453) % 1;
-}
-
-/**
- * @param {number} w
- * @param {number} h
- * @returns {OffscreenCanvas | HTMLCanvasElement | null}
- */
-function _creerSurface(w, h) {
-    if (typeof OffscreenCanvas !== 'undefined') {
-        try {
-            const surface = new OffscreenCanvas(w, h);
-            if (typeof surface.getContext === 'function') return surface;
-        } catch {
-            /* environnement sans OffscreenCanvas complet */
-        }
-    }
-    if (typeof document !== 'undefined' && typeof document.createElement === 'function') {
-        const canvas = document.createElement('canvas');
-        if (typeof canvas.getContext === 'function') {
-            canvas.width = w;
-            canvas.height = h;
-            return canvas;
-        }
-    }
-    return null;
-}
 
 /**
  * @param {CanvasRenderingContext2D} ctx
@@ -196,18 +168,9 @@ function _dessinerCoucheStatiqueVera(ctx, w, h, desature) {
  */
 function _obtenirCoucheStatique(w, h, desature) {
     const cle = `${w}x${h}-${desature ? 'd' : 'n'}`;
-    const existant = _cacheStatique.get(cle);
-    if (existant) return existant;
-
-    const surface = _creerSurface(w, h);
-    if (!surface) return null;
-
-    const ctx = surface.getContext('2d');
-    if (!ctx) return null;
-
-    _dessinerCoucheStatiqueVera(ctx, w, h, desature);
-    _cacheStatique.set(cle, surface);
-    return surface;
+    return obtenirCoucheStatique(_cacheStatique, cle, w, h, (ctx, width, height) =>
+        _dessinerCoucheStatiqueVera(ctx, width, height, desature)
+    );
 }
 
 /**
@@ -226,7 +189,7 @@ function _appliquerBandesGlitch(ctx, w, h, source, tAnim, decalages) {
     for (let bi = 0; bi < bandes; bi++) {
         const y0 = cy - 34 + bi * 26;
         const offset =
-            (decalages[bi] ?? 0) + Math.sin(tAnim * 6 + bi * 1.7 + _seedFraction(bi) * 6) * 3;
+            (decalages[bi] ?? 0) + Math.sin(tAnim * 6 + bi * 1.7 + seedFraction(bi) * 6) * 3;
         ctx.save();
         ctx.beginPath();
         ctx.rect(0, y0, w, hBande);
@@ -284,7 +247,7 @@ function _dessinerParticulesVera(ctx, cx, cy, s, tAnim, params) {
     const count = 8;
 
     for (let i = 0; i < count; i++) {
-        const seed = _seedFraction(i + 3);
+        const seed = seedFraction(i + 3);
         const angle =
             (i / count) * Math.PI * 2 + tAnim * fv * (erratic ? 1.8 : 0.9) + seed * Math.PI * 0.4;
         const r = (36 + Math.sin(tAnim * 2 * fv + i * 1.3) * 6) * fr * s;

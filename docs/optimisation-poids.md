@@ -5,7 +5,7 @@
 | Ressource                    | Plafond                     | Commande                   |
 | ---------------------------- | --------------------------- | -------------------------- |
 | App shell (precache SW prod) | 2048 Ko                     | `npm run audit:poids`      |
-| JS minifie (dist)            | 900 Ko (CI : 580 Ko bundle) | `npm run build` puis audit |
+| JS minifie (dist)            | 900 Ko (CI : 605 Ko bundle) | `npm run build` puis audit |
 | Polices woff2                | 300 Ko                      | audit                      |
 | Scene cutscene PNG           | 200 Ko / image              | audit                      |
 | Piste musique                | 3,5 Mo                      | audit                      |

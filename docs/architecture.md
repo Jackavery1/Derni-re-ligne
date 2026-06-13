@@ -113,7 +113,7 @@ flowchart TB
 - **RAF conditionnelle** — `aBesoinDeBoucle()` suspend la boucle principale quand inutile.
 - **FPS adaptatif** — EWMA dans `boucle-jeu.js` ; effets réduits si FPS < 45 ou `prefers-reduced-motion`.
 - **Cache canvas** — gradients statiques (vignette, ambiance bas, masque météo) en offscreen dans `rendu-plateau.js` ; fonds biome/méta pré-générés.
-- **Budget bundle** — `scripts/verifier-bundle.mjs` en CI (max 560 Ko) ; `npm run analyze` après build.
+- **Budget bundle** — `scripts/verifier-bundle.mjs` en CI (max 605 Ko) ; `npm run analyze` après build.
 
 ## Guides
 

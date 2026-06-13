@@ -26,18 +26,12 @@ export function obtenirCutsceneEntree(mondeId, premiereVisite) {
             : 'monde_finale';
         const lignesFinale = _textes().CUTSCENES_ENTREE[cleEntree];
         if (!lignesFinale?.length) return null;
-        return {
-            lignes: _formaterLignes(lignesFinale),
-            personnages: _extrairePersonnages(lignesFinale),
-        };
+        return { lignes: lignesFinale };
     }
     if (!premiereVisite) return null;
     const lignesRaw = _textes().CUTSCENES_ENTREE[mondeId];
     if (!lignesRaw?.length) return null;
-    return {
-        lignes: _formaterLignes(lignesRaw),
-        personnages: _extrairePersonnages(lignesRaw),
-    };
+    return { lignes: lignesRaw };
 }
 
 export function afficherVictoireBoss(bossId, typeFin = 'normal', onFin) {
@@ -53,11 +47,7 @@ export function afficherVictoireBoss(bossId, typeFin = 'normal', onFin) {
     }
     void _importerUi()
         .then(({ afficherCutsceneHistoire }) => {
-            afficherCutsceneHistoire(
-                _formaterLignes(lignesRaw),
-                _extrairePersonnages(lignesRaw),
-                onFin
-            );
+            afficherCutsceneHistoire(lignesRaw, null, onFin);
         })
         .catch(() => onFin?.());
 }
@@ -69,11 +59,7 @@ export function afficherTransitionChapitre(cleChapitre, onFin) {
         return;
     }
     void _importerUi().then(({ afficherCutsceneHistoire }) => {
-        afficherCutsceneHistoire(
-            _formaterLignes(lignesRaw),
-            _extrairePersonnages(lignesRaw),
-            onFin
-        );
+        afficherCutsceneHistoire(lignesRaw, null, onFin);
     });
 }
 
@@ -105,11 +91,7 @@ export function declencherFin(finId) {
             const epilogue = _textes().EPILOGUES[finId];
             void _importerUi()
                 .then(({ afficherCutsceneHistoire }) => {
-                    afficherCutsceneHistoire(
-                        _formaterLignes(epilogue),
-                        _extrairePersonnages(epilogue),
-                        suivant
-                    );
+                    afficherCutsceneHistoire(epilogue, null, suivant);
                 })
                 .catch((err) => {
                     logger.warn('[histoire] épilogue indisponible :', err);
@@ -125,16 +107,12 @@ export function declencherFin(finId) {
             const outro = _textes().OUTRO_FINS[finId];
             void _importerUi()
                 .then(({ afficherCutsceneHistoire }) => {
-                    afficherCutsceneHistoire(
-                        _formaterLignes(outro),
-                        _extrairePersonnages(outro),
-                        () => {
-                            const etatHist = _obtenirEtatHistoireLocal();
-                            etatHist.outroVue = true;
-                            persisterEtatHistoire(etatHist);
-                            suivant();
-                        }
-                    );
+                    afficherCutsceneHistoire(outro, null, () => {
+                        const etatHist = _obtenirEtatHistoireLocal();
+                        etatHist.outroVue = true;
+                        persisterEtatHistoire(etatHist);
+                        suivant();
+                    });
                 })
                 .catch(() => suivant());
         },
@@ -155,11 +133,7 @@ export function declencherFin(finId) {
 
 export function afficherDecouverteLabo(onFin) {
     void _importerUi().then(({ afficherCutsceneHistoire }) => {
-        afficherCutsceneHistoire(
-            _formaterLignes(_textes().DECOUVERTE_LABO),
-            _extrairePersonnages(_textes().DECOUVERTE_LABO),
-            onFin
-        );
+        afficherCutsceneHistoire(_textes().DECOUVERTE_LABO, null, onFin);
     });
 }
 
@@ -183,8 +157,6 @@ export function obtenirTransitionApresVictoire(mondeId) {
 export function obtenirTypeFin() {
     const etatHist = _obtenirEtatHistoireLocal();
 
-    // Aligne avec FINS.fin_secrete (condition mondeCache: 'trame') :
-    // la fin secrete exige d'avoir reellement complete LA TRAME PRIMORDIALE.
     if (
         etatHist.mondesCompletes.includes('monde_trame') &&
         etatHist.conditionsTrame.miroirComplete &&
@@ -213,27 +185,15 @@ export function typeFinVersCleBoss(finId) {
     }
 }
 
-function _formaterLignes(lignesRaw) {
-    return lignesRaw.map((l) => l.texte ?? l);
-}
-
-function _extrairePersonnages(lignesRaw) {
-    return lignesRaw.map((l) => l.personnage ?? 'narrateur');
-}
-
 /**
  * Retourne la cutscene post-monde pour un monde donne (ou null).
- * Utilise apres un monde normal complete (pas boss).
  * @param {string} mondeId
  * @param {boolean} premiereCompletion
- * @returns {{ lignes: string[], personnages: string[] } | null}
+ * @returns {{ lignes: Array<{ personnage?: string, texte: string, scene?: string, humeur?: string }> } | null}
  */
 export function obtenirCutscenePostMonde(mondeId, premiereCompletion) {
     if (!premiereCompletion) return null;
     const lignesRaw = _textes().CUTSCENES_POST_MONDE[mondeId];
     if (!lignesRaw?.length) return null;
-    return {
-        lignes: _formaterLignes(lignesRaw),
-        personnages: _extrairePersonnages(lignesRaw),
-    };
+    return { lignes: lignesRaw };
 }

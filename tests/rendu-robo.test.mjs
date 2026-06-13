@@ -68,7 +68,20 @@ describe('rendu-robo', () => {
     it('expose PALETTE_ROBO canon', () => {
         expect(PALETTE_ROBO.SCLERE).toBe('#eaf6ff');
         expect(PALETTE_ROBO.PUPILLE).toBe('#1a3c46');
-        expect(PALETTE_ROBO.DENTS).toBe('#35e0e6');
+        expect(PALETTE_ROBO.BOUCHE_NEON).toBe('#35e0e6');
+    });
+
+    it('utilise un arc neon en neutre (pas de grille de dents)', () => {
+        const ctx = creerCtxMock();
+        dessinerRobo(ctx, 120, 150, 'neutre', 0);
+        expect(ctx.quadraticCurveTo.mock.calls.length).toBeGreaterThan(0);
+        expect(ctx.fillRect.mock.calls.length).toBeLessThan(20);
+    });
+
+    it('utilise un sourire ouvert en excite', () => {
+        const ctx = creerCtxMock();
+        dessinerRobo(ctx, 120, 150, 'excite', 0);
+        expect(ctx.ellipse.mock.calls.length).toBeGreaterThan(0);
     });
 
     it('dessine chaque humeur canvas sans erreur', () => {

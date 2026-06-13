@@ -1,5 +1,4 @@
 import {
-    creerSurfaceCanvas,
     etatBossDepuisParams,
     obtenirCoucheStatique,
     seedFraction,

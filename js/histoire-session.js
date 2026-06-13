@@ -63,9 +63,7 @@ async function _demarrerMondeHistoireInterne(mondeId) {
             etat.mondesDejaMontres.push(mondeId);
             sauvegarderEtatHistoire(etat);
         }
-        afficherCutsceneHistoire(cutscene.lignes, cutscene.personnages, () =>
-            _apresPresentationMonde(monde)
-        );
+        afficherCutsceneHistoire(cutscene.lignes, null, () => _apresPresentationMonde(monde));
     } else {
         _apresPresentationMonde(monde);
     }
@@ -208,11 +206,7 @@ export function demarrerParadoxe() {
     void Promise.all([chargerHistoireTextes(), import('./histoire-manager-ui.js')])
         .then(([textes, { afficherCutsceneHistoire }]) => {
             const lignes = textes.CUTSCENES_ENTREE.monde_paradoxe ?? [];
-            afficherCutsceneHistoire(
-                lignes.map((l) => l.texte),
-                lignes.map((l) => l.personnage),
-                () => _surFinParadoxe()
-            );
+            afficherCutsceneHistoire(lignes, null, () => _surFinParadoxe());
         })
         .catch((err) => logger.warn('[paradoxe] chargement cutscene :', err));
 }

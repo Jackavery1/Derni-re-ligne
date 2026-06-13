@@ -53,7 +53,7 @@ describe('declencherFin — épilogue puis outro', () => {
         const [textesOutro] = afficherCutsceneHistoire.mock.calls[1];
 
         expect(textesEpilogue.length).toBeGreaterThan(0);
-        expect(textesOutro.some((t) => String(t).includes('LE CYCLE'))).toBe(true);
+        expect(textesOutro.some((l) => String(l.texte ?? l).includes('LE CYCLE'))).toBe(true);
         expect(executerFin).toHaveBeenCalledWith('fin_normale');
     }, 15_000);
 

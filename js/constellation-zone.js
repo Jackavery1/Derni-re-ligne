@@ -1,5 +1,5 @@
 export const LARGEUR_PANNEAU_SEL_DESKTOP = 380;
-export const SEUIL_PANNEAU_SEL_MOBILE = 900;
+export const SEUIL_PANNEAU_SEL_MOBILE = 768;
 
 /**
  * @param {boolean} panneauOuvert

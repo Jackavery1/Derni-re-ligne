@@ -35,7 +35,7 @@ body.contraste-eleve .bouton {
     }
 }
 
-@media (max-height: 500px) and (orientation: landscape) {
+@media (max-height: 768px) and (orientation: landscape) {
     #controles-mobile {
         display: none !important;
     }
@@ -106,13 +106,23 @@ body.contraste-eleve .bouton {
 }
 #controles-paysage .btn-tactile {
     width: 52px;
-    height: 44px;
+    height: 48px;
+    min-width: 44px;
+    min-height: 44px;
     font-size: 0.9rem;
 }
 
-@media (max-height: 500px) and (orientation: landscape) {
+@media (max-height: 768px) and (orientation: landscape) {
     body.partie-active #controles-paysage {
         display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .bouton-mode {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 12px 16px;
     }
 }
 

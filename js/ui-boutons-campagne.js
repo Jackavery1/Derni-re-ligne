@@ -1,4 +1,3 @@
-import { afficherEcran } from './ecrans-ui.js';
 import {
     nouvellePartieNecessiteConfirmation,
     demanderConfirmationNouvellePartie,

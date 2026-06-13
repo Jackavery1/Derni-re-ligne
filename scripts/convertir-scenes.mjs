@@ -161,6 +161,130 @@ function formatGravite(gravite) {
 }
 
 /**
+ * @param {string} idScene
+ * @param {string} cheminSortie
+ * @param {string} graviteLabel
+ */
+async function rapportSceneSkip(idScene, cheminSortie, graviteLabel) {
+    const meta = await sharp(cheminSortie).metadata();
+    const octetsSortie = statSync(cheminSortie).size;
+    return {
+        ignoree: false,
+        skip: true,
+        rapport: {
+            scene: idScene,
+            source: `${meta.width}×${meta.height} (skip)`,
+            letterbox: '—',
+            gravite: graviteLabel,
+            poids: `${formaterKo(octetsSortie)} Ko`,
+            statut: octetsSortie <= BUDGET_SCENE_KO * 1024 ? 'OK' : 'ALERTE',
+        },
+    };
+}
+
+/**
+ * @param {string} cheminSource
+ * @param {string} idScene
+ * @param {number} octetsSource
+ * @param {string} formatSource
+ */
+async function convertirPipelineImage(cheminSource, idScene, octetsSource, formatSource) {
+    const cheminSortie = join(OUT_DIR, `${idScene}.png`);
+    const cheminTemp = join(OUT_DIR, `.${idScene}.png.tmp`);
+
+    const imageSource = sharp(cheminSource);
+    const metaSource = await imageSource.metadata();
+    const largeurSource = metaSource.width ?? 0;
+    const hauteurSource = metaSource.height ?? 0;
+
+    const { data, info } = await imageSource.clone().ensureAlpha().raw().toBuffer({
+        resolveWithObject: true,
+    });
+
+    const letterbox = detecterLetterbox(data, info.width, info.height, info.channels);
+    if (letterbox.haut > 0 || letterbox.bas > 0) {
+        console.log(`    letterbox detectee : ${letterbox.haut} px haut / ${letterbox.bas} px bas`);
+    }
+
+    const cropLetterbox = {
+        left: 0,
+        top: letterbox.haut,
+        width: info.width,
+        height: info.height - letterbox.haut - letterbox.bas,
+    };
+
+    if (cropLetterbox.height <= 0 || cropLetterbox.width <= 0) {
+        throw new Error('image invalide apres rognage letterbox');
+    }
+
+    const gravite = GRAVITE_RECADRAGE[idScene] ?? 'centre';
+    const fenetre = calculerFenetre169(cropLetterbox.width, cropLetterbox.height, gravite);
+    const extractFinal = {
+        left: cropLetterbox.left + fenetre.left,
+        top: cropLetterbox.top + fenetre.top,
+        width: fenetre.width,
+        height: fenetre.height,
+    };
+
+    if (fenetre.width < LARGEUR || fenetre.height < HAUTEUR) {
+        console.warn(
+            `    AVERT — zone 16:9 ${fenetre.width}×${fenetre.height} < ${LARGEUR}×${HAUTEUR}, upscale nearest`
+        );
+    }
+
+    const image = sharp(cheminSource).extract(extractFinal).resize(LARGEUR, HAUTEUR, {
+        kernel: sharp.kernel.nearest,
+    });
+
+    let bufferFinal = null;
+    let paletteUtilisee = PALETTE_TAILLES[0];
+
+    for (const colors of PALETTE_TAILLES) {
+        const buffer = await quantifierPng(image, colors);
+        bufferFinal = buffer;
+        paletteUtilisee = colors;
+        if (buffer.length <= BUDGET_SCENE_KO * 1024) break;
+    }
+
+    if (!bufferFinal) {
+        throw new Error('echec quantification PNG');
+    }
+
+    if (paletteUtilisee !== PALETTE_TAILLES[0]) {
+        console.log(
+            `    palette reduite a ${paletteUtilisee} couleurs (budget ${BUDGET_SCENE_KO} Ko)`
+        );
+    }
+
+    writeFileSync(cheminTemp, bufferFinal);
+    renameSync(cheminTemp, cheminSortie);
+
+    const octetsSortie = bufferFinal.length;
+    const alerteBudget = octetsSortie > BUDGET_SCENE_KO * 1024;
+    const statut = alerteBudget ? 'ALERTE' : 'OK';
+
+    console.log(
+        `    → ${idScene}.png : ${formaterKo(octetsSource)} Ko → ${formaterKo(octetsSortie)} Ko (${LARGEUR}×${HAUTEUR}, gravite ${formatGravite(gravite)}, ${paletteUtilisee} couleurs)${alerteBudget ? ' ALERTE BUDGET' : ''}`
+    );
+
+    return {
+        ignoree: false,
+        skip: false,
+        rapport: {
+            scene: idScene,
+            source: `${largeurSource}×${hauteurSource} ${formatSource}`,
+            letterbox:
+                letterbox.haut > 0 || letterbox.bas > 0
+                    ? `${letterbox.haut}/${letterbox.bas} px`
+                    : '0/0',
+            gravite: formatGravite(gravite),
+            poids: `${formaterKo(octetsSortie)} Ko`,
+            statut,
+        },
+    };
+}
+
+/**
  * @param {string} fichierSource
  * @returns {Promise<{
  *   ignoree?: boolean,
@@ -186,21 +310,8 @@ async function convertirScene(fichierSource) {
 
     if (!doitReconvertir(cheminSource, cheminSortie)) {
         console.log(`  SKIP (a jour) : ${fichierSource}`);
-        const meta = await sharp(cheminSortie).metadata();
-        const octetsSortie = statSync(cheminSortie).size;
         const gravite = GRAVITE_RECADRAGE[idScene] ?? 'centre';
-        return {
-            ignoree: false,
-            skip: true,
-            rapport: {
-                scene: idScene,
-                source: `${meta.width}×${meta.height} (skip)`,
-                letterbox: '—',
-                gravite: formatGravite(gravite),
-                poids: `${formaterKo(octetsSortie)} Ko`,
-                statut: octetsSortie <= BUDGET_SCENE_KO * 1024 ? 'OK' : 'ALERTE',
-            },
-        };
+        return await rapportSceneSkip(idScene, cheminSortie, formatGravite(gravite));
     }
 
     const octetsSource = statSync(cheminSource).size;
@@ -212,100 +323,7 @@ async function convertirScene(fichierSource) {
     }
 
     try {
-        const imageSource = sharp(cheminSource);
-        const metaSource = await imageSource.metadata();
-        const largeurSource = metaSource.width ?? 0;
-        const hauteurSource = metaSource.height ?? 0;
-
-        const { data, info } = await imageSource
-            .clone()
-            .ensureAlpha()
-            .raw()
-            .toBuffer({ resolveWithObject: true });
-
-        const letterbox = detecterLetterbox(data, info.width, info.height, info.channels);
-        if (letterbox.haut > 0 || letterbox.bas > 0) {
-            console.log(
-                `    letterbox detectee : ${letterbox.haut} px haut / ${letterbox.bas} px bas`
-            );
-        }
-
-        const cropLetterbox = {
-            left: 0,
-            top: letterbox.haut,
-            width: info.width,
-            height: info.height - letterbox.haut - letterbox.bas,
-        };
-
-        if (cropLetterbox.height <= 0 || cropLetterbox.width <= 0) {
-            throw new Error('image invalide apres rognage letterbox');
-        }
-
-        const gravite = GRAVITE_RECADRAGE[idScene] ?? 'centre';
-        const fenetre = calculerFenetre169(cropLetterbox.width, cropLetterbox.height, gravite);
-        const extractFinal = {
-            left: cropLetterbox.left + fenetre.left,
-            top: cropLetterbox.top + fenetre.top,
-            width: fenetre.width,
-            height: fenetre.height,
-        };
-
-        if (fenetre.width < LARGEUR || fenetre.height < HAUTEUR) {
-            console.warn(
-                `    AVERT — zone 16:9 ${fenetre.width}×${fenetre.height} < ${LARGEUR}×${HAUTEUR}, upscale nearest`
-            );
-        }
-
-        const image = sharp(cheminSource).extract(extractFinal).resize(LARGEUR, HAUTEUR, {
-            kernel: sharp.kernel.nearest,
-        });
-
-        let bufferFinal = null;
-        let paletteUtilisee = PALETTE_TAILLES[0];
-
-        for (const colors of PALETTE_TAILLES) {
-            const buffer = await quantifierPng(image, colors);
-            bufferFinal = buffer;
-            paletteUtilisee = colors;
-            if (buffer.length <= BUDGET_SCENE_KO * 1024) break;
-        }
-
-        if (!bufferFinal) {
-            throw new Error('echec quantification PNG');
-        }
-
-        if (paletteUtilisee !== PALETTE_TAILLES[0]) {
-            console.log(
-                `    palette reduite a ${paletteUtilisee} couleurs (budget ${BUDGET_SCENE_KO} Ko)`
-            );
-        }
-
-        writeFileSync(cheminTemp, bufferFinal);
-        renameSync(cheminTemp, cheminSortie);
-
-        const octetsSortie = bufferFinal.length;
-        const alerteBudget = octetsSortie > BUDGET_SCENE_KO * 1024;
-        const statut = alerteBudget ? 'ALERTE' : 'OK';
-
-        console.log(
-            `    → ${fichierSortie} : ${formaterKo(octetsSource)} Ko → ${formaterKo(octetsSortie)} Ko (${LARGEUR}×${HAUTEUR}, gravite ${formatGravite(gravite)}, ${paletteUtilisee} couleurs)${alerteBudget ? ' ALERTE BUDGET' : ''}`
-        );
-
-        return {
-            ignoree: false,
-            skip: false,
-            rapport: {
-                scene: idScene,
-                source: `${largeurSource}×${hauteurSource} ${formatSource}`,
-                letterbox:
-                    letterbox.haut > 0 || letterbox.bas > 0
-                        ? `${letterbox.haut}/${letterbox.bas} px`
-                        : '0/0',
-                gravite: formatGravite(gravite),
-                poids: `${formaterKo(octetsSortie)} Ko`,
-                statut,
-            },
-        };
+        return await convertirPipelineImage(cheminSource, idScene, octetsSource, formatSource);
     } catch (erreur) {
         if (existsSync(cheminTemp)) unlinkSync(cheminTemp);
         console.error(
