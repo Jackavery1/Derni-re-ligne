@@ -8,6 +8,8 @@ import {
     passerFluxLancementMonde,
     attendrePartieVisible,
     attendreNotificationsInitiales,
+    preparerPremierLancement,
+    passerCutsceneHistoire,
     ETAT_HISTOIRE_BOSS_BRASIER,
 } from './helpers.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
@@ -42,16 +44,99 @@ const ETAT_PARADOXE_DEBLOQUE = {
     conditionsParadoxe: { finSecreteObtenue: true, topsVolontairesPrologue: 3 },
 };
 
+test('intro Jour 2 554 — première visite depuis Nouvelle partie', async ({ page }) => {
+    test.setTimeout(60000);
+    await preparerPremierLancement(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
+
+    await expect(page.locator('#btn-nouvelle-partie')).toBeVisible();
+    await page.locator('#btn-nouvelle-partie').click();
+
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 15000,
+    });
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/cutscene-mode-narration/);
+    await expect(page.locator('#texte-narration-cutscene')).toContainText(/invent.*jeu/i);
+
+    await passerCutsceneHistoire(page);
+    await expect(page.locator('#canvas-histoire-map')).toBeVisible();
+
+    const introVue = await page.evaluate(() =>
+        localStorage.getItem('derniereLigne_introHistoireVue')
+    );
+    expect(introVue).toBe('1');
+});
+
+test('nouvelle partie après progression — reset et rejoue l intro', async ({ page }) => {
+    test.setTimeout(60000);
+    await page.route('**/sw.js', (route) => route.abort());
+    await page.addInitScript(() => {
+        window.__NEO_SILENT_NOTIFS__ = true;
+        localStorage.setItem('dl_migration_v1', '1');
+        localStorage.setItem('derniereLigne_tutorielVu', '1');
+        localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
+        localStorage.setItem('derniereLigne_introHistoireVue', '1');
+        localStorage.setItem(
+            'derniereLigne_histoire',
+            JSON.stringify({
+                chapitreActuel: 'prologue',
+                mondesCompletes: ['monde_prologue'],
+                bossVaincus: [],
+                journauxTrouves: [],
+                mondesCachesDebloques: [],
+                conditionsMiroir: { bossArchivisteVaincu: false, tetrisTriplesCyber: 0 },
+                conditionsTrame: {
+                    miroirComplete: false,
+                    tousJournauxTrouves: false,
+                    tousBossSansContinue: true,
+                    actionDistorsionFaite: false,
+                },
+                conditionsParadoxe: { finSecreteObtenue: false, topsVolontairesPrologue: 0 },
+                finObtenue: null,
+                toutesFinObtenues: [],
+                nbContinuesUtilises: 0,
+                enModeHistoire: false,
+                mondesDejaMontres: [],
+                laboDecouvert: false,
+                prouessesHistoire: {
+                    blocksRouillesMax: 0,
+                    lignesEclipseBasseMax: 0,
+                    lignesVideMax: 0,
+                    precisionMiroirMax: 0,
+                    meilleurTimerBossMs: Infinity,
+                },
+            })
+        );
+    });
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
+
+    await expect(page.locator('#btn-continuer')).toBeVisible();
+    await page.locator('#btn-nouvelle-partie').click();
+    await expect(page.locator('#dialog-nouvelle-partie')).not.toHaveClass(/element-masque/);
+    await page.locator('#btn-confirm-nouvelle-partie').click();
+
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 15000,
+    });
+    await expect(page.locator('#texte-narration-cutscene')).toContainText(/invent.*jeu/i);
+
+    await passerCutsceneHistoire(page);
+    await expect(page.locator('#canvas-histoire-map')).toBeVisible();
+
+    const etat = await page.evaluate(() =>
+        JSON.parse(localStorage.getItem('derniereLigne_histoire') ?? '{}')
+    );
+    expect(etat.mondesCompletes ?? []).toEqual([]);
+});
+
 test('carte histoire accessible depuis le menu', async ({ page }) => {
     await ouvrirCarteHistoire(page);
     await expect(page.locator('#canvas-histoire-map')).toBeVisible();
     await expect(page.locator('#histoire-prog-mondes')).toContainText('MONDES');
-});
-
-test('carte histoire sans violations accessibilité critiques', async ({ page }) => {
-    await ouvrirCarteHistoire(page);
-    const result = await new AxeBuilder({ page }).include('#ecran-histoire-map').analyze();
-    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
 });
 
 test('carte histoire sans violations accessibilité critiques', async ({ page }) => {
@@ -134,7 +219,7 @@ test('panneau objectifs prologue mobile sans debordement horizontal', async ({ p
     });
 
     expect(metriques.debord).toBe(false);
-    expect(metriques.btnH).toBeGreaterThanOrEqual(44);
+    expect(metriques.btnH).toBeGreaterThanOrEqual(48);
     expect(metriques.btnW).toBeGreaterThan(0);
 
     await btnCommencer.click({ force: true, noWaitAfter: true });
@@ -149,6 +234,81 @@ test('carte histoire utilisable sur viewport mobile', async ({ page }) => {
     await ouvrirCarteHistoire(page);
     await expect(page.locator('#histoire-monde-clavier')).toBeVisible();
     await expect(page.locator('#canvas-histoire-map')).toBeVisible();
+
+    const metriques = await page.evaluate(() => {
+        const doc = document.documentElement;
+        const retour = document.getElementById('btn-histoire-retour');
+        const rect = retour?.getBoundingClientRect();
+        return {
+            debord: doc.scrollWidth > doc.clientWidth + 1,
+            retourH: rect?.height ?? 0,
+            retourW: rect?.width ?? 0,
+        };
+    });
+    expect(metriques.debord).toBe(false);
+    expect(metriques.retourH).toBeGreaterThanOrEqual(48);
+    expect(metriques.retourW).toBeGreaterThanOrEqual(48);
+});
+
+test('cutscene mobile — boutons tactiles et pas de débordement', async ({ page }) => {
+    test.setTimeout(45000);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.addInitScript((etat) => {
+        localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
+        localStorage.setItem('dl_migration_v1', '1');
+        localStorage.setItem('derniereLigne_tutorielVu', '1');
+        localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
+        localStorage.setItem('derniereLigne_introHistoireVue', '1');
+    }, ETAT_HISTOIRE_VIDE);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
+    await page.locator('#btn-continuer').click();
+    await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });
+    await page.locator('.bouton-jouer-monde').click({ force: true });
+
+    const cutscene = page.locator('#ecran-histoire-cutscene');
+    await expect(cutscene).toHaveClass(/actif/, { timeout: 15000 });
+
+    const metriques = await page.evaluate(() => {
+        const doc = document.documentElement;
+        const suivant = document.getElementById('btn-cutscene-suivant');
+        const passer = document.getElementById('btn-cutscene-passer');
+        const rs = suivant?.getBoundingClientRect();
+        const rp = passer?.getBoundingClientRect();
+        return {
+            debord: doc.scrollWidth > doc.clientWidth + 1,
+            suivantH: rs?.height ?? 0,
+            passerH: rp?.height ?? 0,
+        };
+    });
+    expect(metriques.debord).toBe(false);
+    expect(metriques.suivantH).toBeGreaterThanOrEqual(48);
+    expect(metriques.passerH).toBeGreaterThanOrEqual(48);
+
+    const portraitDessine = await page.evaluate(() => {
+        const canvas = document.getElementById('canvas-portrait-gauche');
+        if (!(canvas instanceof HTMLCanvasElement)) return false;
+        if (canvas.classList.contains('absent')) return false;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return false;
+        const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        for (let i = 3; i < data.length; i += 4) {
+            if (data[i] > 0) return true;
+        }
+        return false;
+    });
+    expect(portraitDessine).toBe(true);
+
+    const portraitsStables = await page.evaluate(() => {
+        const gauche = document.getElementById('canvas-portrait-gauche');
+        const droite = document.getElementById('canvas-portrait-droite');
+        const rects = [gauche, droite]
+            .filter((c) => c instanceof HTMLCanvasElement && !c.classList.contains('absent'))
+            .map((c) => c.getBoundingClientRect());
+        return rects.every((r) => r.width >= 48 && r.height >= 48 && r.top >= 0 && r.left >= 0);
+    });
+    expect(portraitsStables).toBe(true);
 });
 
 test('scroll molette sur la carte histoire ne provoque pas d erreur', async ({ page }) => {
@@ -226,6 +386,11 @@ test('cutscene narration active le mode voix off', async ({ page }) => {
 
 test('mondes cachés non débloqués absents de la sélection clavier', async ({ page }) => {
     await ouvrirCarteHistoire(page, ETAT_HISTOIRE_BOSS_BRASIER);
+    await expect(
+        page.locator('#histoire-monde-clavier option[value="monde_prologue"]')
+    ).toBeAttached({
+        timeout: 10000,
+    });
     const options = await page.locator('#histoire-monde-clavier option').allInnerTexts();
     const valeurs = await page
         .locator('#histoire-monde-clavier option')

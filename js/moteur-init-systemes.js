@@ -19,8 +19,7 @@ import { creerParticulesExplosion } from './particules-jeu.js';
 import { initialiserCanvas, demarrerJeu } from './partie.js';
 import { initialiserEffetsPartie } from './effets-partie.js';
 import { mettreAJourBoutonsMute } from './options-ui.js';
-import { demarrerCooperatif } from './coop-jeu.js';
-import { coopEstPrefere } from './coop-logique.js';
+import { coopEstPrefere } from './coop-preference.js';
 import { appliquerThemeBiome } from './ecrans-ui.js';
 
 export function initialiserSystemesMoteur() {
@@ -80,7 +79,9 @@ export function initialiserSystemesMoteur() {
         biomeEstDebloque,
         appliquerThemeBiome,
         demarrerJeu,
-        demarrerCooperatif,
+        demarrerCooperatif: () => {
+            void import('./coop-jeu.js').then(({ demarrerCooperatif }) => demarrerCooperatif());
+        },
         modeCoopEstActif: coopEstPrefere,
         sonMenu: (type) => AudioMoteur.son(type),
         ouvrirHistoireVersMonde: (mondeId) => {

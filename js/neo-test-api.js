@@ -10,7 +10,12 @@ export function estNeoTestAutorise() {
 }
 
 /**
- * @param {{ terminerPartie?: (victoire: boolean) => void, demarrerPartieLibre?: (biomeId?: string) => void }} api
+ * @param {{
+ *   terminerPartie?: (victoire: boolean, options?: { immediat?: boolean }) => void,
+ *   demarrerPartieLibre?: (biomeId?: string) => void,
+ *   boucleMenuUnifieActive?: () => boolean,
+ *   simulerVictoireSprint?: () => void
+ * }} api
  */
 export function exposerNeoTestApi(api) {
     if (!estNeoTestAutorise()) return;

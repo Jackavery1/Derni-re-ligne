@@ -360,7 +360,7 @@ body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
     grid-template-columns: 1fr 1fr;
     align-items: end;
     width: 100%;
-    padding: 0 4%;
+    padding: 0 4% max(12px, env(safe-area-inset-bottom, 0px));
     gap: 8px;
 }
 
@@ -624,6 +624,8 @@ body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.15);
     padding: 8px 20px;
+    min-height: 48px;
+    min-width: 48px;
     cursor: pointer;
     transition:
         background 0.2s,
@@ -648,14 +650,16 @@ body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
     border: none;
     cursor: pointer;
     transition: color 0.2s;
-    padding: 8px;
+    padding: 8px 12px;
+    min-height: 48px;
+    min-width: 48px;
 }
 .btn-cutscene-passer:hover {
     color: rgba(255, 255, 255, 0.75);
 }
 
 /* Mobile : même grille à zones fixes, portraits compacts */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     #ecran-histoire-cutscene.ecran.actif {
         grid-template-rows:
             clamp(72px, 14vh, 140px)

@@ -24,6 +24,9 @@ import { initialiserUiObjectifs } from './ui-panneau-objectifs.js';
 import { initialiserTutoriel } from './tutoriel.js';
 import { obtenirActions } from './actions-jeu.js';
 import { exposerNeoTestApi } from './neo-test-api.js';
+import { boucleSecondaireActive } from './planificateur-raf.js';
+import { CONFIG } from './config-jeu.js';
+import { etat } from './store-jeu.js';
 
 export function initialiserInterfaceMoteur() {
     chargerStats();
@@ -51,11 +54,18 @@ export function initialiserInterfaceMoteur() {
     if (typeof window !== 'undefined') {
         document.body.dataset.neoTestReady = '1';
         exposerNeoTestApi({
-            terminerPartie: (victoire) => obtenirActions().terminerPartie?.(victoire),
+            terminerPartie: (victoire, options) =>
+                obtenirActions().terminerPartie?.(victoire, options),
             demarrerPartieLibre: (biomeId = 'classique') => {
                 definirBiomeActif(biomeId);
                 sauvegarderBiomeActif(biomeId);
                 demarrerJeu();
+            },
+            boucleMenuUnifieActive: () => boucleSecondaireActive('menu-unifie'),
+            simulerVictoireSprint: () => {
+                etat.modeJeu = 'sprint';
+                etat.lignes = CONFIG.sprintLignes;
+                obtenirActions().terminerPartie?.(true, { immediat: true });
             },
         });
     }

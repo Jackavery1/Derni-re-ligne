@@ -177,6 +177,21 @@ describe('ui-panneau-detail', () => {
         expect(noeuds.get('panneau-detail-condition')?.textContent).toContain('Miroir');
     });
 
+    it('affiche le teaser si afficherTeaserVerrouille', () => {
+        const { ouvrirPanneauDetail } = globalThis.__panneauDetail;
+        ouvrirPanneauDetail({
+            id: 'test_teaser',
+            accent: '#00f5ff',
+            titre: 'CYBER',
+            description: 'Complete LE MIROIR en mode histoire pour debloquer',
+            verrouille: true,
+            afficherTeaserVerrouille: true,
+        });
+        expect(noeuds.get('panneau-detail-titre')?.textContent).toContain('CYBER');
+        const desc = noeuds.get('panneau-detail-description');
+        expect(desc?.children[0]?.textContent).toContain('mode histoire');
+    });
+
     it('affiche la barre de progression si verrouille', () => {
         const { ouvrirPanneauDetail } = globalThis.__panneauDetail;
         ouvrirPanneauDetail({

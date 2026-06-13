@@ -402,7 +402,7 @@ body.histoire-active #section-objectifs-histoire {
         flex-wrap: wrap;
         align-items: flex-start;
         padding: 10px;
-        min-height: 44px;
+        min-height: 48px;
     }
 
     .objectif-etoile-libelle {

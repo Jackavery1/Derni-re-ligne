@@ -27,7 +27,7 @@ Délai de réponse visé : **7 jours ouvrés**.
 | **XSS**                           | CSP stricte (`script-src 'self'`), pas de `innerHTML` sur contenu dynamique, fragments HTML chargés via `DOMParser` | Faible — contenu statique contrôlé         |
 | **Intégrité JS prod**             | SRI `sha384` sur `bundle.js` (`npm run build` → `dist/index.html`)                                                  | Faible                                     |
 | **Injection localStorage**        | Whitelist stricte de clés dans `progression.js`, validation regex (sans wildcard préfixe)                           | Faible — impact local uniquement           |
-| **Clickjacking**                  | CSP `frame-ancestors 'none'` dans `index.html`                                                                      | Faible                                     |
+| **Clickjacking**                  | `frame-ancestors 'none'` via en-tête HTTP (GitHub Pages : commentaire + doc ; **inefficace en meta CSP**)           | Faible — iframe embedding                  |
 | **Cache poisoning SW**            | SW versionné (`derniere-ligne-{semver}`), notification MAJ, purge anciens caches                                    | Moyen — utilisateur peut retarder la MAJ   |
 | **Intégrité bundle prod**         | SRI `sha384` sur `js/bundle.js` dans `dist/index.html` (build CI)                                                   | Faible — dev local sans SRI volontairement |
 | **Supply chain npm**              | 0 dépendance runtime, `npm audit` + Dependabot + CodeQL en CI                                                       | Faible                                     |
@@ -36,7 +36,7 @@ Délai de réponse visé : **7 jours ouvrés**.
 
 ## Bonnes pratiques en place
 
-- Content-Security-Policy stricte (`index.html`, incluant `frame-ancestors 'none'` et `worker-src 'self'`)
+- Content-Security-Policy stricte (`index.html`, `worker-src 'self'` ; `frame-ancestors` documenté en commentaire HTML — en-tête HTTP en prod si CDN)
 - **SRI (Subresource Integrity)** sur le bundle prod (`dist/index.html` — `integrity="sha384-…"` + `crossorigin="anonymous"`, généré par `npm run build`)
 - Whitelist `localStorage` (`js/progression.js`)
 - Aucune dépendance runtime npm

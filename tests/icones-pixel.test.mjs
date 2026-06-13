@@ -49,4 +49,29 @@ describe('icones-pixel', () => {
         expect(ctx.imageSmoothingEnabled).toBe(false);
         expect(ctx.filter).toBe('none');
     });
+
+    it('chaque icône codex produit un empreinte canvas distincte', () => {
+        /** @param {string} idIcone */
+        function empreinteIcone(idIcone) {
+            const rects = [];
+            const ctx = {
+                imageSmoothingEnabled: true,
+                filter: 'auto',
+                fillStyle: '',
+                drawImage() {},
+                fillRect(x, y, w, h) {
+                    rects.push(`${x},${y},${w},${h},${ctx.fillStyle}`);
+                },
+            };
+            dessinerIconePixel(ctx, idIcone, 0, 0, 4);
+            return rects.join('|');
+        }
+
+        const empreintes = new Set(
+            Object.values(CODEX)
+                .slice(0, 8)
+                .map((entree) => empreinteIcone(ICONE_PAR_ENTREE[entree.id]))
+        );
+        expect(empreintes.size).toBeGreaterThan(4);
+    });
 });

@@ -1,7 +1,7 @@
 import { readdirSync, statSync } from 'fs';
 
-const MAX_KO = 605;
-const WARN_KO = 530;
+const MAX_KO = 610;
+const WARN_KO = 535;
 const dossier = 'dist/js';
 const fichiers = readdirSync(dossier).filter((f) => f.endsWith('.js') && !f.endsWith('.map'));
 const octets = fichiers.reduce(

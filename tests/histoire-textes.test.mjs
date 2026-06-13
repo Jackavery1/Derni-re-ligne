@@ -12,6 +12,7 @@ import { ACHIEVEMENTS_HISTOIRE } from '../js/achievements-histoire.js';
 import { INTRO_HISTOIRE } from '../js/histoire-textes/intro-interludes.js';
 import { SCENES_CUTSCENE } from '../js/scenes-cutscene.js';
 import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
+import { SEQUENCE_HISTOIRE } from '../js/histoire-donnees.js';
 
 function extrairePersonnagesCutscenes(objet) {
     const ids = new Set();
@@ -119,12 +120,14 @@ describe('histoire-textes — cohérence portraits', () => {
 
     it('FRAGMENTS_VERA_SIGNAL couvre les mondes narratifs principaux', () => {
         for (const cle of [
+            'apres_prologue',
             'apres_ocean',
             'apres_foret',
             'apres_glace',
             'apres_desert',
             'apres_eclipse',
             'apres_lave',
+            'apres_rouille',
             'apres_cyber',
             'apres_fuochi',
             'apres_cosmos',
@@ -132,5 +135,42 @@ describe('histoire-textes — cohérence portraits', () => {
         ]) {
             expect(FRAGMENTS_VERA_SIGNAL[cle]?.length, cle).toBeGreaterThan(0);
         }
+    });
+
+    it('chaque monde narratif visible a une cutscene post-monde', () => {
+        const mondes = SEQUENCE_HISTOIRE.filter((m) => !m.estBoss && !m.estCache);
+        for (const monde of mondes) {
+            expect(CUTSCENES_POST_MONDE[monde.id]?.length, monde.id).toBeGreaterThan(0);
+        }
+    });
+
+    it('mondes secrets ont une cutscene post-monde ou entree dediee', () => {
+        for (const id of ['monde_miroir', 'monde_trame']) {
+            expect(CUTSCENES_POST_MONDE[id]?.length ?? 0, id).toBeGreaterThan(0);
+        }
+        expect(CUTSCENES_ENTREE.monde_paradoxe).toBeTruthy();
+    });
+
+    it('chaque monde de SEQUENCE_HISTOIRE a une cutscene entree', () => {
+        for (const monde of SEQUENCE_HISTOIRE) {
+            const lignes = extraireLignesCutscene(CUTSCENES_ENTREE[monde.id]);
+            expect(lignes.length, monde.id).toBeGreaterThan(0);
+        }
+    });
+
+    it('scenes referencees dans les cutscenes existent dans le registre ou sont absentes', () => {
+        const ids = new Set(Object.keys(SCENES_CUTSCENE));
+        for (const [mondeId, entree] of Object.entries(CUTSCENES_ENTREE)) {
+            for (const ligne of extraireLignesCutscene(entree)) {
+                if (!ligne.scene) continue;
+                expect(ids.has(ligne.scene), `${mondeId} → ${ligne.scene}`).toBe(true);
+            }
+        }
+    });
+
+    it('vide_errance est referencee dans une cutscene et marquee lazy', () => {
+        const vide = extraireLignesCutscene(CUTSCENES_ENTREE.monde_vide);
+        expect(vide.some((l) => l.scene === 'vide_errance')).toBe(true);
+        expect(SCENES_CUTSCENE.vide_errance?.lazy).toBe(true);
     });
 });

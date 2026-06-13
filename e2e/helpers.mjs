@@ -52,6 +52,11 @@ export async function preparerPremierLancement(page) {
     await page.addInitScript(() => {
         localStorage.setItem('dl_migration_v1', '1');
         localStorage.removeItem('derniereLigne_histoire');
+        localStorage.removeItem('derniereLigne_introHistoireVue');
+        localStorage.removeItem('derniereLigne_tutorielVu');
+        localStorage.removeItem('derniereLigne_tutorielHistoireVu');
+        localStorage.removeItem('derniereLigne_tutorielCoopVu');
+        localStorage.removeItem('derniereLigne_tutorielArchitecteVu');
     });
 }
 
@@ -66,6 +71,7 @@ export async function preparerPageSansSw(page, etatHistoire = ETAT_DEBLOCAGE_MON
         localStorage.setItem('derniereLigne_tutorielCoopVu', '1');
         localStorage.setItem('derniereLigne_tutorielArchitecteVu', '1');
         localStorage.setItem('derniereLigne_introHistoireVue', '1');
+        localStorage.setItem('derniereLigne_infobulleOracleCoop', '1');
         localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
         if ('serviceWorker' in navigator) {
             void navigator.serviceWorker.getRegistrations().then((regs) => {
@@ -108,7 +114,9 @@ export async function selectionnerBiomeClavier(page, option = { value: 'classiqu
 
 /** @param {import('@playwright/test').Page} page @param {string} [biomeId] */
 async function confirmerDemarragePartie(page, biomeId = 'classique') {
-    await page.locator('#btn-panneau-detail-jouer').click({ force: true });
+    await page.evaluate(() => {
+        document.getElementById('btn-panneau-detail-jouer')?.click();
+    });
     const demarre = await page.evaluate((biome) => {
         if (document.body.classList.contains('partie-active')) return true;
         const demarrer = window.__NEO_TEST__?.demarrerPartieLibre;
@@ -138,6 +146,18 @@ export async function attendreNotificationsInitiales(page) {
             await expect(el).not.toHaveClass(/visible/, { timeout: 20000 });
         }
     }
+}
+
+/** @param {import('@playwright/test').Page} page */
+export async function fermerInfobulleContexteSiVisible(page) {
+    const overlay = page.locator('#overlay-infobulle-contexte');
+    if (await overlay.isVisible().catch(() => false)) {
+        await page.locator('#btn-infobulle-contexte-fermer').click({ force: true });
+        await expect(overlay).toHaveClass(/element-masque/, { timeout: 5000 });
+    }
+    await page.evaluate(() => {
+        document.getElementById('overlay-infobulle-contexte')?.classList.add('element-masque');
+    });
 }
 
 /**
@@ -279,8 +299,11 @@ export async function demarrerPartieCoop(page) {
     await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
     await page.goto('/');
     await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
     await page.locator('#btn-jouer').click();
-    await page.locator('#toggle-coop').click();
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    await fermerInfobulleContexteSiVisible(page);
+    await page.locator('#toggle-coop').click({ force: true });
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await selectionnerBiomeClavier(page);
     await page.locator('#btn-panneau-detail-jouer').click({ force: true });
@@ -291,29 +314,53 @@ export async function demarrerPartieCoop(page) {
 export async function terminerPartieCourante(page) {
     await expect(page.locator('body')).toHaveClass(/partie-active/, { timeout: 15000 });
 
-    for (let tentative = 0; tentative < 3; tentative++) {
-        const declenche = await page.evaluate(() => {
-            if (typeof window.__NEO_TEST__?.terminerPartie === 'function') {
-                window.__NEO_TEST__.terminerPartie(false);
-                return true;
-            }
-            return false;
-        });
-        if (!declenche) {
-            await page.evaluate(() => {
-                document
-                    .querySelectorAll('.ecran.actif')
-                    .forEach((el) => el.classList.remove('actif'));
-                document.getElementById('ecran-game-over')?.classList.add('actif');
-            });
-            break;
+    const declenche = await page.evaluate(() => {
+        if (typeof window.__NEO_TEST__?.terminerPartie === 'function') {
+            window.__NEO_TEST__.terminerPartie(false, { immediat: true });
+            return true;
         }
-        try {
-            await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/, { timeout: 5000 });
+        return false;
+    });
+    expect(declenche).toBe(true);
+    await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/, { timeout: 5000 });
+}
+
+/** @param {import('@playwright/test').Page} page */
+export async function passerCutsceneHistoire(page) {
+    for (let i = 0; i < 40; i++) {
+        if (
+            await page
+                .locator('#ecran-histoire-map')
+                .evaluate((el) => el.classList.contains('actif'))
+        ) {
             return;
-        } catch {
-            await page.waitForTimeout(400);
         }
+
+        const passer = page.locator('#btn-cutscene-passer');
+        if (await passer.isVisible().catch(() => false)) {
+            await passer.click({ force: true });
+            continue;
+        }
+
+        const suivant = page.locator('#btn-cutscene-suivant');
+        if (await suivant.isVisible().catch(() => false)) {
+            await suivant.click({ force: true });
+            continue;
+        }
+
+        const tutoriel = page.locator('#btn-tutoriel-fermer');
+        if (await tutoriel.isVisible().catch(() => false)) {
+            await tutoriel.click();
+            continue;
+        }
+
+        await page.waitForTimeout(200);
     }
-    await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/, { timeout: 15000 });
+
+    await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/, { timeout: 20000 });
+}
+
+/** @param {import('@playwright/test').Page} page */
+export async function passerFluxPremierLancementCampagne(page) {
+    await passerCutsceneHistoire(page);
 }

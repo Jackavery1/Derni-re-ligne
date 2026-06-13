@@ -171,6 +171,26 @@ export const FRAGMENTS_VERA_SIGNAL = {
         { personnage: 'systeme', texte: '> SATURATION DU CAPTEUR', humeur: 'alerte' },
     ],
 
+    apres_prologue: [
+        { personnage: 'systeme', texte: '> PREMIER CONTACT — CANAL VERA', humeur: 'neutre' },
+        {
+            personnage: 'vera',
+            texte: '...Robo... si tu m entends... ne t arrete pas apres la premiere grille...',
+            humeur: 'douce',
+        },
+        { personnage: 'systeme', texte: '> SIGNAL FAIBLE', humeur: 'alerte' },
+    ],
+
+    apres_rouille: [
+        { personnage: 'systeme', texte: '> INTERFERENCE METALLIQUE', humeur: 'alerte' },
+        {
+            personnage: 'vera',
+            texte: '...ces machines rouillees... elles gardent la memoire de ce qui a ete abandonne...',
+            humeur: 'inquiete',
+        },
+        { personnage: 'systeme', texte: '> FIN DU FRAGMENT', humeur: 'alerte' },
+    ],
+
     apres_cyber: [
         { personnage: 'systeme', texte: '> PAQUET CHIFFRÉ — CLÉ VERA', humeur: 'neutre' },
         {

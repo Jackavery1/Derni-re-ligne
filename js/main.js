@@ -2,6 +2,11 @@ import { chargerEcrans } from './charger-ecrans.js';
 import { initialiserApplication } from './moteur.js';
 import { logger, afficherErreurUtilisateur } from './logger.js';
 import { lireStockage } from './progression-stockage.js';
+import { swAutorise, libererSwEnDevLocal } from './sw-dev.js';
+
+if (window.top !== window.self) {
+    window.top.location.replace(window.self.location.href);
+}
 
 window.addEventListener('error', (ev) => {
     logger.error(ev.message, ev.filename, ev.lineno);
@@ -14,6 +19,8 @@ window.addEventListener('unhandledrejection', (ev) => {
 });
 
 async function demarrer() {
+    if (await libererSwEnDevLocal()) return;
+
     document.body?.classList.toggle(
         'contraste-eleve',
         lireStockage('derniereLigne_contraste', 'false') === 'true'
@@ -41,7 +48,7 @@ async function demarrer() {
     }
 }
 
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && swAutorise()) {
     window.addEventListener('load', () => {
         navigator.serviceWorker
             .register('sw.js')

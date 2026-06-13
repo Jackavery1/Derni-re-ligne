@@ -21,6 +21,7 @@ import { sansAccentsE } from './texte-jeu.js';
  * @property {'narratif' | 'ui'} [typoDescription]
  * @property {string[]} [lignesMeta]
  * @property {boolean} [verrouille]
+ * @property {boolean} [afficherTeaserVerrouille]
  * @property {string} [conditionTexte]
  * @property {{ actuel: number, cible: number, formaterTexte?: (actuel: number, cible: number) => string }} [progression]
  * @property {{ libelle?: string, onAction: () => void }} [actionPrincipale]
@@ -167,18 +168,20 @@ function appliquerContenu(config) {
 
     rendreIcone(config);
 
+    const masquerSpoiler = config.verrouille && !config.afficherTeaserVerrouille;
+
     if (refs.titre) {
-        refs.titre.textContent = sansAccentsE(config.verrouille ? '???' : config.titre);
+        refs.titre.textContent = sansAccentsE(masquerSpoiler ? '???' : config.titre);
     }
     if (refs.sousTitre) {
-        const st = config.verrouille ? '' : (config.sousTitre ?? '');
+        const st = masquerSpoiler ? '' : (config.sousTitre ?? '');
         refs.sousTitre.textContent = sansAccentsE(st);
         refs.sousTitre.classList.toggle('element-masque', !st);
     }
 
     remplirDescription(
         refs.description,
-        config.verrouille ? '' : config.description,
+        masquerSpoiler ? '' : config.description,
         config.typoDescription ?? 'ui'
     );
 

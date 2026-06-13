@@ -137,6 +137,9 @@ export function afficherEcran(idEcran) {
 export function cacherEcrans() {
     document.querySelectorAll('.ecran').forEach((el) => el.classList.remove('actif'));
     definirZoneJeuInerte(false);
+    arreterConstellation();
+    arreterFondMeta();
+    void import('./histoire-map.js').then(({ arreterCarteHistoire }) => arreterCarteHistoire());
 }
 
 /** @param {() => void} [apresNavigation] */

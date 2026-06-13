@@ -1,7 +1,11 @@
 import { CONFIG } from './config-jeu.js';
 import { etat } from './store-jeu.js';
 import { majStatsReactionRobo } from './achievements.js';
-import { definirHumeurRobo, definirClignementInactifMascotte } from './rendu-robo.js';
+import {
+    definirHumeurRobo,
+    definirClignementInactifMascotte,
+    demarrerBoucleRobo,
+} from './rendu-robo.js';
 import { logger } from './logger.js';
 
 /** @param {string} humeur */
@@ -276,4 +280,5 @@ export function reinitialiserMascottePartie() {
     _humeurLogiqueCourante = 'neutre';
     definirClignementInactifMascotte(false);
     _appliquerReaction('neutre', 0, { compterStats: false });
+    demarrerBoucleRobo();
 }

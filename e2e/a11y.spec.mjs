@@ -7,6 +7,8 @@ import {
     attendreApplicationPrete,
     demarrerPartie,
     ETAT_DEBLOCAGE_COMPLET,
+    ouvrirCarteHistoire,
+    ETAT_HISTOIRE_BOSS_BRASIER,
 } from './helpers.mjs';
 
 test('écran titre sans violations accessibilité critiques', async ({ page }) => {
@@ -145,5 +147,19 @@ test('options sans violations accessibilité critiques', async ({ page }) => {
     await page.locator('#btn-options').click();
     await expect(page.locator('#ecran-options')).toHaveClass(/actif/);
     const result = await new AxeBuilder({ page }).include('#ecran-options').analyze();
+    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
+});
+
+test('cutscene histoire sans violations accessibilité critiques', async ({ page }) => {
+    const etatPremiereVisiteBoss = {
+        ...ETAT_HISTOIRE_BOSS_BRASIER,
+        mondesDejaMontres: [],
+    };
+    await ouvrirCarteHistoire(page, etatPremiereVisiteBoss);
+    await page.locator('#histoire-monde-clavier').selectOption('monde_boss_1', { force: true });
+    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 10000 });
+    await page.waitForTimeout(300);
+    const result = await new AxeBuilder({ page }).include('#ecran-histoire-cutscene').analyze();
     expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
 });

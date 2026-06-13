@@ -74,6 +74,7 @@ export function ouvrirPanneauBiomeConstellation(idBiome, deps) {
         typoDescription: 'ui',
         lignesMeta: meta,
         verrouille,
+        afficherTeaserVerrouille: verrouille,
         icone: { id: obtenirIdIconeBiome(idBiome), taillePixel: 10 },
         actionPrincipale: verrouille
             ? undefined

@@ -83,32 +83,6 @@ function _portraitsPourLigne(personnageActuel, personnages, indexLigne) {
     };
 }
 
-function _dessinerROBOSimple(ctx, w, h, ts, humeur) {
-    const cx = w * 0.5;
-    const E = Math.min(w, h) * 0.04;
-    ctx.fillStyle = '#5533aa';
-    ctx.fillRect(cx - 3 * E, h * 0.42, 6 * E, 7 * E);
-    ctx.fillStyle = '#d42b2b';
-    ctx.fillRect(cx - 2.5 * E, h * 0.24, 5 * E, 4.5 * E);
-    ctx.fillStyle = '#00ddc8';
-    const ouv = humeur === 'alerte' ? E * 1.6 : E * 1.2;
-    ctx.beginPath();
-    ctx.ellipse(cx - 1.2 * E, h * 0.35, E * 0.8, ouv, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(cx + 1.2 * E, h * 0.35, E * 0.8, ouv, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 16;
-    ctx.shadowColor = '#00ddc8';
-    ctx.strokeStyle = '#00ddc8';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.ellipse(cx - 1.2 * E, h * 0.35, E * 0.8, ouv, 0, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-    void ts;
-}
-
 /**
  * @param {HTMLCanvasElement} canvas
  * @param {CanvasRenderingContext2D | null} ctx
@@ -139,24 +113,15 @@ function _dessinerPortrait(canvas, ctx, personnageId, parle, ts, ligneCourante) 
               ? 'content'
               : 'neutre';
         definirHumeurRoboCutscene(humeurRobo);
-        if (typeof dessinerRobo === 'function') {
-            try {
-                dessinerRobo(
-                    ctx,
-                    w,
-                    h,
-                    /** @type {'neutre'|'content'|'excite'|'triste'|'alerte'} */ (
-                        convertirHumeurVersCanvas(humeurRobo)
-                    ),
-                    ts / 1000
-                );
-                return;
-            } catch {
-                _dessinerROBOSimple(ctx, w, h, ts, humeurRobo);
-                return;
-            }
-        }
-        _dessinerROBOSimple(ctx, w, h, ts, humeurRobo);
+        dessinerRobo(
+            ctx,
+            w,
+            h,
+            /** @type {'neutre'|'content'|'excite'|'triste'|'alerte'} */ (
+                convertirHumeurVersCanvas(humeurRobo)
+            ),
+            ts / 1000
+        );
         return;
     }
 

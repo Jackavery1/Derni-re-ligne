@@ -24,6 +24,15 @@ body.archi-active #conteneur-principal-archi {
     display: flex;
 }
 
+body.partie-active.archi-active #controles-mobile,
+body.partie-active.archi-active #controles-paysage,
+body.archi-active #controles-mobile,
+body.archi-active #controles-paysage {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
 #interface-echelle-archi {
     flex-shrink: 0;
     overflow: visible;
@@ -289,7 +298,7 @@ body.archi-active #conteneur-principal-archi {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: 50;
+    z-index: 60;
 }
 
 #controles-archi-paysage .ctrl-col {
@@ -328,5 +337,24 @@ body.archi-active #conteneur-principal-archi {
 
     body.archi-active #interface-jeu-archi .archi-guide {
         display: none;
+    }
+}
+
+#controles-archi-paysage .btn-tactile {
+    width: 52px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    font-size: 0.9rem;
+}
+
+#btn-reinit-archi {
+    min-height: 48px;
+}
+
+@media (max-width: 768px) {
+    .archi-filtre-btn {
+        min-height: 48px;
+        min-width: 48px;
     }
 }

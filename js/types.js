@@ -161,7 +161,13 @@
 /**
  * @typedef {Window & typeof globalThis & {
  *   webkitAudioContext?: typeof AudioContext,
- *   __NEO_TEST__?: { terminerPartie?: (victoire: boolean) => void }
+ *   __NEO_SILENT_NOTIFS__?: boolean,
+ *   __NEO_TEST__?: {
+ *     terminerPartie?: (victoire: boolean, options?: { immediat?: boolean }) => void,
+ *     demarrerPartieLibre?: (biomeId?: string) => void,
+ *     boucleMenuUnifieActive?: () => boolean,
+ *     simulerVictoireSprint?: () => void
+ *   }
  * }} WindowEtendu
  */
 

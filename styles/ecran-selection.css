@@ -139,13 +139,13 @@
 
 #sel-barre-modes {
     position: fixed;
-    z-index: 4;
+    z-index: 8700;
     right: 0;
     bottom: 0;
     width: min(380px, 100%);
     max-height: 50vh;
     overflow-y: auto;
-    padding: 12px 16px 20px;
+    padding: 12px 16px calc(20px + env(safe-area-inset-bottom, 0px));
     pointer-events: auto;
     display: flex;
     flex-direction: column;
@@ -153,6 +153,10 @@
     background: rgba(8, 8, 26, 0.88);
     border-top: 1px solid var(--bordure);
     border-left: 1px solid var(--bordure);
+}
+
+body:has(#sel-barre-modes:not(.element-masque)) .panneau-detail-corps {
+    padding-bottom: min(42vh, 280px);
 }
 
 #sel-barre-modes.element-masque {
@@ -636,8 +640,8 @@ body.effets-reduits .panneau-detail-corps {
     font-size: 0.55rem;
     cursor: pointer;
     padding: 10px 14px;
-    min-width: 44px;
-    min-height: 44px;
+    min-width: 48px;
+    min-height: 48px;
     letter-spacing: 1px;
 }
 .panneau-detail-fermer:hover {
@@ -751,6 +755,7 @@ body.effets-reduits .panneau-detail-progression-fill {
 .panneau-detail-jouer {
     width: 100%;
     margin-top: 8px;
+    min-height: 48px;
     border-color: var(--accent-carte);
     color: var(--accent-carte);
     text-shadow: 0 0 8px color-mix(in srgb, var(--accent-carte) 55%, transparent);
@@ -781,6 +786,8 @@ body.effets-reduits .panneau-detail-progression-fill {
         bottom: 0;
         width: 100%;
         max-height: 55vh;
+        overflow-y: auto;
+        overscroll-behavior: contain;
         border-radius: 12px 12px 0 0;
         transform: translateY(105%);
     }
@@ -1095,10 +1102,10 @@ body.coop-active #conteneur-principal {
     color: var(--texte);
     font-family: var(--police);
     font-size: 0.6rem;
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
     cursor: pointer;
     border-radius: 4px;
     display: flex;
@@ -1159,5 +1166,34 @@ body.coop-active #conteneur-principal {
     }
     body.coop-active #interface-jeu-coop {
         justify-content: center;
+    }
+}
+
+@media (max-height: 768px) and (orientation: landscape) {
+    body.coop-active #controles-coop-j1,
+    body.coop-active #controles-coop-j2 {
+        display: flex;
+    }
+    body.coop-active #interface-jeu-coop .panneau-coop {
+        display: none;
+    }
+    body.coop-active #interface-jeu-coop {
+        justify-content: center;
+    }
+
+    #controles-coop-j1 {
+        padding-left: max(8px, env(safe-area-inset-left, 0px));
+    }
+    #controles-coop-j2 {
+        padding-right: max(8px, env(safe-area-inset-right, 0px));
+    }
+}
+
+@media (max-width: 768px) {
+    .codex-contenu {
+        padding-top: max(24px, env(safe-area-inset-top, 0px));
+        padding-bottom: max(32px, env(safe-area-inset-bottom, 0px));
+        padding-left: max(16px, env(safe-area-inset-left, 0px));
+        padding-right: max(16px, env(safe-area-inset-right, 0px));
     }
 }

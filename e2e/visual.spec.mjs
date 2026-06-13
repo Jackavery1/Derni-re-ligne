@@ -51,4 +51,18 @@ test.describe('régressions visuelles', () => {
             animations: 'disabled',
         });
     });
+
+    test('écran sélection tablette paysage sans débordement', async ({ page }) => {
+        await page.setViewportSize({ width: 1024, height: 768 });
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+        await page.locator('#btn-jouer').click();
+        await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+        const metriques = await page.evaluate(() => ({
+            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+            constellation: Boolean(document.getElementById('canvas-constellation')),
+        }));
+        expect(metriques.debord).toBe(false);
+        expect(metriques.constellation).toBe(true);
+    });
 });

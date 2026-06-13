@@ -107,8 +107,8 @@ body.contraste-eleve .bouton {
 #controles-paysage .btn-tactile {
     width: 52px;
     height: 48px;
-    min-width: 44px;
-    min-height: 44px;
+    min-width: 48px;
+    min-height: 48px;
     font-size: 0.9rem;
 }
 
@@ -118,10 +118,17 @@ body.contraste-eleve .bouton {
     }
 }
 
+body.archi-active #controles-mobile,
+body.archi-active #controles-paysage,
+body.coop-active #controles-mobile,
+body.coop-active #controles-paysage {
+    display: none !important;
+}
+
 @media (max-width: 768px) {
     .bouton-mode {
-        min-width: 44px;
-        min-height: 44px;
+        min-width: 48px;
+        min-height: 48px;
         padding: 12px 16px;
     }
 }

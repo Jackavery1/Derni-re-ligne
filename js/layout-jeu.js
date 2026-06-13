@@ -96,9 +96,12 @@ export function adapterInterfaceArchi() {
     const iface = document.getElementById('interface-jeu-archi');
     if (!echelle || !iface) return;
 
+    const estPaysageMobile = estPaysageCompact();
     const largeurTotale =
         LAYOUT_ARCHI.panneauLargeur * 2 + LAYOUT_ARCHI.gap * 2 + LAYOUT_ARCHI.plateauLargeur;
-    const hauteurTotale = LAYOUT_ARCHI.plateauHauteur + LAYOUT_ARCHI.paddingVertical;
+    const hauteurTotale = estPaysageMobile
+        ? Math.max(LAYOUT_ARCHI.plateauHauteur, 280) + LAYOUT_ARCHI.paddingVertical
+        : LAYOUT_ARCHI.plateauHauteur + LAYOUT_ARCHI.paddingVertical;
 
     const mobileControles = hauteurControlesTactiles();
 

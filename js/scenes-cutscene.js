@@ -49,6 +49,13 @@ export const SCENES_CUTSCENE = {
         voile: 0.4,
         kenBurns: 'fixe',
     },
+    vide_errance: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_vide_errance.png',
+        voile: 0.5,
+        kenBurns: 'zoom_lent',
+        lazy: true,
+    },
 };
 
 /** @type {Map<string, { img: HTMLImageElement, charge: boolean, echec: boolean }>} */

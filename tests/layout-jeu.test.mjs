@@ -111,6 +111,26 @@ describe('layout-jeu', () => {
         );
     });
 
+    it('adapterInterfaceArchi ajuste l echelle en paysage compact', () => {
+        window.innerWidth = 844;
+        window.innerHeight = 390;
+        adapterInterfaceArchi();
+        const hPaysage = document
+            .getElementById('interface-echelle-archi')
+            .style.setProperty.mock.calls.find((c) => c[0] === '--iface-echelle-h')?.[1];
+
+        window.innerWidth = 390;
+        window.innerHeight = 844;
+        adapterInterfaceArchi();
+        const hPortrait = document
+            .getElementById('interface-echelle-archi')
+            .style.setProperty.mock.calls.findLast((c) => c[0] === '--iface-echelle-h')?.[1];
+
+        expect(hPaysage).toBeTruthy();
+        expect(hPortrait).toBeTruthy();
+        expect(hPaysage).not.toBe(hPortrait);
+    });
+
     it('adapterInterface ne plante pas si le DOM est absent', () => {
         vi.stubGlobal('document', { getElementById: () => null });
         expect(() => adapterInterface()).not.toThrow();

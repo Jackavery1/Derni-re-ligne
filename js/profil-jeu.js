@@ -316,14 +316,17 @@ function afficherTableauRecordsLocaux() {
 
         const nom = document.createElement('span');
         nom.className = 'profil-records-cell profil-records-nom';
+        nom.setAttribute('role', 'cell');
         nom.textContent = sansAccentsE(ligne.nom);
 
         const marathon = document.createElement('span');
         marathon.className = 'profil-records-cell';
+        marathon.setAttribute('role', 'cell');
         marathon.textContent = ligne.record > 0 ? ligne.record.toLocaleString('fr-FR') : '—';
 
         const sprint = document.createElement('span');
         sprint.className = 'profil-records-cell';
+        sprint.setAttribute('role', 'cell');
         sprint.textContent = ligne.sprintMs > 0 ? formaterTemps(ligne.sprintMs) : '—';
 
         row.append(nom, marathon, sprint);

@@ -51,6 +51,17 @@ Carte → cutscene (si 1ère visite) → partie → boss éventuel → journal /
 | Trame    | Miroir + tous journaux + boss sans continue |
 | Paradoxe | Fin secrète + tops volontaires prologue     |
 
+Les conditions Trame sont visibles dans le HUD pendant une run (`mecaniques-histoire.js`). Les fragments signal VERA après chaque biome narratif préparent la rampe vers Miroir et Trame.
+
+## Rampe narrative
+
+| Étape            | Indice in-game                                       |
+| ---------------- | ---------------------------------------------------- |
+| Prologue → Ch. I | Fragments VERA après prologue, lave, rouille         |
+| Ch. II–III       | Journaux + fragments par biome                       |
+| Ch. IV           | Entraînement Avant-Garde avant la finale             |
+| Post-finale      | Mondes secrets débloqués par `conditions-secrets.js` |
+
 ## Persistance
 
 `localStorage` via `progression.js` (clé `derniereLigne_histoire`). Runtime : `store.histoire`.

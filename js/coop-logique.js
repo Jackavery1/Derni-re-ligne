@@ -471,9 +471,7 @@ export function reinitialiserEtatCoop() {
 }
 
 /** Préférence coop sur l'écran sélection (avant lancement). */
-export function coopEstPrefere() {
-    return modeCoopActif;
-}
+export { coopEstPrefere } from './coop-preference.js';
 
 /** Partie coop en cours (runtime). */
 export function coopPartieEnCours() {

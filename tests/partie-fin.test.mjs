@@ -144,6 +144,12 @@ describe('partie-fin', () => {
         expect(planifierBoucle).toHaveBeenCalled();
     });
 
+    it('affiche le game over sans délai en mode immediat', () => {
+        terminerPartie(false, { immediat: true });
+        expect(afficherEcran).toHaveBeenCalledWith('ecran-game-over');
+        expect(planifierBoucle).toHaveBeenCalled();
+    });
+
     it('masque le badge record si pas de nouveau record', () => {
         const badge = document.getElementById('badge-record');
         terminerPartie(false);

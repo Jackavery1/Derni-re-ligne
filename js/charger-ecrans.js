@@ -2,7 +2,17 @@ import { LISTE_ECRANS_CHARGEMENT } from './ecrans-config.js';
 import { chargerIconesPixel } from './icones-pixel.js';
 import { logger } from './logger.js';
 
-const parseur = new DOMParser();
+/** URL absolue d'un fragment HTML, robuste au base href et aux sous-chemins PWA. */
+export function urlFragmentEcran(nom) {
+    return new URL(`html/${nom}.html`, document.baseURI).href;
+}
+
+let _parseur = null;
+function obtenirParseur() {
+    if (!_parseur) _parseur = new DOMParser();
+    return _parseur;
+}
+
 const MAX_TENTATIVES = 3;
 const DELAI_BASE_MS = 300;
 
@@ -38,14 +48,14 @@ export async function chargerEcrans() {
 
     const fragments = await Promise.all(
         LISTE_ECRANS_CHARGEMENT.map(async (nom) => {
-            const reponse = await fetchAvecRetry(`html/${nom}.html`);
+            const reponse = await fetchAvecRetry(urlFragmentEcran(nom));
             return reponse.text();
         })
     );
 
     conteneur.replaceChildren();
     for (const html of fragments) {
-        const doc = parseur.parseFromString(html, 'text/html');
+        const doc = obtenirParseur().parseFromString(html, 'text/html');
         conteneur.append(...doc.body.childNodes);
     }
 

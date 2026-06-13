@@ -276,3 +276,14 @@
     flex-wrap: wrap;
     justify-content: center;
 }
+
+@media (max-width: 768px) {
+    .go-contenu {
+        margin: max(12px, env(safe-area-inset-top, 0px)) 12px
+            max(12px, env(safe-area-inset-bottom, 0px));
+    }
+
+    .go-boutons .bouton {
+        min-height: 48px;
+    }
+}

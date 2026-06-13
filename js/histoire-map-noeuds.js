@@ -2,6 +2,7 @@ import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { BIOMES } from './config.js';
 import { obtenirEtatHistoire, mondePeutEtreJoue, obtenirEtatMonde } from './histoire-mondes.js';
 import { sansAccentsE } from './texte-jeu.js';
+import { dessinerRoboMiniature } from './rendu-robo-mini.js';
 
 function _positionLabel(pos, rayon, w) {
     const centreX = w * 0.5;
@@ -176,7 +177,7 @@ function dessinerNoeud(etatCarte, monde, pos, etatHist, timestamp) {
     );
 
     if (estDisponible && !estComplete) {
-        dessinerRoboMiniature(etatCarte, x, y - rayon - 4, timestamp);
+        dessinerRoboMiniature(ctxCarte, x, y - rayon - 4, timestamp);
     }
 
     ctxCarte.restore();
@@ -214,35 +215,6 @@ function dessinerNoeudCache(etatCarte, monde, pos, etatHist, timestamp) {
         ctxCarte.fillStyle = '#ffe600';
         ctxCarte.fillText(sansAccentsE(monde.nomAffiche), x, y + rayon + 11);
     }
-    ctxCarte.restore();
-}
-
-function dessinerRoboMiniature(etatCarte, x, y, timestamp) {
-    const { ctxCarte } = etatCarte;
-    if (!ctxCarte) return;
-
-    const bounce = Math.sin(timestamp / 380) * 2.5;
-    const rx = Math.round(x - 8);
-    const ry = Math.round(y - 14 + bounce);
-
-    ctxCarte.save();
-    ctxCarte.fillStyle = '#0c0c28';
-    ctxCarte.strokeStyle = '#00f5ff';
-    ctxCarte.lineWidth = 1;
-
-    ctxCarte.fillRect(rx + 2, ry, 12, 9);
-    ctxCarte.strokeRect(rx + 2, ry, 12, 9);
-    ctxCarte.fillRect(rx + 3, ry + 9, 10, 5);
-    ctxCarte.strokeRect(rx + 3, ry + 9, 10, 5);
-    ctxCarte.fillStyle = '#00f5ff';
-    ctxCarte.fillRect(rx + 4, ry + 2, 3, 3);
-    ctxCarte.fillRect(rx + 9, ry + 2, 3, 3);
-    const alphaBlink = 0.6 + 0.4 * Math.sin(timestamp / 700);
-    ctxCarte.globalAlpha = alphaBlink;
-    ctxCarte.fillStyle = '#ff006e';
-    ctxCarte.fillRect(rx + 7, ry - 3, 2, 2);
-    ctxCarte.globalAlpha = 1;
-
     ctxCarte.restore();
 }
 

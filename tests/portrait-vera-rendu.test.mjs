@@ -88,4 +88,13 @@ describe('portrait VERA canon', () => {
         const appels = ctx.drawImage.mock.calls.length + ctx.fillRect.mock.calls.length;
         expect(appels).toBeGreaterThan(5);
     });
+
+    it('structure anti-dalle : tête en ellipse et traits de visage', () => {
+        const ctx = creerCtxMock();
+        const params = obtenirParamsExpressionPortrait('vera', 'neutre', 1000);
+        dessinerPortraitVeraCanon(ctx, 180, 260, 0, params);
+        expect(ctx.ellipse.mock.calls.length).toBeGreaterThanOrEqual(2);
+        expect(ctx.arc.mock.calls.length).toBeGreaterThanOrEqual(2);
+        expect(ctx.quadraticCurveTo.mock.calls.length).toBeGreaterThan(0);
+    });
 });

@@ -22,7 +22,7 @@ import { ECRANS } from './store-jeu.js';
 import { planifierBoucle } from './boucle-jeu.js';
 import { afficherMelodieGameOver } from './melodie.js';
 import { finaliserPartieCommune } from './partie-fin-commun.js';
-import { coop } from './coop-logique.js';
+import { modeCoopEnCours } from './registre-modes.js';
 import { store } from './store-core.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { defiJourActif } from './mode-defi-jour.js';
@@ -57,8 +57,10 @@ function _enregistrerRecordsFinPartie(victoire, scoreFinal) {
     }
 }
 
-export function terminerPartie(victoire = false) {
-    if (coop.actif) return;
+/** @param {boolean} [victoire] @param {{ immediat?: boolean }} [options] */
+export function terminerPartie(victoire = false, options = {}) {
+    const { immediat = false } = options;
+    if (modeCoopEnCours()) return;
     arreterFondBiome();
     const bossIdDefaite = !victoire ? obtenirBossIdActif() : null;
     if (bossEstActif() && !victoire) {
@@ -115,10 +117,15 @@ export function terminerPartie(victoire = false) {
 
     const afficherGameOver = !(modeHistoireEnCours() && victoire);
     if (afficherGameOver) {
-        setTimeout(() => {
+        const montrerGameOver = () => {
             afficherEcran(ECRANS.GAME_OVER);
             planifierBoucle();
-        }, 350);
+        };
+        if (immediat) {
+            montrerGameOver();
+        } else {
+            setTimeout(montrerGameOver, 350);
+        }
     }
 
     setTimeout(() => afficherMelodieGameOver(), 400);

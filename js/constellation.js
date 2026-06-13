@@ -42,6 +42,17 @@ function panneauBiomeEstOuvert() {
     return panneauBiomeConstellationOuvert();
 }
 
+/** @param {number} base */
+function parametresSpiraleConstellation(base) {
+    const compact = base < 400;
+    return {
+        compact,
+        rayonInit: base * (compact ? 0.05 : 0.12),
+        croissance: base * (compact ? 0.022 : 0.06),
+        angleIncr: compact ? 2.15 : 2.4,
+    };
+}
+
 function obtenirDecalageZoneActuel() {
     return obtenirDecalageCentreConstellation(panneauBiomeEstOuvert(), window.innerWidth);
 }
@@ -65,9 +76,7 @@ function repositionnerNoeudsConstellation() {
     const centreX = w / 2 + obtenirDecalageZoneActuel();
     const centreY = h / 2;
     const base = Math.min(w, h);
-    const rayonInit = base * 0.12;
-    const croissance = base * 0.06;
-    const angleIncr = 2.4;
+    const { rayonInit, croissance, angleIncr } = parametresSpiraleConstellation(base);
 
     ORDRE_BIOMES_LIBRE.forEach((id, index) => {
         const noeud = constellationNoeuds.find((n) => n.id === id);
@@ -160,9 +169,7 @@ function initConstellation() {
     const centreX = w / 2 + obtenirDecalageZoneActuel();
     const centreY = h / 2;
     const base = Math.min(w, h);
-    const rayonInit = base * 0.12;
-    const croissance = base * 0.06;
-    const angleIncr = 2.4;
+    const { rayonInit, croissance, angleIncr, compact } = parametresSpiraleConstellation(base);
 
     ORDRE_BIOMES_LIBRE.forEach((id, index) => {
         const biome = BIOMES[id];
@@ -173,7 +180,7 @@ function initConstellation() {
             biome,
             x: centreX + Math.cos(angle) * rayonSpirale,
             y: centreY + Math.sin(angle) * rayonSpirale,
-            rayon: 28 + index * 2,
+            rayon: (compact ? 22 : 28) + index * (compact ? 1.5 : 2),
             pulsation: Math.random() * Math.PI * 2,
             vitessePuls: 0.02 + Math.random() * 0.01,
             verrouille: !biomeEstDebloqueParHistoire(id),

@@ -34,6 +34,7 @@ function marquerVu(biomeId, type) {
 /** @param {{ titre: string, texte: string }} contenu */
 function afficherInfobulle(contenu) {
     if (typeof document === 'undefined') return;
+    if (window.__NEO_SILENT_NOTIFS__) return;
     const overlay = document.getElementById('overlay-infobulle-contexte');
     if (!overlay) return;
 
@@ -99,6 +100,7 @@ export function proposerInfobulleRelique(biomeId, relique) {
 const CLE_ORACLE_COOP = 'derniereLigne_infobulleOracleCoop';
 
 export function proposerInfobulleOracleCoopExclusif() {
+    if (typeof window !== 'undefined' && window.__NEO_SILENT_NOTIFS__) return;
     if (lireStockage(CLE_ORACLE_COOP, '0') === '1') return;
     const wrapOracle = document.getElementById('toggle-oracle-wrap');
     if (!wrapOracle?.classList.contains('mode-debloque')) return;

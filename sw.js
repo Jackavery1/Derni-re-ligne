@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v34';
+const VERSION_SHELL = 'dl-shell-v37';
 const VERSION_MEDIAS = 'dl-medias-v2';
 
 const SCENES_CUTSCENE_PRECACHE = [
@@ -157,6 +157,7 @@ const FICHIERS_A_CACHER = [
     './js/histoire-intro.js',
     './js/histoire-journal-ui.js',
     './js/histoire-manager-completion.js',
+    './js/histoire-manager-post-monde.js',
     './js/histoire-manager-ui.js',
     './js/histoire-manager.js',
     './js/histoire-map-camera.js',
@@ -254,6 +255,11 @@ const FICHIERS_A_CACHER = [
     './js/rendu-motifs-biome.js',
     './js/rendu-plateau.js',
     './js/rendu-previews.js',
+    './js/rendu-robo-corps.js',
+    './js/rendu-robo-donnees.js',
+    './js/rendu-robo-geometrie.js',
+    './js/rendu-robo-mini.js',
+    './js/rendu-robo-visage.js',
     './js/rendu-robo.js',
     './js/rendu-vivant.js',
     './js/scenes-cutscene.js',
@@ -263,6 +269,7 @@ const FICHIERS_A_CACHER = [
     './js/store-histoire.js',
     './js/store-jeu.js',
     './js/store-refs-canvas.js',
+    './js/sw-dev.js',
     './js/texte-jeu.js',
     './js/themes-biome.js',
     './js/touches-config.js',

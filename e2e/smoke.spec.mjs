@@ -130,3 +130,85 @@ test('écran titre utilisable sur viewport mobile', async ({ page }) => {
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#sel-biome-clavier')).toBeVisible();
 });
+
+test('constellation tablette paysage sans débordement horizontal', async ({ page }) => {
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_MONDE_LIBRE);
+    await page.setViewportSize({ width: 1024, height: 768 });
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-jouer').click();
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    await expect(page.locator('#canvas-constellation')).toBeVisible();
+
+    const metriques = await page.evaluate(() => ({
+        debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+        constellationVisible: Boolean(document.getElementById('canvas-constellation')),
+    }));
+    expect(metriques.debord).toBe(false);
+    expect(metriques.constellationVisible).toBe(true);
+});
+
+test('partie solo paysage mobile — contrôles latéraux', async ({ page }) => {
+    await page.setViewportSize({ width: 844, height: 390 });
+    await demarrerPartie(page);
+    await expect(page.locator('#controles-paysage')).toBeVisible();
+    await expect(page.locator('#controles-mobile')).toBeHidden();
+
+    const metriques = await page.evaluate(() => {
+        const btn = document.getElementById('btn-gauche-p');
+        const rect = btn?.getBoundingClientRect();
+        return { h: rect?.height ?? 0, w: rect?.width ?? 0 };
+    });
+    expect(metriques.h).toBeGreaterThanOrEqual(48);
+    expect(metriques.w).toBeGreaterThanOrEqual(48);
+});
+
+test('pause mobile sans débordement horizontal', async ({ page }) => {
+    await demarrerPartie(page);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
+
+    const debord = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+    );
+    expect(debord).toBe(false);
+});
+
+test('game over mobile sans débordement horizontal', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await demarrerPartieViaClavier(page);
+    await terminerPartieCourante(page);
+    await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/, { timeout: 10000 });
+
+    const debord = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+    );
+    expect(debord).toBe(false);
+});
+
+test('panneau detail JOUER visible sur petit ecran sans scroll force', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 568 });
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_MONDE_LIBRE);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-jouer').click();
+    await selectionnerBiomeClavier(page);
+
+    const metriques = await page.evaluate(() => {
+        const btn = document.getElementById('btn-panneau-detail-jouer');
+        btn?.scrollIntoView({ block: 'nearest' });
+        const rect = btn?.getBoundingClientRect();
+        const corps = document.getElementById('panneau-detail-corps');
+        const corpsRect = corps?.getBoundingClientRect();
+        return {
+            h: rect?.height ?? 0,
+            dansPanneau:
+                Boolean(rect && corpsRect) &&
+                rect.bottom <= corpsRect.bottom + 1 &&
+                rect.top >= corpsRect.top - 1,
+        };
+    });
+    expect(metriques.h).toBeGreaterThanOrEqual(48);
+    expect(metriques.dansPanneau).toBe(true);
+});
