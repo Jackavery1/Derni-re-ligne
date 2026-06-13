@@ -75,7 +75,24 @@ describe('rendu-robo', () => {
         const ctx = creerCtxMock();
         dessinerRobo(ctx, 120, 150, 'neutre', 0);
         expect(ctx.quadraticCurveTo.mock.calls.length).toBeGreaterThan(0);
+        expect(ctx.lineWidth).toBeGreaterThan(1);
         expect(ctx.fillRect.mock.calls.length).toBeLessThan(20);
+    });
+
+    it('triste dessine un arc inverse via courbe negative', () => {
+        const ctx = creerCtxMock();
+        dessinerRobo(ctx, 120, 150, 'triste', 0);
+        const bouche = ctx.quadraticCurveTo.mock.calls.find(
+            ([, , ctrlY]) => typeof ctrlY === 'number'
+        );
+        expect(bouche).toBeTruthy();
+    });
+
+    it('alerte dessine un trait horizontal (pas de grille)', () => {
+        const ctx = creerCtxMock();
+        dessinerRobo(ctx, 120, 150, 'alerte', 0);
+        expect(ctx.moveTo.mock.calls.length).toBeGreaterThan(0);
+        expect(ctx.lineTo.mock.calls.length).toBeGreaterThan(0);
     });
 
     it('utilise un sourire ouvert en excite', () => {

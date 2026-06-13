@@ -33,6 +33,32 @@ export const PALETTE_ROBO = {
     ETINCELLE: '#aaff88',
     ALERTE_LED: '#ffaa00',
     OMBRE_PIED: '#991515',
+    RING_EXCITE_1: 'rgba(0,220,200,0.12)',
+    RING_EXCITE_2: 'rgba(255,0,200,0.08)',
+    COURONNE_LUEUR: 'gold',
+};
+
+/** Proportions visage (canon §1) — constantes, pas de Math.random en rendu. */
+const VISAGE = {
+    LARGEUR_TETE_REF: 86,
+    RATIO_OEIL_LARGEUR_TETE: 0.3,
+    RATIO_PUPILLE_OEIL: 0.5,
+    /** Écart asymétrique fixe entre pupilles (≈1 px à taille mascotte). */
+    ECART_ASYM_PUPILLE: 0.5,
+    BOUCHE_TRAIT_RATIO: 0.07,
+    ARC_NEUTRE_HALF: 20,
+    ARC_NEUTRE_COURBE: 7,
+    ARC_TRISTE_HALF: 14,
+    ARC_TRISTE_COURBE: -4,
+    ALERTE_TRAIT_HALF: 12,
+    REFLET_PRINC_X: -3.5,
+    REFLET_PRINC_Y: -4,
+    REFLET_SEC_X: 2,
+    REFLET_SEC_Y: 2,
+    REFLET_PRINC_R: 2.2,
+    REFLET_SEC_R: 1,
+    SOUVRI_OUVERT_HALF: 18,
+    SOUVRI_OUVERT_PROF: 10,
 };
 
 const C = PALETTE_ROBO;
@@ -130,12 +156,12 @@ function _dessinerRingsExcite(ctx, cx, cy, E, t) {
     const r1 = 55 * E + Math.sin(t * 3) * 5 * E;
     const r2 = 70 * E + Math.sin(t * 3 + 1) * 5 * E;
     ctx.save();
-    ctx.strokeStyle = 'rgba(0,220,200,0.12)';
+    ctx.strokeStyle = C.RING_EXCITE_1;
     ctx.lineWidth = Math.max(1, 2 * E);
     ctx.beginPath();
     ctx.arc(cx, cy, r1, 0, Math.PI * 2);
     ctx.stroke();
-    ctx.strokeStyle = 'rgba(255,0,200,0.08)';
+    ctx.strokeStyle = C.RING_EXCITE_2;
     ctx.beginPath();
     ctx.arc(cx, cy, r2, 0, Math.PI * 2);
     ctx.stroke();
@@ -355,16 +381,24 @@ function _dessinerOreilles(ctx, cx, E, offsetY, h) {
     ctx.fill();
 }
 
+function _mesuresOeil(E) {
+    const largeurTete = VISAGE.LARGEUR_TETE_REF * E;
+    const sclereR = (largeurTete * VISAGE.RATIO_OEIL_LARGEUR_TETE) / 2;
+    const pupR = sclereR * VISAGE.RATIO_PUPILLE_OEIL;
+    return { sclereR, pupR };
+}
+
 function _dessinerOeil(ctx, cx, cy, E, humeur, cote, fermer = false) {
     if (fermer) {
+        const { sclereR } = _mesuresOeil(E);
         ctx.fillStyle = C.OEIL_CONTOUR;
-        ctx.fillRect(cx - 14 * E, cy - 2 * E, 28 * E, 4 * E);
+        ctx.fillRect(cx - sclereR, cy - 2 * E, sclereR * 2, 4 * E);
         return;
     }
-    const dir = cote === 'g' ? -1 : 1;
-    const sclereR = 13.5 * E;
-    const pupR = 6.5 * E;
-    let pupDx = dir * 0.35 * E;
+
+    const { sclereR, pupR } = _mesuresOeil(E);
+    const ecartAsym = VISAGE.ECART_ASYM_PUPILLE * E;
+    let pupDx = cote === 'g' ? -ecartAsym : ecartAsym;
     let pupDy = 0;
 
     if (humeur === 'excite') {
@@ -386,13 +420,26 @@ function _dessinerOeil(ctx, cx, cy, E, humeur, cote, fermer = false) {
     ctx.arc(cx + pupDx, cy + pupDy, pupR, 0, Math.PI * 2);
     ctx.fill();
 
+    const refDir = cote === 'g' ? -1 : 1;
     ctx.fillStyle = C.REFLET;
     ctx.beginPath();
-    ctx.arc(cx - 3.5 * E * dir, cy - 4 * E, 2.2 * E, 0, Math.PI * 2);
+    ctx.arc(
+        cx + VISAGE.REFLET_PRINC_X * E * refDir,
+        cy + VISAGE.REFLET_PRINC_Y * E,
+        VISAGE.REFLET_PRINC_R * E,
+        0,
+        Math.PI * 2
+    );
     ctx.fill();
     ctx.fillStyle = C.REFLET_SEC;
     ctx.beginPath();
-    ctx.arc(cx + 2 * E * dir, cy + 2 * E, 1 * E, 0, Math.PI * 2);
+    ctx.arc(
+        cx + VISAGE.REFLET_SEC_X * E * refDir,
+        cy + VISAGE.REFLET_SEC_Y * E,
+        VISAGE.REFLET_SEC_R * E,
+        0,
+        Math.PI * 2
+    );
     ctx.fill();
 
     if (humeur === 'triste') {
@@ -406,6 +453,7 @@ function _dessinerOeil(ctx, cx, cy, E, humeur, cote, fermer = false) {
     }
 
     if (humeur === 'alerte') {
+        const dir = cote === 'g' ? -1 : 1;
         ctx.save();
         ctx.translate(cx, cy - 16 * E);
         ctx.rotate((dir * -8 * Math.PI) / 180);
@@ -420,7 +468,7 @@ function _dessinerOeil(ctx, cx, cy, E, humeur, cote, fermer = false) {
     }
 }
 
-function _dessinerArcNeon(ctx, cx, cy, halfW, courbe, E, epaisseur) {
+function _dessinerArcNeon(ctx, cx, cy, halfW, courbe, epaisseur) {
     ctx.strokeStyle = C.BOUCHE_NEON;
     ctx.lineWidth = epaisseur;
     ctx.lineCap = 'round';
@@ -431,8 +479,8 @@ function _dessinerArcNeon(ctx, cx, cy, halfW, courbe, E, epaisseur) {
 }
 
 function _dessinerSourireOuvert(ctx, cx, cy, E) {
-    const halfW = 18 * E;
-    const profondeur = 10 * E;
+    const halfW = VISAGE.SOUVRI_OUVERT_HALF * E;
+    const profondeur = VISAGE.SOUVRI_OUVERT_PROF * E;
 
     ctx.fillStyle = C.BOUCHE_FOND;
     ctx.beginPath();
@@ -459,8 +507,8 @@ function _dessinerSourireOuvert(ctx, cx, cy, E) {
 
 function _dessinerBouche(ctx, cx, E, offsetY, h, humeur) {
     const cy = _py(72, E, offsetY, h);
-    const tw = 86 * E;
-    const traitEpais = Math.max(2, tw * 0.07);
+    const tw = VISAGE.LARGEUR_TETE_REF * E;
+    const traitEpais = Math.max(2, tw * VISAGE.BOUCHE_TRAIT_RATIO);
 
     if (humeur === 'excite' || humeur === 'content') {
         _dessinerSourireOuvert(ctx, cx, cy, E);
@@ -468,12 +516,26 @@ function _dessinerBouche(ctx, cx, E, offsetY, h, humeur) {
     }
 
     if (humeur === 'neutre') {
-        _dessinerArcNeon(ctx, cx, cy, 20 * E, 7 * E, traitEpais);
+        _dessinerArcNeon(
+            ctx,
+            cx,
+            cy,
+            VISAGE.ARC_NEUTRE_HALF * E,
+            VISAGE.ARC_NEUTRE_COURBE * E,
+            traitEpais
+        );
         return;
     }
 
     if (humeur === 'triste') {
-        _dessinerArcNeon(ctx, cx, cy, 14 * E, -4 * E, Math.max(1.5, traitEpais * 0.75));
+        _dessinerArcNeon(
+            ctx,
+            cx,
+            cy,
+            VISAGE.ARC_TRISTE_HALF * E,
+            VISAGE.ARC_TRISTE_COURBE * E,
+            Math.max(1.5, traitEpais * 0.75)
+        );
         return;
     }
 
@@ -482,8 +544,8 @@ function _dessinerBouche(ctx, cx, E, offsetY, h, humeur) {
         ctx.lineWidth = Math.max(1.5, traitEpais * 0.85);
         ctx.lineCap = 'round';
         ctx.beginPath();
-        ctx.moveTo(cx - 12 * E, cy);
-        ctx.lineTo(cx + 12 * E, cy);
+        ctx.moveTo(cx - VISAGE.ALERTE_TRAIT_HALF * E, cy);
+        ctx.lineTo(cx + VISAGE.ALERTE_TRAIT_HALF * E, cy);
         ctx.stroke();
     }
 }
@@ -558,7 +620,7 @@ function _dessinerCouronne(ctx, cx, E, offsetY, h, t) {
     ctx.font = `${Math.round(18 * E)}px serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.shadowColor = 'gold';
+    ctx.shadowColor = C.COURONNE_LUEUR;
     ctx.shadowBlur = 8 * E;
     ctx.fillText('👑', 0, 0);
     ctx.restore();

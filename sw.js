@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v33';
+const VERSION_SHELL = 'dl-shell-v34';
 const VERSION_MEDIAS = 'dl-medias-v2';
 
 const SCENES_CUTSCENE_PRECACHE = [
