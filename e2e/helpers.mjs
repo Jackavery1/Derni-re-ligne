@@ -289,19 +289,31 @@ export async function demarrerPartieCoop(page) {
 
 /** @param {import('@playwright/test').Page} page */
 export async function terminerPartieCourante(page) {
-    const declenche = await page.evaluate(() => {
-        if (typeof window.__NEO_TEST__?.terminerPartie === 'function') {
-            window.__NEO_TEST__.terminerPartie(false);
-            return true;
-        }
-        return false;
-    });
-    if (!declenche) {
-        await page.evaluate(() => {
-            document.querySelectorAll('.ecran.actif').forEach((el) => el.classList.remove('actif'));
-            document.getElementById('ecran-game-over')?.classList.add('actif');
+    await expect(page.locator('body')).toHaveClass(/partie-active/, { timeout: 15000 });
+
+    for (let tentative = 0; tentative < 3; tentative++) {
+        const declenche = await page.evaluate(() => {
+            if (typeof window.__NEO_TEST__?.terminerPartie === 'function') {
+                window.__NEO_TEST__.terminerPartie(false);
+                return true;
+            }
+            return false;
         });
-    } else {
-        await page.waitForTimeout(600);
+        if (!declenche) {
+            await page.evaluate(() => {
+                document
+                    .querySelectorAll('.ecran.actif')
+                    .forEach((el) => el.classList.remove('actif'));
+                document.getElementById('ecran-game-over')?.classList.add('actif');
+            });
+            break;
+        }
+        try {
+            await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/, { timeout: 5000 });
+            return;
+        } catch {
+            await page.waitForTimeout(400);
+        }
     }
+    await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/, { timeout: 15000 });
 }
