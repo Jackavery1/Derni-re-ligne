@@ -51,6 +51,7 @@ import {
 } from './rendu-jeu.js';
 import { mettreAJourParticules } from './particules-jeu.js';
 import { mettreAJourAffichageTemps } from './ecrans-ui.js';
+import { tickTimerNiveau } from './timer-niveau.js';
 import { verrouillerPiece, vitesseChute } from './logique-partie.js';
 import { menuAnimActif, mettreAJourMenuFond } from './menu-fond.js';
 import { mettreAJourHistoriquePositions, dessinerDecorations } from './decorations-jeu.js';
@@ -208,6 +209,7 @@ function boucleJeu(timestamp) {
             mettreAJourParticulesAmbiance(deltaTemps);
             mettreAJourTextesFlottants(deltaTemps);
             mettreAJourAffichageTemps();
+            tickTimerNiveau();
             if (bossEstActif()) {
                 if (!bossEstVaincu()) mettreAJourBoss(deltaTemps);
                 rendrePortraitBoss(timestamp);

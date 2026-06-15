@@ -32,6 +32,8 @@ function marquerVu(biomeId, type) {
 }
 
 /** @param {{ titre: string, texte: string }} contenu */
+let _timerInfobulle = null;
+
 function afficherInfobulle(contenu) {
     if (typeof document === 'undefined') return;
     if (window.__NEO_SILENT_NOTIFS__) return;
@@ -45,9 +47,10 @@ function afficherInfobulle(contenu) {
 
     overlay.classList.remove('element-masque');
     const btn = document.getElementById('btn-infobulle-contexte-fermer');
-    if (btn) {
-        btn.onclick = () => overlay.classList.add('element-masque');
-    }
+    const fermer = () => overlay.classList.add('element-masque');
+    if (btn) btn.onclick = fermer;
+    clearTimeout(_timerInfobulle);
+    _timerInfobulle = setTimeout(fermer, 12000);
 }
 
 /**

@@ -67,6 +67,40 @@ test('sync cloud — pull fusionne les records distants', async ({ page }) => {
     expect(record).toBe('7500');
 });
 
+test('sync cloud — push envoie les records locaux', async ({ page }) => {
+    let corpsPush = null;
+    await preparerPageSansSw(page);
+    await preparerSyncCloud(page);
+    await page.route('**/rest/v1/progression_snapshots*', async (route) => {
+        const method = route.request().method();
+        if (method === 'GET') {
+            await route.fulfill({
+                status: 200,
+                contentType: 'application/json',
+                body: '[]',
+            });
+            return;
+        }
+        if (method === 'POST') {
+            corpsPush = route.request().postDataJSON();
+            await route.fulfill({ status: 201, body: '' });
+            return;
+        }
+        await route.continue();
+    });
+
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-options').click();
+    await page.locator('#btn-sync-maintenant').click();
+    await expect(page.locator('#options-sync-statut')).toContainText(/a jour/i, {
+        timeout: 10000,
+    });
+
+    expect(corpsPush?.sync_id).toBe(SYNC_ID);
+    expect(corpsPush?.payload?.donnees?.derniereLigne_record_classique).toBe('1200');
+});
+
 test('import progression — fusionne un fichier JSON', async ({ page }) => {
     await preparerPageSansSw(page);
     await page.addInitScript(() => {

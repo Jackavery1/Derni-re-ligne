@@ -4,20 +4,20 @@ import { chargerEtatHistoire, sauvegarderEtatHistoire } from './progression.js';
 import { store } from './store-core.js';
 
 export const SEUILS_COMPLETION = {
-    classique: 8,
-    lave: 10,
-    rouille: 9,
-    ocean: 10,
-    foret: 10,
-    glace: 10,
-    desert: 11,
-    eclipse: 10,
-    cyber: 12,
-    fuochi: 12,
-    cosmos: 12,
-    vide: 9,
-    miroir: 12,
-    trame: 14,
+    classique: 10,
+    lave: 12,
+    rouille: 11,
+    ocean: 12,
+    foret: 12,
+    glace: 12,
+    desert: 13,
+    eclipse: 12,
+    cyber: 14,
+    fuochi: 14,
+    cosmos: 14,
+    vide: 11,
+    miroir: 14,
+    trame: 16,
 };
 
 /** @returns {import('./histoire-donnees.js').ETAT_HISTOIRE_VIDE} */
@@ -87,6 +87,27 @@ function mondeSecretEstDebloque(mondeId, etat) {
         default:
             return false;
     }
+}
+
+/**
+ * Prochain monde narratif non complété après `mondeId` (ordre global).
+ * @param {string} mondeId
+ * @param {import('./histoire-donnees.js').ETAT_HISTOIRE_VIDE} [etatHist]
+ * @returns {string | null}
+ */
+export function obtenirProchainMondeCampagne(mondeId, etatHist) {
+    const etat = etatHist ?? obtenirEtatHistoire();
+    const triee = [...SEQUENCE_HISTOIRE].sort((a, b) => a.ordreGlobal - b.ordreGlobal);
+    const idx = triee.findIndex((m) => m.id === mondeId);
+    if (idx < 0) return null;
+
+    for (let i = idx + 1; i < triee.length; i++) {
+        const candidat = triee[i];
+        if (!mondePeutEtreJoue(candidat.id, etat)) continue;
+        if (etat.mondesCompletes.includes(candidat.id)) continue;
+        return candidat.id;
+    }
+    return null;
 }
 
 export function masquerPanneauDetails() {

@@ -28,6 +28,7 @@ import { mettreAJourIndicateurRelique } from './piece-jeu.js';
 import { enregistrerProgression, suiviDifficulteActif } from './gestionnaire-difficulte.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { brancherBusReactionsMascotte } from './mascotte-robo.js';
+import { reinitialiserTimerNiveau } from './timer-niveau.js';
 
 let effetsInitialises = false;
 
@@ -40,11 +41,22 @@ function _endommagerBossTSpinSansLigne(result, nbLignes) {
 function _traiterLevelUpSolo(result) {
     if (!result.levelUp) return;
     if (modeHistoireEnCours() && suiviDifficulteActif()) return;
+    reinitialiserTimerNiveau();
     afficherNotifNiveau();
     reagirRoboLevelUp();
     AudioMoteur.son('niveau');
     AudioMoteur.relancerIntervalleMusique();
     annoncer(`Niveau ${etat.niveau} atteint`);
+}
+
+function _traiterLevelUpTemps({ niveau }) {
+    if (modeHistoireEnCours()) return;
+    afficherNotifNiveau();
+    reagirRoboLevelUp();
+    AudioMoteur.son('niveau');
+    AudioMoteur.relancerIntervalleMusique();
+    annoncer(`Niveau ${niveau} — temps ecoule`);
+    rafraichirStats();
 }
 
 export function initialiserEffetsPartie() {
@@ -55,6 +67,8 @@ export function initialiserEffetsPartie() {
     ecouter('piece:son', ({ type }) => AudioMoteur.son(type));
 
     ecouter('partie:stats', () => rafraichirStats());
+
+    ecouter('partie:level-up-temps', _traiterLevelUpTemps);
 
     ecouter('partie:nouvelle-piece', () => {
         dessinerFileNext();

@@ -49,10 +49,21 @@ export function configurerSupabase(url, anonKey) {
     if (anonKey) ecrireStockageSync(CLE_SUPABASE_KEY, anonKey.trim());
 }
 
+/** @param {string} url */
+export function urlSupabaseValide(url) {
+    if (!url || typeof url !== 'string') return false;
+    try {
+        const parsed = new URL(url.trim());
+        return parsed.protocol === 'https:' && parsed.hostname.endsWith('.supabase.co');
+    } catch {
+        return false;
+    }
+}
+
 export function syncCloudConfigure() {
     const url = obtenirSupabaseUrl();
     const key = obtenirSupabaseAnonKey();
-    return Boolean(url && key);
+    return Boolean(urlSupabaseValide(url) && key);
 }
 
 /** @returns {string} */

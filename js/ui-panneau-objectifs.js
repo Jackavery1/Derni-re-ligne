@@ -207,7 +207,7 @@ function _afficherRecap(etoiles, monde) {
     _el('overlay-recap-monde')?.classList.add('objectif-overlay-visible');
 
     if (_timerRecap) clearTimeout(_timerRecap);
-    _timerRecap = window.setTimeout(() => _fermerRecap(), 3500);
+    _timerRecap = null;
 }
 
 function _fermerRecap() {

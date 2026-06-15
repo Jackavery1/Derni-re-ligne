@@ -2,14 +2,19 @@ export const CONFIG = {
     colonnes: 10,
     lignes: 20,
     taille: 32,
-    vitesseBase: 900,
-    vitesseMin: 80,
-    reductionParNiveau: 60,
+    vitesseBase: 920,
+    vitesseMin: 85,
+    reductionParNiveau: 52,
     lockDelay: 500,
     maxLockResets: 15,
     dasDelai: 167,
     arrInterval: 33,
     sprintLignes: 40,
+    lignesParNiveau: 15,
+    tempsNiveauBaseSec: 150,
+    tempsNiveauBonusSec: 12,
+    tempsNiveauMaxSec: 240,
+    tempsAlerteFinSec: 30,
 };
 
 export const LAYOUT = {

@@ -14,6 +14,7 @@ import {
     obtenirEtatHistoire,
     mondePeutEtreJoue,
     masquerPanneauDetails,
+    obtenirProchainMondeCampagne,
 } from './histoire-mondes.js';
 import { modeDevActif } from './mode-dev-etat.js';
 import { obtenirActionsHistoire, configurerActionsHistoire } from './histoire-actions.js';
@@ -63,7 +64,7 @@ async function _demarrerMondeHistoireInterne(mondeId) {
             etat.mondesDejaMontres.push(mondeId);
             sauvegarderEtatHistoire(etat);
         }
-        afficherCutsceneHistoire(cutscene.lignes, null, () => _apresPresentationMonde(monde));
+        afficherCutsceneHistoire(cutscene, null, () => _apresPresentationMonde(monde));
     } else {
         _apresPresentationMonde(monde);
     }
@@ -117,6 +118,34 @@ function _lancerPartieHistoire(monde) {
     } catch (err) {
         logger.error('[histoire] demarrerJeu:', err);
     }
+}
+
+/**
+ * Enchaîne la campagne après victoire : lance le monde suivant ou affiche le game over.
+ * @param {string} [mondeId]
+ * @returns {Promise<boolean>} true si un monde suivant a été lancé
+ */
+export async function enchainerCampagneApresMonde(mondeId) {
+    const id = mondeId ?? store.histoire.mondeActuel;
+    arreterSuiviMonde();
+    document.body.classList.remove('partie-active');
+
+    const suivantId = id ? obtenirProchainMondeCampagne(id) : null;
+    const [{ afficherBoutonCarteGameOver }, { cacherEcrans, afficherEcran }] = await Promise.all([
+        import('./histoire-manager-ui.js'),
+        import('./navigation-ecrans.js'),
+    ]);
+
+    if (suivantId) {
+        afficherBoutonCarteGameOver(false);
+        cacherEcrans();
+        demarrerMondeHistoire(suivantId);
+        return true;
+    }
+
+    afficherBoutonCarteGameOver(true);
+    afficherEcran(ECRANS.GAME_OVER);
+    return false;
 }
 
 export async function retournerACarte() {
@@ -205,8 +234,8 @@ export function demarrerParadoxe() {
 
     void Promise.all([chargerHistoireTextes(), import('./histoire-manager-ui.js')])
         .then(([textes, { afficherCutsceneHistoire }]) => {
-            const lignes = textes.CUTSCENES_ENTREE.monde_paradoxe ?? [];
-            afficherCutsceneHistoire(lignes, null, () => _surFinParadoxe());
+            const entree = textes.CUTSCENES_ENTREE.monde_paradoxe ?? [];
+            afficherCutsceneHistoire(entree, null, () => _surFinParadoxe());
         })
         .catch((err) => logger.warn('[paradoxe] chargement cutscene :', err));
 }

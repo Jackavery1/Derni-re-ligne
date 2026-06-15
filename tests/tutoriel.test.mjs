@@ -3,6 +3,7 @@ import {
     initialiserTutoriel,
     afficherTutorielContextuel,
     afficherTutorielPrologueApresCutscene,
+    NOMBRE_SLIDES_PROLOGUE,
 } from '../js/tutoriel.js';
 
 function creerElement(initialClasses = ['element-masque']) {
@@ -79,10 +80,15 @@ describe('tutoriel', () => {
         expect(blocControles.classList.contains('element-masque')).toBe(false);
     });
 
+    it('le tutoriel prologue compte au plus 3 slides', () => {
+        expect(NOMBRE_SLIDES_PROLOGUE).toBeLessThanOrEqual(3);
+        expect(NOMBRE_SLIDES_PROLOGUE).toBe(3);
+    });
+
     it('appelle onCompris directement si le tutoriel prologue a déjà été vu', () => {
         const cb = vi.fn();
         afficherTutorielPrologueApresCutscene();
-        for (let i = 0; i < 6; i++) btnFermer.onclick?.();
+        for (let i = 0; i < NOMBRE_SLIDES_PROLOGUE; i++) btnFermer.onclick?.();
         afficherTutorielPrologueApresCutscene(cb);
         expect(cb).toHaveBeenCalledTimes(1);
         expect(overlay.classList.contains('element-masque')).toBe(true);

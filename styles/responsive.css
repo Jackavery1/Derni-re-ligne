@@ -13,7 +13,7 @@ body.contraste-eleve .bouton {
 }
 
 @media (max-width: 768px), (max-height: 600px) {
-    body.partie-active #controles-mobile {
+    body.partie-active.controles-tactiles-actifs #controles-mobile {
         display: flex;
     }
     .btn-tactile {
@@ -113,7 +113,7 @@ body.contraste-eleve .bouton {
 }
 
 @media (max-height: 768px) and (orientation: landscape) {
-    body.partie-active #controles-paysage {
+    body.partie-active.controles-tactiles-actifs #controles-paysage {
         display: block;
     }
 }

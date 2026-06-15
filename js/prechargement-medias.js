@@ -37,6 +37,10 @@ function urlsMusiqueMonde(mondeId) {
     return [`${base}.ogg`, `${base}.m4a`];
 }
 
+function urlsMusiqueNarratifCutscene() {
+    return urlsMusiqueMonde('narratif_cutscene');
+}
+
 /**
  * @param {string} mondeId
  * @returns {string | null}
@@ -133,6 +137,13 @@ export function demarrerPrechargementCarte() {
         const scene = urlSceneMonde(mondeId);
         if (scene) {
             await fetchSilencieux(scene, signal);
+        }
+
+        if (signal.aborted) return;
+
+        for (const piste of urlsMusiqueNarratifCutscene()) {
+            if (signal.aborted) return;
+            await fetchSilencieux(piste, signal);
         }
     })().catch((err) => {
         if (/** @type {Error} */ (err).name !== 'AbortError') {

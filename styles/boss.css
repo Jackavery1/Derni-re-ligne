@@ -129,20 +129,30 @@
 
 .overlay-infobulle-contexte {
     position: fixed;
-    inset: 0;
-    z-index: 9000;
+    bottom: -160px;
+    left: max(16px, env(safe-area-inset-left, 0px));
+    right: auto;
+    inset: auto;
+    z-index: 310;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.72);
+    align-items: flex-end;
+    justify-content: flex-start;
+    background: transparent;
+    pointer-events: none;
+    transition: bottom 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.overlay-infobulle-contexte:not(.element-masque) {
+    bottom: max(88px, calc(24px + env(safe-area-inset-bottom, 0px)));
 }
 
 .overlay-infobulle-contenu {
-    max-width: min(92vw, 420px);
-    padding: 1.25rem;
-    background: var(--fond-panneau, #0d1117);
-    border: 2px solid var(--cyan);
-    box-shadow: 0 0 24px rgba(0, 255, 255, 0.25);
+    max-width: min(88vw, 300px);
+    padding: 0.85rem 1rem;
+    background: rgba(8, 8, 26, 0.96);
+    border: 1px solid var(--cyan);
+    box-shadow: 0 0 18px rgba(0, 255, 255, 0.2);
+    pointer-events: auto;
 }
 
 .infobulle-contexte-titre {

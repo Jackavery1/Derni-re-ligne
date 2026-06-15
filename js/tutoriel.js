@@ -14,51 +14,30 @@ const SLIDES_PROLOGUE = [
     {
         titre: 'BIENVENUE DANS DERNIÈRE LIGNE',
         lignes: [
-            'Parcourez la carte des mondes au clavier via la liste de selection ou à la souris sur la carte.',
-            "Suivez l'histoire de ROBO contre son ennemi juré à travers les mondes où ils s'affronteront.",
-            'Aidez-le à atteindre son objectif et surtout… Amusez-vous !',
+            'Parcourez la carte des mondes (souris ou liste clavier) et suivez ROBO à travers l’histoire.',
+            'Molette ou pincement pour zoomer, clic-glisser pour déplacer. Sur mobile : glissez un doigt.',
         ],
         avecControles: true,
     },
     {
-        titre: 'OBJECTIFS ET ÉTOILES',
+        titre: 'OBJECTIFS, BOSS ET BIOMES',
         lignes: [
-            'Chaque monde se termine après un nombre de lignes ou un combat de boss.',
-            'Les étoiles récompensent vitesse et performance — visez ★★★ pour les secrets.',
-            'Le palier de vitesse monte au fil de la partie : surveillez le HUD.',
+            'Chaque monde se termine après un quota de lignes ou un combat de boss — visez ★★★ pour les secrets.',
+            'Les boss changent de phase quand leur jauge baisse ; le palier de vitesse monte en partie.',
+            'Chaque biome modifie les règles (météo, cellules vivantes, reliques…) : lisez l’indicateur sous l’objectif.',
         ],
     },
     {
-        titre: 'COMBATS DE BOSS',
-        lignes: [
-            'Les boss ont plusieurs phases : leurs attaques changent quand leur jauge baisse.',
-            'Observez la barre de vie et adaptez-vous aux mécaniques du biome.',
-        ],
-    },
-    {
-        titre: 'MÉCANIQUES DES BIOMES',
-        lignes: [
-            'Chaque biome modifie les règles : météo, cellules vivantes, reliques temporaires…',
-            "Lisez l'indicateur sous l'objectif — une info-bulle s'affiche à la première occurrence.",
-        ],
-    },
-    {
-        titre: 'RELIQUES, ORACLE ET MÉTÉO',
+        titre: 'RELIQUES ET ORACLE',
         lignes: [
             'Les reliques apparaissent après un nombre de pièces — choisissez-en une à chaque palier.',
-            "L'Oracle (débloqué en histoire) suggère un placement : suivez-le ou défiez-le pour multiplier le score.",
-            'La météo et la mélodie du biome influencent le rythme — consultez le HUD en partie.',
-        ],
-    },
-    {
-        titre: 'NAVIGUER SUR LA CARTE',
-        lignes: [
-            'Molette ou pincement pour zoomer, clic-glisser pour déplacer la vue.',
-            'Sur mobile : glissez avec un doigt. Au clavier : utilisez la liste de sélection des mondes.',
-            'Survolez un monde pour voir les conditions de déblocage et les objectifs.',
+            "L'Oracle (débloqué plus tard) suggère un placement : suivez-le ou défiez-le pour multiplier le score.",
+            'Amusez-vous — les modes Coop, Architecte et Oracle ont leur propre tutoriel au premier lancement.',
         ],
     },
 ];
+
+export const NOMBRE_SLIDES_PROLOGUE = SLIDES_PROLOGUE.length;
 
 /** @type {{ touche: string, action: string }[]} */
 const CONTROLES_CLAVIER = [

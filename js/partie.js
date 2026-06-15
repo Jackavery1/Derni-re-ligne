@@ -77,6 +77,7 @@ import {
     mettreAJourStatsOracleUI,
 } from './oracle-jeu.js';
 import { demarrerFondBiome, arreterFondBiome } from './rendu-fond-biome.js';
+import { reinitialiserTimerNiveau } from './timer-niveau.js';
 import { rafraichirHudObjectifsHistoire } from './ui-panneau-objectifs.js';
 export { initialiserCanvas } from './partie-canvas.js';
 export { terminerPartie } from './partie-fin.js';
@@ -191,6 +192,7 @@ function initialiserUIPartie() {
     mettreAJourIndicateurRelique();
 
     rafraichirStats();
+    reinitialiserTimerNiveau();
     const elTemps = document.getElementById('affichage-temps');
     if (elTemps) elTemps.textContent = '00:00';
     cacherEcrans();

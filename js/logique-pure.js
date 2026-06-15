@@ -160,7 +160,7 @@ export function calculerPointsLignes(nbLignes, niveau) {
 
 /** @param {number} lignes @returns {number} */
 export function calculerNiveauDepuisLignes(lignes) {
-    return Math.floor(lignes / 10) + 1;
+    return Math.floor(lignes / CONFIG.lignesParNiveau) + 1;
 }
 
 /**

@@ -18,6 +18,10 @@ describe('histoire-narratif — metadata cutscene', () => {
                 monde_boss_1: [
                     { scene: 'seuil_brasier', personnage: 'brasier', texte: 'QUI APPROCHE ?' },
                 ],
+                monde_lave: {
+                    scene: 'seuil_brasier',
+                    lignes: [{ personnage: 'robo', texte: 'Le feu brûle plus fort.' }],
+                },
             },
             CUTSCENES_POST_MONDE: {
                 monde_trame: [
@@ -37,6 +41,12 @@ describe('histoire-narratif — metadata cutscene', () => {
             })
         );
         expect(typeof cutscene?.lignes[0]).toBe('object');
+    });
+
+    it('obtenirCutsceneEntree conserve scene par defaut sur entree objet', () => {
+        const cutscene = obtenirCutsceneEntree('monde_lave', true);
+        expect(cutscene?.scene).toBe('seuil_brasier');
+        expect(cutscene?.lignes[0]?.personnage).toBe('robo');
     });
 
     it('obtenirCutsceneEntree retourne null si deja visite', () => {

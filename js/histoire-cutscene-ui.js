@@ -95,10 +95,6 @@ export function assurerZoneNarrationCutscene() {
 }
 
 export function initDomCutscene() {
-    if (refsDomCutscene.uiPret && refsDomCutscene.canvasGauche && refsDomCutscene.canvasDroite) {
-        return true;
-    }
-
     refsDomCutscene.canvasGauche = /** @type {HTMLCanvasElement | null} */ (
         document.getElementById('canvas-portrait-gauche')
     );

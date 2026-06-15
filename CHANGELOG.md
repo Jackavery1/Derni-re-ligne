@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version    | Date       | En bref                                                                                           |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------- |
+| **2.5.20** | 2026-06-15 | Timer niveau marathon, enchaînement campagne, contrôles tactiles, UI jeu & équilibrage difficulté |
 | **2.5.19** | 2026-06-15 | Remédiations audits A/B/C/D : sync cloud, haptique, swipe, narration, bundle/CSS                  |
 | **2.5.18** | 2026-06-13 | Audits B/D, E2E dist coop/archi/histoire, teaser biomes, refactor ROBO/cutscenes, responsive 48px |
 | **2.5.17** | 2026-06-13 | ROBO arc neon, audits A/C/D, pont scènes cutscene, SW v33, responsive 768, bundle 605 Ko          |
@@ -33,6 +34,27 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.2.0**  | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                                        |
 | **2.1.0**  | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                                        |
 | **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                                     |
+
+---
+
+## [2.5.20] — 2026-06-15
+
+### Gameplay & campagne
+
+- **Enchaînement narratif** : après victoire, la campagne continue automatiquement vers le monde suivant (plus de retour carte via « CONTINUER »)
+- **Timer niveau marathon** : décompte HUD par niveau (alerte 30 s), lignes/niveau 15, courbes vitesse adoucies
+- **Équilibrage mondes** : objectifs lignes et paliers vitesse augmentés (`difficulte-mondes.js`)
+
+### UI jeu
+
+- **ROBO** : fond opaque isolé du biome ; previews HOLD/NEXT redimensionnées
+- **Contrôles tactiles** : HOLD à gauche, ▶ à droite ; option désactivable (off par défaut desktop)
+- **Overlays** : infobulles reliques/événements en toast bas-gauche, auto-fermeture 12 s
+
+### Technique
+
+- Nouveaux modules `timer-niveau.js`, `controles-tactiles.js` ; tests unitaires et E2E étendus
+- Scènes cutscene recompressées ; SW `dl-shell-v46`
 
 ---
 

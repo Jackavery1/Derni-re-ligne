@@ -22,6 +22,7 @@ import { mettreAJourBoutonsMute } from './options-ui.js';
 import { coopEstPrefere } from './coop-preference.js';
 import { appliquerThemeBiome } from './ecrans-ui.js';
 import { initialiserHaptique } from './haptique.js';
+import { appliquerControlesTactilesDepuisStockage } from './controles-tactiles.js';
 import {
     initialiserSyncCloud,
     synchroniserCloudAuDemarrage,
@@ -32,6 +33,7 @@ import { enregistrerPlanificateurPushCloud } from './progression-stockage.js';
 export function initialiserSystemesMoteur() {
     migrerClesLocalStorage();
     initialiserHaptique();
+    appliquerControlesTactilesDepuisStockage();
     enregistrerPlanificateurPushCloud(planifierPushCloud);
     initialiserSyncCloud();
     const lancerSyncCloud = () => void synchroniserCloudAuDemarrage();

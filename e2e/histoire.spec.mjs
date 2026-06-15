@@ -372,10 +372,11 @@ test('monde caché Paradoxe affiche sa cutscene puis revient à la carte', async
 });
 
 test('cutscene entree monde lave — fond scene seuil_brasier', async ({ page }) => {
+    await page.route('**/sw.js', (route) => route.abort());
     const etatLave = {
         ...ETAT_HISTOIRE_VIDE,
         mondesCompletes: ['monde_prologue'],
-        mondesDejaMontres: ['monde_prologue', 'monde_lave'],
+        mondesDejaMontres: ['monde_prologue'],
     };
     await ouvrirCarteHistoire(page, etatLave);
     await page.locator('#histoire-monde-clavier').selectOption('monde_lave', { force: true });
@@ -383,7 +384,37 @@ test('cutscene entree monde lave — fond scene seuil_brasier', async ({ page })
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
         timeout: 10000,
     });
-    await expect(page.locator('#canvas-bg-cutscene')).toHaveClass(/cutscene-scene-image/);
+    await page.waitForFunction(
+        () =>
+            document
+                .getElementById('ecran-histoire-cutscene')
+                ?.classList.contains('cutscene-scene-image'),
+        null,
+        { timeout: 15000 }
+    );
+    const statsCanvas = await page.evaluate(() => {
+        const canvas = document.getElementById('canvas-cutscene-bg');
+        if (!canvas || canvas.width < 16 || canvas.height < 16) return null;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return null;
+        const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        let n = 0;
+        for (let i = 0; i < data.length; i += 4) {
+            if (data[i + 3] < 16) continue;
+            r += data[i];
+            g += data[i + 1];
+            b += data[i + 2];
+            n++;
+        }
+        if (n === 0) return null;
+        return { r: r / n, g: g / n, b: b / n, n };
+    });
+    expect(statsCanvas).not.toBeNull();
+    expect(statsCanvas.n).toBeGreaterThan(1000);
+    expect(statsCanvas.r).toBeGreaterThan(statsCanvas.g);
 });
 
 test('cutscene narration active le mode voix off', async ({ page }) => {

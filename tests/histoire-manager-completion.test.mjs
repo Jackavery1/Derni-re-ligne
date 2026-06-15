@@ -44,13 +44,13 @@ describe('histoire-manager-completion', () => {
     });
 
     it('expose les seuils de completion par biome', () => {
-        expect(SEUILS_COMPLETION.classique).toBe(8);
-        expect(SEUILS_COMPLETION.lave).toBe(10);
-        expect(SEUILS_COMPLETION.miroir).toBe(12);
+        expect(SEUILS_COMPLETION.classique).toBe(10);
+        expect(SEUILS_COMPLETION.lave).toBe(12);
+        expect(SEUILS_COMPLETION.miroir).toBe(14);
     });
 
     it('marque le monde complété quand le seuil de lignes est atteint', () => {
-        surFinDeMondeHistoire(8, 1200);
+        surFinDeMondeHistoire(10, 1200);
         expect(store.histoire.etat.mondesCompletes).toContain('monde_prologue');
     });
 

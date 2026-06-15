@@ -14,7 +14,6 @@ import { store } from './store-core.js';
 import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
 import { sauvegarderEtatHistoire } from './progression.js';
 import { definirExpressionVera } from './portraits-vera.js';
-import { ECRANS } from './ecrans-config.js';
 import { logger } from './logger.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { afficherRecapAvantNarratif } from './ui-panneau-objectifs.js';
@@ -223,7 +222,7 @@ export function declencherNarratifPostMonde(monde, etatHist, premiereCompletion,
             const postMonde = obtenirCutscenePostMonde(monde.id, premiereCompletion);
             void import('./histoire-manager-ui.js')
                 .then(({ afficherCutsceneHistoire }) => {
-                    afficherCutsceneHistoire(postMonde.lignes, null, suivant);
+                    afficherCutsceneHistoire(postMonde, null, suivant);
                 })
                 .catch((err) => {
                     logger.warn('[histoire] cutscene post-monde indisponible :', err);
@@ -245,15 +244,15 @@ export function declencherNarratifPostMonde(monde, etatHist, premiereCompletion,
     });
 
     file.ajouter({
-        id: 'bouton_carte',
+        id: 'suite_campagne',
         executer: (suivant) => {
-            void import('./histoire-manager-ui.js').then(({ afficherBoutonCarteGameOver }) =>
-                afficherBoutonCarteGameOver(true)
-            );
-            void import('./navigation-ecrans.js').then(({ afficherEcran }) =>
-                afficherEcran(ECRANS.GAME_OVER)
-            );
-            suivant();
+            void import('./histoire-session.js')
+                .then(({ enchainerCampagneApresMonde }) => enchainerCampagneApresMonde(monde.id))
+                .then(() => suivant())
+                .catch((err) => {
+                    logger.warn('[histoire] suite campagne indisponible :', err);
+                    suivant();
+                });
         },
     });
 

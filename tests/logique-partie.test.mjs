@@ -245,8 +245,8 @@ describe('logique-partie', () => {
         expect(result.points).toBe(3000);
     });
 
-    it('appliquerScoreLignes monte de niveau à 10 lignes', () => {
-        const partie = { score: 0, lignes: 9, niveau: 1, combo: 0, dernierEtaitTetris: false };
+    it('appliquerScoreLignes monte de niveau à 15 lignes', () => {
+        const partie = { score: 0, lignes: 14, niveau: 1, combo: 0, dernierEtaitTetris: false };
         const result = appliquerScoreLignes(partie, 1);
         expect(result.levelUp).toBe(true);
         expect(partie.niveau).toBe(2);

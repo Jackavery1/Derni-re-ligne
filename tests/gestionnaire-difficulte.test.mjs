@@ -21,23 +21,23 @@ describe('gestionnaire-difficulte', () => {
         arreterSuiviMonde();
     });
 
-    it('demarre le prologue au palier 1 (800 ms)', () => {
+    it('demarre le prologue au palier 1', () => {
         demarrerSuiviMonde('monde_prologue');
         expect(vitesseHistoireMs()).toBe(PALIERS_VITESSE_MS[1]);
     });
 
-    it('montee de vague a 50% puis pose piece suivante', () => {
+    it('montee de vague a 55% puis pose piece suivante', () => {
         demarrerSuiviMonde('monde_prologue');
-        enregistrerProgression({ nbLignes: 4, estTetris: false, combo: 1 });
+        enregistrerProgression({ nbLignes: 6, estTetris: false, combo: 1 });
         expect(store.histoire.difficulte?.palierCourant).toBe(1);
         expect(store.histoire.difficulte?.palierEnAttente).toBe(2);
         enregistrerPosePiece();
         expect(store.histoire.difficulte?.palierCourant).toBe(2);
     });
 
-    it('declenche victoire objectif a 8 lignes prologue', () => {
+    it('declenche victoire objectif a 10 lignes prologue', () => {
         demarrerSuiviMonde('monde_prologue');
-        enregistrerProgression({ nbLignes: 8, estTetris: false, combo: 1 });
+        enregistrerProgression({ nbLignes: 10, estTetris: false, combo: 1 });
         expect(store.histoire.difficulte?.victoireDeclenchee).toBe(true);
     });
 

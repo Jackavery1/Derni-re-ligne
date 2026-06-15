@@ -81,6 +81,10 @@ export function precharger(idScene) {
 
     const entree = _cacheImages.get(idScene);
     if (entree?.charge && !entree.echec) return Promise.resolve(entree.img);
+    if (entree?.echec) {
+        _cacheImages.delete(idScene);
+        _promesses.delete(idScene);
+    }
     if (_promesses.has(idScene)) return _promesses.get(idScene);
 
     const promesse = new Promise((resolve) => {
@@ -100,7 +104,8 @@ export function precharger(idScene) {
             logger.debug('[scenes] échec src → fallback canvas', scene.src);
             resolve(null);
         };
-        img.src = scene.src;
+        img.src =
+            typeof document !== 'undefined' ? new URL(scene.src, document.baseURI).href : scene.src;
     });
     _promesses.set(idScene, promesse);
     return promesse;

@@ -31,11 +31,32 @@ vi.mock('../js/navigation-ecrans.js', () => ({
     afficherEcran: vi.fn(),
 }));
 
+vi.mock('../js/histoire-session.js', () => ({
+    enchainerCampagneApresMonde: vi.fn(() => Promise.resolve(true)),
+}));
+
 describe('histoire-manager-post-monde', () => {
     beforeEach(() => {
         store.histoire.etat = structuredClone(ETAT_HISTOIRE_VIDE);
         store.histoire.dernierJournal = null;
         vi.clearAllMocks();
+    });
+
+    it('enchaine la campagne apres le narratif post-monde', async () => {
+        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        await chargerHistoireTextes();
+        const { declencherNarratifPostMonde } =
+            await import('../js/histoire-manager-post-monde.js');
+        const { enchainerCampagneApresMonde } = await import('../js/histoire-session.js');
+
+        const monde = { id: 'monde_prologue', biomeId: 'classique', estBoss: false };
+        const etat = structuredClone(ETAT_HISTOIRE_VIDE);
+        store.histoire.etat = etat;
+
+        declencherNarratifPostMonde(monde, etat, true, [true, false, false]);
+        await vi.waitFor(() => {
+            expect(enchainerCampagneApresMonde).toHaveBeenCalledWith('monde_prologue');
+        });
     });
 
     it('enregistre le fragment VERA apres premiere completion prologue', async () => {

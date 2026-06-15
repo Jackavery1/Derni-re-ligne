@@ -7,12 +7,18 @@ import {
 } from './progression.js';
 import { haptiqueActif, definirHaptiqueActif } from './haptique.js';
 import {
+    controlesTactilesActifs,
+    definirControlesTactilesActifs,
+    appliquerControlesTactilesDepuisStockage,
+} from './controles-tactiles.js';
+import {
     syncCloudActif,
     activerSyncCloud,
     configurerSupabase,
     obtenirSupabaseUrl,
     obtenirSupabaseAnonKey,
     syncCloudConfigure,
+    obtenirOuCreerSyncId,
 } from './config-sync.js';
 import {
     obtenirStatutSyncCloud,
@@ -80,14 +86,27 @@ export function mettreAJourBoutonHaptique(btn) {
     btn.classList.toggle('actif', actif);
 }
 
+export function mettreAJourBoutonControlesTactiles(btn) {
+    const actif = controlesTactilesActifs();
+    btn.textContent = actif ? '👆 TOUCHES TACTILES ON' : '👆 TOUCHES TACTILES OFF';
+    btn.setAttribute('aria-pressed', actif ? 'true' : 'false');
+    btn.classList.toggle('actif', actif);
+}
+
 function mettreAJourUiSyncCloud() {
     const actif = syncCloudActif();
     const btn = document.getElementById('btn-toggle-sync-cloud');
     const panneau = document.getElementById('panneau-sync-config');
     const statut = document.getElementById('options-sync-statut');
+    const inputSyncId = /** @type {HTMLInputElement | null} */ (
+        document.getElementById('input-sync-id')
+    );
     btn?.setAttribute('aria-pressed', actif ? 'true' : 'false');
     btn?.classList.toggle('actif', actif);
     panneau?.classList.toggle('element-masque', !actif);
+    if (inputSyncId && actif) {
+        inputSyncId.value = obtenirOuCreerSyncId();
+    }
     if (statut && actif) {
         statut.classList.remove('element-masque');
         const labels = {
@@ -96,8 +115,10 @@ function mettreAJourUiSyncCloud() {
             ok: 'Sync cloud : a jour',
             erreur: 'Sync cloud : erreur reseau',
             'hors-ligne': 'Sync cloud : hors ligne',
+            config: 'Sync cloud : URL Supabase invalide',
         };
-        statut.textContent = labels[obtenirStatutSyncCloud()] ?? labels.idle;
+        const cleStatut = syncCloudConfigure() ? obtenirStatutSyncCloud() : 'config';
+        statut.textContent = labels[cleStatut] ?? labels.idle;
     } else {
         statut?.classList.add('element-masque');
     }
@@ -201,6 +222,7 @@ export function initialiserOptions() {
     AudioMoteur.volumeMusique = parseFloat(volMus) || 1;
     AudioMoteur.muet = muet;
     appliquerContrasteDepuisStockage();
+    appliquerControlesTactilesDepuisStockage();
     chargerAccessibiliteDepuisStockage();
 
     const slider = obtenirInput('slider-volume');
@@ -210,10 +232,13 @@ export function initialiserOptions() {
     const btnDaltonien = obtenirBouton('btn-toggle-daltonien');
     const btnReduireEffets = obtenirBouton('btn-toggle-reduire-effets');
     const btnHaptique = obtenirBouton('btn-toggle-haptique');
+    const btnControlesTactiles = obtenirBouton('btn-toggle-controles-tactiles');
     const btnSyncCloud = obtenirBouton('btn-toggle-sync-cloud');
     const btnSyncMaintenant = obtenirBouton('btn-sync-maintenant');
     const inputSupabaseUrl = obtenirInput('input-supabase-url');
     const inputSupabaseKey = obtenirInput('input-supabase-key');
+    const inputSyncId = obtenirInput('input-sync-id');
+    const btnCopierSyncId = obtenirBouton('btn-copier-sync-id');
     const sliderMixMusBiome = obtenirInput('slider-mix-musique-biome');
     const sliderMixEffBiome = obtenirInput('slider-mix-effets-biome');
     if (slider) slider.value = String(Math.round(AudioMoteur.volumeEffets * 100));
@@ -225,8 +250,10 @@ export function initialiserOptions() {
     const btnConstellationClic = obtenirBouton('btn-toggle-constellation-clic');
     if (btnConstellationClic) mettreAJourBoutonConstellationClic(btnConstellationClic);
     if (btnHaptique) mettreAJourBoutonHaptique(btnHaptique);
+    if (btnControlesTactiles) mettreAJourBoutonControlesTactiles(btnControlesTactiles);
     if (inputSupabaseUrl) inputSupabaseUrl.value = obtenirSupabaseUrl();
     if (inputSupabaseKey) inputSupabaseKey.value = obtenirSupabaseAnonKey();
+    if (inputSyncId) inputSyncId.value = obtenirOuCreerSyncId();
     mettreAJourUiSyncCloud();
 
     const biomeMix = chargerBiomeActif();
@@ -282,11 +309,18 @@ export function initialiserOptions() {
         mettreAJourBoutonHaptique(btnHaptique);
     });
 
+    btnControlesTactiles?.addEventListener('click', () => {
+        definirControlesTactilesActifs(!controlesTactilesActifs());
+        mettreAJourBoutonControlesTactiles(btnControlesTactiles);
+    });
+
     initialiserSyncCloudOptions(
         btnSyncCloud,
         btnSyncMaintenant,
         inputSupabaseUrl,
-        inputSupabaseKey
+        inputSupabaseKey,
+        inputSyncId,
+        btnCopierSyncId
     );
 
     sliderMixMusBiome?.addEventListener('input', (e) => {
@@ -311,7 +345,9 @@ function initialiserSyncCloudOptions(
     btnSyncCloud,
     btnSyncMaintenant,
     inputSupabaseUrl,
-    inputSupabaseKey
+    inputSupabaseKey,
+    inputSyncId,
+    btnCopierSyncId
 ) {
     btnSyncCloud?.addEventListener('click', async () => {
         const actif = !syncCloudActif();
@@ -319,6 +355,7 @@ function initialiserSyncCloudOptions(
         if (actif && inputSupabaseUrl?.value && inputSupabaseKey?.value) {
             configurerSupabase(inputSupabaseUrl.value, inputSupabaseKey.value);
         }
+        if (inputSyncId && actif) inputSyncId.value = obtenirOuCreerSyncId();
         mettreAJourUiSyncCloud();
         if (actif && syncCloudConfigure()) {
             await synchroniserCloudAuDemarrage();
@@ -326,16 +363,31 @@ function initialiserSyncCloudOptions(
         }
     });
 
-    inputSupabaseUrl?.addEventListener('change', () => {
-        configurerSupabase(inputSupabaseUrl.value, inputSupabaseKey?.value ?? '');
-    });
-    inputSupabaseKey?.addEventListener('change', () => {
-        configurerSupabase(inputSupabaseUrl?.value ?? '', inputSupabaseKey.value);
+    const persisterSupabase = () => {
+        configurerSupabase(inputSupabaseUrl?.value ?? '', inputSupabaseKey?.value ?? '');
+        mettreAJourUiSyncCloud();
+    };
+
+    inputSupabaseUrl?.addEventListener('change', persisterSupabase);
+    inputSupabaseKey?.addEventListener('change', persisterSupabase);
+
+    btnCopierSyncId?.addEventListener('click', async () => {
+        const id = obtenirOuCreerSyncId();
+        if (inputSyncId) inputSyncId.value = id;
+        try {
+            await navigator.clipboard.writeText(id);
+        } catch {
+            inputSyncId?.select();
+        }
     });
 
     btnSyncMaintenant?.addEventListener('click', async () => {
         if (!syncCloudActif()) return;
         configurerSupabase(inputSupabaseUrl?.value ?? '', inputSupabaseKey?.value ?? '');
+        if (!syncCloudConfigure()) {
+            mettreAJourUiSyncCloud();
+            return;
+        }
         await synchroniserCloudAuDemarrage();
         await pousserCloudMaintenant();
         mettreAJourUiSyncCloud();

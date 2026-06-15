@@ -122,6 +122,14 @@
                 <button
                     class="bouton discret"
                     type="button"
+                    id="btn-toggle-controles-tactiles"
+                    aria-pressed="false"
+                >
+                    👆 TOUCHES TACTILES
+                </button>
+                <button
+                    class="bouton discret"
+                    type="button"
                     id="btn-toggle-haptique"
                     aria-pressed="true"
                 >
@@ -146,8 +154,10 @@
             </div>
             <div class="options-sync-config element-masque" id="panneau-sync-config">
                 <p class="options-sync-aide">
-                    Creer la table Supabase avec <strong>docs/supabase-sync.sql</strong>, puis
-                    renseigner l’URL et la cle anon du projet.
+                    1. Executer <strong>docs/supabase-sync.sql</strong> dans le SQL Editor
+                    Supabase.<br />
+                    2. Coller l’URL du projet (<code>https://xxx.supabase.co</code>) et la cle anon
+                    (Settings → API).
                 </p>
                 <label class="option-label" for="input-supabase-url">URL SUPABASE</label>
                 <input
@@ -156,6 +166,7 @@
                     id="input-supabase-url"
                     placeholder="https://xxx.supabase.co"
                     autocomplete="off"
+                    inputmode="url"
                 />
                 <label class="option-label" for="input-supabase-key">CLE ANON</label>
                 <input
@@ -165,6 +176,22 @@
                     placeholder="eyJ..."
                     autocomplete="off"
                 />
+                <div class="options-sync-id-ligne">
+                    <label class="option-label" for="input-sync-id">ID SYNC (appareil)</label>
+                    <div class="options-sync-id-champ">
+                        <input
+                            class="option-texte"
+                            type="text"
+                            id="input-sync-id"
+                            readonly
+                            aria-readonly="true"
+                            tabindex="-1"
+                        />
+                        <button class="bouton discret" type="button" id="btn-copier-sync-id">
+                            COPIER ID
+                        </button>
+                    </div>
+                </div>
             </div>
             <p
                 class="options-controles-mobile element-masque"
@@ -228,8 +255,8 @@
                 <dd>Pause</dd>
             </dl>
             <p class="options-controles-mobile">
-                Sur mobile : boutons tactiles en bas de l'ecran et swipe sur le plateau (glisser
-                pour deplacer, swipe haut = drop, tap = rotation).
+                Boutons tactiles à l'écran (mobile ou option activée) : hold à gauche, déplacement à
+                droite en paysage. Désactivés par défaut sur desktop.
             </p>
         </div>
 

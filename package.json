@@ -1,6 +1,6 @@
 {
     "name": "derniere-ligne",
-    "version": "2.5.19",
+    "version": "2.5.20",
     "type": "module",
     "description": "Dernière Ligne — Tetris narratif, PWA hors-ligne",
     "private": true,
@@ -40,6 +40,7 @@
         "audit:poids": "node scripts/audit-poids.mjs",
         "media:musique": "node scripts/convertir-musique.mjs",
         "media:scenes": "node scripts/convertir-scenes.mjs",
+        "media:scenes:force": "node scripts/convertir-scenes.mjs --force",
         "media:polices": "node scripts/preparer-polices.mjs",
         "typecheck": "tsc --noEmit -p jsconfig.json",
         "typecheck:migrate": "node scripts/corriger-strict.mjs",

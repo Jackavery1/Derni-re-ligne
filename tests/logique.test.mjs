@@ -72,8 +72,8 @@ describe('logique-pure', () => {
 
     it('Niveau depuis lignes', () => {
         expect(calculerNiveauDepuisLignes(0)).toBe(1);
-        expect(calculerNiveauDepuisLignes(10)).toBe(2);
-        expect(calculerNiveauDepuisLignes(25)).toBe(3);
+        expect(calculerNiveauDepuisLignes(15)).toBe(2);
+        expect(calculerNiveauDepuisLignes(30)).toBe(3);
     });
 
     it('supprimerLignesDuPlateau efface plusieurs lignes complètes simultanément', () => {

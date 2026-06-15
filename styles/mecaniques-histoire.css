@@ -29,7 +29,7 @@ body.histoire-active [data-biome='vide'] #canvas-plateau {
         inset 0 0 28px rgba(0, 0, 0, 0.45) !important;
 }
 
-body.histoire-active [data-biome='eclipse'] .section {
+body.histoire-active [data-biome='eclipse'] .section:not(#section-mascotte) {
     background: linear-gradient(180deg, rgba(255, 200, 0, 0.04) 0%, rgba(50, 30, 120, 0.06) 100%);
 }
 

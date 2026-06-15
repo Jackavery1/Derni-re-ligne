@@ -155,12 +155,27 @@ test('partie solo paysage mobile — contrôles latéraux', async ({ page }) => 
     await expect(page.locator('#controles-mobile')).toBeHidden();
 
     const metriques = await page.evaluate(() => {
-        const btn = document.getElementById('btn-gauche-p');
-        const rect = btn?.getBoundingClientRect();
-        return { h: rect?.height ?? 0, w: rect?.width ?? 0 };
+        const hold = document.getElementById('btn-reserve-p')?.getBoundingClientRect();
+        const droite = document.getElementById('btn-droite-p')?.getBoundingClientRect();
+        const gauche = document.getElementById('btn-gauche-p')?.getBoundingClientRect();
+        return {
+            h: gauche?.height ?? 0,
+            w: gauche?.width ?? 0,
+            holdAGauche: (hold?.left ?? 0) < window.innerWidth / 2,
+            droiteADroite: (droite?.left ?? 0) > window.innerWidth / 2,
+        };
     });
     expect(metriques.h).toBeGreaterThanOrEqual(48);
     expect(metriques.w).toBeGreaterThanOrEqual(48);
+    expect(metriques.holdAGauche).toBe(true);
+    expect(metriques.droiteADroite).toBe(true);
+});
+
+test('partie solo desktop — contrôles tactiles masqués par défaut', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await demarrerPartie(page);
+    await expect(page.locator('#controles-paysage')).toBeHidden();
+    await expect(page.locator('#controles-mobile')).toBeHidden();
 });
 
 test('pause mobile sans débordement horizontal', async ({ page }) => {

@@ -12,11 +12,12 @@ import {
     definirNiveauGlobal,
     definirDerniereSecondeTemps,
 } from './store-jeu.js';
-import { obtenirScoreAffiche } from './oracle-jeu.js';
+import { CONFIG } from './config.js';
 import { annoncer } from './annonces.js';
 import { afficherNotificationNiveau } from './ui-notifications.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { obtenirSuiviDifficulte } from './gestionnaire-difficulte.js';
+import { obtenirScoreAffiche } from './oracle-jeu.js';
 
 export function chargerProgression() {
     definirNiveauGlobal(chargerNiveauGlobal());
@@ -83,8 +84,9 @@ export function rafraichirStats() {
             : `Score ${score.toLocaleString('fr-FR')}, ${etat.lignes} lignes, niveau ${etat.niveau}`
     );
 
-    const modNiveau = etat.lignes % 10;
-    const lignesRestantes = modNiveau === 0 ? 10 : 10 - modNiveau;
+    const lignesParNiveau = CONFIG.lignesParNiveau;
+    const modNiveau = etat.lignes % lignesParNiveau;
+    const lignesRestantes = modNiveau === 0 ? lignesParNiveau : lignesParNiveau - modNiveau;
     const elRestant = document.getElementById('affichage-restant');
     if (elRestant) {
         if (modeHistoireEnCours()) {
@@ -99,7 +101,10 @@ export function rafraichirStats() {
         if (modeHistoireEnCours()) {
             elBarre.style.setProperty('--barre-progression-pct', '0%');
         } else {
-            elBarre.style.setProperty('--barre-progression-pct', `${modNiveau * 10}%`);
+            elBarre.style.setProperty(
+                '--barre-progression-pct',
+                `${(modNiveau / lignesParNiveau) * 100}%`
+            );
         }
     }
 

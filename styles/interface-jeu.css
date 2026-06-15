@@ -69,6 +69,7 @@ body.partie-active #conteneur-principal {
 .canvas-preview {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
 }
 
 .canvas-preview.relique-imminente {
@@ -123,6 +124,27 @@ body.partie-active #conteneur-principal {
 .stat-valeur.jaune {
     color: var(--jaune);
     text-shadow: 0 0 8px var(--jaune);
+}
+
+#section-timer-niveau.timer-niveau-alerte .stat-label {
+    color: var(--rose);
+    opacity: 1;
+}
+
+#section-timer-niveau.timer-niveau-alerte .stat-valeur {
+    color: var(--rose);
+    text-shadow: 0 0 10px var(--rose);
+    animation: pulseTimerNiveau 0.9s ease-in-out infinite;
+}
+
+@keyframes pulseTimerNiveau {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.65;
+    }
 }
 
 .stat-valeur.cyan {
@@ -194,8 +216,8 @@ body.partie-active #conteneur-principal {
 #section-mascotte {
     --mascotte-lueur: #00ddc8;
     flex-shrink: 0;
-    background: rgba(0, 221, 200, 0.04);
-    border-color: rgba(0, 221, 200, 0.22);
+    background: #08081a !important;
+    border-color: rgba(0, 221, 200, 0.22) !important;
 }
 
 #section-mascotte .section-titre {
@@ -212,6 +234,7 @@ body.partie-active #conteneur-principal {
     height: auto;
     max-width: 130px;
     image-rendering: pixelated;
+    background: #08081a;
     filter: none !important;
     -webkit-filter: none !important;
 }

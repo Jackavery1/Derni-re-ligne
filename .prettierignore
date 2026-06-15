@@ -1,0 +1,5 @@
+dist/
+coverage/
+node_modules/
+rapport-poids.json
+assets/cutscenes/*.meta.json

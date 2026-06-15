@@ -39,6 +39,8 @@ export function creerEtatPartieInitial() {
         tempsDebut: null,
         tempsPauseAccumule: 0,
         tempsPauseDebut: null,
+        tempsNiveauDebut: null,
+        tempsNiveauBudgetMs: 0,
         modeJeu: 'marathon',
         victoireSprint: false,
     };

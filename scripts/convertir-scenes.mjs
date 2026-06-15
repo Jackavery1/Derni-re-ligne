@@ -6,6 +6,7 @@ import {
     renameSync,
     unlinkSync,
     writeFileSync,
+    readFileSync,
 } from 'fs';
 import { join, basename, extname } from 'path';
 import sharp from 'sharp';
@@ -20,6 +21,7 @@ const RATIO_16_9 = 16 / 9;
 const EXTENSIONS_SOURCE = new Set(['.png', '.jpg', '.jpeg']);
 const NOM_SCENE_VALIDE = /^scene_[a-z0-9_]+\.(png|jpe?g)$/i;
 const PALETTE_TAILLES = [256, 192, 128];
+const FORCE_RECONVERSION = process.argv.includes('--force');
 
 const GRAVITE_RECADRAGE = {
     scene_seuil_avantgarde: 'bas',
@@ -150,9 +152,38 @@ function listerSources() {
     return [...parBase.values()].sort();
 }
 
+function cheminMetaSource(cheminSortie) {
+    return `${cheminSortie}.meta.json`;
+}
+
+function lireMetaSource(cheminSortie) {
+    const cheminMeta = cheminMetaSource(cheminSortie);
+    if (!existsSync(cheminMeta)) return null;
+    try {
+        return JSON.parse(readFileSync(cheminMeta, 'utf8'));
+    } catch {
+        return null;
+    }
+}
+
+function ecrireMetaSource(cheminSource, cheminSortie) {
+    const src = statSync(cheminSource);
+    writeFileSync(
+        cheminMetaSource(cheminSortie),
+        JSON.stringify({ mtimeMs: src.mtimeMs, size: src.size })
+    );
+}
+
 function doitReconvertir(cheminSource, cheminSortie) {
+    if (FORCE_RECONVERSION) return true;
     if (!existsSync(cheminSortie)) return true;
-    return statSync(cheminSortie).mtimeMs < statSync(cheminSource).mtimeMs;
+
+    const src = statSync(cheminSource);
+    const meta = lireMetaSource(cheminSortie);
+    if (meta && meta.mtimeMs === src.mtimeMs && meta.size === src.size) return false;
+
+    if (!meta) return statSync(cheminSortie).mtimeMs < src.mtimeMs;
+    return true;
 }
 
 function formatGravite(gravite) {
@@ -165,7 +196,8 @@ function formatGravite(gravite) {
  * @param {string} cheminSortie
  * @param {string} graviteLabel
  */
-async function rapportSceneSkip(idScene, cheminSortie, graviteLabel) {
+async function rapportSceneSkip(idScene, cheminSortie, graviteLabel, cheminSource) {
+    if (!lireMetaSource(cheminSortie)) ecrireMetaSource(cheminSource, cheminSortie);
     const meta = await sharp(cheminSortie).metadata();
     const octetsSortie = statSync(cheminSortie).size;
     return {
@@ -258,6 +290,7 @@ async function convertirPipelineImage(cheminSource, idScene, octetsSource, forma
 
     writeFileSync(cheminTemp, bufferFinal);
     renameSync(cheminTemp, cheminSortie);
+    ecrireMetaSource(cheminSource, cheminSortie);
 
     const octetsSortie = bufferFinal.length;
     const alerteBudget = octetsSortie > BUDGET_SCENE_KO * 1024;
@@ -311,7 +344,7 @@ async function convertirScene(fichierSource) {
     if (!doitReconvertir(cheminSource, cheminSortie)) {
         console.log(`  SKIP (a jour) : ${fichierSource}`);
         const gravite = GRAVITE_RECADRAGE[idScene] ?? 'centre';
-        return await rapportSceneSkip(idScene, cheminSortie, formatGravite(gravite));
+        return await rapportSceneSkip(idScene, cheminSortie, formatGravite(gravite), cheminSource);
     }
 
     const octetsSource = statSync(cheminSource).size;

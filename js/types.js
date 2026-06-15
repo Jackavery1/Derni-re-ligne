@@ -70,6 +70,8 @@
  * @property {number | null} tempsDebut
  * @property {number} tempsPauseAccumule
  * @property {number | null} tempsPauseDebut
+ * @property {number | null} tempsNiveauDebut
+ * @property {number} tempsNiveauBudgetMs
  * @property {string} modeJeu
  * @property {boolean} victoireSprint
  * @property {number} [compteurEvenementsPartie]
