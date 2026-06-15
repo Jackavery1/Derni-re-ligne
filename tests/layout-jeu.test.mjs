@@ -135,4 +135,26 @@ describe('layout-jeu', () => {
         vi.stubGlobal('document', { getElementById: () => null });
         expect(() => adapterInterface()).not.toThrow();
     });
+
+    it('adapterInterface tient compte de visualViewport', () => {
+        window.innerWidth = 900;
+        window.innerHeight = 800;
+        window.visualViewport = {
+            width: 360,
+            height: 640,
+            addEventListener: vi.fn(),
+        };
+        adapterInterface();
+        const scaleCompact = document
+            .getElementById('interface-jeu')
+            .style.setProperty.mock.calls.find((c) => c[0] === '--iface-scale')?.[1];
+
+        window.visualViewport = null;
+        adapterInterface();
+        const scaleLarge = document
+            .getElementById('interface-jeu')
+            .style.setProperty.mock.calls.findLast((c) => c[0] === '--iface-scale')?.[1];
+
+        expect(Number(scaleCompact)).toBeLessThan(Number(scaleLarge));
+    });
 });

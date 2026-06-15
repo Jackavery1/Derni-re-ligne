@@ -12,6 +12,12 @@ export const FONDS_BIOME = {
     cyber: ['#0a000f', '#040006'],
     fuochi: ['#06040a', '#020108'],
     cosmos: ['#040010', '#010006'],
+    rouille: ['#120804', '#060302'],
+    eclipse: ['#0c0a00', '#060500'],
+    vide: ['#08060a', '#000000'],
+    miroir: ['#100804', '#060402'],
+    trame: ['#080010', '#030006'],
+    paradoxe: ['#020002', '#000000'],
 };
 
 export const NOMS_MONDES_REQUIS = {

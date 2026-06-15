@@ -246,11 +246,6 @@ button.options-hint-controles:hover {
     background: rgba(0, 221, 200, 0.12);
 }
 
-.option-accents-ui.actif {
-    border-color: var(--jaune, #ffbb44);
-    color: var(--jaune, #ffbb44);
-}
-
 .histoire-prog-trame-detail {
     list-style: none;
     margin: 0.25rem 0 0;
@@ -292,11 +287,6 @@ button.options-hint-controles:hover {
     color: var(--orange, #ffaa44);
     border: 1px solid rgba(255, 170, 68, 0.35);
     background: rgba(255, 170, 68, 0.08);
-}
-
-.option-accents-ui {
-    border-color: var(--cyan, #00ddc8);
-    color: var(--cyan, #00ddc8);
 }
 
 .options-hint-controles {

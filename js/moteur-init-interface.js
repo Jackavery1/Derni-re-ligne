@@ -14,6 +14,7 @@ import { initialiserInput } from './input-jeu.js';
 import { adapterInterface, initialiserLayout } from './layout-jeu.js';
 import { initialiserModeDeveloppeur } from './mode-developpeur.js';
 import { initPiecesFond } from './menu-fond.js';
+import { initialiserMenuRoboTitre } from './menu-robo-titre.js';
 import { initialiserOptions } from './options-ui.js';
 import { demarrerBoucleRobo } from './rendu-robo.js';
 import { demarrerJeu } from './partie.js';
@@ -27,6 +28,7 @@ import { exposerNeoTestApi } from './neo-test-api.js';
 import { boucleSecondaireActive } from './planificateur-raf.js';
 import { CONFIG } from './config-jeu.js';
 import { etat } from './store-jeu.js';
+import { AudioMoteur } from './audio.js';
 
 export function initialiserInterfaceMoteur() {
     chargerStats();
@@ -38,6 +40,7 @@ export function initialiserInterfaceMoteur() {
     appliquerThemeBiome(obtenirBiomeActif());
     mettreAJourAffichageRecord();
     initPiecesFond();
+    initialiserMenuRoboTitre();
     initialiserOptions();
     initialiserInput();
     initialiserInputCoop();
@@ -67,6 +70,9 @@ export function initialiserInterfaceMoteur() {
                 etat.lignes = CONFIG.sprintLignes;
                 obtenirActions().terminerPartie?.(true, { immediat: true });
             },
+            obtenirColonnePieceActive: () =>
+                typeof etat.pieceActuelle?.x === 'number' ? etat.pieceActuelle.x : null,
+            obtenirMusiqueActive: () => AudioMoteur.biomeMusique,
         });
     }
 }

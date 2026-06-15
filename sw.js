@@ -1,10 +1,13 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v37';
-const VERSION_MEDIAS = 'dl-medias-v2';
+const VERSION_SHELL = 'dl-shell-v45';
+const VERSION_MEDIAS = 'dl-medias-v3';
 
 const SCENES_CUTSCENE_PRECACHE = [
+    './assets/splash-chargement.png',
+    './assets/cutscenes/cutscenes.css',
     './assets/cutscenes/scene_observatoire.png',
     './assets/cutscenes/scene_labo.png',
+    './assets/portraits/vera-base.png',
     './assets/cutscenes/scene_trame.png',
     './assets/cutscenes/scene_fragmentation.png',
     './assets/cutscenes/scene_seuil_brasier.png',
@@ -21,12 +24,11 @@ const FICHIERS_A_CACHER = [
     './',
     './index.html',
     './manifest.json',
+    './styles/ecran-chargement.css',
     './styles/base.css',
     './styles/boss.css',
     './styles/boutons-verrouilles.css',
     './styles/controles-tactiles.css',
-    './styles/cutscenes.css',
-    './styles/dev.css',
     './styles/ecran-game-over.css',
     './styles/ecran-pause.css',
     './styles/ecran-selection.css',
@@ -77,6 +79,8 @@ const FICHIERS_A_CACHER = [
     './js/achievements-histoire.js',
     './js/achievements-icones-map.js',
     './js/achievements-progres.js',
+    './js/achievements-stats.js',
+    './js/achievements-ui.js',
     './js/achievements.js',
     './js/actions-jeu.js',
     './js/actions-piece-communes.js',
@@ -88,6 +92,8 @@ const FICHIERS_A_CACHER = [
     './js/archi-icones-map.js',
     './js/archi-input.js',
     './js/archi-jeu.js',
+    './js/archi-partie.js',
+    './js/archi-selection.js',
     './js/archi-logique.js',
     './js/archi-rendu.js',
     './js/audio-donnees.js',
@@ -110,10 +116,16 @@ const FICHIERS_A_CACHER = [
     './js/charger-ecrans.js',
     './js/charger-histoire-textes.js',
     './js/codex-donnees.js',
+    './js/codex-donnees/chroniques.js',
+    './js/codex-donnees/mondes.js',
+    './js/codex-donnees/reliques.js',
     './js/codex-histoire.js',
     './js/codex-icones-map.js',
     './js/codex-illustrations-histoire.js',
     './js/codex-illustrations.js',
+    './js/codex-illustrations/biomes.js',
+    './js/codex-illustrations/chroniques.js',
+    './js/codex-illustrations/reliques.js',
     './js/codex.js',
     './js/conditions-secrets.js',
     './js/config-jeu.js',
@@ -142,7 +154,9 @@ const FICHIERS_A_CACHER = [
     './js/fin-bg-rendu.js',
     './js/fins-histoire.js',
     './js/fond-ecrans-meta.js',
-    './js/gestionnaire-difficulte.js',
+    './js/haptique.js',
+    './js/config-sync.js',
+    './js/progression-sync-cloud.js',
     './js/histoire-actions.js',
     './js/histoire-cutscene-config.js',
     './js/histoire-cutscene-fonds.js',
@@ -151,6 +165,10 @@ const FICHIERS_A_CACHER = [
     './js/histoire-cutscene-typewriter.js',
     './js/histoire-cutscene-ui.js',
     './js/histoire-cutscene.js',
+    './js/histoire-donnees/fins-etat.js',
+    './js/histoire-donnees/journaux-donnees.js',
+    './js/histoire-donnees/personnages-boss.js',
+    './js/histoire-donnees/sequence-histoire.js',
     './js/histoire-donnees.js',
     './js/histoire-etat.js',
     './js/histoire-illustrations.js',
@@ -187,6 +205,7 @@ const FICHIERS_A_CACHER = [
     './js/logique-partie-verrouillage.js',
     './js/logique-partie.js',
     './js/logique-pure.js',
+    './js/ecran-chargement.js',
     './js/main.js',
     './js/mascotte-robo.js',
     './js/mecaniques-histoire.js',
@@ -224,6 +243,7 @@ const FICHIERS_A_CACHER = [
     './js/portrait-rendu-utils.js',
     './js/portrait-sentinelle-rendu.js',
     './js/portrait-vera-rendu.js',
+    './js/portrait-vera-assets.js',
     './js/portraits-cutscene-etat.js',
     './js/portraits-cutscene-personnages.js',
     './js/portraits-cutscene-utils.js',
@@ -288,7 +308,6 @@ const FICHIERS_A_CACHER = [
     './img/icon-192.png',
     './img/icon-512.png',
     './img/icon-maskable-512.png',
-    './img/robo-accueil.png',
     /* PRECACHE:FIN */
 ];
 
@@ -303,8 +322,13 @@ function estCheminScene(pathname) {
 }
 
 /** @param {string} pathname */
+function estCheminSplash(pathname) {
+    return pathname.includes('/assets/splash-');
+}
+
+/** @param {string} pathname */
 function estCheminMedia(pathname) {
-    return estCheminMusique(pathname) || estCheminScene(pathname);
+    return estCheminMusique(pathname) || estCheminScene(pathname) || estCheminSplash(pathname);
 }
 
 /** @param {Request} requete @param {string} nomCache */

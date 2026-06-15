@@ -198,14 +198,10 @@ describe('audit 2 — gameplay UX', () => {
     });
 
     describe('polish et contenu (audit 2 dims 9-10)', () => {
-        it('expose l option accents UI', async () => {
-            const { obtenirAccentsUi, persisterAccentsUi, sansAccentsE } =
-                await import('../js/texte-jeu.js');
-            persisterAccentsUi(true);
-            expect(obtenirAccentsUi()).toBe(true);
-            expect(sansAccentsE('RÉSERVE')).toBe('RÉSERVE');
-            persisterAccentsUi(false);
+        it('sansAccentsE retire les accents des libelles UI', async () => {
+            const { sansAccentsE } = await import('../js/texte-jeu.js');
             expect(sansAccentsE('RÉSERVE')).toBe('RESERVE');
+            expect(sansAccentsE('Prêt')).toBe('Pret');
         });
 
         it('persiste les records sprint par biome', async () => {

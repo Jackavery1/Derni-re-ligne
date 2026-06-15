@@ -112,14 +112,6 @@
                     ◇ RÉDUIRE EFFETS
                 </button>
                 <button
-                    class="bouton option-accents-ui"
-                    type="button"
-                    id="btn-toggle-accents"
-                    aria-pressed="false"
-                >
-                    É ACCENTS UI (dialogues inchanges)
-                </button>
-                <button
                     class="bouton discret"
                     type="button"
                     id="btn-toggle-constellation-clic"
@@ -127,13 +119,77 @@
                 >
                     ◎ CONSTELLATION AU CLIC
                 </button>
+                <button
+                    class="bouton discret"
+                    type="button"
+                    id="btn-toggle-haptique"
+                    aria-pressed="true"
+                >
+                    📳 RETOUR HAPTIQUE
+                </button>
             </div>
             <button type="button" class="options-hint-controles" id="btn-aller-controles">
                 Personnaliser les touches → onglet <strong>CONTRÔLES</strong>
             </button>
+            <div class="options-boutons options-boutons-sauvegarde">
+                <button
+                    class="bouton discret"
+                    type="button"
+                    id="btn-toggle-sync-cloud"
+                    aria-pressed="false"
+                >
+                    ☁ SYNC CLOUD AUTO
+                </button>
+                <button class="bouton discret" type="button" id="btn-sync-maintenant">
+                    ↻ SYNC MAINTENANT
+                </button>
+            </div>
+            <div class="options-sync-config element-masque" id="panneau-sync-config">
+                <p class="options-sync-aide">
+                    Creer la table Supabase avec <strong>docs/supabase-sync.sql</strong>, puis
+                    renseigner l’URL et la cle anon du projet.
+                </p>
+                <label class="option-label" for="input-supabase-url">URL SUPABASE</label>
+                <input
+                    class="option-texte"
+                    type="url"
+                    id="input-supabase-url"
+                    placeholder="https://xxx.supabase.co"
+                    autocomplete="off"
+                />
+                <label class="option-label" for="input-supabase-key">CLE ANON</label>
+                <input
+                    class="option-texte"
+                    type="password"
+                    id="input-supabase-key"
+                    placeholder="eyJ..."
+                    autocomplete="off"
+                />
+            </div>
+            <p
+                class="options-controles-mobile element-masque"
+                id="options-sync-statut"
+                aria-live="polite"
+            ></p>
+            <div class="options-boutons options-boutons-sauvegarde">
+                <button class="bouton discret" type="button" id="btn-export-progression">
+                    ↓ EXPORTER RECORDS
+                </button>
+                <button class="bouton discret" type="button" id="btn-import-progression">
+                    ↑ IMPORTER RECORDS
+                </button>
+                <input
+                    type="file"
+                    id="input-import-progression"
+                    accept="application/json,.json"
+                    class="element-masque"
+                    aria-hidden="true"
+                    tabindex="-1"
+                />
+            </div>
             <p class="options-confidentialite">
-                Vos scores, preferences et progression sont enregistres localement sur cet appareil
-                (localStorage). Aucune donnee n’est transmise à un serveur.
+                Scores et profil en localStorage. Export manuel ou sync cloud opt-in (records
+                uniquement, Supabase). Retour haptique sur mobile si disponible.
             </p>
         </div>
 

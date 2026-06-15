@@ -355,6 +355,10 @@ export function initialiserUiObjectifs() {
     });
 
     _el('overlay-recap-monde')?.addEventListener('click', () => _fermerRecap());
+    _el('btn-recap-continuer')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        _fermerRecap();
+    });
 
     ecouter('difficulte:vague', ({ montee, palierApres }) => {
         _flashVague(montee);

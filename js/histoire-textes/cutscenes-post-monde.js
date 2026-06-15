@@ -216,15 +216,17 @@ export const CUTSCENES_POST_MONDE = {
     ],
 
     monde_vide: [
-        { personnage: 'narrateur', texte: 'Le Vide ne parle pas.' },
-        { personnage: 'narrateur', texte: 'Mais il ecoute.' },
+        { personnage: 'narrateur', scene: 'vide_errance', texte: 'Le Vide ne parle pas.' },
+        { personnage: 'narrateur', scene: 'vide_errance', texte: 'Mais il écoute.' },
         {
             personnage: 'robo',
+            scene: 'vide_errance',
             texte: "J'ai joué à l'aveugle. Juste la mémoire des positions, la confiance dans la géométrie.",
             humeur: 'neutre',
         },
         {
             personnage: 'robo',
+            scene: 'vide_errance',
             texte: "Je crois que c'est comme ça qu'elle s'en sort depuis des années.",
             humeur: 'triste',
         },
@@ -266,30 +268,36 @@ export const CUTSCENES_POST_MONDE = {
         },
         {
             personnage: 'robo',
+            scene: 'trame',
             texte: "Je croyais chercher VERA. Je comprends maintenant que je complétais ce qu'elle avait commencé le Jour 2 191.",
             humeur: 'neutre',
         },
         {
             personnage: 'robo',
+            scene: 'trame',
             texte: "Chaque ligne que j'ai tenue jusqu'au bout est restée ici. Pas comme un abandon. Comme un dépôt.",
             humeur: 'content',
         },
         {
             personnage: 'narrateur',
+            scene: 'trame',
             texte: "Dans le tissu, une phrase — pas une voix. Une trace qu'elle a laissée il y a longtemps :",
         },
         {
             personnage: 'vera',
+            scene: 'trame',
             texte: "« Si tu lis ceci dans la Trame, c'est que tu as tout gardé. Tu peux partir. Ou tu peux rester. Les deux comptent. »",
             humeur: 'douce',
         },
         {
             personnage: 'robo',
+            scene: 'trame',
             texte: "Elle savait que quelqu'un finirait par arriver avec des lignes complètes. Pas des mots.",
             humeur: 'triste',
         },
         {
             personnage: 'narrateur',
+            scene: 'trame',
             texte: "Au-dessus, quelque part, une fin attend encore celui qui osera ne pas l'effacer.",
         },
     ],

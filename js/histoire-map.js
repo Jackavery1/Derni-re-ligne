@@ -337,8 +337,22 @@ function _lerpCamera() {
 
 export async function demarrerCarteHistoire() {
     arreterCarteHistoire();
-    const { chargerHistoireTextes } = await import('./charger-histoire-textes.js');
-    await chargerHistoireTextes();
+    const moduleTextes = await import('./charger-histoire-textes.js');
+    let overlayChargement = false;
+    try {
+        moduleTextes.obtenirHistoireTextesSync();
+    } catch {
+        const { afficherEcranChargement, definirMessageChargement } =
+            await import('./ecran-chargement.js');
+        definirMessageChargement('Chargement de la campagne…');
+        afficherEcranChargement();
+        overlayChargement = true;
+    }
+    await moduleTextes.chargerHistoireTextes();
+    if (overlayChargement) {
+        const { masquerEcranChargement } = await import('./ecran-chargement.js');
+        masquerEcranChargement();
+    }
     if (!initialiserCarteMonde()) return;
     etatCarte.carteActive = true;
     mettreAJourAriaCarteHistoire(etatCarte);

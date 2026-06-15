@@ -37,12 +37,14 @@
     z-index: 1;
 }
 
-#ecran-histoire-cutscene:has(.cutscene-bg-canvas) {
+#ecran-histoire-cutscene:has(.cutscene-bg-canvas),
+#ecran-histoire-cutscene.cutscene-scene-image {
     background: transparent !important;
     animation: none;
 }
 
-#ecran-histoire-cutscene:has(.cutscene-bg-canvas) .cutscene-fond-overlay {
+#ecran-histoire-cutscene:has(.cutscene-bg-canvas) .cutscene-fond-overlay,
+#ecran-histoire-cutscene.cutscene-scene-image .cutscene-fond-overlay {
     background: transparent !important;
 }
 

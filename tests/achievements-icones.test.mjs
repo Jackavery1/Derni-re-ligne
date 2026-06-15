@@ -8,6 +8,7 @@ import {
     obtenirTexteVerrouillePanneau,
     obtenirLibelleCategorieFiltre,
     estCategorieIndiceMasque,
+    ICONE_PAR_ACHIEVEMENT,
 } from '../js/achievements-icones-map.js';
 
 describe('achievements-icones-map', () => {
@@ -16,6 +17,15 @@ describe('achievements-icones-map', () => {
             const idIcone = obtenirIdIconeAchievement(ach.id, ach.categorie);
             expect(ICONES_PIXEL[idIcone], `${ach.id} → ${idIcone}`).toBeTruthy();
             expect(obtenirAccentCategorie(ach.categorie)).toMatch(/^#[0-9a-f]{6}$/i);
+        }
+    });
+
+    it('assigne une icone dediee a chaque exploit histoire', () => {
+        const histoire = Object.values(ACHIEVEMENTS).filter((a) =>
+            a.categorie.startsWith('histoire')
+        );
+        for (const ach of histoire) {
+            expect(ICONE_PAR_ACHIEVEMENT[ach.id], ach.id).toBeTruthy();
         }
     });
 

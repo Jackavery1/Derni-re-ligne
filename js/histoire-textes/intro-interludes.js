@@ -3,14 +3,17 @@ export const INTRO_HISTOIRE = {
     lignes: [
         {
             personnage: 'narrateur',
+            scene: 'observatoire',
             texte: "Il y a longtemps, quelqu'un a inventé un jeu.",
         },
         {
             personnage: 'narrateur',
+            scene: 'observatoire',
             texte: 'Des blocs qui tombent. Des lignes qui disparaissent. Simple.',
         },
         {
             personnage: 'narrateur',
+            scene: 'observatoire',
             texte: "Personne ne s'est demandé où allaient les lignes complétées. Ni ce que devenaient celles qu'on abandonnait.",
         },
         {
@@ -84,91 +87,115 @@ export const INTRO_HISTOIRE = {
 // INTERLUDES NARRATIFS (hors carte)
 // ============================================================
 export const INTERLUDES = {
-    interlude_gardiens: [
-        {
-            personnage: 'systeme',
-            texte: "ALERTE. ENTITÉ MASSIVE DÉTECTÉE AU CŒUR D'INFERNO. CLASSIFICATION : GARDIEN.",
-            humeur: 'alerte',
-        },
-        {
-            personnage: 'narrateur',
-            texte: 'Avant La Distorsion, la Trame avait des gardiens. Nés des biomes eux-mêmes, pour les maintenir.',
-        },
-        {
-            personnage: 'narrateur',
-            texte: "Des siècles d'abandon les ont laissés seuls avec leur fonction. Le Brasier chauffe. La Sentinelle fige. L'Archiviste classe. Sans plus savoir pourquoi.",
-        },
-        {
-            personnage: 'narrateur',
-            texte: "La Distorsion ne les a pas créés. Elle les a trouvés — déjà cassés. Certains la servent. D'autres se servent d'elle comme excuse.",
-        },
-        {
-            personnage: 'robo',
-            texte: "Et je vais devoir passer à travers eux. Pas parce qu'ils sont mauvais. Parce qu'ils bloquent la route.",
-            humeur: 'neutre',
-        },
-        {
-            personnage: 'robo',
-            texte: "J'espère que la différence existe.",
-            humeur: 'triste',
-        },
-    ],
+    interlude_gardiens: {
+        scene: 'seuil_brasier',
+        lignes: [
+            {
+                personnage: 'systeme',
+                texte: "ALERTE. ENTITÉ MASSIVE DÉTECTÉE AU CŒUR D'INFERNO. CLASSIFICATION : GARDIEN.",
+                humeur: 'alerte',
+            },
+            {
+                personnage: 'narrateur',
+                texte: 'Avant La Distorsion, la Trame avait des gardiens. Nés des biomes eux-mêmes, pour les maintenir.',
+            },
+            {
+                personnage: 'narrateur',
+                texte: "Des siècles d'abandon les ont laissés seuls avec leur fonction. Le Brasier chauffe. La Sentinelle fige. L'Archiviste classe. Sans plus savoir pourquoi.",
+            },
+            {
+                personnage: 'narrateur',
+                texte: "La Distorsion ne les a pas créés. Elle les a trouvés — déjà cassés. Certains la servent. D'autres se servent d'elle comme excuse.",
+            },
+            {
+                personnage: 'robo',
+                texte: "Et je vais devoir passer à travers eux. Pas parce qu'ils sont mauvais. Parce qu'ils bloquent la route.",
+                humeur: 'neutre',
+            },
+            {
+                personnage: 'robo',
+                texte: "J'espère que la différence existe.",
+                humeur: 'triste',
+            },
+        ],
+    },
 
     interlude_veille: [
-        { personnage: 'narrateur', texte: 'Au seuil de la Finale. Deux silhouettes.' },
+        {
+            personnage: 'narrateur',
+            scene: 'seuil_avantgarde',
+            texte: 'Au seuil de la Finale. Deux silhouettes.',
+        },
         {
             personnage: 'avantgarde',
+            scene: 'seuil_avantgarde',
             texte: "Il arrive. Tu veux que je l'arrête ?",
             humeur: 'calme',
         },
-        { personnage: 'distorsion', texte: 'Non. Je veux que tu vérifies.', humeur: 'souffrante' },
-        { personnage: 'avantgarde', texte: 'Vérifier quoi ?', humeur: 'calme' },
         {
             personnage: 'distorsion',
+            scene: 'seuil_avantgarde',
+            texte: 'Non. Je veux que tu vérifies.',
+            humeur: 'souffrante',
+        },
+        {
+            personnage: 'avantgarde',
+            scene: 'seuil_avantgarde',
+            texte: 'Vérifier quoi ?',
+            humeur: 'calme',
+        },
+        {
+            personnage: 'distorsion',
+            scene: 'seuil_avantgarde',
             texte: "Qu'il survivra à ce que je suis. Le dernier être qui m'a vue en entier, c'était VERA. Elle n'est jamais ressortie.",
             humeur: 'souffrante',
         },
         {
             personnage: 'avantgarde',
+            scene: 'seuil_avantgarde',
             texte: "Et s'il n'est pas prêt ?",
             humeur: 'calme',
         },
         {
             personnage: 'distorsion',
+            scene: 'seuil_avantgarde',
             texte: 'Alors renvoie-le. Doucement. ... Je ne veux pas en casser un autre.',
             humeur: 'souffrante',
         },
     ],
 
-    interlude_elle: [
-        { personnage: 'narrateur', texte: 'Ailleurs. Au centre de la Trame.' },
-        {
-            personnage: 'distorsion',
-            texte: "Il avance. Il complète. Il ne casse rien d'autre que ce qu'il répare.",
-            humeur: 'souffrante',
-        },
-        {
-            personnage: 'distorsion',
-            texte: "Les autres gardiens détruisaient ce qu'ils ne comprenaient pas. Lui, il écoute en empilant.",
-            humeur: 'souffrante',
-        },
-        {
-            personnage: 'distorsion',
-            texte: "VERA... c'est ça que tu m'envoyais ? Pas une arme. Une oreille.",
-            humeur: 'souffrante',
-        },
-        { personnage: 'distorsion', texte: 'Laissez-le passer.', humeur: 'souffrante' },
-        {
-            personnage: 'systeme',
-            texte: 'ORDRE PROPAGÉ À 61% DES FRAGMENTS. 39% REFUSENT.',
-            humeur: 'alerte',
-        },
-        {
-            personnage: 'distorsion',
-            texte: "... Évidemment. Je ne suis même pas d'accord avec moi-même.",
-            humeur: 'souffrante',
-        },
-    ],
+    interlude_elle: {
+        scene: 'trame',
+        lignes: [
+            { personnage: 'narrateur', texte: 'Ailleurs. Au centre de la Trame.' },
+            {
+                personnage: 'distorsion',
+                texte: "Il avance. Il complète. Il ne casse rien d'autre que ce qu'il répare.",
+                humeur: 'souffrante',
+            },
+            {
+                personnage: 'distorsion',
+                texte: "Les autres gardiens détruisaient ce qu'ils ne comprenaient pas. Lui, il écoute en empilant.",
+                humeur: 'souffrante',
+            },
+            {
+                personnage: 'distorsion',
+                texte: "VERA... c'est ça que tu m'envoyais ? Pas une arme. Une oreille.",
+                humeur: 'souffrante',
+            },
+            { personnage: 'distorsion', texte: 'Laissez-le passer.', humeur: 'souffrante' },
+            {
+                personnage: 'systeme',
+                texte: 'ORDRE PROPAGÉ À 61% DES FRAGMENTS. 39% REFUSENT.',
+                humeur: 'alerte',
+            },
+            {
+                personnage: 'distorsion',
+                texte: "... Évidemment. Je ne suis même pas d'accord avec moi-même.",
+                humeur: 'souffrante',
+            },
+        ],
+    },
 };
 
 // ============================================================

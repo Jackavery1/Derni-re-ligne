@@ -110,7 +110,7 @@
     grid-template-columns: 1fr;
     gap: 20px;
     padding: 24px 20px 32px;
-    max-height: 100vh;
+    max-height: 100dvh;
     overflow-y: auto;
     scrollbar-width: none;
     position: relative;
@@ -283,7 +283,7 @@
     align-items: center;
     gap: 20px;
     padding: 28px 20px 36px;
-    max-height: 100vh;
+    max-height: 100dvh;
     overflow-y: auto;
     scrollbar-width: none;
     position: relative;

@@ -3,6 +3,8 @@ import { BIOMES } from './config.js';
 import { obtenirEtatHistoire, mondePeutEtreJoue, obtenirEtatMonde } from './histoire-mondes.js';
 import { sansAccentsE } from './texte-jeu.js';
 import { dessinerRoboMiniature } from './rendu-robo-mini.js';
+import { dessinerIconePixel, iconesPixelChargees } from './icones-pixel.js';
+import { obtenirIdIconeMondeHistoire } from './biome-icones-map.js';
 
 function _positionLabel(pos, rayon, w) {
     const centreX = w * 0.5;
@@ -100,24 +102,48 @@ function _dessinerCorpsNoeud(ctx, x, y, rayon, monde, couleur, estComplete, estD
     ctx.shadowBlur = 0;
 }
 
-function _dessinerIconeNoeud(ctx, x, y, biome, estComplete, estDisponible) {
-    const alpha = estComplete || estDisponible ? 1 : 0.25;
+function _dessinerIconeNoeud(ctx, x, y, rayon, monde, biome, estComplete, estDisponible) {
+    const alpha = estComplete || estDisponible ? 1 : 0.3;
+    ctx.save();
     ctx.globalAlpha = alpha;
-    ctx.font = '13px serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
 
     if (!estDisponible && !estComplete) {
+        ctx.font = '8px "Press Start 2P", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
         ctx.fillStyle = '#3a3a5a';
-        ctx.fillText('🔒', x, y);
-    } else if (estComplete) {
-        ctx.fillStyle = '#ffffff';
-        ctx.fillText('✓', x, y);
+        ctx.fillText('?', x, y);
+        ctx.restore();
+        return;
+    }
+
+    const idIcone = obtenirIdIconeMondeHistoire(monde.id, monde.biomeId);
+    const taillePixel = Math.max(1, Math.floor((rayon * 1.35) / 16));
+    const taille = 16 * taillePixel;
+
+    if (iconesPixelChargees()) {
+        dessinerIconePixel(ctx, idIcone, x - taille / 2, y - taille / 2, taillePixel, {
+            accent: biome.lueurCoul,
+        });
     } else {
+        ctx.font = '13px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
         ctx.fillStyle = '#ffffff';
         ctx.fillText(biome.icone, x, y);
     }
-    ctx.globalAlpha = 1;
+
+    if (estComplete) {
+        ctx.globalAlpha = 1;
+        ctx.font = '6px "Press Start 2P", monospace';
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = biome.lueurCoul;
+        ctx.shadowBlur = 6;
+        ctx.fillText('OK', x + rayon * 0.52, y - rayon * 0.52);
+        ctx.shadowBlur = 0;
+    }
+
+    ctx.restore();
 }
 
 function _dessinerLabelNoeud(
@@ -164,7 +190,7 @@ function dessinerNoeud(etatCarte, monde, pos, etatHist, timestamp) {
     }
 
     _dessinerCorpsNoeud(ctxCarte, x, y, rayon, monde, couleur, estComplete, estDisponible);
-    _dessinerIconeNoeud(ctxCarte, x, y, biome, estComplete, estDisponible);
+    _dessinerIconeNoeud(ctxCarte, x, y, rayon, monde, biome, estComplete, estDisponible);
     _dessinerLabelNoeud(
         ctxCarte,
         etatCarte,
@@ -204,11 +230,21 @@ function dessinerNoeudCache(etatCarte, monde, pos, etatHist, timestamp) {
     ctxCarte.fill();
     ctxCarte.stroke();
     ctxCarte.shadowBlur = 0;
-    ctxCarte.font = '12px serif';
-    ctxCarte.textAlign = 'center';
-    ctxCarte.textBaseline = 'middle';
-    ctxCarte.fillStyle = '#ffe600';
-    ctxCarte.fillText('✦', x, y);
+
+    const idIcone = obtenirIdIconeMondeHistoire(monde.id, monde.biomeId);
+    const taillePixel = Math.max(1, Math.floor((rayon * 1.2) / 16));
+    const taille = 16 * taillePixel;
+    if (iconesPixelChargees()) {
+        dessinerIconePixel(ctxCarte, idIcone, x - taille / 2, y - taille / 2, taillePixel, {
+            accent: '#ffe600',
+        });
+    } else {
+        ctxCarte.font = '12px serif';
+        ctxCarte.textAlign = 'center';
+        ctxCarte.textBaseline = 'middle';
+        ctxCarte.fillStyle = '#ffe600';
+        ctxCarte.fillText('✦', x, y);
+    }
 
     if (noeudSelectionne === monde.id || noeudSurvole === monde.id) {
         ctxCarte.font = '5px "Press Start 2P", monospace';

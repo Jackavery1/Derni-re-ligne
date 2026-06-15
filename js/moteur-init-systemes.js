@@ -21,9 +21,25 @@ import { initialiserEffetsPartie } from './effets-partie.js';
 import { mettreAJourBoutonsMute } from './options-ui.js';
 import { coopEstPrefere } from './coop-preference.js';
 import { appliquerThemeBiome } from './ecrans-ui.js';
+import { initialiserHaptique } from './haptique.js';
+import {
+    initialiserSyncCloud,
+    synchroniserCloudAuDemarrage,
+    planifierPushCloud,
+} from './progression-sync-cloud.js';
+import { enregistrerPlanificateurPushCloud } from './progression-stockage.js';
 
 export function initialiserSystemesMoteur() {
     migrerClesLocalStorage();
+    initialiserHaptique();
+    enregistrerPlanificateurPushCloud(planifierPushCloud);
+    initialiserSyncCloud();
+    const lancerSyncCloud = () => void synchroniserCloudAuDemarrage();
+    if (typeof requestIdleCallback === 'function') {
+        requestIdleCallback(lancerSyncCloud, { timeout: 4000 });
+    } else {
+        setTimeout(lancerSyncCloud, 0);
+    }
     initialiserEffetsPartie();
     configurerMeteo({
         obtenirEtat: () => etat,

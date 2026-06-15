@@ -16,6 +16,10 @@
     lireStockage,
     ecrireStockage,
     existeStockage,
+    estCleProgressionB10,
+    exporterProgressionB10,
+    importerProgressionB10,
+    VERSION_EXPORT_PROGRESSION,
 } from './progression-stockage.js';
 
 export {

@@ -8,6 +8,7 @@ import {
     chuteRapide,
     tourner,
 } from './logique-partie.js';
+import { vibrerRotation, vibrerChuteRapide } from './haptique.js';
 
 export function initialiserCanvas() {
     const cp = obtenirCanvas('canvas-plateau');
@@ -31,10 +32,24 @@ export function initialiserCanvas() {
 
     if (!cp.dataset.evenementsOk) {
         cp.dataset.evenementsOk = '1';
+        let gesteSwipe = false;
+
         cp.addEventListener(
             'touchstart',
             (e) => {
+                gesteSwipe = false;
                 definirTouchDepart({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+            },
+            { passive: true }
+        );
+        cp.addEventListener(
+            'touchmove',
+            (e) => {
+                const touchDepart = obtenirTouchDepart();
+                if (!touchDepart) return;
+                const dx = e.touches[0].clientX - touchDepart.x;
+                const dy = e.touches[0].clientY - touchDepart.y;
+                if (Math.abs(dx) > 12 || Math.abs(dy) > 12) gesteSwipe = true;
             },
             { passive: true }
         );
@@ -46,19 +61,35 @@ export function initialiserCanvas() {
                 const dx = e.changedTouches[0].clientX - touchDepart.x;
                 const dy = e.changedTouches[0].clientY - touchDepart.y;
                 const seuil = 25;
+                const amplitude = Math.max(Math.abs(dx), Math.abs(dy));
+                if (amplitude < seuil) {
+                    definirTouchDepart(null);
+                    return;
+                }
+                gesteSwipe = true;
                 if (Math.abs(dx) > Math.abs(dy)) {
                     if (dx > seuil) deplacerDroite();
-                    if (dx < -seuil) deplacerGauche();
+                    else if (dx < -seuil) deplacerGauche();
                 } else {
                     if (dy > seuil) deplacerBas();
-                    if (dy < -seuil) chuteRapide();
+                    else if (dy < -seuil) {
+                        vibrerChuteRapide();
+                        chuteRapide();
+                    }
                 }
                 definirTouchDepart(null);
             },
             { passive: true }
         );
         cp.addEventListener('click', () => {
-            if (!etat.pieceActuelle?.reliqueForme) tourner(1);
+            if (gesteSwipe) {
+                gesteSwipe = false;
+                return;
+            }
+            if (!etat.pieceActuelle?.reliqueForme) {
+                vibrerRotation();
+                tourner(1);
+            }
         });
     }
     return true;

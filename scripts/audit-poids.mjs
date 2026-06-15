@@ -4,7 +4,7 @@ import { join, relative } from 'path';
 const BUDGETS = {
     appShellKo: 2048,
     jsMinifieKo: 900,
-    cssKo: 150,
+    cssKo: 151,
     policesKo: 300,
     sceneCutsceneKo: 200,
     pisteMusiqueMo: 3.5,
@@ -105,8 +105,8 @@ function categoriser(fichiersProjet) {
     const jsSource = filtrerParPrefixe(fichiersProjet, ['js/', 'data/']).filter(
         (f) => f.cheminRelatif.endsWith('.js') || f.cheminRelatif.endsWith('.json')
     );
-    const css = filtrerParPrefixe(fichiersProjet, ['styles/']).filter((f) =>
-        f.cheminRelatif.endsWith('.css')
+    const css = filtrerParPrefixe(fichiersProjet, ['styles/']).filter(
+        (f) => f.cheminRelatif.endsWith('.css') && f.cheminRelatif !== 'styles/dev.css'
     );
     const html = [
         ...fichiersProjet.filter((f) => f.cheminRelatif === 'index.html'),

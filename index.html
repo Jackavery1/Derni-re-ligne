@@ -5,7 +5,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <title>Dernière Ligne</title>
         <link rel="manifest" href="manifest.json" />
-        <meta name="theme-color" content="#08081a" />
+        <meta name="theme-color" content="#120818" />
+        <link
+            rel="preload"
+            href="assets/splash-chargement.png"
+            as="image"
+            type="image/png"
+            fetchpriority="high"
+        />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -15,7 +22,7 @@
         <!-- Securite framing: frame-ancestors 'none' (directive en-tete HTTP uniquement — ignoree en meta CSP) -->
         <meta
             http-equiv="Content-Security-Policy"
-            content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self';"
+            content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://*.supabase.co; media-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self';"
         />
         <link
             rel="preload"
@@ -53,8 +60,34 @@
             <button class="bouton" id="btn-maj-sw" type="button">METTRE À JOUR</button>
         </div>
 
+        <div
+            id="ecran-chargement"
+            class="ecran-chargement actif"
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+            aria-label="Chargement de Dernière Ligne"
+        >
+            <div class="ecran-chargement-contenu">
+                <img
+                    class="ecran-chargement-image"
+                    src="assets/splash-chargement.png"
+                    alt=""
+                    width="512"
+                    height="512"
+                    decoding="async"
+                    fetchpriority="high"
+                />
+                <p class="ecran-chargement-titre">DERNIERE LIGNE</p>
+                <p class="ecran-chargement-message" id="ecran-chargement-message">Chargement…</p>
+                <div class="ecran-chargement-barre" aria-hidden="true">
+                    <div class="ecran-chargement-barre-fill" id="ecran-chargement-barre"></div>
+                </div>
+            </div>
+        </div>
+
         <div id="conteneur-ecrans" tabindex="-1"></div>
 
-        <script type="module" src="js/main.js?v=2.5.18"></script>
+        <script type="module" src="js/main.js?v=2.5.19"></script>
     </body>
 </html>

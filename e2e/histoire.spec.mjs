@@ -371,6 +371,21 @@ test('monde caché Paradoxe affiche sa cutscene puis revient à la carte', async
     await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/, { timeout: 10000 });
 });
 
+test('cutscene entree monde lave — fond scene seuil_brasier', async ({ page }) => {
+    const etatLave = {
+        ...ETAT_HISTOIRE_VIDE,
+        mondesCompletes: ['monde_prologue'],
+        mondesDejaMontres: ['monde_prologue', 'monde_lave'],
+    };
+    await ouvrirCarteHistoire(page, etatLave);
+    await page.locator('#histoire-monde-clavier').selectOption('monde_lave', { force: true });
+    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 10000,
+    });
+    await expect(page.locator('#canvas-bg-cutscene')).toHaveClass(/cutscene-scene-image/);
+});
+
 test('cutscene narration active le mode voix off', async ({ page }) => {
     const etatPremiereVisiteBoss = {
         ...ETAT_HISTOIRE_BOSS_BRASIER,

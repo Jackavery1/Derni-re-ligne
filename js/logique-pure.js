@@ -47,6 +47,21 @@ export function compterLignesCompletes(plateau) {
 }
 
 /**
+ * Retire les lignes indiquées et ajoute des lignes vides en haut.
+ * @param {(number | string)[][]} plateau
+ * @param {number[]} lignesEffacees
+ */
+function retirerLignesIndices(plateau, lignesEffacees) {
+    const aRetirer = new Set(lignesEffacees);
+    const lignesConservees = plateau.filter((_, i) => !aRetirer.has(i));
+    const nbVides = CONFIG.lignes - lignesConservees.length;
+    return [
+        ...Array.from({ length: nbVides }, () => Array(CONFIG.colonnes).fill(0)),
+        ...lignesConservees,
+    ];
+}
+
+/**
  * Supprime les lignes completes et retourne un nouveau plateau.
  * @param {(number | string)[][]} plateau
  * @returns {{ plateau: (number | string)[][], nbSupprimees: number, lignesEffacees: number[] }}
@@ -59,34 +74,20 @@ export function supprimerLignesDuPlateau(plateau) {
     if (lignesEffacees.length === 0) {
         return { plateau, nbSupprimees: 0, lignesEffacees: [] };
     }
-    const copie = plateau.map((ligne) => [...ligne]);
-    for (const l of [...lignesEffacees].sort((a, b) => b - a)) {
-        copie.splice(l, 1);
-        copie.unshift(Array(CONFIG.colonnes).fill(0));
-    }
-    return { plateau: copie, nbSupprimees: lignesEffacees.length, lignesEffacees };
+    return {
+        plateau: retirerLignesIndices(plateau, lignesEffacees),
+        nbSupprimees: lignesEffacees.length,
+        lignesEffacees,
+    };
 }
 
 /**
- * Comme supprimerLignesDuPlateau, mais ignore les lignes contenant une cellule rouillée.
- * @param {(x: number, y: number) => boolean} estRouillee
+ * Efface les lignes complètes (y compris si des cellules sont rouillées).
+ * @param {(number | string)[][]} plateau
+ * @param {(x: number, y: number) => boolean} _estRouillee
  */
-export function supprimerLignesDuPlateauExcluantRouille(plateau, estRouillee) {
-    const lignesEffacees = [];
-    for (let l = CONFIG.lignes - 1; l >= 0; l--) {
-        const complete = plateau[l].every((c) => c !== 0);
-        const bloquee = plateau[l].some((_, x) => estRouillee(x, l));
-        if (complete && !bloquee) lignesEffacees.push(l);
-    }
-    if (lignesEffacees.length === 0) {
-        return { plateau, nbSupprimees: 0, lignesEffacees: [] };
-    }
-    const copie = plateau.map((ligne) => [...ligne]);
-    for (const l of [...lignesEffacees].sort((a, b) => b - a)) {
-        copie.splice(l, 1);
-        copie.unshift(Array(CONFIG.colonnes).fill(0));
-    }
-    return { plateau: copie, nbSupprimees: lignesEffacees.length, lignesEffacees };
+export function supprimerLignesDuPlateauExcluantRouille(plateau, _estRouillee) {
+    return supprimerLignesDuPlateau(plateau);
 }
 
 /** @param {number[][]} forme */

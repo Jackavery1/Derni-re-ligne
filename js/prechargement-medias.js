@@ -43,13 +43,27 @@ function urlsMusiqueMonde(mondeId) {
  */
 function urlSceneMonde(mondeId) {
     const entree = obtenirHistoireTextesSync()?.CUTSCENES_ENTREE?.[mondeId];
-    const sceneId =
-        entree && typeof entree === 'object' && !Array.isArray(entree) && 'scene' in entree
-            ? entree.scene
-            : null;
-    if (!sceneId) return null;
-    const scene = SCENES_CUTSCENE[sceneId];
-    return scene?.type === 'image' ? scene.src : null;
+    if (!entree) return null;
+
+    /** @param {string} sceneId */
+    const srcScene = (sceneId) => {
+        const scene = SCENES_CUTSCENE[sceneId];
+        return scene?.type === 'image' ? scene.src : null;
+    };
+
+    if (typeof entree === 'object' && !Array.isArray(entree)) {
+        if ('scene' in entree && entree.scene) return srcScene(entree.scene);
+        const lignes = entree.lignes ?? [];
+        for (const ligne of lignes) {
+            if (ligne?.scene) return srcScene(ligne.scene);
+        }
+        return null;
+    }
+
+    for (const ligne of entree) {
+        if (ligne?.scene) return srcScene(ligne.scene);
+    }
+    return null;
 }
 
 export function annulerPrechargementMedias() {

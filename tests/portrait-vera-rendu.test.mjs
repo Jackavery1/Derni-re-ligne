@@ -7,9 +7,23 @@ import {
 } from '../js/portrait-vera-rendu.js';
 import {
     obtenirParamsExpressionPortrait,
+    infererHumeurVeraDepuisTexte,
     reinitExpressionsCutscene,
 } from '../js/expressions-cutscene.js';
+import {
+    obtenirImagePortraitVera,
+    reinitialiserCachePortraitVeraAssets,
+} from '../js/portrait-vera-assets.js';
 import { store } from '../js/store-core.js';
+
+vi.mock('../js/portrait-vera-assets.js', async (importOriginal) => {
+    const original = await importOriginal();
+    return {
+        ...original,
+        obtenirImagePortraitVera: vi.fn(() => null),
+        prechargerPortraitVera: vi.fn(() => Promise.resolve(null)),
+    };
+});
 
 function creerCtxMock() {
     const gradient = { addColorStop: vi.fn() };
@@ -43,24 +57,26 @@ function creerCtxMock() {
         globalAlpha: 1,
         shadowBlur: 0,
         shadowColor: '',
+        filter: '',
     };
 }
 
-describe('portrait VERA canon', () => {
+describe('portrait VERA sprite', () => {
     beforeEach(() => {
         viderCachePortraitVera();
+        reinitialiserCachePortraitVeraAssets();
         reinitExpressionsCutscene();
         store.histoire.cutscene.enCours = true;
+        vi.mocked(obtenirImagePortraitVera).mockReturnValue(null);
     });
 
-    it('expose les palettes du canon sans couleur hors bloc', () => {
+    it('expose les palettes du canon', () => {
         expect(PALETTE_VERA.COMBINAISON).toBe('#e8edf5');
         expect(PALETTE_VERA.HALO).toBe('#ff2d78');
         expect(PALETTE_VERA_DESAT.VISIERE).toBeTruthy();
-        expect(Object.keys(PALETTE_VERA).length).toBeGreaterThanOrEqual(10);
     });
 
-    it('dessine sans erreur pour chaque humeur PROMPT A', () => {
+    it('dessine sans erreur pour chaque humeur', () => {
         const humeurs = ['neutre', 'douce', 'inquiete', 'determinee', 'glitch'];
         for (const humeur of humeurs) {
             const ctx = creerCtxMock();
@@ -70,31 +86,34 @@ describe('portrait VERA canon', () => {
         }
     });
 
-    it('effets réduits : t figé (pas de pulsation supplémentaire via tAnim)', () => {
-        const ctx0 = creerCtxMock();
-        const ctx1 = creerCtxMock();
+    it('utilise drawImage quand le sprite est chargé', () => {
+        vi.mocked(obtenirImagePortraitVera).mockReturnValue({
+            width: 512,
+            height: 512,
+        });
+        const ctx = creerCtxMock();
         const params = obtenirParamsExpressionPortrait('vera', 'neutre', 1000);
-        params.effetsReduits = true;
-        dessinerPortraitVeraCanon(ctx0, 180, 260, 0, params);
-        dessinerPortraitVeraCanon(ctx1, 180, 260, 99, params);
-        expect(ctx0.arc.mock.calls.length).toBe(ctx1.arc.mock.calls.length);
+        dessinerPortraitVeraCanon(ctx, 180, 260, 0, params);
+        expect(ctx.drawImage).toHaveBeenCalled();
     });
 
-    it('glitch active les bandes (drawImage ou fill si pas de cache)', () => {
+    it('glitch active les bandes (clip + drawImage)', () => {
+        vi.mocked(obtenirImagePortraitVera).mockReturnValue({
+            width: 512,
+            height: 512,
+        });
         const ctx = creerCtxMock();
         const params = obtenirParamsExpressionPortrait('vera', 'glitch', 1000);
         params.decalagesGlitch = [2, 4, 3];
         dessinerPortraitVeraCanon(ctx, 180, 260, 2, params);
-        const appels = ctx.drawImage.mock.calls.length + ctx.fillRect.mock.calls.length;
-        expect(appels).toBeGreaterThan(5);
+        expect(ctx.clip.mock.calls.length).toBeGreaterThan(0);
+        expect(ctx.drawImage.mock.calls.length).toBeGreaterThan(1);
     });
 
-    it('structure anti-dalle : tête en ellipse et traits de visage', () => {
-        const ctx = creerCtxMock();
-        const params = obtenirParamsExpressionPortrait('vera', 'neutre', 1000);
-        dessinerPortraitVeraCanon(ctx, 180, 260, 0, params);
-        expect(ctx.ellipse.mock.calls.length).toBeGreaterThanOrEqual(2);
-        expect(ctx.arc.mock.calls.length).toBeGreaterThanOrEqual(2);
-        expect(ctx.quadraticCurveTo.mock.calls.length).toBeGreaterThan(0);
+    it('infère des humeurs depuis le texte de dialogue', () => {
+        expect(infererHumeurVeraDepuisTexte('ROBO. Je suis là.')).toBe('determinee');
+        expect(infererHumeurVeraDepuisTexte('— Signal perdu —')).toBe('glitch');
+        expect(infererHumeurVeraDepuisTexte('Je suis fière de toi.')).toBe('douce');
+        expect(infererHumeurVeraDepuisTexte('Tu es en danger ?')).toBe('inquiete');
     });
 });

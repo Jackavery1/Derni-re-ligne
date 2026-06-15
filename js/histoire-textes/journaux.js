@@ -27,50 +27,60 @@ export const JOURNAUX_VERA_DIALOGUES = {
 export const DECOUVERTE_LABO = [
     {
         personnage: 'narrateur',
+        scene: 'labo',
         texte: "Les archives s'ouvrent.",
     },
     {
         personnage: 'vera',
+        scene: 'labo',
         texte: 'Si tu lis ceci, tu as réussi le triple Tetris. Bien joué.',
         humeur: 'douce',
     },
     {
         personnage: 'vera',
+        scene: 'labo',
         texte: "J'ai laissé une serrure algorithmique. Seule la précision l'ouvre.",
         humeur: 'determinee',
     },
     {
         personnage: 'vera',
+        scene: 'labo',
         texte: 'Voici ce que tu dois savoir sur La Distorsion.',
         humeur: 'determinee',
     },
     {
         personnage: 'vera',
+        scene: 'labo',
         texte: "Elle n'est pas née d'une erreur. Elle est née d'un choix collectif.",
         humeur: 'determinee',
     },
     {
         personnage: 'vera',
+        scene: 'labo',
         texte: "Des millions de joueurs, sur des millions d'années, qui abandonnaient leurs parties.",
         humeur: 'determinee',
     },
     {
         personnage: 'vera',
+        scene: 'labo',
         texte: 'Chaque ligne incomplète laissée dans la Trame. Accumulée. Cristallisée.',
         humeur: 'inquiete',
     },
     {
         personnage: 'vera',
+        scene: 'labo',
         texte: 'Elle est la somme de toutes les frustrations. Et elle souffre.',
         humeur: 'inquiete',
     },
     {
         personnage: 'vera',
+        scene: 'labo',
         texte: "Je vais entrer dans la Trame pour lui parler. Ne m'attends pas.",
         humeur: 'determinee',
     },
     {
         personnage: 'robo',
+        scene: 'labo',
         texte: "... Elle savait ce qu'elle faisait.",
         humeur: 'triste',
     },

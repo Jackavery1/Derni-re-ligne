@@ -43,6 +43,7 @@ import {
 import { onGameOverHistoire } from './mecaniques-histoire.js';
 import { oracle, obtenirScoreFinalOracle } from './oracle-jeu.js';
 import { statsGlobales } from './achievements.js';
+import { vibrerFinPartie } from './haptique.js';
 import { arreterFondBiome } from './rendu-fond-biome.js';
 
 function _enregistrerRecordsFinPartie(victoire, scoreFinal) {
@@ -79,6 +80,7 @@ export function terminerPartie(victoire = false, options = {}) {
         reagirRoboGameOver();
     }
     if (!victoire) setTimeout(() => AudioMoteur.son('game_over'), 250);
+    vibrerFinPartie(victoire);
     const annonceVictoire = modeHistoireEnCours()
         ? 'Monde termine ! Victoire'
         : etat.modeJeu === 'sprint'

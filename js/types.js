@@ -166,7 +166,9 @@
  *     terminerPartie?: (victoire: boolean, options?: { immediat?: boolean }) => void,
  *     demarrerPartieLibre?: (biomeId?: string) => void,
  *     boucleMenuUnifieActive?: () => boolean,
- *     simulerVictoireSprint?: () => void
+ *     simulerVictoireSprint?: () => void,
+ *     obtenirColonnePieceActive?: () => number | null,
+ *     obtenirMusiqueActive?: () => string | null
  *   }
  * }} WindowEtendu
  */

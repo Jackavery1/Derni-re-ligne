@@ -42,4 +42,11 @@ describe('audio', () => {
             expect(cfg.gamme).toBeTruthy();
         }
     });
+
+    it('piste narrative dediee aux cutscenes', () => {
+        const cfg = MUSIQUE_BIOMES.narratif_cutscene;
+        expect(cfg).toBeDefined();
+        expect(cfg.tempo).toBeLessThan(90);
+        expect(cfg.echoActif).toBe(true);
+    });
 });

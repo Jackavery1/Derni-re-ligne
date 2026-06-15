@@ -1,0 +1,76 @@
+.ecran-chargement {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px))
+        max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+    background: radial-gradient(ellipse at 50% 35%, #2a1048 0%, #120818 45%, #06040c 100%);
+    opacity: 1;
+    transition: opacity 0.45s ease;
+}
+
+.ecran-chargement.actif {
+    display: flex;
+}
+
+.ecran-chargement.sortie {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ecran-chargement-contenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    width: min(100%, 440px);
+}
+
+.ecran-chargement-image {
+    width: min(88vw, 380px);
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: contain;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    filter: drop-shadow(0 0 28px rgba(255, 45, 120, 0.35));
+}
+
+.ecran-chargement-titre {
+    font-family: var(--font-titre, 'Press Start 2P', monospace);
+    font-size: clamp(0.55rem, 2.4vw, 0.75rem);
+    letter-spacing: 4px;
+    color: #ff2d78;
+    text-shadow: 0 0 12px rgba(255, 45, 120, 0.55);
+}
+
+.ecran-chargement-message {
+    font-family: var(--font-ui, 'Rajdhani', sans-serif);
+    font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+    letter-spacing: 2px;
+    color: rgba(224, 224, 255, 0.82);
+    text-align: center;
+    min-height: 1.4em;
+}
+
+.ecran-chargement-barre {
+    width: min(100%, 280px);
+    height: 4px;
+    margin-top: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(180, 0, 255, 0.35);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.ecran-chargement-barre-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #b400ff, #ff2d78, #00f5ff);
+    box-shadow: 0 0 10px rgba(255, 45, 120, 0.45);
+    transition: width 0.25s ease-out;
+}

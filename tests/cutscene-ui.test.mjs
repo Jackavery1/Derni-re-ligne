@@ -8,6 +8,20 @@ vi.mock('../js/navigation-ecrans.js', () => ({
     annoncer: vi.fn(),
 }));
 
+vi.mock('../js/scenes-cutscene.js', async (importOriginal) => {
+    const mod = await importOriginal();
+    return { ...mod, prechargerScenes: vi.fn(async () => {}) };
+});
+
+vi.mock('../js/portrait-vera-rendu.js', () => ({
+    prechargerPortraitVera: vi.fn(async () => {}),
+}));
+
+async function attendreDemarrageCutscene() {
+    await Promise.resolve();
+    await Promise.resolve();
+}
+
 function creerCanvas(id) {
     const canvas = {
         id,
@@ -17,6 +31,7 @@ function creerCanvas(id) {
         classList: {
             add: vi.fn(),
             remove: vi.fn(),
+            toggle: vi.fn(),
         },
         getContext: () => ({
             clearRect: vi.fn(),
@@ -121,10 +136,11 @@ describe('cutscene UI', () => {
         managerUi = await import('../js/histoire-manager-ui.js');
     }, 30_000);
 
-    it('remplace le texte à chaque ligne au lieu de l accumuler', () => {
+    it('remplace le texte à chaque ligne au lieu de l accumuler', async () => {
         const { afficherCutsceneHistoire, avancerCutscene } = managerUi;
 
         afficherCutsceneHistoire(['Ligne un.', 'Ligne deux.'], ['robo', 'vera'], null);
+        await attendreDemarrageCutscene();
 
         avancerCutscene();
         expect(texteEl.textContent).toBe('Ligne un.');
@@ -135,10 +151,11 @@ describe('cutscene UI', () => {
         expect(texteEl.textContent).not.toContain('Ligne un.');
     });
 
-    it('active le mode narration (texte en haut centre)', () => {
+    it('active le mode narration (texte en haut centre)', async () => {
         const { afficherCutsceneHistoire, avancerCutscene } = managerUi;
 
         afficherCutsceneHistoire(['Une voix off.', 'ROBO parle.'], ['narrateur', 'robo'], null);
+        await attendreDemarrageCutscene();
         avancerCutscene();
 
         expect(narrationEl.textContent).toBe('Une voix off.');

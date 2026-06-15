@@ -17,8 +17,16 @@ body.histoire-active [data-biome='miroir'] #canvas-plateau {
 
 body.histoire-active [data-biome='vide'] #affichage-score::after {
     content: ' [?]';
-    color: rgba(255, 255, 255, 0.18);
+    color: rgba(200, 160, 180, 0.22);
     font-size: 0.3em;
+}
+
+body.histoire-active [data-biome='vide'] #canvas-plateau {
+    border-color: #4a3848 !important;
+    box-shadow:
+        0 0 8px rgba(140, 100, 130, 0.18),
+        0 0 24px rgba(0, 0, 0, 0.65),
+        inset 0 0 28px rgba(0, 0, 0, 0.45) !important;
 }
 
 body.histoire-active [data-biome='eclipse'] .section {
@@ -58,7 +66,7 @@ body.histoire-active [data-biome='trame'] #canvas-plateau {
 
 #indicateur-vide-actif {
     font-size: 0.28rem;
-    color: rgba(255, 255, 255, 0.15);
+    color: rgba(180, 150, 190, 0.35);
     letter-spacing: 2px;
     text-align: center;
     padding: 3px 0;

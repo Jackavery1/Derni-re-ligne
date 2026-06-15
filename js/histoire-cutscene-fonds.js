@@ -1,6 +1,6 @@
 /** Fonds animes canvas cutscene + scenes image plein ecran. */
 import { CONFIG_FOND_CUTSCENE } from './histoire-cutscene-config.js';
-import { obtenirScene, obtenirImageScenePrechargee } from './scenes-cutscene.js';
+import { obtenirScene, obtenirImageScenePrechargee, precharger } from './scenes-cutscene.js';
 import { obtenirEffetsAccessibiliteReduits } from './accessibilite.js';
 import { logger } from './logger.js';
 
@@ -16,6 +16,13 @@ let _personnageFallback = 'narrateur';
 let _transitionDebutMs = 0;
 /** @type {string | null} */
 let _transitionScenePrecedenteId = null;
+
+function _syncAffichageSceneImage(actif) {
+    _canvasBgCutscene?.classList.toggle('cutscene-bg-canvas', actif);
+    document
+        .getElementById('ecran-histoire-cutscene')
+        ?.classList.toggle('cutscene-scene-image', actif);
+}
 
 export function lierCanvasFondCutscene(canvas) {
     _canvasBgCutscene = canvas;
@@ -273,9 +280,14 @@ export function definirSceneCutsceneFond(
     if (!_ctxBg || !_canvasBgCutscene) return false;
     const scene = obtenirScene(sceneId);
     if (!scene) return false;
-    const img = obtenirImageScenePrechargee(sceneId);
+    let img = obtenirImageScenePrechargee(sceneId);
     if (!img) {
+        void precharger(sceneId).then((chargee) => {
+            if (!chargee || _sceneIdCourante !== sceneId) return;
+            definirSceneCutsceneFond(sceneId, personnageFallback, performance.now());
+        });
         logger.debug('[scenes] fallback canvas personnage', personnageFallback);
+        _syncAffichageSceneImage(false);
         _sceneIdCourante = null;
         demarrerFondCutscene(personnageFallback);
         return false;
@@ -294,6 +306,7 @@ export function definirSceneCutsceneFond(
 
     _sceneIdCourante = sceneId;
     _sceneDebutMs = timestamp;
+    _syncAffichageSceneImage(true);
     _assurerBoucleFond();
     return true;
 }
@@ -305,6 +318,7 @@ export function retirerSceneCutsceneFond(personnageId, timestamp = performance.n
         _transitionDebutMs = timestamp;
     }
     _sceneIdCourante = null;
+    _syncAffichageSceneImage(false);
     demarrerFondCutscene(personnageId ?? _personnageFallback);
 }
 
@@ -325,6 +339,7 @@ export function stopFondCutscene() {
     _sceneIdCourante = null;
     _transitionScenePrecedenteId = null;
     _transitionDebutMs = 0;
+    _syncAffichageSceneImage(false);
     if (_ctxBg && _canvasBgCutscene) {
         _ctxBg.clearRect(0, 0, _canvasBgCutscene.width, _canvasBgCutscene.height);
     }

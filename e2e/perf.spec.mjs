@@ -4,8 +4,6 @@ import {
     attendreApplicationPrete,
     attendreNotificationsInitiales,
     selectionnerBiomeClavier,
-    terminerPartieCourante,
-    ETAT_DEBLOCAGE_MONDE_LIBRE,
 } from './helpers.mjs';
 
 test('budget chargement ecran titre (dist)', async ({ page }) => {

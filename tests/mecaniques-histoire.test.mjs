@@ -15,6 +15,7 @@ import {
     enregistrerTimestampCellules,
     mettreAJourMecaniquesHistoire,
     pieceEstInvisible,
+    opacitePieceCourante,
     ghostEstDesactive,
     onGameOverHistoire,
     initialiserMecaniquesHistoire,
@@ -84,7 +85,7 @@ describe('mecaniques-histoire', () => {
         expect(modifiee).toBeLessThan(vitesseBase);
     });
 
-    it('la rouille bloque l’effacement d’une ligne complète', () => {
+    it('la rouille n’empêche plus l’effacement d’une ligne complète', () => {
         store.histoire.actif = true;
         definirBiomeActif('rouille');
         initialiserMecaniquesHistoire();
@@ -96,7 +97,7 @@ describe('mecaniques-histoire', () => {
             etat.plateau,
             celluleEstRouillee
         );
-        expect(nbSupprimees).toBe(0);
+        expect(nbSupprimees).toBe(1);
     });
 
     it('la rouille marque les cellules après le délai', () => {
@@ -115,11 +116,21 @@ describe('mecaniques-histoire', () => {
         vi.restoreAllMocks();
     });
 
-    it('le biome vide désactive le fantôme', () => {
+    it('le biome vide desactive le fantome de guidage', () => {
         store.histoire.actif = true;
         definirBiomeActif('vide');
         expect(ghostEstDesactive()).toBe(true);
         expect(pieceEstInvisible()).toBe(false);
+        expect(opacitePieceCourante()).toBe(1);
+    });
+
+    it('la pièce vide devient translucide au lieu de disparaître', () => {
+        store.histoire.actif = true;
+        definirBiomeActif('vide');
+        initialiserMecaniquesHistoire();
+        store.histoire.mecaniques.videInvisible = true;
+        expect(pieceEstInvisible()).toBe(true);
+        expect(opacitePieceCourante()).toBe(0.35);
     });
 
     it('onGameOverHistoire compte les tops volontaires au prologue', () => {

@@ -114,6 +114,12 @@ export function obtenirImageScenePrechargee(idScene) {
     return entree.img;
 }
 
+/** @param {Iterable<string | null | undefined>} ids */
+export async function prechargerScenes(ids) {
+    const uniques = [...new Set(ids)].filter(Boolean);
+    await Promise.all(uniques.map((id) => precharger(id)));
+}
+
 export function reinitialiserCacheScenes() {
     _cacheImages.clear();
     _promesses.clear();

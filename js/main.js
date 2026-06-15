@@ -3,6 +3,11 @@ import { initialiserApplication } from './moteur.js';
 import { logger, afficherErreurUtilisateur } from './logger.js';
 import { lireStockage } from './progression-stockage.js';
 import { swAutorise, libererSwEnDevLocal } from './sw-dev.js';
+import {
+    definirProgressionChargement,
+    definirMessageChargement,
+    masquerEcranChargement,
+} from './ecran-chargement.js';
 
 if (window.top !== window.self) {
     window.top.location.replace(window.self.location.href);
@@ -21,14 +26,20 @@ window.addEventListener('unhandledrejection', (ev) => {
 async function demarrer() {
     if (await libererSwEnDevLocal()) return;
 
+    definirProgressionChargement(0.08);
+    definirMessageChargement('Preparation…');
+
     document.body?.classList.toggle(
         'contraste-eleve',
         lireStockage('derniereLigne_contraste', 'false') === 'true'
     );
     try {
+        definirMessageChargement('Chargement des ecrans…');
+        definirProgressionChargement(0.25);
         await chargerEcrans();
     } catch (err) {
         logger.error('Échec chargement ecrans:', err);
+        masquerEcranChargement();
         afficherErreurUtilisateur(
             'Impossible de charger les ecrans du jeu. Verifiez votre connexion et rechargez.'
         );
@@ -36,12 +47,18 @@ async function demarrer() {
     }
 
     try {
+        definirMessageChargement('Initialisation…');
+        definirProgressionChargement(0.72);
         if (document.fonts?.ready) {
             await document.fonts.ready;
         }
+        definirProgressionChargement(0.9);
         initialiserApplication();
+        definirProgressionChargement(1);
+        masquerEcranChargement();
     } catch (err) {
         logger.error('Échec initialisation moteur:', err);
+        masquerEcranChargement();
         afficherErreurUtilisateur(
             "Impossible d'initialiser le jeu. Rechargez la page ou videz le cache (Ctrl+Shift+R)."
         );

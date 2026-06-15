@@ -156,20 +156,7 @@ function remplirMeta(el, lignes) {
     }
 }
 
-function appliquerContenu(config) {
-    const refs = obtenirRefs();
-    if (!refs.racine || !refs.corps) return;
-
-    refs.racine.style.setProperty('--accent-carte', config.accent);
-    refs.corps.style.setProperty('--accent-carte', config.accent);
-    if (refs.iconeWrap) {
-        refs.iconeWrap.style.setProperty('--accent-carte', config.accent);
-    }
-
-    rendreIcone(config);
-
-    const masquerSpoiler = config.verrouille && !config.afficherTeaserVerrouille;
-
+function appliquerTextesPanneau(refs, config, masquerSpoiler) {
     if (refs.titre) {
         refs.titre.textContent = sansAccentsE(masquerSpoiler ? '???' : config.titre);
     }
@@ -195,7 +182,9 @@ function appliquerContenu(config) {
     }
 
     refs.racine.classList.toggle('panneau-detail--verrouille', !!config.verrouille);
+}
 
+function appliquerBoutonsPanneau(refs, config) {
     if (refs.btnJouer) {
         const action = config.actionPrincipale;
         const visible = Boolean(action?.onAction) && !config.verrouille;
@@ -213,6 +202,23 @@ function appliquerContenu(config) {
             refs.btnSecondaire.textContent = sansAccentsE(action?.libelle ?? 'ACTION');
         }
     }
+}
+
+function appliquerContenu(config) {
+    const refs = obtenirRefs();
+    if (!refs.racine || !refs.corps) return;
+
+    refs.racine.style.setProperty('--accent-carte', config.accent);
+    refs.corps.style.setProperty('--accent-carte', config.accent);
+    if (refs.iconeWrap) {
+        refs.iconeWrap.style.setProperty('--accent-carte', config.accent);
+    }
+
+    rendreIcone(config);
+
+    const masquerSpoiler = config.verrouille && !config.afficherTeaserVerrouille;
+    appliquerTextesPanneau(refs, config, masquerSpoiler);
+    appliquerBoutonsPanneau(refs, config);
 }
 
 function retirerOuverture() {

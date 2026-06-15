@@ -19,7 +19,11 @@ import { dessinerCellule } from './rendu-cellule.js';
 import { dessinerCelluleStyle } from './rendu-blocs.js';
 import { dessinerFondBiome } from './rendu-ambiance.js';
 import { dessinerSignesVie } from './rendu-vivant.js';
-import { celluleEstRouillee, pieceEstInvisible, ghostEstDesactive } from './mecaniques-histoire.js';
+import {
+    celluleEstRouillee,
+    opacitePieceCourante,
+    ghostEstDesactive,
+} from './mecaniques-histoire.js';
 import {
     dessinerMotifsAccessibilite,
     dessinerMotifsPieceCourante,
@@ -230,6 +234,7 @@ export function dessinerPieceFantome() {
 
     const distAffichee = distance;
     const xAffiche = etat.pieceActuelle.x + offsetFaux;
+    const opaciteFantome = 0.22;
 
     for (let l = 0; l < forme.length; l++) {
         for (let c = 0; c < forme[l].length; c++) {
@@ -237,8 +242,7 @@ export function dessinerPieceFantome() {
             const x = xAffiche + c;
             const y = etat.pieceActuelle.y + l + distAffichee;
             if (y >= 0 && x >= 0 && x < CONFIG.colonnes) {
-                // 0.22 : assez visible pour servir de guide sans se confondre avec une piece posee.
-                dessinerCellule(obtenirCtx(), x, y, couleur, CONFIG.taille, 0.22);
+                dessinerCellule(obtenirCtx(), x, y, couleur, CONFIG.taille, opaciteFantome);
             }
         }
     }
@@ -268,7 +272,7 @@ export function dessinerOverlayBraise() {
 
 export function dessinerPieceActive() {
     if (!etat.pieceActuelle) return;
-    if (pieceEstInvisible()) return;
+    const opacitePiece = opacitePieceCourante();
     const forme = obtenirForme(etat.pieceActuelle);
     const couleur = obtenirCouleurPiece(etat.pieceActuelle);
     const relique = obtenirReliqueActive() ?? etat.pieceActuelle.reliqueData;
@@ -302,7 +306,7 @@ export function dessinerPieceActive() {
                     y,
                     couleur,
                     CONFIG.taille,
-                    1,
+                    opacitePiece,
                     obtenirBiomeActif(),
                     {
                         effetsReduits: obtenirEffetsReduits(),

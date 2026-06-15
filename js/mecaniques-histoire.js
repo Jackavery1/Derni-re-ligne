@@ -44,6 +44,7 @@ export function initialiserMecaniquesHistoire() {
 
     store.histoire.mecaniques.videTimestamp = performance.now();
     store.histoire.mecaniques.videInvisible = false;
+    if (mec === 'vide') _mettreAJourHudVide();
 
     store.histoire.mecaniques.cyberTetrisConsecutifs = 0;
 
@@ -107,6 +108,7 @@ function _surNouvellepiece() {
     if (biomeActuelEstVide()) {
         store.histoire.mecaniques.videTimestamp = performance.now();
         store.histoire.mecaniques.videInvisible = false;
+        _mettreAJourHudVide();
     }
 }
 
@@ -193,36 +195,39 @@ export function reinitialiserMatricesRouille() {
 
 function _decalerMatricesRouille(lignesEffacees) {
     if (!store.histoire.mecaniques.plateauTimestamps || !lignesEffacees?.length) return;
-    const sorted = [...lignesEffacees].sort((a, b) => b - a);
+    const aRetirer = new Set(lignesEffacees);
     const TS = store.histoire.mecaniques.plateauTimestamps;
     const RO = store.histoire.mecaniques.plateauRouille;
     const C = CONFIG.colonnes;
+    const L = CONFIG.lignes;
 
     let rustEffaces = 0;
-    for (const lig of sorted) {
+    for (const lig of lignesEffacees) {
         for (let c = 0; c < C; c++) {
             if (RO[lig * C + c]) rustEffaces++;
         }
     }
 
-    for (const lig of sorted) {
-        for (let l = lig; l > 0; l--) {
-            for (let c = 0; c < C; c++) {
-                TS[l * C + c] = TS[(l - 1) * C + c];
-                RO[l * C + c] = RO[(l - 1) * C + c];
-            }
-        }
+    const newTS = new Float64Array(L * C);
+    const newRO = new Uint8Array(L * C);
+    let writeRow = L - 1;
+    for (let readRow = L - 1; readRow >= 0; readRow--) {
+        if (aRetirer.has(readRow)) continue;
         for (let c = 0; c < C; c++) {
-            TS[c] = 0;
-            RO[c] = 0;
+            const dst = writeRow * C + c;
+            const src = readRow * C + c;
+            newTS[dst] = TS[src];
+            newRO[dst] = RO[src];
         }
+        writeRow--;
     }
 
-    // Les decalages invalident les indices stockes : on reconstruit l'ensemble
-    // des cellules actives (peu couteux, uniquement lors d'un effacement de ligne).
+    store.histoire.mecaniques.plateauTimestamps = newTS;
+    store.histoire.mecaniques.plateauRouille = newRO;
+
     _celluleActivesRouille.clear();
-    for (let i = 0; i < TS.length; i++) {
-        if (TS[i] !== 0 && !RO[i]) _celluleActivesRouille.add(i);
+    for (let i = 0; i < newTS.length; i++) {
+        if (newTS[i] !== 0 && !newRO[i]) _celluleActivesRouille.add(i);
     }
 
     if (rustEffaces > 0) ajouterBlocksRouillesEffaces(rustEffaces);
@@ -285,6 +290,7 @@ function _tickVide(timestamp) {
     if (ecoule >= VIDE_SEUIL_INVISIBILITE_MS()) {
         store.histoire.mecaniques.videInvisible = true;
     }
+    _mettreAJourHudVide();
 }
 
 export function pieceEstInvisible() {
@@ -292,9 +298,32 @@ export function pieceEstInvisible() {
     return biomeActuelEstVide() && store.histoire.mecaniques.videInvisible;
 }
 
+/** Opacité de la pièce courante (1 = visible, ~0.35 = fantôme après délai). */
+export function opacitePieceCourante() {
+    if (!pieceEstInvisible()) return 1;
+    return 0.35;
+}
+
 export function ghostEstDesactive() {
     if (!modeHistoireEnCours()) return false;
-    return biomeActuelEstVide();
+    const mec = biomeActuelMecanique();
+    if (mec === 'paradoxe') return true;
+    return BIOMES[obtenirBiomeActif()]?.pieceFantomeActive === false;
+}
+
+function _mettreAJourHudVide() {
+    if (biomeActuelMecanique() !== 'vide') return;
+    const el = document.querySelector('#indicateur-vide-actif .section-vide-msg');
+    if (!el) return;
+    if (store.histoire.mecaniques.videInvisible) {
+        el.textContent = 'SIGNAL PERDU';
+        return;
+    }
+    const restantMs =
+        VIDE_SEUIL_INVISIBILITE_MS() -
+        (performance.now() - store.histoire.mecaniques.videTimestamp);
+    const sec = Math.max(0, Math.ceil(restantMs / 1000));
+    el.textContent = sec > 0 ? `TRACE ${sec}s` : 'SIGNAL PERDU';
 }
 
 function _appliquerCSSMiroir(actif) {

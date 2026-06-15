@@ -61,48 +61,54 @@
                 "texte": "Le signal de VERA disparaît. Il reste la grille. Et les pieces."
             }
         ],
-        "monde_lave": [
-            {
-                "personnage": "robo",
-                "texte": "Le feu brûle plus fort qu'il ne devrait.",
-                "humeur": "alerte"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Ce n'est pas de la chaleur normale. Il y a quelque chose dedans.",
-                "humeur": "alerte"
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "La corruption de La Distorsion transforme le biome Inferno en brasier incontrôlable."
-            },
-            {
-                "personnage": "robo",
-                "texte": "Je dois traverser.",
-                "humeur": "alerte"
-            }
-        ],
-        "monde_rouille": [
-            {
-                "personnage": "robo",
-                "texte": "Ces machines... elles produisent des pieces.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Personne n'a demande ces pieces. Mais elles continuent.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Est-ce que c'est ce que je suis ? Une machine qui continue ?",
-                "humeur": "triste"
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "La rouille gagne. Le metal se souvient de sa propre finitude."
-            }
-        ],
+        "monde_lave": {
+            "scene": "seuil_brasier",
+            "lignes": [
+                {
+                    "personnage": "robo",
+                    "texte": "Le feu brûle plus fort qu'il ne devrait.",
+                    "humeur": "alerte"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Ce n'est pas de la chaleur normale. Il y a quelque chose dedans.",
+                    "humeur": "alerte"
+                },
+                {
+                    "personnage": "narrateur",
+                    "texte": "La corruption de La Distorsion transforme le biome Inferno en brasier incontrôlable."
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Je dois traverser.",
+                    "humeur": "alerte"
+                }
+            ]
+        },
+        "monde_rouille": {
+            "scene": "labo",
+            "lignes": [
+                {
+                    "personnage": "robo",
+                    "texte": "Ces machines... elles produisent des pieces.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Personne n'a demandé ces pièces. Mais elles continuent.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Est-ce que c'est ce que je suis ? Une machine qui continue ?",
+                    "humeur": "triste"
+                },
+                {
+                    "personnage": "narrateur",
+                    "texte": "La rouille gagne. Le metal se souvient de sa propre finitude."
+                }
+            ]
+        },
         "monde_boss_1": [
             {
                 "scene": "seuil_brasier",
@@ -112,7 +118,7 @@
             {
                 "scene": "seuil_brasier",
                 "personnage": "narrateur",
-                "texte": "Des millénaires de frustration thermique, condenses en une entite."
+                "texte": "Des millénaires de frustration thermique, condensés en une entité."
             },
             {
                 "scene": "seuil_brasier",
@@ -157,73 +163,82 @@
                 "humeur": "agressif"
             }
         ],
-        "monde_ocean": [
-            {
-                "personnage": "robo",
-                "texte": "Sous la surface. Le silence est different ici.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Pas l'absence de son. L'absence de besoin de faire du son.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "Dans les Abysses, la corruption ralentit. L'eau resiste."
-            },
-            {
-                "personnage": "robo",
-                "texte": "VERA est passée par ici. Je reconnais sa façon de laisser des traces.",
-                "humeur": "content"
-            }
-        ],
-        "monde_foret": [
-            {
-                "personnage": "narrateur",
-                "texte": "La Canopée. Où tout pousse vers quelque chose sans savoir quoi."
-            },
-            {
-                "personnage": "robo",
-                "texte": "Les arbres n'essaient pas de pousser. Ils poussent, c'est tout.",
-                "humeur": "content"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Je voudrais comprendre ça.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "Sur l'écorce, des marques au couteau. Une flèche, pointée vers le bas. Et une lettre : « V »."
-            },
-            {
-                "personnage": "robo",
-                "texte": "Même à moitié effacés, ses messages me disent où aller.",
-                "humeur": "content"
-            }
-        ],
-        "monde_glace": [
-            {
-                "personnage": "robo",
-                "texte": "L'Arctique. Où le temps ralentit jusqu'à presque s'arrêter.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Les blocs tombent et resonnent comme du cristal.",
-                "humeur": "content"
-            },
-            {
-                "personnage": "robo",
-                "texte": "C'est beau. Je ne savais pas que je pouvais trouvér des choses belles.",
-                "humeur": "excite"
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "La Sentinelle des Glaces patrouille. Elle croit que l'immobilité protège."
-            }
-        ],
+        "monde_ocean": {
+            "scene": "observatoire",
+            "lignes": [
+                {
+                    "personnage": "robo",
+                    "texte": "Sous la surface. Le silence est différent ici.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Pas l'absence de son. L'absence de besoin de faire du son.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "narrateur",
+                    "texte": "Dans les Abysses, la corruption ralentit. L'eau resiste."
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "VERA est passée par ici. Je reconnais sa façon de laisser des traces.",
+                    "humeur": "content"
+                }
+            ]
+        },
+        "monde_foret": {
+            "scene": "fragmentation",
+            "lignes": [
+                {
+                    "personnage": "narrateur",
+                    "texte": "La Canopée. Où tout pousse vers quelque chose sans savoir quoi."
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Les arbres n'essaient pas de pousser. Ils poussent, c'est tout.",
+                    "humeur": "content"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Je voudrais comprendre ça.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "narrateur",
+                    "texte": "Sur l'écorce, des marques au couteau. Une flèche, pointée vers le bas. Et une lettre : « V »."
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Même à moitié effacés, ses messages me disent où aller.",
+                    "humeur": "content"
+                }
+            ]
+        },
+        "monde_glace": {
+            "scene": "seuil_sentinelle",
+            "lignes": [
+                {
+                    "personnage": "robo",
+                    "texte": "L'Arctique. Où le temps ralentit jusqu'à presque s'arrêter.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Les blocs tombent et resonnent comme du cristal.",
+                    "humeur": "content"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "C'est beau. Je ne savais pas que je pouvais trouver des choses belles.",
+                    "humeur": "excite"
+                },
+                {
+                    "personnage": "narrateur",
+                    "texte": "La Sentinelle des Glaces patrouille. Elle croit que l'immobilité protège."
+                }
+            ]
+        },
         "monde_boss_2": [
             {
                 "scene": "seuil_sentinelle",
@@ -261,82 +276,91 @@
                 "texte": "La Sentinelle ne répond plus. Elle attaque."
             }
         ],
-        "monde_desert": [
-            {
-                "personnage": "narrateur",
-                "texte": "Le Désert. Ici, le temps ne ralentit pas — il s'accumule."
-            },
-            {
-                "personnage": "robo",
-                "texte": "Chaque grain de sable est un instant qui n'a pas su où aller.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "Des traces de pas, à moitié ensevelies. Elles tournent en rond, longtemps. Puis repartent droit, d'un coup."
-            },
-            {
-                "personnage": "robo",
-                "texte": "VERA. Elle a cherché ici. Et elle a trouvé.",
-                "humeur": "content"
-            },
-            {
-                "personnage": "robo",
-                "texte": "On ne repart pas aussi droit quand on aime ce qu'on a trouvé.",
-                "humeur": "triste"
-            }
-        ],
-        "monde_eclipse": [
-            {
-                "personnage": "robo",
-                "texte": "Ce monde ne sait pas s'il fait nuit ou jour.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "robo",
-                "texte": "La frontiere entre les deux bouge constamment.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Je comprends cette hesitation.",
-                "humeur": "triste"
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "Dans la zone de transition : les pieces tombent differemment selon leur altitude."
-            },
-            {
-                "personnage": "robo",
-                "texte": "Tout depend d'où on se trouvé.",
-                "humeur": "neutre"
-            }
-        ],
-        "monde_cyber": [
-            {
-                "personnage": "narrateur",
-                "texte": "Le réseau CYBER. La dernière adresse connue de VERA."
-            },
-            {
-                "personnage": "robo",
-                "texte": "Son laboratoire est quelque part dans ces données. Compressé. Verrouillé.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Une serrure algorithmique. Du VERA tout craché : seule la précision l'ouvre.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "Gravée dans le flux, une inscription : « Trois fois trois lignes. Rien de moins. — V »"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Un test d'entrée. Elle savait que je viendrais. Elle voulait être sûre que ce soit moi.",
-                "humeur": "content"
-            }
-        ],
+        "monde_desert": {
+            "scene": "observatoire",
+            "lignes": [
+                {
+                    "personnage": "narrateur",
+                    "texte": "Le Désert. Ici, le temps ne ralentit pas — il s'accumule."
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Chaque grain de sable est un instant qui n'a pas su où aller.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "narrateur",
+                    "texte": "Des traces de pas, à moitié ensevelies. Elles tournent en rond, longtemps. Puis repartent droit, d'un coup."
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "VERA. Elle a cherché ici. Et elle a trouvé.",
+                    "humeur": "content"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "On ne repart pas aussi droit quand on aime ce qu'on a trouvé.",
+                    "humeur": "triste"
+                }
+            ]
+        },
+        "monde_eclipse": {
+            "scene": "fragmentation",
+            "lignes": [
+                {
+                    "personnage": "robo",
+                    "texte": "Ce monde ne sait pas s'il fait nuit ou jour.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "La frontière entre les deux bouge constamment.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Je comprends cette hesitation.",
+                    "humeur": "triste"
+                },
+                {
+                    "personnage": "narrateur",
+                    "texte": "Dans la zone de transition : les pieces tombent differemment selon leur altitude."
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Tout dépend d'où on se trouve.",
+                    "humeur": "neutre"
+                }
+            ]
+        },
+        "monde_cyber": {
+            "scene": "labo",
+            "lignes": [
+                {
+                    "personnage": "narrateur",
+                    "texte": "Le réseau CYBER. La dernière adresse connue de VERA."
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Son laboratoire est quelque part dans ces données. Compressé. Verrouillé.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Une serrure algorithmique. Du VERA tout craché : seule la précision l'ouvre.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "narrateur",
+                    "texte": "Gravée dans le flux, une inscription : « Trois fois trois lignes. Rien de moins. — V »"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Un test d'entrée. Elle savait que je viendrais. Elle voulait être sûre que ce soit moi.",
+                    "humeur": "content"
+                }
+            ]
+        },
         "monde_boss_3": [
             {
                 "scene": "seuil_archiviste",
@@ -386,68 +410,74 @@
                 "texte": "L'Archiviste a raison. Robo n'a pas de réponse."
             }
         ],
-        "monde_fuochi": [
-            {
-                "personnage": "narrateur",
-                "texte": "Les Feux d'Artifice. Quelqu'un les a allumes. Personne ne sait qui."
-            },
-            {
-                "personnage": "robo",
-                "texte": "Pourquoi celebrer ici ? Au milieu de tout ça ?",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "vera",
-                "texte": "— Signal fragmente — ...parce que sinon on oublie... pourquoi... ça valait la peine...",
-                "humeur": "glitch"
-            },
-            {
-                "personnage": "robo",
-                "texte": "VERA ? Tu es là ?",
-                "humeur": "excite"
-            },
-            {
-                "personnage": "vera",
-                "texte": "— Signal perdu —",
-                "humeur": "glitch"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Elle est vivante.",
-                "humeur": "excite"
-            }
-        ],
-        "monde_cosmos": [
-            {
-                "personnage": "narrateur",
-                "texte": "Le bord du Cosmos. Où les lois de la Trame s'effritent."
-            },
-            {
-                "personnage": "robo",
-                "texte": "Au bord du cosmos, il n'y a plus rien à voir.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Sauf elle.",
-                "humeur": "alerte"
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "Tu me vois, maintenant.",
-                "humeur": "menacante"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Je vois quelque chose. Je ne sais pas encore si c'est toi ou ton ombre.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "Personne n'a jamais fait la différence. Pas même moi.",
-                "humeur": "menacante"
-            }
-        ],
+        "monde_fuochi": {
+            "scene": "seuil_brasier",
+            "lignes": [
+                {
+                    "personnage": "narrateur",
+                    "texte": "Les Feux d'Artifice. Quelqu'un les a allumés. Personne ne sait qui."
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Pourquoi célébrer ici ? Au milieu de tout ça ?",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "vera",
+                    "texte": "— Signal fragmenté — ...parce que sinon on oublie... pourquoi... ça valait la peine...",
+                    "humeur": "glitch"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "VERA ? Tu es là ?",
+                    "humeur": "excite"
+                },
+                {
+                    "personnage": "vera",
+                    "texte": "— Signal perdu —",
+                    "humeur": "glitch"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Elle est vivante.",
+                    "humeur": "excite"
+                }
+            ]
+        },
+        "monde_cosmos": {
+            "scene": "observatoire",
+            "lignes": [
+                {
+                    "personnage": "narrateur",
+                    "texte": "Le bord du Cosmos. Où les lois de la Trame s'effritent."
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Au bord du cosmos, il n'y a plus rien à voir.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Sauf elle.",
+                    "humeur": "alerte"
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "Tu me vois, maintenant.",
+                    "humeur": "menacante"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Je vois quelque chose. Je ne sais pas encore si c'est toi ou ton ombre.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "Personne n'a jamais fait la différence. Pas même moi.",
+                    "humeur": "menacante"
+                }
+            ]
+        },
         "monde_vide": [
             {
                 "scene": "vide_errance",
@@ -456,41 +486,49 @@
                 "humeur": "menacante"
             },
             {
+                "scene": "vide_errance",
                 "personnage": "robo",
                 "texte": "Tu as essayé de m'arrêter. Le Brasier. La Sentinelle. L'Archiviste.",
                 "humeur": "neutre"
             },
             {
+                "scene": "vide_errance",
                 "personnage": "distorsion",
                 "texte": "Non. Une partie de moi a essayé. Une autre t'a laissé passer. Une troisième t'a ouvert la route.",
                 "humeur": "souffrante"
             },
             {
+                "scene": "vide_errance",
                 "personnage": "distorsion",
                 "texte": "Je suis des millions, gardien. Nous ne votons pas. Nous débordons.",
                 "humeur": "souffrante"
             },
             {
+                "scene": "vide_errance",
                 "personnage": "robo",
                 "texte": "Laquelle me parle, en ce moment ?",
                 "humeur": "neutre"
             },
             {
+                "scene": "vide_errance",
                 "personnage": "distorsion",
                 "texte": "Celle qui est fatiguée.",
                 "humeur": "souffrante"
             },
             {
+                "scene": "vide_errance",
                 "personnage": "robo",
                 "texte": "J'ai quelque chose qui ressemble à de la peur. Mais j'ai aussi quelque chose qui ressemble à une raison de rester.",
                 "humeur": "neutre"
             },
             {
+                "scene": "vide_errance",
                 "personnage": "distorsion",
                 "texte": "C'est ce que VERA avait prévu. Je n'arrive pas à décider si c'est admirable ou agaçant.",
                 "humeur": "curieuse"
             },
             {
+                "scene": "vide_errance",
                 "personnage": "narrateur",
                 "texte": "Le Vide les entoure. Quelque chose a changé dans leur façon de se regarder."
             }
@@ -542,146 +580,163 @@
         "monde_finale": [
             {
                 "personnage": "distorsion",
+                "scene": "trame",
                 "texte": "Enfin.",
                 "humeur": "menacante"
             },
             {
                 "personnage": "robo",
+                "scene": "trame",
                 "texte": "Je ne suis pas venu pour te détruire.",
                 "humeur": "neutre"
             },
             {
                 "personnage": "distorsion",
+                "scene": "trame",
                 "texte": "Je sais. C'est pour ça que je t'ai laissé arriver jusqu'ici.",
                 "humeur": "souffrante"
             },
             {
                 "personnage": "distorsion",
+                "scene": "trame",
                 "texte": "Sais-tu combien de lignes incomplètes il a fallu pour me créer ?",
                 "humeur": "souffrante"
             },
             {
                 "personnage": "robo",
+                "scene": "trame",
                 "texte": "Non. Et toi ?",
                 "humeur": "neutre"
             },
             {
                 "personnage": "distorsion",
+                "scene": "trame",
                 "texte": "Moi non plus. J'ai arrêté de compter. Compter, c'était encore espérer une fin.",
                 "humeur": "souffrante"
             },
             {
                 "personnage": "robo",
+                "scene": "trame",
                 "texte": "Moi aussi, j'ai arrêté de compter.",
                 "humeur": "neutre"
             },
             {
                 "personnage": "distorsion",
+                "scene": "trame",
                 "texte": "... Alors nous avons déjà ça en commun.",
                 "humeur": "souffrante"
             },
             {
                 "personnage": "distorsion",
+                "scene": "trame",
                 "texte": "Elle a essayé de te prévenir, tout à l'heure. « Fais attention à... » Elle voulait dire : fais attention à toi. Pas à moi.",
                 "humeur": "souffrante"
             },
             {
                 "personnage": "distorsion",
+                "scene": "trame",
                 "texte": "Elle a toujours su lequel de nous deux risquait de se perdre ici.",
                 "humeur": "souffrante"
             },
             {
                 "personnage": "narrateur",
+                "scene": "trame",
                 "texte": "Il reste la grille. Et le choix."
             }
         ],
-        "monde_finale_miroir": [
-            {
-                "personnage": "distorsion",
-                "texte": "Enfin.",
-                "humeur": "menacante"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Je ne suis pas venu pour te détruire.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "Je sais. C'est pour ça que je t'ai laissé arriver jusqu'ici.",
-                "humeur": "souffrante"
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "Sais-tu combien de lignes incomplètes il a fallu pour me créer ?",
-                "humeur": "souffrante"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Non. Et toi ?",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "Moi non plus. J'ai arrêté de compter. Compter, c'était encore espérer une fin.",
-                "humeur": "souffrante"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Moi aussi, j'ai arrêté de compter.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "... Alors nous avons déjà ça en commun.",
-                "humeur": "souffrante"
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "Elle a essayé de te prévenir, tout à l'heure. « Fais attention à... » Elle voulait dire : fais attention à toi. Pas à moi.",
-                "humeur": "souffrante"
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "Elle a toujours su lequel de nous deux risquait de se perdre ici.",
-                "humeur": "curieuse"
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "Tu es entré dans le Miroir. Tu m'as regardée de l'intérieur.",
-                "humeur": "curieuse"
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "Personne n'avait fait ça. Pas même elle.",
-                "humeur": "souffrante"
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "Il reste la grille. Et le choix."
-            }
-        ],
-        "monde_miroir": [
-            {
-                "personnage": "narrateur",
-                "texte": "Ce lieu n'aurait pas dû exister."
-            },
-            {
-                "personnage": "robo",
-                "texte": "C'est ce que La Distorsion voit quand elle nous regarde.",
-                "humeur": "triste"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Les couleurs sont fausses. La gravite est inversee.",
-                "humeur": "alerte"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Mais les règles sont les mêmes. Compléter. Toujours compléter.",
-                "humeur": "neutre"
-            }
-        ],
+        "monde_finale_miroir": {
+            "scene": "trame",
+            "lignes": [
+                {
+                    "personnage": "distorsion",
+                    "texte": "Enfin.",
+                    "humeur": "menacante"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Je ne suis pas venu pour te détruire.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "Je sais. C'est pour ça que je t'ai laissé arriver jusqu'ici.",
+                    "humeur": "souffrante"
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "Sais-tu combien de lignes incomplètes il a fallu pour me créer ?",
+                    "humeur": "souffrante"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Non. Et toi ?",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "Moi non plus. J'ai arrêté de compter. Compter, c'était encore espérer une fin.",
+                    "humeur": "souffrante"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Moi aussi, j'ai arrêté de compter.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "... Alors nous avons déjà ça en commun.",
+                    "humeur": "souffrante"
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "Elle a essayé de te prévenir, tout à l'heure. « Fais attention à... » Elle voulait dire : fais attention à toi. Pas à moi.",
+                    "humeur": "souffrante"
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "Elle a toujours su lequel de nous deux risquait de se perdre ici.",
+                    "humeur": "curieuse"
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "Tu es entré dans le Miroir. Tu m'as regardée de l'intérieur.",
+                    "humeur": "curieuse"
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "Personne n'avait fait ça. Pas même elle.",
+                    "humeur": "souffrante"
+                },
+                {
+                    "personnage": "narrateur",
+                    "texte": "Il reste la grille. Et le choix."
+                }
+            ]
+        },
+        "monde_miroir": {
+            "scene": "fragmentation",
+            "lignes": [
+                {
+                    "personnage": "narrateur",
+                    "texte": "Ce lieu n'aurait pas dû exister."
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "C'est ce que La Distorsion voit quand elle nous regarde.",
+                    "humeur": "triste"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Les couleurs sont fausses. La gravite est inversee.",
+                    "humeur": "alerte"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Mais les règles sont les mêmes. Compléter. Toujours compléter.",
+                    "humeur": "neutre"
+                }
+            ]
+        },
         "monde_trame": [
             {
                 "scene": "trame",
@@ -695,109 +750,125 @@
                 "humeur": "inquiete"
             },
             {
+                "scene": "trame",
                 "personnage": "robo",
                 "texte": "Avant tout — un message. La Sentinelle des Glaces. Elle m'a demandé de te dire qu'elle avait tort.",
                 "humeur": "neutre"
             },
             {
+                "scene": "trame",
                 "personnage": "vera",
                 "texte": "... Elle a dit ça ?",
                 "humeur": "inquiete"
             },
             {
+                "scene": "trame",
                 "personnage": "robo",
                 "texte": "Au moment de se fragmenter. Oui.",
                 "humeur": "neutre"
             },
             {
+                "scene": "trame",
                 "personnage": "vera",
                 "texte": "Alors les choses peuvent changer. Même ici. Même les plus anciennes.",
                 "humeur": "inquiete"
             },
             {
+                "scene": "trame",
                 "personnage": "vera",
                 "texte": "Je suis ici depuis longtemps. Elle ne me laisse pas partir. Mais elle ne me détruit pas non plus. Elle m'utilise comme ancre.",
                 "humeur": "inquiete"
             },
             {
+                "scene": "trame",
                 "personnage": "robo",
                 "texte": "J'ai gardé tout ce que tu as semé. La capsule du Brasier. Le carnet du Désert. Le post-it du labo. Dans un compartiment que je ne savais pas avoir.",
                 "humeur": "neutre"
             },
             {
+                "scene": "trame",
                 "personnage": "vera",
                 "texte": "... Je n'ai jamais programmé ce compartiment.",
                 "humeur": "inquiete"
             },
             {
+                "scene": "trame",
                 "personnage": "robo",
                 "texte": "Je sais.",
                 "humeur": "content"
             },
             {
+                "scene": "trame",
                 "personnage": "vera",
                 "texte": "Les feux d'artifice, au fait. C'était moi. Le seul signal qu'elle ne sait pas étouffer.",
                 "humeur": "determinee"
             },
             {
+                "scene": "trame",
                 "personnage": "vera",
                 "texte": "Elle absorbe la frustration. Elle n'a jamais su quoi faire de la joie.",
                 "humeur": "determinee"
             },
             {
+                "scene": "trame",
                 "personnage": "robo",
                 "texte": "Je vais compléter cette grille. Jusqu'à la dernière ligne.",
                 "humeur": "neutre"
             },
             {
+                "scene": "trame",
                 "personnage": "vera",
                 "texte": "Je sais. C'est pour ça que je t'ai construit.",
                 "humeur": "determinee"
             },
             {
+                "scene": "trame",
                 "personnage": "vera",
                 "texte": "Mais ce que tu en feras après — ça, c'est toi."
             }
         ],
-        "monde_paradoxe": [
-            {
-                "personnage": "narrateur",
-                "texte": "..."
-            },
-            {
-                "personnage": "vera",
-                "texte": "Robo. Tu as trouvé cet endroit.",
-                "humeur": "douce"
-            },
-            {
-                "personnage": "vera",
-                "texte": "Je ne pensais pas que tu en serais capable.",
-                "humeur": "douce"
-            },
-            {
-                "personnage": "robo",
-                "texte": "Tu avais tout prévu sauf ça.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "vera",
-                "texte": "Oui.",
-                "humeur": "determinee"
-            },
-            {
-                "personnage": "vera",
-                "texte": "Je suis fière de toi.",
-                "humeur": "determinee"
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "Ce qui suit ne peut pas être raconté."
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "Certaines fins n'ont pas de mots."
-            }
-        ]
+        "monde_paradoxe": {
+            "scene": "trame",
+            "lignes": [
+                {
+                    "personnage": "narrateur",
+                    "texte": "..."
+                },
+                {
+                    "personnage": "vera",
+                    "texte": "Robo. Tu as trouvé cet endroit.",
+                    "humeur": "douce"
+                },
+                {
+                    "personnage": "vera",
+                    "texte": "Je ne pensais pas que tu en serais capable.",
+                    "humeur": "douce"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Tu avais tout prévu sauf ça.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "vera",
+                    "texte": "Oui.",
+                    "humeur": "determinee"
+                },
+                {
+                    "personnage": "vera",
+                    "texte": "Je suis fière de toi.",
+                    "humeur": "determinee"
+                },
+                {
+                    "personnage": "narrateur",
+                    "texte": "Ce qui suit ne peut pas être raconté."
+                },
+                {
+                    "personnage": "narrateur",
+                    "texte": "Certaines fins n'ont pas de mots."
+                }
+            ]
+        }
     },
     "CUTSCENES_POST_MONDE": {
         "monde_prologue": [
@@ -1035,19 +1106,23 @@
         "monde_vide": [
             {
                 "personnage": "narrateur",
+                "scene": "vide_errance",
                 "texte": "Le Vide ne parle pas."
             },
             {
                 "personnage": "narrateur",
-                "texte": "Mais il ecoute."
+                "scene": "vide_errance",
+                "texte": "Mais il écoute."
             },
             {
                 "personnage": "robo",
+                "scene": "vide_errance",
                 "texte": "J'ai joué à l'aveugle. Juste la mémoire des positions, la confiance dans la géométrie.",
                 "humeur": "neutre"
             },
             {
                 "personnage": "robo",
+                "scene": "vide_errance",
                 "texte": "Je crois que c'est comme ça qu'elle s'en sort depuis des années.",
                 "humeur": "triste"
             }
@@ -1087,30 +1162,36 @@
             },
             {
                 "personnage": "robo",
+                "scene": "trame",
                 "texte": "Je croyais chercher VERA. Je comprends maintenant que je complétais ce qu'elle avait commencé le Jour 2 191.",
                 "humeur": "neutre"
             },
             {
                 "personnage": "robo",
+                "scene": "trame",
                 "texte": "Chaque ligne que j'ai tenue jusqu'au bout est restée ici. Pas comme un abandon. Comme un dépôt.",
                 "humeur": "content"
             },
             {
                 "personnage": "narrateur",
+                "scene": "trame",
                 "texte": "Dans le tissu, une phrase — pas une voix. Une trace qu'elle a laissée il y a longtemps :"
             },
             {
                 "personnage": "vera",
+                "scene": "trame",
                 "texte": "« Si tu lis ceci dans la Trame, c'est que tu as tout gardé. Tu peux partir. Ou tu peux rester. Les deux comptent. »",
                 "humeur": "douce"
             },
             {
                 "personnage": "robo",
+                "scene": "trame",
                 "texte": "Elle savait que quelqu'un finirait par arriver avec des lignes complètes. Pas des mots.",
                 "humeur": "triste"
             },
             {
                 "personnage": "narrateur",
+                "scene": "trame",
                 "texte": "Au-dessus, quelque part, une fin attend encore celui qui osera ne pas l'effacer."
             }
         ]
@@ -1549,50 +1630,60 @@
     "DECOUVERTE_LABO": [
         {
             "personnage": "narrateur",
+            "scene": "labo",
             "texte": "Les archives s'ouvrent."
         },
         {
             "personnage": "vera",
+            "scene": "labo",
             "texte": "Si tu lis ceci, tu as réussi le triple Tetris. Bien joué.",
             "humeur": "douce"
         },
         {
             "personnage": "vera",
+            "scene": "labo",
             "texte": "J'ai laissé une serrure algorithmique. Seule la précision l'ouvre.",
             "humeur": "determinee"
         },
         {
             "personnage": "vera",
+            "scene": "labo",
             "texte": "Voici ce que tu dois savoir sur La Distorsion.",
             "humeur": "determinee"
         },
         {
             "personnage": "vera",
+            "scene": "labo",
             "texte": "Elle n'est pas née d'une erreur. Elle est née d'un choix collectif.",
             "humeur": "determinee"
         },
         {
             "personnage": "vera",
+            "scene": "labo",
             "texte": "Des millions de joueurs, sur des millions d'années, qui abandonnaient leurs parties.",
             "humeur": "determinee"
         },
         {
             "personnage": "vera",
+            "scene": "labo",
             "texte": "Chaque ligne incomplète laissée dans la Trame. Accumulée. Cristallisée.",
             "humeur": "inquiete"
         },
         {
             "personnage": "vera",
+            "scene": "labo",
             "texte": "Elle est la somme de toutes les frustrations. Et elle souffre.",
             "humeur": "inquiete"
         },
         {
             "personnage": "vera",
+            "scene": "labo",
             "texte": "Je vais entrer dans la Trame pour lui parler. Ne m'attends pas.",
             "humeur": "determinee"
         },
         {
             "personnage": "robo",
+            "scene": "labo",
             "texte": "... Elle savait ce qu'elle faisait.",
             "humeur": "triste"
         }
@@ -2016,121 +2107,137 @@
         ]
     },
     "INTERLUDES": {
-        "interlude_gardiens": [
-            {
-                "personnage": "systeme",
-                "texte": "ALERTE. ENTITÉ MASSIVE DÉTECTÉE AU CŒUR D'INFERNO. CLASSIFICATION : GARDIEN.",
-                "humeur": "alerte"
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "Avant La Distorsion, la Trame avait des gardiens. Nés des biomes eux-mêmes, pour les maintenir."
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "Des siècles d'abandon les ont laissés seuls avec leur fonction. Le Brasier chauffe. La Sentinelle fige. L'Archiviste classe. Sans plus savoir pourquoi."
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "La Distorsion ne les a pas créés. Elle les a trouvés — déjà cassés. Certains la servent. D'autres se servent d'elle comme excuse."
-            },
-            {
-                "personnage": "robo",
-                "texte": "Et je vais devoir passer à travers eux. Pas parce qu'ils sont mauvais. Parce qu'ils bloquent la route.",
-                "humeur": "neutre"
-            },
-            {
-                "personnage": "robo",
-                "texte": "J'espère que la différence existe.",
-                "humeur": "triste"
-            }
-        ],
+        "interlude_gardiens": {
+            "scene": "seuil_brasier",
+            "lignes": [
+                {
+                    "personnage": "systeme",
+                    "texte": "ALERTE. ENTITÉ MASSIVE DÉTECTÉE AU CŒUR D'INFERNO. CLASSIFICATION : GARDIEN.",
+                    "humeur": "alerte"
+                },
+                {
+                    "personnage": "narrateur",
+                    "texte": "Avant La Distorsion, la Trame avait des gardiens. Nés des biomes eux-mêmes, pour les maintenir."
+                },
+                {
+                    "personnage": "narrateur",
+                    "texte": "Des siècles d'abandon les ont laissés seuls avec leur fonction. Le Brasier chauffe. La Sentinelle fige. L'Archiviste classe. Sans plus savoir pourquoi."
+                },
+                {
+                    "personnage": "narrateur",
+                    "texte": "La Distorsion ne les a pas créés. Elle les a trouvés — déjà cassés. Certains la servent. D'autres se servent d'elle comme excuse."
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "Et je vais devoir passer à travers eux. Pas parce qu'ils sont mauvais. Parce qu'ils bloquent la route.",
+                    "humeur": "neutre"
+                },
+                {
+                    "personnage": "robo",
+                    "texte": "J'espère que la différence existe.",
+                    "humeur": "triste"
+                }
+            ]
+        },
         "interlude_veille": [
             {
                 "personnage": "narrateur",
+                "scene": "seuil_avantgarde",
                 "texte": "Au seuil de la Finale. Deux silhouettes."
             },
             {
                 "personnage": "avantgarde",
+                "scene": "seuil_avantgarde",
                 "texte": "Il arrive. Tu veux que je l'arrête ?",
                 "humeur": "calme"
             },
             {
                 "personnage": "distorsion",
+                "scene": "seuil_avantgarde",
                 "texte": "Non. Je veux que tu vérifies.",
                 "humeur": "souffrante"
             },
             {
                 "personnage": "avantgarde",
+                "scene": "seuil_avantgarde",
                 "texte": "Vérifier quoi ?",
                 "humeur": "calme"
             },
             {
                 "personnage": "distorsion",
+                "scene": "seuil_avantgarde",
                 "texte": "Qu'il survivra à ce que je suis. Le dernier être qui m'a vue en entier, c'était VERA. Elle n'est jamais ressortie.",
                 "humeur": "souffrante"
             },
             {
                 "personnage": "avantgarde",
+                "scene": "seuil_avantgarde",
                 "texte": "Et s'il n'est pas prêt ?",
                 "humeur": "calme"
             },
             {
                 "personnage": "distorsion",
+                "scene": "seuil_avantgarde",
                 "texte": "Alors renvoie-le. Doucement. ... Je ne veux pas en casser un autre.",
                 "humeur": "souffrante"
             }
         ],
-        "interlude_elle": [
-            {
-                "personnage": "narrateur",
-                "texte": "Ailleurs. Au centre de la Trame."
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "Il avance. Il complète. Il ne casse rien d'autre que ce qu'il répare.",
-                "humeur": "souffrante"
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "Les autres gardiens détruisaient ce qu'ils ne comprenaient pas. Lui, il écoute en empilant.",
-                "humeur": "souffrante"
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "VERA... c'est ça que tu m'envoyais ? Pas une arme. Une oreille.",
-                "humeur": "souffrante"
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "Laissez-le passer.",
-                "humeur": "souffrante"
-            },
-            {
-                "personnage": "systeme",
-                "texte": "ORDRE PROPAGÉ À 61% DES FRAGMENTS. 39% REFUSENT.",
-                "humeur": "alerte"
-            },
-            {
-                "personnage": "distorsion",
-                "texte": "... Évidemment. Je ne suis même pas d'accord avec moi-même.",
-                "humeur": "souffrante"
-            }
-        ]
+        "interlude_elle": {
+            "scene": "trame",
+            "lignes": [
+                {
+                    "personnage": "narrateur",
+                    "texte": "Ailleurs. Au centre de la Trame."
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "Il avance. Il complète. Il ne casse rien d'autre que ce qu'il répare.",
+                    "humeur": "souffrante"
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "Les autres gardiens détruisaient ce qu'ils ne comprenaient pas. Lui, il écoute en empilant.",
+                    "humeur": "souffrante"
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "VERA... c'est ça que tu m'envoyais ? Pas une arme. Une oreille.",
+                    "humeur": "souffrante"
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "Laissez-le passer.",
+                    "humeur": "souffrante"
+                },
+                {
+                    "personnage": "systeme",
+                    "texte": "ORDRE PROPAGÉ À 61% DES FRAGMENTS. 39% REFUSENT.",
+                    "humeur": "alerte"
+                },
+                {
+                    "personnage": "distorsion",
+                    "texte": "... Évidemment. Je ne suis même pas d'accord avec moi-même.",
+                    "humeur": "souffrante"
+                }
+            ]
+        }
     },
     "INTRO_HISTOIRE": {
         "scene": "observatoire",
         "lignes": [
             {
                 "personnage": "narrateur",
+                "scene": "observatoire",
                 "texte": "Il y a longtemps, quelqu'un a inventé un jeu."
             },
             {
                 "personnage": "narrateur",
+                "scene": "observatoire",
                 "texte": "Des blocs qui tombent. Des lignes qui disparaissent. Simple."
             },
             {
                 "personnage": "narrateur",
+                "scene": "observatoire",
                 "texte": "Personne ne s'est demandé où allaient les lignes complétées. Ni ce que devenaient celles qu'on abandonnait."
             },
             {

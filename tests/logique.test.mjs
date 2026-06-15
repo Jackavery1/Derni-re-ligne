@@ -76,12 +76,21 @@ describe('logique-pure', () => {
         expect(calculerNiveauDepuisLignes(25)).toBe(3);
     });
 
-    it('supprimerLignesDuPlateauExcluantRouille ignore les lignes rouillées', () => {
+    it('supprimerLignesDuPlateau efface plusieurs lignes complètes simultanément', () => {
+        const plateau = Array.from({ length: CONFIG.lignes }, () => Array(CONFIG.colonnes).fill(0));
+        plateau[18].fill('#00f5ff');
+        plateau[19].fill('#ff006e');
+        const { nbSupprimees, plateau: sortie } = supprimerLignesDuPlateau(plateau);
+        expect(nbSupprimees).toBe(2);
+        expect(compterLignesCompletes(sortie)).toBe(0);
+    });
+
+    it('supprimerLignesDuPlateauExcluantRouille efface une ligne complète rouillée', () => {
         const plateau = Array.from({ length: CONFIG.lignes }, () => Array(CONFIG.colonnes).fill(0));
         plateau[19].fill('#8b4513');
         const estRouillee = (x, y) => y === 19 && x === 2;
         const { nbSupprimees } = supprimerLignesDuPlateauExcluantRouille(plateau, estRouillee);
-        expect(nbSupprimees).toBe(0);
+        expect(nbSupprimees).toBe(1);
     });
 
     it('detecterTSpin retourne full avec 3 coins remplis', () => {

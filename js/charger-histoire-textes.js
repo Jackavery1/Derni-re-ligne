@@ -17,7 +17,7 @@ async function chargerDepuisJson() {
 
 async function chargerDepuisModuleSource() {
     logger.warn('[histoire] fallback vers histoire-textes.js');
-    return import('./histoire-textes.js');
+    return import('./histoire-textes.fallback.js');
 }
 
 export async function chargerHistoireTextes() {

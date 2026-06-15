@@ -155,6 +155,23 @@ function _humeurCompatDefaut(personnageId, parle) {
     return 'neutre';
 }
 
+/** @param {string} texte */
+export function infererHumeurVeraDepuisTexte(texte) {
+    if (!texte) return 'neutre';
+    const t = texte.toLowerCase();
+    if (/\.{2,}|signal perdu|— signal|glitch|coupe|static|\.{3}/.test(t)) return 'glitch';
+    if (/pardon|fière|merci|recommenc|espère|bienvenue|mon amie|suffisant|douce/.test(t)) {
+        return 'douce';
+    }
+    if (/danger|vite|attention|non|arrêt|erreur|peur|inquiet|perdu|aide/.test(t)) return 'inquiete';
+    if (/continue|trouve|doit|mission|prends|écoute|rob[oô]|determin|vas-y|maintenant/.test(t)) {
+        return 'determinee';
+    }
+    if (/\?$/.test(t.trim())) return 'inquiete';
+    if (/!/.test(t)) return 'determinee';
+    return 'neutre';
+}
+
 /**
  * @param {string} personnageId
  * @param {string | undefined} humeurDemandee
@@ -177,6 +194,25 @@ export function resoudreHumeurPortrait(personnageId, humeurDemandee, options = {
         `[expressions] humeur inconnue "${humeurDemandee}" pour ${personnageId} → ${_humeurCompatDefaut(personnageId, parle)}`
     );
     return _humeurCompatDefaut(personnageId, parle);
+}
+
+/**
+ * @param {string} personnageId
+ * @param {string | undefined} humeurDemandee
+ * @param {string | undefined} texteLigne
+ * @param {{ parle?: boolean }} [options]
+ */
+export function resoudreHumeurPortraitAvecTexte(
+    personnageId,
+    humeurDemandee,
+    texteLigne,
+    options = {}
+) {
+    if (humeurDemandee) return resoudreHumeurPortrait(personnageId, humeurDemandee, options);
+    if (idPortraitRendu(personnageId) === 'vera' && texteLigne) {
+        return infererHumeurVeraDepuisTexte(texteLigne);
+    }
+    return resoudreHumeurPortrait(personnageId, humeurDemandee, options);
 }
 
 function _presetBrut(personnageId, humeur) {
@@ -232,7 +268,7 @@ function _genererDecalagesGlitchVera(semence) {
 
 /**
  * @param {number} indexLigne
- * @param {{ personnage?: string, humeur?: string }} ligne
+ * @param {{ personnage?: string, humeur?: string, texte?: string }} ligne
  * @param {number} timestamp
  */
 export function notifierChangementLigneCutscene(indexLigne, ligne, timestamp) {
@@ -242,7 +278,9 @@ export function notifierChangementLigneCutscene(indexLigne, ligne, timestamp) {
 
     const personnage = ligne.personnage ?? 'narrateur';
     const idInterpole = idPortraitRendu(personnage);
-    const humeur = resoudreHumeurPortrait(personnage, ligne.humeur, { parle: true });
+    const humeur = resoudreHumeurPortraitAvecTexte(personnage, ligne.humeur, ligne.texte, {
+        parle: true,
+    });
     _derniereHumeurParlee.set(personnage, humeur);
     _derniereHumeurParlee.set(idInterpole, humeur);
 
@@ -263,7 +301,7 @@ export function notifierChangementLigneCutscene(indexLigne, ligne, timestamp) {
 
 /**
  * @param {string} personnageId
- * @param {{ humeur?: string } | null | undefined} ligne
+ * @param {{ humeur?: string, texte?: string } | null | undefined} ligne
  * @param {boolean} parle
  */
 export function obtenirHumeurEffectivePortrait(personnageId, ligne, parle) {
@@ -272,7 +310,9 @@ export function obtenirHumeurEffectivePortrait(personnageId, ligne, parle) {
     }
 
     if (parle) {
-        return resoudreHumeurPortrait(personnageId, ligne?.humeur, { parle: true });
+        return resoudreHumeurPortraitAvecTexte(personnageId, ligne?.humeur, ligne?.texte, {
+            parle: true,
+        });
     }
 
     return (

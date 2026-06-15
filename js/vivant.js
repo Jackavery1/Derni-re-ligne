@@ -161,10 +161,13 @@ export function vivant_enregistrerDepot(x, y) {
 
 export function vivant_synchroniserApresLignes(lignesEffacees) {
     if (!lignesEffacees?.length || !vivantPlateauTempsPret()) return;
-    for (const l of [...lignesEffacees].sort((a, b) => b - a)) {
-        vivant.plateauTemps.splice(l, 1);
-        vivant.plateauTemps.unshift(Array(CONFIG.colonnes).fill(0));
-    }
+    const aRetirer = new Set(lignesEffacees);
+    const conserve = vivant.plateauTemps.filter((_, i) => !aRetirer.has(i));
+    const nbVides = CONFIG.lignes - conserve.length;
+    vivant.plateauTemps = [
+        ...Array.from({ length: nbVides }, () => Array(CONFIG.colonnes).fill(0)),
+        ...conserve,
+    ];
 }
 
 export function vivant_recompenserActivite() {

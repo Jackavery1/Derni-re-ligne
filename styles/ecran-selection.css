@@ -246,6 +246,16 @@ body.effets-reduits #sel-info-biome {
     outline-offset: 3px;
 }
 
+#ecran-options.ecran {
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    justify-content: flex-start;
+    padding-block: max(12px, env(safe-area-inset-top, 0px))
+        max(12px, env(safe-area-inset-bottom, 0px));
+}
+
 .options-contenu {
     display: flex;
     flex-direction: column;
@@ -256,6 +266,8 @@ body.effets-reduits #sel-info-biome {
     background: rgba(8, 8, 26, 0.95);
     max-width: min(90vw, 420px);
     width: 100%;
+    flex-shrink: 0;
+    margin-block: auto;
 }
 
 .options-onglets {
@@ -310,8 +322,33 @@ body.effets-reduits #sel-info-biome {
     letter-spacing: 1px;
     line-height: 1.6;
     text-align: center;
-    margin-top: 1rem;
+    margin-top: 0.75rem;
     max-width: 28rem;
+}
+
+.options-boutons-sauvegarde,
+.options-sync-config {
+    margin-top: 0.75rem;
+}
+.options-sync-config {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    max-width: 28rem;
+}
+.options-sync-config .option-texte {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 0.34rem;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--bordure);
+    color: var(--texte);
+}
+.options-sync-aide {
+    font-family: var(--font-ui);
+    font-size: var(--typo-corps);
+    color: var(--texte-dim);
+    line-height: 1.35;
 }
 
 .options-controles-mobile {
@@ -353,6 +390,16 @@ body.effets-reduits #sel-info-biome {
     gap: 10px;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+.option-boutons .bouton.actif,
+.option-boutons .bouton[aria-pressed='true'] {
+    border-color: var(--jaune);
+    color: var(--jaune);
+    text-shadow: 0 0 8px var(--jaune);
+    box-shadow:
+        0 0 12px rgba(255, 230, 0, 0.35),
+        inset 0 0 8px rgba(255, 230, 0, 0.08);
 }
 
 #notif-maj-sw {
@@ -426,7 +473,7 @@ body.effets-reduits #sel-info-biome {
     align-items: center;
     gap: 14px;
     padding: 24px 16px 32px;
-    max-height: 100vh;
+    max-height: 100dvh;
     overflow-y: auto;
     scrollbar-width: none;
     position: relative;
@@ -1021,7 +1068,7 @@ body.effets-reduits .panneau-detail-progression-fill {
     align-items: center;
     justify-content: center;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     overflow: visible;
 }
 
@@ -1195,5 +1242,15 @@ body.coop-active #conteneur-principal {
         padding-bottom: max(32px, env(safe-area-inset-bottom, 0px));
         padding-left: max(16px, env(safe-area-inset-left, 0px));
         padding-right: max(16px, env(safe-area-inset-right, 0px));
+    }
+
+    .codex-liste {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        max-width: 100%;
+    }
+
+    .codex-item {
+        padding: 4px 4px 6px;
     }
 }

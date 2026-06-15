@@ -402,7 +402,10 @@ const DESSINATEURS_DECO = {
     halo_relique: () => dessinerHaloRelique(),
     halo_oracle: () => dessinerHaloOracle(),
     bordure_bicolore: () => dessinerBordureBicolore(),
-    couronne_lumineuse: () => {},
+    couronne_lumineuse: () => {
+        dessinerAuraDoree();
+        dessinerGemmesOrbitales();
+    },
     robo_arc_en_ciel: () => definirArcEnCiel(true),
 };
 

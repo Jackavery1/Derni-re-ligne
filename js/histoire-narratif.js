@@ -18,20 +18,27 @@ function _importerUi() {
     return import('./histoire-manager-ui.js');
 }
 
+function _extraireLignesCutscene(entree) {
+    if (!entree) return [];
+    return Array.isArray(entree) ? entree : (entree.lignes ?? []);
+}
+
 export function obtenirCutsceneEntree(mondeId, premiereVisite) {
     if (mondeId === 'monde_finale') {
         const etatHist = _obtenirEtatHistoireLocal();
         const cleEntree = etatHist.mondesCompletes.includes('monde_miroir')
             ? 'monde_finale_miroir'
             : 'monde_finale';
-        const lignesFinale = _textes().CUTSCENES_ENTREE[cleEntree];
-        if (!lignesFinale?.length) return null;
-        return { lignes: lignesFinale };
+        const entreeFinale = _textes().CUTSCENES_ENTREE[cleEntree];
+        const lignesFinale = _extraireLignesCutscene(entreeFinale);
+        if (!lignesFinale.length) return null;
+        return Array.isArray(entreeFinale) ? { lignes: entreeFinale } : entreeFinale;
     }
     if (!premiereVisite) return null;
-    const lignesRaw = _textes().CUTSCENES_ENTREE[mondeId];
-    if (!lignesRaw?.length) return null;
-    return { lignes: lignesRaw };
+    const entree = _textes().CUTSCENES_ENTREE[mondeId];
+    const lignes = _extraireLignesCutscene(entree);
+    if (!lignes.length) return null;
+    return Array.isArray(entree) ? { lignes: entree } : entree;
 }
 
 export function afficherVictoireBoss(bossId, typeFin = 'normal', onFin) {

@@ -98,10 +98,10 @@ const CONFIGS = {
         particules: { n: 7, couleur: '#ffddaa', type: 'etoile_filante', ampX: 0, vy: 0.0 },
     },
     monde_vide: {
-        fond: ['#000000', '#010106'],
+        fond: ['#000000', '#050408'],
         motif: 'grille_distordue',
-        couleurMotif: 'rgba(70,70,70,0.05)',
-        particules: { n: 14, couleur: '#333355', type: 'onde', ampX: 0, vy: 0.0 },
+        couleurMotif: 'rgba(140,110,150,0.05)',
+        particules: { n: 10, couleur: 'rgba(200,170,190,0.55)', type: 'grain', ampX: 3, vy: 0.0 },
     },
     monde_boss_4: {
         fond: ['#040010', '#07001c'],

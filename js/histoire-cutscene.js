@@ -13,7 +13,8 @@ import {
     definirSceneCutsceneFond,
     retirerSceneCutsceneFond,
 } from './histoire-cutscene-fonds.js';
-import { precharger, reinitialiserCacheScenes } from './scenes-cutscene.js';
+import { prechargerScenes, reinitialiserCacheScenes } from './scenes-cutscene.js';
+import { prechargerPortraitVera } from './portrait-vera-rendu.js';
 import {
     assurerZoneNarrationCutscene,
     initDomCutscene,
@@ -35,6 +36,8 @@ import {
     reinitVisuelPortraitsCutscene,
 } from './histoire-cutscene-portraits.js';
 import { reinitExpressionsCutscene } from './expressions-cutscene.js';
+import { assurerFeuilleStyle } from './charger-feuille-style.js';
+import { AudioMoteur } from './audio.js';
 import {
     typewriterEstActif,
     stopTypewriter,
@@ -54,6 +57,8 @@ let cutsceneSceneDefaut = null;
 let _sceneActive = null;
 let cutsceneCallbackFin = null;
 let _finCutsceneEnCours = false;
+/** @type {string | null} */
+let _biomeMusiqueAvantCutscene = null;
 
 function _normaliserEntreeCutscene(textes, personnages) {
     let sceneDefaut = null;
@@ -99,14 +104,22 @@ function _normaliserEntreeCutscene(textes, personnages) {
     };
 }
 
-function _prechargerScenesCutscene(entree) {
+function _idsScenesCutscene(entree) {
     const ids = new Set();
     if (entree.sceneDefaut) ids.add(entree.sceneDefaut);
     for (const s of entree.scenes) {
         if (s) ids.add(s);
     }
-    if (ids.size === 0) return;
-    void Promise.all([...ids].map((id) => precharger(id)));
+    return ids;
+}
+
+async function _prechargerScenesCutscene(entree) {
+    const ids = _idsScenesCutscene(entree);
+    if (ids.size === 0) {
+        await prechargerPortraitVera();
+        return;
+    }
+    await Promise.all([prechargerPortraitVera(), prechargerScenes(ids)]);
 }
 
 function _appliquerFondPourLigne(personnageId) {
@@ -169,6 +182,13 @@ function _terminerCutscene() {
     cutsceneCallbackFin = null;
     store.histoire.cutscene.onFin = null;
 
+    if (_biomeMusiqueAvantCutscene) {
+        AudioMoteur.transitionMusique(_biomeMusiqueAvantCutscene);
+        _biomeMusiqueAvantCutscene = null;
+    } else {
+        AudioMoteur.arreterMusique(350);
+    }
+
     cacherEcransHistoire();
 
     try {
@@ -216,18 +236,30 @@ export function afficherCutsceneHistoire(textes, personnages, onFin, options = {
     cutsceneIndex = 0;
     cutsceneCallbackFin = onFin ?? null;
     store.histoire.cutscene.onFin = onFin ?? null;
+    store.histoire.cutscene.enCours = true;
 
-    _prechargerScenesCutscene(entree);
+    _biomeMusiqueAvantCutscene = AudioMoteur.biomeMusique;
+    AudioMoteur.transitionMusique('narratif_cutscene');
 
     if (!entree.lignes.length) {
-        store.histoire.cutscene.enCours = true;
         _terminerCutscene();
         return true;
     }
 
+    Promise.all([
+        assurerFeuilleStyle('assets/cutscenes/cutscenes.css'),
+        _prechargerScenesCutscene(entree),
+    ]).then(() => {
+        if (!store.histoire.cutscene.enCours) return;
+        _demarrerAffichageCutscene(entree, options);
+    });
+
+    return true;
+}
+
+function _demarrerAffichageCutscene(entree, options = {}) {
     detecterParticipantsCutscene(_obtenirSequenceCutscene());
     definirHumeurRoboCutscene(options.humeurRobo ?? 'content');
-    store.histoire.cutscene.enCours = true;
 
     stopTypewriter();
     stopBouclePortraitsCutscene();
@@ -263,20 +295,19 @@ export function afficherCutsceneHistoire(textes, personnages, onFin, options = {
             store.histoire.cutscene.enCours = false;
             cutsceneCallbackFin = null;
             store.histoire.cutscene.onFin = null;
-            return false;
+            return;
         }
         logger.error('[cutscene] erreur affichage ligne', err);
         cacherEcransHistoire();
         store.histoire.cutscene.enCours = false;
-        const cb = cutsceneCallbackFin ?? onFin;
+        const cb = cutsceneCallbackFin;
         cutsceneCallbackFin = null;
         store.histoire.cutscene.onFin = null;
         cb?.();
-        return false;
+        return;
     }
 
     mettreAJourProgressCutscene(0, entree.lignes.length);
-    return true;
 }
 
 export function passerCutscene() {
@@ -350,5 +381,7 @@ export function afficherFinHistoire(finId) {
 
 export function afficherBoutonCarteGameOver(afficher) {
     const btn = document.getElementById('btn-histoire-carte');
-    if (btn) btn.style.display = afficher ? 'inline-block' : 'none';
+    if (!btn) return;
+    btn.classList.toggle('element-masque', !afficher);
+    btn.style.display = '';
 }

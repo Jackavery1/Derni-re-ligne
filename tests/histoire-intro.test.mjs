@@ -40,7 +40,9 @@ describe('histoire-intro', () => {
         await mod.chargerHistoireTextes();
         const textes = mod.obtenirHistoireTextesSync();
         expect(textes.INTRO_HISTOIRE?.lignes?.length ?? textes.INTRO_HISTOIRE?.length).toBe(15);
-        expect(textes.INTERLUDES?.interlude_gardiens?.length).toBeGreaterThan(3);
+        const gardiens = textes.INTERLUDES?.interlude_gardiens;
+        const lignesGardiens = Array.isArray(gardiens) ? gardiens : (gardiens?.lignes ?? []);
+        expect(lignesGardiens.length).toBeGreaterThan(3);
         expect(textes.OUTRO_FINS?.fin_normale?.length).toBeGreaterThan(0);
     });
 });

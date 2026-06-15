@@ -149,11 +149,14 @@ export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq, obteni
         },
 
         demarrerMusique(biomeId, conserverPosition = false) {
-            if (!this.initialise || !this.ctx) return;
-            if (this.ctx.state === 'suspended') this.ctx.resume();
-
             const config = obtenirConfigMusiqueBiome(biomeId);
             if (!config) return;
+
+            this.biomeMusique = biomeId;
+            this.configMusique = config;
+
+            if (!this.initialise || !this.ctx) return;
+            if (this.ctx.state === 'suspended') this.ctx.resume();
 
             if (!conserverPosition) {
                 clearInterval(this.intervalMusique);
@@ -161,8 +164,6 @@ export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq, obteni
                 this.stepActuel = 0;
             }
 
-            this.biomeMusique = biomeId;
-            this.configMusique = config;
             this.sequenceActuelle = genererSequence(config, biomeId, noteVersFreq);
             this.seqBasse = genererSequenceBasse(config, biomeId, noteVersFreq);
             this.musiqueActive = true;
@@ -205,7 +206,8 @@ export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq, obteni
                 this.demarrerMusique(biomeId);
                 return;
             }
-            this.arreterMusique(300);
+            this.biomeMusique = biomeId;
+            this.arreterMusique(300, { conserverBiome: true });
             setTimeout(() => this.demarrerMusique(biomeId), 350);
         },
 
@@ -217,14 +219,16 @@ export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq, obteni
             });
         },
 
-        arreterMusique(fadeDuree = 0) {
+        arreterMusique(fadeDuree = 0, options = {}) {
             this.musiqueActive = false;
             clearInterval(this.intervalMusique);
             this.intervalMusique = null;
 
             if (!this.gainMusique || !this.ctx) {
-                this.biomeMusique = null;
-                this.configMusique = null;
+                if (!options.conserverBiome) {
+                    this.biomeMusique = null;
+                    this.configMusique = null;
+                }
                 return;
             }
 
@@ -242,8 +246,10 @@ export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq, obteni
                 }, fadeDuree + 50);
             }
 
-            this.biomeMusique = null;
-            this.configMusique = null;
+            if (!options.conserverBiome) {
+                this.biomeMusique = null;
+                this.configMusique = null;
+            }
             this.stepActuel = 0;
         },
     };

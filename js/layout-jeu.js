@@ -12,6 +12,19 @@ import { etat } from './store-jeu.js';
 
 const SEUIL_PAYSAGE_COMPACT = 768;
 
+/** @returns {{ largeur: number, hauteur: number }} */
+function obtenirDimensionsViewport() {
+    const vv = window.visualViewport;
+    if (vv) return { largeur: vv.width, hauteur: vv.height };
+    return { largeur: window.innerWidth, hauteur: window.innerHeight };
+}
+
+function ecouterViewport(callback) {
+    window.addEventListener('resize', callback);
+    window.visualViewport?.addEventListener('resize', callback);
+    window.visualViewport?.addEventListener('scroll', callback);
+}
+
 const LAYOUT_ARCHI = {
     panneauLargeur: 120,
     gap: 10,
@@ -23,12 +36,14 @@ const LAYOUT_ARCHI = {
 };
 
 function estPaysageCompact() {
-    return window.innerHeight <= SEUIL_PAYSAGE_COMPACT && window.innerWidth > window.innerHeight;
+    const { largeur, hauteur } = obtenirDimensionsViewport();
+    return hauteur <= SEUIL_PAYSAGE_COMPACT && largeur > hauteur;
 }
 
 function hauteurControlesTactiles() {
+    const { largeur, hauteur } = obtenirDimensionsViewport();
     if (estPaysageCompact()) return 0;
-    if (window.innerWidth <= SEUIL_PAYSAGE_COMPACT || window.innerHeight <= 600) {
+    if (largeur <= SEUIL_PAYSAGE_COMPACT || hauteur <= 600) {
         return LAYOUT.hauteurControles;
     }
     return 0;
@@ -70,24 +85,20 @@ export function adapterInterface() {
 
     const mobileControles = hauteurControlesTactiles();
 
-    const scale = calculerEchelleInterface(
-        window.innerWidth,
-        window.innerHeight,
-        largeurTotale,
-        hauteurTotale,
-        {
-            margeScale: LAYOUT.margeScale,
-            hauteurControles: mobileControles,
-            scaleMax: 2.2,
-        }
-    );
+    const { largeur, hauteur } = obtenirDimensionsViewport();
+
+    const scale = calculerEchelleInterface(largeur, hauteur, largeurTotale, hauteurTotale, {
+        margeScale: LAYOUT.margeScale,
+        hauteurControles: mobileControles,
+        scaleMax: 2.2,
+    });
 
     appliquerEchelleInterface(echelle, iface, largeurTotale, hauteurTotale, scale);
 
     const canvasMenuFond = obtenirCanvasMenuFond();
     if (canvasMenuFond && menuAnimActif) {
-        canvasMenuFond.width = window.innerWidth;
-        canvasMenuFond.height = window.innerHeight;
+        canvasMenuFond.width = largeur;
+        canvasMenuFond.height = hauteur;
     }
 }
 
@@ -105,23 +116,19 @@ export function adapterInterfaceArchi() {
 
     const mobileControles = hauteurControlesTactiles();
 
-    const scale = calculerEchelleInterface(
-        window.innerWidth,
-        window.innerHeight,
-        largeurTotale,
-        hauteurTotale,
-        {
-            margeScale: LAYOUT_ARCHI.margeScale,
-            hauteurControles: mobileControles,
-            scaleMax: 2.2,
-        }
-    );
+    const { largeur, hauteur } = obtenirDimensionsViewport();
+
+    const scale = calculerEchelleInterface(largeur, hauteur, largeurTotale, hauteurTotale, {
+        margeScale: LAYOUT_ARCHI.margeScale,
+        hauteurControles: mobileControles,
+        scaleMax: 2.2,
+    });
 
     appliquerEchelleInterface(echelle, iface, largeurTotale, hauteurTotale, scale);
 }
 
 export function initialiserLayout() {
-    window.addEventListener('resize', () => {
+    ecouterViewport(() => {
         adapterInterface();
         if (modeArchiEnCours()) adapterInterfaceArchi();
         redimensionnerConstellation();

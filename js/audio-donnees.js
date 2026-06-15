@@ -20,6 +20,7 @@ export const TONIQUES_BIOMES = {
     cyber: 277,
     fuochi: 294,
     cosmos: 185,
+    narratif_cutscene: 174.61,
 };
 
 export const MUSIQUE_BIOMES = {
@@ -129,5 +130,19 @@ export const MUSIQUE_BIOMES = {
         echoActif: true,
         echoDelai: 0.3,
         echoVolume: 0.12,
+    },
+    narratif_cutscene: {
+        tempo: 68,
+        gamme: 'pentatonique',
+        timbre: 'sine',
+        basse: false,
+        melodie: [4, null, 7, 9, null, 7, 4, 2, null, 0, 2, 4, null, 7, null, null],
+        basseLine: null,
+        adsr: { a: 0.14, d: 0.22, s: 0.5, r: 0.5 },
+        volumeMelodie: 0.16,
+        tenueNote: true,
+        echoActif: true,
+        echoDelai: 0.38,
+        echoVolume: 0.09,
     },
 };

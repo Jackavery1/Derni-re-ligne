@@ -3,7 +3,7 @@ import { etat, obtenirBiomeActif } from './store-jeu.js';
 import { obtenirDaltonien } from './accessibilite.js';
 import { obtenirForme, calculerDistanceChute } from './piece-jeu.js';
 import { obtenirFauxFantomeActif } from './boss-jeu.js';
-import { ghostEstDesactive, pieceEstInvisible } from './mecaniques-histoire.js';
+import { ghostEstDesactive } from './mecaniques-histoire.js';
 
 const TYPES_PIECE = ['I', 'O', 'T', 'S', 'Z', 'J', 'L'];
 const INDEX_COULEUR_PIECE = { I: 0, O: 1, T: 2, S: 3, Z: 4, J: 5, L: 6 };
@@ -178,7 +178,7 @@ export function dessinerPulsePieceActive(ctx) {
     const daltonien = obtenirDaltonien();
     const contrasteEleve =
         typeof document !== 'undefined' && document.body?.classList?.contains('contraste-eleve');
-    if ((!daltonien && !contrasteEleve) || !etat.pieceActuelle || pieceEstInvisible()) return;
+    if ((!daltonien && !contrasteEleve) || !etat.pieceActuelle) return;
 
     const forme = obtenirForme(etat.pieceActuelle);
     const pulse = 0.45 + 0.55 * Math.sin(performance.now() / 180);

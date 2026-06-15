@@ -9,16 +9,28 @@ import {
 } from '../js/histoire-textes.js';
 import { CODEX_HISTOIRE } from '../js/codex-histoire.js';
 import { ACHIEVEMENTS_HISTOIRE } from '../js/achievements-histoire.js';
-import { INTRO_HISTOIRE } from '../js/histoire-textes/intro-interludes.js';
+import { INTRO_HISTOIRE, OUTRO_FINS } from '../js/histoire-textes/intro-interludes.js';
 import { SCENES_CUTSCENE } from '../js/scenes-cutscene.js';
 import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
 import { SEQUENCE_HISTOIRE } from '../js/histoire-donnees.js';
+import { HUMEURS_PERSONNAGES } from '../js/expressions-cutscene.js';
+import { idPortraitRendu } from '../js/histoire-cutscene-config.js';
+
+const BOSS_CONNUS = new Set(['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion']);
+
+const REGISTRES_NARRATIFS = [
+    ['CUTSCENES_ENTREE', CUTSCENES_ENTREE],
+    ['CUTSCENES_POST_MONDE', CUTSCENES_POST_MONDE],
+    ['INTERLUDES', INTERLUDES],
+    ['EPILOGUES', EPILOGUES],
+    ['OUTRO_FINS', OUTRO_FINS],
+    ['FRAGMENTS_VERA_SIGNAL', FRAGMENTS_VERA_SIGNAL],
+];
 
 function extrairePersonnagesCutscenes(objet) {
     const ids = new Set();
     for (const entree of Object.values(objet)) {
-        const lignes = Array.isArray(entree) ? entree : (entree?.lignes ?? []);
-        if (!Array.isArray(lignes)) continue;
+        const lignes = extraireLignesCutscene(entree);
         for (const ligne of lignes) {
             if (ligne?.personnage) ids.add(ligne.personnage);
         }
@@ -30,18 +42,33 @@ function extraireLignesCutscene(entree) {
     return Array.isArray(entree) ? entree : (entree?.lignes ?? []);
 }
 
+function sceneDefautEntree(entree) {
+    if (Array.isArray(entree)) return null;
+    return entree?.scene ?? null;
+}
+
+function* itererLignesNarratives(registre) {
+    for (const [nomRegistre, objet] of registre) {
+        for (const [cle, entree] of Object.entries(objet)) {
+            const defaut = sceneDefautEntree(entree);
+            for (const ligne of extraireLignesCutscene(entree)) {
+                yield { nomRegistre, cle, ligne, sceneDefaut: defaut };
+            }
+        }
+    }
+}
+
 describe('histoire-textes — cohérence portraits', () => {
-    it('chaque personnage de cutscene existe dans PORTRAITS ou est un boss connu', () => {
-        const personnages = extrairePersonnagesCutscenes(CUTSCENES_ENTREE);
-        const bossConnus = new Set([
-            'brasier',
-            'sentinelle',
-            'archiviste',
-            'avantgarde',
-            'distorsion',
-        ]);
+    it('chaque personnage narratif existe dans PORTRAITS ou est un boss connu', () => {
+        const personnages = new Set();
+        for (const [, objet] of REGISTRES_NARRATIFS) {
+            for (const id of extrairePersonnagesCutscenes(objet)) personnages.add(id);
+        }
+        for (const ligne of INTRO_HISTOIRE.lignes ?? []) {
+            if (ligne.personnage) personnages.add(ligne.personnage);
+        }
         for (const id of personnages) {
-            const connu = PORTRAITS[id] || bossConnus.has(id) || id === 'narrateur';
+            const connu = PORTRAITS[id] || BOSS_CONNUS.has(id) || id === 'narrateur';
             expect(connu, `personnage inconnu : ${id}`).toBeTruthy();
         }
     });
@@ -69,8 +96,8 @@ describe('histoire-textes — cohérence portraits', () => {
     });
 
     it('INTERLUDES contient gardiens et veille', () => {
-        expect(INTERLUDES.interlude_gardiens?.length).toBeGreaterThan(3);
-        expect(INTERLUDES.interlude_veille?.length).toBeGreaterThan(3);
+        expect(extraireLignesCutscene(INTERLUDES.interlude_gardiens).length).toBeGreaterThan(3);
+        expect(extraireLignesCutscene(INTERLUDES.interlude_veille).length).toBeGreaterThan(3);
     });
 
     it('monde_boss_1 inclut le dialogue du Brasier', () => {
@@ -160,11 +187,35 @@ describe('histoire-textes — cohérence portraits', () => {
 
     it('scenes referencees dans les cutscenes existent dans le registre ou sont absentes', () => {
         const ids = new Set(Object.keys(SCENES_CUTSCENE));
+        for (const { nomRegistre, cle, ligne } of itererLignesNarratives(REGISTRES_NARRATIFS)) {
+            if (!ligne.scene) continue;
+            expect(ids.has(ligne.scene), `${nomRegistre}.${cle} → ${ligne.scene}`).toBe(true);
+        }
+        for (const ligne of INTRO_HISTOIRE.lignes ?? []) {
+            if (!ligne.scene) continue;
+            expect(ids.has(ligne.scene), `INTRO → ${ligne.scene}`).toBe(true);
+        }
+    });
+
+    it('humeurs de cutscene sont valides pour chaque personnage', () => {
+        for (const { nomRegistre, cle, ligne } of itererLignesNarratives(REGISTRES_NARRATIFS)) {
+            if (!ligne.humeur) continue;
+            const pid = ligne.personnage ?? 'narrateur';
+            const rendu = idPortraitRendu(pid);
+            const valides = HUMEURS_PERSONNAGES[rendu] ?? HUMEURS_PERSONNAGES[pid];
+            expect(valides, `${nomRegistre}.${cle} ${pid}`).toBeTruthy();
+            expect(valides.includes(ligne.humeur), `${nomRegistre}.${cle} ${ligne.humeur}`).toBe(
+                true
+            );
+        }
+    });
+
+    it('chaque cutscene entree a une scene par defaut ou sur la premiere ligne', () => {
         for (const [mondeId, entree] of Object.entries(CUTSCENES_ENTREE)) {
-            for (const ligne of extraireLignesCutscene(entree)) {
-                if (!ligne.scene) continue;
-                expect(ids.has(ligne.scene), `${mondeId} → ${ligne.scene}`).toBe(true);
-            }
+            const defaut = sceneDefautEntree(entree);
+            const lignes = extraireLignesCutscene(entree);
+            const scenePremiereLigne = lignes[0]?.scene ?? null;
+            expect(defaut || scenePremiereLigne, `${mondeId} sans fond de scene`).toBeTruthy();
         }
     });
 

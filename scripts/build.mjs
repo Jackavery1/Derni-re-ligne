@@ -10,6 +10,7 @@ import {
     existsSync,
 } from 'fs';
 import { execSync } from 'child_process';
+import { resolve } from 'path';
 
 const dist = 'dist';
 
@@ -20,6 +21,8 @@ mkdirSync(`${dist}/js`, { recursive: true });
 mkdirSync(`${dist}/data`, { recursive: true });
 
 cpSync('data', `${dist}/data`, { recursive: true });
+
+const racineJs = resolve('js');
 
 await esbuild.build({
     entryPoints: ['js/main.js'],
@@ -33,6 +36,18 @@ await esbuild.build({
     sourcemap: true,
     target: ['es2022'],
     logLevel: 'info',
+    legalComments: 'none',
+    drop: ['debugger'],
+    plugins: [
+        {
+            name: 'stub-histoire-textes-fallback',
+            setup(buildApi) {
+                buildApi.onResolve({ filter: /histoire-textes\.fallback\.js$/ }, () => ({
+                    path: resolve(racineJs, 'histoire-textes.fallback.stub.js'),
+                }));
+            },
+        },
+    ],
 });
 
 cpSync('styles', `${dist}/styles`, { recursive: true });

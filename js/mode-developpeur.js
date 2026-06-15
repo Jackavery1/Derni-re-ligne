@@ -9,8 +9,18 @@ import { modeDevActif, activerSessionDev, desactiverSessionDev } from './mode-de
 
 export { modeDevActif } from './mode-dev-etat.js';
 
+function chargerFeuilleDev() {
+    if (document.getElementById('feuille-dev')) return;
+    const lien = document.createElement('link');
+    lien.id = 'feuille-dev';
+    lien.rel = 'stylesheet';
+    lien.href = 'styles/dev.css';
+    document.head.appendChild(lien);
+}
+
 export function activerModeDev() {
     activerSessionDev();
+    chargerFeuilleDev();
     _monterInterfaceDev();
     rafraichirApresActionDev();
 }

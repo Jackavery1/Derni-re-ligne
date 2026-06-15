@@ -51,45 +51,51 @@ export const CUTSCENES_ENTREE_PROLOGUE = {
         },
     ],
 
-    monde_lave: [
-        {
-            personnage: 'robo',
-            texte: "Le feu brûle plus fort qu'il ne devrait.",
-            humeur: 'alerte',
-        },
-        {
-            personnage: 'robo',
-            texte: "Ce n'est pas de la chaleur normale. Il y a quelque chose dedans.",
-            humeur: 'alerte',
-        },
-        {
-            personnage: 'narrateur',
-            texte: 'La corruption de La Distorsion transforme le biome Inferno en brasier incontrôlable.',
-        },
-        { personnage: 'robo', texte: 'Je dois traverser.', humeur: 'alerte' },
-    ],
+    monde_lave: {
+        scene: 'seuil_brasier',
+        lignes: [
+            {
+                personnage: 'robo',
+                texte: "Le feu brûle plus fort qu'il ne devrait.",
+                humeur: 'alerte',
+            },
+            {
+                personnage: 'robo',
+                texte: "Ce n'est pas de la chaleur normale. Il y a quelque chose dedans.",
+                humeur: 'alerte',
+            },
+            {
+                personnage: 'narrateur',
+                texte: 'La corruption de La Distorsion transforme le biome Inferno en brasier incontrôlable.',
+            },
+            { personnage: 'robo', texte: 'Je dois traverser.', humeur: 'alerte' },
+        ],
+    },
 
-    monde_rouille: [
-        {
-            personnage: 'robo',
-            texte: 'Ces machines... elles produisent des pieces.',
-            humeur: 'neutre',
-        },
-        {
-            personnage: 'robo',
-            texte: "Personne n'a demande ces pieces. Mais elles continuent.",
-            humeur: 'neutre',
-        },
-        {
-            personnage: 'robo',
-            texte: "Est-ce que c'est ce que je suis ? Une machine qui continue ?",
-            humeur: 'triste',
-        },
-        {
-            personnage: 'narrateur',
-            texte: 'La rouille gagne. Le metal se souvient de sa propre finitude.',
-        },
-    ],
+    monde_rouille: {
+        scene: 'labo',
+        lignes: [
+            {
+                personnage: 'robo',
+                texte: 'Ces machines... elles produisent des pieces.',
+                humeur: 'neutre',
+            },
+            {
+                personnage: 'robo',
+                texte: "Personne n'a demandé ces pièces. Mais elles continuent.",
+                humeur: 'neutre',
+            },
+            {
+                personnage: 'robo',
+                texte: "Est-ce que c'est ce que je suis ? Une machine qui continue ?",
+                humeur: 'triste',
+            },
+            {
+                personnage: 'narrateur',
+                texte: 'La rouille gagne. Le metal se souvient de sa propre finitude.',
+            },
+        ],
+    },
 
     monde_boss_1: [
         {
@@ -100,7 +106,7 @@ export const CUTSCENES_ENTREE_PROLOGUE = {
         {
             scene: 'seuil_brasier',
             personnage: 'narrateur',
-            texte: 'Des millénaires de frustration thermique, condenses en une entite.',
+            texte: 'Des millénaires de frustration thermique, condensés en une entité.',
         },
         {
             scene: 'seuil_brasier',

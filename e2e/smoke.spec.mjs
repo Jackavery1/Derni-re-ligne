@@ -212,3 +212,82 @@ test('panneau detail JOUER visible sur petit ecran sans scroll force', async ({ 
     expect(metriques.h).toBeGreaterThanOrEqual(48);
     expect(metriques.dansPanneau).toBe(true);
 });
+
+test('partie mobile — swipe horizontal deplace la piece', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await demarrerPartie(page);
+
+    const avant = await page.evaluate(
+        () => window.__NEO_TEST__?.obtenirColonnePieceActive?.() ?? null
+    );
+    expect(avant).not.toBeNull();
+
+    await page.evaluate(() => {
+        const canvas = document.getElementById('canvas-plateau');
+        if (!(canvas instanceof HTMLCanvasElement)) return;
+        const rect = canvas.getBoundingClientRect();
+        const x0 = rect.left + rect.width / 2;
+        const y0 = rect.top + rect.height / 2;
+        const x1 = x0 + 48;
+        const mk = (x, y) =>
+            new Touch({
+                identifier: 1,
+                target: canvas,
+                clientX: x,
+                clientY: y,
+            });
+        canvas.dispatchEvent(
+            new TouchEvent('touchstart', {
+                bubbles: true,
+                touches: [mk(x0, y0)],
+                changedTouches: [mk(x0, y0)],
+            })
+        );
+        canvas.dispatchEvent(
+            new TouchEvent('touchmove', {
+                bubbles: true,
+                touches: [mk(x1, y0)],
+                changedTouches: [mk(x1, y0)],
+            })
+        );
+        canvas.dispatchEvent(
+            new TouchEvent('touchend', {
+                bubbles: true,
+                touches: [],
+                changedTouches: [mk(x1, y0)],
+            })
+        );
+    });
+
+    const apres = await page.evaluate(
+        () => window.__NEO_TEST__?.obtenirColonnePieceActive?.() ?? null
+    );
+    expect(apres).toBeGreaterThan(avant);
+});
+
+test('codex mobile — grille deux colonnes', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_MONDE_LIBRE);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-codex').click();
+    await expect(page.locator('#ecran-codex')).toHaveClass(/actif/);
+
+    const colonnes = await page.evaluate(() => {
+        const liste = document.querySelector('#ecran-codex .codex-liste');
+        if (!liste) return 0;
+        return getComputedStyle(liste).gridTemplateColumns.split(' ').filter(Boolean).length;
+    });
+    expect(colonnes).toBe(2);
+});
+
+test('ecran chargement — padding safe-area declare', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/');
+    const padding = await page.evaluate(() => {
+        const el = document.querySelector('.ecran-chargement');
+        if (!el) return null;
+        return getComputedStyle(el).paddingTop;
+    });
+    expect(padding).toBeTruthy();
+});

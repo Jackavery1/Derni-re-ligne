@@ -1,0 +1,145 @@
+export const CODEX_RELIQUES = {
+    relique_omega: {
+        id: 'relique_omega',
+        chapitre: 'reliques',
+        titre: "L'OMEGA",
+        sousTitre: 'Le Bloc sans Fin',
+        icone: '⊗',
+        condition: (s) => (s.typesReliquesUtilises || new Set()).has('doublon'),
+        conditionTexte: 'Utiliser la relique Omega',
+        illustration: 'dessinerIllustReliqueCarre',
+        texte: [
+            "L'Omega est le seul tetromino qui existe en deux etats simultanement. En le posant, vous ne placez pas un bloc — vous affirmez une verite.",
+            'Sa forme carree cache un paradoxe : il est à la fois la piece la plus simple et la plus complexe. Sans rotation, sans ambiguïte. Juste quatre cases, deux fois.',
+            "« L'Omega m'a appris que doubler un effort ne signifie pas faire deux fois plus d'erreurs, » note Robo. « Ça signifie faire la même erreur avec deux fois plus de conviction. »",
+        ],
+    },
+
+    relique_magma: {
+        id: 'relique_magma',
+        chapitre: 'reliques',
+        titre: 'MAGMA',
+        sousTitre: 'La Croix de Feu',
+        icone: '💥',
+        condition: (s) => (s.typesReliquesUtilises || new Set()).has('explosion'),
+        conditionTexte: 'Utiliser la relique Magma',
+        illustration: 'dessinerIllustReliqueExplosion',
+        texte: [
+            "On dit que la premiere Relique Magma a ete forgee dans le cœur d'un volcan par un joueur qui avait perdu 47 parties de suite et avait decide que si le plateau ne voulait pas cooperer, il exploserait.",
+            "La croix n'est pas une piece offensive. C'est un acte de desespoir creatif. Un aveu que parfois, la seule solution est de tout detruire et de recommencer.",
+            "« J'aime le Magma, » confie Robo. « Il me rappelle que la precision est surestimee. Parfois une bonne explosion vaut mieux que dix poses parfaites. »",
+        ],
+    },
+
+    relique_bulle: {
+        id: 'relique_bulle',
+        chapitre: 'reliques',
+        titre: 'LA BULLE',
+        sousTitre: 'La Piece qui Remonte',
+        icone: '🫧',
+        condition: (s) => (s.typesReliquesUtilises || new Set()).has('flottaison'),
+        conditionTexte: 'Utiliser la relique Bulle',
+        illustration: 'dessinerIllustReliqueBulle',
+        texte: [
+            'La Bulle defie la regle fondamentale du jeu : les blocs tombent, toujours, inevitablement. Sauf quand ils ne tombent pas.',
+            'Recuperee dans les abysses par un plongeur qui cherchait autre chose, la Bulle introduit la notion de regret contrôle. Une façon de dire : "j\'aurais dû jouer ça plus haut."',
+            "« La Bulle m'a pris trois semaines à comprendre, » admet Robo. « Puis j'ai realise que c'etait simplement du bon sens aquatique. Les choses legeres remontent. Même les erreurs. »",
+        ],
+    },
+
+    relique_spore: {
+        id: 'relique_spore',
+        chapitre: 'reliques',
+        titre: 'LA SPORE',
+        sousTitre: "Ce qui Pousse Sans Qu'on le Veuille",
+        icone: '🌱',
+        condition: (s) => (s.typesReliquesUtilises || new Set()).has('croissance'),
+        conditionTexte: 'Utiliser la relique Spore',
+        illustration: 'dessinerIllustReliqueSpore',
+        texte: [
+            "La Spore ne pose pas des blocs. Elle les seme. La difference est importante : ce qu'on seme, on ne contrôle pas entierement où ça pousse.",
+            'Issue de la Forêt profonde, cette relique est la plus organique du Codex. Elle favorise les joueurs intuitifs, ceux qui sentent les espaces vides plutôt que de les calculer.',
+            "« J'ai eu une longue conversation avec la Spore, » ecrit Robo dans son journal. « Elle m'a dit que le contrôle est une illusion. J'ai repondu que je suis un robot. Elle n'a pas semble impressionnee. »",
+        ],
+    },
+
+    relique_blizzard: {
+        id: 'relique_blizzard',
+        chapitre: 'reliques',
+        titre: 'LE BLIZZARD',
+        sousTitre: "Le Don de l'Espace",
+        icone: '❄️',
+        condition: (s) => (s.typesReliquesUtilises || new Set()).has('blizzard'),
+        conditionTexte: 'Utiliser la relique Blizzard',
+        illustration: 'dessinerIllustReliqueGlace',
+        texte: [
+            'Le Blizzard est la seule relique qui donne. Les autres prennent, deplacent, detruisent. Le Blizzard offre une ligne — une respiration, un sursis.',
+            "Nee dans les tempêtes arctiques, elle materialise l'idee que le vide peut être un cadeau. Que parfois, un espace supplementaire change tout.",
+            "« Le Blizzard m'a aide à comprendre la generosite, » dit Robo. « Donner de l'espace aux autres. Donner de l'espace à soi-même. Ne pas tout remplir immediatement. » Il marque une pause. « Je travaille encore là-dessus. »",
+        ],
+    },
+
+    relique_sable: {
+        id: 'relique_sable',
+        chapitre: 'reliques',
+        titre: 'LE SABLE',
+        sousTitre: 'Le Colmatage des Failles',
+        icone: '⌛',
+        condition: (s) => (s.typesReliquesUtilises || new Set()).has('remplissage'),
+        conditionTexte: 'Utiliser la relique Sable',
+        illustration: 'dessinerIllustReliqueSable',
+        texte: [
+            "Le Sable ne resout pas les problemes. Il les bouche. Nuance importante : un trou colmate n'est pas un trou repare. Mais parfois, ça suffit.",
+            "Ramassee dans les dunes du Desert par quelqu'un qui cherchait une oasis et a trouve quelque chose d'infiniment plus utile, cette relique est le symbole du pragmatisme.",
+            "« Le Sable, c'est l'art de ne pas se plaindre et de faire avec ce qu'on a, » resume Robo. « Je l'admire profondement. Je m'y reconnais presque. »",
+        ],
+    },
+
+    relique_virus: {
+        id: 'relique_virus',
+        chapitre: 'reliques',
+        titre: 'LE VIRUS',
+        sousTitre: "L'Effacement Cible",
+        icone: '⚠',
+        condition: (s) => (s.typesReliquesUtilises || new Set()).has('hack'),
+        conditionTexte: 'Utiliser la relique Virus',
+        illustration: 'dessinerIllustReliqueCircuit',
+        texte: [
+            'Le Virus est une relique qui fait peur aux debutants et sourire aux experts. Il ne detruit pas au hasard — il cible. Il cherche les cellules qui coûtent cher et les efface.',
+            "Ne dans les profondeurs du reseau Cyber, il est l'arme favorite des joueurs qui ont compris que parfois, moins c'est plus, et qu'un espace vide au bon endroit vaut mieux que dix blocs.",
+            "« Je comprends le Virus mieux que les autres reliques, » avoue Robo. « Nous partageons une philosophie : identifier ce qui dysfonctionne et l'eliminer. C'est de la maintenance. Pas de la destruction. »",
+        ],
+    },
+
+    relique_fusee: {
+        id: 'relique_fusee',
+        chapitre: 'reliques',
+        titre: 'LA FUSÉE',
+        sousTitre: 'La Purge Verticale',
+        icone: '🚀',
+        condition: (s) => (s.typesReliquesUtilises || new Set()).has('colonne'),
+        conditionTexte: 'Utiliser la relique Fusee',
+        illustration: 'dessinerIllustReliqueFusee',
+        texte: [
+            'La Fusee ne raisonne pas horizontalement. Elle voit le plateau comme une collection de colonnes, et elle en choisit une pour la purger completement, de haut en bas.',
+            "Forgee dans l'enthousiasme pyrotechnique du biome Feux d'Artifice, elle est à la fois spectaculaire et efficace — ce qui est rare.",
+            "« La premiere fois que j'ai utilise la Fusee, j'ai ferme les yeux par reflexe, » raconte Robo. « Puis j'ai realise que je n'avais pas de paupieres. C'etait une reaction purement emotionnelle. Je la considere comme un progres. »",
+        ],
+    },
+
+    relique_nexus: {
+        id: 'relique_nexus',
+        chapitre: 'reliques',
+        titre: 'LE NEXUS',
+        sousTitre: 'La Gravite Recalibree',
+        icone: '✦',
+        condition: (s) => (s.typesReliquesUtilises || new Set()).has('gravite'),
+        conditionTexte: 'Utiliser la relique Nexus',
+        illustration: 'dessinerIllustReliqueNexus',
+        texte: [
+            "Le Nexus vient du Cosmos, et ça se voit. Il ne detruit pas, ne cree pas — il reorganise. Il rappelle à chaque cellule qu'elle a une responsabilite : descendre.",
+            "Dans un plateau chaotique, le Nexus cree un instant de clarte. Tout s'affaisse d'un cran, comme si le monde retenait son souffle et le relâchait en même temps.",
+            "« Le Nexus est ma relique preferee, » confie Robo. « Il impose l'ordre sans violence. Il rappelle à chaque element sa place naturelle. Je lui trouve une sagesse que j'aspire à developper. » Une pause. « Je travaille encore là-dessus aussi. »",
+        ],
+    },
+};

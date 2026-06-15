@@ -55,6 +55,11 @@ export function dessinerCelluleStyle(ctx2d, x, y, couleur, taille, opacite, biom
         g.addColorStop(1, assombrir(couleur, 0.5));
         ctx2d.fillStyle = g;
         ctx2d.fillRect(px + 2, py + 2, taille - 4, taille - 4);
+        if (biomeId === 'vide') {
+            ctx2d.strokeStyle = 'rgba(180,150,190,0.28)';
+            ctx2d.lineWidth = 1;
+            ctx2d.strokeRect(px + 1.5, py + 1.5, taille - 3, taille - 3);
+        }
         ctx2d.restore();
         return;
     }
@@ -63,4 +68,13 @@ export function dessinerCelluleStyle(ctx2d, x, y, couleur, taille, opacite, biom
     const sansOmbre = opacite < 1 || sansOmbreExterne === true;
     const renderer = RENDERERS[style] ?? RENDERERS.biseaute;
     renderer(ctx2d, x, y, couleur, taille, opacite, sansOmbre, preferences);
+
+    if (biomeId === 'vide' && opacite > 0.05) {
+        ctx2d.save();
+        ctx2d.globalAlpha = opacite * 0.35;
+        ctx2d.strokeStyle = 'rgba(200,160,180,0.4)';
+        ctx2d.lineWidth = 1;
+        ctx2d.strokeRect(px + 1.5, py + 1.5, taille - 3, taille - 3);
+        ctx2d.restore();
+    }
 }

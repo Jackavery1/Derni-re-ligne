@@ -31,18 +31,13 @@ export default [
     },
     {
         files: [
-            'js/histoire-donnees.js',
             'js/histoire-textes.js',
             'js/portraits-cutscene.js',
             'js/portraits-cutscene-personnages.js',
-            'js/codex-donnees.js',
-            'js/codex-illustrations.js',
             'js/codex-illustrations-histoire.js',
             'js/boss-rendu.js',
             'js/rendu-ambiance-particules.js',
             'js/icones-pixel.js',
-            'js/achievements.js',
-            'js/archi-jeu.js',
             'js/coop-logique.js',
             'js/rendu-blocs-styles.js',
         ],
