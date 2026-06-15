@@ -5,6 +5,8 @@ export const CLE_SUPABASE_URL = 'derniereLigne_supabaseUrl';
 export const CLE_SUPABASE_KEY = 'derniereLigne_supabaseAnonKey';
 
 export const TABLE_SYNC = 'progression_snapshots';
+export const TABLE_LEADERBOARD = 'leaderboard_entries';
+export const CLE_LEADERBOARD_PSEUDO = 'derniereLigne_leaderboardPseudo';
 
 /** URL Supabase par défaut (projet dédié Dernière Ligne — clé anon publique). */
 export const SUPABASE_URL_DEFAUT = '';
@@ -82,4 +84,17 @@ export function reinitialiserSyncId() {
     } catch {
         /* ignore */
     }
+}
+
+/** @returns {string} */
+export function obtenirPseudoLeaderboard() {
+    const brut = lireStockageSync(CLE_LEADERBOARD_PSEUDO, '').trim();
+    if (brut) return brut.slice(0, 16);
+    const id = obtenirOuCreerSyncId();
+    return `J-${id.slice(0, 4).toUpperCase()}`;
+}
+
+/** @param {string} pseudo */
+export function persisterPseudoLeaderboard(pseudo) {
+    ecrireStockageSync(CLE_LEADERBOARD_PSEUDO, (pseudo ?? '').trim().slice(0, 16));
 }

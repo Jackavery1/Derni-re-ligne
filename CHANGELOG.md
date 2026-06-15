@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version    | Date       | En bref                                                                                           |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------- |
+| **2.5.21** | 2026-06-16 | Remédiations audits A/B/C/D : splits modules, leaderboard, safe-area, narration post-monde        |
 | **2.5.20** | 2026-06-15 | Timer niveau marathon, enchaînement campagne, contrôles tactiles, UI jeu & équilibrage difficulté |
 | **2.5.19** | 2026-06-15 | Remédiations audits A/B/C/D : sync cloud, haptique, swipe, narration, bundle/CSS                  |
 | **2.5.18** | 2026-06-13 | Audits B/D, E2E dist coop/archi/histoire, teaser biomes, refactor ROBO/cutscenes, responsive 48px |
@@ -34,6 +35,27 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.2.0**  | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                                        |
 | **2.1.0**  | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                                        |
 | **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                                     |
+
+---
+
+## [2.5.21] — 2026-06-16
+
+### Audits A / B / C / D — remédiations
+
+- **A** : 0 hotspot >450 L (splits boss, coop, rendu-blocs, codex, particules, options) ; script `split-audit-hotspots.mjs`
+- **B** : leaderboard global Supabase opt-in, haptique tactile touchstart, exclusion `robo-accueil.png`, E2E timer marathon
+- **C** : safe-area iPhone (`--safe-*`, `safe-area.js`, layout-jeu), E2E encoche simulée, doublons padding supprimés
+- **D** : cutscenes post-monde `{ scene, lignes }`, fragments VERA secrets, fix interludes, E2E histoire (6 scénarios)
+
+### Gameplay & UI
+
+- Modale TRAME non bloquante sur la carte ; fermeture overlays avant lancement partie
+- HUD objectifs + bandeau Trame masqués pendant la partie histoire
+- Favicon / icônes PWA depuis `assets/splash-chargement.png`
+
+### Technique
+
+- SW `dl-shell-v47` ; **676** tests unitaires ; E2E histoire-narratif + prologue-trame-modal
 
 ---
 

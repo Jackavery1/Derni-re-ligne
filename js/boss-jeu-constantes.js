@@ -1,0 +1,1 @@
+export const DUREE_VICTOIRE_BOSS_MS = 2200;

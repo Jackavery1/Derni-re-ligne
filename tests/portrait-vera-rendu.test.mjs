@@ -86,6 +86,14 @@ describe('portrait VERA sprite', () => {
         }
     });
 
+    it('fallback canvas dessine un buste sans rectangles bruts', () => {
+        const ctx = creerCtxMock();
+        const params = obtenirParamsExpressionPortrait('vera', 'neutre', 1000);
+        dessinerPortraitVeraCanon(ctx, 180, 260, 0, params);
+        expect(ctx.ellipse).toHaveBeenCalled();
+        expect(ctx.fillRect.mock.calls.every((c) => c[2] < 70)).toBe(true);
+    });
+
     it('utilise drawImage quand le sprite est chargé', () => {
         vi.mocked(obtenirImagePortraitVera).mockReturnValue({
             width: 512,

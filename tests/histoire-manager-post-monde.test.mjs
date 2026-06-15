@@ -76,4 +76,41 @@ describe('histoire-manager-post-monde', () => {
         expect(afficherCutsceneHistoire).toHaveBeenCalled();
         expect(store.histoire.etat.fragmentsVusIds).toContain('apres_prologue');
     });
+
+    it('enregistre le fragment VERA apres premiere completion vide', async () => {
+        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        await chargerHistoireTextes();
+        const { declencherNarratifPostMonde } =
+            await import('../js/histoire-manager-post-monde.js');
+
+        const monde = { id: 'monde_vide', biomeId: 'vide', estBoss: false };
+        const etat = structuredClone(ETAT_HISTOIRE_VIDE);
+        store.histoire.etat = etat;
+
+        declencherNarratifPostMonde(monde, etat, true, [true, false, false]);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        expect(store.histoire.etat.fragmentsVusIds).toContain('apres_vide');
+    });
+
+    it('joue interlude_gardiens apres premiere completion rouille', async () => {
+        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        await chargerHistoireTextes();
+        const { declencherNarratifPostMonde } =
+            await import('../js/histoire-manager-post-monde.js');
+        const { afficherCutsceneHistoire } = await import('../js/histoire-manager-ui.js');
+
+        const monde = { id: 'monde_rouille', biomeId: 'rouille', estBoss: false };
+        const etat = structuredClone(ETAT_HISTOIRE_VIDE);
+        etat.fragmentsVusIds = ['apres_rouille'];
+        store.histoire.etat = etat;
+
+        declencherNarratifPostMonde(monde, etat, true, [true, false, false]);
+        await vi.waitFor(() => expect(afficherCutsceneHistoire).toHaveBeenCalled());
+
+        const textes = afficherCutsceneHistoire.mock.calls.at(-1)?.[0];
+        const lignes = Array.isArray(textes) ? textes : (textes?.lignes ?? []);
+        expect(lignes.some((l) => String(l.texte ?? l).includes('GARDIEN'))).toBe(true);
+        expect(store.histoire.etat.interludesVusIds).toContain('interlude_gardiens');
+    });
 });

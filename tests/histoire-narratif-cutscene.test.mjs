@@ -59,4 +59,16 @@ describe('histoire-narratif — metadata cutscene', () => {
             expect.objectContaining({ scene: 'trame', personnage: 'narrateur' })
         );
     });
+
+    it('obtenirCutscenePostMonde injecte la scene par defaut sur tableau brut', () => {
+        obtenirHistoireTextesSync.mockReturnValue({
+            CUTSCENES_ENTREE: {},
+            CUTSCENES_POST_MONDE: {
+                monde_lave: [{ personnage: 'robo', texte: 'Le feu brûle plus fort.' }],
+            },
+        });
+        const post = obtenirCutscenePostMonde('monde_lave', true);
+        expect(post?.scene).toBe('seuil_brasier');
+        expect(post?.lignes).toHaveLength(1);
+    });
 });

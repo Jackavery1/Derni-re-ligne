@@ -1,6 +1,7 @@
 import { obtenirTouches } from './touches-config.js';
 import { touchesActives } from './store-jeu.js';
 import { reinitialiserDas } from './piece-jeu.js';
+import { vibrer } from './haptique.js';
 
 /** @type {Record<string, keyof ReturnType<typeof obtenirTouches>>} */
 const ACTION_PAR_BOUTON = {
@@ -10,7 +11,36 @@ const ACTION_PAR_BOUTON = {
     'btn-gauche-p': 'gauche',
     'btn-droite-p': 'droite',
     'btn-bas-p': 'bas',
+    'ccj1-gauche': 'gauche',
+    'ccj1-droite': 'droite',
+    'ccj1-bas': 'bas',
+    'ccj2-gauche': 'gauche',
+    'ccj2-droite': 'droite',
+    'ccj2-bas': 'bas',
 };
+
+/** @type {Record<string, 'rotation' | 'chute' | 'verrou'>} */
+const HAPTIQUE_PAR_BOUTON = {
+    'btn-rotation': 'rotation',
+    'btn-rotation-ccw': 'rotation',
+    'btn-rotation-p': 'rotation',
+    'btn-rotation-ccw-p': 'rotation',
+    'btn-chute': 'chute',
+    'btn-chute-p': 'chute',
+    'btn-reserve': 'verrou',
+    'btn-reserve-p': 'verrou',
+    'ccj1-rot': 'rotation',
+    'ccj1-drop': 'chute',
+    'ccj1-hold': 'verrou',
+    'ccj2-rot': 'rotation',
+    'ccj2-drop': 'chute',
+    'ccj2-hold': 'verrou',
+};
+
+function vibrerBoutonTactile(idBouton) {
+    const type = HAPTIQUE_PAR_BOUTON[idBouton];
+    if (type) vibrer(type);
+}
 
 /**
  * Attache une action à un bouton tactile/souris ; la repetition DAS/ARR passe par mettreAJourDas.
@@ -42,6 +72,7 @@ export function attacherRepetitionBouton(btn, action, avecRepetition = false) {
         'touchstart',
         (e) => {
             e.preventDefault();
+            vibrerBoutonTactile(btn.id);
             debut();
         },
         { passive: false }

@@ -1,31 +1,14 @@
-import {
-    lireStockage,
-    ecrireStockage,
-    chargerBiomeActif,
-    exporterProgressionB10,
-    importerProgressionB10,
-} from './progression.js';
+import { lireStockage, ecrireStockage, chargerBiomeActif } from './progression.js';
 import { haptiqueActif, definirHaptiqueActif } from './haptique.js';
 import {
     controlesTactilesActifs,
     definirControlesTactilesActifs,
     appliquerControlesTactilesDepuisStockage,
 } from './controles-tactiles.js';
-import {
-    syncCloudActif,
-    activerSyncCloud,
-    configurerSupabase,
-    obtenirSupabaseUrl,
-    obtenirSupabaseAnonKey,
-    syncCloudConfigure,
-    obtenirOuCreerSyncId,
-} from './config-sync.js';
-import {
-    obtenirStatutSyncCloud,
-    synchroniserCloudAuDemarrage,
-    pousserCloudMaintenant,
-} from './progression-sync-cloud.js';
+import { obtenirSupabaseUrl, obtenirSupabaseAnonKey, obtenirOuCreerSyncId } from './config-sync.js';
 import { obtenirMixBiome, persisterMixBiome } from './audio-mix-biome.js';
+import { initialiserSyncCloudOptions, mettreAJourUiSyncCloud } from './options-sync-cloud-ui.js';
+import { initialiserSauvegardeProgression } from './options-progression-ui.js';
 import { AudioMoteur } from './audio.js';
 import { obtenirInput, obtenirBouton } from './dom-utils.js';
 import {
@@ -91,37 +74,6 @@ export function mettreAJourBoutonControlesTactiles(btn) {
     btn.textContent = actif ? '👆 TOUCHES TACTILES ON' : '👆 TOUCHES TACTILES OFF';
     btn.setAttribute('aria-pressed', actif ? 'true' : 'false');
     btn.classList.toggle('actif', actif);
-}
-
-function mettreAJourUiSyncCloud() {
-    const actif = syncCloudActif();
-    const btn = document.getElementById('btn-toggle-sync-cloud');
-    const panneau = document.getElementById('panneau-sync-config');
-    const statut = document.getElementById('options-sync-statut');
-    const inputSyncId = /** @type {HTMLInputElement | null} */ (
-        document.getElementById('input-sync-id')
-    );
-    btn?.setAttribute('aria-pressed', actif ? 'true' : 'false');
-    btn?.classList.toggle('actif', actif);
-    panneau?.classList.toggle('element-masque', !actif);
-    if (inputSyncId && actif) {
-        inputSyncId.value = obtenirOuCreerSyncId();
-    }
-    if (statut && actif) {
-        statut.classList.remove('element-masque');
-        const labels = {
-            idle: 'Sync cloud : inactif',
-            sync: 'Sync cloud : en cours…',
-            ok: 'Sync cloud : a jour',
-            erreur: 'Sync cloud : erreur reseau',
-            'hors-ligne': 'Sync cloud : hors ligne',
-            config: 'Sync cloud : URL Supabase invalide',
-        };
-        const cleStatut = syncCloudConfigure() ? obtenirStatutSyncCloud() : 'config';
-        statut.textContent = labels[cleStatut] ?? labels.idle;
-    } else {
-        statut?.classList.add('element-masque');
-    }
 }
 
 export function mettreAJourBoutonsMute() {
@@ -214,7 +166,7 @@ function initialiserRebindingControles() {
     });
 }
 
-export function initialiserOptions() {
+function hydraterOptionsDepuisStockage() {
     const vol = lireStockage('derniereLigne_volume', '1');
     const volMus = lireStockage('derniereLigne_volumeMusique', '1');
     const muet = lireStockage('derniereLigne_muet', 'false') === 'true';
@@ -224,47 +176,9 @@ export function initialiserOptions() {
     appliquerContrasteDepuisStockage();
     appliquerControlesTactilesDepuisStockage();
     chargerAccessibiliteDepuisStockage();
+}
 
-    const slider = obtenirInput('slider-volume');
-    const sliderMus = obtenirInput('slider-musique');
-    const btnMute = obtenirBouton('btn-toggle-mute');
-    const btnContraste = obtenirBouton('btn-toggle-contraste');
-    const btnDaltonien = obtenirBouton('btn-toggle-daltonien');
-    const btnReduireEffets = obtenirBouton('btn-toggle-reduire-effets');
-    const btnHaptique = obtenirBouton('btn-toggle-haptique');
-    const btnControlesTactiles = obtenirBouton('btn-toggle-controles-tactiles');
-    const btnSyncCloud = obtenirBouton('btn-toggle-sync-cloud');
-    const btnSyncMaintenant = obtenirBouton('btn-sync-maintenant');
-    const inputSupabaseUrl = obtenirInput('input-supabase-url');
-    const inputSupabaseKey = obtenirInput('input-supabase-key');
-    const inputSyncId = obtenirInput('input-sync-id');
-    const btnCopierSyncId = obtenirBouton('btn-copier-sync-id');
-    const sliderMixMusBiome = obtenirInput('slider-mix-musique-biome');
-    const sliderMixEffBiome = obtenirInput('slider-mix-effets-biome');
-    if (slider) slider.value = String(Math.round(AudioMoteur.volumeEffets * 100));
-    if (sliderMus) sliderMus.value = String(Math.round(AudioMoteur.volumeMusique * 100));
-    mettreAJourBoutonsMute();
-    if (btnContraste) mettreAJourBoutonContraste(btnContraste);
-    if (btnDaltonien) mettreAJourBoutonDaltonien(btnDaltonien);
-    if (btnReduireEffets) mettreAJourBoutonReduireEffets(btnReduireEffets);
-    const btnConstellationClic = obtenirBouton('btn-toggle-constellation-clic');
-    if (btnConstellationClic) mettreAJourBoutonConstellationClic(btnConstellationClic);
-    if (btnHaptique) mettreAJourBoutonHaptique(btnHaptique);
-    if (btnControlesTactiles) mettreAJourBoutonControlesTactiles(btnControlesTactiles);
-    if (inputSupabaseUrl) inputSupabaseUrl.value = obtenirSupabaseUrl();
-    if (inputSupabaseKey) inputSupabaseKey.value = obtenirSupabaseAnonKey();
-    if (inputSyncId) inputSyncId.value = obtenirOuCreerSyncId();
-    mettreAJourUiSyncCloud();
-
-    const biomeMix = chargerBiomeActif();
-    const mix = obtenirMixBiome(biomeMix);
-    if (sliderMixMusBiome) {
-        sliderMixMusBiome.value = String(Math.round(mix.musique * 100));
-    }
-    if (sliderMixEffBiome) {
-        sliderMixEffBiome.value = String(Math.round(mix.effets * 100));
-    }
-
+function lierEcouteursAudioOptions(slider, sliderMus, btnMute) {
     slider?.addEventListener('input', (e) => {
         const cible = /** @type {HTMLInputElement} */ (e.target);
         AudioMoteur.reglerVolumeEffets(parseInt(cible.value, 10) / 100);
@@ -279,7 +193,16 @@ export function initialiserOptions() {
     });
 
     btnMute?.addEventListener('click', () => AudioMoteur.basculerMute());
+}
 
+function lierEcouteursAccessibiliteOptions({
+    btnContraste,
+    btnDaltonien,
+    btnReduireEffets,
+    btnConstellationClic,
+    btnHaptique,
+    btnControlesTactiles,
+}) {
     btnContraste?.addEventListener('click', () => {
         const actif = document.body.classList.toggle('contraste-eleve');
         ecrireStockage('derniereLigne_contraste', actif.toString());
@@ -313,16 +236,9 @@ export function initialiserOptions() {
         definirControlesTactilesActifs(!controlesTactilesActifs());
         mettreAJourBoutonControlesTactiles(btnControlesTactiles);
     });
+}
 
-    initialiserSyncCloudOptions(
-        btnSyncCloud,
-        btnSyncMaintenant,
-        inputSupabaseUrl,
-        inputSupabaseKey,
-        inputSyncId,
-        btnCopierSyncId
-    );
-
+function lierEcouteursMixBiome(sliderMixMusBiome, sliderMixEffBiome) {
     sliderMixMusBiome?.addEventListener('input', (e) => {
         const cible = /** @type {HTMLInputElement} */ (e.target);
         const biomeId = chargerBiomeActif();
@@ -335,108 +251,74 @@ export function initialiserOptions() {
         persisterMixBiome(biomeId, { effets: parseInt(cible.value, 10) / 100 });
         AudioMoteur.son('deplacement');
     });
+}
+
+export function initialiserOptions() {
+    hydraterOptionsDepuisStockage();
+
+    const slider = obtenirInput('slider-volume');
+    const sliderMus = obtenirInput('slider-musique');
+    const btnMute = obtenirBouton('btn-toggle-mute');
+    const btnContraste = obtenirBouton('btn-toggle-contraste');
+    const btnDaltonien = obtenirBouton('btn-toggle-daltonien');
+    const btnReduireEffets = obtenirBouton('btn-toggle-reduire-effets');
+    const btnHaptique = obtenirBouton('btn-toggle-haptique');
+    const btnControlesTactiles = obtenirBouton('btn-toggle-controles-tactiles');
+    const btnSyncCloud = obtenirBouton('btn-toggle-sync-cloud');
+    const btnSyncMaintenant = obtenirBouton('btn-sync-maintenant');
+    const inputSupabaseUrl = obtenirInput('input-supabase-url');
+    const inputSupabaseKey = obtenirInput('input-supabase-key');
+    const inputSyncId = obtenirInput('input-sync-id');
+    const btnCopierSyncId = obtenirBouton('btn-copier-sync-id');
+    const sliderMixMusBiome = obtenirInput('slider-mix-musique-biome');
+    const sliderMixEffBiome = obtenirInput('slider-mix-effets-biome');
+    const btnConstellationClic = obtenirBouton('btn-toggle-constellation-clic');
+
+    if (slider) slider.value = String(Math.round(AudioMoteur.volumeEffets * 100));
+    if (sliderMus) sliderMus.value = String(Math.round(AudioMoteur.volumeMusique * 100));
+    mettreAJourBoutonsMute();
+    if (btnContraste) mettreAJourBoutonContraste(btnContraste);
+    if (btnDaltonien) mettreAJourBoutonDaltonien(btnDaltonien);
+    if (btnReduireEffets) mettreAJourBoutonReduireEffets(btnReduireEffets);
+    if (btnConstellationClic) mettreAJourBoutonConstellationClic(btnConstellationClic);
+    if (btnHaptique) mettreAJourBoutonHaptique(btnHaptique);
+    if (btnControlesTactiles) mettreAJourBoutonControlesTactiles(btnControlesTactiles);
+    if (inputSupabaseUrl) inputSupabaseUrl.value = obtenirSupabaseUrl();
+    if (inputSupabaseKey) inputSupabaseKey.value = obtenirSupabaseAnonKey();
+    if (inputSyncId) inputSyncId.value = obtenirOuCreerSyncId();
+    mettreAJourUiSyncCloud();
+
+    const biomeMix = chargerBiomeActif();
+    const mix = obtenirMixBiome(biomeMix);
+    if (sliderMixMusBiome) {
+        sliderMixMusBiome.value = String(Math.round(mix.musique * 100));
+    }
+    if (sliderMixEffBiome) {
+        sliderMixEffBiome.value = String(Math.round(mix.effets * 100));
+    }
+
+    lierEcouteursAudioOptions(slider, sliderMus, btnMute);
+    lierEcouteursAccessibiliteOptions({
+        btnContraste,
+        btnDaltonien,
+        btnReduireEffets,
+        btnConstellationClic,
+        btnHaptique,
+        btnControlesTactiles,
+    });
+
+    initialiserSyncCloudOptions(
+        btnSyncCloud,
+        btnSyncMaintenant,
+        inputSupabaseUrl,
+        inputSupabaseKey,
+        inputSyncId,
+        btnCopierSyncId
+    );
+
+    lierEcouteursMixBiome(sliderMixMusBiome, sliderMixEffBiome);
 
     initialiserRebindingControles();
     rafraichirPanneauControles();
     initialiserSauvegardeProgression();
-}
-
-function initialiserSyncCloudOptions(
-    btnSyncCloud,
-    btnSyncMaintenant,
-    inputSupabaseUrl,
-    inputSupabaseKey,
-    inputSyncId,
-    btnCopierSyncId
-) {
-    btnSyncCloud?.addEventListener('click', async () => {
-        const actif = !syncCloudActif();
-        activerSyncCloud(actif);
-        if (actif && inputSupabaseUrl?.value && inputSupabaseKey?.value) {
-            configurerSupabase(inputSupabaseUrl.value, inputSupabaseKey.value);
-        }
-        if (inputSyncId && actif) inputSyncId.value = obtenirOuCreerSyncId();
-        mettreAJourUiSyncCloud();
-        if (actif && syncCloudConfigure()) {
-            await synchroniserCloudAuDemarrage();
-            mettreAJourUiSyncCloud();
-        }
-    });
-
-    const persisterSupabase = () => {
-        configurerSupabase(inputSupabaseUrl?.value ?? '', inputSupabaseKey?.value ?? '');
-        mettreAJourUiSyncCloud();
-    };
-
-    inputSupabaseUrl?.addEventListener('change', persisterSupabase);
-    inputSupabaseKey?.addEventListener('change', persisterSupabase);
-
-    btnCopierSyncId?.addEventListener('click', async () => {
-        const id = obtenirOuCreerSyncId();
-        if (inputSyncId) inputSyncId.value = id;
-        try {
-            await navigator.clipboard.writeText(id);
-        } catch {
-            inputSyncId?.select();
-        }
-    });
-
-    btnSyncMaintenant?.addEventListener('click', async () => {
-        if (!syncCloudActif()) return;
-        configurerSupabase(inputSupabaseUrl?.value ?? '', inputSupabaseKey?.value ?? '');
-        if (!syncCloudConfigure()) {
-            mettreAJourUiSyncCloud();
-            return;
-        }
-        await synchroniserCloudAuDemarrage();
-        await pousserCloudMaintenant();
-        mettreAJourUiSyncCloud();
-    });
-}
-
-function initialiserSauvegardeProgression() {
-    const btnExport = document.getElementById('btn-export-progression');
-    const btnImport = document.getElementById('btn-import-progression');
-    const inputImport = document.getElementById('input-import-progression');
-
-    btnExport?.addEventListener('click', () => {
-        const exportData = exporterProgressionB10();
-        const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-            type: 'application/json',
-        });
-        const url = URL.createObjectURL(blob);
-        const lien = document.createElement('a');
-        lien.href = url;
-        lien.download = `derniere-ligne-records-${exportData.exportedAt.slice(0, 10)}.json`;
-        lien.click();
-        URL.revokeObjectURL(url);
-    });
-
-    btnImport?.addEventListener('click', () => {
-        inputImport?.click();
-    });
-
-    inputImport?.addEventListener('change', async (e) => {
-        const cible = /** @type {HTMLInputElement} */ (e.target);
-        const fichier = cible.files?.[0];
-        cible.value = '';
-        if (!fichier) return;
-
-        try {
-            const texte = await fichier.text();
-            const payload = JSON.parse(texte);
-            const resultat = importerProgressionB10(payload);
-            if (!resultat.ok) {
-                window.alert(resultat.erreur ?? 'Import impossible');
-                return;
-            }
-            const [{ chargerProfilDernier }] = await Promise.all([import('./profil-jeu.js')]);
-            chargerProfilDernier();
-            window.alert(
-                `Import reussi : ${resultat.importes} nouvelle(s) entree(s), ${resultat.fusionnes} fusion(s).`
-            );
-        } catch {
-            window.alert('Fichier de sauvegarde invalide.');
-        }
-    });
 }

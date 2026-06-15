@@ -1,5 +1,6 @@
 import { LAYOUT } from './config.js';
 import { calculerEchelleInterface } from './layout-calcul.js';
+import { lireInsetsSafeArea } from './safe-area.js';
 
 export { calculerEchelleInterface } from './layout-calcul.js';
 import { redimensionnerConstellation } from './constellation.js';
@@ -14,9 +15,18 @@ const SEUIL_PAYSAGE_COMPACT = 768;
 
 /** @returns {{ largeur: number, hauteur: number }} */
 function obtenirDimensionsViewport() {
+    const insets = lireInsetsSafeArea();
     const vv = window.visualViewport;
-    if (vv) return { largeur: vv.width, hauteur: vv.height };
-    return { largeur: window.innerWidth, hauteur: window.innerHeight };
+    if (vv) {
+        return {
+            largeur: Math.max(0, vv.width - insets.left - insets.right),
+            hauteur: Math.max(0, vv.height - insets.top - insets.bottom),
+        };
+    }
+    return {
+        largeur: Math.max(0, window.innerWidth - insets.left - insets.right),
+        hauteur: Math.max(0, window.innerHeight - insets.top - insets.bottom),
+    };
 }
 
 function ecouterViewport(callback) {
@@ -44,7 +54,7 @@ function hauteurControlesTactiles() {
     const { largeur, hauteur } = obtenirDimensionsViewport();
     if (estPaysageCompact()) return 0;
     if (largeur <= SEUIL_PAYSAGE_COMPACT || hauteur <= 600) {
-        return LAYOUT.hauteurControles;
+        return LAYOUT.hauteurControles + lireInsetsSafeArea().bottom;
     }
     return 0;
 }

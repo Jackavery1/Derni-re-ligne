@@ -126,7 +126,7 @@ export const CUTSCENES_ENTREE_FINALE = {
             },
             {
                 personnage: 'robo',
-                texte: 'Les couleurs sont fausses. La gravite est inversee.',
+                texte: 'Les couleurs sont fausses. La gravité est inversée.',
                 humeur: 'alerte',
             },
             {

@@ -81,7 +81,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         { personnage: 'narrateur', texte: 'La Sentinelle commence à se fragmenter en cristaux.' },
         {
             personnage: 'sentinelle',
-            texte: "Si tu trouvés VERA... dis-lui que j'avais tort.",
+            texte: "Si tu trouves VERA... dis-lui que j'avais tort.",
             humeur: 'vacillant',
         },
         {
@@ -237,7 +237,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
             texte: "Moi non plus. Pas avec quelqu'un.",
             humeur: 'neutre',
         },
-        { personnage: 'narrateur', texte: 'Robo pose les pieces.' },
+        { personnage: 'narrateur', texte: 'Robo pose les pièces.' },
         {
             personnage: 'narrateur',
             texte: "La Distorsion, pour la première fois, n'attaque pas.",

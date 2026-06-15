@@ -203,7 +203,7 @@ function dessinerNoeud(etatCarte, monde, pos, etatHist, timestamp) {
     );
 
     if (estDisponible && !estComplete) {
-        dessinerRoboMiniature(ctxCarte, x, y - rayon - 4, timestamp);
+        dessinerRoboMiniature(ctxCarte, x, y - rayon - 10, timestamp);
     }
 
     ctxCarte.restore();

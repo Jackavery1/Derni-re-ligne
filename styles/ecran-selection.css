@@ -19,7 +19,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 24px 20px;
+    padding: calc(24px + var(--safe-top)) calc(20px + var(--safe-right))
+        calc(24px + var(--safe-bottom)) calc(20px + var(--safe-left));
     pointer-events: none;
 }
 #selection-overlay > * {
@@ -252,8 +253,7 @@ body.effets-reduits #sel-info-biome {
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
     justify-content: flex-start;
-    padding-block: max(12px, env(safe-area-inset-top, 0px))
-        max(12px, env(safe-area-inset-bottom, 0px));
+    padding-block: 12px;
 }
 
 .options-contenu {
@@ -363,6 +363,26 @@ body.effets-reduits #sel-info-biome {
     min-width: 0;
     font-size: 0.28rem;
 }
+.options-leaderboard-ligne {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+.options-leaderboard-entete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+}
+.liste-leaderboard-options {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--texte-secondaire, #9ab);
+}
 
 .options-controles-mobile {
     font-size: 0.32rem;
@@ -417,7 +437,7 @@ body.effets-reduits #sel-info-biome {
 
 #notif-maj-sw {
     position: fixed;
-    bottom: 16px;
+    bottom: calc(16px + var(--safe-bottom));
     left: 50%;
     transform: translateX(-50%);
     display: none;
@@ -946,7 +966,8 @@ body.effets-reduits .panneau-detail-progression-fill {
     gap: 16px;
     background: rgba(8, 8, 26, 0.97);
     z-index: 500;
-    padding: 24px;
+    padding: calc(24px + var(--safe-top)) calc(24px + var(--safe-right))
+        calc(24px + var(--safe-bottom)) calc(24px + var(--safe-left));
     text-align: center;
     font-size: 0.55rem;
     color: var(--rose);
@@ -1172,9 +1193,11 @@ body.coop-active #conteneur-principal {
 }
 #controles-coop-j1 {
     left: 0;
+    padding-left: max(8px, var(--safe-left));
 }
 #controles-coop-j2 {
     right: 0;
+    padding-right: max(8px, var(--safe-right));
 }
 
 .btn-coop-tactile {
@@ -1276,19 +1299,16 @@ body.coop-active #conteneur-principal {
     }
 
     #controles-coop-j1 {
-        padding-left: max(8px, env(safe-area-inset-left, 0px));
+        padding-left: max(8px, var(--safe-left));
     }
     #controles-coop-j2 {
-        padding-right: max(8px, env(safe-area-inset-right, 0px));
+        padding-right: max(8px, var(--safe-right));
     }
 }
 
 @media (max-width: 768px) {
     .codex-contenu {
-        padding-top: max(24px, env(safe-area-inset-top, 0px));
-        padding-bottom: max(32px, env(safe-area-inset-bottom, 0px));
-        padding-left: max(16px, env(safe-area-inset-left, 0px));
-        padding-right: max(16px, env(safe-area-inset-right, 0px));
+        padding: 24px 16px 32px;
     }
 
     .codex-liste {

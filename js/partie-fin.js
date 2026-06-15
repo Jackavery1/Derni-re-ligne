@@ -45,10 +45,28 @@ import { oracle, obtenirScoreFinalOracle } from './oracle-jeu.js';
 import { statsGlobales } from './achievements.js';
 import { vibrerFinPartie } from './haptique.js';
 import { arreterFondBiome } from './rendu-fond-biome.js';
+import { planifierSoumissionLeaderboard } from './leaderboard-cloud.js';
+
+function _soumettreLeaderboardSiRecord(nouveauRecordMarathon, nouveauRecordSprint, scoreFinal) {
+    if (modeHistoireEnCours() || modeCoopEnCours()) return;
+    if (!nouveauRecordMarathon && !nouveauRecordSprint) return;
+    const mode = etat.modeJeu === 'sprint' ? 'sprint' : 'marathon';
+    planifierSoumissionLeaderboard({
+        mode,
+        biome: obtenirBiomeActif(),
+        score: scoreFinal,
+        sprintMs: mode === 'sprint' ? obtenirTempsEcoule() : null,
+        niveau: etat.niveau,
+    });
+}
 
 function _enregistrerRecordsFinPartie(victoire, scoreFinal) {
+    let nouveauRecordSprint = false;
     if (victoire && etat.modeJeu === 'sprint' && !modeHistoireEnCours()) {
-        sauvegarderRecordSprintBiome(obtenirBiomeActif(), obtenirTempsEcoule());
+        nouveauRecordSprint = sauvegarderRecordSprintBiome(
+            obtenirBiomeActif(),
+            obtenirTempsEcoule()
+        );
     }
     if (victoire && defiJourActif && !modeHistoireEnCours()) {
         const defi = obtenirDefiDuJour();
@@ -56,6 +74,7 @@ function _enregistrerRecordsFinPartie(victoire, scoreFinal) {
             enregistrerScoreDefiJour(defi.date, scoreFinal);
         }
     }
+    return nouveauRecordSprint;
 }
 
 /** @param {boolean} [victoire] @param {{ immediat?: boolean }} [options] */
@@ -95,7 +114,8 @@ export function terminerPartie(victoire = false, options = {}) {
     _appliquerStatsOracleFinPartie(scoreFinal);
 
     const nouveauRecord = sauvegarderRecord(scoreFinal);
-    _enregistrerRecordsFinPartie(victoire, scoreFinal);
+    const nouveauRecordSprint = _enregistrerRecordsFinPartie(victoire, scoreFinal);
+    _soumettreLeaderboardSiRecord(nouveauRecord, nouveauRecordSprint, scoreFinal);
     _appliquerProgressionFinPartie(scoreFinal);
 
     mettreAJourAffichageRecord();

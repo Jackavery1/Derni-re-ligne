@@ -204,6 +204,11 @@ body.histoire-active #section-objectifs-histoire {
     display: flex;
 }
 
+body.histoire-active.partie-active #section-objectifs-histoire,
+body.histoire-active.partie-active #bandeau-trame-run {
+    display: none !important;
+}
+
 .objectif-hud-titre {
     font-size: 0.28rem;
     letter-spacing: 1px;

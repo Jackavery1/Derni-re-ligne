@@ -192,6 +192,30 @@
                         </button>
                     </div>
                 </div>
+                <div class="options-leaderboard-ligne" id="panneau-leaderboard-options">
+                    <label class="option-label" for="input-leaderboard-pseudo"
+                        >PSEUDO CLASSEMENT</label
+                    >
+                    <input
+                        class="option-texte"
+                        type="text"
+                        id="input-leaderboard-pseudo"
+                        maxlength="16"
+                        placeholder="Votre pseudo"
+                        autocomplete="nickname"
+                    />
+                    <div class="options-leaderboard-entete">
+                        <span class="option-label">TOP MARATHON (biome actif)</span>
+                        <button
+                            class="bouton discret"
+                            type="button"
+                            id="btn-rafraichir-leaderboard"
+                        >
+                            ↻ ACTUALISER
+                        </button>
+                    </div>
+                    <ol id="liste-leaderboard-options" class="liste-leaderboard-options"></ol>
+                </div>
             </div>
             <p
                 class="options-controles-mobile element-masque"

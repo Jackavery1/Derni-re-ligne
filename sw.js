@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v46';
+const VERSION_SHELL = 'dl-shell-v47';
 const VERSION_MEDIAS = 'dl-medias-v4';
 
 const SCENES_CUTSCENE_PRECACHE = [
@@ -109,9 +109,12 @@ const FICHIERS_A_CACHER = [
     './js/biomes-histoire.js',
     './js/biomes.js',
     './js/boss-attaques.js',
+    './js/boss-combat.js',
     './js/boss-dialogues.js',
+    './js/boss-jeu-constantes.js',
     './js/boss-jeu.js',
     './js/boss-rendu.js',
+    './js/boss-ui-hud.js',
     './js/boucle-jeu.js',
     './js/bus-jeu.js',
     './js/charger-ecrans.js',
@@ -137,6 +140,7 @@ const FICHIERS_A_CACHER = [
     './js/coop-das.js',
     './js/coop-input.js',
     './js/coop-jeu.js',
+    './js/coop-lignes-score.js',
     './js/coop-logique.js',
     './js/coop-preference.js',
     './js/coop-rendu.js',
@@ -193,6 +197,7 @@ const FICHIERS_A_CACHER = [
     './js/input-repetition.js',
     './js/layout-calcul.js',
     './js/layout-jeu.js',
+    './js/leaderboard-cloud.js',
     './js/logger.js',
     './js/logique-partie-hold.js',
     './js/logique-partie-mouvement.js',
@@ -224,6 +229,8 @@ const FICHIERS_A_CACHER = [
     './js/navigation-ecrans.js',
     './js/neo-test-api.js',
     './js/notifications-file.js',
+    './js/options-progression-ui.js',
+    './js/options-sync-cloud-ui.js',
     './js/options-ui.js',
     './js/oracle-jeu.js',
     './js/particules-jeu.js',
@@ -260,8 +267,11 @@ const FICHIERS_A_CACHER = [
     './js/rendu-accessibilite.js',
     './js/rendu-ambiance-fonds.js',
     './js/rendu-ambiance-histoire.js',
+    './js/rendu-ambiance-particules-init.js',
     './js/rendu-ambiance-particules.js',
     './js/rendu-ambiance.js',
+    './js/rendu-blocs-styles-nature.js',
+    './js/rendu-blocs-styles-tech.js',
     './js/rendu-blocs-styles.js',
     './js/rendu-blocs-utils.js',
     './js/rendu-blocs.js',
@@ -279,6 +289,7 @@ const FICHIERS_A_CACHER = [
     './js/rendu-robo-visage.js',
     './js/rendu-robo.js',
     './js/rendu-vivant.js',
+    './js/safe-area.js',
     './js/scenes-cutscene.js',
     './js/score-partie.js',
     './js/store-core.js',
@@ -306,7 +317,6 @@ const FICHIERS_A_CACHER = [
     './img/icon-192.png',
     './img/icon-512.png',
     './img/icon-maskable-512.png',
-    './img/robo-accueil.png',
     /* PRECACHE:FIN */
 ];
 

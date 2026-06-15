@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, devices } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {
     demarrerPartie,
@@ -305,4 +305,32 @@ test('ecran chargement — padding safe-area declare', async ({ page }) => {
         return getComputedStyle(el).paddingTop;
     });
     expect(padding).toBeTruthy();
+});
+
+test('iphone — contenu menu titre respecte encoche simulee', async ({ browser }) => {
+    const context = await browser.newContext({ ...devices['iPhone 14'] });
+    const page = await context.newPage();
+    await preparerPageSansSw(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+
+    await page.evaluate(() => {
+        document.documentElement.style.setProperty('--safe-top', '47px');
+        document.documentElement.style.setProperty('--safe-bottom', '34px');
+    });
+
+    const metriques = await page.evaluate(() => {
+        const btn = document.getElementById('btn-jouer');
+        const ecran = document.getElementById('ecran-titre');
+        const btnRect = btn?.getBoundingClientRect();
+        const ecranRect = ecran?.getBoundingClientRect();
+        return {
+            topEcran: ecranRect?.top ?? -1,
+            topBouton: btnRect?.top ?? -1,
+        };
+    });
+    expect(metriques.topEcran).toBeGreaterThanOrEqual(46);
+    expect(metriques.topBouton).toBeGreaterThanOrEqual(46);
+
+    await context.close();
 });

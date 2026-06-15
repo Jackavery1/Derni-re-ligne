@@ -196,11 +196,36 @@ export function typeFinVersCleBoss(finId) {
  * Retourne la cutscene post-monde pour un monde donne (ou null).
  * @param {string} mondeId
  * @param {boolean} premiereCompletion
- * @returns {{ lignes: Array<{ personnage?: string, texte: string, scene?: string, humeur?: string }> } | null}
+ * @returns {{ scene?: string, lignes: Array<{ personnage?: string, texte: string, scene?: string, humeur?: string }> } | null}
  */
+export const SCENE_DEFAUT_POST_MONDE = {
+    monde_prologue: 'labo',
+    monde_lave: 'seuil_brasier',
+    monde_rouille: 'labo',
+    monde_ocean: 'observatoire',
+    monde_foret: 'fragmentation',
+    monde_glace: 'seuil_sentinelle',
+    monde_desert: 'observatoire',
+    monde_eclipse: 'fragmentation',
+    monde_cyber: 'labo',
+    monde_fuochi: 'seuil_brasier',
+    monde_cosmos: 'observatoire',
+    monde_vide: 'vide_errance',
+    monde_miroir: 'fragmentation',
+    monde_trame: 'trame',
+    monde_paradoxe: 'trame',
+};
+
 export function obtenirCutscenePostMonde(mondeId, premiereCompletion) {
     if (!premiereCompletion) return null;
-    const lignesRaw = _textes().CUTSCENES_POST_MONDE[mondeId];
-    if (!lignesRaw?.length) return null;
-    return { lignes: lignesRaw };
+    const entree = _textes().CUTSCENES_POST_MONDE[mondeId];
+    const lignes = _extraireLignesCutscene(entree);
+    if (!lignes.length) return null;
+    if (Array.isArray(entree)) {
+        const scene = lignes[0]?.scene ?? SCENE_DEFAUT_POST_MONDE[mondeId] ?? null;
+        return scene ? { scene, lignes: entree } : { lignes: entree };
+    }
+    if (entree?.scene) return entree;
+    const scene = SCENE_DEFAUT_POST_MONDE[mondeId];
+    return scene ? { scene, lignes } : { lignes };
 }

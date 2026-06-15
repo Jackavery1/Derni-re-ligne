@@ -41,10 +41,10 @@ export const CUTSCENES_ENTREE_DESERT = {
                 texte: 'La frontière entre les deux bouge constamment.',
                 humeur: 'neutre',
             },
-            { personnage: 'robo', texte: 'Je comprends cette hesitation.', humeur: 'triste' },
+            { personnage: 'robo', texte: 'Je comprends cette hésitation.', humeur: 'triste' },
             {
                 personnage: 'narrateur',
-                texte: 'Dans la zone de transition : les pieces tombent differemment selon leur altitude.',
+                texte: 'Dans la zone de transition : les pièces tombent différemment selon leur altitude.',
             },
             {
                 personnage: 'robo',

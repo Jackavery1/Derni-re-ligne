@@ -47,7 +47,7 @@ export const CUTSCENES_ENTREE_PROLOGUE = {
         {
             scene: 'labo',
             personnage: 'narrateur',
-            texte: 'Le signal de VERA disparaît. Il reste la grille. Et les pieces.',
+            texte: 'Le signal de VERA disparaît. Il reste la grille. Et les pièces.',
         },
     ],
 
@@ -77,7 +77,7 @@ export const CUTSCENES_ENTREE_PROLOGUE = {
         lignes: [
             {
                 personnage: 'robo',
-                texte: 'Ces machines... elles produisent des pieces.',
+                texte: 'Ces machines... elles produisent des pièces.',
                 humeur: 'neutre',
             },
             {
@@ -92,7 +92,7 @@ export const CUTSCENES_ENTREE_PROLOGUE = {
             },
             {
                 personnage: 'narrateur',
-                texte: 'La rouille gagne. Le metal se souvient de sa propre finitude.',
+                texte: 'La rouille gagne. Le métal se souvient de sa propre finitude.',
             },
         ],
     },

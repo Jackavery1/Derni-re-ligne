@@ -11,6 +11,7 @@ import {
     mettreAJourAffichageRecord,
 } from './ecrans-ui.js';
 import { obtenirRecordCoopBiome, sauvegarderRecordCoopBiome } from './progression.js';
+import { planifierSoumissionLeaderboard } from './leaderboard-cloud.js';
 import { finaliserPartieCommune } from './partie-fin-commun.js';
 import { planifierBoucle, suspendreBoucleSolo } from './boucle-jeu.js';
 import { obtenirBouton } from './dom-utils.js';
@@ -206,7 +207,15 @@ export function terminerCooperatif(joueurFautif) {
     }
 
     // Record coop separe : ne doit pas ecraser le record solo du biome.
-    sauvegarderRecordCoopBiome(obtenirBiomeActif(), coop.score);
+    const nouveauRecordCoop = sauvegarderRecordCoopBiome(obtenirBiomeActif(), coop.score);
+    if (nouveauRecordCoop) {
+        planifierSoumissionLeaderboard({
+            mode: 'coop',
+            biome: obtenirBiomeActif(),
+            score: coop.score,
+            niveau: coop.niveau,
+        });
+    }
     mettreAJourAffichageRecord();
     if (elRecord) {
         elRecord.textContent = obtenirRecordCoopBiome(obtenirBiomeActif()).toLocaleString('fr-FR');

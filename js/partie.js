@@ -185,8 +185,12 @@ function initialiserAudioPartie() {
 }
 
 function initialiserUIPartie() {
+    void import('./layout-jeu.js').then(({ adapterInterface }) => adapterInterface());
     const ctxReserve = obtenirCtxReserve();
     const canvasReserve = obtenirCanvasReserve();
+    if (!ctxReserve || !canvasReserve) {
+        throw new Error('Canvas reserve indisponible');
+    }
     ctxReserve.clearRect(0, 0, canvasReserve.width, canvasReserve.height);
     dessinerFileNext();
     mettreAJourIndicateurRelique();

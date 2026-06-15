@@ -19,8 +19,9 @@ import {
 import { modeDevActif } from './mode-dev-etat.js';
 import { obtenirActionsHistoire, configurerActionsHistoire } from './histoire-actions.js';
 import { arreterSuiviMonde, demarrerSuiviMonde } from './gestionnaire-difficulte.js';
-import { fermerOverlayObjectifsPre } from './ui-panneau-objectifs.js';
+import { fermerOverlaysFluxPartie } from './ui-panneau-objectifs.js';
 import { activerModeHistoire } from './mode-histoire.js';
+import { cacherEcrans } from './navigation-ecrans.js';
 
 /** @param {string} mondeId */
 export function demarrerMondeHistoire(mondeId) {
@@ -48,6 +49,11 @@ async function _demarrerMondeHistoireInterne(mondeId) {
     }
 
     masquerPanneauDetails();
+    const trame = document.getElementById('overlay-trame-conditions');
+    if (trame) {
+        trame.classList.remove('objectif-overlay-visible');
+        trame.classList.add('element-masque');
+    }
 
     const dejaJoue =
         etat.mondesCompletes.includes(mondeId) || (etat.mondesDejaMontres ?? []).includes(mondeId);
@@ -99,6 +105,8 @@ function _apresPresentationMonde(monde) {
 /** @param {typeof SEQUENCE_HISTOIRE[number]} monde */
 function _lancerPartieHistoire(monde) {
     obtenirActionsHistoire().arreterCarte?.();
+    fermerOverlaysFluxPartie();
+    cacherEcrans();
 
     activerModeHistoire();
     store.histoire.mondeActuel = monde.id;
@@ -106,15 +114,20 @@ function _lancerPartieHistoire(monde) {
     definirBiomeActif(monde.biomeId);
     sauvegarderBiomeActif(monde.biomeId);
 
-    void import('./navigation-ecrans.js').then(({ cacherEcrans }) => cacherEcrans());
     document.body.classList.add('histoire-active');
 
     if (!store.histoire.difficulte?.actif) {
         demarrerSuiviMonde(monde.id);
     }
 
+    const demarrerJeu = obtenirActions().demarrerJeu;
+    if (!demarrerJeu) {
+        logger.error('[histoire] demarrerJeu indisponible');
+        return;
+    }
+
     try {
-        obtenirActions().demarrerJeu?.();
+        demarrerJeu();
     } catch (err) {
         logger.error('[histoire] demarrerJeu:', err);
     }
@@ -138,6 +151,7 @@ export async function enchainerCampagneApresMonde(mondeId) {
 
     if (suivantId) {
         afficherBoutonCarteGameOver(false);
+        fermerOverlaysFluxPartie();
         cacherEcrans();
         demarrerMondeHistoire(suivantId);
         return true;
@@ -193,8 +207,7 @@ export function relancerMondeActuel() {
         return;
     }
 
-    fermerOverlayObjectifsPre();
-
+    fermerOverlaysFluxPartie();
     document.body.classList.remove('partie-active');
     obtenirActionsHistoire().arreterCarte?.();
     activerModeHistoire();
@@ -203,11 +216,12 @@ export function relancerMondeActuel() {
     definirBiomeActif(monde.biomeId);
     sauvegarderBiomeActif(monde.biomeId);
 
-    void import('./navigation-ecrans.js').then(({ cacherEcrans }) => cacherEcrans());
+    cacherEcrans();
     document.body.classList.add('histoire-active');
 
     demarrerSuiviMonde(mondeId);
-    obtenirActions().demarrerJeu?.();
+    const demarrerJeu = obtenirActions().demarrerJeu;
+    if (demarrerJeu) demarrerJeu();
 }
 
 export function retournerAuMondeActuel() {

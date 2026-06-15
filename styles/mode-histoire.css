@@ -95,6 +95,83 @@
     align-items: center;
 }
 
+.histoire-prog-trame-btn {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+    background: rgba(255, 45, 120, 0.08);
+    border: 1px solid rgba(255, 45, 120, 0.35);
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.histoire-prog-trame-btn:hover,
+.histoire-prog-trame-btn:focus-visible {
+    background: rgba(255, 45, 120, 0.16);
+    border-color: rgba(255, 45, 120, 0.6);
+    outline: none;
+}
+
+.histoire-trame-panneau {
+    text-align: left;
+    max-width: 440px;
+}
+
+.histoire-trame-intro {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 0 0 16px;
+    line-height: 1.45;
+}
+
+.histoire-trame-detail-liste {
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.histoire-trame-detail-liste li {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.72rem;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.82);
+    padding: 8px 10px;
+    border-left: 3px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.histoire-trame-detail-liste .histoire-trame-condition-ok {
+    color: var(--cyan, #00ddc8);
+    border-left-color: var(--cyan, #00ddc8);
+    background: rgba(0, 221, 200, 0.06);
+}
+
+#overlay-trame-conditions .objectif-btn-commencer {
+    width: 100%;
+}
+
+/* La carte reste cliquable (REJOUER, noeuds) pendant que la modale TRAME est ouverte */
+#overlay-trame-conditions.objectif-overlay-visible {
+    pointer-events: none;
+    background: transparent;
+}
+
+#overlay-trame-conditions.objectif-overlay-visible .histoire-trame-panneau {
+    pointer-events: auto;
+    box-shadow:
+        0 0 40px rgba(0, 0, 0, 0.85),
+        0 0 24px rgba(0, 245, 255, 0.15),
+        inset 0 0 40px rgba(0, 245, 255, 0.04);
+}
+
 #histoire-monde-details {
     display: flex;
     position: absolute;

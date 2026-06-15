@@ -1,9 +1,9 @@
 
-# Genere les icones PWA (PNG reels) depuis img/robo-favicon.png (JPEG 1024x1024).
+# Genere les icones PWA (PNG reels) depuis assets/splash-chargement.png.
 Add-Type -AssemblyName System.Drawing
 
 $racine = Split-Path -Parent $PSScriptRoot
-$src = [System.Drawing.Image]::FromFile((Join-Path $racine 'img/robo-favicon.png'))
+$src = [System.Drawing.Image]::FromFile((Join-Path $racine 'assets/splash-chargement.png'))
 
 function Save-Resized($img, $size, $path) {
     $bmp = New-Object System.Drawing.Bitmap($size, $size)
@@ -24,7 +24,7 @@ $size = 512
 $bmp = New-Object System.Drawing.Bitmap($size, $size)
 $g = [System.Drawing.Graphics]::FromImage($bmp)
 $g.InterpolationMode = 'HighQualityBicubic'
-$g.Clear([System.Drawing.ColorTranslator]::FromHtml('#08081a'))
+$g.Clear([System.Drawing.ColorTranslator]::FromHtml('#120818'))
 $inner = [int]($size * 0.78)
 $off = [int](($size - $inner) / 2)
 $g.DrawImage($src, $off, $off, $inner, $inner)

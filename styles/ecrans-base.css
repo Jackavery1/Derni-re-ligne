@@ -3,7 +3,10 @@
         ================================================ */
 .ecran {
     position: fixed;
-    inset: 0;
+    top: var(--safe-top);
+    right: var(--safe-right);
+    bottom: var(--safe-bottom);
+    left: var(--safe-left);
     display: none;
     flex-direction: column;
     align-items: center;

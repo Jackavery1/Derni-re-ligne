@@ -15,6 +15,8 @@ import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
 import { SEQUENCE_HISTOIRE } from '../js/histoire-donnees.js';
 import { HUMEURS_PERSONNAGES } from '../js/expressions-cutscene.js';
 import { idPortraitRendu } from '../js/histoire-cutscene-config.js';
+import { CLE_FRAGMENT_PAR_MONDE } from '../js/histoire-manager-post-monde.js';
+import { SCENE_DEFAUT_POST_MONDE } from '../js/histoire-narratif.js';
 
 const BOSS_CONNUS = new Set(['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion']);
 
@@ -95,8 +97,9 @@ describe('histoire-textes — cohérence portraits', () => {
         expect(DIALOGUES_COMBAT_BOSS.distorsion.phases).toHaveLength(3);
     });
 
-    it('INTERLUDES contient gardiens et veille', () => {
+    it('INTERLUDES contient gardiens, elle et veille', () => {
         expect(extraireLignesCutscene(INTERLUDES.interlude_gardiens).length).toBeGreaterThan(3);
+        expect(extraireLignesCutscene(INTERLUDES.interlude_elle).length).toBeGreaterThan(3);
         expect(extraireLignesCutscene(INTERLUDES.interlude_veille).length).toBeGreaterThan(3);
     });
 
@@ -109,7 +112,41 @@ describe('histoire-textes — cohérence portraits', () => {
     });
 
     it('CUTSCENES_POST_MONDE.monde_trame existe avec au moins 8 lignes', () => {
-        expect(CUTSCENES_POST_MONDE.monde_trame?.length).toBeGreaterThanOrEqual(8);
+        expect(
+            extraireLignesCutscene(CUTSCENES_POST_MONDE.monde_trame)?.length
+        ).toBeGreaterThanOrEqual(8);
+    });
+
+    it('chaque cutscene post-monde expose un fond de scene valide', () => {
+        const ids = new Set(Object.keys(SCENES_CUTSCENE));
+        for (const mondeId of Object.keys(CUTSCENES_POST_MONDE)) {
+            const entree = CUTSCENES_POST_MONDE[mondeId];
+            const scene =
+                entree?.scene ??
+                extraireLignesCutscene(entree)[0]?.scene ??
+                SCENE_DEFAUT_POST_MONDE[mondeId];
+            expect(scene && ids.has(scene), `${mondeId} → ${scene}`).toBe(true);
+        }
+    });
+
+    it('narration francaise sans typos connues audit D', () => {
+        const motifs = [
+            /\btu as avance\b/i,
+            /\becran principal\b/i,
+            /Si tu trouvés/i,
+            /\bpieces\b/i,
+            /\bhesitation\b/i,
+            /\bgravite est inversee\b/i,
+            /\bdifferemment\b/i,
+        ];
+        const corpus = REGISTRES_NARRATIFS.flatMap(([, objet]) =>
+            Object.values(objet).flatMap((entree) =>
+                extraireLignesCutscene(entree).map((l) => l.texte)
+            )
+        ).join('\n');
+        for (const motif of motifs) {
+            expect(corpus).not.toMatch(motif);
+        }
     });
 
     it('entree Codex Paradoxe sans accents dans le corps', () => {
@@ -145,37 +182,37 @@ describe('histoire-textes — cohérence portraits', () => {
         expect(entreeTrame.some((l) => l.scene === 'trame')).toBe(true);
     });
 
-    it('FRAGMENTS_VERA_SIGNAL couvre les mondes narratifs principaux', () => {
-        for (const cle of [
-            'apres_prologue',
-            'apres_ocean',
-            'apres_foret',
-            'apres_glace',
-            'apres_desert',
-            'apres_eclipse',
-            'apres_lave',
-            'apres_rouille',
-            'apres_cyber',
-            'apres_fuochi',
-            'apres_cosmos',
-            'apres_vide',
-        ]) {
+    it('CLE_FRAGMENT_PAR_MONDE couvre chaque fragment narratif', () => {
+        for (const cle of Object.values(CLE_FRAGMENT_PAR_MONDE)) {
             expect(FRAGMENTS_VERA_SIGNAL[cle]?.length, cle).toBeGreaterThan(0);
         }
+        expect(CLE_FRAGMENT_PAR_MONDE.monde_vide).toBe('apres_vide');
     });
 
     it('chaque monde narratif visible a une cutscene post-monde', () => {
         const mondes = SEQUENCE_HISTOIRE.filter((m) => !m.estBoss && !m.estCache);
         for (const monde of mondes) {
-            expect(CUTSCENES_POST_MONDE[monde.id]?.length, monde.id).toBeGreaterThan(0);
+            const entree = CUTSCENES_POST_MONDE[monde.id];
+            const nb = extraireLignesCutscene(entree).length;
+            expect(nb, monde.id).toBeGreaterThan(0);
         }
     });
 
     it('mondes secrets ont une cutscene post-monde ou entree dediee', () => {
-        for (const id of ['monde_miroir', 'monde_trame']) {
-            expect(CUTSCENES_POST_MONDE[id]?.length ?? 0, id).toBeGreaterThan(0);
+        for (const id of ['monde_miroir', 'monde_trame', 'monde_paradoxe']) {
+            expect(
+                CUTSCENES_POST_MONDE[id]?.lignes?.length ?? CUTSCENES_POST_MONDE[id]?.length ?? 0,
+                id
+            ).toBeGreaterThan(0);
         }
         expect(CUTSCENES_ENTREE.monde_paradoxe).toBeTruthy();
+    });
+
+    it('chaque cutscene post-monde declare une scene explicite', () => {
+        for (const [mondeId, entree] of Object.entries(CUTSCENES_POST_MONDE)) {
+            const scene = entree?.scene ?? extraireLignesCutscene(entree)[0]?.scene;
+            expect(scene, mondeId).toBeTruthy();
+        }
     });
 
     it('chaque monde de SEQUENCE_HISTOIRE a une cutscene entree', () => {

@@ -34,12 +34,9 @@ export default [
             'js/histoire-textes.js',
             'js/portraits-cutscene.js',
             'js/portraits-cutscene-personnages.js',
-            'js/codex-illustrations-histoire.js',
             'js/boss-rendu.js',
-            'js/rendu-ambiance-particules.js',
             'js/icones-pixel.js',
             'js/coop-logique.js',
-            'js/rendu-blocs-styles.js',
         ],
         rules: {
             'max-lines': 'off',

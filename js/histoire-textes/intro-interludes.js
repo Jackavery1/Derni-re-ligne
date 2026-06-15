@@ -220,6 +220,7 @@ export const OUTRO_FINS = {
         {
             personnage: 'robo',
             texte: "Quelque part, en ce moment, quelqu'un commence une partie. Empile trois pièces. Et abandonne.",
+            humeur: 'triste',
         },
         {
             personnage: 'robo',
@@ -311,6 +312,7 @@ export const OUTRO_FINS = {
         {
             personnage: 'robo',
             texte: "Une dernière chose. Le Brasier, la Sentinelle, l'Archiviste, l'Avant-Garde — ils sont encore quelque part là-dedans, n'est-ce pas ?",
+            humeur: 'neutre',
         },
         {
             personnage: 'distorsion',

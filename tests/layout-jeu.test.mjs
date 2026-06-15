@@ -51,6 +51,10 @@ describe('layout-jeu', () => {
             addEventListener: vi.fn(),
         });
 
+        vi.stubGlobal('getComputedStyle', () => ({
+            getPropertyValue: () => '0px',
+        }));
+
         const elements = new Map([
             ['interface-echelle', { style: creerElementStyle() }],
             ['interface-jeu', { style: creerElementStyle() }],
@@ -59,6 +63,7 @@ describe('layout-jeu', () => {
         ]);
 
         vi.stubGlobal('document', {
+            documentElement: {},
             getElementById: (id) => elements.get(id) ?? null,
         });
     });
@@ -156,5 +161,45 @@ describe('layout-jeu', () => {
             .style.setProperty.mock.calls.findLast((c) => c[0] === '--iface-scale')?.[1];
 
         expect(Number(scaleCompact)).toBeLessThan(Number(scaleLarge));
+    });
+
+    it('adapterInterface reduit l echelle quand les insets safe-area sont actifs', () => {
+        window.innerWidth = 390;
+        window.innerHeight = 500;
+        window.visualViewport = null;
+
+        vi.stubGlobal('getComputedStyle', (el) => {
+            if (el === document.documentElement) {
+                return {
+                    getPropertyValue: (cle) =>
+                        ({
+                            '--safe-top': '80px',
+                            '--safe-right': '0px',
+                            '--safe-bottom': '80px',
+                            '--safe-left': '0px',
+                        })[cle] ?? '0px',
+                };
+            }
+            return { getPropertyValue: () => '0px' };
+        });
+
+        adapterInterface();
+        const scaleAvecEncoche = Number(
+            document
+                .getElementById('interface-jeu')
+                .style.setProperty.mock.calls.findLast((c) => c[0] === '--iface-scale')?.[1]
+        );
+
+        vi.stubGlobal('getComputedStyle', () => ({
+            getPropertyValue: () => '0px',
+        }));
+        adapterInterface();
+        const scaleSansEncoche = Number(
+            document
+                .getElementById('interface-jeu')
+                .style.setProperty.mock.calls.findLast((c) => c[0] === '--iface-scale')?.[1]
+        );
+
+        expect(scaleAvecEncoche).toBeLessThan(scaleSansEncoche);
     });
 });

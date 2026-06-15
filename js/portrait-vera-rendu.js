@@ -7,6 +7,8 @@ export const PALETTE_VERA = {
     COMBINAISON: '#e8edf5',
     COMBINAISON_OMBRE: '#b8c4d6',
     LISERES: '#3da8e0',
+    CASQUE: '#9ecde8',
+    ECRUTEURS: '#7ab4d8',
     VISIERE: '#7fd4f0',
     VISIERE_REFLET: '#c8ecf8',
     VISIERE_SOMBRE: '#3a7a96',
@@ -17,6 +19,8 @@ export const PALETTE_VERA = {
     PEAU_OMBRE: '#c89484',
     CHEVEUX: '#8a4a3a',
     CHEVEUX_REFLET: '#a8604a',
+    SOURCILS: '#6a4a3a',
+    LEVRES: '#c8786a',
     HALO: '#ff2d78',
     HALO_DOUX: '#ff5a98',
 };
@@ -201,7 +205,23 @@ function _dessinerExpressionVera(ctx, w, h, s, cx, params) {
     ctx.lineWidth = 1.4 * s;
     ctx.lineCap = 'round';
 
-    if (sourcils) {
+    if (douce) {
+        ctx.strokeStyle = PALETTE_VERA.SOURCILS;
+        ctx.beginPath();
+        ctx.moveTo(cx - 18 * s, h * 0.27);
+        ctx.quadraticCurveTo(cx - 10 * s, h * 0.265, cx - 6 * s, h * 0.27);
+        ctx.moveTo(cx + 6 * s, h * 0.27);
+        ctx.quadraticCurveTo(cx + 10 * s, h * 0.265, cx + 18 * s, h * 0.27);
+        ctx.stroke();
+        ctx.strokeStyle = PALETTE_VERA.SOURCILS;
+        ctx.lineWidth = 1.1 * s;
+        ctx.beginPath();
+        ctx.moveTo(cx - 10 * s, h * 0.33);
+        ctx.lineTo(cx - 4 * s, h * 0.335);
+        ctx.moveTo(cx + 4 * s, h * 0.335);
+        ctx.lineTo(cx + 10 * s, h * 0.33);
+        ctx.stroke();
+    } else if (sourcils) {
         ctx.beginPath();
         ctx.moveTo(cx - 18 * s, h * 0.26);
         ctx.lineTo(cx - 8 * s, h * 0.275);
@@ -217,7 +237,7 @@ function _dessinerExpressionVera(ctx, w, h, s, cx, params) {
         ctx.stroke();
     }
 
-    ctx.strokeStyle = PALETTE_VERA.PEAU_OMBRE;
+    ctx.strokeStyle = PALETTE_VERA.LEVRES;
     ctx.lineWidth = 1.3 * s;
     if (douce) {
         ctx.beginPath();
@@ -253,10 +273,35 @@ function _dessinerExpressionVera(ctx, w, h, s, cx, params) {
  */
 function _dessinerFallbackVera(ctx, w, h) {
     const cx = w * 0.5;
+    const s = w / 180;
+
     ctx.fillStyle = PALETTE_VERA.COMBINAISON;
-    ctx.fillRect(cx - w * 0.22, h * 0.45, w * 0.44, h * 0.48);
+    ctx.beginPath();
+    ctx.moveTo(cx - 44 * s, h * 0.92);
+    ctx.quadraticCurveTo(cx - 50 * s, h * 0.58, cx - 30 * s, h * 0.5);
+    ctx.lineTo(cx + 30 * s, h * 0.5);
+    ctx.quadraticCurveTo(cx + 50 * s, h * 0.58, cx + 44 * s, h * 0.92);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = PALETTE_VERA.PEAU;
+    ctx.beginPath();
+    ctx.ellipse(cx, h * 0.38, 22 * s, 26 * s, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = PALETTE_VERA.CASQUE;
+    ctx.beginPath();
+    ctx.ellipse(cx, h * 0.3, 28 * s, 18 * s, 0, Math.PI, 0);
+    ctx.fill();
+
     ctx.fillStyle = PALETTE_VERA.VISIERE;
-    ctx.fillRect(cx - w * 0.28, h * 0.22, w * 0.56, h * 0.14);
+    ctx.fillRect(cx - 30 * s, h * 0.24, 60 * s, 14 * s);
+
+    ctx.fillStyle = PALETTE_VERA.ECRUTEURS;
+    ctx.beginPath();
+    ctx.ellipse(cx - 34 * s, h * 0.36, 6 * s, 10 * s, 0, 0, Math.PI * 2);
+    ctx.ellipse(cx + 34 * s, h * 0.36, 6 * s, 10 * s, 0, 0, Math.PI * 2);
+    ctx.fill();
 }
 
 /**

@@ -14,6 +14,8 @@
 
 body.partie-active #conteneur-principal {
     display: flex;
+    box-sizing: border-box;
+    padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
 }
 
 #interface-echelle,

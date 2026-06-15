@@ -3,6 +3,7 @@ import {
     preparerPageSansSw,
     attendreApplicationPrete,
     ouvrirCarteHistoire,
+    demarrerPartie,
     ETAT_HISTOIRE_BOSS_BRASIER,
 } from './helpers.mjs';
 
@@ -24,6 +25,26 @@ async function preparerSyncCloud(page) {
                 status: 200,
                 contentType: 'application/json',
                 body: JSON.stringify([{ payload, updated_at: payload.exportedAt }]),
+            });
+            return;
+        }
+        if (method === 'POST') {
+            await route.fulfill({ status: 201, body: '' });
+            return;
+        }
+        await route.continue();
+    });
+
+    await page.route('**/rest/v1/leaderboard_entries*', async (route) => {
+        const method = route.request().method();
+        if (method === 'GET') {
+            await route.fulfill({
+                status: 200,
+                contentType: 'application/json',
+                body: JSON.stringify([
+                    { pseudo: 'Neo', score: 15000, sprint_ms: null, niveau: 8 },
+                    { pseudo: 'Vera', score: 12000, sprint_ms: null, niveau: 6 },
+                ]),
             });
             return;
         }
@@ -180,4 +201,26 @@ test('ecran titre — mascotte ROBO canvas visible', async ({ page }) => {
         return { ok: false };
     });
     expect(metriques.ok).toBe(true);
+});
+
+test('sync cloud — leaderboard marathon affiche le top', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await preparerSyncCloud(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+
+    await page.locator('#btn-options').click();
+    await expect(page.locator('#panneau-leaderboard-options')).toBeVisible();
+    await page.locator('#btn-rafraichir-leaderboard').click();
+
+    await expect(page.locator('#liste-leaderboard-options li').first()).toContainText(/Neo/i, {
+        timeout: 10000,
+    });
+    await expect(page.locator('#liste-leaderboard-options')).toContainText(/15[\s\u00a0]?000/);
+});
+
+test('marathon — timer niveau visible en partie', async ({ page }) => {
+    await demarrerPartie(page);
+    await expect(page.locator('#section-timer-niveau')).toBeVisible();
+    await expect(page.locator('#affichage-temps-niveau')).toContainText(/\d{2}:\d{2}/);
 });

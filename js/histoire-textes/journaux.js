@@ -15,7 +15,7 @@ export const JOURNAUX_VERA_DIALOGUES = {
         {
             personnage: 'robo',
             texte: 'Transmission endommagée — fragments manquants. La corruption a effacé une partie du message.',
-            humeur: 'inquiet',
+            humeur: 'alerte',
         },
         { personnage: 'robo', texte: 'Le reste est du sable.', humeur: 'triste' },
     ],
@@ -239,5 +239,44 @@ export const FRAGMENTS_VERA_SIGNAL = {
             humeur: 'glitch',
         },
         { personnage: 'systeme', texte: '> REPRISE DU BRUIT DE FOND', humeur: 'alerte' },
+    ],
+
+    apres_miroir: [
+        { personnage: 'systeme', texte: '> REFLET INSTABLE — CANAL 9', humeur: 'alerte' },
+        {
+            personnage: 'vera',
+            texte: '...de l autre cote du miroir... tu as vu ce qu elle voit... n oublie pas que ce n est pas toi...',
+            humeur: 'inquiete',
+        },
+        { personnage: 'systeme', texte: '> IMAGE INVERSEE', humeur: 'alerte' },
+    ],
+
+    apres_trame: [
+        { personnage: 'systeme', texte: '> DEPOT DANS LA TRAME — 1.4 SECONDES', humeur: 'neutre' },
+        {
+            personnage: 'vera',
+            texte: '...tu as tout garde jusqu au bout... la phrase que j ai laissee... tu l as lue...',
+            humeur: 'douce',
+        },
+        {
+            personnage: 'vera',
+            texte: '...maintenant tu peux choisir... partir ou rester... les deux comptent...',
+            humeur: 'determinee',
+        },
+        { personnage: 'systeme', texte: '> FIN DU DEPOT', humeur: 'alerte' },
+    ],
+
+    apres_paradoxe: [
+        {
+            personnage: 'systeme',
+            texte: '> ANOMALIE VOLONTAIRE — TOP NON DEMANDE',
+            humeur: 'alerte',
+        },
+        {
+            personnage: 'vera',
+            texte: '...tu es revenu ici sans qu on te le demande... trois fois... c est comme ca qu on trouve les portes secretes...',
+            humeur: 'douce',
+        },
+        { personnage: 'systeme', texte: '> BOUCLE PARADOXALE FERMEE', humeur: 'alerte' },
     ],
 };

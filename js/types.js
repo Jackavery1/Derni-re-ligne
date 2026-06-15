@@ -170,7 +170,9 @@
  *     boucleMenuUnifieActive?: () => boolean,
  *     simulerVictoireSprint?: () => void,
  *     obtenirColonnePieceActive?: () => number | null,
- *     obtenirMusiqueActive?: () => string | null
+ *     obtenirMusiqueActive?: () => string | null,
+ *     declencherFinHistoire?: (finId: string) => Promise<void>,
+ *     declencherPostMondeNarratif?: (mondeId: string) => Promise<void>
  *   }
  * }} WindowEtendu
  */

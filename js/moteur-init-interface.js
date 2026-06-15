@@ -25,6 +25,10 @@ import { initialiserUiObjectifs } from './ui-panneau-objectifs.js';
 import { initialiserTutoriel } from './tutoriel.js';
 import { obtenirActions } from './actions-jeu.js';
 import { exposerNeoTestApi } from './neo-test-api.js';
+import { activerModeHistoire } from './mode-histoire.js';
+import { chargerHistoireTextes } from './charger-histoire-textes.js';
+import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
+import { store } from './store-core.js';
 import { boucleSecondaireActive } from './planificateur-raf.js';
 import { CONFIG } from './config-jeu.js';
 import { etat } from './store-jeu.js';
@@ -73,6 +77,24 @@ export function initialiserInterfaceMoteur() {
             obtenirColonnePieceActive: () =>
                 typeof etat.pieceActuelle?.x === 'number' ? etat.pieceActuelle.x : null,
             obtenirMusiqueActive: () => AudioMoteur.biomeMusique,
+            declencherFinHistoire: async (finId) => {
+                activerModeHistoire();
+                await chargerHistoireTextes();
+                const { declencherFin } = await import('./histoire-narratif.js');
+                declencherFin(finId);
+            },
+            declencherPostMondeNarratif: async (mondeId) => {
+                activerModeHistoire();
+                await chargerHistoireTextes();
+                const { declencherNarratifPostMonde } =
+                    await import('./histoire-manager-post-monde.js');
+                const { SEQUENCE_HISTOIRE } = await import('./histoire-donnees.js');
+                const monde = SEQUENCE_HISTOIRE.find((m) => m.id === mondeId);
+                if (!monde) return;
+                const etatHist = obtenirEtatHistoirePersiste();
+                store.histoire.etat = etatHist;
+                declencherNarratifPostMonde(monde, etatHist, true, [true, false, false]);
+            },
         });
     }
 }

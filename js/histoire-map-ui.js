@@ -15,6 +15,43 @@ import { obtenirEtoilesPersistees } from './gestionnaire-difficulte.js';
 import { definirTexteUi, sansAccentsE } from './texte-jeu.js';
 import { obtenirResumeConditionsTrame, obtenirGuideMondeSecret } from './conditions-secrets.js';
 
+let _modalTrameAttache = false;
+
+function _ouvrirModalTrame() {
+    const overlay = document.getElementById('overlay-trame-conditions');
+    if (!overlay) return;
+    overlay.classList.remove('element-masque');
+    overlay.classList.add('objectif-overlay-visible');
+}
+
+export function fermerModalTrameCarte() {
+    const overlay = document.getElementById('overlay-trame-conditions');
+    if (!overlay) return;
+    overlay.classList.remove('objectif-overlay-visible');
+    overlay.classList.add('element-masque');
+}
+
+function _fermerModalTrame() {
+    fermerModalTrameCarte();
+}
+
+export function initialiserModalTrameCarte() {
+    if (_modalTrameAttache) return;
+    _modalTrameAttache = true;
+
+    document.getElementById('btn-histoire-trame')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        _ouvrirModalTrame();
+    });
+
+    const overlay = document.getElementById('overlay-trame-conditions');
+    const panneau = overlay?.querySelector('.histoire-trame-panneau');
+    document
+        .getElementById('btn-trame-fermer')
+        ?.addEventListener('click', () => _fermerModalTrame());
+    panneau?.addEventListener('click', (e) => e.stopPropagation());
+}
+
 export function mettreAJourAriaCarteHistoire(etatCarte) {
     const canvas = etatCarte.canvasCarte;
     if (!canvas) return;
@@ -299,7 +336,7 @@ export function mettreAJourEnteteHistoire() {
     const elMondes = document.getElementById('histoire-prog-mondes');
     const elJournaux = document.getElementById('histoire-prog-journaux');
     const elTrame = document.getElementById('histoire-prog-trame');
-    const wrapTrame = document.getElementById('histoire-prog-trame-wrap');
+    const btnTrame = document.getElementById('btn-histoire-trame');
     if (elMondes) elMondes.textContent = `${prog.nbCompletes}/${prog.nbTotal} MONDES`;
     if (elJournaux) {
         elJournaux.textContent = `${prog.nbJournaux}/${prog.nbJournauxTotal} TRANSMISSIONS`;
@@ -308,15 +345,14 @@ export function mettreAJourEnteteHistoire() {
     const etatHist = obtenirEtatHistoire();
     const resumeTrame = obtenirResumeConditionsTrame(etatHist);
     const trameDebloquee = etatHist.mondesCompletes?.includes('monde_trame');
-    const elDetail = document.getElementById('histoire-prog-trame-detail');
-    if (elTrame && wrapTrame) {
+    const elListe = document.getElementById('histoire-trame-detail-liste');
+    if (elTrame && btnTrame) {
         if (trameDebloquee) {
-            wrapTrame.classList.add('element-masque');
-            elDetail?.replaceChildren();
-            elDetail?.classList.add('element-masque');
+            btnTrame.classList.add('element-masque');
+            elListe?.replaceChildren();
         } else {
-            wrapTrame.classList.remove('element-masque');
-            wrapTrame.classList.toggle(
+            btnTrame.classList.remove('element-masque');
+            btnTrame.classList.toggle(
                 'histoire-prog-trame--en-cours',
                 resumeTrame.validees < resumeTrame.total
             );
@@ -324,14 +360,14 @@ export function mettreAJourEnteteHistoire() {
             const detail = resumeTrame.details
                 .map((d) => `${d.ok ? '✓' : '○'} ${d.libelle}`)
                 .join(' · ');
-            elTrame.title = detail;
-            if (elDetail) {
-                elDetail.classList.remove('element-masque');
-                elDetail.replaceChildren();
+            btnTrame.title = detail;
+            if (elListe) {
+                elListe.replaceChildren();
                 for (const d of resumeTrame.details) {
                     const li = document.createElement('li');
+                    li.classList.toggle('histoire-trame-condition-ok', d.ok);
                     li.textContent = sansAccentsE(`${d.ok ? '✓' : '○'} ${d.libelle}`);
-                    elDetail.appendChild(li);
+                    elListe.appendChild(li);
                 }
             }
         }
@@ -340,6 +376,7 @@ export function mettreAJourEnteteHistoire() {
 
 export function lancerMondeDepuisCarte(monde) {
     annulerPrechargementMedias();
+    fermerModalTrameCarte();
     const actions = obtenirActionsHistoire();
     if (['monde_miroir', 'monde_trame', 'monde_paradoxe'].includes(monde.id)) {
         actions.demarrerMondeCache?.(monde.id);

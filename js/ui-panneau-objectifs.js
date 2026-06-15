@@ -63,6 +63,10 @@ function _texte(id, txt) {
     if (el) el.textContent = sansAccentsE(txt);
 }
 
+function _partieHistoireEnCours() {
+    return document.body.classList.contains('partie-active') && modeHistoireEnCours();
+}
+
 function _ancrerOverlaysAuBody() {
     for (const id of IDS_OVERLAYS) {
         const el = _el(id);
@@ -170,6 +174,20 @@ export function fermerOverlayObjectifsPre() {
     _callbackPanneauPre = null;
 }
 
+/** Ferme les overlays narratifs qui peuvent masquer ou bloquer la zone de jeu. */
+export function fermerOverlaysFluxPartie() {
+    fermerOverlayObjectifsPre();
+    _el('overlay-recap-monde')?.classList.remove('objectif-overlay-visible');
+    _masquer('overlay-recap-monde');
+    _callbackRecap = null;
+    document.getElementById('overlay-tutoriel')?.classList.add('element-masque');
+    const trame = document.getElementById('overlay-trame-conditions');
+    if (trame) {
+        trame.classList.remove('objectif-overlay-visible');
+        trame.classList.add('element-masque');
+    }
+}
+
 function _fermerPanneauPre() {
     _retirerEcouteurEscape();
     _el('overlay-objectifs-pre')?.classList.remove('objectif-overlay-visible');
@@ -245,6 +263,12 @@ export function rafraichirHudObjectifsHistoire() {
         return;
     }
 
+    if (_partieHistoireEnCours()) {
+        _masquer('section-objectifs-histoire');
+        _rafraichirHudTrame();
+        return;
+    }
+
     _afficher('section-objectifs-histoire');
     const config = suivi.config;
     const etoiles = calculerEtoiles(suivi.mondeId ?? '');
@@ -290,7 +314,7 @@ function _rafraichirHudTrame() {
     const etat = obtenirEtatHistoire();
     const trameComplete = etat.mondesCompletes?.includes('monde_trame');
     const bandeau = _el('bandeau-trame-run');
-    if (!modeHistoireEnCours() || trameComplete) {
+    if (!modeHistoireEnCours() || trameComplete || _partieHistoireEnCours()) {
         wrap?.classList.add('element-masque');
         bandeau?.classList.add('element-masque');
         return;
@@ -390,6 +414,8 @@ export function proposerPanneauObjectifsAvantPartie(monde, onCommencer) {
     const etatHist = obtenirEtatHistoire();
     if (etatHist.mondesCompletes.includes(monde.id)) {
         demarrerSuiviMonde(monde.id);
+        _cacherEcransPourObjectifs();
+        fermerOverlaysFluxPartie();
         onCommencer();
         return;
     }

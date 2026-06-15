@@ -10,6 +10,7 @@ import {
     mettreAJourSelectMondesClavier,
     mettreAJourAriaCarteHistoire,
     traiterSelectionNoeud,
+    initialiserModalTrameCarte,
 } from './histoire-map-ui.js';
 import { configurerActionsHistoire } from './histoire-actions.js';
 import { obtenirEtatHistoire, mondePeutEtreJoue } from './histoire-mondes.js';
@@ -63,6 +64,7 @@ export function initialiserCarteMonde() {
         etatCarte.evenementsCarteAttaches = true;
     }
     mettreAJourEnteteHistoire();
+    initialiserModalTrameCarte();
     mettreAJourSelectMondesClavier(etatCarte, (noeud, doubleTap) =>
         traiterSelectionNoeud(etatCarte, noeud, doubleTap, lancerMondeDepuisCarte)
     );

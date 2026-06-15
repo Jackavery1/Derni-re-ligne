@@ -68,4 +68,34 @@ describe('declencherFin — épilogue puis outro', () => {
             true
         );
     });
+
+    it('enchaîne épilogue, outro et executerFin pour fin_secrete', async () => {
+        const { store } = await import('../js/store-core.js');
+        store.histoire.actif = true;
+        const { declencherFin } = await import('../js/histoire-narratif.js');
+
+        declencherFin('fin_secrete');
+
+        await vi.waitFor(() => expect(afficherCutsceneHistoire).toHaveBeenCalledTimes(2));
+
+        const [textesOutro] = afficherCutsceneHistoire.mock.calls[1];
+        expect(textesOutro.some((l) => String(l.texte ?? l).includes('LA LIGNE PARFAITE'))).toBe(
+            true
+        );
+        expect(executerFin).toHaveBeenCalledWith('fin_secrete');
+    }, 15_000);
+
+    it('enchaîne épilogue, outro et executerFin pour fin_vraie', async () => {
+        const { store } = await import('../js/store-core.js');
+        store.histoire.actif = true;
+        const { declencherFin } = await import('../js/histoire-narratif.js');
+
+        declencherFin('fin_vraie');
+
+        await vi.waitFor(() => expect(afficherCutsceneHistoire).toHaveBeenCalledTimes(2));
+
+        const [textesOutro] = afficherCutsceneHistoire.mock.calls[1];
+        expect(textesOutro.some((l) => String(l.texte ?? l).includes("L'HARMONIE"))).toBe(true);
+        expect(executerFin).toHaveBeenCalledWith('fin_vraie');
+    }, 15_000);
 });

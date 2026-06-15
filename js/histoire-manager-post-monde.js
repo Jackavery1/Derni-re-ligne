@@ -26,7 +26,7 @@ const INTERLUDES_PAR_MONDE = {
     monde_vide: 'interlude_veille',
 };
 
-const CLE_FRAGMENT_PAR_MONDE = {
+export const CLE_FRAGMENT_PAR_MONDE = {
     monde_prologue: 'apres_prologue',
     monde_ocean: 'apres_ocean',
     monde_foret: 'apres_foret',
@@ -39,6 +39,9 @@ const CLE_FRAGMENT_PAR_MONDE = {
     monde_fuochi: 'apres_fuochi',
     monde_cosmos: 'apres_cosmos',
     monde_vide: 'apres_vide',
+    monde_miroir: 'apres_miroir',
+    monde_trame: 'apres_trame',
+    monde_paradoxe: 'apres_paradoxe',
 };
 
 function obtenirEtatHistoire() {
@@ -109,6 +112,10 @@ function _executerFragmentVera(mondeId, suivant) {
     }
 }
 
+function _extraireLignesCutscene(entree) {
+    return Array.isArray(entree) ? entree : (entree?.lignes ?? []);
+}
+
 function _conditionInterlude(mondeId, premiereCompletion) {
     if (!modeHistoireEnCours() || !premiereCompletion) return false;
     const cleInterlude = INTERLUDES_PAR_MONDE[mondeId];
@@ -117,7 +124,7 @@ function _conditionInterlude(mondeId, premiereCompletion) {
     if (etatHist.interludesVusIds?.includes(cleInterlude)) return false;
     try {
         const interlude = obtenirHistoireTextesSync().INTERLUDES?.[cleInterlude];
-        return Boolean(interlude?.length);
+        return _extraireLignesCutscene(interlude).length > 0;
     } catch {
         return false;
     }

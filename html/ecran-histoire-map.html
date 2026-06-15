@@ -31,23 +31,40 @@
                     <span>📔</span>
                     <span id="histoire-prog-journaux">0/9 TRANSMISSIONS</span>
                 </div>
-                <div class="histoire-prog-item histoire-prog-trame" id="histoire-prog-trame-wrap">
-                    <span>✦</span>
-                    <span
-                        id="histoire-prog-trame"
-                        title="Conditions pour debloquer la Trame Primordiale"
-                        >TRAME 0/4</span
-                    >
-                </div>
-                <ul
-                    id="histoire-prog-trame-detail"
-                    class="histoire-prog-trame-detail"
-                    aria-label="Detail des conditions Trame"
-                ></ul>
+                <button
+                    type="button"
+                    class="histoire-prog-item histoire-prog-trame histoire-prog-trame-btn"
+                    id="btn-histoire-trame"
+                    aria-label="Voir les objectifs Trame Primordiale"
+                    title="Objectifs pour debloquer la Trame Primordiale"
+                >
+                    <span aria-hidden="true">✦</span>
+                    <span id="histoire-prog-trame">TRAME 0/4</span>
+                </button>
             </div>
-            <p id="histoire-map-aide" class="histoire-map-aide">
-                Molette ou pincement pour zoomer · clic-glisser pour deplacer la carte
-            </p>
+        </div>
+
+        <div
+            id="overlay-trame-conditions"
+            class="objectif-overlay objectif-overlay-fermable element-masque"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="histoire-trame-titre"
+        >
+            <div class="objectif-panneau histoire-trame-panneau">
+                <h2 id="histoire-trame-titre" class="objectif-chapitre">TRAME PRIMORDIALE</h2>
+                <p class="histoire-trame-intro">
+                    Objectifs pour debloquer le monde secret de la Trame.
+                </p>
+                <ul
+                    id="histoire-trame-detail-liste"
+                    class="histoire-trame-detail-liste"
+                    aria-label="Conditions Trame"
+                ></ul>
+                <button type="button" class="bouton objectif-btn-commencer" id="btn-trame-fermer">
+                    FERMER
+                </button>
+            </div>
         </div>
 
         <label for="histoire-monde-clavier" class="sr-only">Selection de monde au clavier</label>
