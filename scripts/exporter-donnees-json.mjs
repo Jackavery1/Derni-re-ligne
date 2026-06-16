@@ -10,7 +10,7 @@ for (const [cle, valeur] of Object.entries(textes)) {
     if (cle !== 'default') exportsTextes[cle] = valeur;
 }
 
-writeFileSync('data/histoire-textes.json', `${JSON.stringify(exportsTextes)}\n`);
+writeFileSync('data/histoire-textes.json', `${JSON.stringify(exportsTextes, null, 4)}\n`);
 rmSync('data/codex-donnees.json', { force: true });
 
 execSync('node scripts/exporter-codex-archi.mjs', { stdio: 'inherit' });

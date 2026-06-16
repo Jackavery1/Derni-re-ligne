@@ -48,11 +48,11 @@ const codexBrut = {
 Object.assign(codexBrut, CODEX_HISTOIRE);
 
 const { textes, conditionsSrc } = extraireTextesCodex([codexBrut]);
-writeFileSync('data/codex-textes.json', `${JSON.stringify(textes)}\n`);
+writeFileSync('data/codex-textes.json', `${JSON.stringify(textes, null, 4)}\n`);
 writeFileSync('js/codex-conditions.js', genererFichierConditions(conditionsSrc));
 
 const niveauxArchi = [...NIVEAUX_ARCHI, ...obtenirNiveauxArchiProceduraux()];
-writeFileSync('data/archi-niveaux.json', `${JSON.stringify(niveauxArchi)}\n`);
+writeFileSync('data/archi-niveaux.json', `${JSON.stringify(niveauxArchi, null, 4)}\n`);
 
 console.log(
     `Codex exporté → data/codex-textes.json (${Object.keys(textes).length} entrées), js/codex-conditions.js`
