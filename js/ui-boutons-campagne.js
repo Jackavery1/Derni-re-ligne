@@ -3,6 +3,9 @@ import {
     demanderConfirmationNouvellePartie,
     mettreAJourMenuCampagneTitre,
 } from './menu-titre-campagne.js';
+import { lierBouton } from './ui-lier-bouton.js';
+import { vibrerUi } from './haptique.js';
+
 async function continuerCampagne() {
     const { ouvrirModeHistoireDepuisMenu } = await import('./histoire-intro.js');
     return ouvrirModeHistoireDepuisMenu();
@@ -20,10 +23,12 @@ async function demarrerNouvelleCampagne() {
 }
 
 export function initialiserBoutonsCampagne() {
-    document.getElementById('btn-continuer')?.addEventListener('click', () => {
+    lierBouton('btn-continuer', () => {
+        vibrerUi();
         void continuerCampagne();
     });
-    document.getElementById('btn-nouvelle-partie')?.addEventListener('click', () => {
+    lierBouton('btn-nouvelle-partie', () => {
+        vibrerUi();
         void demarrerNouvelleCampagne();
     });
     mettreAJourMenuCampagneTitre();

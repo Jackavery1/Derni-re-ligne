@@ -7,6 +7,7 @@ const CLE_HAPTIQUE = 'derniereLigne_haptique';
 
 const MOTIFS = {
     deplacement: 8,
+    ui: 6,
     rotation: 12,
     chute: 18,
     verrou: 14,
@@ -60,6 +61,10 @@ export function vibrerRotation() {
 
 export function vibrerChuteRapide() {
     vibrer('chute');
+}
+
+export function vibrerUi() {
+    vibrer('ui');
 }
 
 export function vibrerFinPartie(victoire) {

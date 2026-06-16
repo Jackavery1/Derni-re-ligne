@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v48';
+const VERSION_SHELL = 'dl-shell-v49';
 const VERSION_MEDIAS = 'dl-medias-v4';
 
 const SCENES_CUTSCENE_PRECACHE = [
@@ -316,10 +316,12 @@ const FICHIERS_A_CACHER = [
     './js/touches-config.js',
     './js/tutoriel.js',
     './js/types.js',
+    './js/ui-boutons-assurer.js',
     './js/ui-boutons-campagne.js',
     './js/ui-boutons-navigation.js',
     './js/ui-boutons-partie.js',
     './js/ui-init.js',
+    './js/ui-lier-bouton.js',
     './js/ui-notifications.js',
     './js/ui-objectifs-dom.js',
     './js/ui-objectifs-hud.js',

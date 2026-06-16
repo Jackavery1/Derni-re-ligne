@@ -16,7 +16,7 @@ import { definirTexteUi, sansAccentsE } from './texte-jeu.js';
 import { obtenirResumeConditionsTrame, obtenirGuideMondeSecret } from './conditions-secrets.js';
 
 const MARQUEUR_BOUTON = 'data-neo-histoire-lie';
-let _boutonsCarteOk = false;
+let _modalTrameAttache = false;
 
 function _lierBoutonCarte(id, handler) {
     const el = document.getElementById(id);
@@ -29,9 +29,6 @@ function _lierBoutonCarte(id, handler) {
 }
 
 export function lierBoutonsCarteHistoire() {
-    if (_boutonsCarteOk) return;
-    _boutonsCarteOk = true;
-
     _lierBoutonCarte('btn-histoire-retour', () => {
         obtenirActionsHistoire().retourTitreDepuisCarte?.();
     });
@@ -44,8 +41,6 @@ export function lierBoutonsCarteHistoire() {
         void obtenirActionsHistoire().continuerBossDistorsion?.();
     });
 }
-
-let _modalTrameAttache = false;
 
 function _ouvrirModalTrame() {
     const overlay = document.getElementById('overlay-trame-conditions');
@@ -70,16 +65,21 @@ export function initialiserModalTrameCarte() {
     if (_modalTrameAttache) return;
     _modalTrameAttache = true;
 
-    document.getElementById('btn-histoire-trame')?.addEventListener('click', (e) => {
+    const lierModal = (id, handler) => {
+        const el = document.getElementById(id);
+        if (!el || el.hasAttribute(MARQUEUR_BOUTON)) return;
+        el.setAttribute(MARQUEUR_BOUTON, '1');
+        el.addEventListener('click', handler);
+    };
+
+    lierModal('btn-histoire-trame', (e) => {
         e.stopPropagation();
         _ouvrirModalTrame();
     });
 
     const overlay = document.getElementById('overlay-trame-conditions');
     const panneau = overlay?.querySelector('.histoire-trame-panneau');
-    document
-        .getElementById('btn-trame-fermer')
-        ?.addEventListener('click', () => _fermerModalTrame());
+    lierModal('btn-trame-fermer', () => _fermerModalTrame());
     panneau?.addEventListener('click', (e) => e.stopPropagation());
 }
 

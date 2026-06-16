@@ -93,8 +93,22 @@
         <section class="profil-section panneau-meta panneau-meta--accent-cyan profil-col-full">
             <h2 class="profil-section-label">RECORDS LOCAUX</h2>
             <p class="profil-records-sous-titre">
-                Scores enregistres sur cet appareil. Export / import dans Options.
+                Scores enregistres sur cet appareil. Export / import ci-dessous ou dans Options.
             </p>
+            <div class="profil-records-actions">
+                <button class="bouton discret" type="button" id="btn-profil-export-progression">
+                    EXPORTER RECORDS
+                </button>
+                <button class="bouton discret" type="button" id="btn-profil-import-progression">
+                    IMPORTER RECORDS
+                </button>
+                <input
+                    type="file"
+                    id="input-profil-import-progression"
+                    accept=".json,application/json"
+                    hidden
+                />
+            </div>
             <div
                 id="profil-records-table"
                 class="profil-records-table"

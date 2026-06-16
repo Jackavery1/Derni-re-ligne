@@ -280,9 +280,43 @@
 @media (max-width: 768px) {
     .go-contenu {
         margin: 12px;
+        max-height: calc(
+            100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 24px
+        );
+        overflow-y: auto;
     }
 
     .go-boutons .bouton {
         min-height: 48px;
+    }
+}
+
+@media (max-height: 768px) and (orientation: landscape) {
+    #ecran-game-over.actif {
+        align-items: flex-start;
+        overflow-y: auto;
+        padding-top: max(8px, env(safe-area-inset-top, 0px));
+        padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+    }
+
+    .go-contenu {
+        gap: 10px;
+        padding: 12px 16px;
+    }
+
+    .go-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        width: 100%;
+    }
+
+    .go-boutons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .go-boutons .bouton {
+        width: 100%;
     }
 }

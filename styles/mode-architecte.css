@@ -328,6 +328,11 @@ body.archi-active #controles-paysage {
 
     body.archi-active #interface-jeu-archi .panneau-archi {
         width: 90px;
+        max-height: calc(
+            100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 16px
+        );
+        overflow-y: auto;
+        overscroll-behavior: contain;
     }
 
     body.archi-active #interface-jeu-archi .section {

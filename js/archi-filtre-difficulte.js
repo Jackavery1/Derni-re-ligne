@@ -25,8 +25,10 @@ export function appliquerFiltreDifficulteArchi() {
 export function initialiserFiltreDifficulteArchi() {
     synchroniserUiFiltreDifficulteArchi();
     if (filtreDifficulteArchiOk) return;
+    const conteneur = document.getElementById('archi-filtre-difficulte');
+    if (!conteneur) return;
     filtreDifficulteArchiOk = true;
-    document.getElementById('archi-filtre-difficulte')?.addEventListener('click', (e) => {
+    conteneur.addEventListener('click', (e) => {
         const cible = e.target instanceof Element ? e.target : null;
         const btn = cible?.closest('.archi-filtre-btn');
         if (!(btn instanceof HTMLElement) || !btn.dataset.difficulte) return;

@@ -196,3 +196,22 @@ body.histoire-active #indicateur-vide-actif {
     background: rgba(255, 230, 0, 0.04);
     animation: clignoteBoss 1.5s ease-in-out infinite;
 }
+
+@media (max-width: 360px) {
+    #ecran-histoire-cutscene.actif {
+        padding-top: max(12px, env(safe-area-inset-top, 0px));
+        padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+        padding-left: max(8px, env(safe-area-inset-left, 0px));
+        padding-right: max(8px, env(safe-area-inset-right, 0px));
+    }
+
+    #histoire-cutscene-contenu {
+        padding: 16px 12px;
+        max-width: 100%;
+    }
+
+    #btn-cutscene-suivant,
+    #btn-cutscene-passer {
+        min-height: 48px;
+    }
+}

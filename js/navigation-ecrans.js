@@ -76,7 +76,10 @@ export function afficherEcranAsync(idEcran) {
 
 async function _afficherEcranAvecFragments(idEcran) {
     const fragments = FRAGMENTS_REQUIS_PAR_ECRAN[idEcran];
-    if (fragments?.length) await assurerFragmentsEcran(fragments);
+    if (fragments?.length) {
+        await assurerFragmentsEcran(fragments);
+        document.dispatchEvent(new CustomEvent('neo:fragments-injectes'));
+    }
     definirEcranActuel(idEcran);
     document.querySelectorAll('.ecran').forEach((el) => el.classList.remove('actif'));
     const ecran = document.getElementById(idEcran);
@@ -112,6 +115,9 @@ async function _afficherEcranAvecFragments(idEcran) {
             chargerProfilDernier();
             afficherProfil();
         });
+        import('./options-progression-ui.js').then(({ initialiserSauvegardeProgression }) =>
+            initialiserSauvegardeProgression()
+        );
         mettreAJourVisibiliteModesDebloques();
     }
 

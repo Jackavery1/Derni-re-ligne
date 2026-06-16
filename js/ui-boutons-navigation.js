@@ -1,5 +1,5 @@
 import { etat, ECRANS } from './store-jeu.js';
-import { afficherEcran } from './ecrans-ui.js';
+import { afficherEcranDiffere as afficherEcran } from './navigation-lazy.js';
 import { afficherOngletOptions } from './options-ui.js';
 import { jouerMelodie } from './melodie.js';
 import { AudioMoteur } from './audio.js';
@@ -10,6 +10,15 @@ import { afficherTutorielContextuel } from './tutoriel.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 import { initialiserBoutonsCampagne } from './ui-boutons-campagne.js';
 import { assurerInputArchi, assurerInputCoop } from './modes-input-lazy.js';
+import { lierBouton, lierBoutonsSelecteur } from './ui-lier-bouton.js';
+import { vibrerUi } from './haptique.js';
+
+function navVers(handler) {
+    return () => {
+        vibrerUi();
+        handler();
+    };
+}
 
 export function initialiserBoutonsNavigation() {
     initialiserBoutonsCampagne();
@@ -21,100 +30,127 @@ export function initialiserBoutonsNavigation() {
 }
 
 function _lierBoutonsMenuPrincipal() {
-    document
-        .getElementById('btn-jouer')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.SELECTION));
-    document.getElementById('btn-architecte')?.addEventListener('click', async () => {
-        afficherTutorielContextuel('architecte');
-        await assurerInputArchi();
-        const { archi_afficherSelection } = await import('./archi-jeu.js');
-        await archi_afficherSelection();
+    lierBouton(
+        'btn-jouer',
+        navVers(() => afficherEcran(ECRANS.SELECTION))
+    );
+    lierBouton('btn-architecte', () => {
+        vibrerUi();
+        void (async () => {
+            afficherTutorielContextuel('architecte');
+            await assurerInputArchi();
+            const { archi_afficherSelection } = await import('./archi-jeu.js');
+            await archi_afficherSelection();
+        })();
     });
-    document
-        .getElementById('btn-achievements')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.ACHIEVEMENTS));
-    document
-        .getElementById('btn-codex')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.CODEX));
-    document
-        .getElementById('btn-profil')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.PROFIL));
+    lierBouton(
+        'btn-achievements',
+        navVers(() => afficherEcran(ECRANS.ACHIEVEMENTS))
+    );
+    lierBouton(
+        'btn-codex',
+        navVers(() => afficherEcran(ECRANS.CODEX))
+    );
+    lierBouton(
+        'btn-profil',
+        navVers(() => afficherEcran(ECRANS.PROFIL))
+    );
 }
 
 function _lierBoutonsRetour() {
-    document
-        .getElementById('btn-codex-retour')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
-    document
-        .getElementById('btn-achievements-codex')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.CODEX));
-    document
-        .getElementById('btn-profil-codex')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.CODEX));
-    document
-        .getElementById('btn-achievements-retour')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
-    document
-        .getElementById('btn-profil-gameover')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.PROFIL));
-    document
-        .getElementById('btn-profil-menu')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
-    document
-        .getElementById('btn-profil-achievements')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.ACHIEVEMENTS));
-    document
-        .getElementById('btn-selection-retour')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
-    document
-        .getElementById('btn-options-retour')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
-    document
-        .getElementById('btn-menu')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
+    lierBouton(
+        'btn-codex-retour',
+        navVers(() => afficherEcran(ECRANS.TITRE))
+    );
+    lierBouton(
+        'btn-achievements-codex',
+        navVers(() => afficherEcran(ECRANS.CODEX))
+    );
+    lierBouton(
+        'btn-profil-codex',
+        navVers(() => afficherEcran(ECRANS.CODEX))
+    );
+    lierBouton(
+        'btn-achievements-retour',
+        navVers(() => afficherEcran(ECRANS.TITRE))
+    );
+    lierBouton(
+        'btn-profil-gameover',
+        navVers(() => afficherEcran(ECRANS.PROFIL))
+    );
+    lierBouton(
+        'btn-profil-menu',
+        navVers(() => afficherEcran(ECRANS.TITRE))
+    );
+    lierBouton(
+        'btn-profil-achievements',
+        navVers(() => afficherEcran(ECRANS.ACHIEVEMENTS))
+    );
+    lierBouton(
+        'btn-selection-retour',
+        navVers(() => afficherEcran(ECRANS.TITRE))
+    );
+    lierBouton(
+        'btn-options-retour',
+        navVers(() => afficherEcran(ECRANS.TITRE))
+    );
+    lierBouton(
+        'btn-menu',
+        navVers(() => afficherEcran(ECRANS.TITRE))
+    );
 }
 
 function _lierSelectionEtModes() {
-    document.getElementById('toggle-oracle')?.addEventListener('click', basculerOracle);
-    document.getElementById('toggle-coop')?.addEventListener('click', async () => {
-        await assurerInputCoop();
-        const { basculerModeCoop } = await import('./coop-jeu.js');
-        basculerModeCoop();
-        mettreAJourToggleSprint();
-        if (document.getElementById('toggle-coop')?.classList.contains('actif')) {
-            afficherTutorielContextuel('coop');
-        }
+    lierBouton('toggle-oracle', () => {
+        vibrerUi();
+        basculerOracle();
     });
-    document.getElementById('toggle-sprint')?.addEventListener('click', basculerModeSprint);
-    document.getElementById('toggle-defi-jour')?.addEventListener('click', basculerDefiJour);
-    const ouvrirOptionsControles = () => {
+    lierBouton('toggle-coop', () => {
+        vibrerUi();
+        void (async () => {
+            await assurerInputCoop();
+            const { basculerModeCoop } = await import('./coop-jeu.js');
+            basculerModeCoop();
+            mettreAJourToggleSprint();
+            if (document.getElementById('toggle-coop')?.classList.contains('actif')) {
+                afficherTutorielContextuel('coop');
+            }
+        })();
+    });
+    lierBouton('toggle-sprint', () => {
+        vibrerUi();
+        basculerModeSprint();
+    });
+    lierBouton('toggle-defi-jour', () => {
+        vibrerUi();
+        basculerDefiJour();
+    });
+    const ouvrirOptionsControles = navVers(() => {
         afficherOngletOptions('controles');
         afficherEcran(ECRANS.OPTIONS);
-    };
-    document
-        .getElementById('btn-aller-controles')
-        ?.addEventListener('click', ouvrirOptionsControles);
-    document.getElementById('btn-options')?.addEventListener('click', () => {
-        afficherOngletOptions('reglages');
-        afficherEcran(ECRANS.OPTIONS);
     });
-    document
-        .getElementById('tab-reglages')
-        ?.addEventListener('click', () => afficherOngletOptions('reglages'));
-    document
-        .getElementById('tab-controles')
-        ?.addEventListener('click', () => afficherOngletOptions('controles'));
-    document
-        .getElementById('btn-mute')
-        ?.addEventListener('click', () => AudioMoteur.basculerMute());
-    document.getElementById('btn-reecouter')?.addEventListener('click', () => jouerMelodie());
+    lierBouton('btn-aller-controles', ouvrirOptionsControles);
+    lierBouton(
+        'btn-options',
+        navVers(() => {
+            afficherOngletOptions('reglages');
+            afficherEcran(ECRANS.OPTIONS);
+        })
+    );
+    lierBouton(
+        'tab-reglages',
+        navVers(() => afficherOngletOptions('reglages'))
+    );
+    lierBouton(
+        'tab-controles',
+        navVers(() => afficherOngletOptions('controles'))
+    );
+    lierBouton('btn-mute', () => AudioMoteur.basculerMute());
+    lierBouton('btn-reecouter', () => jouerMelodie());
 
-    document.querySelectorAll('.bouton-mode').forEach((btn) => {
-        btn.addEventListener('click', () => {
-            if (!(btn instanceof HTMLElement)) return;
-            etat.modeJeu = btn.dataset.mode;
-            document.querySelectorAll('.bouton-mode').forEach((b) => b.classList.remove('actif'));
-            btn.classList.add('actif');
-        });
+    lierBoutonsSelecteur('.bouton-mode', (btn) => {
+        etat.modeJeu = btn.dataset.mode;
+        document.querySelectorAll('.bouton-mode').forEach((b) => b.classList.remove('actif'));
+        btn.classList.add('actif');
     });
 }

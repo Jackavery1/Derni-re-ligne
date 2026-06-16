@@ -1,11 +1,12 @@
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { modeArchiActif } from './registre-modes.js';
-import { afficherEcran } from './ecrans-ui.js';
+import { afficherEcranDiffere as afficherEcran } from './navigation-lazy.js';
 import { obtenirActions } from './actions-jeu.js';
 import { ECRANS } from './store-jeu.js';
 import { retournerAuMondeActuel } from './histoire-manager.js';
 import { quitterVersCarteHistoire } from './partie.js';
 import { assurerInputArchi, assurerInputCoop } from './modes-input-lazy.js';
+import { lierBouton } from './ui-lier-bouton.js';
 
 async function avecCoop() {
     await assurerInputCoop();
@@ -23,82 +24,74 @@ async function avecArchi() {
 }
 
 export function initialiserBoutonsPartie() {
-    document.getElementById('btn-rejouer')?.addEventListener('click', () => {
+    lierBouton('btn-rejouer', () => {
         if (modeHistoireEnCours()) {
             retournerAuMondeActuel();
         } else {
             obtenirActions().demarrerJeu?.();
         }
     });
-    document.getElementById('btn-pause-coop')?.addEventListener('click', () => {
+    lierBouton('btn-pause-coop', () => {
         void avecCoop().then((m) => m.basculerPauseCoop());
     });
-    document.getElementById('btn-coop-reprendre')?.addEventListener('click', () => {
+    lierBouton('btn-coop-reprendre', () => {
         void avecCoop().then((m) => m.basculerPauseCoop());
     });
-    document
-        .getElementById('btn-coop-rejouer')
-        ?.addEventListener('click', () => void avecCoop().then((m) => m.demarrerCooperatif()));
-    document.getElementById('btn-coop-quitter')?.addEventListener('click', () => {
+    lierBouton('btn-coop-rejouer', () => {
+        void avecCoop().then((m) => m.demarrerCooperatif());
+    });
+    lierBouton('btn-coop-quitter', () => {
         void avecCoop().then((m) => m.quitterModeCoop());
     });
-    document
-        .getElementById('btn-coop-go-rejouer')
-        ?.addEventListener('click', () => void avecCoop().then((m) => m.demarrerCooperatif()));
-    document.getElementById('btn-coop-go-menu')?.addEventListener('click', () => {
+    lierBouton('btn-coop-go-rejouer', () => {
+        void avecCoop().then((m) => m.demarrerCooperatif());
+    });
+    lierBouton('btn-coop-go-menu', () => {
         void avecCoop().then((m) => m.quitterModeCoop());
     });
-    document.getElementById('btn-pause-archi')?.addEventListener('click', () => {
+    lierBouton('btn-pause-archi', () => {
         void avecArchi().then((m) => m.archi_basculerPause());
     });
-    document
-        .getElementById('btn-reinit-archi')
-        ?.addEventListener(
-            'click',
-            () => void avecArchi().then((m) => m.archi_reinitialiserNiveau())
-        );
-    document
-        .getElementById('archi-sel-retour')
-        ?.addEventListener('click', () => afficherEcran(ECRANS.TITRE));
-    document
-        .getElementById('archi-res-niveaux')
-        ?.addEventListener(
-            'click',
-            () => void avecArchi().then((m) => m.archi_afficherSelection())
-        );
-    document.getElementById('archi-res-menu')?.addEventListener('click', () => {
+    lierBouton('btn-reinit-archi', () => {
+        void avecArchi().then((m) => m.archi_reinitialiserNiveau());
+    });
+    lierBouton('archi-sel-retour', () => afficherEcran(ECRANS.TITRE));
+    lierBouton('archi-res-niveaux', () => {
+        void avecArchi().then((m) => m.archi_afficherSelection());
+    });
+    lierBouton('archi-res-menu', () => {
         void avecArchi().then((m) => m.quitterModeArchi());
     });
-    document.getElementById('btn-passerelle-j1')?.addEventListener('click', () => {
+    lierBouton('btn-passerelle-j1', () => {
         void Promise.all([avecCoop(), avecCoopRendu()]).then(([coop, rendu]) => {
             coop.utiliserPasserelle('j1');
             rendu.coop_dessinerPreview('j1');
             rendu.coop_dessinerPreview('j2');
         });
     });
-    document.getElementById('btn-passerelle-j2')?.addEventListener('click', () => {
+    lierBouton('btn-passerelle-j2', () => {
         void Promise.all([avecCoop(), avecCoopRendu()]).then(([coop, rendu]) => {
             coop.utiliserPasserelle('j2');
             rendu.coop_dessinerPreview('j1');
             rendu.coop_dessinerPreview('j2');
         });
     });
-    document.getElementById('btn-pause')?.addEventListener('click', () => {
+    lierBouton('btn-pause', () => {
         if (modeArchiActif()) void avecArchi().then((m) => m.archi_basculerPause());
         else obtenirActions().basculerPause?.();
     });
-    document.getElementById('btn-reprendre')?.addEventListener('click', () => {
+    lierBouton('btn-reprendre', () => {
         if (modeArchiActif()) void avecArchi().then((m) => m.archi_basculerPause());
         else obtenirActions().basculerPause?.();
     });
-    document.getElementById('btn-recommencer')?.addEventListener('click', () => {
+    lierBouton('btn-recommencer', () => {
         if (modeArchiActif()) void avecArchi().then((m) => m.archi_reinitialiserNiveau());
         else obtenirActions().confirmerRecommencer?.();
     });
-    document.getElementById('btn-pause-carte')?.addEventListener('click', () => {
+    lierBouton('btn-pause-carte', () => {
         quitterVersCarteHistoire();
     });
-    document.getElementById('btn-pause-quitter')?.addEventListener('click', () => {
+    lierBouton('btn-pause-quitter', () => {
         if (modeArchiActif()) void avecArchi().then((m) => m.quitterModeArchi());
         else obtenirActions().quitterVersMenu?.();
     });

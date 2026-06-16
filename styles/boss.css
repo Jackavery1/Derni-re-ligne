@@ -293,9 +293,20 @@ button.options-hint-controles:hover {
 }
 
 .profil-records-sous-titre {
-    font-size: 0.45rem;
-    color: var(--gris-clair, #aaa);
-    margin-bottom: 0.35rem;
+    font-size: 0.42rem;
+    color: rgba(255, 255, 255, 0.45);
+    margin: 0 0 0.5rem;
+}
+
+.profil-records-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 0.75rem;
+}
+
+.profil-records-actions .bouton {
+    min-height: 44px;
 }
 
 @media (max-width: 480px) {

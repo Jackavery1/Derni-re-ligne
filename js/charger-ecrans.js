@@ -83,10 +83,12 @@ export async function assurerFragmentsEcran(noms) {
 
 export async function assurerFragmentsCoop() {
     await assurerFragmentsEcran(FRAGMENTS_COOP);
+    document.dispatchEvent(new CustomEvent('neo:fragments-injectes'));
 }
 
 export async function assurerFragmentsArchi() {
     await assurerFragmentsEcran(FRAGMENTS_ARCHI);
+    document.dispatchEvent(new CustomEvent('neo:fragments-injectes'));
 }
 
 export async function chargerEcrans() {

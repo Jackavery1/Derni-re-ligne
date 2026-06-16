@@ -91,7 +91,7 @@ function _apresPresentationMonde(monde) {
                 );
                 return;
             }
-            if (monde.id === 'monde_finale') {
+            if (monde.id === 'monde_boss_4' || monde.id === 'monde_finale') {
                 afficherTutorielContextuel('distorsion', () =>
                     proposerPanneauObjectifsAvantPartie(monde, lancer)
                 );

@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version    | Date       | En bref                                                                                            |
 | ---------- | ---------- | -------------------------------------------------------------------------------------------------- |
+| **2.5.23** | 2026-06-16 | Fix boutons lazy-load (codex/coop/archi/profil), haptique meta, export profil, responsive audit    |
 | **2.5.22** | 2026-06-16 | Remédiations audits A/B/C/D : lazy-load, precache −47 %, icônes, leaderboard filtres, E2E campagne |
 | **2.5.21** | 2026-06-16 | Remédiations audits A/B/C/D : splits modules, leaderboard, safe-area, narration post-monde         |
 | **2.5.20** | 2026-06-15 | Timer niveau marathon, enchaînement campagne, contrôles tactiles, UI jeu & équilibrage difficulté  |
@@ -36,6 +37,29 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.2.0**  | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                                         |
 | **2.1.0**  | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                                         |
 | **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                                      |
+
+---
+
+## [2.5.23] — 2026-06-16
+
+### Correctifs boutons (lazy-load v2.5.22)
+
+- **`ui-lier-bouton.js`** : wiring idempotent `data-neo-btn-lie` — handlers re-attaches apres injection de fragments
+- **`ui-boutons-assurer.js`** : ecouteur `neo:fragments-injectes` (codex, profil, achievements, coop, archi, histoire)
+- Retours meta, pause/coop/archi, campagne game over (`btn-histoire-carte`, `btn-continue-boss`) fonctionnels
+- Fix filtre difficulte architecte si fragment pas encore charge
+- E2E `boutons-meta.spec.mjs` (codex, profil, architecte)
+
+### Remédiations audit (hors audio)
+
+- Haptique navigation meta (`vibrerUi`)
+- Export / import records depuis l'ecran profil
+- Tutoriel Distorsion des `monde_boss_4` (Avant-Garde)
+- CSS paysage : game over empile, cutscenes safe-area &lt;360px, panneau archi scrollable
+
+### Technique
+
+- SW `dl-shell-v49` ; navigation boutons via `navigation-lazy` (0 cycle)
 
 ---
 
