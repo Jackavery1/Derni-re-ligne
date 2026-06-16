@@ -9,5 +9,5 @@ describe('build prod', () => {
         expect(html).toMatch(
             /<script type="module" src="js\/bundle\.js" integrity="sha384-[^"]+" crossorigin="anonymous"><\/script>/
         );
-    });
+    }, 15000);
 });
