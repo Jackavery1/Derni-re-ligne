@@ -1,0 +1,235 @@
+/** Etats de campagne injectes en E2E. */
+
+/** État histoire minimal pour débloquer le mode libre (Chapitre I complété). */
+export const ETAT_DEBLOCAGE_MONDE_LIBRE = {
+    chapitreActuel: 'chapitre_2',
+    mondesCompletes: ['monde_prologue', 'monde_lave', 'monde_rouille'],
+    bossVaincus: ['brasier'],
+    journauxTrouves: [],
+    mondesCachesDebloques: [],
+    conditionsMiroir: { bossArchivisteVaincu: false, tetrisTriplesCyber: 0 },
+    conditionsTrame: {
+        miroirComplete: false,
+        tousJournauxTrouves: false,
+        tousBossSansContinue: true,
+        actionDistorsionFaite: false,
+    },
+    conditionsParadoxe: { finSecreteObtenue: false, topsVolontairesPrologue: 0 },
+    finObtenue: null,
+    toutesFinObtenues: [],
+    nbContinuesUtilises: 0,
+    enModeHistoire: false,
+    mondesDejaMontres: [],
+    laboDecouvert: false,
+    prouessesHistoire: {
+        blocksRouillesMax: 0,
+        lignesEclipseBasseMax: 0,
+        lignesVideMax: 0,
+        precisionMiroirMax: 0,
+        meilleurTimerBossMs: Infinity,
+    },
+};
+
+/** État histoire pour Oracle, Coop, Codex et Architecte débloqués. */
+export const ETAT_DEBLOCAGE_COMPLET = {
+    ...ETAT_DEBLOCAGE_MONDE_LIBRE,
+    bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion'],
+    mondesCompletes: ['monde_prologue'],
+};
+
+/** État histoire minimal pour jouer le boss Brasier (monde_boss_1). */
+export const ETAT_HISTOIRE_BOSS_BRASIER = {
+    chapitreActuel: 'chapitre_1',
+    mondesCompletes: ['monde_prologue', 'monde_lave', 'monde_rouille'],
+    bossVaincus: [],
+    journauxTrouves: [],
+    mondesCachesDebloques: [],
+    conditionsMiroir: { bossArchivisteVaincu: false, tetrisTriplesCyber: 0 },
+    conditionsTrame: {
+        miroirComplete: false,
+        tousJournauxTrouves: false,
+        tousBossSansContinue: true,
+        actionDistorsionFaite: false,
+    },
+    conditionsParadoxe: { finSecreteObtenue: false, topsVolontairesPrologue: 0 },
+    finObtenue: null,
+    toutesFinObtenues: [],
+    nbContinuesUtilises: 0,
+    enModeHistoire: false,
+    mondesDejaMontres: ['monde_boss_1'],
+    laboDecouvert: false,
+    prouessesHistoire: {
+        blocksRouillesMax: 0,
+        lignesEclipseBasseMax: 0,
+        lignesVideMax: 0,
+        precisionMiroirMax: 0,
+        meilleurTimerBossMs: Infinity,
+    },
+};
+
+/** État prêt pour déclencher la fin secrète (Trame complétée + conditions). */
+export const ETAT_FIN_SECRETE_PRET = {
+    chapitreActuel: 'chapitre_2',
+    mondesCompletes: [
+        'monde_prologue',
+        'monde_lave',
+        'monde_rouille',
+        'monde_ocean',
+        'monde_foret',
+        'monde_glace',
+        'monde_desert',
+        'monde_eclipse',
+        'monde_cyber',
+        'monde_fuochi',
+        'monde_cosmos',
+        'monde_vide',
+        'monde_miroir',
+        'monde_trame',
+        'monde_finale',
+    ],
+    bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion'],
+    journauxTrouves: [
+        'journal_1',
+        'journal_2',
+        'journal_3',
+        'journal_4',
+        'journal_5',
+        'journal_6',
+        'journal_7',
+        'journal_8',
+        'journal_9',
+    ],
+    mondesCachesDebloques: ['monde_miroir', 'monde_trame'],
+    conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 },
+    conditionsTrame: {
+        miroirComplete: true,
+        tousJournauxTrouves: true,
+        tousBossSansContinue: true,
+        actionDistorsionFaite: true,
+    },
+    conditionsParadoxe: { finSecreteObtenue: false, topsVolontairesPrologue: 0 },
+    finObtenue: null,
+    toutesFinObtenues: [],
+    nbContinuesUtilises: 0,
+    enModeHistoire: false,
+    mondesDejaMontres: ['monde_boss_1', 'monde_trame'],
+    laboDecouvert: true,
+    prouessesHistoire: {
+        blocksRouillesMax: 0,
+        lignesEclipseBasseMax: 0,
+        lignesVideMax: 0,
+        precisionMiroirMax: 0,
+        meilleurTimerBossMs: Infinity,
+    },
+};
+
+/** État à une victoire de la fin secrète (Trame OK, finale non battue). */
+export const ETAT_AVANT_FIN_SECRETE = {
+    ...ETAT_FIN_SECRETE_PRET,
+    mondesCompletes: ETAT_FIN_SECRETE_PRET.mondesCompletes.filter((id) => id !== 'monde_finale'),
+    bossVaincus: ETAT_FIN_SECRETE_PRET.bossVaincus.filter((id) => id !== 'distorsion'),
+};
+
+/** État prologue complété, Inferno jouable (enchaînement campagne). */
+export const ETAT_INFERNO_PRET = {
+    chapitreActuel: 'prologue',
+    mondesCompletes: ['monde_prologue'],
+    bossVaincus: [],
+    journauxTrouves: [],
+    mondesCachesDebloques: [],
+    conditionsMiroir: { bossArchivisteVaincu: false, tetrisTriplesCyber: 0 },
+    conditionsTrame: {
+        miroirComplete: false,
+        tousJournauxTrouves: false,
+        tousBossSansContinue: false,
+        actionDistorsionFaite: false,
+    },
+    conditionsParadoxe: { finSecreteObtenue: false, topsVolontairesPrologue: 0 },
+    finObtenue: null,
+    toutesFinObtenues: [],
+    nbContinuesUtilises: 0,
+    enModeHistoire: false,
+    mondesDejaMontres: ['monde_prologue', 'monde_lave'],
+    laboDecouvert: false,
+    prouessesHistoire: {
+        blocksRouillesMax: 0,
+        lignesEclipseBasseMax: 0,
+        lignesVideMax: 0,
+        precisionMiroirMax: 0,
+        meilleurTimerBossMs: Infinity,
+    },
+};
+
+/** État prêt pour déclencher la fin vraie (Miroir complété, sans Trame). */
+export const ETAT_FIN_VRAIE_PRET = {
+    chapitreActuel: 'chapitre_2',
+    mondesCompletes: [
+        'monde_prologue',
+        'monde_lave',
+        'monde_rouille',
+        'monde_ocean',
+        'monde_foret',
+        'monde_glace',
+        'monde_desert',
+        'monde_eclipse',
+        'monde_cyber',
+        'monde_fuochi',
+        'monde_cosmos',
+        'monde_vide',
+        'monde_miroir',
+        'monde_finale',
+    ],
+    bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion'],
+    journauxTrouves: ['journal_1', 'journal_2', 'journal_3', 'journal_4', 'journal_5', 'journal_6'],
+    mondesCachesDebloques: ['monde_miroir'],
+    conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 },
+    conditionsTrame: {
+        miroirComplete: true,
+        tousJournauxTrouves: false,
+        tousBossSansContinue: true,
+        actionDistorsionFaite: false,
+    },
+    conditionsParadoxe: { finSecreteObtenue: false, topsVolontairesPrologue: 0 },
+    finObtenue: null,
+    toutesFinObtenues: [],
+    nbContinuesUtilises: 0,
+    enModeHistoire: false,
+    mondesDejaMontres: ['monde_boss_1', 'monde_miroir'],
+    laboDecouvert: true,
+    fragmentsVusIds: [],
+    interludesVusIds: [],
+    prouessesHistoire: {
+        blocksRouillesMax: 0,
+        lignesEclipseBasseMax: 0,
+        lignesVideMax: 0,
+        precisionMiroirMax: 0,
+        meilleurTimerBossMs: Infinity,
+    },
+};
+
+/** État pour tester fragment VERA océan (première complétion). */
+export const ETAT_OCEAN_FRAGMENT_PRET = {
+    ...ETAT_HISTOIRE_BOSS_BRASIER,
+    mondesCompletes: ['monde_prologue', 'monde_lave', 'monde_rouille'],
+    fragmentsVusIds: [],
+};
+
+/** État pour tester découverte labo cyber + journal 7. */
+export const ETAT_CYBER_LABO_PRET = {
+    ...ETAT_HISTOIRE_BOSS_BRASIER,
+    mondesCompletes: [
+        'monde_prologue',
+        'monde_lave',
+        'monde_rouille',
+        'monde_ocean',
+        'monde_foret',
+        'monde_glace',
+        'monde_desert',
+        'monde_eclipse',
+    ],
+    conditionsMiroir: { bossArchivisteVaincu: false, tetrisTriplesCyber: 3 },
+    laboDecouvert: false,
+    journauxTrouves: ['journal_1', 'journal_2', 'journal_3', 'journal_4', 'journal_5', 'journal_6'],
+    fragmentsVusIds: ['apres_ocean', 'apres_foret', 'apres_glace', 'apres_desert', 'apres_eclipse'],
+    interludesVusIds: ['interlude_gardiens', 'interlude_elle'],
+};

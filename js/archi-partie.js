@@ -12,7 +12,6 @@ import {
     retournerAuMenuTitre,
     appliquerThemeBiome,
 } from './ecrans-ui.js';
-import { arreterConstellation } from './constellation.js';
 import { arreterAnimationMenu } from './menu-fond.js';
 import { basculerOracle, oracle } from './oracle-jeu.js';
 import { statsGlobales, sauvegarderStats, verifierAchievements } from './achievements.js';
@@ -71,8 +70,9 @@ function afficherInterfaceArchi(visible) {
     }
 }
 
-export function demarrerArchi(niveauId) {
-    const niveau = obtenirTousNiveauxArchi().find((n) => n.id === niveauId);
+export async function demarrerArchi(niveauId) {
+    const niveaux = await obtenirTousNiveauxArchi();
+    const niveau = niveaux.find((n) => n.id === niveauId);
     if (!niveau) return;
 
     if (oracle.actif) basculerOracle();
@@ -98,7 +98,7 @@ export function demarrerArchi(niveauId) {
 
     particules.length = 0;
     suspendreBoucleSolo();
-    arreterConstellation();
+    void import('./constellation.js').then(({ arreterConstellation }) => arreterConstellation());
     arreterAnimationMenu();
 
     definirBiomeActif(niveau.biome);
@@ -228,10 +228,10 @@ export function archi_terminerNiveau() {
 
     verifierAchievements();
     sauvegarderStats();
-    archi_afficherResultat(score, etoiles);
+    void archi_afficherResultat(score, etoiles);
 }
 
-export function archi_afficherResultat(score, etoiles) {
+export async function archi_afficherResultat(score, etoiles) {
     const elNom = document.getElementById('archi-res-nom');
     const elScore = document.getElementById('archi-res-score');
     const elEtoiles = document.getElementById('archi-res-etoiles');
@@ -249,13 +249,14 @@ export function archi_afficherResultat(score, etoiles) {
         elPieces.textContent = `${archi.piecesUtilisees} / ${archi.niveauActuel.parPieces} min`;
     }
 
-    const idxActuel = obtenirTousNiveauxArchi().findIndex((n) => n.id === archi.niveauActuel.id);
-    const suivant = obtenirTousNiveauxArchi()[idxActuel + 1];
+    const niveaux = await obtenirTousNiveauxArchi();
+    const idxActuel = niveaux.findIndex((n) => n.id === archi.niveauActuel.id);
+    const suivant = niveaux[idxActuel + 1];
     const btnSuivant = document.getElementById('archi-res-btn-suivant');
     if (btnSuivant) {
         if (suivant) {
             btnSuivant.textContent = `▶ ${suivant.nom}`;
-            btnSuivant.onclick = () => demarrerArchi(suivant.id);
+            btnSuivant.onclick = () => void demarrerArchi(suivant.id);
             btnSuivant.style.display = 'block';
         } else {
             btnSuivant.style.display = 'none';

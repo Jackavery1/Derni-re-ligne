@@ -61,7 +61,7 @@ function creerCtxMock() {
     };
 }
 
-describe('portrait VERA sprite', () => {
+describe('portrait VERA canvas procedural', () => {
     beforeEach(() => {
         viderCachePortraitVera();
         reinitialiserCachePortraitVeraAssets();
@@ -94,28 +94,29 @@ describe('portrait VERA sprite', () => {
         expect(ctx.fillRect.mock.calls.every((c) => c[2] < 70)).toBe(true);
     });
 
-    it('utilise drawImage quand le sprite est chargé', () => {
-        vi.mocked(obtenirImagePortraitVera).mockReturnValue({
-            width: 512,
-            height: 512,
-        });
+    it('dessine en canvas procedural sans sprite PNG', () => {
         const ctx = creerCtxMock();
         const params = obtenirParamsExpressionPortrait('vera', 'neutre', 1000);
         dessinerPortraitVeraCanon(ctx, 180, 260, 0, params);
-        expect(ctx.drawImage).toHaveBeenCalled();
+        expect(ctx.drawImage).not.toHaveBeenCalled();
+        expect(ctx.ellipse.mock.calls.length).toBeGreaterThan(4);
     });
 
-    it('glitch active les bandes (clip + drawImage)', () => {
-        vi.mocked(obtenirImagePortraitVera).mockReturnValue({
-            width: 512,
-            height: 512,
-        });
+    it('glitch procedural utilise getImageData quand disponible', () => {
         const ctx = creerCtxMock();
+        const pixels = new Uint8ClampedArray(180 * 260 * 4);
+        ctx.getImageData = vi.fn(() => ({ data: pixels, width: 180, height: 260 }));
+        ctx.createImageData = vi.fn((width, height) => ({
+            data: new Uint8ClampedArray(width * height * 4),
+            width,
+            height,
+        }));
+        ctx.putImageData = vi.fn();
         const params = obtenirParamsExpressionPortrait('vera', 'glitch', 1000);
         params.decalagesGlitch = [2, 4, 3];
         dessinerPortraitVeraCanon(ctx, 180, 260, 2, params);
-        expect(ctx.clip.mock.calls.length).toBeGreaterThan(0);
-        expect(ctx.drawImage.mock.calls.length).toBeGreaterThan(1);
+        expect(ctx.getImageData).toHaveBeenCalled();
+        expect(ctx.putImageData).toHaveBeenCalled();
     });
 
     it('infère des humeurs depuis le texte de dialogue', () => {

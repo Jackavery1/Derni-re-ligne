@@ -5,7 +5,7 @@ vi.mock('../js/achievements.js', () => ({
 }));
 
 vi.mock('../js/codex.js', () => ({
-    verifierCodex: vi.fn(() => Promise.resolve()),
+    planifierVerifierCodex: vi.fn(),
 }));
 
 vi.mock('../js/profil-jeu.js', () => ({
@@ -21,6 +21,7 @@ vi.mock('../js/annonces.js', () => ({
 }));
 
 import { finaliserStatsPartie } from '../js/achievements.js';
+import { planifierVerifierCodex } from '../js/codex.js';
 import { sauvegarderSnapshotProfil } from '../js/profil-jeu.js';
 import { annoncer } from '../js/annonces.js';
 import { finaliserPartieCommune } from '../js/partie-fin-commun.js';
@@ -30,13 +31,14 @@ describe('partie-fin-commun', () => {
         vi.clearAllMocks();
     });
 
-    it('finalise stats, profil et codex pour solo et coop', () => {
+    it('finalise stats, profil et codex pour solo et coop', async () => {
         finaliserPartieCommune({
             score: 9000,
             lignes: 40,
             biomeId: 'classique',
             annonceDefaite: 'Mission coop echouee',
         });
+        await vi.waitFor(() => expect(planifierVerifierCodex).toHaveBeenCalled());
         expect(sauvegarderSnapshotProfil).toHaveBeenCalledWith(40, 'classique');
         expect(finaliserStatsPartie).toHaveBeenCalledWith(9000, 120);
         expect(annoncer).toHaveBeenCalledWith('Mission coop echouee');

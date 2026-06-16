@@ -4,13 +4,12 @@ import { afficherOngletOptions } from './options-ui.js';
 import { jouerMelodie } from './melodie.js';
 import { AudioMoteur } from './audio.js';
 import { basculerOracle } from './oracle-jeu.js';
-import { basculerModeCoop } from './coop-jeu.js';
 import { basculerModeSprint, mettreAJourToggleSprint } from './mode-sprint.js';
 import { basculerDefiJour, mettreAJourToggleDefiJour } from './mode-defi-jour.js';
-import { archi_afficherSelection } from './archi-jeu.js';
 import { afficherTutorielContextuel } from './tutoriel.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 import { initialiserBoutonsCampagne } from './ui-boutons-campagne.js';
+import { assurerInputArchi, assurerInputCoop } from './modes-input-lazy.js';
 
 export function initialiserBoutonsNavigation() {
     initialiserBoutonsCampagne();
@@ -25,9 +24,11 @@ function _lierBoutonsMenuPrincipal() {
     document
         .getElementById('btn-jouer')
         ?.addEventListener('click', () => afficherEcran(ECRANS.SELECTION));
-    document.getElementById('btn-architecte')?.addEventListener('click', () => {
+    document.getElementById('btn-architecte')?.addEventListener('click', async () => {
         afficherTutorielContextuel('architecte');
-        archi_afficherSelection();
+        await assurerInputArchi();
+        const { archi_afficherSelection } = await import('./archi-jeu.js');
+        await archi_afficherSelection();
     });
     document
         .getElementById('btn-achievements')
@@ -75,7 +76,9 @@ function _lierBoutonsRetour() {
 
 function _lierSelectionEtModes() {
     document.getElementById('toggle-oracle')?.addEventListener('click', basculerOracle);
-    document.getElementById('toggle-coop')?.addEventListener('click', () => {
+    document.getElementById('toggle-coop')?.addEventListener('click', async () => {
+        await assurerInputCoop();
+        const { basculerModeCoop } = await import('./coop-jeu.js');
         basculerModeCoop();
         mettreAJourToggleSprint();
         if (document.getElementById('toggle-coop')?.classList.contains('actif')) {

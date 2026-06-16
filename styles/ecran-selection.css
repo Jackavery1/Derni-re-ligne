@@ -363,6 +363,19 @@ body.effets-reduits #sel-info-biome {
     min-width: 0;
     font-size: 0.28rem;
 }
+.options-leaderboard-filtres {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem 0.5rem;
+    margin-top: 0.35rem;
+}
+.options-leaderboard-filtres .option-label {
+    grid-column: span 2;
+    margin-bottom: 0;
+}
+.options-leaderboard-filtres .option-label:nth-of-type(3) {
+    grid-column: span 2;
+}
 .options-leaderboard-ligne {
     margin-top: 0.75rem;
     display: flex;

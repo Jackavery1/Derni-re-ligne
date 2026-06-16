@@ -1,3 +1,4 @@
+/** Source d'export uniquement — le runtime charge data/archi-niveaux.json. */
 /** @typedef {{ id: string, nom: string, biome: string, difficulte: 1|2|3, parPieces: number, silhouette: string[], pieces: { type: string, qte: number }[], deblocage: number }} NiveauArchi */
 
 /** @type {NiveauArchi[]} */

@@ -1,8 +1,15 @@
 import { describe, it, expect, beforeAll, vi } from 'vitest';
+import { readFileSync } from 'fs';
 import { chargerIconesPixel, dessinerIconePixel } from '../js/icones-pixel.js';
 import { ICONE_PAR_ENTREE, ACCENT_PAR_ENTREE } from '../js/codex-icones-map.js';
-import { CODEX } from '../js/codex-donnees.js';
+import { CONDITIONS_CODEX } from '../js/codex-conditions.js';
 import ICONES_PIXEL from '../data/icones-pixel.json';
+
+const CODEX = Object.fromEntries(
+    Object.entries(JSON.parse(readFileSync('data/codex-textes.json', 'utf8'))).map(
+        ([id, entree]) => [id, { ...entree, condition: CONDITIONS_CODEX[id] }]
+    )
+);
 
 describe('icones-pixel', () => {
     beforeAll(async () => {

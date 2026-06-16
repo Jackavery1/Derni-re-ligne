@@ -228,19 +228,10 @@ export function surFinDeMondeHistoire(lignes, score) {
     }
 }
 
-export function peutContinuerBossGratuit() {
-    if (!modeHistoireEnCours()) return false;
-    if (store.histoire.mondeActuel !== 'monde_finale') return false;
-    const etatHist = obtenirEtatHistoire();
-    return etatHist.continueGratuitDistorsionUtilise !== true;
-}
-
-export function utiliserContinueGratuitDistorsion() {
-    const etatHist = obtenirEtatHistoire();
-    etatHist.continueGratuitDistorsionUtilise = true;
-    sauvegarderEtatHistoire(etatHist);
-    store.histoire.etat = etatHist;
-}
+export {
+    peutContinuerBossGratuit,
+    utiliserContinueGratuitDistorsion,
+} from './histoire-boss-continue.js';
 
 function verifierJournalBiome(biomeId, lignes, etatHist) {
     const journal = JOURNAUX_VERA.find((j) => {

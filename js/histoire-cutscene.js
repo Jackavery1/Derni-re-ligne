@@ -201,6 +201,35 @@ function _terminerCutscene() {
     }
 }
 
+let _boutonsCutsceneOk = false;
+
+function _lierBoutonsCutsceneDom() {
+    if (_boutonsCutsceneOk) return;
+    _boutonsCutsceneOk = true;
+    const marqueur = 'data-neo-cutscene-lie';
+    const lier = (id, handler) => {
+        const el = document.getElementById(id);
+        if (!el || el.hasAttribute?.(marqueur) || typeof el.addEventListener !== 'function') return;
+        el.setAttribute?.(marqueur, '1');
+        el.addEventListener('click', handler);
+    };
+    lier('btn-cutscene-suivant', () => avancerCutscene());
+    lier('btn-cutscene-passer', () => passerCutscene());
+    const ecranCutscene = document.getElementById('ecran-histoire-cutscene');
+    if (
+        ecranCutscene &&
+        !ecranCutscene.hasAttribute?.(marqueur) &&
+        typeof ecranCutscene.addEventListener === 'function'
+    ) {
+        ecranCutscene.setAttribute?.(marqueur, '1');
+        ecranCutscene.addEventListener('click', (e) => {
+            if (e.target instanceof HTMLElement && !e.target.closest('.cutscene-controles')) {
+                avancerCutscene();
+            }
+        });
+    }
+}
+
 export function afficherCutsceneHistoire(textes, personnages, onFin, options = {}) {
     if (typeof personnages === 'function') {
         onFin = personnages;
@@ -219,6 +248,8 @@ export function afficherCutsceneHistoire(textes, personnages, onFin, options = {
         onFin?.();
         return false;
     }
+
+    _lierBoutonsCutsceneDom();
 
     if (!initDomCutscene()) {
         logger.warn('[cutscene] éléments portrait introuvables dans le DOM');
@@ -246,18 +277,36 @@ export function afficherCutsceneHistoire(textes, personnages, onFin, options = {
         return true;
     }
 
-    Promise.all([
-        assurerFeuilleStyle('assets/cutscenes/cutscenes.css'),
-        _prechargerScenesCutscene(entree),
-    ]).then(() => {
-        if (!store.histoire.cutscene.enCours) return;
-        _demarrerAffichageCutscene(entree, options);
-    });
+    void _lancerCutsceneAvecPrechargement(entree, options);
 
     return true;
 }
 
-function _demarrerAffichageCutscene(entree, options = {}) {
+async function _lancerCutsceneAvecPrechargement(entree, options = {}) {
+    const preload = Promise.all([
+        assurerFeuilleStyle('assets/cutscenes/cutscenes.css').catch((err) => {
+            logger.warn('[cutscene] feuille style :', err);
+        }),
+        _prechargerScenesCutscene(entree).catch((err) => {
+            logger.warn('[cutscene] scenes :', err);
+        }),
+    ]);
+
+    try {
+        await afficherEcranHistoire(ECRANS.HISTOIRE_CUTSCENE);
+        if (options.intro) {
+            logger.debug('[intro] moteur: ecran HISTOIRE_CUTSCENE active');
+        }
+    } catch (err) {
+        logger.warn('[cutscene] ecran indisponible :', err);
+    }
+    if (!store.histoire.cutscene.enCours) return;
+
+    await _demarrerAffichageCutscene(entree, options);
+    void preload;
+}
+
+async function _demarrerAffichageCutscene(entree, options = {}) {
     detecterParticipantsCutscene(_obtenirSequenceCutscene());
     definirHumeurRoboCutscene(options.humeurRobo ?? 'content');
 
@@ -277,11 +326,6 @@ function _demarrerAffichageCutscene(entree, options = {}) {
             indexLigne: cutsceneIndex,
         })
     );
-
-    afficherEcranHistoire(ECRANS.HISTOIRE_CUTSCENE);
-    if (options.intro) {
-        logger.debug('[intro] moteur: ecran HISTOIRE_CUTSCENE active');
-    }
 
     try {
         afficherProchaineLigneCutscene();
@@ -382,6 +426,8 @@ export function afficherFinHistoire(finId) {
 export function afficherBoutonCarteGameOver(afficher) {
     const btn = document.getElementById('btn-histoire-carte');
     if (!btn) return;
+    btn.textContent = '🗺 CARTE';
+    btn.setAttribute('aria-label', 'Retourner à la carte histoire');
     btn.classList.toggle('element-masque', !afficher);
     btn.style.display = '';
 }

@@ -19,6 +19,33 @@
     text-shadow: 0 0 8px var(--vert);
     max-width: min(92vw, 320px);
 }
+#notif-niveau.notif-campagne {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    box-shadow: 0 0 24px rgba(0, 245, 255, 0.3);
+    text-shadow: 0 0 8px var(--cyan);
+}
+#notif-niveau.notif-campagne.visible {
+    animation: apparitionNiveauBandeauCampagne 2.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes apparitionNiveauBandeauCampagne {
+    0% {
+        transform: translate(-50%, -120%) scale(0.85);
+        opacity: 0;
+    }
+    12% {
+        transform: translate(-50%, 0) scale(1);
+        opacity: 1;
+    }
+    82% {
+        transform: translate(-50%, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -120%) scale(0.85);
+        opacity: 0;
+    }
+}
 #notif-niveau.visible {
     animation: apparitionNiveauBandeau 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }

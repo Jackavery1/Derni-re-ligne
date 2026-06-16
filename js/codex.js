@@ -25,9 +25,10 @@ export async function chargerDonneesCodex() {
     if (codexDonnees) return codexDonnees;
     if (!promesseCodex) {
         promesseCodex = import('./codex-donnees.js')
-            .then((module) => {
-                codexDonnees = module.CODEX;
-                return codexDonnees;
+            .then((module) => module.chargerCodexComplet())
+            .then((codex) => {
+                codexDonnees = codex;
+                return codex;
             })
             .catch((err) => {
                 promesseCodex = null;
@@ -115,6 +116,23 @@ export async function verifierCodex() {
         }
     } catch (err) {
         logger.warn('[codex] verification impossible :', err);
+    }
+}
+
+let verificationPlanifiee = false;
+
+/** Vérifie les déblocages codex hors chemin critique (idle / timeout court). */
+export function planifierVerifierCodex() {
+    if (verificationPlanifiee) return;
+    verificationPlanifiee = true;
+    const lancer = () => {
+        verificationPlanifiee = false;
+        void verifierCodex();
+    };
+    if (typeof requestIdleCallback === 'function') {
+        requestIdleCallback(lancer, { timeout: 2500 });
+    } else {
+        setTimeout(lancer, 80);
     }
 }
 
@@ -225,7 +243,11 @@ export async function genererCodexComplet() {
     await genererListeCodex(chapitreCodexActif);
 }
 
+let _codexUiInitialise = false;
+
 export function initialiserCodexUI() {
+    if (_codexUiInitialise) return;
+    _codexUiInitialise = true;
     initialiserPanneauDetail();
     abonnerFermeturePanneauDetail(() => {
         void genererListeCodex(chapitreCodexActif);

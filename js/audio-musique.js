@@ -1,5 +1,6 @@
 import { GAMMES } from './audio-donnees.js';
 import { obtenirConfigMusiqueBiome } from './audio-fallback-biomes.js';
+import { creerMethodesMusiqueFichier } from './audio-fichiers-musique.js';
 
 function genererSequence(config, biomeId, noteVersFreq) {
     const gamme = GAMMES[config.gamme] ?? GAMMES.dorien;
@@ -21,8 +22,10 @@ function genererSequenceBasse(config, biomeId, noteVersFreq) {
 }
 
 export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq, obtenirMultMusique }) {
+    const methodesFichier = creerMethodesMusiqueFichier();
     const multMusique = () => (typeof obtenirMultMusique === 'function' ? obtenirMultMusique() : 1);
-    return {
+    return /** @type {any} */ ({
+        ...methodesFichier,
         jouerNoteMusique(freq, config, volume) {
             if (!this.ctx || !this.gainMusique || this.muet) return;
             if (this.ctx.state === 'suspended') this.ctx.resume();
@@ -158,6 +161,8 @@ export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq, obteni
             if (!this.initialise || !this.ctx) return;
             if (this.ctx.state === 'suspended') this.ctx.resume();
 
+            this.arreterLectureFichier();
+
             if (!conserverPosition) {
                 clearInterval(this.intervalMusique);
                 this.intervalMusique = null;
@@ -180,6 +185,8 @@ export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq, obteni
                 this.tickerMusique();
                 this.intervalMusique = setInterval(() => this.tickerMusique(), msParStep);
             }
+
+            void this.tenterMusiqueFichier(biomeId);
         },
 
         relancerIntervalleMusique() {
@@ -223,6 +230,7 @@ export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq, obteni
             this.musiqueActive = false;
             clearInterval(this.intervalMusique);
             this.intervalMusique = null;
+            this.arreterLectureFichier();
 
             if (!this.gainMusique || !this.ctx) {
                 if (!options.conserverBiome) {
@@ -252,5 +260,5 @@ export function creerMethodesMusique({ calculerTempoActuel, noteVersFreq, obteni
             }
             this.stepActuel = 0;
         },
-    };
+    });
 }

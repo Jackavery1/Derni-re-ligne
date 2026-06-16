@@ -135,6 +135,14 @@
                 >
                     📳 RETOUR HAPTIQUE
                 </button>
+                <button
+                    class="bouton discret"
+                    type="button"
+                    id="btn-toggle-enchainement-campagne"
+                    aria-pressed="true"
+                >
+                    ▶ ENCHAINEMENT CAMPAGNE
+                </button>
             </div>
             <button type="button" class="options-hint-controles" id="btn-aller-controles">
                 Personnaliser les touches → onglet <strong>CONTRÔLES</strong>
@@ -204,8 +212,30 @@
                         placeholder="Votre pseudo"
                         autocomplete="nickname"
                     />
+                    <div class="options-leaderboard-filtres">
+                        <label class="option-label" for="select-leaderboard-mode"
+                            >MODE CLASSEMENT</label
+                        >
+                        <select
+                            class="option-texte"
+                            id="select-leaderboard-mode"
+                            aria-label="Mode du classement"
+                        >
+                            <option value="marathon">MARATHON</option>
+                            <option value="sprint">SPRINT</option>
+                            <option value="coop">COOP</option>
+                        </select>
+                        <label class="option-label" for="select-leaderboard-biome">BIOME</label>
+                        <select
+                            class="option-texte"
+                            id="select-leaderboard-biome"
+                            aria-label="Biome du classement"
+                        ></select>
+                    </div>
                     <div class="options-leaderboard-entete">
-                        <span class="option-label">TOP MARATHON (biome actif)</span>
+                        <span class="option-label" id="leaderboard-options-titre"
+                            >TOP MARATHON</span
+                        >
                         <button
                             class="bouton discret"
                             type="button"

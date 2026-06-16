@@ -219,6 +219,60 @@ test('sync cloud — leaderboard marathon affiche le top', async ({ page }) => {
     await expect(page.locator('#liste-leaderboard-options')).toContainText(/15[\s\u00a0]?000/);
 });
 
+test('sync cloud — filtres leaderboard mode et biome', async ({ page }) => {
+    let urlLeaderboard = '';
+    await preparerPageSansSw(page);
+    await preparerSyncCloud(page);
+    await page.route('**/rest/v1/leaderboard_entries*', async (route) => {
+        if (route.request().method() === 'GET') {
+            urlLeaderboard = route.request().url();
+            await route.fulfill({
+                status: 200,
+                contentType: 'application/json',
+                body: JSON.stringify([
+                    { pseudo: 'Sprinteur', score: 0, sprint_ms: 42000, niveau: 1 },
+                ]),
+            });
+            return;
+        }
+        await route.continue();
+    });
+
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-options').click();
+    await expect(page.locator('#select-leaderboard-biome option').first()).toBeAttached({
+        timeout: 5000,
+    });
+
+    await page.locator('#select-leaderboard-mode').selectOption('sprint');
+    await page.locator('#select-leaderboard-biome').selectOption('lave');
+    await page.locator('#btn-rafraichir-leaderboard').click();
+
+    await expect(page.locator('#leaderboard-options-titre')).toContainText(/SPRINT/i);
+    await expect(page.locator('#liste-leaderboard-options')).toContainText(/Sprinteur/i, {
+        timeout: 10000,
+    });
+    expect(urlLeaderboard).toContain('mode=eq.sprint');
+    expect(urlLeaderboard).toContain('biome=eq.lave');
+});
+
+test('options — toggle enchainement campagne persiste', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-options').click();
+
+    await expect(page.locator('#btn-toggle-enchainement-campagne')).toContainText(/ON/i);
+    await page.locator('#btn-toggle-enchainement-campagne').click();
+    await expect(page.locator('#btn-toggle-enchainement-campagne')).toContainText(/RETOUR CARTE/i);
+
+    const valeur = await page.evaluate(() =>
+        localStorage.getItem('derniereLigne_enchainementCampagne')
+    );
+    expect(valeur).toBe('false');
+});
+
 test('marathon — timer niveau visible en partie', async ({ page }) => {
     await demarrerPartie(page);
     await expect(page.locator('#section-timer-niveau')).toBeVisible();

@@ -19,12 +19,9 @@ export const ECRANS = {
     HISTOIRE_FIN: 'ecran-histoire-fin',
 };
 
-/** Ordre de chargement des fragments HTML (source unique pour charger-ecrans et SW). */
-export const LISTE_ECRANS_CHARGEMENT = [
+/** Fragments chargés au boot (parcours titre → sélection → partie). */
+export const ECRANS_CHARGEMENT_IMMEDIAT = [
     ECRANS.TITRE,
-    ECRANS.ACHIEVEMENTS,
-    ECRANS.PROFIL,
-    ECRANS.CODEX,
     ECRANS.SELECTION,
     ECRANS.OPTIONS,
     ECRANS.PAUSE,
@@ -32,6 +29,13 @@ export const LISTE_ECRANS_CHARGEMENT = [
     'overlays',
     'interface-jeu',
     'controles',
+];
+
+/** Fragments chargés à la première ouverture du mode ou écran associé. */
+export const ECRANS_CHARGEMENT_DIFFERE = [
+    ECRANS.ACHIEVEMENTS,
+    ECRANS.PROFIL,
+    ECRANS.CODEX,
     'interface-jeu-coop',
     ECRANS.PAUSE_COOP,
     ECRANS.GAME_OVER_COOP,
@@ -39,4 +43,32 @@ export const LISTE_ECRANS_CHARGEMENT = [
     ECRANS.ARCHI_RESULTAT,
     'interface-jeu-archi',
     ECRANS.HISTOIRE_MAP,
+];
+
+/** Ordre de chargement des fragments HTML (source unique pour charger-ecrans et SW). */
+export const LISTE_ECRANS_CHARGEMENT = [
+    ...ECRANS_CHARGEMENT_IMMEDIAT,
+    ...ECRANS_CHARGEMENT_DIFFERE,
+];
+
+/** @type {Partial<Record<IdEcran, string[]>>} */
+export const FRAGMENTS_REQUIS_PAR_ECRAN = {
+    [ECRANS.ACHIEVEMENTS]: [ECRANS.ACHIEVEMENTS],
+    [ECRANS.PROFIL]: [ECRANS.PROFIL],
+    [ECRANS.CODEX]: [ECRANS.CODEX],
+    [ECRANS.PAUSE_COOP]: ['interface-jeu-coop', ECRANS.PAUSE_COOP],
+    [ECRANS.GAME_OVER_COOP]: ['interface-jeu-coop', ECRANS.GAME_OVER_COOP],
+    [ECRANS.ARCHI_SELECTION]: [ECRANS.ARCHI_SELECTION, 'interface-jeu-archi'],
+    [ECRANS.ARCHI_RESULTAT]: [ECRANS.ARCHI_RESULTAT, 'interface-jeu-archi'],
+    [ECRANS.HISTOIRE_MAP]: [ECRANS.HISTOIRE_MAP],
+    [ECRANS.HISTOIRE_CUTSCENE]: [ECRANS.HISTOIRE_MAP],
+    [ECRANS.HISTOIRE_JOURNAL]: [ECRANS.HISTOIRE_MAP],
+    [ECRANS.HISTOIRE_FIN]: [ECRANS.HISTOIRE_MAP],
+};
+
+export const FRAGMENTS_COOP = ['interface-jeu-coop', ECRANS.PAUSE_COOP, ECRANS.GAME_OVER_COOP];
+export const FRAGMENTS_ARCHI = [
+    ECRANS.ARCHI_SELECTION,
+    ECRANS.ARCHI_RESULTAT,
+    'interface-jeu-archi',
 ];

@@ -5,6 +5,14 @@ const BUDGET_APP_SHELL_KO = 2048;
 const MARQUEUR_DEBUT = '/* PRECACHE:DEBUT */';
 const MARQUEUR_FIN = '/* PRECACHE:FIN */';
 
+/** Fichiers exclus du precache (fetch runtime ou trop lourds pour le shell). */
+const EXCLUS_PRECACHE = new Set([
+    './data/histoire-textes.json',
+    './styles/dev.css',
+    './img/icon-512.png',
+    './img/icon-maskable-512.png',
+]);
+
 const modeProd = process.argv.includes('--prod');
 const enforceBudget = process.argv.includes('--enforce-budget') || modeProd;
 const racine = modeProd ? 'dist' : '.';
@@ -56,7 +64,7 @@ function construireListePrecache() {
         }
     }
 
-    return fichiers;
+    return fichiers.filter((f) => !EXCLUS_PRECACHE.has(f));
 }
 
 function mesurerPoids(fichiers) {

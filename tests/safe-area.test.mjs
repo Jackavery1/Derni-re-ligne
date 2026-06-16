@@ -26,7 +26,21 @@ describe('safe-area audit C', () => {
     it('interface jeu et controles respectent les insets', () => {
         const iface = readFileSync(join(RACINE, 'styles', 'interface-jeu.css'), 'utf8');
         const tactiles = readFileSync(join(RACINE, 'styles', 'controles-tactiles.css'), 'utf8');
+        const responsive = readFileSync(join(RACINE, 'styles', 'responsive.css'), 'utf8');
+        const cutscenes = readFileSync(
+            join(RACINE, 'assets', 'cutscenes', 'cutscenes.css'),
+            'utf8'
+        );
         expect(iface).toMatch(/var\(--safe-top\)/);
         expect(tactiles).toMatch(/var\(--safe-bottom\)/);
+        expect(responsive).toMatch(/var\(--safe-left\)/);
+        expect(cutscenes).toMatch(/var\(--safe-left\)/);
+    });
+
+    it('objectifs et carte histoire couvrent les viewports compacts', () => {
+        const objectifs = readFileSync(join(RACINE, 'styles', 'objectifs-histoire.css'), 'utf8');
+        const histoire = readFileSync(join(RACINE, 'styles', 'mode-histoire.css'), 'utf8');
+        expect(objectifs).toMatch(/max-width:\s*768px\),\s*\(max-height:\s*600px\)/);
+        expect(histoire).toMatch(/max-width:\s*768px\),\s*\(max-height:\s*600px\)/);
     });
 });

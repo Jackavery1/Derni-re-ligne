@@ -80,6 +80,51 @@ body.contraste-eleve .bouton {
     #section-mascotte .section-titre {
         font-size: 0.26rem;
     }
+
+    .panneau .section:nth-child(2) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2px 4px;
+        align-content: start;
+    }
+
+    .panneau .section:nth-child(2) .stat {
+        margin: 0;
+    }
+
+    .panneau .section:nth-child(2) .stat-label {
+        font-size: 0.24rem;
+        margin-bottom: 0;
+    }
+
+    .panneau .section:nth-child(2) .stat-valeur {
+        font-size: 0.42rem;
+        line-height: 1.1;
+    }
+
+    #section-progression {
+        grid-column: 1 / -1;
+        margin-top: 2px;
+        padding-top: 4px;
+        gap: 3px;
+    }
+
+    #section-progression #affichage-restant {
+        font-size: 0.24rem;
+        line-height: 1.2;
+    }
+
+    #barre-progression-wrapper {
+        height: 4px;
+    }
+
+    #section-timer-niveau {
+        grid-column: 1 / -1;
+    }
+
+    #section-objectifs-histoire {
+        grid-column: 1 / -1;
+    }
 }
 
 #controles-paysage {
@@ -99,10 +144,10 @@ body.contraste-eleve .bouton {
     pointer-events: auto;
 }
 .ctrl-gauche {
-    left: 8px;
+    left: max(8px, var(--safe-left));
 }
 .ctrl-droite {
-    right: 8px;
+    right: max(8px, var(--safe-right));
 }
 #controles-paysage .btn-tactile {
     width: 52px;

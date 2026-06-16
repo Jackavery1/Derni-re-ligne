@@ -14,7 +14,8 @@ import {
 } from '../js/touches-config.js';
 import { store } from '../js/store-core.js';
 import { _reinitialiserInfobullesContexte } from '../js/infobulles-contexte.js';
-import { CODEX_HISTOIRE } from '../js/codex-histoire.js';
+import { readFileSync } from 'fs';
+import { CONDITIONS_CODEX } from '../js/codex-conditions.js';
 import { obtenirEtatDeblocage } from '../js/progression-histoire.js';
 import { biomeEstDebloqueParHistoire } from '../js/progression-records.js';
 import { ACHIEVEMENTS } from '../js/achievements-donnees.js';
@@ -152,9 +153,14 @@ describe('audit 2 — gameplay UX', () => {
 
     describe('narration et progression (audit 2 dims 4-5)', () => {
         it('debloque le codex Chemins caches apres archiviste', () => {
+            const textes = JSON.parse(readFileSync('data/codex-textes.json', 'utf8'));
+            const cheminsCaches = {
+                ...textes.chemins_caches,
+                condition: CONDITIONS_CODEX.chemins_caches,
+            };
             const stats = { bossHistoireVaincus: ['archiviste'] };
-            expect(CODEX_HISTOIRE.chemins_caches.condition(stats)).toBe(true);
-            expect(CODEX_HISTOIRE.chemins_caches.texte.length).toBeGreaterThanOrEqual(4);
+            expect(cheminsCaches.condition(stats)).toBe(true);
+            expect(cheminsCaches.texte.length).toBeGreaterThanOrEqual(4);
         });
 
         it('debloque achievements apres le prologue', () => {
@@ -218,7 +224,8 @@ describe('audit 2 — gameplay UX', () => {
             const { obtenirNiveauxArchiProceduraux, obtenirTousNiveauxArchi } =
                 await import('../js/archi-generateur.js');
             expect(obtenirNiveauxArchiProceduraux().length).toBeGreaterThanOrEqual(10);
-            expect(obtenirTousNiveauxArchi().length).toBe(
+            const niveaux = await obtenirTousNiveauxArchi();
+            expect(niveaux.length).toBe(
                 NIVEAUX_ARCHI.length + obtenirNiveauxArchiProceduraux().length
             );
         });

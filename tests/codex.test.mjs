@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { CODEX } from '../js/codex-donnees.js';
+import { describe, it, expect, beforeEach, beforeAll } from 'vitest';
+import { chargerDonneesCodex } from '../js/codex.js';
 import { ILLUSTRATIONS_CODEX } from '../js/codex-illustrations.js';
 import { statsGlobales } from '../js/achievements.js';
 import {
@@ -10,7 +10,14 @@ import {
     verifierCodex,
 } from '../js/codex.js';
 
+/** @type {Awaited<ReturnType<typeof chargerDonneesCodex>>} */
+let CODEX;
+
 describe('codex', () => {
+    beforeAll(async () => {
+        CODEX = await chargerDonneesCodex();
+    });
+
     beforeEach(() => {
         localStorage.removeItem('tetrisNeo_codex');
         localStorage.removeItem('tetrisNeo_codexVus');

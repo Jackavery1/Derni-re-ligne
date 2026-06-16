@@ -365,10 +365,10 @@ body.histoire-active.partie-active #bandeau-trame-run {
 }
 
 /* ================================================
-   MOBILE — Objectifs, HUD, carte (≤768px portrait)
+   MOBILE — Objectifs, HUD, carte (portrait ≤768px ou hauteur compacte)
 ================================================ */
 
-@media (max-width: 768px) {
+@media (max-width: 768px), (max-height: 600px) {
     .objectif-panneau {
         width: min(92vw, 420px);
         max-width: calc(100% - 8px);

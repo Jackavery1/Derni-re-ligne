@@ -1,4 +1,4 @@
-import { LISTE_ECRANS_CHARGEMENT } from './ecrans-config.js';
+import { ECRANS_CHARGEMENT_IMMEDIAT, FRAGMENTS_ARCHI, FRAGMENTS_COOP } from './ecrans-config.js';
 import { chargerIconesPixel } from './icones-pixel.js';
 import { logger } from './logger.js';
 
@@ -15,6 +15,9 @@ function obtenirParseur() {
 
 const MAX_TENTATIVES = 3;
 const DELAI_BASE_MS = 300;
+
+/** @type {Set<string>} */
+const fragmentsCharges = new Set();
 
 /**
  * @param {string} url
@@ -42,22 +45,57 @@ async function fetchAvecRetry(url) {
     throw derniereErreur ?? new Error(`Échec chargement ${url}`);
 }
 
+/**
+ * @param {string} nom
+ * @param {string} html
+ */
+function injecterFragment(nom, html) {
+    const conteneur = document.getElementById('conteneur-ecrans');
+    if (!conteneur) throw new Error('conteneur-ecrans introuvable');
+    const doc = obtenirParseur().parseFromString(html, 'text/html');
+    conteneur.append(...doc.body.childNodes);
+    fragmentsCharges.add(nom);
+}
+
+/**
+ * @param {string} nom
+ */
+async function chargerUnFragment(nom) {
+    if (fragmentsCharges.has(nom)) return;
+    const reponse = await fetchAvecRetry(urlFragmentEcran(nom));
+    injecterFragment(nom, await reponse.text());
+}
+
+/**
+ * @param {string} nom
+ */
+export async function assurerFragmentEcran(nom) {
+    if (fragmentsCharges.has(nom)) return;
+    await chargerUnFragment(nom);
+}
+
+/**
+ * @param {string[]} noms
+ */
+export async function assurerFragmentsEcran(noms) {
+    await Promise.all(noms.map((nom) => assurerFragmentEcran(nom)));
+}
+
+export async function assurerFragmentsCoop() {
+    await assurerFragmentsEcran(FRAGMENTS_COOP);
+}
+
+export async function assurerFragmentsArchi() {
+    await assurerFragmentsEcran(FRAGMENTS_ARCHI);
+}
+
 export async function chargerEcrans() {
     const conteneur = document.getElementById('conteneur-ecrans');
     if (!conteneur) throw new Error('conteneur-ecrans introuvable');
 
-    const fragments = await Promise.all(
-        LISTE_ECRANS_CHARGEMENT.map(async (nom) => {
-            const reponse = await fetchAvecRetry(urlFragmentEcran(nom));
-            return reponse.text();
-        })
-    );
-
     conteneur.replaceChildren();
-    for (const html of fragments) {
-        const doc = obtenirParseur().parseFromString(html, 'text/html');
-        conteneur.append(...doc.body.childNodes);
-    }
+    fragmentsCharges.clear();
 
+    await Promise.all(ECRANS_CHARGEMENT_IMMEDIAT.map((nom) => chargerUnFragment(nom)));
     await chargerIconesPixel();
 }

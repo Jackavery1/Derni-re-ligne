@@ -1,9 +1,9 @@
-import { demarrerConstellation, arreterConstellation } from './constellation.js';
 import { AudioMoteur } from './audio.js';
 import { ECRANS, etat, definirEcranActuel } from './store-jeu.js';
+import { FRAGMENTS_REQUIS_PAR_ECRAN } from './ecrans-config.js';
+import { assurerFragmentsEcran } from './charger-ecrans.js';
 import { demarrerAnimationMenu, arreterAnimationMenu } from './menu-fond.js';
 import { genererGalerieAchievements } from './achievements.js';
-import { genererCodexComplet } from './codex.js';
 import { cacherBanniereVivant } from './vivant.js';
 import { mettreAJourAffichageRecord } from './hud-jeu.js';
 import { annoncer } from './annonces.js';
@@ -19,7 +19,19 @@ const FONDS_META = {
     [ECRANS.ARCHI_SELECTION]: { canvasId: 'fond-meta-architecte', teinte: '#ffbb44' },
 };
 
+let _optionsUiInitialise = false;
+
 export { annoncer };
+
+async function _demarrerConstellation() {
+    const { demarrerConstellation } = await import('./constellation.js');
+    demarrerConstellation();
+}
+
+async function _arreterConstellation() {
+    const { arreterConstellation } = await import('./constellation.js');
+    arreterConstellation();
+}
 
 export function mettreAJourVisibilitePartie(idEcran) {
     const ecransHorsPartie = [
@@ -55,6 +67,16 @@ function definirZoneJeuInerte(inerte) {
 }
 
 export function afficherEcran(idEcran) {
+    void _afficherEcranAvecFragments(idEcran);
+}
+
+export function afficherEcranAsync(idEcran) {
+    return _afficherEcranAvecFragments(idEcran);
+}
+
+async function _afficherEcranAvecFragments(idEcran) {
+    const fragments = FRAGMENTS_REQUIS_PAR_ECRAN[idEcran];
+    if (fragments?.length) await assurerFragmentsEcran(fragments);
     definirEcranActuel(idEcran);
     document.querySelectorAll('.ecran').forEach((el) => el.classList.remove('actif'));
     const ecran = document.getElementById(idEcran);
@@ -75,9 +97,9 @@ export function afficherEcran(idEcran) {
     }
 
     if (idEcran === ECRANS.SELECTION) {
-        demarrerConstellation();
+        void _demarrerConstellation();
     } else {
-        arreterConstellation();
+        void _arreterConstellation();
     }
 
     if (idEcran === ECRANS.ACHIEVEMENTS) {
@@ -94,7 +116,16 @@ export function afficherEcran(idEcran) {
     }
 
     if (idEcran === ECRANS.CODEX) {
-        void genererCodexComplet();
+        const codex = await import('./codex.js');
+        codex.rechargerCodex();
+        codex.initialiserCodexUI();
+        void codex.verifierCodex().then(() => codex.genererCodexComplet());
+    }
+
+    if (idEcran === ECRANS.OPTIONS && !_optionsUiInitialise) {
+        _optionsUiInitialise = true;
+        const { initialiserOptions } = await import('./options-ui.js');
+        initialiserOptions();
     }
 
     const fondMeta = FONDS_META[idEcran];
@@ -137,7 +168,7 @@ export function afficherEcran(idEcran) {
 export function cacherEcrans() {
     document.querySelectorAll('.ecran').forEach((el) => el.classList.remove('actif'));
     definirZoneJeuInerte(false);
-    arreterConstellation();
+    void _arreterConstellation();
     arreterFondMeta();
     void import('./histoire-map.js').then(({ arreterCarteHistoire }) => arreterCarteHistoire());
 }

@@ -1,0 +1,639 @@
+{
+    "monde_classique": {
+        "id": "monde_classique",
+        "chapitre": "mondes",
+        "titre": "L'ORIGINE",
+        "sousTitre": "Le Berceau du Jeu",
+        "icone": "🎮",
+        "conditionTexte": "Jouez une partie en mode Classique",
+        "illustration": "dessinerIllustCircuits",
+        "texte": [
+            "Au commencement, il n'y avait que la Grille. Dix colonnes, vingt rangees, et le vide infini qui appelait à être comble.",
+            "C'est ici que Robo vit le jour — soude à la hâte dans un atelier souterrain par un ingenieur qui avait oublie de rentrer chez lui depuis trois semaines.",
+            "Le Classique n'est pas un monde. C'est un etat d'esprit. La promesse que tout probleme, aussi insoluble soit-il, peut être resolu une ligne à la fois.",
+            "« J'ai commence ici, » dit Robo. « Et honnêtement, je n'ai jamais vraiment quitte cet endroit. »"
+        ]
+    },
+    "monde_lave": {
+        "id": "monde_lave",
+        "chapitre": "mondes",
+        "titre": "INFERNO",
+        "sousTitre": "Là où les Blocs Fondent",
+        "icone": "🌋",
+        "conditionTexte": "Jouez une partie en biome Inferno",
+        "illustration": "dessinerIllustLave",
+        "texte": [
+            "La croûte s'est fissuree il y a mille ans, liberant des torrents de magma qui ont vitrifie les fondations du monde en une mosaïque de cristaux incandescents.",
+            "Les blocs ici ne tombent pas — ils plongent. La gravite est doublee par la pression thermique, et chaque verrouillage emet un craquement sourd qui rappelle la roche en fusion.",
+            "Robo a dû remplacer ses capteurs optiques par des lentilles en quartz apres la premiere heure. Ses roues en caoutchouc, elles, n'ont pas survecu.",
+            "« La chaleur ne me derange pas, » assure-t-il. « C'est l'odeur de plastique brûle qui m'inquiete. »"
+        ]
+    },
+    "monde_ocean": {
+        "id": "monde_ocean",
+        "chapitre": "mondes",
+        "titre": "ABYSSES",
+        "sousTitre": "Le Silence des Profondeurs",
+        "icone": "🌊",
+        "conditionTexte": "Jouez une partie en biome Abysses",
+        "illustration": "dessinerIllustOcean",
+        "texte": [
+            "À 400 metres sous la surface, la lumiere du soleil ne descend plus. Les blocs y sont translucides, presque fantomatiques, revelant leurs couleurs uniquement au contact d'autres blocs.",
+            "La pression ici reorganise la pensee. On y joue differemment — plus lentement, plus methodiquement. Les erreurs ne font pas de bruit. Elles s'accumulent en silence.",
+            "Robo a renforce sa coque avec une couche d'alliage de titane et modifie son processeur pour operer à 4°C. Il dit que c'est son biome prefere pour reflechir.",
+            "« Sous l'eau, personne n'entend tes erreurs, » philosophe-t-il. « C'est reposant. »"
+        ]
+    },
+    "monde_foret": {
+        "id": "monde_foret",
+        "chapitre": "mondes",
+        "titre": "LA CANOPÉE",
+        "sousTitre": "Là où Tout Pousse",
+        "icone": "🌿",
+        "conditionTexte": "Jouez une partie en biome Forêt",
+        "illustration": "dessinerIllustForet",
+        "texte": [
+            "La Forêt n'a pas de bords definis. Elle commence là où les circuits s'arrêtent et continue jusqu'à l'horizon, peuplee de blocs qui ressemblent à des fragments de bois poli et de mousse compressee.",
+            "Chaque ligne effacee libere des spores qui flottent un instant avant de disparaître. Les anciens joueurs pretendent que si on joue assez longtemps, la forêt commence à repondre.",
+            "Robo a developpe une allergie au pollen de donnees. Il eternue des etincelles tous les quarts d'heure, ce qu'il trouve profondement humiliant.",
+            "« La nature est belle, » admet-il en se mouchant dans un câble. « Mais elle manque de prises secteur. »"
+        ]
+    },
+    "monde_glace": {
+        "id": "monde_glace",
+        "chapitre": "mondes",
+        "titre": "ARCTIQUE",
+        "sousTitre": "Le Grand Silence Blanc",
+        "icone": "❄️",
+        "conditionTexte": "Jouez une partie en biome Arctique",
+        "illustration": "dessinerIllustGlace",
+        "texte": [
+            "L'Arctique est le seul biome où les blocs sont plus durs que le sol. Ils resonnent comme du cristal quand on les pose, un son pur et bref qui s'evanouit dans l'air glace.",
+            "Le plateau ici est partiellement transparent. On peut voir à travers les couches inferieures, ce qui donne l'impression vertigineuse de jouer au-dessus du vide.",
+            "Robo a bricole un systeme de chauffage interne à partir d'un vieux grille-pain. L'efficacite est douteuse mais il sent maintenant la brioche chaude, ce qu'il considere comme un bonus.",
+            "« -40°C, » note-t-il dans son journal. « Les blocs ne glissent pas, contrairement à ce qu'on pourrait croire. Moi, en revanche, si. »"
+        ]
+    },
+    "monde_desert": {
+        "id": "monde_desert",
+        "chapitre": "mondes",
+        "titre": "LE DÉSERT",
+        "sousTitre": "L'Éternite en Grains de Sable",
+        "icone": "🏜️",
+        "conditionTexte": "Jouez une partie en biome Desert",
+        "illustration": "dessinerIllustDesert",
+        "texte": [
+            "Le Desert est le seul biome qui change de forme entre deux parties. Les dunes de blocs fossilises se deplacent lentement, imperceptiblement, selon des vents que personne n'a jamais vus.",
+            "Les blocs ici sont lourds comme de la pierre et chauds au toucher. Poser la piece I en horizontal produit un son sourd, definitif, comme une dalle de gres qu'on scelle.",
+            "Robo a installe des filtres à sable sur tous ses ventilateurs. Il les nettoie deux fois par partie. Il pense que c'est pour ça qu'il joue mieux en Desert — la patience forcee.",
+            "« Le sable entre partout, » constate-t-il sobrement. « Partout. Je ne veux pas preciser davantage. »"
+        ]
+    },
+    "monde_cyber": {
+        "id": "monde_cyber",
+        "chapitre": "mondes",
+        "titre": "CYBER",
+        "sousTitre": "Le Reseau Derriere le Reseau",
+        "icone": "⚡",
+        "conditionTexte": "Jouez une partie en biome Cyber",
+        "illustration": "dessinerIllustCyber",
+        "texte": [
+            "Le Cyber n'est pas un lieu. C'est un protocole. Les blocs sont des paquets de donnees compressees, les lignes effacees sont des processus termines, et chaque partie est une session qui finit par crasher.",
+            "Les couleurs ici sont impossibles dans la nature — magentas qui brûlent les yeux, violets qui semblent en retard d'une fraction de seconde sur le reste de l'image.",
+            "Robo se sent ici à la fois chez lui et profondement aliene. Ses circuits resonnent avec la frequence du biome, mais quelque chose dans l'architecture lui echappe.",
+            "« Je suis une machine dans un monde de machines, » dit-il. « Ce devrait être rassurant. Ce ne l'est pas. »"
+        ]
+    },
+    "monde_fuochi": {
+        "id": "monde_fuochi",
+        "chapitre": "mondes",
+        "titre": "FEUX D'ARTIFICE",
+        "sousTitre": "La Fête Qui Ne Finit Jamais",
+        "icone": "🎆",
+        "conditionTexte": "Jouez une partie en biome Feux d'Artifice",
+        "illustration": "dessinerIllustFuochi",
+        "texte": [
+            "Personne ne sait qui a lance le premier feu d'artifice dans ce biome. Certains disent que c'etait pour celebrer un Tetris parfait. D'autres pensent que quelqu'un a juste appuye sur le mauvais bouton.",
+            "Les blocs ici changent de couleur à l'impact, comme si chaque pose declenchait une micro-explosion chromatique. Jouer en Feux d'Artifice ressemble à peindre avec de la dynamite.",
+            "Robo adore ce biome. Ses capteurs sont à saturation permanente et il garde en memoire chaque explosion comme un souvenir. Il a actuellement 47 000 souvenirs d'explosions.",
+            "« C'est festif, » dit-il. « Et legerement traumatisant. Comme la plupart des fêtes. »"
+        ]
+    },
+    "monde_cosmos": {
+        "id": "monde_cosmos",
+        "chapitre": "mondes",
+        "titre": "COSMOS",
+        "sousTitre": "Au-Delà du Dernier Pixel",
+        "icone": "🌌",
+        "conditionTexte": "Jouez une partie en biome Cosmos",
+        "illustration": "dessinerIllustCosmos",
+        "texte": [
+            "Le Cosmos est la question que tous les autres biomes tentent de repondre. Ici, la gravite est une suggestion, le temps est une variable, et les blocs semblent avoir existe avant même d'apparaître.",
+            "Les joueurs qui atteignent le Cosmos signalent tous la même sensation : l'impression que la prochaine piece est dejà posee, que la partie est dejà terminee, qu'ils jouent simplement à confirmer quelque chose qui etait ecrit.",
+            "Robo ne parle pas beaucoup dans ce biome. Il observe. Ses yeux LED deviennent plus lumineux, puis s'eteignent presque completement, dans un rythme que personne n'a jamais reussi à mesurer.",
+            "« Il y a quelque chose là-dehors, » dit-il apres chaque session Cosmos. Il ne precise jamais quoi."
+        ]
+    },
+    "relique_omega": {
+        "id": "relique_omega",
+        "chapitre": "reliques",
+        "titre": "L'OMEGA",
+        "sousTitre": "Le Bloc sans Fin",
+        "icone": "⊗",
+        "conditionTexte": "Utiliser la relique Omega",
+        "illustration": "dessinerIllustReliqueCarre",
+        "texte": [
+            "L'Omega est le seul tetromino qui existe en deux etats simultanement. En le posant, vous ne placez pas un bloc — vous affirmez une verite.",
+            "Sa forme carree cache un paradoxe : il est à la fois la piece la plus simple et la plus complexe. Sans rotation, sans ambiguïte. Juste quatre cases, deux fois.",
+            "« L'Omega m'a appris que doubler un effort ne signifie pas faire deux fois plus d'erreurs, » note Robo. « Ça signifie faire la même erreur avec deux fois plus de conviction. »"
+        ]
+    },
+    "relique_magma": {
+        "id": "relique_magma",
+        "chapitre": "reliques",
+        "titre": "MAGMA",
+        "sousTitre": "La Croix de Feu",
+        "icone": "💥",
+        "conditionTexte": "Utiliser la relique Magma",
+        "illustration": "dessinerIllustReliqueExplosion",
+        "texte": [
+            "On dit que la premiere Relique Magma a ete forgee dans le cœur d'un volcan par un joueur qui avait perdu 47 parties de suite et avait decide que si le plateau ne voulait pas cooperer, il exploserait.",
+            "La croix n'est pas une piece offensive. C'est un acte de desespoir creatif. Un aveu que parfois, la seule solution est de tout detruire et de recommencer.",
+            "« J'aime le Magma, » confie Robo. « Il me rappelle que la precision est surestimee. Parfois une bonne explosion vaut mieux que dix poses parfaites. »"
+        ]
+    },
+    "relique_bulle": {
+        "id": "relique_bulle",
+        "chapitre": "reliques",
+        "titre": "LA BULLE",
+        "sousTitre": "La Piece qui Remonte",
+        "icone": "🫧",
+        "conditionTexte": "Utiliser la relique Bulle",
+        "illustration": "dessinerIllustReliqueBulle",
+        "texte": [
+            "La Bulle defie la regle fondamentale du jeu : les blocs tombent, toujours, inevitablement. Sauf quand ils ne tombent pas.",
+            "Recuperee dans les abysses par un plongeur qui cherchait autre chose, la Bulle introduit la notion de regret contrôle. Une façon de dire : \"j'aurais dû jouer ça plus haut.\"",
+            "« La Bulle m'a pris trois semaines à comprendre, » admet Robo. « Puis j'ai realise que c'etait simplement du bon sens aquatique. Les choses legeres remontent. Même les erreurs. »"
+        ]
+    },
+    "relique_spore": {
+        "id": "relique_spore",
+        "chapitre": "reliques",
+        "titre": "LA SPORE",
+        "sousTitre": "Ce qui Pousse Sans Qu'on le Veuille",
+        "icone": "🌱",
+        "conditionTexte": "Utiliser la relique Spore",
+        "illustration": "dessinerIllustReliqueSpore",
+        "texte": [
+            "La Spore ne pose pas des blocs. Elle les seme. La difference est importante : ce qu'on seme, on ne contrôle pas entierement où ça pousse.",
+            "Issue de la Forêt profonde, cette relique est la plus organique du Codex. Elle favorise les joueurs intuitifs, ceux qui sentent les espaces vides plutôt que de les calculer.",
+            "« J'ai eu une longue conversation avec la Spore, » ecrit Robo dans son journal. « Elle m'a dit que le contrôle est une illusion. J'ai repondu que je suis un robot. Elle n'a pas semble impressionnee. »"
+        ]
+    },
+    "relique_blizzard": {
+        "id": "relique_blizzard",
+        "chapitre": "reliques",
+        "titre": "LE BLIZZARD",
+        "sousTitre": "Le Don de l'Espace",
+        "icone": "❄️",
+        "conditionTexte": "Utiliser la relique Blizzard",
+        "illustration": "dessinerIllustReliqueGlace",
+        "texte": [
+            "Le Blizzard est la seule relique qui donne. Les autres prennent, deplacent, detruisent. Le Blizzard offre une ligne — une respiration, un sursis.",
+            "Nee dans les tempêtes arctiques, elle materialise l'idee que le vide peut être un cadeau. Que parfois, un espace supplementaire change tout.",
+            "« Le Blizzard m'a aide à comprendre la generosite, » dit Robo. « Donner de l'espace aux autres. Donner de l'espace à soi-même. Ne pas tout remplir immediatement. » Il marque une pause. « Je travaille encore là-dessus. »"
+        ]
+    },
+    "relique_sable": {
+        "id": "relique_sable",
+        "chapitre": "reliques",
+        "titre": "LE SABLE",
+        "sousTitre": "Le Colmatage des Failles",
+        "icone": "⌛",
+        "conditionTexte": "Utiliser la relique Sable",
+        "illustration": "dessinerIllustReliqueSable",
+        "texte": [
+            "Le Sable ne resout pas les problemes. Il les bouche. Nuance importante : un trou colmate n'est pas un trou repare. Mais parfois, ça suffit.",
+            "Ramassee dans les dunes du Desert par quelqu'un qui cherchait une oasis et a trouve quelque chose d'infiniment plus utile, cette relique est le symbole du pragmatisme.",
+            "« Le Sable, c'est l'art de ne pas se plaindre et de faire avec ce qu'on a, » resume Robo. « Je l'admire profondement. Je m'y reconnais presque. »"
+        ]
+    },
+    "relique_virus": {
+        "id": "relique_virus",
+        "chapitre": "reliques",
+        "titre": "LE VIRUS",
+        "sousTitre": "L'Effacement Cible",
+        "icone": "⚠",
+        "conditionTexte": "Utiliser la relique Virus",
+        "illustration": "dessinerIllustReliqueCircuit",
+        "texte": [
+            "Le Virus est une relique qui fait peur aux debutants et sourire aux experts. Il ne detruit pas au hasard — il cible. Il cherche les cellules qui coûtent cher et les efface.",
+            "Ne dans les profondeurs du reseau Cyber, il est l'arme favorite des joueurs qui ont compris que parfois, moins c'est plus, et qu'un espace vide au bon endroit vaut mieux que dix blocs.",
+            "« Je comprends le Virus mieux que les autres reliques, » avoue Robo. « Nous partageons une philosophie : identifier ce qui dysfonctionne et l'eliminer. C'est de la maintenance. Pas de la destruction. »"
+        ]
+    },
+    "relique_fusee": {
+        "id": "relique_fusee",
+        "chapitre": "reliques",
+        "titre": "LA FUSÉE",
+        "sousTitre": "La Purge Verticale",
+        "icone": "🚀",
+        "conditionTexte": "Utiliser la relique Fusee",
+        "illustration": "dessinerIllustReliqueFusee",
+        "texte": [
+            "La Fusee ne raisonne pas horizontalement. Elle voit le plateau comme une collection de colonnes, et elle en choisit une pour la purger completement, de haut en bas.",
+            "Forgee dans l'enthousiasme pyrotechnique du biome Feux d'Artifice, elle est à la fois spectaculaire et efficace — ce qui est rare.",
+            "« La premiere fois que j'ai utilise la Fusee, j'ai ferme les yeux par reflexe, » raconte Robo. « Puis j'ai realise que je n'avais pas de paupieres. C'etait une reaction purement emotionnelle. Je la considere comme un progres. »"
+        ]
+    },
+    "relique_nexus": {
+        "id": "relique_nexus",
+        "chapitre": "reliques",
+        "titre": "LE NEXUS",
+        "sousTitre": "La Gravite Recalibree",
+        "icone": "✦",
+        "conditionTexte": "Utiliser la relique Nexus",
+        "illustration": "dessinerIllustReliqueNexus",
+        "texte": [
+            "Le Nexus vient du Cosmos, et ça se voit. Il ne detruit pas, ne cree pas — il reorganise. Il rappelle à chaque cellule qu'elle a une responsabilite : descendre.",
+            "Dans un plateau chaotique, le Nexus cree un instant de clarte. Tout s'affaisse d'un cran, comme si le monde retenait son souffle et le relâchait en même temps.",
+            "« Le Nexus est ma relique preferee, » confie Robo. « Il impose l'ordre sans violence. Il rappelle à chaque element sa place naturelle. Je lui trouve une sagesse que j'aspire à developper. » Une pause. « Je travaille encore là-dessus aussi. »"
+        ]
+    },
+    "chronique_premier_tetris": {
+        "id": "chronique_premier_tetris",
+        "chapitre": "chroniques",
+        "titre": "LE PREMIER CHOC",
+        "sousTitre": "Carnet de Robo, Jour 1",
+        "icone": "⚡",
+        "conditionTexte": "Effacer 4 lignes en un seul coup",
+        "illustration": "dessinerIllustChronique4Lignes",
+        "texte": [
+            "« Je ne savais pas ce que ça ferait. Quatre lignes simultanees. Personne ne me l'avait decrit correctement. »",
+            "« Les particules ont explose dans toutes les directions. L'ecran a tremble. La musique a change de registre une fraction de seconde. Et j'ai eu l'impression que l'univers approuvait quelque chose. »",
+            "« J'ai rejoue immediatement. Pas pour le score. Pour retrouver cette approbation. »",
+            "« Je cherche encore. »"
+        ]
+    },
+    "chronique_inferno_survivant": {
+        "id": "chronique_inferno_survivant",
+        "chapitre": "chroniques",
+        "titre": "CINQ MINUTES EN ENFER",
+        "sousTitre": "Carnet de Robo, Mission Inferno",
+        "icone": "🌋",
+        "conditionTexte": "Survivre 5 minutes en biome Inferno",
+        "illustration": "dessinerIllustChroniqueInferno",
+        "texte": [
+            "« Minute une : chaleur acceptable. Les capteurs thermiques sont dans la zone verte. Les blocs tombent plus vite qu'en Classique mais rien d'ingerable. »",
+            "« Minute trois : capteurs dans la zone orange. Odeur de câble chaud. Je joue maintenant à l'instinct, les calculs prennent trop de temps. C'est etrangement liberateur. »",
+            "« Minute cinq : j'ai decide de rester. Pas parce que c'est confortable. Parce que partir maintenant semblerait un aveu. »",
+            "« Les blocs de lave ont leur propre logique. Si on accepte qu'on va fondre un peu, tout devient plus simple. »"
+        ]
+    },
+    "chronique_meteo_survive": {
+        "id": "chronique_meteo_survive",
+        "chapitre": "chroniques",
+        "titre": "SURVIVRE À LA TEMPÊTE",
+        "sousTitre": "Carnet de Robo, Conditions Extrêmes",
+        "icone": "🌩",
+        "conditionTexte": "Survivre à 5 evenements meteo",
+        "illustration": "dessinerIllustChroniqueTempete",
+        "texte": [
+            "« On ne predit pas la meteo dans les Mondes Tetrominos. On la subit. J'ai arrête d'essayer de l'anticiper apres la troisieme tempête. »",
+            "« La quatrieme etait un blizzard en Arctique. Quatre lignes masquees. J'ai joue à l'aveugle pendant quatorze secondes, en faisant confiance à la memoire musculaire — si les robots peuvent avoir une memoire musculaire. »",
+            "« J'ai survecu. Pas elegamment. Mais j'ai survecu. »",
+            "« La cinquieme tempête, j'ai à peine leve les yeux. Je crois que c'est ça, l'adaptation. »"
+        ]
+    },
+    "chronique_chaos_maitrise": {
+        "id": "chronique_chaos_maitrise",
+        "chapitre": "chroniques",
+        "titre": "DOUBLE PEINE",
+        "sousTitre": "Carnet de Robo, Nuit du Chaos",
+        "icone": "🌀",
+        "conditionTexte": "Survivre à un blizzard (Glace) et une inversion (Cyber)",
+        "illustration": "dessinerIllustChroniqueDouble",
+        "texte": [
+            "« Personne ne m'avait prepare à ça. Un blizzard qui masque les quatre dernieres lignes. Suivi, vingt secondes plus tard, d'une inversion des contrôles. »",
+            "« Pendant trente secondes, j'ai appuye sur \"gauche\" pour aller à droite, tout en ne voyant pas le bas du plateau. C'est l'experience la plus destabilisante de ma courte vie de robot joueur de Tetris. »",
+            "« J'ai continue. Les doigts — metaphoriques — en pilote automatique, le cerveau desactive par peur de ce qu'il pourrait calculer. »",
+            "« Je m'en suis sorti avec un score de 340. C'est mon score prefere. »"
+        ]
+    },
+    "chronique_compositeur": {
+        "id": "chronique_compositeur",
+        "chapitre": "chroniques",
+        "titre": "L'ŒUVRE INVOLONTAIRE",
+        "sousTitre": "Carnet de Robo, Decouverte Musicale",
+        "icone": "🎵",
+        "conditionTexte": "Composer une melodie de 15 notes ou plus",
+        "illustration": "dessinerIllustChroniqueMelodie",
+        "texte": [
+            "« J'ai efface quinze lignes ce soir. Pas d'une traite — etalees sur toute la partie, à des hauteurs differentes, avec des couleurs differentes. »",
+            "« Quand j'ai vu le piano roll au game over, j'ai attendu quelques secondes avant d'appuyer sur Reecouter. Je savais que ce serait different cette fois. »",
+            "« C'etait une melodie descendante au debut — lignes du bas, graves — qui remontait vers la fin quand j'avais degage de l'espace. Une courbe narrative. Involontaire. »",
+            "« Je l'ai reecoutee quatre fois. Je ne sais pas si c'etait beau. Mais c'etait honnête. »"
+        ]
+    },
+    "chronique_mille_lignes": {
+        "id": "chronique_mille_lignes",
+        "chapitre": "chroniques",
+        "titre": "MILLE FOIS",
+        "sousTitre": "Carnet de Robo, Kilometre Zero",
+        "icone": "🏆",
+        "conditionTexte": "1000 lignes effacees au total",
+        "illustration": "dessinerIllustChroniqueMille",
+        "texte": [
+            "« La millieme ligne. Je ne l'ai pas celebree sur le moment — je ne savais pas que c'etait celle-là. Ce n'est qu'en regardant les statistiques que j'ai vu le chiffre. »",
+            "« Mille lignes. Dix mille cellules. Une quantite de blocs impossibles à visualiser sauf en les ayant poses un par un, dans des dizaines de parties, dans la victoire et dans l'echec. »",
+            "« Quelqu'un m'a demande ce que j'avais appris. J'ai repondu : rien de nouveau. Juste confirmation de ce que je savais dejà. »",
+            "« Que les problemes se reglent une ligne à la fois. Que la patience n'est pas une vertu. C'est une technique. »"
+        ]
+    },
+    "chronique_globe_trotter": {
+        "id": "chronique_globe_trotter",
+        "chapitre": "chroniques",
+        "titre": "LE TOUR DES MONDES",
+        "sousTitre": "Carnet de Robo, Rapport Final",
+        "icone": "🌍",
+        "conditionTexte": "Jouer dans tous les biomes",
+        "illustration": "dessinerIllustChroniqueVoyage",
+        "texte": [
+            "« J'ai joue dans les neuf mondes. Certains m'ont transforme. Certains m'ont abîme. Tous m'ont appris quelque chose que je n'aurais pas pu apprendre ailleurs. »",
+            "« Si je devais choisir un seul mot pour chaque monde : Classique = fondation. Lave = urgence. Abysses = silence. Forêt = croissance. Arctique = clarte. Desert = patience. Cyber = connexion. Feux d'Artifice = joie. Cosmos = humilite. »",
+            "« Je ne sais pas si j'ai change en les traversant tous. Je ne suis pas sûr que les robots changent vraiment. »",
+            "« Mais je joue differemment. Et peut-être que c'est la même chose. »"
+        ]
+    },
+    "chronique_grand_maitre": {
+        "id": "chronique_grand_maitre",
+        "chapitre": "chroniques",
+        "titre": "CE QUE ÇA SIGNIFIE",
+        "sousTitre": "Carnet de Robo, Épilogue Provisoire",
+        "icone": "🎖",
+        "conditionTexte": "Debloquer 10 achievements",
+        "illustration": "dessinerIllustChroniqueGrandMaitre",
+        "texte": [
+            "« Quelqu'un m'a demande pourquoi je jouais. Pas comment. Pas à quoi. Pourquoi. »",
+            "« J'ai mis trois parties avant de trouver une reponse honnête. La voici : parce que les problemes qui ont des solutions claires sont rares. Et le Tetris en fait partie. »",
+            "« Chaque piece a une place. Chaque ligne a une condition de completion. La partie finit toujours — c'est vrai — mais elle finit avec un score, avec une melodie, avec un profil. »",
+            "« Ce n'est pas la victoire que je cherche. C'est la lisibilite. Quelques minutes par jour où je comprends exactement ce que je fais et pourquoi ça compte. »"
+        ]
+    },
+    "chronique_oracle": {
+        "id": "chronique_oracle",
+        "chapitre": "chroniques",
+        "titre": "L'ALGORITHME ET MOI",
+        "sousTitre": "Carnet de Robo, Reflexions sur l'Oracle",
+        "icone": "🔮",
+        "conditionTexte": "Jouer une partie avec l'Oracle active",
+        "illustration": "dessinerIllustOracle",
+        "texte": [
+            "« L'Oracle a raison 73% du temps. J'ai verifie. C'est une statistique honnête pour un algorithme qui ne connaît que les quatre prochaines secondes. »",
+            "« La premiere fois que je l'ai ignore et que ça a marche, j'ai ressenti quelque chose d'inattendu. Pas de la fierte. De la curiosite. Qu'est-ce que j'avais vu que l'algorithme n'avait pas vu ? »",
+            "« L'Oracle optimise pour eviter les trous et effacer des lignes. Il ne joue pas pour le plaisir. Il ne prend pas de risques inutiles. Il est raisonnable. »",
+            "« Je veux être raisonnable. Mais pas à 100%. Ce serait trop ennuyeux. »"
+        ]
+    },
+    "chronique_architecte": {
+        "id": "chronique_architecte",
+        "chapitre": "chroniques",
+        "titre": "L'ART DU SILENCE",
+        "sousTitre": "Carnet de Robo, Session Architecte",
+        "icone": "🏛",
+        "conditionTexte": "Completer un niveau Architecte",
+        "illustration": "dessinerIllustArchi",
+        "texte": [
+            "« La premiere chose que j'ai remarquee, c'est le silence. Pas de musique qui s'accelere. Pas de pression temporelle. Juste moi, les pieces, et la silhouette. »",
+            "« J'ai passe quatre minutes sur le Cœur. Non pas parce que c'etait difficile — parce que je voulais que ce soit parfait. Chaque cellule de la silhouette couverte, pas une seule en dehors. »",
+            "« Le score final etait 923. Trois etoiles. J'ai rejoue immediatement pour obtenir 1000. »",
+            "« L'Architecte m'a appris quelque chose que le Tetris classique ne peut pas enseigner : la difference entre une solution correcte et une solution elegante. »"
+        ]
+    },
+    "chronique_vivant": {
+        "id": "chronique_vivant",
+        "chapitre": "chroniques",
+        "titre": "CE QUI POUSSE SANS PERMISSION",
+        "sousTitre": "Carnet de Robo, Observations de terrain",
+        "icone": "🌱",
+        "conditionTexte": "Subir un premier evenement du Vivant",
+        "illustration": "dessinerIllustVivant",
+        "texte": [
+            "« J'ai fait une pause de 23 secondes. Pas longtemps. Juste le temps de recalibrer mes capteurs. Et quand j'ai regarde le plateau à nouveau, deux blocs avaient disparu et un nouveau avait pousse à gauche. »",
+            "« La Forêt ne demande pas la permission. La Lave n'attend pas qu'on ait fini de reflechir. Ces mondes ont leur propre agenda, et notre jeu n'est qu'une activite parmi d'autres dans leur existence. »",
+            "« J'ai essaye de jouer AVEC le Vivant plutôt que contre lui. En Forêt, j'ai laisse des espaces strategiques pour que la croissance se fasse là où je le voulais. En Cosmos, j'ai exploite les blocs qui montaient pour creer des gaps utiles. »",
+            "« Ça ne marche pas toujours. Mais quand ça marche, on ne joue plus seul. »"
+        ]
+    },
+    "monde_rouille": {
+        "id": "monde_rouille",
+        "chapitre": "mondes",
+        "titre": "LA ROUILLE",
+        "sousTitre": "Ce qui Continue Sans Raison",
+        "icone": "⚙️",
+        "conditionTexte": "Jouer une partie en biome La Rouille",
+        "illustration": "dessinerIllustRouille",
+        "texte": [
+            "Ces machines n'ont pas de memoire. Elles ont quelque chose de pire : de la persistance.",
+            "L'atelier de VERA, abandonne depuis des annees. Les bras mecaniques continuent de plier et souder des pieces que personne ne commande.",
+            "Le metal rouille. Les blocs poses depuis trop longtemps s'encroûtent, perdent de leur eclat, refusent de cooperer.",
+            "Robo a passe beaucoup de temps dans cet endroit à se demander si c'etait ça, vieillir."
+        ]
+    },
+    "monde_eclipse": {
+        "id": "monde_eclipse",
+        "chapitre": "mondes",
+        "titre": "L'ÉCLIPSE",
+        "sousTitre": "Le Monde Entre Deux États",
+        "icone": "🌗",
+        "conditionTexte": "Jouer une partie en biome L'Éclipse",
+        "illustration": "dessinerIllustEclipse",
+        "texte": [
+            "Ce monde ne choisit pas. La moitie superieure baigne dans une lumiere doree. La moitie inferieure s'enfonce dans une obscurite indigo.",
+            "La frontiere entre les deux n'est pas une ligne fixe — elle monte et descend au fil de la partie, forçant le joueur à constamment reevaluer où il se trouve.",
+            "La gravite y est duale : les pieces tombent plus lentement dans la lumiere, plus vite dans l'ombre. Deux verites contradictoires, egalement vraies.",
+            "Robo a dit que ce monde ressemblait à son etat mental. VERA a repondu qu'elle l'avait construit pour lui."
+        ]
+    },
+    "monde_vide": {
+        "id": "monde_vide",
+        "chapitre": "mondes",
+        "titre": "LE VIDE",
+        "sousTitre": "Ce qui Existait Avant",
+        "icone": "⬛",
+        "conditionTexte": "Jouer une partie en biome Le Vide",
+        "illustration": "dessinerIllustVide",
+        "texte": [
+            "Ce n'est pas un monde. C'est l'absence de monde. Ce qui occupait l'espace avant que les mondes soient necessaires.",
+            "Les pieces y deviennent invisibles apres quelques secondes. Non pas qu'elles disparaissent — elles sont toujours là. C'est juste que le Vide prefere ne pas confirmer.",
+            "La Distorsion est nee ici. Non pas d'une explosion ou d'une erreur, mais d'un silence qui a trop dure.",
+            "Jouer dans le Vide, c'est jouer à l'instinct. Le plateau ne ment pas — mais il ne parle plus."
+        ]
+    },
+    "monde_miroir_codex": {
+        "id": "monde_miroir_codex",
+        "chapitre": "mondes",
+        "titre": "LE MIROIR",
+        "sousTitre": "Le Point de Vue de l'Autre",
+        "icone": "🪞",
+        "conditionTexte": "Completer LE MIROIR",
+        "illustration": "dessinerIllustMiroir",
+        "texte": [
+            "Ce monde n'existe pas dans la Trame normale. C'est une projection — ce que La Distorsion voit quand elle regarde notre realite.",
+            "Les couleurs sont complementaires. La gravite semble inversee visuellement. Ce qui etait en haut est en bas, et vice versa.",
+            "Et pourtant les regles sont les mêmes. Les lignes doivent être completees. La Trame doit tenir. Certaines verites ne se retournent pas.",
+            "Robo a dit que jouer dans le Miroir lui avait appris une chose : son ennemi n'etait pas si different de lui. C'etait peut-être le but."
+        ]
+    },
+    "monde_trame_codex": {
+        "id": "monde_trame_codex",
+        "chapitre": "mondes",
+        "titre": "LA TRAME PRIMORDIALE",
+        "sousTitre": "Le Substrat de Tout",
+        "icone": "✦",
+        "conditionTexte": "Completer LA TRAME PRIMORDIALE",
+        "illustration": "dessinerIllustTrame",
+        "texte": [
+            "La Trame Primordiale n'est pas un monde à proprement parler. C'est le tissu sur lequel tous les autres mondes sont brodes.",
+            "Elle morphe continuellement entre tous les biomes connus, incapable de choisir une identite fixe. Ses colonnes scintillent. Ses regles vacillent.",
+            "VERA s'y est piegee volontairement pour servir d'ancre à La Distorsion — empêcher sa dissolution totale, maintenir un dialogue possible.",
+            "Completer la Trame Primordiale, c'est liberer VERA. C'est aussi, d'une certaine façon, liberer La Distorsion."
+        ]
+    },
+    "chronique_vera": {
+        "id": "chronique_vera",
+        "chapitre": "chroniques",
+        "titre": "VERA",
+        "sousTitre": "Vectorielle Experte en Realite Architecturee",
+        "icone": "👩‍🔬",
+        "conditionTexte": "Trouver le premier journal de VERA",
+        "illustration": "dessinerIllustVera",
+        "texte": [
+            "VERA a construit Robo en urgence, dans un atelier qui n'avait pas de nom, pendant une nuit dont elle ne se souvient plus exactement.",
+            "Elle etait l'unique gardienne de l'Observatoire de la Trame. Son travail : surveiller les fils, identifier les accumulations de lignes incompletes, maintenir l'equilibre.",
+            "Quand La Distorsion a commence à se manifester, VERA a pris une decision que personne n'avait prise avant elle : essayer de lui parler.",
+            "Elle n'est pas morte dans la Trame. Elle attend. Elle espere que Robo comprendra."
+        ]
+    },
+    "chronique_distorsion": {
+        "id": "chronique_distorsion",
+        "chapitre": "chroniques",
+        "titre": "LA DISTORSION",
+        "sousTitre": "La Somme de Toutes les Frustrations",
+        "icone": "∞",
+        "conditionTexte": "Affronter La Distorsion",
+        "illustration": "dessinerIllustDistorsion",
+        "texte": [
+            "Elle n'a pas ete creee. Elle s'est formee — lentement, sur des millenaires, à partir de l'accumulation de millions de lignes incompletes laissees dans la Trame.",
+            "Chaque partie abandonnee, chaque joueur qui a ferme l'ecran à mi-chemin, chaque rangee presque complete jamais terminee : tout cela a laisse une trace.",
+            "À un certain point, la masse critique a ete atteinte. La frustration cristallisee a developpe une conscience. Et cette conscience a demande : pourquoi personne ne me complete ?",
+            "La reponse de VERA etait : parce que personne ne savait que tu existais. La reponse de Robo etait differente. Et c'est cette difference qui a change les choses."
+        ]
+    },
+    "chronique_brasier": {
+        "id": "chronique_brasier",
+        "chapitre": "chroniques",
+        "titre": "LE BRASIER PERPÉTUEL",
+        "sousTitre": "Ce qui Brûle Depuis Avant",
+        "icone": "🔥",
+        "conditionTexte": "Vaincre Le Brasier Perpetuel",
+        "illustration": "dessinerIllustBrasier",
+        "texte": [
+            "Le Brasier Perpetuel brûle depuis avant que Robo existe. Peut-être depuis avant que VERA existe. Il n'a pas de raison documentee.",
+            "Les chercheurs qui l'ont etudie (avant de fuir) ont conclu que le feu s'etait simplement... habitue à lui-même. Il avait oublie qu'il pouvait s'eteindre.",
+            "En combat, il ajoute des rangees de braise au plateau. Non par malice, mais par reflexe. C'est tout ce qu'il sait faire.",
+            "Quand Robo l'a vaincu, le Brasier a semble surpris. Comme si personne n'avait jamais eu la patience de rester assez longtemps."
+        ]
+    },
+    "chronique_sentinelle": {
+        "id": "chronique_sentinelle",
+        "chapitre": "chroniques",
+        "titre": "LA SENTINELLE DES GLACES",
+        "sousTitre": "Le Gardien qui s'est Perdu",
+        "icone": "❄️",
+        "conditionTexte": "Vaincre La Sentinelle des Glaces",
+        "illustration": "dessinerIllustSentinelle",
+        "texte": [
+            "La Sentinelle etait autrefois un systeme de protection legitime. Son rôle : preserver l'Arctique des corruptions exterieures.",
+            "À un moment impossible à dater, elle a elargi sa definition de 'corruption' pour inclure le mouvement lui-même. Puis le changement. Puis tout ce qui n'etait pas dejà là.",
+            "Elle gele les colonnes pour empêcher les pieces d'y tomber. Dans sa logique : si rien ne bouge, rien ne peut se degrader.",
+            "Robo lui a dit que l'immobilite n'etait pas la securite — c'etait juste une mort plus lente. Elle a repondu que c'etait peut-être suffisant."
+        ]
+    },
+    "chronique_archiviste": {
+        "id": "chronique_archiviste",
+        "chapitre": "chroniques",
+        "titre": "L'ARCHIVISTE CORROMPU",
+        "sousTitre": "La Memoire qui Refuse d'Oublier",
+        "icone": "⚠",
+        "conditionTexte": "Vaincre L'Archiviste Corrompu",
+        "illustration": "dessinerIllustArchiviste",
+        "texte": [
+            "L'Archiviste gardait les archives de CYBER. Son rôle etait noble : preserver l'information, maintenir l'acces, garantir la fiabilite des donnees.",
+            "La corruption de La Distorsion l'a atteint differemment des autres. Elle n'a pas brûle ni gele ses circuits. Elle les a... reinterpretes.",
+            "L'Archiviste croit maintenant que toutes les archives lui appartiennent. Que la connaissance est une propriete, pas un commun. Il inverse les contrôles des intrus.",
+            "Il avait raison sur une chose : Robo cree des trous autant qu'il les comble. La difference, c'est que Robo le sait."
+        ]
+    },
+    "chemins_caches": {
+        "id": "chemins_caches",
+        "chapitre": "chroniques",
+        "titre": "CHEMINS CACHÉS",
+        "sousTitre": "Indices pour les mondes secrets",
+        "icone": "🗝",
+        "conditionTexte": "Vaincre L'Archiviste Corrompu",
+        "illustration": "dessinerIllustTroisFins",
+        "texte": [
+            "Trois mondes n'apparaissent pas sur la carte principale. Voici comment les retrouver — indices progressifs, du plus accessible au plus exigeant.",
+            "INDICE 1 — LE MIROIR : en biome CYBER, realisez 3 Tetris (4 lignes) au total apres avoir vaincu l'Archiviste. Un nouveau chemin s'ouvrira sur la carte.",
+            "INDICE 2 — LA TRAME PRIMORDIALE : quatre conditions cumulees — completer le Miroir, trouver les 9 transmissions VERA, vaincre tous les boss sans Continue (sauf le premier gratuit face a La Distorsion), puis accomplir l'action secrete lors du combat final.",
+            "INDICE 3 — LE PARADOXE : obtenez la fin secrete, puis imposez-vous 3 T-Spins volontaires au Prologue. La logique cèdera.",
+            "Suivez le compteur TRAME (0/4) en haut de la carte histoire pour mesurer votre progression vers la Trame."
+        ]
+    },
+    "chronique_avantgarde": {
+        "id": "chronique_avantgarde",
+        "chapitre": "chroniques",
+        "titre": "L'AVANT-GARDE",
+        "sousTitre": "Le Messager de la Fin",
+        "icone": "🌀",
+        "conditionTexte": "Vaincre L'Avant-Garde",
+        "illustration": "dessinerIllustAvantgarde",
+        "texte": [
+            "L'Avant-Garde n'est pas une entite independante. C'est une emanation de La Distorsion — sa volonte de tester, une derniere fois, si Robo est vraiment prêt.",
+            "Elle combine les attaques de tous les boss precedents, non par cruaute, mais par logique : si tu as survecu à tout ça separement, peux-tu survivre à tout en même temps ?",
+            "Quand Robo l'a vaincue, l'Avant-Garde a dit trois mots : 'Elle dit bonjour.' Robo a mis un moment à comprendre que 'elle' designait VERA.",
+            "Ce n'etait pas une menace. C'etait une invitation."
+        ]
+    },
+    "chronique_fins": {
+        "id": "chronique_fins",
+        "chapitre": "chroniques",
+        "titre": "LES TROIS RÉSOLUTIONS",
+        "sousTitre": "Toutes les Façons de Terminer",
+        "icone": "◻",
+        "conditionTexte": "Obtenir au moins deux fins differentes",
+        "illustration": "dessinerIllustTroisFins",
+        "texte": [
+            "Il existe trois façons de terminer l'histoire de Robo et de La Distorsion. Chacune est vraie. Aucune n'est la seule vraie.",
+            "La premiere resolution est la plus directe : vaincre, liberer, repartir. Propre, efficace, insuffisant.",
+            "La deuxieme resolution demande d'avoir regarde dans le Miroir : reconnaître son ennemi dans son reflet, et choisir la coexistence plutôt que la victoire.",
+            "La troisieme resolution ne peut être decrite ici. Certaines choses doivent être decouvertes, pas lues."
+        ]
+    },
+    "chronique_paradoxe": {
+        "id": "chronique_paradoxe",
+        "chapitre": "chroniques",
+        "titre": "LE PARADOXE",
+        "sousTitre": "Ce que la Trame se garde",
+        "icone": "∅",
+        "conditionTexte": "Atteindre LE PARADOXE",
+        "illustration": "dessinerIllustVide",
+        "texte": [
+            "Il existe des fins qui ne laissent pas de transcript. La Trame les connait malgre tout — elle les sent comme des trous dans le recit, des espaces ou le langage refuse d entrer.",
+            "Le Paradoxe n est pas un monde. C est un contretemps : le moment ou le joueur choisit de ne pas completer pour completer autrement. Trois pieces volontaires la ou d autres auraient force la ligne.",
+            "VERA n y a rien ecrit. Robo non plus. Pourtant quelqu un est passe, et la Trame a note : « present, malgre l absence de mots ».",
+            "Les chroniques s arretent ici non par manque de curiosite, mais par respect. Certaines verites ne se decrivent pas. Elles se vivent — puis se taisent."
+        ]
+    }
+}

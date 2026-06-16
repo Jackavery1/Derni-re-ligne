@@ -282,15 +282,17 @@ export function definirSceneCutsceneFond(
     if (!scene) return false;
     let img = obtenirImageScenePrechargee(sceneId);
     if (!img) {
+        _personnageFallback = personnageFallback;
+        _sceneIdCourante = sceneId;
+        _sceneDebutMs = timestamp;
+        _syncAffichageSceneImage(true);
         void precharger(sceneId).then((chargee) => {
             if (!chargee || _sceneIdCourante !== sceneId) return;
             definirSceneCutsceneFond(sceneId, personnageFallback, performance.now());
         });
         logger.debug('[scenes] fallback canvas personnage', personnageFallback);
-        _syncAffichageSceneImage(false);
-        _sceneIdCourante = null;
         demarrerFondCutscene(personnageFallback);
-        return false;
+        return true;
     }
 
     _personnageFallback = personnageFallback;

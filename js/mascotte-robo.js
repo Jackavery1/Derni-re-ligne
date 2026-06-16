@@ -1,4 +1,4 @@
-import { CONFIG } from './config-jeu.js';
+import { CONFIG } from './config.js';
 import { etat } from './store-jeu.js';
 import { majStatsReactionRobo } from './achievements.js';
 import {

@@ -1,5 +1,4 @@
 import { BIOMES } from './config.js';
-import { arreterConstellation } from './constellation.js';
 import { initialiserMeteo, annulerMeteo } from './meteo.js';
 import { initialiserVivant, annulerTimersVivant } from './vivant.js';
 import { AudioMoteur } from './audio.js';
@@ -53,7 +52,6 @@ import { ECRANS } from './store-jeu.js';
 import { planifierBoucle } from './boucle-jeu.js';
 import { reinitialiserMelodie, arreterLectureMelodie } from './melodie.js';
 import { initStatsPartie } from './achievements.js';
-import { verifierCodex } from './codex.js';
 import { reinitialiserHistoriquePositions } from './decorations-jeu.js';
 import {
     donneesPartie,
@@ -127,8 +125,8 @@ function initialiserFeaturesPartie() {
     reinitialiserDonneesPartie();
     donneesPartie.biomeId = obtenirBiomeActif();
     initStatsPartie();
-    void verifierCodex();
-    arreterConstellation();
+    void import('./codex.js').then((m) => m.planifierVerifierCodex());
+    void import('./constellation.js').then(({ arreterConstellation }) => arreterConstellation());
 }
 
 function initialiserEtatPartie() {

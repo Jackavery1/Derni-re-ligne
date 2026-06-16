@@ -1,5 +1,4 @@
-// js/codex-histoire.js
-// Entrees Codex pour le Mode Histoire :
+// Source d'export uniquement — le runtime charge data/codex-textes.json + codex-conditions.js.
 // nouveaux biomes, boss, mondes caches, personnages.
 // Ajoutees dynamiquement aux chapitres existants (mondes, chroniques).
 

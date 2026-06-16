@@ -4,37 +4,54 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 ## Résumé par version
 
-| Version    | Date       | En bref                                                                                           |
-| ---------- | ---------- | ------------------------------------------------------------------------------------------------- |
-| **2.5.21** | 2026-06-16 | Remédiations audits A/B/C/D : splits modules, leaderboard, safe-area, narration post-monde        |
-| **2.5.20** | 2026-06-15 | Timer niveau marathon, enchaînement campagne, contrôles tactiles, UI jeu & équilibrage difficulté |
-| **2.5.19** | 2026-06-15 | Remédiations audits A/B/C/D : sync cloud, haptique, swipe, narration, bundle/CSS                  |
-| **2.5.18** | 2026-06-13 | Audits B/D, E2E dist coop/archi/histoire, teaser biomes, refactor ROBO/cutscenes, responsive 48px |
-| **2.5.17** | 2026-06-13 | ROBO arc neon, audits A/C/D, pont scènes cutscene, SW v33, responsive 768, bundle 605 Ko          |
-| **2.5.16** | 2026-06-11 | Menu Continuer / Nouvelle partie, remediations G6–G15, mix audio, reset campagne unifie           |
-| **2.5.15** | 2026-06-11 | Découpage CSS modulaire, HUD Trame en run, constellation au clic, liens histoire                  |
-| **2.5.14** | 2026-06-11 | Remédiation audits : UX histoire, défi du jour, ESLint 0 warn, E2E contraste, doc OPT             |
-| **2.5.13** | 2026-06-11 | OPT poids : audit CI, pipeline médias, cache SW deux étages, polices woff2                        |
-| **2.5.12** | 2026-06-11 | Audit gameplay UX dims 1–10 : Sprint 40L, tutoriel étendu, records locaux, fallback audio         |
-| **2.5.11** | 2026-06-11 | Remédiation audit technique 12 dimensions (qualité, perf, sécurité, a11y, versioning)             |
-| **2.5.10** | 2026-06-11 | Memorial Trame, profil VERA synthwave, codex icônes pixel, socle visuel meta                      |
-| **2.5.9**  | 2026-06-10 | Expressions cutscene, réactions ROBO/boss, scènes fond PNG, mode narrateur cinématique            |
-| **2.5.8**  | 2026-06-10 | Accessibilité (daltonien, effets réduits), UI mobile histoire, file narrative                     |
-| **2.5.7**  | 2026-06-10 | Narration enrichie, dialogues boss, cutscenes narration, UI sans accents                          |
-| **2.5.6**  | 2026-06-10 | Audit gameplay, refactor archi, docs simplifiées                                                  |
-| **2.5.5**  | 2026-06-10 | Correctifs audit : intro Jour 2 554, cutscenes, dev, objectifs, rendu, E2E                        |
-| **2.5.4**  | 2026-06-09 | Carte histoire verticale : visibilité, mondes secrets, découpage modules, tests                   |
-| **2.5.3**  | 2026-06-09 | ROBO restauré, modes masqués, carte histoire, CI factorisée, a11y overlays                        |
-| **2.5.2**  | 2026-06-08 | Audit v2.5.2 : SW sync, E2E offline/gameplay, focus trap tutoriel                                 |
-| **2.5.1**  | 2026-06-07 | Corrections audit : ROBO canvas, portraits cutscene, CSP fonts, versions alignées                 |
-| **2.5.0**  | 2026-06-05 | Mode Architecte, coop, bundle prod, rendu découpé, CI renforcée, couverture étendue               |
-| **2.4.2**  | 2026-06-05 | Docs minimalistes + tableau d'évolution, tests, debug `?debug=1`, versions SW alignées            |
-| **2.4.1**  | 2026-06-05 | `moteur.js` découpé en 14 modules, E2E pause/options, ESLint propre                               |
-| **2.4.0**  | 2026-06-05 | CSS externalisé, CSP, Vitest/ESLint/Prettier, CI deploy, modules météo/reliques                   |
-| **2.3.0**  | 2026-06-04 | Audio, progression, étoiles par biome, E2E Playwright                                             |
-| **2.2.0**  | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                                        |
-| **2.1.0**  | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                                        |
-| **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                                     |
+| Version    | Date       | En bref                                                                                            |
+| ---------- | ---------- | -------------------------------------------------------------------------------------------------- |
+| **2.5.22** | 2026-06-16 | Remédiations audits A/B/C/D : lazy-load, precache −47 %, icônes, leaderboard filtres, E2E campagne |
+| **2.5.21** | 2026-06-16 | Remédiations audits A/B/C/D : splits modules, leaderboard, safe-area, narration post-monde         |
+| **2.5.20** | 2026-06-15 | Timer niveau marathon, enchaînement campagne, contrôles tactiles, UI jeu & équilibrage difficulté  |
+| **2.5.19** | 2026-06-15 | Remédiations audits A/B/C/D : sync cloud, haptique, swipe, narration, bundle/CSS                   |
+| **2.5.18** | 2026-06-13 | Audits B/D, E2E dist coop/archi/histoire, teaser biomes, refactor ROBO/cutscenes, responsive 48px  |
+| **2.5.17** | 2026-06-13 | ROBO arc neon, audits A/C/D, pont scènes cutscene, SW v33, responsive 768, bundle 605 Ko           |
+| **2.5.16** | 2026-06-11 | Menu Continuer / Nouvelle partie, remediations G6–G15, mix audio, reset campagne unifie            |
+| **2.5.15** | 2026-06-11 | Découpage CSS modulaire, HUD Trame en run, constellation au clic, liens histoire                   |
+| **2.5.14** | 2026-06-11 | Remédiation audits : UX histoire, défi du jour, ESLint 0 warn, E2E contraste, doc OPT              |
+| **2.5.13** | 2026-06-11 | OPT poids : audit CI, pipeline médias, cache SW deux étages, polices woff2                         |
+| **2.5.12** | 2026-06-11 | Audit gameplay UX dims 1–10 : Sprint 40L, tutoriel étendu, records locaux, fallback audio          |
+| **2.5.11** | 2026-06-11 | Remédiation audit technique 12 dimensions (qualité, perf, sécurité, a11y, versioning)              |
+| **2.5.10** | 2026-06-11 | Memorial Trame, profil VERA synthwave, codex icônes pixel, socle visuel meta                       |
+| **2.5.9**  | 2026-06-10 | Expressions cutscene, réactions ROBO/boss, scènes fond PNG, mode narrateur cinématique             |
+| **2.5.8**  | 2026-06-10 | Accessibilité (daltonien, effets réduits), UI mobile histoire, file narrative                      |
+| **2.5.7**  | 2026-06-10 | Narration enrichie, dialogues boss, cutscenes narration, UI sans accents                           |
+| **2.5.6**  | 2026-06-10 | Audit gameplay, refactor archi, docs simplifiées                                                   |
+| **2.5.5**  | 2026-06-10 | Correctifs audit : intro Jour 2 554, cutscenes, dev, objectifs, rendu, E2E                         |
+| **2.5.4**  | 2026-06-09 | Carte histoire verticale : visibilité, mondes secrets, découpage modules, tests                    |
+| **2.5.3**  | 2026-06-09 | ROBO restauré, modes masqués, carte histoire, CI factorisée, a11y overlays                         |
+| **2.5.2**  | 2026-06-08 | Audit v2.5.2 : SW sync, E2E offline/gameplay, focus trap tutoriel                                  |
+| **2.5.1**  | 2026-06-07 | Corrections audit : ROBO canvas, portraits cutscene, CSP fonts, versions alignées                  |
+| **2.5.0**  | 2026-06-05 | Mode Architecte, coop, bundle prod, rendu découpé, CI renforcée, couverture étendue                |
+| **2.4.2**  | 2026-06-05 | Docs minimalistes + tableau d'évolution, tests, debug `?debug=1`, versions SW alignées             |
+| **2.4.1**  | 2026-06-05 | `moteur.js` découpé en 14 modules, E2E pause/options, ESLint propre                                |
+| **2.4.0**  | 2026-06-05 | CSS externalisé, CSP, Vitest/ESLint/Prettier, CI deploy, modules météo/reliques                    |
+| **2.3.0**  | 2026-06-04 | Audio, progression, étoiles par biome, E2E Playwright                                              |
+| **2.2.0**  | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                                         |
+| **2.1.0**  | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                                         |
+| **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                                      |
+
+---
+
+## [2.5.22] — 2026-06-16
+
+### Audits A / B / C / D — remédiations
+
+- **A** : lazy-load coop/archi/codex/navigation ; entrée bundle **27 Ko** (−40 %) ; precache **1024 Ko** (−47 %) ; icônes PWA compressées ; JSON archi/codex externalisés ; scripts legacy archivés
+- **B** : filtres leaderboard mode/biome ; préférence enchaînement campagne ; bouton **CARTE** game over ; indicateur transition post-victoire
+- **C** : E2E `histoire-responsive` (encoche, paysage) ; safe-area overlays étendue
+- **D** : suppression `vera-base.png` (1 Mo) ; portrait VERA canvas ; E2E campagne prologue → lave ; textes codex externalisés
+
+### Technique
+
+- Split `profil-jeu` → `profil-donnees` + `profil-affichage` ; `ui-objectifs-dom/hud` ; `decorations-trainees`
+- SW `dl-shell-v48` ; **682** tests unitaires ; **119** scénarios E2E
 
 ---
 

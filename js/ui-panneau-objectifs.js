@@ -3,10 +3,7 @@ import { BOSS } from './histoire-donnees.js';
 /** @typedef {import('./histoire-donnees.js').SEQUENCE_HISTOIRE[number]} MondeHistoire */
 import { store } from './store-core.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
-import { obtenirBiomeActif } from './store-jeu.js';
-import { obtenirLibelleModificateurBiomeHud } from './mecaniques-histoire.js';
 import { obtenirEtatHistoire } from './histoire-mondes.js';
-import { obtenirResumeConditionsTrame } from './conditions-secrets.js';
 import { ecouter } from './bus-jeu.js';
 import { DIFFICULTE_MONDES } from '../data/difficulte-mondes.js';
 import { logger } from './logger.js';
@@ -17,9 +14,19 @@ import {
     obtenirEtoilesPersistees,
     libelleEtoile,
     libelleObjectifPrincipal,
-    obtenirSuiviDifficulte,
-    calculerEtoiles,
 } from './gestionnaire-difficulte.js';
+import {
+    elObjectif as _el,
+    masquerObjectif as _masquer,
+    afficherObjectif as _afficher,
+    texteObjectif as _texte,
+} from './ui-objectifs-dom.js';
+import {
+    rafraichirHudObjectifsHistoire,
+    flashVagueObjectifs as _flashVague,
+} from './ui-objectifs-hud.js';
+
+export { rafraichirHudObjectifsHistoire };
 
 const CHAPITRES_LABEL = {
     prologue: 'PROLOGUE',
@@ -45,27 +52,6 @@ let _listenersAttaches = false;
 
 /** @type {((ev: KeyboardEvent) => void) | null} */
 let _ecouteurEscape = null;
-
-function _el(id) {
-    return document.getElementById(id);
-}
-
-function _masquer(id) {
-    _el(id)?.classList.add('element-masque');
-}
-
-function _afficher(id) {
-    _el(id)?.classList.remove('element-masque');
-}
-
-function _texte(id, txt) {
-    const el = _el(id);
-    if (el) el.textContent = sansAccentsE(txt);
-}
-
-function _partieHistoireEnCours() {
-    return document.body.classList.contains('partie-active') && modeHistoireEnCours();
-}
 
 function _ancrerOverlaysAuBody() {
     for (const id of IDS_OVERLAYS) {
@@ -249,116 +235,6 @@ function _fermerRecap() {
 export function afficherRecapAvantNarratif(monde, etoiles, onFin) {
     _callbackRecap = onFin;
     _afficherRecap(etoiles, monde);
-}
-
-export function rafraichirHudObjectifsHistoire() {
-    if (!modeHistoireEnCours()) {
-        _masquer('section-objectifs-histoire');
-        return;
-    }
-
-    const suivi = obtenirSuiviDifficulte();
-    if (!suivi?.actif) {
-        _masquer('section-objectifs-histoire');
-        return;
-    }
-
-    if (_partieHistoireEnCours()) {
-        _masquer('section-objectifs-histoire');
-        _rafraichirHudTrame();
-        return;
-    }
-
-    _afficher('section-objectifs-histoire');
-    const config = suivi.config;
-    const etoiles = calculerEtoiles(suivi.mondeId ?? '');
-
-    ['hud-etoile-0', 'hud-etoile-1', 'hud-etoile-2'].forEach((id, i) => {
-        _el(id)?.classList.toggle('objectif-hud-etoile-active', etoiles[i]);
-    });
-
-    if (config?.boss) {
-        _afficher('hud-objectif-boss');
-        _masquer('hud-objectif-lignes');
-        _texte('hud-boss-phase', `PHASE ${(store.histoire.boss.phase ?? 0) + 1}`);
-    } else {
-        _masquer('hud-objectif-boss');
-        _afficher('hud-objectif-lignes');
-        _texte(
-            'hud-objectif-lignes-val',
-            `OBJECTIF ${suivi.lignesEffacees}/${suivi.lignesObjectif}`
-        );
-    }
-
-    _texte('hud-palier-val', `VITESSE P${suivi.palierCourant}`);
-
-    const modificateur = obtenirLibelleModificateurBiomeHud();
-    const elMod = _el('hud-modificateur-biome');
-    if (elMod) {
-        elMod.textContent = modificateur;
-        elMod.classList.toggle('element-masque', !modificateur);
-    }
-
-    _el('hud-paradoxe-aide')?.classList.toggle(
-        'element-masque',
-        obtenirBiomeActif() !== 'paradoxe'
-    );
-
-    _rafraichirHudTrame();
-}
-
-function _rafraichirHudTrame() {
-    const wrap = _el('hud-trame-conditions');
-    if (!wrap) return;
-
-    const etat = obtenirEtatHistoire();
-    const trameComplete = etat.mondesCompletes?.includes('monde_trame');
-    const bandeau = _el('bandeau-trame-run');
-    if (!modeHistoireEnCours() || trameComplete || _partieHistoireEnCours()) {
-        wrap?.classList.add('element-masque');
-        bandeau?.classList.add('element-masque');
-        return;
-    }
-
-    const resume = obtenirResumeConditionsTrame(etat);
-    if (resume.validees >= resume.total) {
-        wrap?.classList.add('element-masque');
-        bandeau?.classList.add('element-masque');
-        return;
-    }
-
-    wrap.classList.remove('element-masque');
-    const resumeTexte = `TRAME ${resume.validees}/${resume.total}`;
-    _texte('hud-trame-resume', resumeTexte);
-
-    const remplirListe = (ulId) => {
-        const ul = _el(ulId);
-        if (!ul) return;
-        ul.replaceChildren();
-        for (const d of resume.details) {
-            const li = document.createElement('li');
-            li.textContent = sansAccentsE(`${d.ok ? '✓' : '○'} ${d.libelle}`);
-            ul.appendChild(li);
-        }
-    };
-    remplirListe('hud-trame-detail');
-
-    if (bandeau) {
-        bandeau.classList.remove('element-masque');
-        _texte('bandeau-trame-resume', resumeTexte);
-        remplirListe('bandeau-trame-detail');
-    }
-}
-
-function _flashVague(montee) {
-    const el = _el('hud-flash-vitesse');
-    if (!el) return;
-    el.textContent = montee ? 'VITESSE +' : 'ACCALMIE −';
-    el.classList.remove('hud-flash-vitesse-actif', 'hud-flash-vitesse-descente');
-    if (!montee) el.classList.add('hud-flash-vitesse-descente');
-    void el.offsetWidth;
-    el.classList.add('hud-flash-vitesse-actif');
-    setTimeout(() => el.classList.remove('hud-flash-vitesse-actif'), 2000);
 }
 
 export function initialiserUiObjectifs() {

@@ -63,6 +63,9 @@
     align-content: stretch;
     overflow: hidden;
     padding: 0 0 clamp(8px, 1.5vh, 16px);
+    padding-left: max(0px, var(--safe-left));
+    padding-right: max(0px, var(--safe-right));
+    padding-top: max(0px, var(--safe-top));
     gap: 0;
 }
 
@@ -362,7 +365,7 @@ body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
     grid-template-columns: 1fr 1fr;
     align-items: end;
     width: 100%;
-    padding: 0 4% max(12px, env(safe-area-inset-bottom, 0px));
+    padding: 0 max(4%, var(--safe-right)) max(12px, var(--safe-bottom)) max(4%, var(--safe-left));
     gap: 8px;
 }
 
@@ -616,6 +619,7 @@ body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
     gap: 16px;
     align-items: center;
     justify-content: center;
+    padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
 }
 
 .btn-cutscene {
@@ -660,8 +664,8 @@ body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
     color: rgba(255, 255, 255, 0.75);
 }
 
-/* Mobile : même grille à zones fixes, portraits compacts */
-@media (max-width: 768px) {
+/* Mobile / hauteur compacte : grille à zones fixes, portraits compacts */
+@media (max-width: 768px), (max-height: 600px) {
     #ecran-histoire-cutscene.ecran.actif {
         grid-template-rows:
             clamp(72px, 14vh, 140px)
@@ -720,6 +724,48 @@ body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
 
     #texte-narration-cutscene {
         font-size: clamp(18px, 4.8vw, 24px);
+    }
+}
+
+@media (max-height: 768px) and (orientation: landscape) {
+    #ecran-histoire-cutscene.ecran.actif {
+        grid-template-rows:
+            clamp(56px, 12vh, 100px)
+            minmax(0, 1fr)
+            clamp(80px, 16vh, 130px)
+            auto;
+    }
+
+    #rangee-portraits-cutscene {
+        padding-left: max(12px, var(--safe-left));
+        padding-right: max(12px, var(--safe-right));
+    }
+
+    #zone-dialogue-cutscene {
+        padding-left: max(12px, var(--safe-left));
+        padding-right: max(12px, var(--safe-right));
+    }
+
+    #boite-dialogue-cutscene {
+        min-height: 72px;
+        padding: 10px 14px 8px;
+    }
+
+    #texte-narration-cutscene {
+        font-size: clamp(16px, 3.6vw, 20px);
+    }
+}
+
+@media (max-width: 360px) {
+    #zone-dialogue-cutscene,
+    #rangee-portraits-cutscene {
+        padding-left: max(12px, var(--safe-left));
+        padding-right: max(12px, var(--safe-right));
+    }
+
+    #zone-narration-cutscene {
+        padding-left: max(16px, var(--safe-left));
+        padding-right: max(16px, var(--safe-right));
     }
 }
 

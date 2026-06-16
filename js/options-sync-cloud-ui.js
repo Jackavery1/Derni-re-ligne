@@ -15,6 +15,13 @@ import {
 import { chargerBiomeActif } from './progression.js';
 import { chargerClassementLeaderboard } from './leaderboard-cloud.js';
 import { formaterTemps } from './hud-jeu.js';
+import { BIOMES, ORDRE_BIOMES_LIBRE } from './config.js';
+
+const MODES_LEADERBOARD = [
+    { id: 'marathon', libelle: 'MARATHON' },
+    { id: 'sprint', libelle: 'SPRINT' },
+    { id: 'coop', libelle: 'COOP' },
+];
 
 function formaterLigneLeaderboard(ligne, mode) {
     if (mode === 'sprint' && ligne.sprint_ms) {
@@ -23,24 +30,76 @@ function formaterLigneLeaderboard(ligne, mode) {
     return `${ligne.pseudo} — ${Number(ligne.score).toLocaleString('fr-FR')} pts`;
 }
 
-export async function rafraichirLeaderboardOptions(mode = 'marathon') {
+function obtenirSelectLeaderboardMode() {
+    return /** @type {HTMLSelectElement | null} */ (
+        document.getElementById('select-leaderboard-mode')
+    );
+}
+
+function obtenirSelectLeaderboardBiome() {
+    return /** @type {HTMLSelectElement | null} */ (
+        document.getElementById('select-leaderboard-biome')
+    );
+}
+
+export function peuplerSelectsLeaderboardOptions() {
+    const selectBiome = obtenirSelectLeaderboardBiome();
+    if (!selectBiome || selectBiome.options.length > 0) return;
+
+    for (const biomeId of ORDRE_BIOMES_LIBRE) {
+        const biome = BIOMES[biomeId];
+        if (!biome) continue;
+        const opt = document.createElement('option');
+        opt.value = biomeId;
+        opt.textContent = biome.nom ?? biomeId.toUpperCase();
+        selectBiome.appendChild(opt);
+    }
+
+    const biomeActif = chargerBiomeActif();
+    if (ORDRE_BIOMES_LIBRE.includes(biomeActif)) {
+        selectBiome.value = biomeActif;
+    }
+}
+
+function obtenirFiltresLeaderboardOptions() {
+    const mode = obtenirSelectLeaderboardMode()?.value ?? 'marathon';
+    const biome = obtenirSelectLeaderboardBiome()?.value ?? chargerBiomeActif();
+    return { mode, biome };
+}
+
+function mettreAJourEnteteLeaderboard(mode, biome) {
+    const entete = document.getElementById('leaderboard-options-titre');
+    if (!entete) return;
+    const modeLibelle = MODES_LEADERBOARD.find((m) => m.id === mode)?.libelle ?? mode.toUpperCase();
+    const biomeLibelle = BIOMES[biome]?.nom ?? biome.toUpperCase();
+    entete.textContent = `TOP ${modeLibelle} — ${biomeLibelle}`;
+}
+
+export async function rafraichirLeaderboardOptions(mode, biome) {
     const liste = document.getElementById('liste-leaderboard-options');
     if (!liste || !syncCloudConfigure() || !syncCloudActif()) {
         liste?.replaceChildren();
         return;
     }
-    const biome = chargerBiomeActif();
-    const entrees = await chargerClassementLeaderboard({ mode, biome, limit: 8 });
+
+    const filtres = mode && biome ? { mode, biome } : obtenirFiltresLeaderboardOptions();
+    mettreAJourEnteteLeaderboard(filtres.mode, filtres.biome);
+
+    const entrees = await chargerClassementLeaderboard({
+        mode: filtres.mode,
+        biome: filtres.biome,
+        limit: 8,
+    });
     liste.replaceChildren();
     if (entrees.length === 0) {
         const vide = document.createElement('li');
-        vide.textContent = 'Aucun score en ligne pour ce biome.';
+        vide.textContent = 'Aucun score en ligne pour ce filtre.';
         liste.appendChild(vide);
         return;
     }
     entrees.forEach((ligne, index) => {
         const item = document.createElement('li');
-        item.textContent = `${index + 1}. ${formaterLigneLeaderboard(ligne, mode)}`;
+        item.textContent = `${index + 1}. ${formaterLigneLeaderboard(ligne, filtres.mode)}`;
         liste.appendChild(item);
     });
 }
@@ -83,7 +142,8 @@ export function mettreAJourUiSyncCloud() {
         statut?.classList.add('element-masque');
     }
     if (actif && syncCloudConfigure()) {
-        void rafraichirLeaderboardOptions('marathon');
+        peuplerSelectsLeaderboardOptions();
+        void rafraichirLeaderboardOptions();
     }
 }
 
@@ -95,6 +155,8 @@ export function initialiserSyncCloudOptions(
     inputSyncId,
     btnCopierSyncId
 ) {
+    peuplerSelectsLeaderboardOptions();
+
     btnSyncCloud?.addEventListener('click', async () => {
         const actif = !syncCloudActif();
         activerSyncCloud(actif);
@@ -125,8 +187,15 @@ export function initialiserSyncCloudOptions(
         mettreAJourUiSyncCloud();
     });
 
+    const selectMode = obtenirSelectLeaderboardMode();
+    const selectBiome = obtenirSelectLeaderboardBiome();
+    const rafraichirDepuisFiltres = () => void rafraichirLeaderboardOptions();
+
+    selectMode?.addEventListener('change', rafraichirDepuisFiltres);
+    selectBiome?.addEventListener('change', rafraichirDepuisFiltres);
+
     document.getElementById('btn-rafraichir-leaderboard')?.addEventListener('click', () => {
-        void rafraichirLeaderboardOptions('marathon');
+        void rafraichirLeaderboardOptions();
     });
 
     btnCopierSyncId?.addEventListener('click', async () => {
@@ -149,6 +218,6 @@ export function initialiserSyncCloudOptions(
         await synchroniserCloudAuDemarrage();
         await pousserCloudMaintenant();
         mettreAJourUiSyncCloud();
-        void rafraichirLeaderboardOptions('marathon');
+        void rafraichirLeaderboardOptions();
     });
 }

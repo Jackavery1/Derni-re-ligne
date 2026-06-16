@@ -1,5 +1,23 @@
 import { expect } from '@playwright/test';
 
+export {
+    ETAT_DEBLOCAGE_MONDE_LIBRE,
+    ETAT_DEBLOCAGE_COMPLET,
+    ETAT_HISTOIRE_BOSS_BRASIER,
+    ETAT_FIN_SECRETE_PRET,
+    ETAT_AVANT_FIN_SECRETE,
+    ETAT_INFERNO_PRET,
+    ETAT_FIN_VRAIE_PRET,
+    ETAT_OCEAN_FRAGMENT_PRET,
+    ETAT_CYBER_LABO_PRET,
+} from './etats-histoire.mjs';
+
+import {
+    ETAT_DEBLOCAGE_MONDE_LIBRE,
+    ETAT_DEBLOCAGE_COMPLET,
+    ETAT_HISTOIRE_BOSS_BRASIER,
+} from './etats-histoire.mjs';
+
 /** Filtre les violations Axe bloquantes (hors contraste optionnel). */
 export function filtrerViolationsCritiques(violations, { inclureContraste = false } = {}) {
     return violations.filter((v) => {
@@ -9,43 +27,6 @@ export function filtrerViolationsCritiques(violations, { inclureContraste = fals
         return false;
     });
 }
-
-/** État histoire minimal pour débloquer le mode libre (Chapitre I complété). */
-export const ETAT_DEBLOCAGE_MONDE_LIBRE = {
-    chapitreActuel: 'chapitre_2',
-    mondesCompletes: ['monde_prologue', 'monde_lave', 'monde_rouille'],
-    bossVaincus: ['brasier'],
-    journauxTrouves: [],
-    mondesCachesDebloques: [],
-    conditionsMiroir: { bossArchivisteVaincu: false, tetrisTriplesCyber: 0 },
-    conditionsTrame: {
-        miroirComplete: false,
-        tousJournauxTrouves: false,
-        tousBossSansContinue: true,
-        actionDistorsionFaite: false,
-    },
-    conditionsParadoxe: { finSecreteObtenue: false, topsVolontairesPrologue: 0 },
-    finObtenue: null,
-    toutesFinObtenues: [],
-    nbContinuesUtilises: 0,
-    enModeHistoire: false,
-    mondesDejaMontres: [],
-    laboDecouvert: false,
-    prouessesHistoire: {
-        blocksRouillesMax: 0,
-        lignesEclipseBasseMax: 0,
-        lignesVideMax: 0,
-        precisionMiroirMax: 0,
-        meilleurTimerBossMs: Infinity,
-    },
-};
-
-/** État histoire pour Oracle, Coop, Codex et Architecte débloqués. */
-export const ETAT_DEBLOCAGE_COMPLET = {
-    ...ETAT_DEBLOCAGE_MONDE_LIBRE,
-    bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion'],
-    mondesCompletes: ['monde_prologue'],
-};
 
 /** État vierge : aucun déblocage, comme un premier lancement. */
 export async function preparerPremierLancement(page) {
@@ -213,166 +194,6 @@ export async function demarrerPartie(page) {
     await attendrePartieVisible(page);
 }
 
-/** État histoire minimal pour jouer le boss Brasier (monde_boss_1). */
-export const ETAT_HISTOIRE_BOSS_BRASIER = {
-    chapitreActuel: 'chapitre_1',
-    mondesCompletes: ['monde_prologue', 'monde_lave', 'monde_rouille'],
-    bossVaincus: [],
-    journauxTrouves: [],
-    mondesCachesDebloques: [],
-    conditionsMiroir: { bossArchivisteVaincu: false, tetrisTriplesCyber: 0 },
-    conditionsTrame: {
-        miroirComplete: false,
-        tousJournauxTrouves: false,
-        tousBossSansContinue: true,
-        actionDistorsionFaite: false,
-    },
-    conditionsParadoxe: { finSecreteObtenue: false, topsVolontairesPrologue: 0 },
-    finObtenue: null,
-    toutesFinObtenues: [],
-    nbContinuesUtilises: 0,
-    enModeHistoire: false,
-    mondesDejaMontres: ['monde_boss_1'],
-    laboDecouvert: false,
-    prouessesHistoire: {
-        blocksRouillesMax: 0,
-        lignesEclipseBasseMax: 0,
-        lignesVideMax: 0,
-        precisionMiroirMax: 0,
-        meilleurTimerBossMs: Infinity,
-    },
-};
-
-/** État prêt pour déclencher la fin secrète (Trame complétée + conditions). */
-export const ETAT_FIN_SECRETE_PRET = {
-    chapitreActuel: 'chapitre_2',
-    mondesCompletes: [
-        'monde_prologue',
-        'monde_lave',
-        'monde_rouille',
-        'monde_ocean',
-        'monde_foret',
-        'monde_glace',
-        'monde_desert',
-        'monde_eclipse',
-        'monde_cyber',
-        'monde_fuochi',
-        'monde_cosmos',
-        'monde_vide',
-        'monde_miroir',
-        'monde_trame',
-        'monde_finale',
-    ],
-    bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion'],
-    journauxTrouves: [
-        'journal_1',
-        'journal_2',
-        'journal_3',
-        'journal_4',
-        'journal_5',
-        'journal_6',
-        'journal_7',
-        'journal_8',
-        'journal_9',
-    ],
-    mondesCachesDebloques: ['monde_miroir', 'monde_trame'],
-    conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 },
-    conditionsTrame: {
-        miroirComplete: true,
-        tousJournauxTrouves: true,
-        tousBossSansContinue: true,
-        actionDistorsionFaite: true,
-    },
-    conditionsParadoxe: { finSecreteObtenue: false, topsVolontairesPrologue: 0 },
-    finObtenue: null,
-    toutesFinObtenues: [],
-    nbContinuesUtilises: 0,
-    enModeHistoire: false,
-    mondesDejaMontres: ['monde_boss_1', 'monde_trame'],
-    laboDecouvert: true,
-    prouessesHistoire: {
-        blocksRouillesMax: 0,
-        lignesEclipseBasseMax: 0,
-        lignesVideMax: 0,
-        precisionMiroirMax: 0,
-        meilleurTimerBossMs: Infinity,
-    },
-};
-
-/** État prêt pour déclencher la fin vraie (Miroir complété, sans Trame). */
-export const ETAT_FIN_VRAIE_PRET = {
-    chapitreActuel: 'chapitre_2',
-    mondesCompletes: [
-        'monde_prologue',
-        'monde_lave',
-        'monde_rouille',
-        'monde_ocean',
-        'monde_foret',
-        'monde_glace',
-        'monde_desert',
-        'monde_eclipse',
-        'monde_cyber',
-        'monde_fuochi',
-        'monde_cosmos',
-        'monde_vide',
-        'monde_miroir',
-        'monde_finale',
-    ],
-    bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion'],
-    journauxTrouves: ['journal_1', 'journal_2', 'journal_3', 'journal_4', 'journal_5', 'journal_6'],
-    mondesCachesDebloques: ['monde_miroir'],
-    conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 },
-    conditionsTrame: {
-        miroirComplete: true,
-        tousJournauxTrouves: false,
-        tousBossSansContinue: true,
-        actionDistorsionFaite: false,
-    },
-    conditionsParadoxe: { finSecreteObtenue: false, topsVolontairesPrologue: 0 },
-    finObtenue: null,
-    toutesFinObtenues: [],
-    nbContinuesUtilises: 0,
-    enModeHistoire: false,
-    mondesDejaMontres: ['monde_boss_1', 'monde_miroir'],
-    laboDecouvert: true,
-    fragmentsVusIds: [],
-    interludesVusIds: [],
-    prouessesHistoire: {
-        blocksRouillesMax: 0,
-        lignesEclipseBasseMax: 0,
-        lignesVideMax: 0,
-        precisionMiroirMax: 0,
-        meilleurTimerBossMs: Infinity,
-    },
-};
-
-/** État pour tester fragment VERA océan (première complétion). */
-export const ETAT_OCEAN_FRAGMENT_PRET = {
-    ...ETAT_HISTOIRE_BOSS_BRASIER,
-    mondesCompletes: ['monde_prologue', 'monde_lave', 'monde_rouille'],
-    fragmentsVusIds: [],
-};
-
-/** État pour tester découverte labo cyber + journal 7. */
-export const ETAT_CYBER_LABO_PRET = {
-    ...ETAT_HISTOIRE_BOSS_BRASIER,
-    mondesCompletes: [
-        'monde_prologue',
-        'monde_lave',
-        'monde_rouille',
-        'monde_ocean',
-        'monde_foret',
-        'monde_glace',
-        'monde_desert',
-        'monde_eclipse',
-    ],
-    conditionsMiroir: { bossArchivisteVaincu: false, tetrisTriplesCyber: 3 },
-    laboDecouvert: false,
-    journauxTrouves: ['journal_1', 'journal_2', 'journal_3', 'journal_4', 'journal_5', 'journal_6'],
-    fragmentsVusIds: ['apres_ocean', 'apres_foret', 'apres_glace', 'apres_desert', 'apres_eclipse'],
-    interludesVusIds: ['interlude_gardiens', 'interlude_elle'],
-};
-
 /** @param {import('@playwright/test').Page} page */
 export async function fermerRecapPostMonde(page) {
     await expect(page.locator('#overlay-recap-monde')).toBeVisible({ timeout: 10000 });
@@ -381,7 +202,32 @@ export async function fermerRecapPostMonde(page) {
 
 /** @param {import('@playwright/test').Page} page */
 export async function passerCutsceneEntiere(page) {
-    await page.locator('#btn-cutscene-passer').click({ force: true });
+    await page.evaluate(() => {
+        document.getElementById('btn-cutscene-passer')?.click();
+    });
+}
+
+/** Passe toutes les cutscenes actives jusqu'à l'écran de fin histoire. */
+/** @param {import('@playwright/test').Page} page */
+export async function terminerCutscenesVersEcranFin(page) {
+    for (let tentative = 0; tentative < 20; tentative++) {
+        const finActif = await page
+            .locator('#ecran-histoire-fin')
+            .evaluate((el) => el.classList.contains('actif'))
+            .catch(() => false);
+        if (finActif) return;
+
+        const cutActif = await page
+            .locator('#ecran-histoire-cutscene')
+            .evaluate((el) => el.classList.contains('actif'))
+            .catch(() => false);
+        if (cutActif) {
+            await page.locator('#btn-cutscene-passer').click({ force: true });
+            continue;
+        }
+        await page.waitForTimeout(200);
+    }
+    await expect(page.locator('#ecran-histoire-fin')).toHaveClass(/actif/, { timeout: 5000 });
 }
 
 /** @param {import('@playwright/test').Page} page */

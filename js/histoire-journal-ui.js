@@ -6,6 +6,17 @@ import { obtenirCanvas } from './dom-utils.js';
 import { afficherEcranHistoire, cacherEcransHistoire } from './histoire-cutscene-nav.js';
 
 let journalCallbackFermer = null;
+let _boutonJournalFermeOk = false;
+
+function _lierBoutonJournalFermer() {
+    if (_boutonJournalFermeOk) return;
+    const btn = document.getElementById('btn-journal-fermer');
+    if (!btn || typeof btn.addEventListener !== 'function') return;
+    _boutonJournalFermeOk = true;
+    btn.addEventListener('click', () => {
+        fermerJournalHistoire();
+    });
+}
 
 export function afficherJournalHistoire(journal, onFermer) {
     definirExpressionVera('journal_decouvert');
@@ -71,7 +82,8 @@ export function afficherJournalHistoire(journal, onFermer) {
 
     journalCallbackFermer = onFermer ?? null;
 
-    afficherEcranHistoire(ECRANS.HISTOIRE_JOURNAL);
+    _lierBoutonJournalFermer();
+    void afficherEcranHistoire(ECRANS.HISTOIRE_JOURNAL);
 }
 
 function illustrationFallback(ctx2d, w, h) {

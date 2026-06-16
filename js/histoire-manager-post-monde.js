@@ -53,9 +53,11 @@ function trouverJournal(id) {
 }
 
 function _conditionLaboCyber(monde, etatHist) {
+    const triplesPersistes = etatHist.conditionsMiroir?.tetrisTriplesCyber ?? 0;
+    const triplesSession = store.histoire.mecaniques?.cyberTetrisConsecutifs ?? 0;
     return (
         monde.biomeId === 'cyber' &&
-        etatHist.conditionsMiroir.tetrisTriplesCyber >= 3 &&
+        (triplesPersistes >= 3 || triplesSession >= 3) &&
         !etatHist.laboDecouvert
     );
 }
@@ -168,9 +170,10 @@ export function declencherNarratifPostMonde(monde, etatHist, premiereCompletion,
 
     file.ajouter({
         id: 'labo_cyber',
-        condition: () => _conditionLaboCyber(monde, etatHist),
+        condition: () => _conditionLaboCyber(monde, obtenirEtatHistoire()),
         executer: (suivant) => {
-            _preparerDecouverteLabo(etatHist);
+            const etat = obtenirEtatHistoire();
+            _preparerDecouverteLabo(etat);
             afficherDecouverteLabo(suivant);
         },
     });

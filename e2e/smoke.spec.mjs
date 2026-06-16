@@ -171,6 +171,32 @@ test('partie solo paysage mobile — contrôles latéraux', async ({ page }) => 
     expect(metriques.droiteADroite).toBe(true);
 });
 
+test('partie marathon paysage mobile — timer et panneau stats visibles', async ({ page }) => {
+    await page.setViewportSize({ width: 844, height: 390 });
+    await demarrerPartie(page);
+    await expect(page.locator('#section-timer-niveau')).toBeVisible();
+    await expect(page.locator('#affichage-temps-niveau')).toContainText(/\d{2}:\d{2}/);
+
+    const metriques = await page.evaluate(() => {
+        const echelle = document.getElementById('interface-echelle');
+        const timer = document.getElementById('section-timer-niveau');
+        const echelleRect = echelle?.getBoundingClientRect();
+        const timerRect = timer?.getBoundingClientRect();
+        return {
+            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+            echelleDansEcran: Boolean(
+                echelleRect && echelleRect.bottom <= window.innerHeight + 2 && echelleRect.top >= -2
+            ),
+            timerVisible: Boolean(
+                timerRect && timerRect.height > 0 && timerRect.bottom <= window.innerHeight + 2
+            ),
+        };
+    });
+    expect(metriques.debord).toBe(false);
+    expect(metriques.echelleDansEcran).toBe(true);
+    expect(metriques.timerVisible).toBe(true);
+});
+
 test('partie solo desktop — contrôles tactiles masqués par défaut', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await demarrerPartie(page);

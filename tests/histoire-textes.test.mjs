@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'fs';
 import {
     PORTRAITS,
     CUTSCENES_ENTREE,
@@ -7,7 +8,6 @@ import {
     DIALOGUES_COMBAT_BOSS,
     INTERLUDES,
 } from '../js/histoire-textes.js';
-import { CODEX_HISTOIRE } from '../js/codex-histoire.js';
 import { ACHIEVEMENTS_HISTOIRE } from '../js/achievements-histoire.js';
 import { INTRO_HISTOIRE, OUTRO_FINS } from '../js/histoire-textes/intro-interludes.js';
 import { SCENES_CUTSCENE } from '../js/scenes-cutscene.js';
@@ -150,7 +150,9 @@ describe('histoire-textes — cohérence portraits', () => {
     });
 
     it('entree Codex Paradoxe sans accents dans le corps', () => {
-        const entree = CODEX_HISTOIRE.chronique_paradoxe;
+        const entree = JSON.parse(
+            readFileSync('data/codex-textes.json', 'utf8')
+        ).chronique_paradoxe;
         expect(entree).toBeDefined();
         expect(entree.titre).toBe('LE PARADOXE');
         expect(entree.texte.length).toBeGreaterThanOrEqual(3);

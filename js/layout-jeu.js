@@ -3,8 +3,6 @@ import { calculerEchelleInterface } from './layout-calcul.js';
 import { lireInsetsSafeArea } from './safe-area.js';
 
 export { calculerEchelleInterface } from './layout-calcul.js';
-import { redimensionnerConstellation } from './constellation.js';
-import { redimensionnerCarteHistoire } from './histoire-map.js';
 import { obtenirCanvasMenuFond, menuAnimActif } from './menu-fond.js';
 import { modeArchiEnCours } from './registre-modes.js';
 import { obtenirIdBiomeFond } from './biome-fond.js';
@@ -73,9 +71,18 @@ function appliquerEchelleInterface(echelle, iface, largeurTotale, hauteurTotale,
     iface.style.setProperty('--iface-scale', String(scale));
 }
 
+function bonusHauteurTimerMarathon() {
+    if (typeof document === 'undefined') return 0;
+    const section = document.getElementById('section-timer-niveau');
+    if (!section || section.classList.contains('element-masque')) return 0;
+    return 36;
+}
+
 export function obtenirHauteurInterface() {
     const estPaysageMobile = estPaysageCompact();
-    const hGauche = LAYOUT.holdHauteur + 20 + LAYOUT.statsHauteur + 30;
+    const timerBonus = bonusHauteurTimerMarathon();
+    const statsH = estPaysageMobile ? 200 : LAYOUT.statsHauteur;
+    const hGauche = LAYOUT.holdHauteur + 20 + statsH + 30 + timerBonus;
     const hMascotte = estPaysageMobile ? 72 : LAYOUT.mascotteHauteur;
     const hDroite = 210 + 20 + hMascotte + 20 + LAYOUT.pauseHauteur + 20;
     return Math.max(hGauche, hDroite, LAYOUT.plateauHauteur) + LAYOUT.paddingVertical;
@@ -86,12 +93,8 @@ export function adapterInterface() {
     const iface = document.getElementById('interface-jeu');
     if (!echelle || !iface) return;
 
-    const estPaysageMobile = estPaysageCompact();
-
     const largeurTotale = LAYOUT.panneauLargeur * 2 + LAYOUT.gap * 2 + LAYOUT.plateauLargeur;
-    const hauteurTotale = estPaysageMobile
-        ? Math.max(LAYOUT.plateauHauteur, LAYOUT.mascotteHauteur + 280) + LAYOUT.paddingVertical
-        : obtenirHauteurInterface();
+    const hauteurTotale = obtenirHauteurInterface();
 
     const mobileControles = hauteurControlesTactiles();
 
@@ -141,8 +144,10 @@ export function initialiserLayout() {
     ecouterViewport(() => {
         adapterInterface();
         if (modeArchiEnCours()) adapterInterfaceArchi();
-        redimensionnerConstellation();
-        redimensionnerCarteHistoire();
+        void import('./constellation.js').then(({ redimensionnerConstellation }) =>
+            redimensionnerConstellation()
+        );
+        void import('./histoire-map.js').then((m) => m.redimensionnerCarteHistoire());
         invaliderCacheFond();
         if (etat.estEnCours) {
             demarrerFondBiome(obtenirIdBiomeFond());

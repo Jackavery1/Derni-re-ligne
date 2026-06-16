@@ -1,5 +1,4 @@
 import { copierRapportErreurs } from './logger.js';
-import { configurerConstellation } from './constellation.js';
 import { configurerMeteo } from './meteo.js';
 import { configurerReliques } from './reliques.js';
 import { AudioMoteur, configurerAudioMoteur } from './audio.js';
@@ -85,32 +84,34 @@ export function initialiserSystemesMoteur() {
 
     lierCouleursTetrominos();
 
-    configurerConstellation({
-        obtenirNiveauGlobal,
-        obtenirBiomeActif,
-        definirBiomeActif,
-        sauvegarderBiomeActif,
-        obtenirRecordBiome,
-        obtenirRecordNiveauBiome,
-        calculerEtoiles,
-        formaterEtoiles,
-        biomeEstDebloque,
-        appliquerThemeBiome,
-        demarrerJeu,
-        demarrerCooperatif: () => {
-            void import('./coop-jeu.js').then(({ demarrerCooperatif }) => demarrerCooperatif());
-        },
-        modeCoopEstActif: coopEstPrefere,
-        sonMenu: (type) => AudioMoteur.son(type),
-        ouvrirHistoireVersMonde: (mondeId) => {
-            void import('./histoire-navigation.js').then(({ definirMondeCibleCarte }) => {
-                definirMondeCibleCarte(mondeId);
-                void import('./histoire-intro.js').then(({ ouvrirModeHistoireDepuisMenu }) =>
-                    ouvrirModeHistoireDepuisMenu()
-                );
-            });
-        },
-    });
+    void import('./constellation.js').then(({ configurerConstellation }) =>
+        configurerConstellation({
+            obtenirNiveauGlobal,
+            obtenirBiomeActif,
+            definirBiomeActif,
+            sauvegarderBiomeActif,
+            obtenirRecordBiome,
+            obtenirRecordNiveauBiome,
+            calculerEtoiles,
+            formaterEtoiles,
+            biomeEstDebloque,
+            appliquerThemeBiome,
+            demarrerJeu,
+            demarrerCooperatif: () => {
+                void import('./coop-jeu.js').then(({ demarrerCooperatif }) => demarrerCooperatif());
+            },
+            modeCoopEstActif: coopEstPrefere,
+            sonMenu: (type) => AudioMoteur.son(type),
+            ouvrirHistoireVersMonde: (mondeId) => {
+                void import('./histoire-navigation.js').then(({ definirMondeCibleCarte }) => {
+                    definirMondeCibleCarte(mondeId);
+                    void import('./histoire-intro.js').then(({ ouvrirModeHistoireDepuisMenu }) =>
+                        ouvrirModeHistoireDepuisMenu()
+                    );
+                });
+            },
+        })
+    );
 
     return true;
 }

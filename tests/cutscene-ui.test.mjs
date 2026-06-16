@@ -4,8 +4,21 @@ import { store } from '../js/store-core.js';
 
 vi.mock('../js/navigation-ecrans.js', () => ({
     afficherEcran: vi.fn(),
+    afficherEcranAsync: vi.fn(async (id) => {
+        const el = globalThis.document.getElementById(id);
+        el?.classList?.add?.('actif');
+    }),
     cacherEcrans: vi.fn(),
     annoncer: vi.fn(),
+}));
+
+vi.mock('../js/navigation-lazy.js', () => ({
+    afficherEcranDiffere: vi.fn(),
+    afficherEcranDiffereAsync: vi.fn(async (id) => {
+        const el = globalThis.document.getElementById(id);
+        el?.classList?.add?.('actif');
+    }),
+    cacherEcransDiffere: vi.fn(),
 }));
 
 vi.mock('../js/scenes-cutscene.js', async (importOriginal) => {
@@ -20,6 +33,8 @@ vi.mock('../js/portrait-vera-rendu.js', () => ({
 async function attendreDemarrageCutscene() {
     await Promise.resolve();
     await Promise.resolve();
+    await Promise.resolve();
+    await new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 function creerCanvas(id) {

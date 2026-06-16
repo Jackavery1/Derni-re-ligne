@@ -154,6 +154,13 @@ body.partie-active #conteneur-principal {
     text-shadow: 0 0 8px var(--cyan);
 }
 
+@media (max-width: 768px), (max-height: 600px) {
+    #btn-pause,
+    #btn-mute {
+        min-height: 48px;
+    }
+}
+
 #section-progression {
     width: 100%;
     display: flex;

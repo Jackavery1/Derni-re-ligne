@@ -1,5 +1,4 @@
 import { seedFraction } from './portrait-rendu-utils.js';
-import { calculerCadrePortraitVera, obtenirImagePortraitVera } from './portrait-vera-assets.js';
 
 export { prechargerPortraitVera } from './portrait-vera-assets.js';
 
@@ -42,79 +41,6 @@ export const PALETTE_VERA_DESAT = {
     HALO: '#b85878',
     HALO_DOUX: '#c07088',
 };
-
-/**
- * @param {CanvasRenderingContext2D} ctx
- * @param {number} w
- * @param {number} h
- * @param {HTMLImageElement} img
- * @param {{ desature?: boolean, alpha?: number, teinte?: 'cyan' | 'rose' | null }} opts
- */
-function _dessinerSpriteVera(ctx, w, h, img, opts = {}) {
-    const { dx, dy, dw, dh } = calculerCadrePortraitVera(w, h, img.width, img.height);
-    ctx.save();
-    ctx.globalAlpha = opts.alpha ?? 1;
-    if (opts.desature) ctx.filter = 'saturate(0.35) brightness(0.88)';
-    else if (opts.teinte === 'cyan')
-        ctx.filter = 'brightness(1.08) saturate(1.15) hue-rotate(-8deg)';
-    else if (opts.teinte === 'rose')
-        ctx.filter = 'brightness(1.05) saturate(1.2) hue-rotate(12deg)';
-    ctx.drawImage(img, dx, dy, dw, dh);
-    ctx.restore();
-}
-
-/**
- * @param {CanvasRenderingContext2D} ctx
- * @param {number} w
- * @param {number} h
- * @param {HTMLImageElement} source
- * @param {number} tAnim
- * @param {number[]} decalages
- */
-function _appliquerBandesGlitch(ctx, w, h, source, tAnim, decalages) {
-    const { dx, dy, dw, dh } = calculerCadrePortraitVera(w, h, source.width, source.height);
-    const cy = dy + dh * 0.38;
-    const hBande = Math.max(14, dh * 0.12);
-    const bandes = 3;
-
-    for (let bi = 0; bi < bandes; bi++) {
-        const y0 = cy - dh * 0.18 + bi * (hBande + 4);
-        const offset =
-            (decalages[bi] ?? 0) + Math.sin(tAnim * 6 + bi * 1.7 + seedFraction(bi) * 6) * 3;
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(dx, y0, dw, hBande);
-        ctx.clip();
-        ctx.drawImage(source, dx + offset, dy, dw, dh, dx, dy, dw, dh);
-        ctx.restore();
-    }
-}
-
-/**
- * @param {CanvasRenderingContext2D} ctx
- * @param {number} w
- * @param {number} h
- * @param {number} s
- * @param {Record<string, number | boolean | number[]>} params
- */
-function _dessinerOverlayVisiere(ctx, w, h, s, params) {
-    const cx = w * 0.5;
-    const visY = h * 0.28;
-    const visW = w * 0.58;
-    const visH = h * 0.16;
-    const lueur = /** @type {number} */ (params.lueurRose ?? 1);
-    const intense = params.visiereLumineuse === true;
-    const inquiete = params.sourcils === true;
-
-    ctx.save();
-    ctx.globalAlpha = intense ? 0.45 : inquiete ? 0.28 : 0.18;
-    ctx.fillStyle = intense ? PALETTE_VERA.VISIERE_REFLET : PALETTE_VERA.VISIERE;
-    ctx.shadowColor = PALETTE_VERA.LISERES;
-    ctx.shadowBlur = (intense ? 14 : 8) * s * lueur;
-    ctx.fillRect(cx - visW / 2, visY, visW, visH);
-    ctx.shadowBlur = 0;
-    ctx.restore();
-}
 
 /**
  * @param {CanvasRenderingContext2D} ctx
@@ -270,38 +196,188 @@ function _dessinerExpressionVera(ctx, w, h, s, cx, params) {
  * @param {CanvasRenderingContext2D} ctx
  * @param {number} w
  * @param {number} h
+ * @param {number} s
+ * @param {Record<string, number | boolean | number[]>} params
  */
-function _dessinerFallbackVera(ctx, w, h) {
+function _dessinerBusteVeraCanon(ctx, w, h, s, params) {
     const cx = w * 0.5;
-    const s = w / 180;
+    const P = PALETTE_VERA;
+    const douce =
+        !params.sourcils &&
+        !params.visiereLumineuse &&
+        /** @type {number} */ (params.inclinaison ?? 0) > 0.04;
 
-    ctx.fillStyle = PALETTE_VERA.COMBINAISON;
+    ctx.fillStyle = P.COMBINAISON;
     ctx.beginPath();
-    ctx.moveTo(cx - 44 * s, h * 0.92);
-    ctx.quadraticCurveTo(cx - 50 * s, h * 0.58, cx - 30 * s, h * 0.5);
-    ctx.lineTo(cx + 30 * s, h * 0.5);
-    ctx.quadraticCurveTo(cx + 50 * s, h * 0.58, cx + 44 * s, h * 0.92);
+    ctx.moveTo(cx - 52 * s, h * 0.94);
+    ctx.quadraticCurveTo(cx - 58 * s, h * 0.62, cx - 38 * s, h * 0.54);
+    ctx.lineTo(cx - 14 * s, h * 0.5);
+    ctx.lineTo(cx - 10 * s, h * 0.44);
+    ctx.quadraticCurveTo(cx - 8 * s, h * 0.4, cx, h * 0.4);
+    ctx.quadraticCurveTo(cx + 8 * s, h * 0.4, cx + 10 * s, h * 0.44);
+    ctx.lineTo(cx + 14 * s, h * 0.5);
+    ctx.lineTo(cx + 38 * s, h * 0.54);
+    ctx.quadraticCurveTo(cx + 58 * s, h * 0.62, cx + 52 * s, h * 0.94);
     ctx.closePath();
     ctx.fill();
 
-    ctx.fillStyle = PALETTE_VERA.PEAU;
+    ctx.strokeStyle = P.LISERES;
+    ctx.lineWidth = 1.2 * s;
     ctx.beginPath();
-    ctx.ellipse(cx, h * 0.38, 22 * s, 26 * s, 0, 0, Math.PI * 2);
+    ctx.moveTo(cx - 40 * s, h * 0.56);
+    ctx.quadraticCurveTo(cx - 20 * s, h * 0.5, cx - 8 * s, h * 0.44);
+    ctx.moveTo(cx + 40 * s, h * 0.56);
+    ctx.quadraticCurveTo(cx + 20 * s, h * 0.5, cx + 8 * s, h * 0.44);
+    ctx.stroke();
+
+    ctx.fillStyle = P.COMBINAISON_OMBRE;
+    ctx.fillRect(cx - 3 * s, h * 0.44, 6 * s, h * 0.12);
+    ctx.fillStyle = '#8a98ac';
+    for (let z = h * 0.46; z < h * 0.54; z += 5 * s) {
+        ctx.fillRect(cx - 2 * s, z, 4 * s, 2 * s);
+    }
+
+    ctx.fillStyle = P.PEAU;
+    ctx.beginPath();
+    ctx.ellipse(cx, h * 0.39, 20 * s, 24 * s, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = P.PEAU_OMBRE;
+    ctx.fillRect(cx - 2 * s, h * 0.36, 4 * s, 5 * s);
+
+    ctx.fillStyle = P.CASQUE;
+    ctx.beginPath();
+    ctx.ellipse(cx, h * 0.3, 30 * s, 20 * s, 0, Math.PI, 0);
+    ctx.fill();
+    ctx.fillStyle = '#d4ecf8';
+    ctx.beginPath();
+    ctx.ellipse(cx - 8 * s, h * 0.27, 10 * s, 6 * s, -0.3, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = PALETTE_VERA.CASQUE;
+    const visGrad = ctx.createLinearGradient(cx - 32 * s, h * 0.24, cx + 32 * s, h * 0.36);
+    visGrad.addColorStop(0, P.VISIERE_SOMBRE);
+    visGrad.addColorStop(0.35, P.VISIERE);
+    visGrad.addColorStop(0.55, P.VISIERE_REFLET);
+    visGrad.addColorStop(1, P.VISIERE_SOMBRE);
+    ctx.fillStyle = visGrad;
+    ctx.globalAlpha = 0.88;
+    ctx.fillRect(cx - 32 * s, h * 0.245, 64 * s, 16 * s);
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = P.ECRUTEURS;
     ctx.beginPath();
-    ctx.ellipse(cx, h * 0.3, 28 * s, 18 * s, 0, Math.PI, 0);
+    ctx.ellipse(cx - 36 * s, h * 0.37, 7 * s, 11 * s, 0, 0, Math.PI * 2);
+    ctx.ellipse(cx + 36 * s, h * 0.37, 7 * s, 11 * s, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = PALETTE_VERA.VISIERE;
-    ctx.fillRect(cx - 30 * s, h * 0.24, 60 * s, 14 * s);
-
-    ctx.fillStyle = PALETTE_VERA.ECRUTEURS;
+    ctx.fillStyle = P.YEUX;
     ctx.beginPath();
-    ctx.ellipse(cx - 34 * s, h * 0.36, 6 * s, 10 * s, 0, 0, Math.PI * 2);
-    ctx.ellipse(cx + 34 * s, h * 0.36, 6 * s, 10 * s, 0, 0, Math.PI * 2);
+    ctx.ellipse(cx - 12 * s, h * 0.34, 5 * s, 3.5 * s, 0, 0, Math.PI * 2);
+    ctx.ellipse(cx + 12 * s, h * 0.34, 5 * s, 3.5 * s, 0, 0, Math.PI * 2);
     ctx.fill();
+    ctx.fillStyle = P.YEUX_REFLET;
+    ctx.beginPath();
+    ctx.arc(cx - 13 * s, h * 0.335, 1.4 * s, 0, Math.PI * 2);
+    ctx.arc(cx + 11 * s, h * 0.335, 1.4 * s, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = P.SOURCILS;
+    ctx.lineWidth = 1.3 * s;
+    ctx.lineCap = 'round';
+    if (params.sourcils) {
+        ctx.beginPath();
+        ctx.moveTo(cx - 18 * s, h * 0.305);
+        ctx.lineTo(cx - 8 * s, h * 0.318);
+        ctx.moveTo(cx + 8 * s, h * 0.318);
+        ctx.lineTo(cx + 18 * s, h * 0.305);
+        ctx.stroke();
+    } else if (params.visiereLumineuse) {
+        ctx.beginPath();
+        ctx.moveTo(cx - 18 * s, h * 0.31);
+        ctx.lineTo(cx - 8 * s, h * 0.31);
+        ctx.moveTo(cx + 8 * s, h * 0.31);
+        ctx.lineTo(cx + 18 * s, h * 0.31);
+        ctx.stroke();
+    } else if (douce) {
+        ctx.beginPath();
+        ctx.moveTo(cx - 18 * s, h * 0.308);
+        ctx.quadraticCurveTo(cx - 10 * s, h * 0.302, cx - 6 * s, h * 0.308);
+        ctx.moveTo(cx + 6 * s, h * 0.308);
+        ctx.quadraticCurveTo(cx + 10 * s, h * 0.302, cx + 18 * s, h * 0.308);
+        ctx.stroke();
+    } else {
+        ctx.beginPath();
+        ctx.moveTo(cx - 17 * s, h * 0.31);
+        ctx.lineTo(cx - 7 * s, h * 0.312);
+        ctx.moveTo(cx + 7 * s, h * 0.312);
+        ctx.lineTo(cx + 17 * s, h * 0.31);
+        ctx.stroke();
+    }
+
+    ctx.strokeStyle = P.LEVRES;
+    ctx.lineWidth = 1.2 * s;
+    const boucheY = h * 0.43;
+    if (douce) {
+        ctx.beginPath();
+        ctx.arc(cx, boucheY, 6 * s, 0.15 * Math.PI, 0.85 * Math.PI);
+        ctx.stroke();
+    } else if (params.sourcils) {
+        ctx.beginPath();
+        ctx.moveTo(cx - 5 * s, boucheY);
+        ctx.lineTo(cx + 5 * s, boucheY);
+        ctx.stroke();
+    } else {
+        ctx.beginPath();
+        ctx.moveTo(cx - 6 * s, boucheY + 1 * s);
+        ctx.lineTo(cx + 6 * s, boucheY + 1 * s);
+        ctx.stroke();
+    }
+
+    ctx.fillStyle = P.CHEVEUX;
+    ctx.beginPath();
+    ctx.ellipse(cx - 24 * s, h * 0.34, 8 * s, 14 * s, 0.25, 0, Math.PI * 2);
+    ctx.ellipse(cx + 24 * s, h * 0.34, 8 * s, 14 * s, -0.25, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = P.CHEVEUX_REFLET;
+    ctx.fillRect(cx - 26 * s, h * 0.3, 4 * s, 8 * s);
+    ctx.fillRect(cx + 22 * s, h * 0.3, 4 * s, 8 * s);
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {number} w
+ * @param {number} h
+ * @param {number} tAnim
+ * @param {number[]} decalages
+ */
+function _appliquerBandesGlitchProcedural(ctx, w, h, tAnim, decalages) {
+    if (typeof ctx.getImageData !== 'function') return;
+    const data = ctx.getImageData(0, 0, w, h);
+    const out = ctx.createImageData(w, h);
+    const cy = Math.floor(h * 0.38);
+    const hBande = Math.max(10, Math.floor(h * 0.1));
+    const bandes = 3;
+
+    for (let y = 0; y < h; y++) {
+        let offset = 0;
+        for (let bi = 0; bi < bandes; bi++) {
+            const y0 = cy - Math.floor(h * 0.16) + bi * (hBande + 4);
+            if (y >= y0 && y < y0 + hBande) {
+                offset =
+                    Math.round(decalages[bi] ?? 0) + Math.round(Math.sin(tAnim * 6 + bi * 1.7) * 3);
+                break;
+            }
+        }
+        for (let x = 0; x < w; x++) {
+            const sx = Math.min(w - 1, Math.max(0, x - offset));
+            const si = (y * w + sx) * 4;
+            const di = (y * w + x) * 4;
+            out.data[di] = data.data[si];
+            out.data[di + 1] = data.data[si + 1];
+            out.data[di + 2] = data.data[si + 2];
+            out.data[di + 3] = data.data[si + 3];
+        }
+    }
+    ctx.putImageData(out, 0, 0);
 }
 
 /**
@@ -320,43 +396,23 @@ export function dessinerPortraitVeraCanon(ctx, w, h, t, params) {
     const s = w / 180;
     const glitch = p.glitchBandes === true;
     const inclinaison = /** @type {number} */ (p.inclinaison ?? 0);
-    const img = obtenirImagePortraitVera();
 
     ctx.clearRect(0, 0, w, h);
 
-    if (img) {
-        const teinte =
-            p.visiereLumineuse === true
-                ? 'cyan'
-                : /** @type {number} */ (p.lueurRose ?? 1) > 1.05
-                  ? 'rose'
-                  : null;
-        if (glitch) {
-            _dessinerSpriteVera(ctx, w, h, img, { desature: true, alpha: 1 });
-            if (!effetsReduits) {
-                _appliquerBandesGlitch(
-                    ctx,
-                    w,
-                    h,
-                    img,
-                    tAnim,
-                    /** @type {number[]} */ (p.decalagesGlitch ?? [0, 0, 0])
-                );
-            } else {
-                _appliquerBandesGlitch(
-                    ctx,
-                    w,
-                    h,
-                    img,
-                    0,
-                    /** @type {number[]} */ (p.decalagesGlitch ?? [0, 0, 0])
-                );
-            }
-        } else {
-            _dessinerSpriteVera(ctx, w, h, img, { teinte, alpha: 1 });
-        }
+    if (glitch && !effetsReduits) {
+        ctx.save();
+        ctx.filter = 'saturate(0.35) brightness(0.88)';
+        _dessinerBusteVeraCanon(ctx, w, h, s, p);
+        ctx.restore();
+        _appliquerBandesGlitchProcedural(
+            ctx,
+            w,
+            h,
+            tAnim,
+            /** @type {number[]} */ (p.decalagesGlitch ?? [0, 0, 0])
+        );
     } else {
-        _dessinerFallbackVera(ctx, w, h);
+        _dessinerBusteVeraCanon(ctx, w, h, s, p);
     }
 
     ctx.save();
@@ -368,7 +424,6 @@ export function dessinerPortraitVeraCanon(ctx, w, h, t, params) {
 
     _dessinerHaloVera(ctx, cx, cy * 0.95, s, tAnim, p);
     _dessinerParticulesVera(ctx, cx, cy, s, tAnim, p);
-    if (img) _dessinerOverlayVisiere(ctx, w, h, s, p);
     _dessinerExpressionVera(ctx, w, h, s, cx, p);
 
     if (/** @type {number} */ (p.scanline ?? 1) > 1.2 && glitch) {

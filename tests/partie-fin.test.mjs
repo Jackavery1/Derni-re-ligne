@@ -53,7 +53,7 @@ vi.mock('../js/achievements.js', () => ({
 }));
 
 vi.mock('../js/codex.js', () => ({
-    verifierCodex: vi.fn(() => Promise.resolve()),
+    planifierVerifierCodex: vi.fn(),
 }));
 
 vi.mock('../js/profil-jeu.js', () => ({

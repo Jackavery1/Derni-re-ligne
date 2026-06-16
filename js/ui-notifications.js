@@ -19,3 +19,11 @@ export function afficherNotificationNiveau(texte, options = {}) {
     void notif.offsetWidth;
     notif.classList.add('visible');
 }
+
+/** Bandeau court avant lancement du monde suivant en campagne. */
+export function afficherNotificationTransitionCampagne(nomMonde) {
+    afficherNotificationNiveau(`▶ MONDE SUIVANT : ${nomMonde}`, {
+        classesAjouter: ['notif-campagne'],
+        classesRetirer: ['notif-synchro', 'notif-niveau-vert'],
+    });
+}

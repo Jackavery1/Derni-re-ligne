@@ -1,4 +1,4 @@
-import { NIVEAUX_ARCHI } from './archi-donnees.js';
+import { chargerNiveauxArchi } from './archi-niveaux-loader.js';
 
 /** Gabarits procéduraux — puzzles supplémentaires après les niveaux manuels. */
 /** @type {import('./archi-donnees.js').NiveauArchi[]} */
@@ -79,52 +79,58 @@ const MODELES_PROCEDURAUX = [
         ],
     },
     {
-        id: 'double',
-        nom: 'DOUBLE PROC.',
+        id: 'spirale',
+        nom: 'SPIRALE PROC.',
         biome: 'cyber',
-        difficulte: 2,
-        parPieces: 4,
+        difficulte: 3,
+        parPieces: 5,
         deblocage: 750,
-        silhouette: ['..####....', '..####....', '....####..', '....####..'],
+        silhouette: [
+            '########..',
+            '#......#..',
+            '#.####.#..',
+            '#.#..#.#..',
+            '#.####.#..',
+            '#......#..',
+            '########..',
+        ],
         pieces: [
             { type: 'O', qte: 2 },
+            { type: 'I', qte: 2 },
+            { type: 'L', qte: 1 },
+        ],
+    },
+    {
+        id: 'etoile',
+        nom: 'ETOILE PROC.',
+        biome: 'lave',
+        difficulte: 3,
+        parPieces: 5,
+        deblocage: 850,
+        silhouette: [
+            '....##....',
+            '....##....',
+            '..######..',
+            '....##....',
+            '....##....',
+            '..##..##..',
+        ],
+        pieces: [
+            { type: 'T', qte: 3 },
             { type: 'I', qte: 1 },
         ],
     },
     {
-        id: 'croix_proc',
-        nom: 'CROIX PROC.',
-        biome: 'fuochi',
-        difficulte: 3,
-        parPieces: 5,
-        deblocage: 850,
-        silhouette: ['....##....', '..######..', '########..', '..######..', '....##....'],
-        pieces: [
-            { type: 'T', qte: 2 },
-            { type: 'I', qte: 2 },
-            { type: 'O', qte: 1 },
-        ],
-    },
-    {
-        id: 'spirale',
-        nom: 'SPIRALE PROC.',
-        biome: 'cosmos',
+        id: 'mur',
+        nom: 'MUR PROC.',
+        biome: 'ocean',
         difficulte: 3,
         parPieces: 6,
         deblocage: 950,
-        silhouette: [
-            '......##..',
-            '....##....',
-            '..##......',
-            '##........',
-            '..##......',
-            '....##....',
-        ],
+        silhouette: ['########..', '########..', '########..', '########..'],
         pieces: [
-            { type: 'L', qte: 2 },
-            { type: 'J', qte: 2 },
-            { type: 'S', qte: 1 },
-            { type: 'Z', qte: 1 },
+            { type: 'I', qte: 3 },
+            { type: 'O', qte: 2 },
         ],
     },
     {
@@ -157,7 +163,7 @@ export function obtenirNiveauxArchiProceduraux() {
     }));
 }
 
-/** @returns {import('./archi-donnees.js').NiveauArchi[]} */
+/** @returns {Promise<import('./archi-donnees.js').NiveauArchi[]>} */
 export function obtenirTousNiveauxArchi() {
-    return [...NIVEAUX_ARCHI, ...obtenirNiveauxArchiProceduraux()];
+    return chargerNiveauxArchi();
 }

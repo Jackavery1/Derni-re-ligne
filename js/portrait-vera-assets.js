@@ -1,47 +1,20 @@
-import { logger } from './logger.js';
+/** Portrait VERA 100 % canvas — plus de sprite PNG requis. */
 
-export const PORTRAIT_VERA_SRC = 'assets/portraits/vera-base.png';
-
-/** @type {HTMLImageElement | null} */
-let _image = null;
-/** @type {Promise<HTMLImageElement | null> | null} */
-let _promesse = null;
+export const PORTRAIT_VERA_SRC = null;
 
 export function prechargerPortraitVera() {
-    if (_image) return Promise.resolve(_image);
-    if (_promesse) return _promesse;
-
-    _promesse = new Promise((resolve) => {
-        if (typeof Image === 'undefined') {
-            resolve(null);
-            return;
-        }
-        const img = new Image();
-        img.onload = () => {
-            _image = img;
-            resolve(img);
-        };
-        img.onerror = () => {
-            logger.warn('[portrait-vera] échec chargement', PORTRAIT_VERA_SRC);
-            resolve(null);
-        };
-        img.src = PORTRAIT_VERA_SRC;
-    });
-
-    return _promesse;
+    return Promise.resolve(null);
 }
 
 export function obtenirImagePortraitVera() {
-    return _image;
+    return null;
 }
 
-export function reinitialiserCachePortraitVeraAssets() {
-    _image = null;
-    _promesse = null;
-}
+export function reinitialiserCachePortraitVeraAssets() {}
 
 /**
  * @param {number} w
+ * @param {number} h
  * @param {number} imgW
  * @param {number} imgH
  */

@@ -9,7 +9,7 @@ export default [
             'coverage/**',
             'test-results/**',
             'dist/**',
-            'scripts/histoire-manager-ui.original.js',
+            'scripts/archive/**',
         ],
     },
     {
@@ -31,6 +31,7 @@ export default [
     },
     {
         files: [
+            'sw.js',
             'js/histoire-textes.js',
             'js/portraits-cutscene.js',
             'js/portraits-cutscene-personnages.js',

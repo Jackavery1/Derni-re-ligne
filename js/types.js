@@ -172,7 +172,8 @@
  *     obtenirColonnePieceActive?: () => number | null,
  *     obtenirMusiqueActive?: () => string | null,
  *     declencherFinHistoire?: (finId: string) => Promise<void>,
- *     declencherPostMondeNarratif?: (mondeId: string) => Promise<void>
+ *     declencherPostMondeNarratif?: (mondeId: string) => Promise<void>,
+ *     simulerVictoireMondeHistoire?: (mondeId: string, lignes?: number) => Promise<void>
  *   }
  * }} WindowEtendu
  */

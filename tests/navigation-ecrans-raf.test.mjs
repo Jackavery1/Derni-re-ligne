@@ -80,9 +80,9 @@ describe('navigation-ecrans — boucles RAF menu', () => {
 
     it('cacherEcrans arrete constellation, fond meta et carte histoire', async () => {
         cacherEcrans();
-        expect(arreterConstellation).toHaveBeenCalledTimes(1);
         expect(arreterFondMeta).toHaveBeenCalledTimes(1);
         await vi.waitFor(() => {
+            expect(arreterConstellation).toHaveBeenCalledTimes(1);
             expect(arreterCarteHistoire).toHaveBeenCalledTimes(1);
         });
     });

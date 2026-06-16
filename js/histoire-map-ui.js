@@ -15,6 +15,36 @@ import { obtenirEtoilesPersistees } from './gestionnaire-difficulte.js';
 import { definirTexteUi, sansAccentsE } from './texte-jeu.js';
 import { obtenirResumeConditionsTrame, obtenirGuideMondeSecret } from './conditions-secrets.js';
 
+const MARQUEUR_BOUTON = 'data-neo-histoire-lie';
+let _boutonsCarteOk = false;
+
+function _lierBoutonCarte(id, handler) {
+    const el = document.getElementById(id);
+    if (!el || el.hasAttribute(MARQUEUR_BOUTON) || typeof el.addEventListener !== 'function')
+        return;
+    el.setAttribute(MARQUEUR_BOUTON, '1');
+    el.addEventListener('click', () => {
+        void handler();
+    });
+}
+
+export function lierBoutonsCarteHistoire() {
+    if (_boutonsCarteOk) return;
+    _boutonsCarteOk = true;
+
+    _lierBoutonCarte('btn-histoire-retour', () => {
+        obtenirActionsHistoire().retourTitreDepuisCarte?.();
+    });
+
+    _lierBoutonCarte('btn-histoire-carte', () => {
+        obtenirActionsHistoire().retourCarte?.();
+    });
+
+    _lierBoutonCarte('btn-continue-boss', () => {
+        void obtenirActionsHistoire().continuerBossDistorsion?.();
+    });
+}
+
 let _modalTrameAttache = false;
 
 function _ouvrirModalTrame() {
@@ -36,6 +66,7 @@ function _fermerModalTrame() {
 }
 
 export function initialiserModalTrameCarte() {
+    lierBoutonsCarteHistoire();
     if (_modalTrameAttache) return;
     _modalTrameAttache = true;
 

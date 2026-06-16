@@ -1,5 +1,4 @@
 import { BIOMES } from './config.js';
-import { arreterConstellation } from './constellation.js';
 import { AudioMoteur } from './audio.js';
 import { etat, particules, obtenirBiomeActif, definirCouleurAmbRgb, ECRANS } from './store-jeu.js';
 import { hexVersRgb, lierCouleursTetrominos } from './piece-jeu.js';
@@ -113,7 +112,7 @@ export function demarrerCooperatif() {
     initialiserChronometreCoop();
     particules.length = 0;
 
-    arreterConstellation();
+    void import('./constellation.js').then(({ arreterConstellation }) => arreterConstellation());
     initialiserAudioBiome(obtenirBiomeActif(), { delaiMusique: 50 });
     lierCouleursTetrominos();
 

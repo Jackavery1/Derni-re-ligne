@@ -3,6 +3,7 @@ import { join, relative } from 'path';
 
 const BUDGETS = {
     appShellKo: 2048,
+    appShellAlerteKo: 1800,
     jsMinifieKo: 900,
     cssKo: 151,
     policesKo: 300,
@@ -145,6 +146,9 @@ function evaluerBudgets(donnees) {
         unite: 'Ko',
         actif: true,
         depasse: donnees.appShell.octets > BUDGETS.appShellKo * KO,
+        alerte:
+            donnees.appShell.octets > BUDGETS.appShellAlerteKo * KO &&
+            donnees.appShell.octets <= BUDGETS.appShellKo * KO,
     });
 
     if (donnees.jsMinifie) {
@@ -306,10 +310,18 @@ function afficherTableau(categories, jsMinifie, appShell, evaluations) {
     lignes.push('');
 
     const depassements = evaluations.filter((e) => e.actif && e.depasse);
+    const alertes = evaluations.filter((e) => e.actif && e.alerte);
     if (depassements.length > 0) {
         lignes.push('Budgets depasses :');
         for (const d of depassements) {
             lignes.push(`  - ${d.libelle} : ${d.valeur} ${d.unite} > ${d.budget} ${d.unite}`);
+        }
+    } else if (alertes.length > 0) {
+        lignes.push('Budgets en zone d alerte :');
+        for (const d of alertes) {
+            lignes.push(
+                `  - ${d.libelle} : ${d.valeur} ${d.unite} (alerte ${BUDGETS.appShellAlerteKo} ${d.unite})`
+            );
         }
     } else {
         lignes.push('Tous les budgets actifs sont respectes.');

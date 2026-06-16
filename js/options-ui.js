@@ -1,6 +1,10 @@
 import { lireStockage, ecrireStockage, chargerBiomeActif } from './progression.js';
 import { haptiqueActif, definirHaptiqueActif } from './haptique.js';
 import {
+    enchainementCampagneActif,
+    definirEnchainementCampagneActif,
+} from './preferences-campagne.js';
+import {
     controlesTactilesActifs,
     definirControlesTactilesActifs,
     appliquerControlesTactilesDepuisStockage,
@@ -72,6 +76,13 @@ export function mettreAJourBoutonHaptique(btn) {
 export function mettreAJourBoutonControlesTactiles(btn) {
     const actif = controlesTactilesActifs();
     btn.textContent = actif ? '👆 TOUCHES TACTILES ON' : '👆 TOUCHES TACTILES OFF';
+    btn.setAttribute('aria-pressed', actif ? 'true' : 'false');
+    btn.classList.toggle('actif', actif);
+}
+
+export function mettreAJourBoutonEnchainementCampagne(btn) {
+    const actif = enchainementCampagneActif();
+    btn.textContent = actif ? '▶ ENCHAINEMENT CAMPAGNE ON' : '▶ RETOUR CARTE APRES VICTOIRE';
     btn.setAttribute('aria-pressed', actif ? 'true' : 'false');
     btn.classList.toggle('actif', actif);
 }
@@ -202,6 +213,7 @@ function lierEcouteursAccessibiliteOptions({
     btnConstellationClic,
     btnHaptique,
     btnControlesTactiles,
+    btnEnchainementCampagne,
 }) {
     btnContraste?.addEventListener('click', () => {
         const actif = document.body.classList.toggle('contraste-eleve');
@@ -236,6 +248,11 @@ function lierEcouteursAccessibiliteOptions({
         definirControlesTactilesActifs(!controlesTactilesActifs());
         mettreAJourBoutonControlesTactiles(btnControlesTactiles);
     });
+
+    btnEnchainementCampagne?.addEventListener('click', () => {
+        definirEnchainementCampagneActif(!enchainementCampagneActif());
+        mettreAJourBoutonEnchainementCampagne(btnEnchainementCampagne);
+    });
 }
 
 function lierEcouteursMixBiome(sliderMixMusBiome, sliderMixEffBiome) {
@@ -264,6 +281,7 @@ export function initialiserOptions() {
     const btnReduireEffets = obtenirBouton('btn-toggle-reduire-effets');
     const btnHaptique = obtenirBouton('btn-toggle-haptique');
     const btnControlesTactiles = obtenirBouton('btn-toggle-controles-tactiles');
+    const btnEnchainementCampagne = obtenirBouton('btn-toggle-enchainement-campagne');
     const btnSyncCloud = obtenirBouton('btn-toggle-sync-cloud');
     const btnSyncMaintenant = obtenirBouton('btn-sync-maintenant');
     const inputSupabaseUrl = obtenirInput('input-supabase-url');
@@ -283,6 +301,7 @@ export function initialiserOptions() {
     if (btnConstellationClic) mettreAJourBoutonConstellationClic(btnConstellationClic);
     if (btnHaptique) mettreAJourBoutonHaptique(btnHaptique);
     if (btnControlesTactiles) mettreAJourBoutonControlesTactiles(btnControlesTactiles);
+    if (btnEnchainementCampagne) mettreAJourBoutonEnchainementCampagne(btnEnchainementCampagne);
     if (inputSupabaseUrl) inputSupabaseUrl.value = obtenirSupabaseUrl();
     if (inputSupabaseKey) inputSupabaseKey.value = obtenirSupabaseAnonKey();
     if (inputSyncId) inputSyncId.value = obtenirOuCreerSyncId();
@@ -305,6 +324,7 @@ export function initialiserOptions() {
         btnConstellationClic,
         btnHaptique,
         btnControlesTactiles,
+        btnEnchainementCampagne,
     });
 
     initialiserSyncCloudOptions(

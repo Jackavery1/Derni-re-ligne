@@ -14,6 +14,7 @@ import { resolve } from 'path';
 
 const dist = 'dist';
 
+execSync('node scripts/compresser-icones.mjs', { stdio: 'inherit' });
 execSync('node scripts/exporter-donnees-json.mjs', { stdio: 'inherit' });
 
 rmSync(dist, { recursive: true, force: true });
@@ -37,7 +38,7 @@ await esbuild.build({
     target: ['es2022'],
     logLevel: 'info',
     legalComments: 'none',
-    drop: ['debugger'],
+    drop: ['console', 'debugger'],
     plugins: [
         {
             name: 'stub-histoire-textes-fallback',

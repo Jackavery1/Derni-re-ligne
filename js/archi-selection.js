@@ -105,7 +105,7 @@ export function ouvrirDetailNiveauArchi(niv) {
                   libelle: '▶ JOUER',
                   onAction: () => {
                       fermerPanneauDetail();
-                      demarrerArchi(niv.id);
+                      void demarrerArchi(niv.id);
                   },
               }
             : undefined,
@@ -130,7 +130,7 @@ function initialiserSelectionArchiListeners() {
     abonnerFermeturePanneauDetail(actualiserSelectionArchi);
 }
 
-export function archi_afficherSelection() {
+export async function archi_afficherSelection() {
     const grille = document.getElementById('archi-sel-grille');
     if (!grille) return;
     initialiserSelectionArchiListeners();
@@ -139,7 +139,7 @@ export function archi_afficherSelection() {
     fermerPanneauDetail();
     grille.textContent = '';
 
-    const niveaux = [...obtenirTousNiveauxArchi()].sort(
+    const niveaux = [...(await obtenirTousNiveauxArchi())].sort(
         (a, b) =>
             a.difficulte - b.difficulte || a.deblocage - b.deblocage || a.id.localeCompare(b.id)
     );

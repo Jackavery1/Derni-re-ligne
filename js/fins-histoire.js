@@ -3,8 +3,41 @@ import { logger } from './logger.js';
 import { FINS, ETAT_HISTOIRE_VIDE } from './histoire-donnees.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
 import { ECRANS } from './ecrans-config.js';
-import { demarrerFondFin } from './fin-bg-rendu.js';
+import { assurerFragmentsEcran } from './charger-ecrans.js';
+import { afficherEcranDiffere } from './navigation-lazy.js';
+import { demarrerFondFin, arreterFondFin } from './fin-bg-rendu.js';
+import { activerModeHistoire, desactiverModeHistoire } from './mode-histoire.js';
 import { verifierAchievements, statsGlobales, sauvegarderStats } from './achievements.js';
+
+const MARQUEUR_FIN = 'data-neo-fin-lie';
+let _boutonsFinOk = false;
+
+function _lierBoutonsFinDom() {
+    if (_boutonsFinOk) return;
+    _boutonsFinOk = true;
+    const lier = (id, handler) => {
+        const el = document.getElementById(id);
+        if (!el || el.hasAttribute(MARQUEUR_FIN) || typeof el.addEventListener !== 'function')
+            return;
+        el.setAttribute(MARQUEUR_FIN, '1');
+        el.addEventListener('click', () => {
+            void handler();
+        });
+    };
+    lier('btn-fin-menu', () => {
+        arreterFondFin();
+        desactiverModeHistoire();
+        document.body.classList.remove('histoire-active');
+        afficherEcranDiffere(ECRANS.TITRE);
+    });
+    lier('btn-fin-rejouer', () => {
+        arreterFondFin();
+        reinitialiserHistoirePourReplay();
+        document.body.classList.remove('histoire-active');
+        activerModeHistoire();
+        afficherEcranDiffere(ECRANS.HISTOIRE_MAP);
+    });
+}
 
 function _obtenirEtatHistoire() {
     return obtenirEtatHistoirePersiste();
@@ -28,20 +61,21 @@ export function executerFin(finId) {
     statsGlobales.toutesFinHistoire = [...etatHist.toutesFinObtenues];
     sauvegarderStats();
 
-    _afficherEcranFin(finId, etatHist);
+    void _afficherEcranFin(finId, etatHist);
     demarrerFondFin(finId);
     verifierAchievements();
 }
 
-function _afficherEcranFin(finId, etatHist) {
+async function _afficherEcranFin(finId, etatHist) {
     const fin = FINS[finId];
     if (!fin) {
         logger.warn('[fins] finId inconnu :', finId);
-        void import('./navigation-ecrans.js').then(({ afficherEcran }) =>
-            afficherEcran(ECRANS.TITRE)
-        );
+        afficherEcranDiffere(ECRANS.TITRE);
         return;
     }
+
+    await assurerFragmentsEcran([ECRANS.HISTOIRE_MAP]);
+    _lierBoutonsFinDom();
 
     const elTitre = document.getElementById('histoire-fin-titre');
     const elCorps = document.getElementById('histoire-fin-corps');
@@ -92,9 +126,12 @@ function _afficherEcranFin(finId, etatHist) {
         elEmbleme.textContent = EMBLEMES[finId] ?? '✦';
     }
 
-    void import('./navigation-ecrans.js').then(({ afficherEcran }) =>
-        afficherEcran(ECRANS.HISTOIRE_FIN)
-    );
+    void _afficherEcranFinAsync();
+}
+
+async function _afficherEcranFinAsync() {
+    const { afficherEcranDiffereAsync } = await import('./navigation-lazy.js');
+    await afficherEcranDiffereAsync(ECRANS.HISTOIRE_FIN);
 }
 
 function _couleurFin(finId) {
