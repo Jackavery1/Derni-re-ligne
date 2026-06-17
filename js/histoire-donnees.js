@@ -1,5 +1,13 @@
-// Barrel histoire-donnees — re-exporte les sous-modules
-export * from './histoire-donnees/personnages-boss.js';
-export * from './histoire-donnees/journaux-donnees.js';
-export * from './histoire-donnees/fins-etat.js';
-export * from './histoire-donnees/sequence-histoire.js';
+export { ETAT_HISTOIRE_VIDE } from './histoire-donnees/fins-etat.js';
+export {
+    SEQUENCE_HISTOIRE,
+    JOURNAUX_VERA,
+    BOSS,
+    FINS,
+    chargerHistoireDonneesMetier,
+    histoireDonneesMetierChargees,
+} from './histoire-donnees-chargement.js';
+
+/**
+ * @typedef {import('./histoire-donnees/fins-etat.js').EtatHistoire} EtatHistoire
+ */

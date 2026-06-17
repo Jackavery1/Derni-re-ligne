@@ -240,7 +240,7 @@ describe('cutscene UI', () => {
         expect(elements.get('texte-narration-cutscene')).toBeTruthy();
     });
 
-    it('intro sans DOM cutscene : pas de callback fin (flag intro preserve)', () => {
+    it('intro sans DOM cutscene : charge le fragment puis demarre ou appelle onFin', async () => {
         elements.delete('ecran-histoire-cutscene');
         const { afficherCutsceneHistoire } = managerUi;
         const onFin = vi.fn();
@@ -249,7 +249,8 @@ describe('cutscene UI', () => {
             intro: true,
         });
 
-        expect(demarre).toBe(false);
-        expect(onFin).not.toHaveBeenCalled();
+        expect(demarre).toBe(true);
+        await attendreDemarrageCutscene();
+        expect(onFin).toHaveBeenCalledTimes(1);
     });
 });

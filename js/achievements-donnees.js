@@ -1,305 +1,33 @@
-import { ACHIEVEMENTS_HISTOIRE } from './achievements-histoire.js';
+import { ACHIEVEMENTS_HISTOIRE, chargerAchievementsHistoire } from './achievements-histoire.js';
+import { ACHIEVEMENTS_CONDITIONS } from './achievements-conditions-core.js';
 
-export const ACHIEVEMENTS = {
-    premiere_ligne: {
-        id: 'premiere_ligne',
-        nom: 'PREMIÈRE LIGNE',
-        description: 'Effacer votre premiere ligne',
-        icone: '▬',
-        condition: (stats) => stats.lignesTotal >= 1,
-        decoration: 'trainee_simple',
-        categorie: 'lignes',
-    },
-    premier_tetris: {
-        id: 'premier_tetris',
-        nom: 'PREMIER CHOC',
-        description: 'Effacer 4 lignes en un seul coup',
-        icone: '⚡',
-        condition: (stats) => stats.maxLignesUnCoup >= 4,
-        decoration: 'flash_cyan',
-        categorie: 'lignes',
-    },
-    centenaire: {
-        id: 'centenaire',
-        nom: 'CENTENAIRE',
-        description: '100 lignes effacees au total (toutes parties)',
-        icone: '💯',
-        condition: (stats) => stats.lignesTotal >= 100,
-        decoration: 'bordure_pulse',
-        categorie: 'lignes',
-    },
-    millenaire: {
-        id: 'millenaire',
-        nom: 'MILLÉNAIRE',
-        description: '1000 lignes effacees au total',
-        icone: '🏆',
-        condition: (stats) => stats.lignesTotal >= 1000,
-        decoration: 'aura_doree',
-        categorie: 'lignes',
-    },
-    score_10k: {
-        id: 'score_10k',
-        nom: 'DIX MILLE',
-        description: 'Atteindre 10 000 points en une partie',
-        icone: '✦',
-        condition: (stats) => stats.meilleurScore >= 10000,
-        decoration: 'trainee_simple',
-        categorie: 'score',
-    },
-    score_50k: {
-        id: 'score_50k',
-        nom: 'CINQUANTE MILLE',
-        description: 'Atteindre 50 000 points en une partie',
-        icone: '✦✦',
-        condition: (stats) => stats.meilleurScore >= 50000,
-        decoration: 'trainee_double',
-        categorie: 'score',
-    },
-    score_100k: {
-        id: 'score_100k',
-        nom: 'LÉGENDE',
-        description: 'Atteindre 100 000 points en une partie',
-        icone: '👑',
-        condition: (stats) => stats.meilleurScore >= 100000,
-        decoration: 'trainee_arc_en_ciel',
-        categorie: 'score',
-    },
-    survivant_3min: {
-        id: 'survivant_3min',
-        nom: 'RÉSISTANT',
-        description: 'Survivre 3 minutes en une partie',
-        icone: '⏱',
-        condition: (stats) => stats.meilleurTemps >= 180,
-        decoration: 'pouls_bordure',
-        categorie: 'survie',
-    },
-    survivant_10min: {
-        id: 'survivant_10min',
-        nom: 'MARATHONIEN',
-        description: 'Survivre 10 minutes en une partie',
-        icone: '🔥',
-        condition: (stats) => stats.meilleurTemps >= 600,
-        decoration: 'flammes_bords',
-        categorie: 'survie',
-    },
-    explorateur: {
-        id: 'explorateur',
-        nom: 'EXPLORATEUR',
-        description: 'Jouer une partie dans 3 biomes differents',
-        icone: '🗺',
-        condition: (stats) => stats.biomesJoues.size >= 3,
-        decoration: 'particules_biome',
-        categorie: 'biomes',
-    },
-    globe_trotter: {
-        id: 'globe_trotter',
-        nom: 'GLOBE-TROTTEUR',
-        description: 'Jouer une partie dans tous les biomes',
-        icone: '🌍',
-        condition: (stats) => stats.biomesJoues.size >= 9,
-        decoration: 'aura_cosmos',
-        categorie: 'biomes',
-    },
-    inferno_survivor: {
-        id: 'inferno_survivor',
-        nom: 'LAVE-RÉSISTANT',
-        description: 'Survivre 5 minutes en biome Inferno',
-        icone: '🌋',
-        condition: (stats) => (stats.meilleurTempsParBiome.lave || 0) >= 300,
-        decoration: 'flammes_intenses',
-        categorie: 'biomes',
-    },
-    cosmos_master: {
-        id: 'cosmos_master',
-        nom: 'COSMONAUTE',
-        description: 'Effacer 50 lignes en biome Cosmos',
-        icone: '🌌',
-        condition: (stats) => (stats.lignesParBiome.cosmos || 0) >= 50,
-        decoration: 'etoiles_trainee',
-        categorie: 'biomes',
-    },
-    reliquaire: {
-        id: 'reliquaire',
-        nom: 'RELIQUAIRE',
-        description: 'Utiliser 10 reliques au total',
-        icone: '⊗',
-        condition: (stats) => stats.reliquesUtilisees >= 10,
-        decoration: 'halo_relique',
-        categorie: 'reliques',
-    },
-    collectionneur: {
-        id: 'collectionneur',
-        nom: 'COLLECTIONNEUR',
-        description: 'Utiliser chaque type de relique au moins une fois',
-        icone: '💎',
-        condition: (stats) => stats.typesReliquesUtilises.size >= 9,
-        decoration: 'gemmes_orbitales',
-        categorie: 'reliques',
-    },
-    meteorologue: {
-        id: 'meteorologue',
-        nom: 'MÉTÉOROLOGUE',
-        description: 'Survivre à 5 evenements meteo',
-        icone: '🌩',
-        condition: (stats) => stats.meteosSubies >= 5,
-        decoration: 'eclairs_bords',
-        categorie: 'meteo',
-    },
-    chaos_maitrise: {
-        id: 'chaos_maitrise',
-        nom: 'MAÎTRE DU CHAOS',
-        description: 'Survivre à un blizzard (Glace) et une inversion (Cyber)',
-        icone: '🌀',
-        condition: (stats) =>
-            (stats.meteosVues || new Set()).has('blizzard') &&
-            (stats.meteosVues || new Set()).has('inversion'),
-        decoration: 'vortex_bords',
-        categorie: 'meteo',
-    },
-    combo_fou: {
-        id: 'combo_fou',
-        nom: 'COMBO FOU',
-        description: 'Effacer des lignes 5 fois de suite sans interruption',
-        icone: '🔗',
-        condition: (stats) => stats.maxCombo >= 5,
-        decoration: 'trainee_combo',
-        categorie: 'maitrise',
-    },
-    robo_ami: {
-        id: 'robo_ami',
-        nom: 'AMI DE ROBO',
-        description: 'Faire reagir la mascotte 20 fois',
-        icone: '🤖',
-        condition: (stats) => stats.reactionsRobo >= 20,
-        decoration: 'robo_arc_en_ciel',
-        categorie: 'maitrise',
-    },
-    compositeur: {
-        id: 'compositeur',
-        nom: 'COMPOSITEUR',
-        description: 'Composer une melodie de 15 notes ou plus',
-        icone: '🎵',
-        condition: (stats) => stats.maxNotesComposition >= 15,
-        decoration: 'notes_flottantes',
-        categorie: 'maitrise',
-    },
-    grand_maitre: {
-        id: 'grand_maitre',
-        nom: 'GRAND MAÎTRE',
-        description: 'Debloquer 10 achievements',
-        icone: '🎖',
-        condition: (stats) => stats.nbAchievementsDebloques >= 10,
-        decoration: 'couronne_lumineuse',
-        categorie: 'maitrise',
-    },
-    oracle_debutant: {
-        id: 'oracle_debutant',
-        nom: 'APPRENTI',
-        description: "Ignorer l'Oracle 5 fois avec succes en une partie",
-        icone: '🔮',
-        condition: (s) => (s.oracleDeviationsPartieActuelle || 0) >= 5,
-        decoration: 'halo_oracle',
-        categorie: 'oracle',
-    },
-    oracle_maitre: {
-        id: 'oracle_maitre',
-        nom: "MAÎTRE DE L'ORACLE",
-        description: 'Atteindre un multiplicateur de ×4.0 ou plus',
-        icone: '✦',
-        condition: (s) => (s.oracleMeilleuresMult || 1) >= 4.0,
-        decoration: 'halo_oracle',
-        categorie: 'oracle',
-    },
-    premiers_pas_coop: {
-        id: 'premiers_pas_coop',
-        nom: 'PARTENAIRES',
-        description: 'Effacer 10 lignes en mode cooperatif',
-        icone: '👥',
-        condition: (s) => (s.lignesCoopTotal || 0) >= 10,
-        decoration: 'bordure_bicolore',
-        categorie: 'coop',
-    },
-    synchro_parfaite: {
-        id: 'synchro_parfaite',
-        nom: 'SYMBIOSE',
-        description: 'Effacer 4 lignes simultanees en coop (Tetris Coop)',
-        icone: '🔗',
-        condition: (s) => (s.coopMaxLignesUnCoup || 0) >= 4,
-        decoration: 'eclairs_bords',
-        categorie: 'coop',
-    },
-    archi_premier: {
-        id: 'archi_premier',
-        nom: 'APPRENTI ARCHITECTE',
-        description: 'Completer un niveau Architecte',
-        icone: '🏛',
-        condition: (s) => (s.archiNiveauxCompletes?.size || 0) >= 1,
-        decoration: 'bordure_pulse',
-        categorie: 'architecte',
-    },
-    archi_etoiles: {
-        id: 'archi_etoiles',
-        nom: 'MAÎTRE BÂTISSEUR',
-        description: 'Obtenir ★★★ sur 5 niveaux',
-        icone: '⭐',
-        condition: (s) => (s.archiEtoilesMax || 0) >= 15,
-        decoration: 'aura_doree',
-        categorie: 'architecte',
-    },
-    archi_parfait: {
-        id: 'archi_parfait',
-        nom: 'PERFECTION',
-        description: 'Terminer un niveau avec 100% de precision',
-        icone: '💎',
-        condition: (s) => (s.archiPrecisionMax || 0) >= 100,
-        decoration: 'gemmes_orbitales',
-        categorie: 'architecte',
-    },
-    archi_econome: {
-        id: 'archi_econome',
-        nom: 'ÉCONOME',
-        description: 'Terminer un niveau avec le nombre minimal de pieces',
-        icone: '✂',
-        condition: (s) => (s.archiParAtteint || 0) >= 1,
-        decoration: 'trainee_simple',
-        categorie: 'architecte',
-    },
-    vivant_premier: {
-        id: 'vivant_premier',
-        nom: 'LE MONDE RESPIRE',
-        description: 'Subir un premier evenement du Vivant',
-        icone: '🌱',
-        condition: (s) => (s.evenementsVivantSubis || 0) >= 1,
-        decoration: 'notes_flottantes',
-        categorie: 'vivant',
-    },
-    vivant_survivant: {
-        id: 'vivant_survivant',
-        nom: 'COEXISTENCE',
-        description: 'Survivre à 10 evenements du Vivant en une partie',
-        icone: '🌿',
-        condition: (s) => (s.maxEvenementsUnePartie || 0) >= 10,
-        decoration: 'halo_relique',
-        categorie: 'vivant',
-    },
-    vivant_tous_biomes: {
-        id: 'vivant_tous_biomes',
-        nom: 'NATURALISTE',
-        description: 'Subir un evenement du Vivant dans 7 biomes differents',
-        icone: '🌍',
-        condition: (s) => (s.biomesVivantSubis?.size || 0) >= 7,
-        decoration: 'aura_cosmos',
-        categorie: 'vivant',
-    },
-    vivant_maitre: {
-        id: 'vivant_maitre',
-        nom: 'MAÎTRE DU CHAOS NATUREL',
-        description: 'Effacer 50 lignes pendant un evenement actif du Vivant',
-        icone: '⚗',
-        condition: (s) => (s.lignesPendantVivant || 0) >= 50,
-        decoration: 'flammes_intenses',
-        categorie: 'vivant',
-    },
-};
+export const ACHIEVEMENTS = {};
 
-Object.assign(ACHIEVEMENTS, ACHIEVEMENTS_HISTOIRE);
+/** @type {Promise<void> | null} */
+let _chargePromise = null;
+
+export function achievementsDonneesChargees() {
+    return Object.keys(ACHIEVEMENTS).length > 0;
+}
+
+/** @returns {Promise<void>} */
+export async function chargerAchievementsDonnees() {
+    if (achievementsDonneesChargees()) return;
+    if (_chargePromise) return _chargePromise;
+    _chargePromise = fetch('./data/achievements-core.json')
+        .then((reponse) => {
+            if (!reponse.ok) throw new Error(`achievements-core.json : ${reponse.status}`);
+            return reponse.json();
+        })
+        .then(async (meta) => {
+            for (const [id, ach] of Object.entries(meta)) {
+                ACHIEVEMENTS[id] = {
+                    ...ach,
+                    condition: ACHIEVEMENTS_CONDITIONS[id],
+                };
+            }
+            await chargerAchievementsHistoire();
+            Object.assign(ACHIEVEMENTS, ACHIEVEMENTS_HISTOIRE);
+        });
+    return _chargePromise;
+}

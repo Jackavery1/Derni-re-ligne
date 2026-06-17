@@ -1,188 +1,25 @@
-export const RELIQUES = {
-    classique: {
-        nom: 'OMEGA',
-        icone: '⊗',
-        description: 'Bloc 2×2 qui compte double pour chaque ligne',
-        couleur: '#ffffff',
-        forme: [
-            [1, 1],
-            [1, 1],
-        ],
-        effet: 'doublon',
-    },
-    lave: {
-        nom: 'MAGMA',
-        icone: '💥',
-        description: "Detruit un rayon de 2 cases autour du point d'impact",
-        couleur: '#ff4500',
-        forme: [
-            [0, 1, 0],
-            [1, 1, 1],
-            [0, 1, 0],
-        ],
-        effet: 'explosion',
-    },
-    ocean: {
-        nom: 'BULLE',
-        icone: '🫧',
-        description: "Remonte de 2 rangees apres s'être posee",
-        couleur: '#00cfff',
-        forme: [
-            [0, 1, 0],
-            [1, 1, 1],
-        ],
-        effet: 'flottaison',
-    },
-    foret: {
-        nom: 'SPORE',
-        icone: '🌱',
-        description: 'Fait pousser 4 cellules dans les espaces vides adjacents',
-        couleur: '#00cc44',
-        forme: [
-            [1, 0, 1],
-            [0, 1, 0],
-            [1, 0, 1],
-        ],
-        effet: 'croissance',
-    },
-    glace: {
-        nom: 'BLIZZARD',
-        icone: '❄️',
-        description: 'Ajoute une ligne vide sous le tas (repousse tout vers le haut)',
-        couleur: '#aaeeff',
-        forme: [[1, 1, 1, 1]],
-        effet: 'blizzard',
-    },
-    desert: {
-        nom: 'SABLE',
-        icone: '⌛',
-        description: 'Remplit automatiquement les 3 trous les plus profonds du plateau',
-        couleur: '#ffbb44',
-        forme: [
-            [1, 1, 0],
-            [0, 1, 1],
-            [0, 0, 1],
-        ],
-        effet: 'remplissage',
-    },
-    cyber: {
-        nom: 'VIRUS',
-        icone: '⚠',
-        description: "Efface une demi-ligne aleatoire (libere de l'espace)",
-        couleur: '#ff00ff',
-        forme: [
-            [1, 0, 1],
-            [0, 1, 0],
-            [1, 0, 1],
-        ],
-        effet: 'hack',
-    },
-    fuochi: {
-        nom: 'FUSÉE',
-        icone: '🚀',
-        description: "Detruit entierement la colonne d'atterrissage",
-        couleur: '#ffe600',
-        forme: [
-            [0, 1, 0],
-            [0, 1, 0],
-            [1, 1, 1],
-        ],
-        effet: 'colonne',
-    },
-    cosmos: {
-        nom: 'NEXUS',
-        icone: '✦',
-        description: "Compacte le plateau : toutes les cellules tombent d'un rang",
-        couleur: '#7700ff',
-        forme: [
-            [0, 1, 0],
-            [1, 1, 1],
-            [0, 1, 0],
-        ],
-        effet: 'gravite',
-    },
-};
+export const RELIQUES = {};
+export const METEO_BIOMES = {};
 
-export const METEO_BIOMES = {
-    classique: {
-        nom: 'TURBO',
-        icone: '⚡',
-        alerte: 'ACCÉLÉRATION IMMINENTE',
-        actif: 'TURBO ACTIVÉ',
-        couleur: '#ffe600',
-        duree: 12000,
-        effet: 'acceleration',
-    },
-    lave: {
-        nom: 'ÉRUPTION',
-        icone: '🌋',
-        alerte: 'ÉRUPTION IMMINENTE',
-        actif: 'LAVE EN FUSION',
-        couleur: '#ff4500',
-        duree: 0,
-        effet: 'eruption',
-    },
-    ocean: {
-        nom: 'COURANT',
-        icone: '🌊',
-        alerte: 'COURANT SOUS-MARIN',
-        actif: 'DÉRIVE EN COURS',
-        couleur: '#00cfff',
-        duree: 18000,
-        effet: 'courant',
-    },
-    foret: {
-        nom: 'GERMINATION',
-        icone: '🌿',
-        alerte: 'CROISSANCE SAUVAGE',
-        actif: 'LA FORÊT ENVAHIT',
-        couleur: '#00cc44',
-        duree: 0,
-        effet: 'germination',
-    },
-    glace: {
-        nom: 'BLIZZARD',
-        icone: '🌨',
-        alerte: 'TEMPÊTE ARCTIQUE',
-        actif: 'VISIBILITÉ RÉDUITE',
-        couleur: '#aaeeff',
-        duree: 14000,
-        effet: 'blizzard',
-    },
-    desert: {
-        nom: 'TEMPÊTE',
-        icone: '🏜',
-        alerte: 'TEMPÊTE DE SABLE',
-        actif: 'VISIBILITÉ NULLE',
-        couleur: '#ffbb44',
-        duree: 10000,
-        effet: 'tempete',
-    },
-    cyber: {
-        nom: 'INVERSION',
-        icone: '⚠',
-        alerte: 'CORRUPTION DÉTECTÉE',
-        actif: 'CONTRÔLES INVERSÉS',
-        couleur: '#ff00ff',
-        duree: 7000,
-        effet: 'inversion',
-    },
-    fuochi: {
-        nom: 'BARRAGE',
-        icone: '🎆',
-        alerte: 'BARRAGE DE FEU',
-        actif: "FEU D'ARTIFICE",
-        couleur: '#ffe600',
-        duree: 0,
-        effet: 'barrage',
-    },
-    cosmos: {
-        nom: 'MICROGRAVITÉ',
-        icone: '🌌',
-        alerte: 'ANOMALIE GRAVITATIONNELLE',
-        actif: 'MICROGRAVITÉ',
-        couleur: '#7700ff',
-        duree: 20000,
-        effet: 'microgravite',
-    },
-};
+/** @type {Promise<void> | null} */
+let _chargePromise = null;
+
+export function contenuJeuCharge() {
+    return Object.keys(RELIQUES).length > 0;
+}
+
+/** @returns {Promise<void>} */
+export async function chargerContenuJeu() {
+    if (contenuJeuCharge()) return;
+    if (_chargePromise) return _chargePromise;
+    _chargePromise = fetch('./data/contenu-jeu.json')
+        .then((reponse) => {
+            if (!reponse.ok) throw new Error(`contenu-jeu.json : ${reponse.status}`);
+            return reponse.json();
+        })
+        .then((donnees) => {
+            Object.assign(RELIQUES, donnees.RELIQUES ?? {});
+            Object.assign(METEO_BIOMES, donnees.METEO_BIOMES ?? {});
+        });
+    return _chargePromise;
+}

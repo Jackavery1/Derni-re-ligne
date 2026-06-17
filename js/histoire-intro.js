@@ -38,12 +38,12 @@ export async function ouvrirModeHistoireDepuisMenu() {
     const dejaVue = introHistoireDejaVue();
     logger.debug('[intro] introHistoireDejaVue =', dejaVue);
 
-    const { afficherEcran } = await import('./navigation-ecrans.js');
+    const { afficherEcranAsync } = await import('./navigation-ecrans.js');
 
     if (dejaVue) {
         logger.debug('[intro] branche carte directe (intro deja vue)');
         activerModeHistoire();
-        afficherEcran(ECRANS.HISTOIRE_MAP);
+        await afficherEcranAsync(ECRANS.HISTOIRE_MAP);
         return;
     }
 
@@ -88,9 +88,10 @@ export async function ouvrirModeHistoireDepuisMenu() {
 
         logger.debug('[intro] affichage carte histoire');
         activerModeHistoire();
-        afficherEcran(ECRANS.HISTOIRE_MAP);
+        await afficherEcranAsync(ECRANS.HISTOIRE_MAP);
     } catch (err) {
         logger.error('[intro] echec flux intro (flag non modifie):', err);
-        afficherEcran(ECRANS.TITRE);
+        const { afficherEcranAsync } = await import('./navigation-ecrans.js');
+        await afficherEcranAsync(ECRANS.TITRE);
     }
 }

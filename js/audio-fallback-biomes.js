@@ -1,5 +1,5 @@
 import { MUSIQUE_BIOMES } from './audio-donnees.js';
-import { BIOMES_HISTOIRE } from './biomes-histoire.js';
+import { BIOMES_HISTOIRE } from './biomes.js';
 
 /** Profils solo utilisés comme gabarit mélodique pour les biomes histoire. */
 const TEMPLATE_PAR_BIOME_HISTOIRE = {

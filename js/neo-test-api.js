@@ -21,6 +21,7 @@ export function estNeoTestAutorise() {
  *   declencherPostMondeNarratif?: (mondeId: string) => Promise<void>,
  *   simulerVictoireMondeHistoire?: (mondeId: string, lignes?: number) => Promise<void>,
  *   obtenirTypeFinHistoire?: () => Promise<string>
+ *   injecterConditionsTrameDistorsion?: () => void
  * }} api
  */
 export function exposerNeoTestApi(api) {

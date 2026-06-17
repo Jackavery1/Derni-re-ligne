@@ -11,8 +11,8 @@ import {
     majStatsMeteo,
     initStatsPartie,
     finaliserStatsPartie,
-    genererGalerieAchievements,
 } from '../js/achievements.js';
+import { genererGalerieAchievements } from '../js/achievements-ui.js';
 
 describe('achievements', () => {
     beforeEach(() => {

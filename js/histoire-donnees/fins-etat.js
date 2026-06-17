@@ -1,41 +1,4 @@
-// Fins et etat initial histoire
-export const FINS = {
-    fin_normale: {
-        id: 'fin_normale',
-        titre: 'FIN : LE CYCLE',
-        texte: [
-            'La Distorsion est vaisseau.',
-            'La Trame tient. VERA est libre.',
-            "Dans mille ans, peut-être, quelqu'un d'autre devra refaire le chemin.",
-            'Robo pose la derniere piece. Le plateau est vide.',
-            "Pour la premiere fois, il comprend que c'etait ça, le but.",
-        ],
-    },
-    fin_vraie: {
-        id: 'fin_vraie',
-        titre: "FIN : L'HARMONIE",
-        condition: { mondeCache: 'miroir' },
-        texte: [
-            "Robo n'a pas detruit La Distorsion.",
-            'Il lui a tendu la main.',
-            "La completion et l'incompletude forment un nouveau type de Trame.",
-            'Plus fragile. Plus honnête.',
-            'VERA sourit pour la premiere fois depuis longtemps.',
-        ],
-    },
-    fin_secrete: {
-        id: 'fin_secrete',
-        titre: 'FIN : LA LIGNE PARFAITE',
-        condition: { mondeCache: 'trame' },
-        texte: [
-            'La ligne incomplete de VERA.',
-            'Robo la complete. Doucement. Sans hâte.',
-            "La Distorsion ressent quelque chose qu'elle n'a jamais ressenti :",
-            "la satisfaction d'une ligne effacee.",
-            'Elle pleure. En binaire. 0 et 1.',
-        ],
-    },
-};
+// Etat initial histoire (runtime) — donnees narratives dans data/histoire-donnees.json
 
 /**
  * @typedef {Object} EtatHistoire

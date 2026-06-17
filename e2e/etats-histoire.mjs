@@ -1,4 +1,25 @@
-/** Etats de campagne injectes en E2E. */
+/** Séquence des 16 mondes principaux avant la finale (hors secrets). */
+export const MONDES_CAMPAGNE_PRINCIPALE = [
+    'monde_prologue',
+    'monde_lave',
+    'monde_rouille',
+    'monde_boss_1',
+    'monde_ocean',
+    'monde_foret',
+    'monde_glace',
+    'monde_boss_2',
+    'monde_desert',
+    'monde_eclipse',
+    'monde_cyber',
+    'monde_boss_3',
+    'monde_fuochi',
+    'monde_cosmos',
+    'monde_vide',
+    'monde_boss_4',
+];
+
+/** Mondes secrets menant à la fin secrète (après campagne principale). */
+export const MONDES_SECRETS_FIN_SECRETE = ['monde_miroir', 'monde_trame', 'monde_finale'];
 
 /** État histoire minimal pour débloquer le mode libre (Chapitre I complété). */
 export const ETAT_DEBLOCAGE_MONDE_LIBRE = {
@@ -212,6 +233,34 @@ export const ETAT_OCEAN_FRAGMENT_PRET = {
     ...ETAT_HISTOIRE_BOSS_BRASIER,
     mondesCompletes: ['monde_prologue', 'monde_lave', 'monde_rouille'],
     fragmentsVusIds: [],
+};
+
+/** État juste avant victoire du monde désert (enchaînement vers éclipse). */
+export const ETAT_AVANT_DESERT = {
+    ...ETAT_HISTOIRE_BOSS_BRASIER,
+    chapitreActuel: 'chapitre_3',
+    mondesCompletes: [
+        'monde_prologue',
+        'monde_lave',
+        'monde_rouille',
+        'monde_ocean',
+        'monde_foret',
+        'monde_glace',
+        'monde_boss_2',
+    ],
+    bossVaincus: ['brasier', 'sentinelle'],
+    fragmentsVusIds: ['apres_prologue', 'apres_ocean', 'apres_foret', 'apres_glace'],
+    interludesVusIds: [],
+    mondesDejaMontres: [
+        'monde_prologue',
+        'monde_lave',
+        'monde_rouille',
+        'monde_ocean',
+        'monde_foret',
+        'monde_glace',
+        'monde_boss_2',
+        'monde_desert',
+    ],
 };
 
 /** État pour tester découverte labo cyber + journal 7. */

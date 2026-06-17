@@ -74,8 +74,10 @@ test('options affiche l’onglet contrôles', async ({ page }) => {
     await preparerPageSansSw(page);
     await page.goto('/');
     await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
+    await expect(page.locator('#btn-options')).toBeVisible();
     await page.locator('#btn-options').click();
-    await expect(page.locator('#ecran-options')).toHaveClass(/actif/);
+    await expect(page.locator('#ecran-options')).toHaveClass(/actif/, { timeout: 10000 });
     await page.locator('#tab-controles').click();
     await expect(page.locator('#panneau-controles')).toBeVisible();
     await expect(page.locator('#panneau-controles')).not.toHaveAttribute('hidden');
@@ -136,8 +138,11 @@ test('constellation tablette paysage sans débordement horizontal', async ({ pag
     await page.setViewportSize({ width: 1024, height: 768 });
     await page.goto('/');
     await attendreApplicationPrete(page);
+    await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
+    await attendreNotificationsInitiales(page);
+    await expect(page.locator('#btn-jouer')).toBeVisible();
     await page.locator('#btn-jouer').click();
-    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/, { timeout: 10000 });
     await expect(page.locator('#canvas-constellation')).toBeVisible();
 
     const metriques = await page.evaluate(() => ({
@@ -233,7 +238,10 @@ test('panneau detail JOUER visible sur petit ecran sans scroll force', async ({ 
     await preparerPageSansSw(page, ETAT_DEBLOCAGE_MONDE_LIBRE);
     await page.goto('/');
     await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
+    await expect(page.locator('#btn-jouer')).toBeVisible();
     await page.locator('#btn-jouer').click();
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/, { timeout: 10000 });
     await selectionnerBiomeClavier(page);
 
     const metriques = await page.evaluate(() => {

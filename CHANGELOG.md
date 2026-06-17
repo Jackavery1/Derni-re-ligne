@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version    | Date       | En bref                                                                                            |
 | ---------- | ---------- | -------------------------------------------------------------------------------------------------- |
+| **2.5.24** | 2026-06-17 | Données jeu en JSON async, portraits VERA découpés, ROBO menu image, achievements conditions split |
 | **2.5.23** | 2026-06-16 | Fix boutons lazy-load (codex/coop/archi/profil), haptique meta, export profil, responsive audit    |
 | **2.5.22** | 2026-06-16 | Remédiations audits A/B/C/D : lazy-load, precache −47 %, icônes, leaderboard filtres, E2E campagne |
 | **2.5.21** | 2026-06-16 | Remédiations audits A/B/C/D : splits modules, leaderboard, safe-area, narration post-monde         |
@@ -37,6 +38,27 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.2.0**  | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                                         |
 | **2.1.0**  | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                                         |
 | **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                                      |
+
+---
+
+## [2.5.24] — 2026-06-17
+
+### Données externalisées (JSON)
+
+- **Biomes, contenu jeu, difficulté mondes, histoire, achievements** : chargement asynchrone via `data/*.json` au démarrage
+- Suppression des gros modules JS inline (`biomes-histoire.js`, `difficulte-mondes.js`, fragments `histoire-donnees/*`)
+- Pipeline export : `scripts/sources-*-export.mjs` + `exporter-donnees-json.mjs`
+
+### Portraits & UI
+
+- **VERA** : split `portrait-vera-donnees`, `portrait-vera-buste`, `portrait-vera-effets`, `portrait-distorsion-rendu`
+- **Boss combat** : module `portraits-boss-combat.js`
+- **Menu titre** : ROBO en image (`robo-accueil.png`) au lieu du canvas
+
+### Technique
+
+- Écran de chargement avec progression multi-étapes (`main.js`)
+- SW `dl-shell-v50` ; precache JSON + modules portraits ; tests et E2E campagne/narratif étendus
 
 ---
 

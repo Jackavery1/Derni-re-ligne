@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v49';
+const VERSION_SHELL = 'dl-shell-v50';
 const VERSION_MEDIAS = 'dl-medias-v4';
 
 const SCENES_CUTSCENE_PRECACHE = [
@@ -75,6 +75,8 @@ const FICHIERS_A_CACHER = [
     './assets/polices/rajdhani-latin-600-normal.woff2',
     './assets/polices/rajdhani-latin-700-normal.woff2',
     './js/accessibilite.js',
+    './js/achievements-conditions-histoire.js',
+    './js/achievements-conditions-core.js',
     './js/achievements-donnees.js',
     './js/achievements-histoire.js',
     './js/achievements-icones-map.js',
@@ -107,7 +109,6 @@ const FICHIERS_A_CACHER = [
     './js/audio.js',
     './js/biome-fond.js',
     './js/biome-icones-map.js',
-    './js/biomes-histoire.js',
     './js/biomes.js',
     './js/boss-attaques.js',
     './js/boss-combat.js',
@@ -253,7 +254,11 @@ const FICHIERS_A_CACHER = [
     './js/portrait-brasier-rendu.js',
     './js/portrait-rendu-utils.js',
     './js/portrait-sentinelle-rendu.js',
-    './js/portrait-vera-assets.js',
+    './js/portrait-distorsion-rendu.js',
+    './js/portraits-boss-combat.js',
+    './js/portrait-vera-buste.js',
+    './js/portrait-vera-donnees.js',
+    './js/portrait-vera-effets.js',
     './js/portrait-vera-rendu.js',
     './js/portraits-cutscene-etat.js',
     './js/portraits-cutscene-personnages.js',
@@ -331,6 +336,7 @@ const FICHIERS_A_CACHER = [
     './js/vivant-strategies.js',
     './js/vivant.js',
     './img/icon-192.png',
+    './img/robo-accueil.png',
     /* PRECACHE:FIN */
 ];
 

@@ -2,7 +2,7 @@ import {
     DIFFICULTE_MONDES,
     PALIERS_VITESSE_MS,
     VITESSE_PLANCHER_MS,
-} from '../data/difficulte-mondes.js';
+} from './difficulte-mondes-chargement.js';
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { SEUILS_COMPLETION } from './histoire-mondes.js';
 import { store } from './store-core.js';

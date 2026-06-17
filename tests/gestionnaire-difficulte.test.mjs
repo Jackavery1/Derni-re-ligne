@@ -12,7 +12,7 @@ import {
     libelleEtoile,
 } from '../js/gestionnaire-difficulte.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-import { PALIERS_VITESSE_MS } from '../data/difficulte-mondes.js';
+import { PALIERS_VITESSE_MS } from '../js/difficulte-mondes-chargement.js';
 
 describe('gestionnaire-difficulte', () => {
     beforeEach(() => {

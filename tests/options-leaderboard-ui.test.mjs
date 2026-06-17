@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { BIOMES, ORDRE_BIOMES_LIBRE } from '../js/config.js';
 
 const chargerClassementLeaderboard = vi.fn();
 
@@ -20,8 +19,10 @@ describe('options-sync-cloud-ui — leaderboard', () => {
     /** @type {Map<string, HTMLElement>} */
     let noeuds;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         vi.resetModules();
+        const { chargerBiomesJeu } = await import('../js/biomes.js');
+        await chargerBiomesJeu();
         noeuds = new Map();
 
         const titre = { textContent: '' };
@@ -53,6 +54,7 @@ describe('options-sync-cloud-ui — leaderboard', () => {
     });
 
     it('peuple les biomes et charge selon les filtres', async () => {
+        const { BIOMES, ORDRE_BIOMES_LIBRE } = await import('../js/config.js');
         const { peuplerSelectsLeaderboardOptions, rafraichirLeaderboardOptions } =
             await import('../js/options-sync-cloud-ui.js');
 

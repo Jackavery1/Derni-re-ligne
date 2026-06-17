@@ -1,0 +1,202 @@
+{
+    "premier_monde": {
+        "id": "premier_monde",
+        "nom": "L'ÉVEIL",
+        "description": "Completer le Prologue du Mode Histoire",
+        "icone": "🤖",
+        "categorie": "histoire",
+        "decoration": "trainee_simple"
+    },
+    "premier_chapitre": {
+        "id": "premier_chapitre",
+        "nom": "SURVIVANT DU FEU",
+        "description": "Completer le Chapitre I",
+        "icone": "🔥",
+        "categorie": "histoire",
+        "decoration": "flammes_bords"
+    },
+    "tous_chapitres": {
+        "id": "tous_chapitres",
+        "nom": "TRAVERSÉE",
+        "description": "Completer les quatre chapitres principaux",
+        "icone": "🗺",
+        "categorie": "histoire",
+        "decoration": "particules_biome"
+    },
+    "premier_boss": {
+        "id": "premier_boss",
+        "nom": "PREMIER ADVERSAIRE",
+        "description": "Vaincre un boss pour la premiere fois",
+        "icone": "⚔",
+        "categorie": "histoire_boss",
+        "decoration": "eclairs_bords"
+    },
+    "tous_boss": {
+        "id": "tous_boss",
+        "nom": "DOMINATION",
+        "description": "Vaincre les cinq boss du Mode Histoire",
+        "icone": "👑",
+        "categorie": "histoire_boss",
+        "decoration": "couronne_lumineuse"
+    },
+    "sans_continue": {
+        "id": "sans_continue",
+        "nom": "SANS FILET",
+        "description": "Vaincre tous les boss sans utiliser de Continue",
+        "icone": "💎",
+        "categorie": "histoire_boss",
+        "decoration": "gemmes_orbitales"
+    },
+    "boss_rapide": {
+        "id": "boss_rapide",
+        "nom": "EFFICACITÉ MAXIMALE",
+        "description": "Vaincre un boss en moins de 2 minutes",
+        "icone": "⚡",
+        "categorie": "histoire_boss",
+        "decoration": "trainee_combo"
+    },
+    "premier_journal": {
+        "id": "premier_journal",
+        "nom": "SIGNAL REÇU",
+        "description": "Trouver le premier journal de VERA",
+        "icone": "📔",
+        "categorie": "histoire_vera",
+        "decoration": "halo_relique"
+    },
+    "cinq_journaux": {
+        "id": "cinq_journaux",
+        "nom": "ARCHIVISTE",
+        "description": "Trouver cinq journaux de VERA",
+        "icone": "📚",
+        "categorie": "histoire_vera",
+        "decoration": "notes_flottantes"
+    },
+    "tous_journaux": {
+        "id": "tous_journaux",
+        "nom": "TRANSMISSION COMPLÈTE",
+        "description": "Trouver les neuf journaux de VERA",
+        "icone": "📡",
+        "categorie": "histoire_vera",
+        "decoration": "aura_cosmos"
+    },
+    "labo_vera": {
+        "id": "labo_vera",
+        "nom": "ADRESSE TROUVÉE",
+        "description": "Decouvrir le laboratoire de VERA dans CYBER",
+        "icone": "🔬",
+        "categorie": "histoire_vera",
+        "decoration": "halo_oracle"
+    },
+    "fin_normale_obtenue": {
+        "id": "fin_normale_obtenue",
+        "nom": "LE CYCLE",
+        "description": "Obtenir la Fin Normale du Mode Histoire",
+        "icone": "◻",
+        "categorie": "histoire_fins",
+        "decoration": "bordure_pulse"
+    },
+    "fin_vraie_obtenue": {
+        "id": "fin_vraie_obtenue",
+        "nom": "L'HARMONIE",
+        "description": "Obtenir la Fin Vraie du Mode Histoire",
+        "icone": "∞",
+        "categorie": "histoire_fins",
+        "decoration": "trainee_arc_en_ciel"
+    },
+    "fin_secrete_obtenue": {
+        "id": "fin_secrete_obtenue",
+        "nom": "LA LIGNE PARFAITE",
+        "description": "Obtenir la Fin Secrete du Mode Histoire",
+        "icone": "✦",
+        "categorie": "histoire_fins",
+        "decoration": "aura_doree"
+    },
+    "toutes_fins": {
+        "id": "toutes_fins",
+        "nom": "TRANSCENDANCE",
+        "description": "Obtenir les trois fins du Mode Histoire",
+        "icone": "🌟",
+        "categorie": "histoire_fins",
+        "decoration": "trainee_arc_en_ciel"
+    },
+    "miroir_decouvert": {
+        "id": "miroir_decouvert",
+        "nom": "REFLET",
+        "description": "Decouvrir LE MIROIR",
+        "icone": "🪞",
+        "categorie": "histoire_secrets",
+        "decoration": "bordure_bicolore"
+    },
+    "miroir_complete": {
+        "id": "miroir_complete",
+        "nom": "AU-DELÀ DU REFLET",
+        "description": "Completer LE MIROIR",
+        "icone": "✧",
+        "categorie": "histoire_secrets",
+        "decoration": "vortex_bords"
+    },
+    "trame_decouverte": {
+        "id": "trame_decouverte",
+        "nom": "FIL INVISIBLE",
+        "description": "Decouvrir LA TRAME PRIMORDIALE",
+        "icone": "✦",
+        "categorie": "histoire_secrets",
+        "decoration": "aura_cosmos"
+    },
+    "trame_complete": {
+        "id": "trame_complete",
+        "nom": "TISSEUR",
+        "description": "Completer LA TRAME PRIMORDIALE",
+        "icone": "🌌",
+        "categorie": "histoire_secrets",
+        "decoration": "etoiles_trainee"
+    },
+    "paradoxe_atteint": {
+        "id": "paradoxe_atteint",
+        "nom": "SILENCE",
+        "description": "Atteindre LE PARADOXE du Mode Histoire",
+        "icone": "∅",
+        "categorie": "histoire_secrets",
+        "decoration": "vortex_bords"
+    },
+    "rouille_maitrise": {
+        "id": "rouille_maitrise",
+        "nom": "FORGERON",
+        "description": "Effacer 20 blocs rouilles dans LA ROUILLE",
+        "icone": "⚙",
+        "categorie": "histoire_prouesses",
+        "decoration": "halo_relique"
+    },
+    "eclipse_equilibre": {
+        "id": "eclipse_equilibre",
+        "nom": "ÉQUILIBRISTE",
+        "description": "Effacer 10 lignes dans la zone basse de L'ÉCLIPSE sans game over",
+        "icone": "🌗",
+        "categorie": "histoire_prouesses",
+        "decoration": "flash_cyan"
+    },
+    "vide_survivant": {
+        "id": "vide_survivant",
+        "nom": "À L'AVEUGLE",
+        "description": "Effacer 15 lignes dans LE VIDE",
+        "icone": "⬛",
+        "categorie": "histoire_prouesses",
+        "decoration": "vortex_bords"
+    },
+    "miroir_sans_erreur": {
+        "id": "miroir_sans_erreur",
+        "nom": "INVERSÉ PARFAIT",
+        "description": "Completer LE MIROIR pile au seuil, sans ligne superflue",
+        "icone": "💎",
+        "categorie": "histoire_prouesses",
+        "decoration": "gemmes_orbitales"
+    },
+    "patience_distorsion": {
+        "id": "patience_distorsion",
+        "nom": "L'ART DE L'INACHÈVEMENT",
+        "description": "Maintenir le plateau à moitie plein 30 secondes face à La Distorsion",
+        "icone": "⏳",
+        "categorie": "histoire_prouesses",
+        "decoration": "halo_oracle"
+    }
+}

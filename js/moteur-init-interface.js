@@ -1,11 +1,8 @@
-import { chargerStats } from './achievements.js';
+import { chargerStats } from './achievements-stats.js';
 import { planifierBoucle } from './boucle-jeu.js';
-import {
-    afficherEcran,
-    appliquerThemeBiome,
-    mettreAJourAffichageRecord,
-    chargerProgression,
-} from './ecrans-ui.js';
+import { mettreAJourAffichageRecord, chargerProgression } from './hud-jeu.js';
+import { appliquerThemeBiome } from './themes-biome.js';
+import { afficherEcranDiffere } from './navigation-lazy.js';
 import { initialiserInput } from './input-jeu.js';
 import { adapterInterface, initialiserLayout } from './layout-jeu.js';
 import { initPiecesFond } from './menu-fond.js';
@@ -17,7 +14,7 @@ import { initialiserBoutons } from './ui-init.js';
 import { obtenirActions } from './actions-jeu.js';
 import { activerModeHistoire } from './mode-histoire.js';
 import { chargerHistoireTextes } from './charger-histoire-textes.js';
-import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
+import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
 import { store } from './store-core.js';
 import { boucleSecondaireActive } from './planificateur-raf.js';
 import { CONFIG } from './config.js';
@@ -45,13 +42,10 @@ export function initialiserInterfaceMoteur() {
     appliquerThemeBiome(obtenirBiomeActif());
     mettreAJourAffichageRecord();
     initPiecesFond();
-    void import('./menu-robo-titre.js').then(({ initialiserMenuRoboTitre }) =>
-        initialiserMenuRoboTitre()
-    );
     initialiserInput();
     initialiserBoutons();
     initialiserModulesDifferees();
-    afficherEcran(ECRANS.TITRE);
+    afficherEcranDiffere(ECRANS.TITRE);
     planifierBoucle();
     demarrerBoucleRobo();
 
@@ -120,6 +114,38 @@ export function initialiserInterfaceMoteur() {
                     activerModeHistoire();
                     const { obtenirTypeFin } = await import('./histoire-narratif.js');
                     return obtenirTypeFin();
+                },
+                injecterConditionsTrameDistorsion: () => {
+                    activerModeHistoire();
+                    const etatHist = obtenirEtatHistoirePersiste();
+                    etatHist.conditionsTrame.miroirComplete = true;
+                    etatHist.conditionsTrame.tousJournauxTrouves = true;
+                    etatHist.conditionsTrame.tousBossSansContinue = true;
+                    etatHist.conditionsTrame.actionDistorsionFaite = true;
+                    const journauxRequis = [
+                        'journal_1',
+                        'journal_2',
+                        'journal_3',
+                        'journal_4',
+                        'journal_5',
+                        'journal_6',
+                        'journal_7',
+                        'journal_8',
+                        'journal_9',
+                    ];
+                    for (const id of journauxRequis) {
+                        if (!etatHist.journauxTrouves.includes(id)) {
+                            etatHist.journauxTrouves.push(id);
+                        }
+                    }
+                    if (!etatHist.mondesCachesDebloques.includes('monde_miroir')) {
+                        etatHist.mondesCachesDebloques.push('monde_miroir');
+                    }
+                    if (!etatHist.mondesCachesDebloques.includes('monde_trame')) {
+                        etatHist.mondesCachesDebloques.push('monde_trame');
+                    }
+                    persisterEtatHistoire(etatHist);
+                    store.histoire.etat = etatHist;
                 },
             })
         );

@@ -3,6 +3,7 @@ import {
     ouvrirCarteHistoire,
     fermerRecapPostMonde,
     passerCutsceneEntiere,
+    passerFluxLancementMonde,
     terminerCutscenesVersEcranFin,
     ETAT_HISTOIRE_BOSS_BRASIER,
     ETAT_FIN_SECRETE_PRET,
@@ -10,6 +11,7 @@ import {
     ETAT_FIN_VRAIE_PRET,
     ETAT_OCEAN_FRAGMENT_PRET,
     ETAT_CYBER_LABO_PRET,
+    ETAT_AVANT_DESERT,
 } from './helpers.mjs';
 
 test('post-monde monde lave — fond scene seuil_brasier', async ({ page }) => {
@@ -145,6 +147,20 @@ test('decouverte labo cyber — journal VERA', async ({ page }) => {
     });
     expect(final.laboDecouvert).toBe(true);
     expect(final.journal7).toBe(true);
+});
+
+test('victoire monde desert — enchaine vers eclipse', async ({ page }) => {
+    test.setTimeout(120000);
+    await ouvrirCarteHistoire(page, ETAT_AVANT_DESERT);
+    await page.evaluate(async () => {
+        await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.('monde_desert', 99);
+    });
+    await fermerRecapPostMonde(page);
+    await passerCutsceneEntiere(page);
+    await passerCutsceneEntiere(page);
+    await passerFluxLancementMonde(page);
+    await expect(page.locator('body')).toHaveClass(/partie-active/);
+    await expect(page.locator('body')).toHaveAttribute('data-biome', 'eclipse');
 });
 
 test('fin secrete — victoire finale detecte fin_secrete', async ({ page }) => {

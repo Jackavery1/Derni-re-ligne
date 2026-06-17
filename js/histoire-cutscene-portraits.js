@@ -120,7 +120,8 @@ function _dessinerPortrait(canvas, ctx, personnageId, parle, ts, ligneCourante) 
             /** @type {'neutre'|'content'|'excite'|'triste'|'alerte'} */ (
                 convertirHumeurVersCanvas(humeurRobo)
             ),
-            ts / 1000
+            ts / 1000,
+            { fondTransparent: true }
         );
         return;
     }

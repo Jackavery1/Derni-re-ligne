@@ -9,6 +9,7 @@ export default [
             'coverage/**',
             'test-results/**',
             'dist/**',
+            'dist-test/**',
             'scripts/archive/**',
         ],
     },

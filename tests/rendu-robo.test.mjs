@@ -47,7 +47,14 @@ describe('rendu-robo', () => {
         const ctx = creerCtxMock();
         dessinerRobo(ctx, 120, 150, 'neutre', 0);
         expect(ctx.clearRect).toHaveBeenCalled();
+        expect(ctx.fillRect).toHaveBeenCalledWith(0, 0, 120, 150);
         expect(ctx.fillRect.mock.calls.length + ctx.arc.mock.calls.length).toBeGreaterThan(5);
+    });
+
+    it('fond transparent en cutscene sans remplissage plein ecran', () => {
+        const ctx = creerCtxMock();
+        dessinerRobo(ctx, 120, 150, 'neutre', 0, { fondTransparent: true });
+        expect(ctx.fillRect).not.toHaveBeenCalledWith(0, 0, 120, 150);
     });
 
     it('dessine ROBO excité avec arc-en-ciel', () => {

@@ -59,7 +59,6 @@ function construireListePrecache() {
         for (const f of readdirSync(imgDir).sort()) {
             if (!f.endsWith('.png')) continue;
             if (f === 'robo-favicon.png') continue;
-            if (f === 'robo-accueil.png') continue;
             fichiers.push(`./img/${f}`);
         }
     }

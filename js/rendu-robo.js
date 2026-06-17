@@ -35,8 +35,10 @@ const FOND_MASCOTTE = '#08081a';
 
 export function dessinerRobo(ctx, w, h, humeur, t, options = {}) {
     ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = FOND_MASCOTTE;
-    ctx.fillRect(0, 0, w, h);
+    if (!options.fondTransparent) {
+        ctx.fillStyle = FOND_MASCOTTE;
+        ctx.fillRect(0, 0, w, h);
+    }
 
     const E = Math.min(w / 120, h / 150);
     const cx = w / 2;

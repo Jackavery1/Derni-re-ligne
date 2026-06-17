@@ -1,6 +1,12 @@
 import { test, expect } from '@playwright/test';
-import { ouvrirCarteHistoire, fermerRecapPostMonde } from './helpers.mjs';
+import {
+    ouvrirCarteHistoire,
+    fermerRecapPostMonde,
+    viderOverlaysHistoireRapide,
+    terminerCutscenesVersEcranFin,
+} from './helpers.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { MONDES_CAMPAGNE_PRINCIPALE, MONDES_SECRETS_FIN_SECRETE } from './etats-histoire.mjs';
 
 const ETAT_PROLOGUE_PRET = {
     ...ETAT_HISTOIRE_VIDE,
@@ -150,4 +156,65 @@ test('campagne — enchaine prologue puis inferno sans carte', async ({ page }) 
     });
     expect(mondesCompletes).toContain('monde_prologue');
     expect(mondesCompletes).toContain('monde_lave');
+});
+
+test('campagne complete — progression simulee vers fin secrete', async ({ page }) => {
+    test.setTimeout(300000);
+    const etatDepart = {
+        ...ETAT_HISTOIRE_VIDE,
+        mondesDejaMontres: ['monde_prologue'],
+    };
+    await ouvrirCarteHistoire(page, etatDepart);
+
+    for (const mondeId of MONDES_CAMPAGNE_PRINCIPALE) {
+        await page.evaluate(async (id) => {
+            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
+        }, mondeId);
+        await viderOverlaysHistoireRapide(page);
+    }
+
+    for (const mondeId of MONDES_SECRETS_FIN_SECRETE) {
+        if (mondeId === 'monde_trame' || mondeId === 'monde_finale') {
+            await page.evaluate(() => {
+                window.__NEO_TEST__?.injecterConditionsTrameDistorsion?.();
+            });
+        }
+        await page.evaluate(async (id) => {
+            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
+        }, mondeId);
+        await viderOverlaysHistoireRapide(page);
+    }
+
+    const progression = await page.evaluate(async () => {
+        const brut = localStorage.getItem('derniereLigne_histoire');
+        const sauve = brut ? JSON.parse(brut) : {};
+        const typeFin = await window.__NEO_TEST__?.obtenirTypeFinHistoire?.();
+        return {
+            typeFin,
+            mondesCompletes: sauve.mondesCompletes ?? [],
+            finSecreteObtenue: sauve.conditionsParadoxe?.finSecreteObtenue === true,
+        };
+    });
+
+    expect(progression.typeFin).toBe('fin_secrete');
+    expect(progression.mondesCompletes).toContain('monde_trame');
+    expect(progression.mondesCompletes).toContain('monde_finale');
+
+    await page.evaluate(async () => {
+        await window.__NEO_TEST__?.declencherFinHistoire?.('fin_secrete');
+    });
+    await terminerCutscenesVersEcranFin(page);
+    await expect(page.locator('#ecran-histoire-fin')).toHaveAttribute('data-fin', 'fin_secrete');
+    await expect(page.locator('#histoire-fin-titre')).toContainText(/LIGNE PARFAITE/i);
+
+    const apresOutro = await page.evaluate(() => {
+        const brut = localStorage.getItem('derniereLigne_histoire');
+        const sauve = brut ? JSON.parse(brut) : {};
+        return {
+            finSecreteObtenue: sauve.conditionsParadoxe?.finSecreteObtenue === true,
+            toutesFin: sauve.toutesFinObtenues ?? [],
+        };
+    });
+    expect(apresOutro.toutesFin).toContain('fin_secrete');
+    expect(apresOutro.finSecreteObtenue).toBe(true);
 });

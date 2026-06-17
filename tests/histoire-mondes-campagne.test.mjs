@@ -28,4 +28,20 @@ describe('obtenirProchainMondeCampagne', () => {
         etat.mondesCompletes = ['monde_prologue', 'monde_lave', 'monde_rouille', 'monde_boss_1'];
         expect(obtenirProchainMondeCampagne('monde_boss_1', etat)).toBe('monde_ocean');
     });
+
+    it('retourne eclipse apres le desert', () => {
+        const etat = structuredClone(ETAT_HISTOIRE_VIDE);
+        etat.mondesCompletes = [
+            'monde_prologue',
+            'monde_lave',
+            'monde_rouille',
+            'monde_ocean',
+            'monde_foret',
+            'monde_glace',
+            'monde_boss_2',
+            'monde_desert',
+        ];
+        etat.bossVaincus = ['brasier', 'sentinelle'];
+        expect(obtenirProchainMondeCampagne('monde_desert', etat)).toBe('monde_eclipse');
+    });
 });

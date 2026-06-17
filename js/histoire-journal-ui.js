@@ -3,7 +3,7 @@ import { definirExpressionVera } from './portraits-vera.js';
 import { ECRANS } from './ecrans-config.js';
 import { logger } from './logger.js';
 import { obtenirCanvas } from './dom-utils.js';
-import { afficherEcranHistoire, cacherEcransHistoire } from './histoire-cutscene-nav.js';
+import { afficherEcranHistoire } from './histoire-cutscene-nav.js';
 
 let journalCallbackFermer = null;
 let _boutonJournalFermeOk = false;
@@ -20,6 +20,30 @@ function _lierBoutonJournalFermer() {
 
 export function afficherJournalHistoire(journal, onFermer) {
     definirExpressionVera('journal_decouvert');
+    const elTitre = document.getElementById('histoire-journal-titre');
+    if (!elTitre) {
+        void _afficherJournalApresChargementDom(journal, onFermer);
+        return;
+    }
+    _remplirEtAfficherJournal(journal, onFermer);
+}
+
+async function _afficherJournalApresChargementDom(journal, onFermer) {
+    try {
+        await afficherEcranHistoire(ECRANS.HISTOIRE_JOURNAL);
+        if (!document.getElementById('histoire-journal-titre')) {
+            logger.warn('[journal] conteneur introuvable apres chargement');
+            onFermer?.();
+            return;
+        }
+        _remplirEtAfficherJournal(journal, onFermer);
+    } catch (err) {
+        logger.error('[journal] echec chargement fragment :', err);
+        onFermer?.();
+    }
+}
+
+function _remplirEtAfficherJournal(journal, onFermer) {
     const elTitre = document.getElementById('histoire-journal-titre');
     const elSsTitre = document.getElementById('histoire-journal-soustitre');
     const elTexte = document.getElementById('histoire-journal-texte');
@@ -96,6 +120,10 @@ function illustrationFallback(ctx2d, w, h) {
 export function fermerJournalHistoire() {
     const cb = journalCallbackFermer;
     journalCallbackFermer = null;
-    cacherEcransHistoire();
-    cb?.();
+    document.getElementById(ECRANS.HISTOIRE_JOURNAL)?.classList.remove('actif');
+    try {
+        cb?.();
+    } catch (err) {
+        logger.error('[journal] erreur callback fermeture :', err);
+    }
 }

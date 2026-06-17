@@ -4,5 +4,5 @@ export async function afficherEcranHistoire(idEcran) {
 }
 
 export function cacherEcransHistoire() {
-    void import('./navigation-ecrans.js').then(({ cacherEcrans }) => cacherEcrans());
+    return import('./navigation-ecrans.js').then(({ cacherEcrans }) => cacherEcrans());
 }

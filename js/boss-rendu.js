@@ -5,7 +5,7 @@ import {
     obtenirParamsPortraitBossCombat,
     obtenirExpressionBossCombat,
 } from './reactions-boss-portrait.js';
-import { dessinerPortraitBossCombat } from './portraits-cutscene-personnages.js';
+import { dessinerPortraitBossCombat } from './portraits-boss-combat.js';
 
 /** @returns {'calme'|'irrite'|'enrage'|'attaque'|'vaincu'} */
 function _obtenirEtatPortraitBoss() {

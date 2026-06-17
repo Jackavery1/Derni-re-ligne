@@ -3,7 +3,6 @@ import { ECRANS, etat, definirEcranActuel } from './store-jeu.js';
 import { FRAGMENTS_REQUIS_PAR_ECRAN } from './ecrans-config.js';
 import { assurerFragmentsEcran } from './charger-ecrans.js';
 import { demarrerAnimationMenu, arreterAnimationMenu } from './menu-fond.js';
-import { genererGalerieAchievements } from './achievements.js';
 import { cacherBanniereVivant } from './vivant.js';
 import { mettreAJourAffichageRecord } from './hud-jeu.js';
 import { annoncer } from './annonces.js';
@@ -106,6 +105,7 @@ async function _afficherEcranAvecFragments(idEcran) {
     }
 
     if (idEcran === ECRANS.ACHIEVEMENTS) {
+        const { genererGalerieAchievements } = await import('./achievements-ui.js');
         genererGalerieAchievements();
         mettreAJourVisibiliteModesDebloques();
     }

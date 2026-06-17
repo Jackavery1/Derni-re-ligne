@@ -183,24 +183,13 @@ test('cutscene narration — piste audio dediee', async ({ page }) => {
         .toBe('narratif_cutscene');
 });
 
-test('ecran titre — mascotte ROBO canvas visible', async ({ page }) => {
+test('ecran titre — mascotte ROBO image visible', async ({ page }) => {
     await preparerPageSansSw(page);
     await page.goto('/');
     await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
-    await page.waitForTimeout(400);
-
-    const metriques = await page.evaluate(() => {
-        const canvas = document.getElementById('canvas-menu-robo');
-        if (!(canvas instanceof HTMLCanvasElement)) return { ok: false };
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return { ok: false };
-        const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        for (let i = 3; i < data.length; i += 4) {
-            if (data[i] > 0) return { ok: true };
-        }
-        return { ok: false };
-    });
-    expect(metriques.ok).toBe(true);
+    const img = page.locator('.menu-robot');
+    await expect(img).toBeVisible();
+    await expect(img).toHaveAttribute('src', /robo-accueil\.png/);
 });
 
 test('sync cloud — leaderboard marathon affiche le top', async ({ page }) => {

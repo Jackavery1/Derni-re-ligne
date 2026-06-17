@@ -189,7 +189,7 @@ function _terminerCutscene() {
         AudioMoteur.arreterMusique(350);
     }
 
-    cacherEcransHistoire();
+    document.getElementById(ECRANS.HISTOIRE_CUTSCENE)?.classList.remove('actif');
 
     try {
         cb?.();
@@ -230,24 +230,16 @@ function _lierBoutonsCutsceneDom() {
     }
 }
 
-export function afficherCutsceneHistoire(textes, personnages, onFin, options = {}) {
-    if (typeof personnages === 'function') {
-        onFin = personnages;
-        personnages = null;
-    }
-
-    const ecranCutscene = document.getElementById('ecran-histoire-cutscene');
+function _domCutscenePret() {
     assurerZoneNarrationCutscene();
-    const texteEl = document.getElementById('texte-dialogue-cutscene');
-    if (!ecranCutscene || !texteEl) {
-        if (options.intro) {
-            logger.error('[intro] moteur: conteneur cutscene introuvable dans le DOM');
-            return false;
-        }
-        logger.warn('[cutscene] conteneur cutscene introuvable dans le DOM');
-        onFin?.();
-        return false;
-    }
+    return (
+        document.getElementById('ecran-histoire-cutscene') &&
+        document.getElementById('texte-dialogue-cutscene')
+    );
+}
+
+function _demarrerCutsceneHistoire(textes, personnages, onFin, options = {}) {
+    if (!_domCutscenePret()) return false;
 
     _lierBoutonsCutsceneDom();
 
@@ -279,6 +271,36 @@ export function afficherCutsceneHistoire(textes, personnages, onFin, options = {
 
     void _lancerCutsceneAvecPrechargement(entree, options);
 
+    return true;
+}
+
+async function _afficherCutsceneApresChargementDom(textes, personnages, onFin, options = {}) {
+    try {
+        await afficherEcranHistoire(ECRANS.HISTOIRE_CUTSCENE);
+        if (_demarrerCutsceneHistoire(textes, personnages, onFin, options)) return;
+    } catch (err) {
+        logger.error('[cutscene] echec chargement fragment histoire :', err);
+    }
+
+    if (options.intro) {
+        logger.error('[intro] moteur: conteneur cutscene introuvable apres chargement');
+    } else {
+        logger.warn('[cutscene] conteneur cutscene introuvable apres chargement');
+    }
+    onFin?.();
+}
+
+export function afficherCutsceneHistoire(textes, personnages, onFin, options = {}) {
+    if (typeof personnages === 'function') {
+        onFin = personnages;
+        personnages = null;
+    }
+
+    if (_demarrerCutsceneHistoire(textes, personnages, onFin, options)) {
+        return true;
+    }
+
+    void _afficherCutsceneApresChargementDom(textes, personnages, onFin, options);
     return true;
 }
 

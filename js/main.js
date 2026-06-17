@@ -1,8 +1,14 @@
 import { chargerEcrans } from './charger-ecrans.js';
+import { chargerBiomesJeu } from './biomes.js';
+import { chargerContenuJeu } from './contenu-jeu.js';
+import { chargerDifficulteMondes } from './difficulte-mondes-chargement.js';
+import { chargerAchievementsDonnees } from './achievements-donnees.js';
+import { chargerHistoireDonneesMetier } from './histoire-donnees.js';
 import { initialiserApplication } from './moteur.js';
 import { logger, afficherErreurUtilisateur } from './logger.js';
 import { lireStockage } from './progression-stockage.js';
 import { swAutorise, libererSwEnDevLocal } from './sw-dev.js';
+import { precchargerNavigation } from './navigation-lazy.js';
 import {
     definirProgressionChargement,
     definirMessageChargement,
@@ -47,8 +53,19 @@ async function demarrer() {
     }
 
     try {
+        definirMessageChargement('Chargement des biomes…');
+        definirProgressionChargement(0.55);
+        await Promise.all([
+            chargerBiomesJeu(),
+            chargerContenuJeu(),
+            chargerDifficulteMondes(),
+            chargerAchievementsDonnees(),
+            chargerHistoireDonneesMetier(),
+        ]);
+
         definirMessageChargement('Initialisation…');
         definirProgressionChargement(0.72);
+        await precchargerNavigation();
         if (document.fonts?.ready) {
             await document.fonts.ready;
         }

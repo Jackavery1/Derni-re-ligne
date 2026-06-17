@@ -8,5 +8,6 @@ Thumbs.db
 .env.*
 coverage/
 dist/
+dist-test/
 rapport-poids.json
 sources-bruts/

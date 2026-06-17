@@ -10,6 +10,9 @@ export {
     ETAT_FIN_VRAIE_PRET,
     ETAT_OCEAN_FRAGMENT_PRET,
     ETAT_CYBER_LABO_PRET,
+    ETAT_AVANT_DESERT,
+    MONDES_CAMPAGNE_PRINCIPALE,
+    MONDES_SECRETS_FIN_SECRETE,
 } from './etats-histoire.mjs';
 
 import {
@@ -67,6 +70,7 @@ export async function attendreApplicationPrete(page) {
     await expect(page.locator('body')).toHaveAttribute('data-neo-test-ready', '1', {
         timeout: 15000,
     });
+    await expect(page.locator('#ecran-titre')).toHaveClass(/actif/, { timeout: 15000 });
 }
 
 /** @param {import('@playwright/test').Page} page */
@@ -77,9 +81,10 @@ export async function attendreEcranTitre(page) {
 
 /** @param {import('@playwright/test').Page} page @param {{ index?: number, value?: string }} option */
 export async function selectionnerBiomeClavier(page, option = { value: 'classique' }) {
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/, { timeout: 10000 });
     const select = page.locator('#sel-biome-clavier');
     const valeur = option.value ?? 'classique';
-    await expect(select.locator(`option[value="${valeur}"]`)).toBeAttached({ timeout: 10000 });
+    await expect(select.locator(`option[value="${valeur}"]`)).toBeAttached({ timeout: 15000 });
     await select.selectOption(option.value ? option : { value: valeur }, { force: true });
     await page.evaluate((id) => {
         const el = document.getElementById('sel-biome-clavier');
@@ -175,6 +180,12 @@ export async function passerFluxLancementMonde(page) {
             continue;
         }
 
+        const journal = page.locator('#btn-journal-fermer');
+        if (await journal.isVisible().catch(() => false)) {
+            await journal.click({ force: true });
+            continue;
+        }
+
         await page.waitForTimeout(200);
     }
 
@@ -198,6 +209,40 @@ export async function demarrerPartie(page) {
 export async function fermerRecapPostMonde(page) {
     await expect(page.locator('#overlay-recap-monde')).toBeVisible({ timeout: 10000 });
     await page.locator('#btn-recap-continuer').click({ force: true });
+}
+
+/** Ferme recap, journal et cutscenes sans assertion stricte (parcours campagne long). */
+/** @param {import('@playwright/test').Page} page @param {number} [max] */
+export async function viderOverlaysHistoireRapide(page, max = 12) {
+    for (let i = 0; i < max; i++) {
+        const etat = await page.evaluate(() => ({
+            recap: document
+                .getElementById('overlay-recap-monde')
+                ?.classList.contains('objectif-overlay-visible'),
+            cutscene: document
+                .getElementById('ecran-histoire-cutscene')
+                ?.classList.contains('actif'),
+            journal: document.getElementById('ecran-histoire-journal')?.classList.contains('actif'),
+        }));
+        if (!etat.recap && !etat.cutscene && !etat.journal) return;
+        if (etat.recap) {
+            await page.locator('#btn-recap-continuer').click({ force: true });
+            continue;
+        }
+        if (etat.journal) {
+            await page.evaluate(() => {
+                document.getElementById('btn-journal-fermer')?.click();
+            });
+            continue;
+        }
+        if (etat.cutscene) {
+            await page.evaluate(() => {
+                document.getElementById('btn-cutscene-passer')?.click();
+            });
+            continue;
+        }
+        await page.waitForTimeout(150);
+    }
 }
 
 /** @param {import('@playwright/test').Page} page */

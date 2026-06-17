@@ -8,6 +8,11 @@ async function obtenirNavigation() {
     return _navigation;
 }
 
+/** Précharge navigation-ecrans avant la première interaction (évite course au clic menu). */
+export function precchargerNavigation() {
+    return obtenirNavigation();
+}
+
 export function cacherEcransDiffere() {
     void obtenirNavigation().then(({ cacherEcrans }) => cacherEcrans());
 }

@@ -50,21 +50,41 @@ import {
     mettreAJourSecousse,
 } from './rendu-jeu.js';
 import { mettreAJourParticules } from './particules-jeu.js';
-import { mettreAJourAffichageTemps } from './ecrans-ui.js';
+import { mettreAJourAffichageTemps } from './hud-jeu.js';
 import { tickTimerNiveau } from './timer-niveau.js';
 import { verrouillerPiece, vitesseChute } from './logique-partie.js';
 import { menuAnimActif, mettreAJourMenuFond } from './menu-fond.js';
 import { mettreAJourHistoriquePositions, dessinerDecorations } from './decorations-jeu.js';
 import { mettreAJourVivant } from './vivant.js';
 import { dessinerAvertissementsVivant } from './rendu-vivant.js';
-import { dessinerSuggestionOracle } from './oracle-jeu.js';
 import { mettreAJourBoss, bossEstActif, bossEstVaincu } from './boss-jeu.js';
-import { rendrePortraitBoss } from './boss-rendu.js';
 import { mettreAJourMecaniquesHistoire } from './mecaniques-histoire.js';
 import { dessinerMotifsAccessibilite, dessinerMotifsPieceCourante } from './rendu-accessibilite.js';
 
 const SEUIL_ERREURS_BOUCLE = 5;
 let erreursConsecutivesBoucle = 0;
+
+/** @type {typeof import('./boss-rendu.js') | null} */
+let _bossRenduModule = null;
+
+async function _rendrePortraitBossLazy(timestamp) {
+    if (!_bossRenduModule) {
+        _bossRenduModule = await import('./boss-rendu.js');
+    }
+    _bossRenduModule.rendrePortraitBoss(timestamp);
+}
+
+/** @type {typeof import('./oracle-jeu.js') | null} */
+let _oracleModule = null;
+
+async function _dessinerSuggestionOracleLazy() {
+    if (!_oracleModule) {
+        _oracleModule = await import('./oracle-jeu.js');
+    }
+    if (_oracleModule.oracle.actif) {
+        _oracleModule.dessinerSuggestionOracle();
+    }
+}
 
 export function mettreAJourFps(deltaTemps) {
     if (deltaTemps <= 0) return;
@@ -127,7 +147,7 @@ function dessinerFrameSolo(ctx, enPartie) {
     dessinerFlashLignes();
     if (etat.pieceActuelle) {
         dessinerPieceFantome();
-        dessinerSuggestionOracle();
+        void _dessinerSuggestionOracleLazy();
         dessinerPieceActive();
         dessinerMotifsPieceCourante(ctx);
     }
@@ -212,7 +232,7 @@ function boucleJeu(timestamp) {
             tickTimerNiveau();
             if (bossEstActif()) {
                 if (!bossEstVaincu()) mettreAJourBoss(deltaTemps);
-                rendrePortraitBoss(timestamp);
+                void _rendrePortraitBossLazy(timestamp);
             }
             mettreAJourAmbiante(deltaTemps);
             mettreAJourIndicateurRelique();

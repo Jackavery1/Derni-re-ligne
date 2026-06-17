@@ -5,7 +5,7 @@ import { store } from './store-core.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { obtenirEtatHistoire } from './histoire-mondes.js';
 import { ecouter } from './bus-jeu.js';
-import { DIFFICULTE_MONDES } from '../data/difficulte-mondes.js';
+import { DIFFICULTE_MONDES } from './difficulte-mondes-chargement.js';
 import { logger } from './logger.js';
 import { sansAccentsE } from './texte-jeu.js';
 import { afficherNotificationNiveau } from './ui-notifications.js';
