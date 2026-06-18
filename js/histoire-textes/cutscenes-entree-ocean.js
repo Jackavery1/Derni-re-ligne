@@ -14,7 +14,7 @@ export const CUTSCENES_ENTREE_OCEAN = {
             },
             {
                 personnage: 'narrateur',
-                texte: "Dans les Abysses, la corruption ralentit. L'eau resiste.",
+                texte: "Dans les Abysses, la corruption ralentit. L'eau résiste.",
             },
             {
                 personnage: 'robo',
@@ -59,7 +59,7 @@ export const CUTSCENES_ENTREE_OCEAN = {
             },
             {
                 personnage: 'robo',
-                texte: 'Les blocs tombent et resonnent comme du cristal.',
+                texte: 'Les blocs tombent et résonnent comme du cristal.',
                 humeur: 'content',
             },
             {
@@ -78,27 +78,32 @@ export const CUTSCENES_ENTREE_OCEAN = {
         {
             scene: 'seuil_sentinelle',
             personnage: 'sentinelle',
-            texte: 'ARRÊTEZ.',
+            texte: 'ARRÊTEZ. Arrêtez-vous tout de suite.',
             humeur: 'agressif',
         },
         { scene: 'seuil_sentinelle', personnage: 'robo', texte: 'Pardon ?', humeur: 'neutre' },
         {
             scene: 'seuil_sentinelle',
             personnage: 'sentinelle',
-            texte: "Le mouvement corrompt. L'immobilité préserve. Je protège ce biome depuis des millénaires.",
+            texte: "Vous bougez. Ça suffit. Le mouvement corrompt, l'immobilité protège — je le mesure depuis des millénaires, alors arrêtez-vous.",
             humeur: 'calme',
         },
         {
             scene: 'seuil_sentinelle',
             personnage: 'robo',
-            texte: 'Vous preservez le gel. Pas la vie.',
+            texte: "Vous protégez le gel. Pas ce qu'il y a dessous.",
             humeur: 'neutre',
         },
-        { scene: 'seuil_sentinelle', personnage: 'sentinelle', texte: '...', humeur: 'calme' },
+        {
+            scene: 'seuil_sentinelle',
+            personnage: 'sentinelle',
+            texte: '...Il y a quelque chose dessous ?',
+            humeur: 'calme',
+        },
         {
             scene: 'seuil_sentinelle',
             personnage: 'narrateur',
-            texte: 'La Sentinelle ne répond plus. Elle attaque.',
+            texte: "Elle n'a pas aimé la question. Elle attaque.",
         },
     ],
 };

@@ -20,7 +20,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         },
         {
             personnage: 'brasier_voix',
-            texte: 'Je ne brûlais pas pour detruire.',
+            texte: 'Je ne brûlais pas pour détruire.',
             humeur: 'vacillant',
         },
         {
@@ -42,7 +42,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         { personnage: 'brasier_voix', texte: 'VERA... elle savait.', humeur: 'vacillant' },
         {
             personnage: 'brasier_voix',
-            texte: "Elle m'a regarde brûler sans intervenir.",
+            texte: "Elle m'a regardé brûler sans intervenir.",
             humeur: 'vacillant',
         },
         {
@@ -64,7 +64,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         { personnage: 'robo', texte: 'Oui.', humeur: 'neutre' },
         {
             personnage: 'sentinelle',
-            texte: "Je ne comprends pas. Le mouvement corrompt. J'ai mesure. J'ai des donnees.",
+            texte: "Je ne comprends pas. Le mouvement corrompt. J'ai mesuré. J'ai des données.",
             humeur: 'vacillant',
         },
         {
@@ -75,7 +75,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         { personnage: 'sentinelle', texte: '...', humeur: 'vacillant' },
         {
             personnage: 'sentinelle',
-            texte: "Je n'avais pas modelise cette variable.",
+            texte: "Je n'avais pas modélisé cette variable.",
             humeur: 'vacillant',
         },
         { personnage: 'narrateur', texte: 'La Sentinelle commence à se fragmenter en cristaux.' },
@@ -125,7 +125,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         },
         {
             personnage: 'archiviste',
-            texte: "Tout ce qu'elle savait de toi — elle l'avait invente. Puis tu es devenu exactement ça.",
+            texte: "Tout ce qu'elle savait de toi — elle l'avait inventé. Puis tu es devenu exactement ça.",
         },
     ],
 
@@ -183,7 +183,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         },
         {
             personnage: 'distorsion',
-            texte: "Parce que les gens abandonnent. Parce que c'est difficile. Parce qu'ils ont peur. Et ces peurs sont restées. Et elles m'ont fabriquée.",
+            texte: "Parce que les gens abandonnent. Parce que c'est difficile. Parce qu'ils ont peur. Et ces peurs ne sont jamais reparties — regarde ce qu'elles ont fini par fabriquer.",
             humeur: 'souffrante',
         },
         {
@@ -205,7 +205,11 @@ export const CUTSCENES_VICTOIRE_BOSS = {
             personnage: 'narrateur',
             texte: "La Distorsion se dissout. Et en se dissolvant, elle relâche tout ce qu'elle retenait. Les fils. Les biomes. Et, tout au centre, une ancre humaine.",
         },
-        { personnage: 'vera', texte: 'Robo. Je suis là. Tu as réussi.', humeur: 'inquiete' },
+        {
+            personnage: 'vera',
+            texte: 'Robo. Je suis là, je suis là — tu as réussi.',
+            humeur: 'inquiete',
+        },
         {
             personnage: 'robo',
             texte: 'Tu avais programmé ça en moi ? La réussite ?',
@@ -219,7 +223,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
     ],
 
     distorsion_vrai: [
-        { personnage: 'robo', texte: 'Je ne veux pas te detruire.', humeur: 'neutre' },
+        { personnage: 'robo', texte: 'Je ne veux pas te détruire.', humeur: 'neutre' },
         { personnage: 'distorsion', texte: 'Alors que veux-tu ?', humeur: 'curieuse' },
         {
             personnage: 'robo',
@@ -229,7 +233,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         { personnage: 'distorsion', texte: '...', humeur: 'curieuse' },
         {
             personnage: 'distorsion',
-            texte: "Je n'ai jamais essaye.",
+            texte: "Je n'ai jamais essayé.",
             humeur: 'curieuse',
         },
         {
@@ -243,7 +247,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
             texte: "La Distorsion, pour la première fois, n'attaque pas.",
         },
         { personnage: 'narrateur', texte: 'Elle attend.' },
-        { personnage: 'narrateur', texte: 'La ligne est complete.' },
+        { personnage: 'narrateur', texte: 'La ligne est complète.' },
         { personnage: 'narrateur', texte: 'Elle disparaît.' },
         {
             personnage: 'distorsion',
@@ -256,7 +260,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         },
         {
             personnage: 'distorsion',
-            texte: "Ce n'est pas une perte.",
+            texte: "Ce n'est pas une perte, je crois. C'est étrange.",
             humeur: 'apaisee',
         },
         {
@@ -266,7 +270,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         },
         {
             personnage: 'vera',
-            texte: "Robo... tu viens de faire quelque chose que je n'aurais pas pu prevoir.",
+            texte: "Robo... tu viens de faire quelque chose que je n'aurais pas pu prévoir.",
             humeur: 'neutre',
         },
         {
@@ -276,7 +280,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         },
         {
             personnage: 'vera',
-            texte: "Parce que tu l'as amelioree.",
+            texte: "Parce que tu l'as améliorée.",
             humeur: 'douce',
         },
     ],
@@ -295,7 +299,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         { personnage: 'robo', texte: 'Non. Pour te garder en vie.', humeur: 'neutre' },
         {
             personnage: 'robo',
-            texte: 'Une ligne incomplète peut encore être complétée. Quelque chose de mort ne peut pas.',
+            texte: 'Une ligne incomplète, ça peut encore se compléter. Quelque chose de mort, non.',
             humeur: 'neutre',
         },
         {

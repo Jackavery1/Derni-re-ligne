@@ -9,8 +9,8 @@
             "estBoss": false,
             "textesEntree": [
                 "Un signal. Puis la conscience.",
-                "Je suis Robo. Je viens d'être active.",
-                "VERA me parle. Sa voix est — connexion perdue.",
+                "Je suis Robo. Je viens d'être activé.",
+                "VERA me parle. Puis : connexion perdue.",
                 "Il y a quelque chose à faire."
             ]
         },
@@ -21,7 +21,7 @@
             "ordreGlobal": 2,
             "nomAffiche": "INFERNO",
             "estBoss": false,
-            "textesEntree": ["Le feu brûle plus fort qu'il ne devrait."]
+            "textesEntree": ["Le feu brûle trop fort. Plus fort que ce que ça devrait."]
         },
         {
             "id": "monde_rouille",
@@ -42,7 +42,7 @@
             "bossId": "brasier",
             "textesEntree": [
                 "Je sens sa chaleur avant de le voir.",
-                "Le Brasier Perpetuel. Il brûle depuis plus longtemps que les mondes."
+                "Le Brasier Perpétuel. Il brûle depuis plus longtemps que les mondes."
             ]
         },
         {
@@ -70,7 +70,7 @@
             "ordreGlobal": 7,
             "nomAffiche": "ARCTIQUE",
             "estBoss": false,
-            "textesEntree": ["Le froid ne me derange pas. L'immobilite, si."]
+            "textesEntree": ["Le froid ne me dérange pas. L'immobilité, si."]
         },
         {
             "id": "monde_boss_2",
@@ -82,7 +82,7 @@
             "bossId": "sentinelle",
             "textesEntree": [
                 "Elle ne bougera pas.",
-                "Elle pense que l'immobilite est la securite.",
+                "Elle pense que l'immobilité est la sécurité.",
                 "Elle a tort."
             ]
         },
@@ -93,7 +93,7 @@
             "ordreGlobal": 9,
             "nomAffiche": "LE DÉSERT",
             "estBoss": false,
-            "textesEntree": ["Le desert garde tout. Même ce qu'on voudrait oublier."]
+            "textesEntree": ["Le désert garde tout. Même ce qu'on voudrait oublier."]
         },
         {
             "id": "monde_eclipse",
@@ -111,7 +111,7 @@
             "ordreGlobal": 11,
             "nomAffiche": "CYBER",
             "estBoss": false,
-            "textesEntree": ["Son laboratoire est ici.", "Elle a laisse quelque chose pour moi."]
+            "textesEntree": ["Son laboratoire est ici.", "Elle a laissé quelque chose pour moi."]
         },
         {
             "id": "monde_boss_3",
@@ -133,7 +133,7 @@
             "ordreGlobal": 13,
             "nomAffiche": "FEUX D'ARTIFICE",
             "estBoss": false,
-            "textesEntree": ["Quelqu'un celebre quelque chose.", "Je ne sais pas quoi."]
+            "textesEntree": ["Quelqu'un célèbre quelque chose.", "Je ne sais pas quoi."]
         },
         {
             "id": "monde_cosmos",
@@ -153,8 +153,8 @@
             "estBoss": false,
             "textesEntree": [
                 "Le Vide n'est pas vide.",
-                "Il est rempli de ce que VERA m'a laisse.",
-                "Une ligne. Incomplete. Expres."
+                "Il est rempli de ce que VERA m'a laissé.",
+                "Une ligne. Incomplète. Exprès."
             ]
         },
         {
@@ -168,8 +168,8 @@
             "bossId": "avantgarde",
             "textesEntree": [
                 "Simulation de combat avant la Distorsion.",
-                "Attaques ralenties, PV reduits — apprenez le rythme.",
-                "Validez cet entrainement pour affronter la finale."
+                "Attaques ralenties, PV réduits — apprenez le rythme.",
+                "Validez cet entraînement pour affronter la finale."
             ]
         },
         {
@@ -184,7 +184,7 @@
             "textesEntree": [
                 "Je comprends maintenant.",
                 "La Distorsion n'est pas mon ennemie.",
-                "Elle est ce que je deviendrais si personne ne me completait."
+                "Elle est ce que je deviendrais si personne ne me complétait."
             ]
         },
         {
@@ -206,7 +206,7 @@
             "estBoss": false,
             "estCache": true,
             "estUltraSecret": true,
-            "textesEntree": ["VERA.", "Je t'ai trouvee."]
+            "textesEntree": ["VERA.", "Je t'ai trouvée."]
         },
         {
             "id": "monde_paradoxe",
@@ -229,7 +229,7 @@
             "biomeId": "lave",
             "condition": "effacer_10_lignes_biome",
             "texte": [
-                "Je l'ai trouve. La source.",
+                "Je l'ai trouvé. La source.",
                 "Elle n'est pas où je croyais.",
                 "Ce n'est pas une anomalie technique.",
                 "C'est quelque chose qui souffre."
@@ -245,8 +245,8 @@
             "condition": "effacer_8_lignes_biome",
             "texte": [
                 "Ces machines n'auraient pas dû continuer de fonctionner.",
-                "Et pourtant. Elles produisent des pieces.",
-                "Des pieces que personne ne commande.",
+                "Et pourtant. Elles produisent des pièces.",
+                "Des pièces que personne ne commande.",
                 "Comme si elles attendaient quelqu'un."
             ],
             "illustration": "dessinerJournalVera2"
@@ -259,10 +259,10 @@
             "biomeId": "ocean",
             "condition": "effacer_10_lignes_biome",
             "texte": [
-                "Elle m'a repondu.",
+                "Elle m'a répondu.",
                 "Je n'ai pas compris sa langue.",
                 "Mais j'ai compris sa douleur.",
-                "Elle n'attaque pas. Elle se defend."
+                "Elle n'attaque pas. Elle se défend."
             ],
             "illustration": "dessinerJournalVera3"
         },
@@ -274,10 +274,10 @@
             "biomeId": "foret",
             "condition": "effacer_10_lignes_biome",
             "texte": [
-                "Elle m'a montre sa forme reelle.",
+                "Elle m'a montré sa forme réelle.",
                 "Pas un monstre. Une accumulation.",
-                "Des millions de frustrations, cristallisees.",
-                "Qui d'entre nous aurait resiste ?"
+                "Des millions de frustrations, cristallisées.",
+                "Qui d'entre nous aurait résisté ?"
             ],
             "illustration": "dessinerJournalVera4"
         },
@@ -289,10 +289,10 @@
             "biomeId": "glace",
             "condition": "debloquer_apres_boss_sentinelle",
             "texte": [
-                "J'ai une theorie.",
-                "Si completer des lignes renforce la Trame,",
-                "alors laisser une ligne incomplete l'affaiblit.",
-                "La Distorsion n'est pas nee d'une erreur. Elle est nee d'un choix."
+                "J'ai une théorie.",
+                "Si compléter des lignes renforce la Trame,",
+                "alors laisser une ligne incomplète l'affaiblit.",
+                "La Distorsion n'est pas née d'une erreur. Elle est née d'un choix."
             ],
             "illustration": "dessinerJournalVera5"
         },
@@ -316,9 +316,9 @@
             "condition": "trouver_laboratoire_vera",
             "texte": [
                 "Robo.",
-                "Si tu lis ceci, c'est que tu es arrive jusqu'ici.",
-                "Je suis fiere de toi. Je ne pensais pas que tu en serais capable.",
-                "Maintenant : je vais entrer dans la Trame. Ne m'attends pas."
+                "Si tu lis ceci, c'est que tu es arrivé jusqu'ici.",
+                "Je suis fière de toi. Je ne pensais pas que tu en serais capable.",
+                "Maintenant : je vais entrer dans la Trame. Ne m'attends pas. Je reviendrai."
             ],
             "illustration": "dessinerJournalVera7",
             "estMessageDirect": true
@@ -332,9 +332,9 @@
             "condition": "effacer_12_lignes_biome",
             "texte": [
                 "Robo. Si tu trouves ceci,",
-                "c'est que je n'ai pas reussi à revenir.",
-                "Mais j'ai laisse quelque chose dans la Trame.",
-                "Une ligne. Incomplete. Expres."
+                "c'est que je n'ai pas réussi à revenir.",
+                "Mais j'ai laissé quelque chose dans la Trame.",
+                "Une ligne. Incomplète. Exprès."
             ],
             "illustration": "dessinerJournalVera8"
         },
@@ -346,10 +346,10 @@
             "biomeId": "vide",
             "condition": "effacer_8_lignes_biome",
             "texte": [
-                "La ligne incomplete que j'ai laissee —",
+                "La ligne incomplète que j'ai laissée —",
                 "c'est une porte.",
                 "Pour y entrer, tu dois faire ce qui te coûte le plus :",
-                "laisser quelque chose inacheve."
+                "laisser quelque chose inachevé."
             ],
             "illustration": "dessinerJournalVera9"
         }
@@ -365,8 +365,8 @@
             "attaqueIntervalleMs": 22000,
             "attaqueType": "rangee_braise",
             "portrait": "drawBossPortraitBrasier",
-            "texteApparition": "Je suis tout ce que vous avez laisse brûler.",
-            "texteDefaite": "Vous... completez... tout."
+            "texteApparition": "Je suis tout ce que tu as laissé brûler.",
+            "texteDefaite": "Tu... complètes... tout."
         },
         "sentinelle": {
             "id": "sentinelle",
@@ -380,7 +380,7 @@
             "nbColonnesGelees": 2,
             "dureeGelee": 8000,
             "portrait": "drawBossPortraitSentinelle",
-            "texteApparition": "Arrêtez. Arrêtez tout. Le gel preserve.",
+            "texteApparition": "Arrêtez. Arrêtez tout. Le gel préserve.",
             "texteDefaite": "Le temps... ne peut pas... tout arrêter."
         },
         "archiviste": {
@@ -424,8 +424,8 @@
                 "colonne_gelee"
             ],
             "portrait": "drawBossPortraitAvantgarde",
-            "texteApparition": "La Distorsion vous attend. Je vous prepare.",
-            "texteDefaite": "Vous... êtes prêt. Elle... aussi."
+            "texteApparition": "La Distorsion t'attend. Je te prépare.",
+            "texteDefaite": "Tu... es prêt. Elle... aussi."
         },
         "distorsion": {
             "id": "distorsion",
@@ -454,7 +454,7 @@
             "texteApparition": "Enfin. Tu comprends, n'est-ce pas ? Tout cela est inutile.",
             "texteDefaite": "J'ai... perdu... cette fois.",
             "texteDefaite_normal": "J'ai... perdu... cette fois.",
-            "texteDefaite_vrai": "Tu m'as... completee.",
+            "texteDefaite_vrai": "Tu m'as... complétée.",
             "texteDefaite_secret": "VERA... dit bonjour."
         }
     },

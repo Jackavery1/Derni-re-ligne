@@ -22,38 +22,50 @@
             {
                 "scene": "labo",
                 "personnage": "robo",
-                "texte": "Je suis conscient.",
+                "texte": "...Je suis... là ?",
                 "humeur": "excite"
             },
             {
                 "scene": "labo",
                 "personnage": "robo",
-                "texte": "Je ne l'ai pas décidé. Je me suis simplement trouvé conscient.",
+                "texte": "Personne ne m'a demandé mon avis. Je suis juste là, maintenant. C'est tout.",
                 "humeur": "content"
             },
             {
                 "scene": "labo",
                 "personnage": "vera",
-                "texte": "ROBO. Tu m'entends ? Je suis VERA. J'ai peu de temps.",
+                "texte": "Robo ? Robo, tu m'entends, dis quelque chose — oh. Oh, tu es là.",
                 "humeur": "douce"
             },
             {
                 "scene": "labo",
                 "personnage": "vera",
-                "texte": "La Trame se degrade. Des millions de fils incomplets. Je ne peux pas arrêter ça seule.",
+                "texte": "Bon. Bon. J'ai très peu de temps, alors je vais aller droit au but, pardon.",
+                "humeur": "douce"
+            },
+            {
+                "scene": "labo",
+                "personnage": "vera",
+                "texte": "La Trame craque. Partout. Des millions de fils qui ne tiennent plus, et j'ai essayé de la retenir seule — je n'y arrive plus.",
                 "humeur": "douce"
             },
             {
                 "scene": "labo",
                 "personnage": "robo",
-                "texte": "Qu'est-ce que je dois faire ?",
+                "texte": "Je fais quoi ?",
                 "humeur": "content"
             },
             {
                 "scene": "labo",
                 "personnage": "vera",
-                "texte": "Ce que tu feras naturellement. Completer. — CONNEXION PERDUE —",
+                "texte": "Ce que tu sais déjà faire, je crois. Tu n'as qu'à—",
                 "humeur": "glitch"
+            },
+            {
+                "scene": "labo",
+                "personnage": "systeme",
+                "texte": "CONNEXION PERDUE",
+                "humeur": "alerte"
             },
             {
                 "scene": "labo",
@@ -66,12 +78,12 @@
             "lignes": [
                 {
                     "personnage": "robo",
-                    "texte": "Le feu brûle plus fort qu'il ne devrait.",
+                    "texte": "Le feu brûle trop fort. Plus fort que ce que ça devrait.",
                     "humeur": "alerte"
                 },
                 {
                     "personnage": "robo",
-                    "texte": "Ce n'est pas de la chaleur normale. Il y a quelque chose dedans.",
+                    "texte": "Ce n'est pas une chaleur normale. Il y a quelque chose dedans.",
                     "humeur": "alerte"
                 },
                 {
@@ -80,7 +92,7 @@
                 },
                 {
                     "personnage": "robo",
-                    "texte": "Je dois traverser.",
+                    "texte": "Bon. Je dois traverser.",
                     "humeur": "alerte"
                 }
             ]
@@ -90,17 +102,17 @@
             "lignes": [
                 {
                     "personnage": "robo",
-                    "texte": "Ces machines... elles produisent des pièces.",
+                    "texte": "Ces machines fabriquent des pièces. Encore. Et encore.",
                     "humeur": "neutre"
                 },
                 {
                     "personnage": "robo",
-                    "texte": "Personne n'a demandé ces pièces. Mais elles continuent.",
+                    "texte": "Personne ne leur a rien demandé. Elles continuent quand même.",
                     "humeur": "neutre"
                 },
                 {
                     "personnage": "robo",
-                    "texte": "Est-ce que c'est ce que je suis ? Une machine qui continue ?",
+                    "texte": "Est-ce que c'est ça que je suis, moi aussi ? Une machine qui continue ?",
                     "humeur": "triste"
                 },
                 {
@@ -113,7 +125,7 @@
             {
                 "scene": "seuil_brasier",
                 "personnage": "narrateur",
-                "texte": "Au cœur d'Inferno, quelque chose s'est cristallise."
+                "texte": "Au cœur d'Inferno, quelque chose s'est cristallisé."
             },
             {
                 "scene": "seuil_brasier",
@@ -129,7 +141,7 @@
             {
                 "scene": "seuil_brasier",
                 "personnage": "robo",
-                "texte": "Je comprends ça, d'une certaine façon.",
+                "texte": "Je comprends ça. Un peu trop bien, même.",
                 "humeur": "triste"
             },
             {
@@ -141,13 +153,13 @@
             {
                 "scene": "seuil_brasier",
                 "personnage": "robo",
-                "texte": "Je m'appelle ROBO. Je dois traverser.",
+                "texte": "Je m'appelle Robo. Je dois passer.",
                 "humeur": "content"
             },
             {
                 "scene": "seuil_brasier",
                 "personnage": "brasier",
-                "texte": "Tout ce qui me traverse brûle. Ce n'est pas une menace. C'est ce que je suis.",
+                "texte": "Tout ce qui me touche brûle. Pas par méchanceté. C'est juste... ce que je suis.",
                 "humeur": "calme"
             },
             {
@@ -159,7 +171,7 @@
             {
                 "scene": "seuil_brasier",
                 "personnage": "brasier",
-                "texte": "ESSAIE. Des millénaires que j'attends que quelqu'un essaie.",
+                "texte": "ESSAIE. J'attends ça depuis des millénaires.",
                 "humeur": "agressif"
             }
         ],
@@ -178,7 +190,7 @@
                 },
                 {
                     "personnage": "narrateur",
-                    "texte": "Dans les Abysses, la corruption ralentit. L'eau resiste."
+                    "texte": "Dans les Abysses, la corruption ralentit. L'eau résiste."
                 },
                 {
                     "personnage": "robo",
@@ -225,7 +237,7 @@
                 },
                 {
                     "personnage": "robo",
-                    "texte": "Les blocs tombent et resonnent comme du cristal.",
+                    "texte": "Les blocs tombent et résonnent comme du cristal.",
                     "humeur": "content"
                 },
                 {
@@ -243,7 +255,7 @@
             {
                 "scene": "seuil_sentinelle",
                 "personnage": "sentinelle",
-                "texte": "ARRÊTEZ.",
+                "texte": "ARRÊTEZ. Arrêtez-vous tout de suite.",
                 "humeur": "agressif"
             },
             {
@@ -255,25 +267,25 @@
             {
                 "scene": "seuil_sentinelle",
                 "personnage": "sentinelle",
-                "texte": "Le mouvement corrompt. L'immobilité préserve. Je protège ce biome depuis des millénaires.",
+                "texte": "Vous bougez. Ça suffit. Le mouvement corrompt, l'immobilité protège — je le mesure depuis des millénaires, alors arrêtez-vous.",
                 "humeur": "calme"
             },
             {
                 "scene": "seuil_sentinelle",
                 "personnage": "robo",
-                "texte": "Vous preservez le gel. Pas la vie.",
+                "texte": "Vous protégez le gel. Pas ce qu'il y a dessous.",
                 "humeur": "neutre"
             },
             {
                 "scene": "seuil_sentinelle",
                 "personnage": "sentinelle",
-                "texte": "...",
+                "texte": "...Il y a quelque chose dessous ?",
                 "humeur": "calme"
             },
             {
                 "scene": "seuil_sentinelle",
                 "personnage": "narrateur",
-                "texte": "La Sentinelle ne répond plus. Elle attaque."
+                "texte": "Elle n'a pas aimé la question. Elle attaque."
             }
         ],
         "monde_desert": {
@@ -389,7 +401,7 @@
             {
                 "scene": "seuil_archiviste",
                 "personnage": "robo",
-                "texte": "Qu'est-ce que j'ai menti ?",
+                "texte": "J'ai menti sur quoi ?",
                 "humeur": "neutre"
             },
             {
@@ -473,7 +485,7 @@
                 },
                 {
                     "personnage": "distorsion",
-                    "texte": "Personne n'a jamais fait la différence. Pas même moi.",
+                    "texte": "Personne n'a jamais fait la différence. Même moi, je... non. Nous. Nous ne sommes pas sûres.",
                     "humeur": "menacante"
                 }
             ]
@@ -500,7 +512,7 @@
             {
                 "scene": "vide_errance",
                 "personnage": "distorsion",
-                "texte": "Je suis des millions, gardien. Nous ne votons pas. Nous débordons.",
+                "texte": "Je suis des millions, gardien. On ne vote pas, entre nous, on déborde — désolée si ça donne le vertige.",
                 "humeur": "souffrante"
             },
             {
@@ -537,7 +549,7 @@
             {
                 "scene": "seuil_avantgarde",
                 "personnage": "avantgarde",
-                "texte": "Elle t'attend derriere.",
+                "texte": "Elle t'attend derrière.",
                 "humeur": "calme"
             },
             {
@@ -746,7 +758,7 @@
             {
                 "scene": "trame",
                 "personnage": "vera",
-                "texte": "Robo. Tu es là. Je t'entends.",
+                "texte": "Robo. Tu es là. Je n'étais plus sûre d'y croire encore, mais je t'entends.",
                 "humeur": "inquiete"
             },
             {
@@ -776,7 +788,7 @@
             {
                 "scene": "trame",
                 "personnage": "vera",
-                "texte": "Je suis ici depuis longtemps. Elle ne me laisse pas partir. Mais elle ne me détruit pas non plus. Elle m'utilise comme ancre.",
+                "texte": "Ça fait si longtemps que je suis là. Elle ne me laisse pas partir, mais elle ne me détruit pas non plus. Elle m'utilise comme ancre — je ne sais toujours pas si c'est de la cruauté ou de la tendresse.",
                 "humeur": "inquiete"
             },
             {
@@ -1067,7 +1079,7 @@
                 },
                 {
                     "personnage": "robo",
-                    "texte": "Propre. Ordonne. Vide depuis longtemps.",
+                    "texte": "Propre. Ordonné. Vide depuis longtemps.",
                     "humeur": "neutre"
                 },
                 {
@@ -1268,7 +1280,7 @@
             },
             {
                 "personnage": "brasier_voix",
-                "texte": "Je ne brûlais pas pour detruire.",
+                "texte": "Je ne brûlais pas pour détruire.",
                 "humeur": "vacillant"
             },
             {
@@ -1298,7 +1310,7 @@
             },
             {
                 "personnage": "brasier_voix",
-                "texte": "Elle m'a regarde brûler sans intervenir.",
+                "texte": "Elle m'a regardé brûler sans intervenir.",
                 "humeur": "vacillant"
             },
             {
@@ -1327,7 +1339,7 @@
             },
             {
                 "personnage": "sentinelle",
-                "texte": "Je ne comprends pas. Le mouvement corrompt. J'ai mesure. J'ai des donnees.",
+                "texte": "Je ne comprends pas. Le mouvement corrompt. J'ai mesuré. J'ai des données.",
                 "humeur": "vacillant"
             },
             {
@@ -1342,7 +1354,7 @@
             },
             {
                 "personnage": "sentinelle",
-                "texte": "Je n'avais pas modelise cette variable.",
+                "texte": "Je n'avais pas modélisé cette variable.",
                 "humeur": "vacillant"
             },
             {
@@ -1421,7 +1433,7 @@
             },
             {
                 "personnage": "archiviste",
-                "texte": "Tout ce qu'elle savait de toi — elle l'avait invente. Puis tu es devenu exactement ça."
+                "texte": "Tout ce qu'elle savait de toi — elle l'avait inventé. Puis tu es devenu exactement ça."
             }
         ],
         "avantgarde": [
@@ -1496,7 +1508,7 @@
             },
             {
                 "personnage": "distorsion",
-                "texte": "Parce que les gens abandonnent. Parce que c'est difficile. Parce qu'ils ont peur. Et ces peurs sont restées. Et elles m'ont fabriquée.",
+                "texte": "Parce que les gens abandonnent. Parce que c'est difficile. Parce qu'ils ont peur. Et ces peurs ne sont jamais reparties — regarde ce qu'elles ont fini par fabriquer.",
                 "humeur": "souffrante"
             },
             {
@@ -1520,7 +1532,7 @@
             },
             {
                 "personnage": "vera",
-                "texte": "Robo. Je suis là. Tu as réussi.",
+                "texte": "Robo. Je suis là, je suis là — tu as réussi.",
                 "humeur": "inquiete"
             },
             {
@@ -1537,7 +1549,7 @@
         "distorsion_vrai": [
             {
                 "personnage": "robo",
-                "texte": "Je ne veux pas te detruire.",
+                "texte": "Je ne veux pas te détruire.",
                 "humeur": "neutre"
             },
             {
@@ -1557,7 +1569,7 @@
             },
             {
                 "personnage": "distorsion",
-                "texte": "Je n'ai jamais essaye.",
+                "texte": "Je n'ai jamais essayé.",
                 "humeur": "curieuse"
             },
             {
@@ -1579,7 +1591,7 @@
             },
             {
                 "personnage": "narrateur",
-                "texte": "La ligne est complete."
+                "texte": "La ligne est complète."
             },
             {
                 "personnage": "narrateur",
@@ -1596,7 +1608,7 @@
             },
             {
                 "personnage": "distorsion",
-                "texte": "Ce n'est pas une perte.",
+                "texte": "Ce n'est pas une perte, je crois. C'est étrange.",
                 "humeur": "apaisee"
             },
             {
@@ -1606,7 +1618,7 @@
             },
             {
                 "personnage": "vera",
-                "texte": "Robo... tu viens de faire quelque chose que je n'aurais pas pu prevoir.",
+                "texte": "Robo... tu viens de faire quelque chose que je n'aurais pas pu prévoir.",
                 "humeur": "neutre"
             },
             {
@@ -1616,7 +1628,7 @@
             },
             {
                 "personnage": "vera",
-                "texte": "Parce que tu l'as amelioree.",
+                "texte": "Parce que tu l'as améliorée.",
                 "humeur": "douce"
             }
         ],
@@ -1638,7 +1650,7 @@
             },
             {
                 "personnage": "robo",
-                "texte": "Une ligne incomplète peut encore être complétée. Quelque chose de mort ne peut pas.",
+                "texte": "Une ligne incomplète, ça peut encore se compléter. Quelque chose de mort, non.",
                 "humeur": "neutre"
             },
             {
@@ -1698,7 +1710,7 @@
         {
             "personnage": "vera",
             "scene": "labo",
-            "texte": "Voici ce que tu dois savoir sur La Distorsion.",
+            "texte": "Bon. Voici ce que tu dois savoir sur La Distorsion — accroche-toi.",
             "humeur": "determinee"
         },
         {
@@ -1728,7 +1740,7 @@
         {
             "personnage": "vera",
             "scene": "labo",
-            "texte": "Je vais entrer dans la Trame pour lui parler. Ne m'attends pas.",
+            "texte": "Je vais entrer dans la Trame pour lui parler. Ne m'attends pas. Je reviendrai, d'accord ? Je reviendrai.",
             "humeur": "determinee"
         },
         {
@@ -2061,7 +2073,7 @@
             },
             {
                 "personnage": "vera",
-                "texte": "...Robo... si tu m entends... ne t arrete pas apres la premiere grille...",
+                "texte": "...Robo... si tu m'entends... ne t'arrête pas après la première grille...",
                 "humeur": "douce"
             },
             {
@@ -2078,7 +2090,7 @@
             },
             {
                 "personnage": "vera",
-                "texte": "...ces machines rouillees... elles gardent la memoire de ce qui a ete abandonne...",
+                "texte": "...ces machines rouillées... elles gardent la mémoire de ce qui a été abandonné...",
                 "humeur": "inquiete"
             },
             {
@@ -2163,7 +2175,7 @@
             },
             {
                 "personnage": "vera",
-                "texte": "...de l autre cote du miroir... tu as vu ce qu elle voit... n oublie pas que ce n est pas toi...",
+                "texte": "...de l'autre côté du miroir... tu as vu ce qu'elle voit... n'oublie pas que ce n'est pas toi...",
                 "humeur": "inquiete"
             },
             {
@@ -2180,7 +2192,7 @@
             },
             {
                 "personnage": "vera",
-                "texte": "...tu as tout garde jusqu au bout... la phrase que j ai laissee... tu l as lue...",
+                "texte": "...tu as tout gardé jusqu'au bout... la phrase que j'ai laissée... tu l'as lue...",
                 "humeur": "douce"
             },
             {
@@ -2202,7 +2214,7 @@
             },
             {
                 "personnage": "vera",
-                "texte": "...tu es revenu ici sans qu on te le demande... trois fois... c est comme ca qu on trouve les portes secretes...",
+                "texte": "...tu es revenu ici sans qu'on te le demande... trois fois... c'est comme ça qu'on trouve les portes secrètes...",
                 "humeur": "douce"
             },
             {
@@ -2360,7 +2372,7 @@
             {
                 "personnage": "vera",
                 "scene": "fragmentation",
-                "texte": "Jour 2 191. L'anomalie grandit. Ce n'est pas un bug. Un bug ne choisit pas ses cibles.",
+                "texte": "Jour 2 191. L'anomalie grandit encore. Ce n'est pas un bug — un bug ne choisit pas ses cibles, et celle-là, si.",
                 "humeur": "douce"
             },
             {
@@ -2439,7 +2451,7 @@
             },
             {
                 "personnage": "robo",
-                "texte": "Transmission endommagée — fragments manquants. La corruption a effacé une partie du message.",
+                "texte": "Encore un trou. Je n'aurai jamais la phrase complète.",
                 "humeur": "alerte"
             },
             {
@@ -2721,17 +2733,17 @@
         "vers_chapitre_1": [
             {
                 "personnage": "robo",
-                "texte": "VERA m'a dit : \"Complete.\"",
+                "texte": "Sa phrase s'est coupée avant la fin. « Tu n'as qu'à... » Tu n'as qu'à quoi ?",
                 "humeur": "content"
             },
             {
                 "personnage": "robo",
-                "texte": "Je pensais que c'était simple. Remplir des lignes.",
+                "texte": "J'ai décidé que ça voulait dire : remplir des lignes. C'était simple, comme ça.",
                 "humeur": "content"
             },
             {
                 "personnage": "robo",
-                "texte": "Je commence à comprendre que ce n'est pas les lignes qu'elle voulait que je complete.",
+                "texte": "Je commence à comprendre que ce n'était peut-être pas les lignes qu'elle voulait que je complète.",
                 "humeur": "neutre"
             },
             {
@@ -2815,7 +2827,7 @@
             },
             {
                 "personnage": "robo",
-                "texte": "Elle m'a construit pour finir ce qu'elle a commence.",
+                "texte": "Elle m'a construit pour finir ce qu'elle a commencé.",
                 "humeur": "triste"
             },
             {

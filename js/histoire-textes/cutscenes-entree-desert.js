@@ -111,7 +111,7 @@ export const CUTSCENES_ENTREE_DESERT = {
         {
             scene: 'seuil_archiviste',
             personnage: 'robo',
-            texte: "Qu'est-ce que j'ai menti ?",
+            texte: "J'ai menti sur quoi ?",
             humeur: 'neutre',
         },
         {

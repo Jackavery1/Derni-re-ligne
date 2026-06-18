@@ -43,7 +43,7 @@ export const CUTSCENES_ENTREE_COSMOS = {
             },
             {
                 personnage: 'distorsion',
-                texte: "Personne n'a jamais fait la différence. Pas même moi.",
+                texte: "Personne n'a jamais fait la différence. Même moi, je... non. Nous. Nous ne sommes pas sûres.",
                 humeur: 'menacante',
             },
         ],
@@ -71,7 +71,7 @@ export const CUTSCENES_ENTREE_COSMOS = {
         {
             scene: 'vide_errance',
             personnage: 'distorsion',
-            texte: 'Je suis des millions, gardien. Nous ne votons pas. Nous débordons.',
+            texte: 'Je suis des millions, gardien. On ne vote pas, entre nous, on déborde — désolée si ça donne le vertige.',
             humeur: 'souffrante',
         },
         {
@@ -109,7 +109,7 @@ export const CUTSCENES_ENTREE_COSMOS = {
         {
             scene: 'seuil_avantgarde',
             personnage: 'avantgarde',
-            texte: "Elle t'attend derriere.",
+            texte: "Elle t'attend derrière.",
             humeur: 'calme',
         },
         { scene: 'seuil_avantgarde', personnage: 'robo', texte: 'Je sais.', humeur: 'neutre' },

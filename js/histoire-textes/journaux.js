@@ -14,7 +14,7 @@ export const JOURNAUX_VERA_DIALOGUES = {
         },
         {
             personnage: 'robo',
-            texte: 'Transmission endommagée — fragments manquants. La corruption a effacé une partie du message.',
+            texte: "Encore un trou. Je n'aurai jamais la phrase complète.",
             humeur: 'alerte',
         },
         { personnage: 'robo', texte: 'Le reste est du sable.', humeur: 'triste' },
@@ -45,7 +45,7 @@ export const DECOUVERTE_LABO = [
     {
         personnage: 'vera',
         scene: 'labo',
-        texte: 'Voici ce que tu dois savoir sur La Distorsion.',
+        texte: 'Bon. Voici ce que tu dois savoir sur La Distorsion — accroche-toi.',
         humeur: 'determinee',
     },
     {
@@ -75,7 +75,7 @@ export const DECOUVERTE_LABO = [
     {
         personnage: 'vera',
         scene: 'labo',
-        texte: "Je vais entrer dans la Trame pour lui parler. Ne m'attends pas.",
+        texte: "Je vais entrer dans la Trame pour lui parler. Ne m'attends pas. Je reviendrai, d'accord ? Je reviendrai.",
         humeur: 'determinee',
     },
     {
@@ -185,7 +185,7 @@ export const FRAGMENTS_VERA_SIGNAL = {
         { personnage: 'systeme', texte: '> PREMIER CONTACT — CANAL VERA', humeur: 'neutre' },
         {
             personnage: 'vera',
-            texte: '...Robo... si tu m entends... ne t arrete pas apres la premiere grille...',
+            texte: "...Robo... si tu m'entends... ne t'arrête pas après la première grille...",
             humeur: 'douce',
         },
         { personnage: 'systeme', texte: '> SIGNAL FAIBLE', humeur: 'alerte' },
@@ -195,7 +195,7 @@ export const FRAGMENTS_VERA_SIGNAL = {
         { personnage: 'systeme', texte: '> INTERFERENCE METALLIQUE', humeur: 'alerte' },
         {
             personnage: 'vera',
-            texte: '...ces machines rouillees... elles gardent la memoire de ce qui a ete abandonne...',
+            texte: '...ces machines rouillées... elles gardent la mémoire de ce qui a été abandonné...',
             humeur: 'inquiete',
         },
         { personnage: 'systeme', texte: '> FIN DU FRAGMENT', humeur: 'alerte' },
@@ -245,7 +245,7 @@ export const FRAGMENTS_VERA_SIGNAL = {
         { personnage: 'systeme', texte: '> REFLET INSTABLE — CANAL 9', humeur: 'alerte' },
         {
             personnage: 'vera',
-            texte: '...de l autre cote du miroir... tu as vu ce qu elle voit... n oublie pas que ce n est pas toi...',
+            texte: "...de l'autre côté du miroir... tu as vu ce qu'elle voit... n'oublie pas que ce n'est pas toi...",
             humeur: 'inquiete',
         },
         { personnage: 'systeme', texte: '> IMAGE INVERSEE', humeur: 'alerte' },
@@ -255,7 +255,7 @@ export const FRAGMENTS_VERA_SIGNAL = {
         { personnage: 'systeme', texte: '> DEPOT DANS LA TRAME — 1.4 SECONDES', humeur: 'neutre' },
         {
             personnage: 'vera',
-            texte: '...tu as tout garde jusqu au bout... la phrase que j ai laissee... tu l as lue...',
+            texte: "...tu as tout gardé jusqu'au bout... la phrase que j'ai laissée... tu l'as lue...",
             humeur: 'douce',
         },
         {
@@ -274,7 +274,7 @@ export const FRAGMENTS_VERA_SIGNAL = {
         },
         {
             personnage: 'vera',
-            texte: '...tu es revenu ici sans qu on te le demande... trois fois... c est comme ca qu on trouve les portes secretes...',
+            texte: "...tu es revenu ici sans qu'on te le demande... trois fois... c'est comme ça qu'on trouve les portes secrètes...",
             humeur: 'douce',
         },
         { personnage: 'systeme', texte: '> BOUCLE PARADOXALE FERMEE', humeur: 'alerte' },

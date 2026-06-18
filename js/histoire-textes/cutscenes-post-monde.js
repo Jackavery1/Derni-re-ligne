@@ -199,7 +199,7 @@ export const CUTSCENES_POST_MONDE = {
             },
             {
                 personnage: 'robo',
-                texte: 'Propre. Ordonne. Vide depuis longtemps.',
+                texte: 'Propre. Ordonné. Vide depuis longtemps.',
                 humeur: 'neutre',
             },
             {

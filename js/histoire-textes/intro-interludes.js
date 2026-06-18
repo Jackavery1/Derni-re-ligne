@@ -30,7 +30,7 @@ export const INTRO_HISTOIRE = {
         {
             personnage: 'vera',
             scene: 'fragmentation',
-            texte: "Jour 2 191. L'anomalie grandit. Ce n'est pas un bug. Un bug ne choisit pas ses cibles.",
+            texte: "Jour 2 191. L'anomalie grandit encore. Ce n'est pas un bug — un bug ne choisit pas ses cibles, et celle-là, si.",
             humeur: 'douce',
         },
         {

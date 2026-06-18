@@ -2,17 +2,17 @@ export const TRANSITIONS_CHAPITRE = {
     vers_chapitre_1: [
         {
             personnage: 'robo',
-            texte: 'VERA m\'a dit : "Complete."',
+            texte: "Sa phrase s'est coupée avant la fin. « Tu n'as qu'à... » Tu n'as qu'à quoi ?",
             humeur: 'content',
         },
         {
             personnage: 'robo',
-            texte: "Je pensais que c'était simple. Remplir des lignes.",
+            texte: "J'ai décidé que ça voulait dire : remplir des lignes. C'était simple, comme ça.",
             humeur: 'content',
         },
         {
             personnage: 'robo',
-            texte: "Je commence à comprendre que ce n'est pas les lignes qu'elle voulait que je complete.",
+            texte: "Je commence à comprendre que ce n'était peut-être pas les lignes qu'elle voulait que je complète.",
             humeur: 'neutre',
         },
         { personnage: 'systeme', texte: '> CHAPITRE I — LE FEU DES ORIGINES', humeur: 'neutre' },
@@ -87,7 +87,7 @@ export const TRANSITIONS_CHAPITRE = {
         },
         {
             personnage: 'robo',
-            texte: "Elle m'a construit pour finir ce qu'elle a commence.",
+            texte: "Elle m'a construit pour finir ce qu'elle a commencé.",
             humeur: 'triste',
         },
         { personnage: 'robo', texte: 'Je ne sais pas si je suis à la hauteur.', humeur: 'neutre' },

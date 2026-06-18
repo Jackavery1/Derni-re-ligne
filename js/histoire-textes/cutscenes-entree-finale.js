@@ -146,7 +146,7 @@ export const CUTSCENES_ENTREE_FINALE = {
         {
             scene: 'trame',
             personnage: 'vera',
-            texte: "Robo. Tu es là. Je t'entends.",
+            texte: "Robo. Tu es là. Je n'étais plus sûre d'y croire encore, mais je t'entends.",
             humeur: 'inquiete',
         },
         {
@@ -171,7 +171,7 @@ export const CUTSCENES_ENTREE_FINALE = {
         {
             scene: 'trame',
             personnage: 'vera',
-            texte: "Je suis ici depuis longtemps. Elle ne me laisse pas partir. Mais elle ne me détruit pas non plus. Elle m'utilise comme ancre.",
+            texte: "Ça fait si longtemps que je suis là. Elle ne me laisse pas partir, mais elle ne me détruit pas non plus. Elle m'utilise comme ancre — je ne sais toujours pas si c'est de la cruauté ou de la tendresse.",
             humeur: 'inquiete',
         },
         {

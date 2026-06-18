@@ -13,36 +13,48 @@ export const CUTSCENES_ENTREE_PROLOGUE = {
             texte: 'CALIBRATION MOTRICE : OK',
             humeur: 'neutre',
         },
-        { scene: 'labo', personnage: 'robo', texte: 'Je suis conscient.', humeur: 'excite' },
+        { scene: 'labo', personnage: 'robo', texte: '...Je suis... là ?', humeur: 'excite' },
         {
             scene: 'labo',
             personnage: 'robo',
-            texte: "Je ne l'ai pas décidé. Je me suis simplement trouvé conscient.",
+            texte: "Personne ne m'a demandé mon avis. Je suis juste là, maintenant. C'est tout.",
             humeur: 'content',
         },
         {
             scene: 'labo',
             personnage: 'vera',
-            texte: "ROBO. Tu m'entends ? Je suis VERA. J'ai peu de temps.",
+            texte: "Robo ? Robo, tu m'entends, dis quelque chose — oh. Oh, tu es là.",
             humeur: 'douce',
         },
         {
             scene: 'labo',
             personnage: 'vera',
-            texte: 'La Trame se degrade. Des millions de fils incomplets. Je ne peux pas arrêter ça seule.',
+            texte: "Bon. Bon. J'ai très peu de temps, alors je vais aller droit au but, pardon.",
+            humeur: 'douce',
+        },
+        {
+            scene: 'labo',
+            personnage: 'vera',
+            texte: "La Trame craque. Partout. Des millions de fils qui ne tiennent plus, et j'ai essayé de la retenir seule — je n'y arrive plus.",
             humeur: 'douce',
         },
         {
             scene: 'labo',
             personnage: 'robo',
-            texte: "Qu'est-ce que je dois faire ?",
+            texte: 'Je fais quoi ?',
             humeur: 'content',
         },
         {
             scene: 'labo',
             personnage: 'vera',
-            texte: 'Ce que tu feras naturellement. Completer. — CONNEXION PERDUE —',
+            texte: "Ce que tu sais déjà faire, je crois. Tu n'as qu'à—",
             humeur: 'glitch',
+        },
+        {
+            scene: 'labo',
+            personnage: 'systeme',
+            texte: 'CONNEXION PERDUE',
+            humeur: 'alerte',
         },
         {
             scene: 'labo',
@@ -56,19 +68,19 @@ export const CUTSCENES_ENTREE_PROLOGUE = {
         lignes: [
             {
                 personnage: 'robo',
-                texte: "Le feu brûle plus fort qu'il ne devrait.",
+                texte: 'Le feu brûle trop fort. Plus fort que ce que ça devrait.',
                 humeur: 'alerte',
             },
             {
                 personnage: 'robo',
-                texte: "Ce n'est pas de la chaleur normale. Il y a quelque chose dedans.",
+                texte: "Ce n'est pas une chaleur normale. Il y a quelque chose dedans.",
                 humeur: 'alerte',
             },
             {
                 personnage: 'narrateur',
                 texte: 'La corruption de La Distorsion transforme le biome Inferno en brasier incontrôlable.',
             },
-            { personnage: 'robo', texte: 'Je dois traverser.', humeur: 'alerte' },
+            { personnage: 'robo', texte: 'Bon. Je dois traverser.', humeur: 'alerte' },
         ],
     },
 
@@ -77,17 +89,17 @@ export const CUTSCENES_ENTREE_PROLOGUE = {
         lignes: [
             {
                 personnage: 'robo',
-                texte: 'Ces machines... elles produisent des pièces.',
+                texte: 'Ces machines fabriquent des pièces. Encore. Et encore.',
                 humeur: 'neutre',
             },
             {
                 personnage: 'robo',
-                texte: "Personne n'a demandé ces pièces. Mais elles continuent.",
+                texte: 'Personne ne leur a rien demandé. Elles continuent quand même.',
                 humeur: 'neutre',
             },
             {
                 personnage: 'robo',
-                texte: "Est-ce que c'est ce que je suis ? Une machine qui continue ?",
+                texte: "Est-ce que c'est ça que je suis, moi aussi ? Une machine qui continue ?",
                 humeur: 'triste',
             },
             {
@@ -101,7 +113,7 @@ export const CUTSCENES_ENTREE_PROLOGUE = {
         {
             scene: 'seuil_brasier',
             personnage: 'narrateur',
-            texte: "Au cœur d'Inferno, quelque chose s'est cristallise.",
+            texte: "Au cœur d'Inferno, quelque chose s'est cristallisé.",
         },
         {
             scene: 'seuil_brasier',
@@ -117,20 +129,20 @@ export const CUTSCENES_ENTREE_PROLOGUE = {
         {
             scene: 'seuil_brasier',
             personnage: 'robo',
-            texte: "Je comprends ça, d'une certaine façon.",
+            texte: 'Je comprends ça. Un peu trop bien, même.',
             humeur: 'triste',
         },
         { scene: 'seuil_brasier', personnage: 'brasier', texte: 'QUI APPROCHE ?', humeur: 'calme' },
         {
             scene: 'seuil_brasier',
             personnage: 'robo',
-            texte: "Je m'appelle ROBO. Je dois traverser.",
+            texte: "Je m'appelle Robo. Je dois passer.",
             humeur: 'content',
         },
         {
             scene: 'seuil_brasier',
             personnage: 'brasier',
-            texte: "Tout ce qui me traverse brûle. Ce n'est pas une menace. C'est ce que je suis.",
+            texte: "Tout ce qui me touche brûle. Pas par méchanceté. C'est juste... ce que je suis.",
             humeur: 'calme',
         },
         {
@@ -142,7 +154,7 @@ export const CUTSCENES_ENTREE_PROLOGUE = {
         {
             scene: 'seuil_brasier',
             personnage: 'brasier',
-            texte: "ESSAIE. Des millénaires que j'attends que quelqu'un essaie.",
+            texte: "ESSAIE. J'attends ça depuis des millénaires.",
             humeur: 'agressif',
         },
     ],
