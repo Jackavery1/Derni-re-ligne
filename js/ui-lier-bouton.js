@@ -9,7 +9,19 @@ export function lierBouton(id, handler) {
     const el = document.getElementById(id);
     if (!el || el.hasAttribute(MARQUEUR) || typeof el.addEventListener !== 'function') return;
     el.setAttribute(MARQUEUR, '1');
-    el.addEventListener('click', handler);
+    let viaPointer = false;
+    el.addEventListener('pointerup', (ev) => {
+        if (ev.pointerType === 'mouse' && ev.button !== 0) return;
+        viaPointer = true;
+        handler(ev);
+    });
+    el.addEventListener('click', (ev) => {
+        if (viaPointer) {
+            viaPointer = false;
+            return;
+        }
+        handler(ev);
+    });
 }
 
 /**
@@ -20,7 +32,19 @@ export function lierBoutonElement(el, handler) {
     if (!(el instanceof HTMLElement)) return;
     if (el.hasAttribute(MARQUEUR) || typeof el.addEventListener !== 'function') return;
     el.setAttribute(MARQUEUR, '1');
-    el.addEventListener('click', handler);
+    let viaPointer = false;
+    el.addEventListener('pointerup', (ev) => {
+        if (ev.pointerType === 'mouse' && ev.button !== 0) return;
+        viaPointer = true;
+        handler(ev);
+    });
+    el.addEventListener('click', (ev) => {
+        if (viaPointer) {
+            viaPointer = false;
+            return;
+        }
+        handler(ev);
+    });
 }
 
 /**

@@ -5,7 +5,7 @@
     overflow: hidden;
 }
 #ecran-titre.ecran {
-    background: transparent;
+    background: var(--fond);
     backdrop-filter: none;
 }
 

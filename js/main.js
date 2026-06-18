@@ -4,7 +4,9 @@ import { chargerContenuJeu } from './contenu-jeu.js';
 import { chargerDifficulteMondes } from './difficulte-mondes-chargement.js';
 import { chargerAchievementsDonnees } from './achievements-donnees.js';
 import { chargerHistoireDonneesMetier } from './histoire-donnees.js';
+import { chargerHistoireTextes } from './charger-histoire-textes.js';
 import { initialiserApplication } from './moteur.js';
+import { attendreBoutonsPretes } from './ui-init.js';
 import { logger, afficherErreurUtilisateur } from './logger.js';
 import { lireStockage } from './progression-stockage.js';
 import { swAutorise, libererSwEnDevLocal } from './sw-dev.js';
@@ -61,6 +63,7 @@ async function demarrer() {
             chargerDifficulteMondes(),
             chargerAchievementsDonnees(),
             chargerHistoireDonneesMetier(),
+            chargerHistoireTextes(),
         ]);
 
         definirMessageChargement('Initialisation…');
@@ -71,6 +74,10 @@ async function demarrer() {
         }
         definirProgressionChargement(0.9);
         initialiserApplication();
+        await attendreBoutonsPretes();
+        if (typeof document !== 'undefined') {
+            document.body.dataset.neoTestReady = '1';
+        }
         definirProgressionChargement(1);
         masquerEcranChargement();
     } catch (err) {

@@ -68,7 +68,7 @@ export async function preparerPageSansSw(page, etatHistoire = ETAT_DEBLOCAGE_MON
 /** @param {import('@playwright/test').Page} page */
 export async function attendreApplicationPrete(page) {
     await expect(page.locator('body')).toHaveAttribute('data-neo-test-ready', '1', {
-        timeout: 15000,
+        timeout: 25000,
     });
     await expect(page.locator('#ecran-titre')).toHaveClass(/actif/, { timeout: 15000 });
 }

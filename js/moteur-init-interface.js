@@ -6,7 +6,6 @@ import { afficherEcranDiffere } from './navigation-lazy.js';
 import { initialiserInput } from './input-jeu.js';
 import { adapterInterface, initialiserLayout } from './layout-jeu.js';
 import { initPiecesFond } from './menu-fond.js';
-import { demarrerBoucleRobo } from './rendu-robo.js';
 import { demarrerJeu } from './partie.js';
 import { ECRANS, obtenirBiomeActif, definirBiomeActif } from './store-jeu.js';
 import { sauvegarderBiomeActif } from './progression.js';
@@ -47,10 +46,8 @@ export function initialiserInterfaceMoteur() {
     initialiserModulesDifferees();
     afficherEcranDiffere(ECRANS.TITRE);
     planifierBoucle();
-    demarrerBoucleRobo();
 
     if (typeof window !== 'undefined') {
-        document.body.dataset.neoTestReady = '1';
         void import('./neo-test-api.js').then(({ exposerNeoTestApi }) =>
             exposerNeoTestApi({
                 terminerPartie: (victoire, options) =>

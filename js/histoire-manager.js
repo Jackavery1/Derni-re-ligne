@@ -18,16 +18,6 @@ export {
 } from './histoire-session.js';
 
 export {
-    afficherCutsceneHistoire,
-    afficherFinHistoire,
-    afficherJournalHistoire,
-    avancerCutscene,
-    fermerJournalHistoire,
-    passerCutscene,
-    afficherBoutonCarteGameOver,
-} from './histoire-manager-ui.js';
-
-export {
     surFinDeMondeHistoire,
     peutContinuerBossGratuit,
     utiliserContinueGratuitDistorsion,

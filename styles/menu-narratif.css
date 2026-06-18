@@ -10,6 +10,8 @@
     border: 2px solid;
     border-radius: 4px;
     cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     transition:
         box-shadow 0.3s ease,
         transform 0.15s ease,
@@ -44,7 +46,8 @@
 .btn-continuer,
 .btn-nouvelle-partie {
     width: 100%;
-    padding: 10px 18px;
+    min-height: 48px;
+    padding: 12px 18px;
     flex-direction: column;
     gap: 4px;
     position: relative;

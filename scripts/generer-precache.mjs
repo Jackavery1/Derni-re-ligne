@@ -7,7 +7,6 @@ const MARQUEUR_FIN = '/* PRECACHE:FIN */';
 
 /** Fichiers exclus du precache (fetch runtime ou trop lourds pour le shell). */
 const EXCLUS_PRECACHE = new Set([
-    './data/histoire-textes.json',
     './styles/dev.css',
     './img/icon-512.png',
     './img/icon-maskable-512.png',

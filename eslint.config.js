@@ -10,6 +10,7 @@ export default [
             'test-results/**',
             'dist/**',
             'dist-test/**',
+            'dist-test-bundle/**',
             'scripts/archive/**',
         ],
     },

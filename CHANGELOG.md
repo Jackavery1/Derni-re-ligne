@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version    | Date       | En bref                                                                                            |
 | ---------- | ---------- | -------------------------------------------------------------------------------------------------- |
+| **2.5.25** | 2026-06-17 | Mobile accueil, precache textes histoire, cutscene découpée, bundle −1 Ko, SW v51                  |
 | **2.5.24** | 2026-06-17 | Données jeu en JSON async, portraits VERA découpés, ROBO menu image, achievements conditions split |
 | **2.5.23** | 2026-06-16 | Fix boutons lazy-load (codex/coop/archi/profil), haptique meta, export profil, responsive audit    |
 | **2.5.22** | 2026-06-16 | Remédiations audits A/B/C/D : lazy-load, precache −47 %, icônes, leaderboard filtres, E2E campagne |
@@ -38,6 +39,24 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.2.0**  | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                                         |
 | **2.1.0**  | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                                         |
 | **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                                      |
+
+---
+
+## [2.5.25] — 2026-06-17
+
+### Mobile & accueil
+
+- **Nouvelle partie** : attente du wiring async des boutons (`attendreBoutonsPretes`), `pointerup` tactile, `touch-action: manipulation`
+- **Liseré vert** : `#notif-niveau` masqué hors `.visible` ; fond opaque écran titre ; canvas menu calé sur `#ecran-titre`
+- E2E smoke mobile/tablette « nouvelle partie »
+
+### Technique
+
+- **Precache** : `data/histoire-textes.json` inclus dans le shell SW (offline narration)
+- **Cutscene** : extraction `histoire-cutscene-moteur.js` (entrée, DOM, lignes) ; orchestrateur 324 lignes
+- **Boot** : cutscenes retirées du barrel `histoire-manager.js` ; `demarrerBoucleRobo` uniquement au démarrage partie
+- Suppression `menu-robo-titre.js` (ROBO menu en image depuis v2.5.24)
+- Bundle prod **554 Ko** (−1 Ko vs 2.5.24) ; SW `dl-shell-v51`
 
 ---
 

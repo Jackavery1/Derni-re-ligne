@@ -10,6 +10,8 @@ import {
     attendreApplicationPrete,
     attendreNotificationsInitiales,
     selectionnerBiomeClavier,
+    passerFluxPremierLancementCampagne,
+    preparerPremierLancement,
 } from './helpers.mjs';
 
 test('aucune bannière erreur au démarrage', async ({ page }) => {
@@ -131,6 +133,32 @@ test('écran titre utilisable sur viewport mobile', async ({ page }) => {
     await expect(page.locator('#btn-jouer')).toBeVisible();
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#sel-biome-clavier')).toBeVisible();
+});
+
+test('nouvelle partie mobile ouvre la carte histoire', async ({ page }) => {
+    test.setTimeout(60000);
+    await preparerPremierLancement(page);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
+    await expect(page.locator('#btn-nouvelle-partie')).toBeVisible();
+    await page.locator('#btn-nouvelle-partie').click();
+    await passerFluxPremierLancementCampagne(page);
+    await expect(page.locator('#canvas-histoire-map')).toBeVisible();
+});
+
+test('nouvelle partie tablette ouvre la carte histoire', async ({ page }) => {
+    test.setTimeout(60000);
+    await preparerPremierLancement(page);
+    await page.setViewportSize({ width: 1024, height: 768 });
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
+    await expect(page.locator('#btn-nouvelle-partie')).toBeVisible();
+    await page.locator('#btn-nouvelle-partie').click();
+    await passerFluxPremierLancementCampagne(page);
+    await expect(page.locator('#canvas-histoire-map')).toBeVisible();
 });
 
 test('constellation tablette paysage sans débordement horizontal', async ({ page }) => {

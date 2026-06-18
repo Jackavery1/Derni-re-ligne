@@ -1,11 +1,21 @@
+let promesseBoutons = null;
+
+/** @returns {Promise<void>} */
+export function attendreBoutonsPretes() {
+    return promesseBoutons ?? Promise.resolve();
+}
+
 export function initialiserBoutons() {
-    void import('./ui-boutons-assurer.js').then(
-        ({ assurerBoutonsApresFragments, enregistrerEcouteurFragments }) => {
+    if (promesseBoutons) return promesseBoutons;
+    promesseBoutons = import('./ui-boutons-assurer.js')
+        .then(({ assurerBoutonsApresFragments, enregistrerEcouteurFragments }) => {
             enregistrerEcouteurFragments();
-            void assurerBoutonsApresFragments();
-        }
-    );
-    void import('./ui-raccourcis-histoire.js').then(({ initialiserRaccourcisHistoire }) =>
-        initialiserRaccourcisHistoire()
-    );
+            return assurerBoutonsApresFragments();
+        })
+        .then(() => {
+            void import('./ui-raccourcis-histoire.js').then(({ initialiserRaccourcisHistoire }) =>
+                initialiserRaccourcisHistoire()
+            );
+        });
+    return promesseBoutons;
 }
