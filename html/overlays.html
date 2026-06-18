@@ -26,45 +26,47 @@
     </div>
 </div>
 
-<div id="notif-niveau" role="status" aria-live="polite" aria-atomic="true">NIVEAU 2 !</div>
+<div id="zone-notifs-jeu" class="zone-notifs-jeu" aria-live="polite">
+    <div id="notif-niveau" role="status" aria-live="polite" aria-atomic="true">NIVEAU 2 !</div>
 
-<div id="notif-achievement" role="status" aria-live="polite" aria-atomic="true">
-    <div class="ach-badge">
-        <span id="ach-icone"></span>
+    <div id="notif-achievement" role="status" aria-live="polite" aria-atomic="true">
+        <div class="ach-badge">
+            <span id="ach-icone"></span>
+        </div>
+        <div class="ach-texte">
+            <div class="ach-entete">ACHIEVEMENT DEBLOQUE</div>
+            <div id="ach-nom"></div>
+            <div id="ach-description"></div>
+        </div>
     </div>
-    <div class="ach-texte">
-        <div class="ach-entete">ACHIEVEMENT DEBLOQUE</div>
-        <div id="ach-nom"></div>
-        <div id="ach-description"></div>
-    </div>
-</div>
 
-<div id="notif-oracle" role="status" aria-live="polite" aria-atomic="true"></div>
+    <div id="notif-oracle" role="status" aria-live="polite" aria-atomic="true"></div>
 
-<div id="notif-codex" role="status" aria-live="polite" aria-atomic="true">
-    <div class="codex-notif-icone-wrap">
-        <canvas id="codex-notif-icone" width="48" height="48" aria-hidden="true"></canvas>
+    <div id="notif-codex" role="status" aria-live="polite" aria-atomic="true">
+        <div class="codex-notif-icone-wrap">
+            <canvas id="codex-notif-icone" width="48" height="48" aria-hidden="true"></canvas>
+        </div>
+        <div class="codex-notif-texte">
+            <div class="codex-notif-label">CODEX MIS À JOUR</div>
+            <div id="codex-notif-chapitre" class="codex-notif-chapitre"></div>
+            <div id="codex-notif-titre" class="codex-notif-titre"></div>
+        </div>
     </div>
-    <div class="codex-notif-texte">
-        <div class="codex-notif-label">CODEX MIS À JOUR</div>
-        <div id="codex-notif-chapitre" class="codex-notif-chapitre"></div>
-        <div id="codex-notif-titre" class="codex-notif-titre"></div>
-    </div>
-</div>
 
-<div id="banniere-meteo" role="status" aria-live="polite" aria-atomic="true">
-    <span id="meteo-icone"></span>
-    <span id="meteo-texte"></span>
-    <div id="meteo-barre-alerte"></div>
-</div>
-
-<div id="banniere-vivant" role="status" aria-live="polite" aria-atomic="true">
-    <span id="vivant-icone"></span>
-    <div class="vivant-textes">
-        <span id="vivant-nom"></span>
-        <span id="vivant-desc"></span>
+    <div id="banniere-meteo" role="status" aria-live="polite" aria-atomic="true">
+        <span id="meteo-icone"></span>
+        <span id="meteo-texte"></span>
+        <div id="meteo-barre-alerte"></div>
     </div>
-    <div id="vivant-compte-rebours"></div>
+
+    <div id="banniere-vivant" role="status" aria-live="polite" aria-atomic="true">
+        <span id="vivant-icone"></span>
+        <div class="vivant-textes">
+            <span id="vivant-nom"></span>
+            <span id="vivant-desc"></span>
+        </div>
+        <div id="vivant-compte-rebours"></div>
+    </div>
 </div>
 
 <div

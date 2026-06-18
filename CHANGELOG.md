@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version    | Date       | En bref                                                                                            |
 | ---------- | ---------- | -------------------------------------------------------------------------------------------------- |
+| **2.5.27** | 2026-06-17 | Notifs hors canvas, modes Sans fin/Sprint, sélection mobile constellation, infobulles modes        |
 | **2.5.25** | 2026-06-17 | Mobile accueil, precache textes histoire, cutscene découpée, bundle −1 Ko, SW v51                  |
 | **2.5.24** | 2026-06-17 | Données jeu en JSON async, portraits VERA découpés, ROBO menu image, achievements conditions split |
 | **2.5.23** | 2026-06-16 | Fix boutons lazy-load (codex/coop/archi/profil), haptique meta, export profil, responsive audit    |
@@ -39,6 +40,26 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.2.0**  | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                                         |
 | **2.1.0**  | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                                         |
 | **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                                      |
+
+---
+
+## [2.5.27] — 2026-06-17
+
+### UX partie
+
+- **Notifications** (achievements, niveau, codex, oracle, météo, vivant, infobulles reliques) ancrées hors du canvas : au-dessus en portrait, sur le côté en paysage/desktop ; textes agrandis en partie
+- Nouveau positionnement notifications dans `layout-jeu.js` et feuille `notifs-jeu.css`
+
+### Sélection & modes
+
+- Affichage **Sans fin** / **Sprint** (IDs internes inchangés)
+- Barre modes mobile pleine largeur ; rafraîchissement déblocages Oracle/Coop
+- **Constellation mobile** : liste déroulante mondes, pan tactile, parallax renforcé
+- Infobulles première fois pour Sans fin, Sprint, Oracle, Coop, Défi du jour
+
+### Technique
+
+- SW `dl-shell-v52` ; plafond bundle releve a 560 Ko (558 Ko mesure)
 
 ---
 

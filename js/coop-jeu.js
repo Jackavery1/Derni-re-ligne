@@ -18,6 +18,7 @@ import { mettreAJourParticules } from './particules-jeu.js';
 import { initialiserAudioBiome } from './audio-partie.js';
 import { basculerOracle, oracle } from './oracle-jeu.js';
 import { afficherTutorielContextuel } from './tutoriel.js';
+import { adapterNotifsJeu } from './layout-jeu.js';
 import {
     coop,
     reinitialiserEtatCoop,
@@ -121,6 +122,7 @@ export function demarrerCooperatif() {
     cacherEcrans();
     deplacerZoneJeuVersCoop();
     afficherInterfaceCoop(true);
+    requestAnimationFrame(() => adapterNotifsJeu());
 
     coop_dessinerPreview('j1');
     coop_dessinerPreview('j2');

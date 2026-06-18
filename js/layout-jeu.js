@@ -88,6 +88,77 @@ export function obtenirHauteurInterface() {
     return Math.max(hGauche, hDroite, LAYOUT.plateauHauteur) + LAYOUT.paddingVertical;
 }
 
+const VARS_NOTIF = [
+    '--notif-rail-left',
+    '--notif-rail-top',
+    '--notif-rail-width',
+    '--notif-rail-height',
+];
+
+export function adapterNotifsJeu() {
+    const zone = document.getElementById('zone-notifs-jeu');
+    const root = document.documentElement;
+    const body = document.body;
+    if (!zone) return;
+    if (!body?.classList.contains('partie-active')) {
+        zone.removeAttribute('data-layout');
+        body?.removeAttribute('data-notif-layout');
+        VARS_NOTIF.forEach((p) => root.style.removeProperty(p));
+        return;
+    }
+    const coop = document.body.classList.contains('coop-active');
+    const archi = document.body.classList.contains('archi-active');
+    const canvas = document.getElementById(
+        coop ? 'zone-jeu-coop' : archi ? 'zone-jeu-archi' : 'zone-jeu'
+    );
+    const bloc = document.getElementById(
+        coop ? 'interface-echelle-coop' : archi ? 'interface-echelle-archi' : 'interface-echelle'
+    );
+    if (!canvas || !bloc) return;
+    const ins = lireInsetsSafeArea();
+    const cr = canvas.getBoundingClientRect();
+    const br = bloc.getBoundingClientRect();
+    const portrait = window.innerHeight > window.innerWidth;
+    let left;
+    let top;
+    let width;
+    let height;
+    let layout;
+    if (portrait) {
+        top = ins.top + 4;
+        left = cr.left;
+        width = cr.width;
+        height = Math.max(48, cr.top - top - 6);
+        layout = 'above';
+    } else {
+        const sl = br.left - ins.left;
+        const sr = window.innerWidth - br.right - ins.right;
+        top = br.top;
+        height = br.height;
+        if (sl >= 128 && sl >= sr) {
+            left = ins.left + 4;
+            width = sl - 10;
+            layout = 'beside-left';
+        } else if (sr >= 128) {
+            left = br.right + 6;
+            width = sr - 10;
+            layout = 'beside-right';
+        } else {
+            top = ins.top + 4;
+            left = br.left;
+            width = br.width;
+            height = Math.max(48, br.top - top - 6);
+            layout = 'above';
+        }
+    }
+    zone.dataset.layout = layout;
+    body.dataset.notifLayout = layout;
+    root.style.setProperty('--notif-rail-left', `${left}px`);
+    root.style.setProperty('--notif-rail-top', `${top}px`);
+    root.style.setProperty('--notif-rail-width', `${width}px`);
+    root.style.setProperty('--notif-rail-height', `${height}px`);
+}
+
 export function adapterInterface() {
     const echelle = document.getElementById('interface-echelle');
     const iface = document.getElementById('interface-jeu');
@@ -107,6 +178,7 @@ export function adapterInterface() {
     });
 
     appliquerEchelleInterface(echelle, iface, largeurTotale, hauteurTotale, scale);
+    adapterNotifsJeu();
 
     const canvasMenuFond = obtenirCanvasMenuFond();
     if (canvasMenuFond && menuAnimActif) {
@@ -138,6 +210,7 @@ export function adapterInterfaceArchi() {
     });
 
     appliquerEchelleInterface(echelle, iface, largeurTotale, hauteurTotale, scale);
+    adapterNotifsJeu();
 }
 
 export function initialiserLayout() {

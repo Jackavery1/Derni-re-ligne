@@ -2,14 +2,20 @@
     <canvas
         id="canvas-constellation"
         role="img"
-        aria-label="Constellation des biomes. Utilisez la liste de selection pour choisir un monde au clavier."
+        aria-label="Constellation des biomes. Sur mobile, choisissez un monde dans la liste ou touchez un noeud."
     ></canvas>
-    <label for="sel-biome-clavier" class="sr-only">Selection de biome au clavier</label>
-    <select id="sel-biome-clavier" class="sr-only" aria-label="Selection de biome"></select>
     <div id="selection-overlay">
         <div id="selection-header">
             <span id="sel-titre-jeu" class="sel-titre-jeu"></span>
             <span id="sel-sous-titre" class="sel-sous-titre"></span>
+            <div id="sel-biome-picker" class="sel-biome-picker">
+                <label for="sel-biome-clavier" class="sel-biome-label">Choisir un monde</label>
+                <select
+                    id="sel-biome-clavier"
+                    class="sel-biome-select"
+                    aria-label="Selection de biome"
+                ></select>
+            </div>
         </div>
         <button
             class="bouton discret sel-retour"
@@ -26,6 +32,21 @@
         aria-hidden="true"
         aria-label="Modes de jeu pour le biome selectionne"
     >
+        <p class="sel-barre-modes-titre">Mode de jeu</p>
+        <div id="toggle-sprint-wrap" class="toggle-oracle-wrap">
+            <button
+                id="toggle-sprint"
+                class="toggle-oracle"
+                type="button"
+                aria-label="Basculer entre Sans fin et Sprint"
+            >
+                <span id="sprint-toggle-label">SANS FIN</span>
+            </button>
+            <div id="sprint-mode-desc" class="oracle-toggle-desc">
+                Partie ouverte : progressez sans limite de lignes. En solo, un timer par niveau vous
+                pousse a avancer.
+            </div>
+        </div>
         <div id="toggle-coop-wrap" class="toggle-oracle-wrap element-masque" aria-hidden="true">
             <button
                 id="toggle-coop"
@@ -51,19 +72,6 @@
             </button>
             <div id="oracle-toggle-desc" class="oracle-toggle-desc">
                 Suggestions de placement et multiplicateur de score. Incompatible avec le mode Coop.
-            </div>
-        </div>
-        <div id="toggle-sprint-wrap" class="toggle-oracle-wrap">
-            <button
-                id="toggle-sprint"
-                class="toggle-oracle"
-                type="button"
-                aria-label="Activer ou desactiver le mode Sprint 40 lignes"
-            >
-                <span id="sprint-toggle-label">SPRINT 40L : OFF</span>
-            </button>
-            <div class="oracle-toggle-desc">
-                Effacez 40 lignes le plus vite possible — meilleur temps enregistre par biome.
             </div>
         </div>
         <div id="toggle-defi-jour-wrap" class="toggle-oracle-wrap element-masque">

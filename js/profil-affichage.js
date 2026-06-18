@@ -39,7 +39,7 @@ function afficherTableauRecordsLocaux() {
     const entetes = document.createElement('div');
     entetes.className = 'profil-records-ligne profil-records-entete';
     entetes.setAttribute('role', 'row');
-    for (const label of ['MONDE', 'MARATHON', 'SPRINT 40L']) {
+    for (const label of ['MONDE', 'SANS FIN', 'SPRINT']) {
         const cell = document.createElement('span');
         cell.className = 'profil-records-cell';
         cell.setAttribute('role', 'columnheader');

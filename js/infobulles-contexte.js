@@ -1,4 +1,5 @@
 import { BIOMES, RELIQUES } from './config.js';
+import { INFOBULLES_MODES_JEU } from './contenu-jeu.js';
 import { lireStockage, ecrireStockage } from './progression.js';
 import { sansAccentsE } from './texte-jeu.js';
 
@@ -101,6 +102,25 @@ export function proposerInfobulleRelique(biomeId, relique) {
 }
 
 const CLE_ORACLE_COOP = 'derniereLigne_infobulleOracleCoop';
+const CLE_MODES_JEU = 'derniereLigne_infobullesModesJeu';
+
+/** @param {'sansFin' | 'sprint' | 'oracle' | 'coop' | 'defiJour'} modeId */
+export function proposerInfobulleModeJeu(modeId) {
+    if (typeof window !== 'undefined' && window.__NEO_SILENT_NOTIFS__) return;
+    const contenu = INFOBULLES_MODES_JEU[modeId];
+    if (!contenu) return;
+
+    let vu = {};
+    try {
+        vu = JSON.parse(lireStockage(CLE_MODES_JEU, '{}')) || {};
+    } catch {
+        vu = {};
+    }
+    if (vu[modeId]) return;
+    vu[modeId] = true;
+    ecrireStockage(CLE_MODES_JEU, JSON.stringify(vu));
+    afficherInfobulle(contenu);
+}
 
 export function proposerInfobulleOracleCoopExclusif() {
     if (typeof window !== 'undefined' && window.__NEO_SILENT_NOTIFS__) return;
@@ -119,4 +139,5 @@ export function proposerInfobulleOracleCoopExclusif() {
 export function _reinitialiserInfobullesContexte() {
     ecrireStockage(CLE_STOCKAGE, '{}');
     ecrireStockage(CLE_ORACLE_COOP, '0');
+    ecrireStockage(CLE_MODES_JEU, '{}');
 }

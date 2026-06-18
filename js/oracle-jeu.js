@@ -284,6 +284,9 @@ export function basculerOracle() {
         btn.classList.add('actif');
         label.textContent = 'ORACLE : ON';
         afficherTutorielContextuel('oracle');
+        import('./infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) =>
+            proposerInfobulleModeJeu('oracle')
+        );
         desactiverPreferenceCoop();
         if (coopBtn) coopBtn.disabled = true;
         if (desc) {

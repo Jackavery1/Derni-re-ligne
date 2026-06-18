@@ -1,23 +1,24 @@
 # Index des modules JS
 
-Généré par `npm run analyze` — 287 fichiers sous `js/`.
+Généré par `npm run analyze` — 288 fichiers sous `js/`.
 
 ## Hotspots (> 450 lignes)
 
-| Module | Lignes |
-| ------ | ------ |
+| Module                | Lignes |
+| --------------------- | ------ |
+| `js/constellation.js` | 490    |
 
 ## Tous les modules
 
 | Module                                            | Lignes | Taille |
 | ------------------------------------------------- | ------ | ------ |
+| `js/constellation.js`                             | 490    | 16 Ko  |
 | `js/histoire-map.js`                              | 432    | 14 Ko  |
-| `js/constellation.js`                             | 419    | 13 Ko  |
 | `js/histoire-map-ui.js`                           | 418    | 15 Ko  |
 | `js/rendu-fond-biome.js`                          | 414    | 14 Ko  |
 | `js/mecaniques-histoire.js`                       | 411    | 14 Ko  |
+| `js/oracle-jeu.js`                                | 383    | 14 Ko  |
 | `js/rendu-plateau.js`                             | 382    | 13 Ko  |
-| `js/oracle-jeu.js`                                | 380    | 13 Ko  |
 | `js/histoire-illustrations.js`                    | 374    | 11 Ko  |
 | `js/histoire-textes/cutscenes-post-monde.js`      | 370    | 12 Ko  |
 | `js/histoire-map-fond.js`                         | 369    | 12 Ko  |
@@ -31,7 +32,7 @@ Généré par `npm run analyze` — 287 fichiers sous `js/`.
 | `js/options-ui.js`                                | 345    | 14 Ko  |
 | `js/histoire-textes/intro-interludes.js`          | 339    | 12 Ko  |
 | `js/vivant.js`                                    | 335    | 10 Ko  |
-| `js/histoire-textes/cutscenes-boss-victoire.js`   | 329    | 12 Ko  |
+| `js/histoire-textes/cutscenes-boss-victoire.js`   | 333    | 12 Ko  |
 | `js/gestionnaire-difficulte.js`                   | 328    | 11 Ko  |
 | `js/decorations-jeu.js`                           | 327    | 11 Ko  |
 | `js/achievements-stats.js`                        | 326    | 13 Ko  |
@@ -43,7 +44,7 @@ Généré par `npm run analyze` — 287 fichiers sous `js/`.
 | `js/boss-dialogues.js`                            | 307    | 10 Ko  |
 | `js/archi-partie.js`                              | 306    | 11 Ko  |
 | `js/tutoriel.js`                                  | 306    | 11 Ko  |
-| `js/rendu-motifs-biome.js`                        | 302    | 9 Ko   |
+| `js/rendu-motifs-biome.js`                        | 302    | 8 Ko   |
 | `js/ui-panneau-objectifs.js`                      | 301    | 9 Ko   |
 | `js/progression-stockage.js`                      | 297    | 9 Ko   |
 | `js/histoire-session.js`                          | 295    | 10 Ko  |
@@ -70,9 +71,9 @@ Généré par `npm run analyze` — 287 fichiers sous `js/`.
 | `js/rendu-ambiance-particules.js`                 | 258    | 8 Ko   |
 | `js/audio-effets.js`                              | 257    | 11 Ko  |
 | `js/codex-histoire.js`                            | 253    | 15 Ko  |
+| `js/coop-jeu.js`                                  | 249    | 9 Ko   |
 | `js/fins-histoire.js`                             | 249    | 8 Ko   |
 | `js/conditions-secrets.js`                        | 248    | 9 Ko   |
-| `js/coop-jeu.js`                                  | 247    | 8 Ko   |
 | `js/histoire-cutscene-portraits.js`               | 246    | 8 Ko   |
 | `js/codex-illustrations-histoire/boss-fins.js`    | 244    | 7 Ko   |
 | `js/histoire-textes/cutscenes-entree-finale.js`   | 242    | 9 Ko   |
@@ -90,19 +91,19 @@ Généré par `npm run analyze` — 287 fichiers sous `js/`.
 | `js/achievements-icones-map.js`                   | 208    | 6 Ko   |
 | `js/codex-illustrations-histoire/mondes.js`       | 208    | 6 Ko   |
 | `js/rendu-ambiance-particules-init.js`            | 208    | 7 Ko   |
-| `js/histoire-cutscene-moteur.js`                  | 207    | 6 Ko   |
 | `js/histoire-cutscene-ui.js`                      | 207    | 8 Ko   |
 | `js/coop-rendu.js`                                | 203    | 7 Ko   |
 | `js/boss-attaques.js`                             | 200    | 6 Ko   |
 | `js/rendu-accessibilite.js`                       | 200    | 7 Ko   |
 | `js/codex-illustrations/biomes.js`                | 198    | 6 Ko   |
+| `js/histoire-cutscene-moteur.js`                  | 196    | 6 Ko   |
 | `js/boss-jeu.js`                                  | 195    | 6 Ko   |
 | `js/boss-combat.js`                               | 193    | 7 Ko   |
 | `js/portraits-cutscene-personnages.js`            | 193    | 7 Ko   |
 | `js/logique-partie-verrouillage.js`               | 192    | 6 Ko   |
 | `js/codex-donnees/chroniques.js`                  | 191    | 12 Ko  |
 | `js/portrait-vera-effets.js`                      | 191    | 6 Ko   |
-| `js/navigation-ecrans.js`                         | 188    | 7 Ko   |
+| `js/navigation-ecrans.js`                         | 190    | 7 Ko   |
 | `js/progression-records.js`                       | 185    | 6 Ko   |
 | `js/profil-affichage.js`                          | 183    | 7 Ko   |
 | `js/rendu-ambiance-fonds.js`                      | 182    | 6 Ko   |
@@ -113,9 +114,12 @@ Généré par `npm run analyze` — 287 fichiers sous `js/`.
 | `js/logique-pure.js`                              | 176    | 6 Ko   |
 | `js/archi-generateur.js`                          | 170    | 4 Ko   |
 | `js/piece-jeu.js`                                 | 169    | 5 Ko   |
+| `js/infobulles-contexte.js`                       | 167    | 6 Ko   |
 | `js/coop-input.js`                                | 165    | 5 Ko   |
-| `js/layout-jeu.js`                                | 157    | 6 Ko   |
-| `js/ui-boutons-navigation.js`                     | 157    | 5 Ko   |
+| `js/layout-notifs-jeu.js`                         | 165    | 5 Ko   |
+| `js/histoire-textes/cutscenes-entree-prologue.js` | 162    | 5 Ko   |
+| `js/layout-jeu.js`                                | 161    | 6 Ko   |
+| `js/ui-boutons-navigation.js`                     | 160    | 5 Ko   |
 | `js/codex-donnees/mondes.js`                      | 155    | 9 Ko   |
 | `js/prechargement-medias.js`                      | 154    | 5 Ko   |
 | `js/reactions-boss-portrait.js`                   | 153    | 5 Ko   |
@@ -123,7 +127,6 @@ Généré par `npm run analyze` — 287 fichiers sous `js/`.
 | `js/moteur-init-interface.js`                     | 151    | 7 Ko   |
 | `js/progression-export-b10.js`                    | 151    | 5 Ko   |
 | `js/progression-sync-cloud.js`                    | 151    | 5 Ko   |
-| `js/histoire-textes/cutscenes-entree-prologue.js` | 150    | 5 Ko   |
 | `js/store-etat-partie.js`                         | 150    | 4 Ko   |
 | `js/audio-donnees.js`                             | 149    | 4 Ko   |
 | `js/particules-jeu.js`                            | 149    | 5 Ko   |
@@ -137,6 +140,7 @@ Généré par `npm run analyze` — 287 fichiers sous `js/`.
 | `js/histoire-mondes.js`                           | 135    | 4 Ko   |
 | `js/scenes-cutscene.js`                           | 132    | 4 Ko   |
 | `js/histoire-textes/cutscenes-entree-desert.js`   | 131    | 4 Ko   |
+| `js/constellation-panneau.js`                     | 130    | 5 Ko   |
 | `js/histoire-journal-ui.js`                       | 130    | 5 Ko   |
 | `js/boss-rendu.js`                                | 129    | 4 Ko   |
 | `js/menu-titre-campagne.js`                       | 129    | 4 Ko   |
@@ -144,10 +148,8 @@ Généré par `npm run analyze` — 287 fichiers sous `js/`.
 | `js/rendu-vivant.js`                              | 127    | 5 Ko   |
 | `js/ui-objectifs-hud.js`                          | 126    | 4 Ko   |
 | `js/actions-piece-communes.js`                    | 123    | 4 Ko   |
-| `js/infobulles-contexte.js`                       | 123    | 4 Ko   |
 | `js/main.js`                                      | 123    | 4 Ko   |
 | `js/hud-jeu.js`                                   | 122    | 4 Ko   |
-| `js/constellation-panneau.js`                     | 120    | 4 Ko   |
 | `js/histoire-textes/portraits.js`                 | 120    | 3 Ko   |
 | `js/codex-illustrations/reliques.js`              | 119    | 3 Ko   |
 | `js/moteur-init-systemes.js`                      | 118    | 4 Ko   |
@@ -157,11 +159,11 @@ Généré par `npm run analyze` — 287 fichiers sous `js/`.
 | `js/rendu-robo-mini.js`                           | 114    | 4 Ko   |
 | `js/achievements-histoire.js`                     | 113    | 4 Ko   |
 | `js/codex-icones-map.js`                          | 112    | 4 Ko   |
+| `js/histoire-textes/cutscenes-entree-ocean.js`    | 110    | 4 Ko   |
 | `js/rendu-ambiance.js`                            | 110    | 3 Ko   |
 | `js/boss-ui-hud.js`                               | 108    | 4 Ko   |
 | `js/achievements-progres.js`                      | 107    | 5 Ko   |
 | `js/coop-lignes-score.js`                         | 106    | 4 Ko   |
-| `js/histoire-textes/cutscenes-entree-ocean.js`    | 105    | 3 Ko   |
 | `js/charger-ecrans.js`                            | 104    | 3 Ko   |
 | `js/fin-bg-rendu.js`                              | 104    | 3 Ko   |
 | `js/portraits-boss-combat.js`                     | 104    | 4 Ko   |
@@ -193,19 +195,19 @@ Généré par `npm run analyze` — 287 fichiers sous `js/`.
 | `js/logique-partie-hold.js`                       | 69     | 2 Ko   |
 | `js/histoire-cutscene-config.js`                  | 67     | 2 Ko   |
 | `js/input-gamepad.js`                             | 65     | 2 Ko   |
+| `js/mode-sprint.js`                               | 65     | 2 Ko   |
 | `js/themes-biome.js`                              | 64     | 2 Ko   |
 | `js/portrait-rendu-utils.js`                      | 63     | 2 Ko   |
 | `js/histoire-textes/dialogues-boss.js`            | 62     | 3 Ko   |
 | `js/rendu-robo-donnees.js`                        | 62     | 2 Ko   |
 | `js/biome-icones-map.js`                          | 60     | 2 Ko   |
 | `js/deblocage-ui.js`                              | 60     | 2 Ko   |
+| `js/mode-defi-jour.js`                            | 60     | 2 Ko   |
 | `js/ui-lier-bouton.js`                            | 60     | 2 Ko   |
 | `js/score-partie.js`                              | 59     | 2 Ko   |
 | `js/file-narrative.js`                            | 58     | 1 Ko   |
-| `js/mode-defi-jour.js`                            | 57     | 2 Ko   |
 | `js/audio-mix-biome.js`                           | 55     | 2 Ko   |
 | `js/coop-das.js`                                  | 55     | 2 Ko   |
-| `js/mode-sprint.js`                               | 54     | 2 Ko   |
 | `js/progression.js`                               | 54     | 1 Ko   |
 | `js/rendu-previews.js`                            | 53     | 2 Ko   |
 | `js/audio-fallback-biomes.js`                     | 52     | 2 Ko   |

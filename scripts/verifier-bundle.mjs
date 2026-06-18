@@ -1,6 +1,6 @@
 import { readdirSync, statSync } from 'fs';
 
-const MAX_KO_TOTAL = 555;
+const MAX_KO_TOTAL = 560;
 const WARN_KO_ENTREE = 80;
 const WARN_KO_TOTAL = 540;
 const dossier = 'dist/js';

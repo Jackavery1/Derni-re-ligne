@@ -1,5 +1,6 @@
 export const RELIQUES = {};
 export const METEO_BIOMES = {};
+export const INFOBULLES_MODES_JEU = {};
 
 /** @type {Promise<void> | null} */
 let _chargePromise = null;
@@ -20,6 +21,7 @@ export async function chargerContenuJeu() {
         .then((donnees) => {
             Object.assign(RELIQUES, donnees.RELIQUES ?? {});
             Object.assign(METEO_BIOMES, donnees.METEO_BIOMES ?? {});
+            Object.assign(INFOBULLES_MODES_JEU, donnees.INFOBULLES_MODES ?? {});
         });
     return _chargePromise;
 }

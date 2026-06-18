@@ -1,6 +1,6 @@
-import { CONFIG } from './config.js';
 import { etat } from './store-jeu.js';
 import { obtenirBouton, obtenirElement } from './dom-utils.js';
+import { INFOBULLES_MODES_JEU } from './contenu-jeu.js';
 
 export let modeSprintActif = false;
 
@@ -13,6 +13,9 @@ export function basculerModeSprint() {
     modeSprintActif = !modeSprintActif;
     etat.modeJeu = modeSprintActif ? 'sprint' : 'marathon';
     mettreAJourToggleSprint();
+    void import('./infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) =>
+        proposerInfobulleModeJeu(modeSprintActif ? 'sprint' : 'sansFin')
+    );
 }
 
 export function desactiverModeSprint() {
@@ -29,6 +32,7 @@ export function mettreAJourToggleSprint() {
     const wrap = document.getElementById('toggle-sprint-wrap');
     const btn = obtenirBouton('toggle-sprint');
     const label = obtenirElement('sprint-toggle-label');
+    const desc = obtenirElement('sprint-mode-desc');
     const coopBtn = obtenirBouton('toggle-coop');
 
     if (wrap) {
@@ -38,11 +42,15 @@ export function mettreAJourToggleSprint() {
 
     if (modeSprintActif) {
         btn?.classList.add('actif');
-        if (label) label.textContent = `SPRINT ${CONFIG.sprintLignes}L : ON`;
+        if (label) label.textContent = 'SPRINT';
+        if (desc) desc.textContent = INFOBULLES_MODES_JEU.sprint?.desc ?? '';
+        btn?.setAttribute('aria-label', 'Mode Sprint actif — appuyer pour Sans fin');
         if (coopBtn) coopBtn.disabled = true;
     } else {
         btn?.classList.remove('actif');
-        if (label) label.textContent = `SPRINT ${CONFIG.sprintLignes}L : OFF`;
+        if (label) label.textContent = 'SANS FIN';
+        if (desc) desc.textContent = INFOBULLES_MODES_JEU.sansFin?.desc ?? '';
+        btn?.setAttribute('aria-label', 'Mode Sans fin actif — appuyer pour Sprint');
         if (coopBtn && !coopActif) coopBtn.disabled = false;
     }
 }

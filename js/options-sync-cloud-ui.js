@@ -18,7 +18,7 @@ import { formaterTemps } from './hud-jeu.js';
 import { BIOMES, ORDRE_BIOMES_LIBRE } from './config.js';
 
 const MODES_LEADERBOARD = [
-    { id: 'marathon', libelle: 'MARATHON' },
+    { id: 'marathon', libelle: 'SANS FIN' },
     { id: 'sprint', libelle: 'SPRINT' },
     { id: 'coop', libelle: 'COOP' },
 ];

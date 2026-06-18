@@ -10,6 +10,7 @@ import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { modeArchiActif } from './registre-modes.js';
 import { demarrerFondMeta, arreterFondMeta } from './fond-ecrans-meta.js';
+import { adapterNotifsJeu } from './layout-jeu.js';
 
 const FONDS_META = {
     [ECRANS.CODEX]: { canvasId: 'fond-meta-codex', teinte: '#ff2d78' },
@@ -50,6 +51,7 @@ export function mettreAJourVisibilitePartie(idEcran) {
     if (ecransHorsPartie.includes(idEcran)) {
         document.body.classList.remove('partie-active');
         cacherBanniereVivant();
+        adapterNotifsJeu();
     }
 }
 

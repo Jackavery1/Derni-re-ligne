@@ -16,6 +16,9 @@ export function basculerDefiJour() {
     if (defiJourActif) {
         etat.modeJeu = 'marathon';
         import('./mode-sprint.js').then(({ desactiverModeSprint }) => desactiverModeSprint());
+        import('./infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) =>
+            proposerInfobulleModeJeu('defiJour')
+        );
     }
     mettreAJourToggleDefiJour();
 }

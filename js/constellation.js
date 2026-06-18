@@ -30,6 +30,11 @@ let biomeHover = null;
 let biomeChoisi = null;
 let offsetCamX = 0;
 let offsetCamY = 0;
+let panConstellationX = 0;
+let panConstellationY = 0;
+/** @type {{ x: number, y: number, panX: number, panY: number } | null} */
+let glissadeConstellation = null;
+let glissadeEnCours = false;
 let sourisCX = 0;
 let sourisCY = 0;
 let canvasConst = null;
@@ -55,6 +60,30 @@ function parametresSpiraleConstellation(base) {
 
 function obtenirDecalageZoneActuel() {
     return obtenirDecalageCentreConstellation(panneauBiomeEstOuvert(), window.innerWidth);
+}
+
+function bornesPanConstellation() {
+    const max = window.innerWidth <= 768 ? 160 : 100;
+    panConstellationX = Math.max(-max, Math.min(max, panConstellationX));
+    panConstellationY = Math.max(-max, Math.min(max, panConstellationY));
+}
+
+/** @param {string} idBiome */
+function centrerSurNoeud(idBiome) {
+    const noeud = constellationNoeuds.find((n) => n.id === idBiome);
+    if (!noeud || !canvasConst) return;
+    const cx = canvasConst.width / 2 + obtenirDecalageZoneActuel();
+    const cy = canvasConst.height / 2;
+    panConstellationX = cx - noeud.x;
+    panConstellationY = cy - noeud.y;
+    bornesPanConstellation();
+}
+
+function reinitialiserPanConstellation() {
+    panConstellationX = 0;
+    panConstellationY = 0;
+    glissadeConstellation = null;
+    glissadeEnCours = false;
 }
 
 function depsPanneauBiome() {
@@ -129,6 +158,16 @@ function mettreAJourEnteteSelection() {
     }
 }
 
+function noeudDepuisPointer(clientX, clientY) {
+    const { x, y } = coordonneesCanvas(clientX, clientY);
+    const w = canvasConst.width;
+    const h = canvasConst.height;
+    const parallax = window.innerWidth <= 768 ? 36 : 18;
+    const offX = (x / w - 0.5) * parallax + panConstellationX;
+    const offY = (y / h - 0.5) * parallax + panConstellationY;
+    return noeudSousCurseur(x - offX, y - offY);
+}
+
 function noeudSousCurseur(cx, cy) {
     for (let i = constellationNoeuds.length - 1; i >= 0; i--) {
         const n = constellationNoeuds[i];
@@ -154,6 +193,7 @@ function initConstellation() {
     constellationNoeuds.length = 0;
     biomeHover = null;
     biomeChoisi = deps.obtenirBiomeActif();
+    reinitialiserPanConstellation();
 
     for (let i = 0; i < 200; i++) {
         constellationEtoiles.push({
@@ -191,6 +231,7 @@ function initConstellation() {
     mettreAJourEnteteSelection();
     if (biomeChoisi && BIOMES[biomeChoisi]) {
         mettreAJourInfoBiome(biomeChoisi);
+        centrerSurNoeud(biomeChoisi);
     } else {
         masquerInfoBiome();
     }
@@ -235,8 +276,9 @@ function boucleConstellation(timestamp) {
 
     const w = canvasConst.width;
     const h = canvasConst.height;
-    offsetCamX = (sourisCX / w - 0.5) * 18;
-    offsetCamY = (sourisCY / h - 0.5) * 18;
+    const parallax = window.innerWidth <= 768 ? 36 : 18;
+    offsetCamX = (sourisCX / w - 0.5) * parallax + panConstellationX;
+    offsetCamY = (sourisCY / h - 0.5) * parallax + panConstellationY;
 
     dessinerFondBiome(ctxConst, w, h, biomeChoisi ?? 'classique');
 
@@ -278,6 +320,7 @@ function traiterSelectionNoeud(noeud, _doubleTap = false) {
     biomeChoisi = noeud.id;
     deps.definirBiomeActif(noeud.id);
     deps.sauvegarderBiomeActif(noeud.id);
+    centrerSurNoeud(noeud.id);
     mettreAJourInfoBiome(noeud.id);
     const select = /** @type {HTMLSelectElement | null} */ (
         document.getElementById('sel-biome-clavier')
@@ -303,8 +346,7 @@ function attacherEvenementsConstellation() {
     canvasConst.addEventListener('mousemove', (e) => {
         sourisCX = e.clientX;
         sourisCY = e.clientY;
-        const { x, y } = coordonneesCanvas(e.clientX, e.clientY);
-        const noeud = noeudSousCurseur(x, y);
+        const noeud = noeudDepuisPointer(e.clientX, e.clientY);
         if (noeud?.id !== biomeHover) {
             biomeHover = noeud?.id ?? null;
             if (!obtenirConstellationClicSeul()) {
@@ -324,8 +366,7 @@ function attacherEvenementsConstellation() {
     });
 
     canvasConst.addEventListener('click', (e) => {
-        const { x, y } = coordonneesCanvas(e.clientX, e.clientY);
-        const noeud = noeudSousCurseur(x, y);
+        const noeud = noeudDepuisPointer(e.clientX, e.clientY);
         if (noeud && noeud.id === biomeChoisi && panneauBiomeEstOuvert()) {
             masquerInfoBiome();
             return;
@@ -334,16 +375,39 @@ function attacherEvenementsConstellation() {
     });
 
     canvasConst.addEventListener(
-        'touchmove',
+        'touchstart',
         (e) => {
-            e.preventDefault();
             const touch = e.touches[0];
             if (!touch) return;
+            glissadeEnCours = false;
+            glissadeConstellation = {
+                x: touch.clientX,
+                y: touch.clientY,
+                panX: panConstellationX,
+                panY: panConstellationY,
+            };
             sourisCX = touch.clientX;
             sourisCY = touch.clientY;
-            const { x, y } = coordonneesCanvas(touch.clientX, touch.clientY);
-            const noeud = noeudSousCurseur(x, y);
-            biomeHover = noeud?.id ?? null;
+        },
+        { passive: true }
+    );
+
+    canvasConst.addEventListener(
+        'touchmove',
+        (e) => {
+            const touch = e.touches[0];
+            if (!touch || !glissadeConstellation) return;
+            const dx = touch.clientX - glissadeConstellation.x;
+            const dy = touch.clientY - glissadeConstellation.y;
+            if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+                glissadeEnCours = true;
+                panConstellationX = glissadeConstellation.panX + dx * 0.85;
+                panConstellationY = glissadeConstellation.panY + dy * 0.85;
+                bornesPanConstellation();
+            }
+            sourisCX = touch.clientX;
+            sourisCY = touch.clientY;
+            if (glissadeEnCours) e.preventDefault();
         },
         { passive: false }
     );
@@ -352,11 +416,16 @@ function attacherEvenementsConstellation() {
         'touchend',
         (e) => {
             e.preventDefault();
+            if (glissadeEnCours) {
+                glissadeConstellation = null;
+                glissadeEnCours = false;
+                return;
+            }
             const touch = e.changedTouches[0];
             if (!touch) return;
-            const { x, y } = coordonneesCanvas(touch.clientX, touch.clientY);
-            const noeud = noeudSousCurseur(x, y);
+            const noeud = noeudDepuisPointer(touch.clientX, touch.clientY);
             traiterSelectionNoeud(noeud, false);
+            glissadeConstellation = null;
         },
         { passive: false }
     );

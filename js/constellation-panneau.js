@@ -47,7 +47,7 @@ export function ouvrirPanneauBiomeConstellation(idBiome, deps) {
     } else if (modeSprintActif) {
         const ms = obtenirRecordSprintBiome(idBiome);
         recordTexte =
-            ms > 0 ? `Meilleur temps : ${formaterTemps(ms)} (40L)` : 'Sprint 40 lignes — chrono';
+            ms > 0 ? `Meilleur temps : ${formaterTemps(ms)}` : 'Sprint — chrono 40 lignes';
     } else {
         recordTexte = `Record : ${record.toLocaleString('fr-FR')} — ${etoiles}`;
     }
@@ -99,6 +99,18 @@ export function afficherBarreModesBiome(idBiome) {
     if (!barre || !BIOMES[idBiome]) return;
     barre.classList.remove('element-masque');
     barre.setAttribute('aria-hidden', 'false');
+    void import('./deblocage-ui.js').then(({ mettreAJourVisibiliteModesDebloques }) =>
+        mettreAJourVisibiliteModesDebloques()
+    );
+    void import('./mode-sprint.js').then(({ mettreAJourToggleSprint }) =>
+        mettreAJourToggleSprint()
+    );
+    void import('./mode-defi-jour.js').then(({ mettreAJourToggleDefiJour }) =>
+        mettreAJourToggleDefiJour()
+    );
+    void import('./infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) =>
+        proposerInfobulleModeJeu(modeSprintActif ? 'sprint' : 'sansFin')
+    );
 }
 
 export function masquerBarreModesBiome() {
