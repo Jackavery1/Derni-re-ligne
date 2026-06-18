@@ -41,6 +41,48 @@ test('cutscene paysage mobile — boutons dans la zone visible', async ({ page }
     expect(metriques.dansEcran).toBe(true);
 });
 
+test('cutscene ultra-etroit 319px — pas de debordement', async ({ page }) => {
+    test.setTimeout(45000);
+    await page.setViewportSize({ width: 319, height: 568 });
+    await page.addInitScript((etat) => {
+        localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
+        localStorage.setItem('dl_migration_v1', '1');
+        localStorage.setItem('derniereLigne_tutorielVu', '1');
+        localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
+        localStorage.setItem('derniereLigne_introHistoireVue', '1');
+    }, ETAT_HISTOIRE_VIDE);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
+    await page.locator('#btn-continuer').click();
+    await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });
+    await page.locator('.bouton-jouer-monde').click({ force: true });
+
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 15000 });
+
+    const metriques = await page.evaluate(() => {
+        const suivant = document.getElementById('btn-cutscene-suivant');
+        const passer = document.getElementById('btn-cutscene-passer');
+        const rectS = suivant?.getBoundingClientRect();
+        const rectP = passer?.getBoundingClientRect();
+        return {
+            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+            suivantH: rectS?.height ?? 0,
+            passerH: rectP?.height ?? 0,
+            dansEcran: Boolean(
+                rectS &&
+                rectP &&
+                rectS.bottom <= window.innerHeight &&
+                rectP.bottom <= window.innerHeight
+            ),
+        };
+    });
+    expect(metriques.debord).toBe(false);
+    expect(metriques.suivantH).toBeGreaterThanOrEqual(48);
+    expect(metriques.passerH).toBeGreaterThanOrEqual(48);
+    expect(metriques.dansEcran).toBe(true);
+});
+
 test('recap post-monde paysage mobile — panneau scrollable', async ({ page }) => {
     test.setTimeout(60000);
     await page.setViewportSize({ width: 844, height: 390 });

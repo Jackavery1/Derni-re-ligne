@@ -122,6 +122,22 @@ body.contraste-eleve .bouton {
         grid-column: 1 / -1;
     }
 
+    #section-timer-niveau .stat-label {
+        font-size: 0.24rem;
+    }
+
+    #section-timer-niveau .stat-valeur {
+        font-size: 0.4rem;
+        line-height: 1.1;
+    }
+
+    body.partie-active .panneau {
+        max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 8px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
     #section-objectifs-histoire {
         grid-column: 1 / -1;
     }

@@ -1,5 +1,4 @@
 import { BIOMES, ORDRE_BIOMES_LIBRE } from './config.js';
-import { obtenirConstellationClicSeul } from './accessibilite.js';
 import { obtenirCanvas } from './dom-utils.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 import { biomeEstDebloqueParHistoire } from './progression.js';
@@ -11,7 +10,6 @@ import {
 } from './constellation-rendu.js';
 import { obtenirDecalageCentreConstellation } from './constellation-zone.js';
 import { abonnerBoucleMenuUnifiee, desabonnerBoucleMenuUnifiee } from './planificateur-raf.js';
-import { proposerInfobulleOracleCoopExclusif } from './infobulles-contexte.js';
 import {
     ouvrirPanneauBiomeConstellation,
     fermerPanneauBiomeConstellation,
@@ -19,6 +17,11 @@ import {
     masquerBarreModesBiome,
 } from './constellation-panneau.js';
 import { initialiserPanneauDetail, abonnerFermeturePanneauDetail } from './ui-panneau-detail.js';
+import {
+    attacherEvenementEscapeSelection,
+    attacherEvenementsConstellation,
+    configurerEvenementsConstellation,
+} from './constellation-evenements.js';
 
 let abonnementFermeturePanneauOk = false;
 
@@ -42,6 +45,47 @@ let ctxConst = null;
 let evenementsOk = false;
 let selectBiomesOk = false;
 let evenementEscapeOk = false;
+
+configurerEvenementsConstellation({
+    obtenirCanvas: () => canvasConst,
+    obtenirNoeuds: () => constellationNoeuds,
+    obtenirPanX: () => panConstellationX,
+    obtenirPanY: () => panConstellationY,
+    definirPan: (x, y) => {
+        panConstellationX = x;
+        panConstellationY = y;
+    },
+    bornesPan: bornesPanConstellation,
+    obtenirBiomeHover: () => biomeHover,
+    definirBiomeHover: (id) => {
+        biomeHover = id;
+    },
+    obtenirBiomeChoisi: () => biomeChoisi,
+    definirSouris: (x, y) => {
+        sourisCX = x;
+        sourisCY = y;
+    },
+    obtenirEvenementsOk: () => evenementsOk,
+    definirEvenementsOk: (ok) => {
+        evenementsOk = ok;
+    },
+    obtenirEscapeOk: () => evenementEscapeOk,
+    definirEscapeOk: (ok) => {
+        evenementEscapeOk = ok;
+    },
+    obtenirGlissadeConstellation: () => glissadeConstellation,
+    definirGlissadeConstellation: (g) => {
+        glissadeConstellation = g;
+    },
+    obtenirGlissadeEnCours: () => glissadeEnCours,
+    definirGlissadeEnCours: (ok) => {
+        glissadeEnCours = ok;
+    },
+    panneauBiomeEstOuvert,
+    masquerInfoBiome,
+    mettreAJourInfoBiome,
+    traiterSelectionNoeud,
+});
 
 function panneauBiomeEstOuvert() {
     return panneauBiomeConstellationOuvert();
@@ -128,18 +172,6 @@ function mettreAJourInfoBiome(idBiome) {
     repositionnerNoeudsConstellation();
 }
 
-function attacherEvenementEscapeSelection() {
-    if (evenementEscapeOk) return;
-    evenementEscapeOk = true;
-    document.addEventListener('keydown', (e) => {
-        if (e.key !== 'Escape') return;
-        if (!document.getElementById('ecran-selection')?.classList.contains('actif')) return;
-        if (!panneauBiomeEstOuvert()) return;
-        e.preventDefault();
-        masquerInfoBiome();
-    });
-}
-
 function compterBiomesDebloques() {
     let n = 0;
     for (const id of ORDRE_BIOMES_LIBRE) {
@@ -156,27 +188,6 @@ function mettreAJourEnteteSelection() {
         const nb = compterBiomesDebloques();
         sousTitre.textContent = `NIVEAU GLOBAL : ${deps.obtenirNiveauGlobal()} — ${nb}/${ORDRE_BIOMES_LIBRE.length} MONDES`;
     }
-}
-
-function noeudDepuisPointer(clientX, clientY) {
-    const { x, y } = coordonneesCanvas(clientX, clientY);
-    const w = canvasConst.width;
-    const h = canvasConst.height;
-    const parallax = window.innerWidth <= 768 ? 36 : 18;
-    const offX = (x / w - 0.5) * parallax + panConstellationX;
-    const offY = (y / h - 0.5) * parallax + panConstellationY;
-    return noeudSousCurseur(x - offX, y - offY);
-}
-
-function noeudSousCurseur(cx, cy) {
-    for (let i = constellationNoeuds.length - 1; i >= 0; i--) {
-        const n = constellationNoeuds[i];
-        const rayonHit = n.verrouille ? n.rayon * 0.75 + 4 : n.rayon + 8;
-        const dx = cx - n.x;
-        const dy = cy - n.y;
-        if (dx * dx + dy * dy <= rayonHit * rayonHit) return n;
-    }
-    return null;
 }
 
 function initConstellation() {
@@ -329,108 +340,6 @@ function traiterSelectionNoeud(noeud, _doubleTap = false) {
     deps.sonMenu?.('menu_hover');
 }
 
-function coordonneesCanvas(clientX, clientY) {
-    const rect = canvasConst.getBoundingClientRect();
-    const scaleX = canvasConst.width / rect.width;
-    const scaleY = canvasConst.height / rect.height;
-    return {
-        x: (clientX - rect.left) * scaleX,
-        y: (clientY - rect.top) * scaleY,
-    };
-}
-
-function attacherEvenementsConstellation() {
-    if (!canvasConst || evenementsOk) return;
-    evenementsOk = true;
-
-    canvasConst.addEventListener('mousemove', (e) => {
-        sourisCX = e.clientX;
-        sourisCY = e.clientY;
-        const noeud = noeudDepuisPointer(e.clientX, e.clientY);
-        if (noeud?.id !== biomeHover) {
-            biomeHover = noeud?.id ?? null;
-            if (!obtenirConstellationClicSeul()) {
-                if (noeud && !noeud.verrouille) {
-                    mettreAJourInfoBiome(noeud.id);
-                } else if (!noeud && !biomeChoisi) {
-                    masquerInfoBiome();
-                }
-            }
-        }
-        canvasConst.style.cursor = noeud ? 'pointer' : 'default';
-    });
-
-    canvasConst.addEventListener('mouseleave', () => {
-        biomeHover = null;
-        canvasConst.style.cursor = 'default';
-    });
-
-    canvasConst.addEventListener('click', (e) => {
-        const noeud = noeudDepuisPointer(e.clientX, e.clientY);
-        if (noeud && noeud.id === biomeChoisi && panneauBiomeEstOuvert()) {
-            masquerInfoBiome();
-            return;
-        }
-        traiterSelectionNoeud(noeud, false);
-    });
-
-    canvasConst.addEventListener(
-        'touchstart',
-        (e) => {
-            const touch = e.touches[0];
-            if (!touch) return;
-            glissadeEnCours = false;
-            glissadeConstellation = {
-                x: touch.clientX,
-                y: touch.clientY,
-                panX: panConstellationX,
-                panY: panConstellationY,
-            };
-            sourisCX = touch.clientX;
-            sourisCY = touch.clientY;
-        },
-        { passive: true }
-    );
-
-    canvasConst.addEventListener(
-        'touchmove',
-        (e) => {
-            const touch = e.touches[0];
-            if (!touch || !glissadeConstellation) return;
-            const dx = touch.clientX - glissadeConstellation.x;
-            const dy = touch.clientY - glissadeConstellation.y;
-            if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
-                glissadeEnCours = true;
-                panConstellationX = glissadeConstellation.panX + dx * 0.85;
-                panConstellationY = glissadeConstellation.panY + dy * 0.85;
-                bornesPanConstellation();
-            }
-            sourisCX = touch.clientX;
-            sourisCY = touch.clientY;
-            if (glissadeEnCours) e.preventDefault();
-        },
-        { passive: false }
-    );
-
-    canvasConst.addEventListener(
-        'touchend',
-        (e) => {
-            e.preventDefault();
-            if (glissadeEnCours) {
-                glissadeConstellation = null;
-                glissadeEnCours = false;
-                return;
-            }
-            const touch = e.changedTouches[0];
-            if (!touch) return;
-            const noeud = noeudDepuisPointer(touch.clientX, touch.clientY);
-            traiterSelectionNoeud(noeud, false);
-            glissadeConstellation = null;
-        },
-        { passive: false }
-    );
-}
-
 export function configurerConstellation(configuration) {
     deps = configuration;
 }
@@ -450,8 +359,12 @@ export function demarrerConstellation() {
     }
     initConstellation();
     masquerOracleCoopSiNecessaire();
-    proposerInfobulleOracleCoopExclusif();
-    import('./mode-sprint.js').then(({ mettreAJourToggleSprint }) => mettreAJourToggleSprint());
+    void import('./infobulles-contexte.js').then(({ proposerInfobulleOracleCoopExclusif }) =>
+        proposerInfobulleOracleCoopExclusif()
+    );
+    void import('./mode-sprint.js').then(({ mettreAJourToggleSprint }) =>
+        mettreAJourToggleSprint()
+    );
     abonnerBoucleMenuUnifiee(boucleConstellation);
 }
 
@@ -475,7 +388,6 @@ export { obtenirDecalageCentreConstellation } from './constellation-zone.js';
 
 export function lancerBiomeSelectionne() {
     if (!biomeChoisi || !BIOMES[biomeChoisi]) return;
-    // Même critère que les nœuds de la carte : déblocage par le Mode Histoire.
     if (!biomeEstDebloqueParHistoire(biomeChoisi)) return;
     deps.definirBiomeActif(biomeChoisi);
     deps.sauvegarderBiomeActif(biomeChoisi);

@@ -53,6 +53,17 @@ export function dessinerPortraitVeraCanon(ctx, w, h, t, params) {
 
     dessinerHaloVera(ctx, cx, cy * 0.95, s, tAnim, p);
     dessinerParticulesVera(ctx, cx, cy, s, tAnim, p);
+    if (tAnim && !effetsReduits) {
+        const y = h * 0.345 + Math.sin(tAnim * 2.8) * s;
+        ctx.globalAlpha = 0.7;
+        ctx.fillStyle = '#a8d4f0';
+        for (let g = -1; g < 2; g += 2) {
+            ctx.beginPath();
+            ctx.arc(cx + g * 11 * s, y + Math.sin(tAnim + g) * s, 2 * s, 0, 7);
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+    }
     dessinerExpressionVera(ctx, w, h, s, cx, p);
 
     if (/** @type {number} */ (p.scanline ?? 1) > 1.2 && glitch) {

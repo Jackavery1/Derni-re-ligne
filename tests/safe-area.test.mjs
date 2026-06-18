@@ -40,7 +40,19 @@ describe('safe-area audit C', () => {
     it('objectifs et carte histoire couvrent les viewports compacts', () => {
         const objectifs = readFileSync(join(RACINE, 'styles', 'objectifs-histoire.css'), 'utf8');
         const histoire = readFileSync(join(RACINE, 'styles', 'mode-histoire.css'), 'utf8');
+        const archi = readFileSync(join(RACINE, 'styles', 'mode-architecte.css'), 'utf8');
+        const pause = readFileSync(join(RACINE, 'styles', 'ecran-pause.css'), 'utf8');
         expect(objectifs).toMatch(/max-width:\s*768px\),\s*\(max-height:\s*600px\)/);
         expect(histoire).toMatch(/max-width:\s*768px\),\s*\(max-height:\s*600px\)/);
+        expect(objectifs).toMatch(/orientation:\s*landscape/);
+        expect(cutscenesFrom(RACINE)).toMatch(/max-width:\s*319px/);
+        expect(archi).toMatch(/var\(--safe-top\)/);
+        expect(archi).toMatch(/overflow-y:\s*auto/);
+        expect(pause).toMatch(/orientation:\s*landscape/);
+        expect(pause).toMatch(/var\(--safe-top\)/);
     });
 });
+
+function cutscenesFrom(racine) {
+    return readFileSync(join(racine, 'assets', 'cutscenes', 'cutscenes.css'), 'utf8');
+}

@@ -282,3 +282,47 @@ export const ETAT_CYBER_LABO_PRET = {
     fragmentsVusIds: ['apres_ocean', 'apres_foret', 'apres_glace', 'apres_desert', 'apres_eclipse'],
     interludesVusIds: ['interlude_gardiens', 'interlude_elle'],
 };
+
+/** État avec le monde Paradoxe débloqué (fin secrète + tops volontaires prologue). */
+export const ETAT_PARADOXE_DEBLOQUE = {
+    ...ETAT_FIN_SECRETE_PRET,
+    mondesCachesDebloques: [...ETAT_FIN_SECRETE_PRET.mondesCachesDebloques, 'monde_paradoxe'],
+    mondesDejaMontres: [...ETAT_FIN_SECRETE_PRET.mondesDejaMontres, 'monde_paradoxe'],
+    conditionsParadoxe: { finSecreteObtenue: true, topsVolontairesPrologue: 3 },
+    finObtenue: 'fin_secrete',
+    toutesFinObtenues: ['fin_secrete'],
+};
+
+/** État prêt pour victoire finale → fin vraie (Miroir OK, sans Trame). */
+export const ETAT_AVANT_FIN_VRAIE = {
+    ...ETAT_FIN_VRAIE_PRET,
+    mondesCompletes: ETAT_FIN_VRAIE_PRET.mondesCompletes.filter((id) => id !== 'monde_finale'),
+    bossVaincus: ETAT_FIN_VRAIE_PRET.bossVaincus.filter((id) => id !== 'distorsion'),
+};
+
+/** Première visite Cosmos — cutscene d'entrée observatoire. */
+export const ETAT_ENTREE_COSMOS = {
+    ...ETAT_FIN_VRAIE_PRET,
+    mondesCompletes: ETAT_FIN_VRAIE_PRET.mondesCompletes.filter(
+        (id) => !['monde_cosmos', 'monde_vide', 'monde_miroir', 'monde_finale'].includes(id)
+    ),
+    bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde'],
+    mondesDejaMontres: ['monde_prologue', 'monde_lave', 'monde_fuochi'],
+};
+
+/** Première visite Vide — cutscene d'entrée vide_errance. */
+export const ETAT_ENTREE_VIDE = {
+    ...ETAT_ENTREE_COSMOS,
+    mondesCompletes: [...ETAT_ENTREE_COSMOS.mondesCompletes, 'monde_cosmos'],
+    mondesDejaMontres: [...ETAT_ENTREE_COSMOS.mondesDejaMontres, 'monde_cosmos'],
+};
+
+/** Première visite Trame — cutscene d'entrée trame. */
+export const ETAT_ENTREE_TRAME = {
+    ...ETAT_FIN_SECRETE_PRET,
+    mondesCompletes: ETAT_FIN_SECRETE_PRET.mondesCompletes.filter(
+        (id) => !['monde_trame', 'monde_finale'].includes(id)
+    ),
+    mondesCachesDebloques: ['monde_miroir', 'monde_trame'],
+    mondesDejaMontres: ['monde_boss_1', 'monde_miroir'],
+};

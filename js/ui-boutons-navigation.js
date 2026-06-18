@@ -1,6 +1,6 @@
 import { etat, ECRANS } from './store-jeu.js';
-import { afficherEcranDiffere as afficherEcran } from './navigation-lazy.js';
 import { afficherOngletOptions } from './options-ui.js';
+import { afficherEcranDiffere as afficherEcran } from './navigation-lazy.js';
 import { jouerMelodie } from './melodie.js';
 import { AudioMoteur } from './audio.js';
 import { basculerOracle } from './oracle-jeu.js';
@@ -148,10 +148,17 @@ function _lierSelectionEtModes() {
         'tab-controles',
         navVers(() => afficherOngletOptions('controles'))
     );
-    lierBouton('btn-mute', () => AudioMoteur.basculerMute());
-    lierBouton('btn-reecouter', () => jouerMelodie());
+    lierBouton('btn-mute', () => {
+        vibrerUi();
+        AudioMoteur.basculerMute();
+    });
+    lierBouton('btn-reecouter', () => {
+        vibrerUi();
+        jouerMelodie();
+    });
 
     lierBoutonsSelecteur('.bouton-mode', (btn) => {
+        vibrerUi();
         etat.modeJeu = btn.dataset.mode;
         document.querySelectorAll('.bouton-mode').forEach((b) => b.classList.remove('actif'));
         btn.classList.add('actif');

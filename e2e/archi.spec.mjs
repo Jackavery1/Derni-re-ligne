@@ -158,3 +158,32 @@ test('architecte paysage tablette — contrôles paysage visibles', async ({ pag
     await page.locator('#btn-archi-valider-p').click();
     await expect(page.locator('#archi-pieces-used')).not.toHaveText(piecesAvant);
 });
+
+test('architecte telephone paysage — panneau stats scrollable', async ({ page }) => {
+    await page.setViewportSize({ width: 667, height: 375 });
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-architecte').click();
+    await ouvrirPremierNiveauArchitecte(page);
+    await expect(page.locator('#interface-jeu-archi')).toBeVisible({ timeout: 5000 });
+
+    const metriques = await page.evaluate(() => {
+        const panneau = document.querySelector('#interface-jeu-archi .panneau-archi');
+        const objectif = document.getElementById('archi-par');
+        const style = panneau ? getComputedStyle(panneau) : null;
+        const rect = objectif?.getBoundingClientRect();
+        return {
+            overflowY: style?.overflowY ?? '',
+            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+            objectifVisible: Boolean(rect && rect.height > 0),
+            paysageCtrl: getComputedStyle(
+                document.getElementById('controles-archi-paysage') ?? document.body
+            ).display,
+        };
+    });
+    expect(metriques.debord).toBe(false);
+    expect(metriques.overflowY).toBe('auto');
+    expect(metriques.objectifVisible).toBe(true);
+    expect(metriques.paysageCtrl).not.toBe('none');
+});

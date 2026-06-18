@@ -44,7 +44,7 @@ export function ouvrirPanneauBiomeConstellation(idBiome, deps) {
             nbVerrouilles > 0
                 ? `${nbVerrouilles} monde(s) a debloquer en histoire`
                 : 'A debloquer en mode histoire';
-    } else if (modeSprintActif) {
+    } else if (modeSprintActif()) {
         const ms = obtenirRecordSprintBiome(idBiome);
         recordTexte =
             ms > 0 ? `Meilleur temps : ${formaterTemps(ms)}` : 'Sprint — chrono 40 lignes';
@@ -109,7 +109,7 @@ export function afficherBarreModesBiome(idBiome) {
         mettreAJourToggleDefiJour()
     );
     void import('./infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) =>
-        proposerInfobulleModeJeu(modeSprintActif ? 'sprint' : 'sansFin')
+        proposerInfobulleModeJeu(modeSprintActif() ? 'sprint' : 'sansFin')
     );
 }
 

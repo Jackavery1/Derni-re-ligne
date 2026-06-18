@@ -186,3 +186,31 @@ export const METEO_BIOMES = {
         effet: 'microgravite',
     },
 };
+
+export const INFOBULLES_MODES = {
+    sansFin: {
+        titre: 'SANS FIN',
+        texte: 'Partie ouverte sans quota de lignes. En solo, un timer par niveau vous pousse a viser le meilleur score.',
+        desc: 'Partie ouverte : progressez sans limite. Timer par niveau en solo.',
+    },
+    sprint: {
+        titre: 'SPRINT',
+        texte: 'Effacez 40 lignes le plus vite possible. Le chrono demarre tout de suite ; record par biome.',
+        desc: '40 lignes au chrono — meilleur temps par biome.',
+    },
+    oracle: {
+        titre: 'ORACLE',
+        texte: 'Fantome cyan : suivez-le pour un bonus ou defiez-le pour le multiplicateur. Incompatible Coop.',
+        desc: 'Suggestion cyan : bonus ou defi multiplicateur. Solo uniquement.',
+    },
+    coop: {
+        titre: 'COOP',
+        texte: 'Deux joueurs, plateau partage (J1 cols 1-5, J2 cols 6-10). Ligne valide si les deux moities sont pleines.',
+        desc: 'Plateau partage a deux — lignes sur toute la largeur.',
+    },
+    defiJour: {
+        titre: 'DEFI DU JOUR',
+        texte: 'Un biome et un quota de lignes imposes pour la journee. Battez votre record du jour avant minuit — mode Sans fin desactive.',
+        desc: 'Biome et quota imposes — record a battre chaque jour.',
+    },
+};

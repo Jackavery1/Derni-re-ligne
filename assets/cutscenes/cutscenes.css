@@ -619,7 +619,7 @@ body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
     gap: 16px;
     align-items: center;
     justify-content: center;
-    padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+    padding-bottom: max(8px, var(--safe-bottom));
 }
 
 .btn-cutscene {
@@ -766,6 +766,50 @@ body.effets-reduits #ecran-histoire-cutscene.mode-narrateur .letterbox-bas {
     #zone-narration-cutscene {
         padding-left: max(16px, var(--safe-left));
         padding-right: max(16px, var(--safe-right));
+    }
+}
+
+@media (max-width: 319px) {
+    #canvas-portrait-gauche,
+    #canvas-portrait-droite {
+        width: min(38vw, 112px);
+        height: min(52vw, 156px);
+    }
+
+    #texte-narration-cutscene {
+        font-size: max(14px, min(4.2vw, 18px));
+    }
+
+    #texte-dialogue-cutscene {
+        font-size: max(13px, 3.6vw);
+    }
+
+    .cutscene-barre-bas {
+        grid-template-columns: 1fr;
+        justify-items: stretch;
+        gap: 6px;
+        padding-left: max(8px, var(--safe-left));
+        padding-right: max(8px, var(--safe-right));
+    }
+
+    #ecran-histoire-cutscene .cutscene-progress {
+        justify-self: center;
+        width: 100%;
+        text-align: center;
+    }
+
+    #ecran-histoire-cutscene .cutscene-controles {
+        grid-column: 1;
+        justify-self: stretch;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-bottom: max(6px, var(--safe-bottom));
+    }
+
+    .btn-cutscene-passer {
+        padding: 8px 6px;
+        font-size: 10px;
+        letter-spacing: 1px;
     }
 }
 

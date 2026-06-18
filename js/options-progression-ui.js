@@ -1,6 +1,14 @@
 import { exporterProgressionB10, importerProgressionB10 } from './progression.js';
 import { lierBouton } from './ui-lier-bouton.js';
 
+function pulseExportImport() {
+    try {
+        if (localStorage.getItem('derniereLigne_haptique') !== 'false') navigator.vibrate?.(8);
+    } catch {
+        /* ignore */
+    }
+}
+
 const MARQUEUR_IMPORT = 'data-neo-import-lie';
 
 async function traiterImportFichier(fichier) {
@@ -27,6 +35,7 @@ async function traiterImportFichier(fichier) {
 
 function lierExportImport({ btnExportId, btnImportId, inputImportId }) {
     lierBouton(btnExportId, () => {
+        pulseExportImport();
         const exportData = exporterProgressionB10();
         const blob = new Blob([JSON.stringify(exportData, null, 2)], {
             type: 'application/json',
@@ -40,6 +49,7 @@ function lierExportImport({ btnExportId, btnImportId, inputImportId }) {
     });
 
     lierBouton(btnImportId, () => {
+        pulseExportImport();
         document.getElementById(inputImportId)?.click();
     });
 

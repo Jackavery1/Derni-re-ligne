@@ -6,6 +6,11 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version    | Date       | En bref                                                                                            |
 | ---------- | ---------- | -------------------------------------------------------------------------------------------------- |
+| **2.5.32** | 2026-06-18 | Compléments audit : yeux VERA, haptique leaderboard, E2E entrées/fin vraie, ESLint 0 warn          |
+| **2.5.31** | 2026-06-18 | Remédiation audit D : E2E post-monde 15 mondes, paradoxe, audio cutscene, VERA expressif           |
+| **2.5.30** | 2026-06-18 | Remédiation audit C : cutscenes &lt;320px, archi/pause/game over paysage, safe-area harmonisée     |
+| **2.5.29** | 2026-06-18 | Remédiation audit B : infobulles modes, haptique, briefing Distorsion carte, ROBO HUD              |
+| **2.5.28** | 2026-06-18 | Remédiation audit A : bundle, hotspots, ESLint, images UI, SW v53                                  |
 | **2.5.27** | 2026-06-17 | Notifs hors canvas, modes Sans fin/Sprint, sélection mobile constellation, infobulles modes        |
 | **2.5.25** | 2026-06-17 | Mobile accueil, precache textes histoire, cutscene découpée, bundle −1 Ko, SW v51                  |
 | **2.5.24** | 2026-06-17 | Données jeu en JSON async, portraits VERA découpés, ROBO menu image, achievements conditions split |
@@ -40,6 +45,68 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.2.0**  | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                                         |
 | **2.1.0**  | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                                         |
 | **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                                      |
+
+---
+
+## [2.5.32] — 2026-06-18
+
+### Compléments audits (hors pistes audio)
+
+- **VERA** : pupilles animées dans `portrait-vera-rendu.js` ; tests sourcils par humeur
+- **Audit B** : haptique sur `btn-rafraichir-leaderboard`
+- **Audit D** : E2E entrées `monde_cosmos`, `monde_vide`, `monde_trame` ; victoire finale → `fin_vraie`
+- **ESLint** : 0 warning (imports/variables inutilisés E2E)
+- **Docs** : `mode-histoire.md` — liste complète des specs E2E narration
+- SW `dl-shell-v57` ; versions alignées **2.5.32**
+
+---
+
+## [2.5.31] — 2026-06-18
+
+### Remédiation audit D (narration & E2E)
+
+- **E2E post-monde** : `e2e/histoire-post-monde.spec.mjs` couvre les 15 mondes de `CUTSCENES_POST_MONDE`
+- **Campagne fin secrète** : conditions Trame via localStorage organique (sans `injecterConditionsTrameDistorsion`)
+- **Paradoxe** : E2E après outro fin secrète → monde paradoxe jouable avec cutscene d’entrée
+- **Audio narratif** : assertion `obtenirMusiqueActive() === 'narratif_cutscene'` en cutscene post-monde
+- **VERA expressif** : parle → humeur `douce`, écoute → `neutre` (comme ROBO) ; halo/particules animés existants
+- SW `dl-shell-v56` ; versions alignées **2.5.31**
+
+---
+
+## [2.5.30] — 2026-06-18
+
+### Remédiation audit C (responsivité)
+
+- **Cutscenes &lt; 320 px** : barre contrôles en colonne, portraits compacts, typo plancher
+- **Architecte paysage** : safe-area sur `#conteneur-principal-archi`, panneau stats scrollable, typo lisible
+- **HUD / post-partie** : timer marathon compact en paysage ; overlays objectifs scrollables
+- **Pause & game over** : layout paysage mobile avec safe-area (`var(--safe-*)`)
+- **Tests** : `safe-area.test.mjs` étendu ; E2E cutscene 319px, archi 667×375, pause/game over paysage
+- SW `dl-shell-v55` ; versions alignées **2.5.30**
+
+---
+
+## [2.5.29] — 2026-06-18
+
+### Remédiation audit B (gameplay & UX)
+
+- **Infobulles modes** : `INFOBULLES_MODES` restauré dans `contenu-jeu.json` (export pipeline corrigé)
+- **Haptique** : `btn-mute`, `btn-reecouter`, sélecteur `.bouton-mode`, export/import profil, rafraîchir leaderboard
+- **Campagne** : bouton **Briefing Distorsion** dans le panneau détail (boss 4 / finale) + tutoriel rejouable
+- SW `dl-shell-v54` ; versions alignées **2.5.29**
+
+---
+
+## [2.5.28] — 2026-06-18
+
+### Remédiation audit A (technique)
+
+- **Bundle** : extraction `histoire-boutons-carte.js` (boot sans `histoire-map-ui`) ; lazy `options-ui` au mute ; **559 Ko** / 560 max
+- **Hotspots** : `constellation-evenements.js` extrait ; **0 module > 450 L**
+- **ESLint** : `portrait-distorsion-parties.js` — **0 warning**
+- **Images** : `compresser-images-ui.mjs` — splash 72→62 Ko, robo 89→77 Ko ; precache **~1310 Ko**
+- SW `dl-shell-v53` ; versions alignées **2.5.28**
 
 ---
 

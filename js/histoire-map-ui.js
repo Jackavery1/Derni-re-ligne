@@ -8,8 +8,10 @@ import {
     obtenirProgressionGlobale,
     SEUILS_COMPLETION,
 } from './histoire-mondes.js';
-import { obtenirActionsHistoire } from './histoire-actions.js';
 import { annulerPrechargementMedias } from './prechargement-medias.js';
+import { lierBoutonsCarteHistoire } from './histoire-boutons-carte.js';
+import { obtenirActionsHistoire } from './histoire-actions.js';
+export { lierBoutonsCarteHistoire } from './histoire-boutons-carte.js';
 import { modeDevActif } from './mode-dev-etat.js';
 import { obtenirEtoilesPersistees } from './gestionnaire-difficulte.js';
 import { definirTexteUi, sansAccentsE } from './texte-jeu.js';
@@ -17,30 +19,6 @@ import { obtenirResumeConditionsTrame, obtenirGuideMondeSecret } from './conditi
 
 const MARQUEUR_BOUTON = 'data-neo-histoire-lie';
 let _modalTrameAttache = false;
-
-function _lierBoutonCarte(id, handler) {
-    const el = document.getElementById(id);
-    if (!el || el.hasAttribute(MARQUEUR_BOUTON) || typeof el.addEventListener !== 'function')
-        return;
-    el.setAttribute(MARQUEUR_BOUTON, '1');
-    el.addEventListener('click', () => {
-        void handler();
-    });
-}
-
-export function lierBoutonsCarteHistoire() {
-    _lierBoutonCarte('btn-histoire-retour', () => {
-        obtenirActionsHistoire().retourTitreDepuisCarte?.();
-    });
-
-    _lierBoutonCarte('btn-histoire-carte', () => {
-        obtenirActionsHistoire().retourCarte?.();
-    });
-
-    _lierBoutonCarte('btn-continue-boss', () => {
-        void obtenirActionsHistoire().continuerBossDistorsion?.();
-    });
-}
 
 function _ouvrirModalTrame() {
     const overlay = document.getElementById('overlay-trame-conditions');
@@ -245,6 +223,7 @@ function _mettreAJourGuideEtAvertissement(monde, etatMonde, estBoss) {
     }
 
     const elAvert = document.getElementById('histoire-detail-avert');
+    const btnBriefing = document.getElementById('btn-histoire-briefing-distorsion');
     const mondesDifficiles = [
         'monde_miroir',
         'monde_trame',
@@ -264,6 +243,13 @@ function _mettreAJourGuideEtAvertissement(monde, etatMonde, estBoss) {
             elAvert.textContent = '';
             elAvert.classList.add('element-masque');
         }
+    }
+
+    if (btnBriefing) {
+        const afficherBriefing =
+            (monde.id === 'monde_boss_4' || monde.id === 'monde_finale') &&
+            etatMonde === 'disponible';
+        btnBriefing.classList.toggle('element-masque', !afficherBriefing);
     }
 }
 

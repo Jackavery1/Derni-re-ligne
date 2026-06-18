@@ -261,6 +261,50 @@ test('game over mobile sans débordement horizontal', async ({ page }) => {
     expect(debord).toBe(false);
 });
 
+test('pause paysage mobile sans debordement', async ({ page }) => {
+    await demarrerPartie(page);
+    await page.setViewportSize({ width: 667, height: 375 });
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
+
+    const metriques = await page.evaluate(() => {
+        const contenu = document.querySelector('#ecran-pause .pause-contenu');
+        return {
+            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+            pauseOverflow: getComputedStyle(document.getElementById('ecran-pause') ?? document.body)
+                .overflowY,
+            boutonH: document.getElementById('btn-reprendre')?.getBoundingClientRect().height ?? 0,
+            contenuOverflow: contenu ? getComputedStyle(contenu).overflowY : '',
+        };
+    });
+    expect(metriques.debord).toBe(false);
+    expect(metriques.boutonH).toBeGreaterThanOrEqual(48);
+});
+
+test('game over paysage mobile sans debordement', async ({ page }) => {
+    await page.setViewportSize({ width: 667, height: 375 });
+    await demarrerPartieViaClavier(page);
+    await terminerPartieCourante(page);
+    await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/, { timeout: 10000 });
+
+    const metriques = await page.evaluate(() => {
+        const contenu = document.querySelector('#ecran-game-over .go-contenu');
+        return {
+            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+            goOverflow: getComputedStyle(
+                document.getElementById('ecran-game-over') ?? document.body
+            ).overflowY,
+            boutonH:
+                document
+                    .querySelector('#ecran-game-over .go-boutons .bouton')
+                    ?.getBoundingClientRect().height ?? 0,
+            contenuOverflow: contenu ? getComputedStyle(contenu).overflowY : '',
+        };
+    });
+    expect(metriques.debord).toBe(false);
+    expect(metriques.boutonH).toBeGreaterThanOrEqual(48);
+});
+
 test('panneau detail JOUER visible sur petit ecran sans scroll force', async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 568 });
     await preparerPageSansSw(page, ETAT_DEBLOCAGE_MONDE_LIBRE);

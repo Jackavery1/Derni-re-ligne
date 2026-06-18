@@ -34,9 +34,14 @@ describe('expressions cutscene', () => {
         expect(resoudreHumeurPortrait('robo', undefined, { parle: false })).toBe('neutre');
     });
 
+    it('VERA sans humeur : parle → douce, écoute → neutre', () => {
+        expect(resoudreHumeurPortrait('vera', undefined, { parle: true })).toBe('douce');
+        expect(resoudreHumeurPortrait('vera', undefined, { parle: false })).toBe('neutre');
+    });
+
     it('humeur invalide : fallback sans exception', () => {
         expect(() => resoudreHumeurPortrait('vera', 'banane', { parle: true })).not.toThrow();
-        expect(resoudreHumeurPortrait('vera', 'banane', { parle: true })).toBe('neutre');
+        expect(resoudreHumeurPortrait('vera', 'banane', { parle: true })).toBe('douce');
     });
 
     it('applique les humeurs explicites sur trois personnages', () => {

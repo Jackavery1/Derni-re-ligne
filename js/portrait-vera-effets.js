@@ -69,14 +69,6 @@ export function dessinerParticulesVera(ctx, cx, cy, s, tAnim, params) {
     ctx.globalAlpha = 1;
 }
 
-/**
- * @param {CanvasRenderingContext2D} ctx
- * @param {number} w
- * @param {number} h
- * @param {number} s
- * @param {number} cx
- * @param {Record<string, number | boolean | number[]>} params
- */
 export function dessinerExpressionVera(ctx, w, h, s, cx, params) {
     const sourcils = params.sourcils === true;
     const douce =

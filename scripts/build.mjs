@@ -15,6 +15,7 @@ import { resolve } from 'path';
 const dist = 'dist';
 
 execSync('node scripts/compresser-icones.mjs', { stdio: 'inherit' });
+execSync('node scripts/compresser-images-ui.mjs', { stdio: 'inherit' });
 execSync('node scripts/exporter-donnees-json.mjs', { stdio: 'inherit' });
 
 rmSync(dist, { recursive: true, force: true });

@@ -39,6 +39,7 @@ writeFileSync(
         {
             RELIQUES: contenuSource.RELIQUES,
             METEO_BIOMES: contenuSource.METEO_BIOMES,
+            INFOBULLES_MODES: contenuSource.INFOBULLES_MODES,
         },
         null,
         2

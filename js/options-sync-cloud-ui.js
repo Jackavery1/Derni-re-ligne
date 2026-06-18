@@ -195,6 +195,11 @@ export function initialiserSyncCloudOptions(
     selectBiome?.addEventListener('change', rafraichirDepuisFiltres);
 
     document.getElementById('btn-rafraichir-leaderboard')?.addEventListener('click', () => {
+        try {
+            if (localStorage.getItem('derniereLigne_haptique') !== 'false') navigator.vibrate?.(8);
+        } catch {
+            /* ignore */
+        }
         void rafraichirLeaderboardOptions();
     });
 

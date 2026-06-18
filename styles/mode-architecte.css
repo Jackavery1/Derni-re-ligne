@@ -7,9 +7,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100vw;
+    width: 100%;
+    max-width: 100vw;
     height: 100dvh;
     overflow: visible;
+    box-sizing: border-box;
+    padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
 }
 
 #conteneur-principal-archi.element-masque {
@@ -288,7 +291,7 @@ body.archi-active #controles-paysage {
     display: none;
     flex-direction: column;
     gap: 6px;
-    padding: 8px 12px calc(14px + env(safe-area-inset-bottom, 0px));
+    padding: 8px 12px calc(14px + var(--safe-bottom));
     background: linear-gradient(transparent, rgba(8, 8, 26, 0.97) 30%);
     z-index: 50;
 }
@@ -328,16 +331,24 @@ body.archi-active #controles-paysage {
 
     body.archi-active #interface-jeu-archi .panneau-archi {
         width: 90px;
-        max-height: calc(
-            100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 16px
-        );
+        max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 16px);
         overflow-y: auto;
         overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
     }
 
     body.archi-active #interface-jeu-archi .section {
         padding: 6px 4px;
         gap: 4px;
+    }
+
+    body.archi-active #interface-jeu-archi .stat-label {
+        font-size: 0.3rem;
+    }
+
+    body.archi-active #interface-jeu-archi .stat-valeur {
+        font-size: 0.52rem;
+        line-height: 1.15;
     }
 
     body.archi-active #interface-jeu-archi .archi-guide {

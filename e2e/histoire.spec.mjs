@@ -12,6 +12,12 @@ import {
     passerCutsceneHistoire,
     ETAT_HISTOIRE_BOSS_BRASIER,
 } from './helpers.mjs';
+import {
+    ETAT_PARADOXE_DEBLOQUE,
+    ETAT_ENTREE_COSMOS,
+    ETAT_ENTREE_VIDE,
+    ETAT_ENTREE_TRAME,
+} from './etats-histoire.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 
 /** État avec le monde Miroir débloqué (3 Tetris CYBER + Archiviste vaincu). */
@@ -34,14 +40,6 @@ const ETAT_TRAME_DEBLOQUE = {
         tousBossSansContinue: true,
         actionDistorsionFaite: true,
     },
-};
-
-/** État avec le monde Paradoxe débloqué (fin secrète + 3 tops volontaires prologue). */
-const ETAT_PARADOXE_DEBLOQUE = {
-    ...ETAT_HISTOIRE_BOSS_BRASIER,
-    mondesCachesDebloques: ['monde_paradoxe'],
-    mondesDejaMontres: ['monde_boss_1', 'monde_paradoxe'],
-    conditionsParadoxe: { finSecreteObtenue: true, topsVolontairesPrologue: 3 },
 };
 
 test('intro Jour 2 554 — première visite depuis Nouvelle partie', async ({ page }) => {
@@ -415,6 +413,41 @@ test('cutscene entree monde lave — fond scene seuil_brasier', async ({ page })
     expect(statsCanvas).not.toBeNull();
     expect(statsCanvas.n).toBeGreaterThan(1000);
     expect(statsCanvas.r).toBeGreaterThan(statsCanvas.g);
+});
+
+/** @param {import('@playwright/test').Page} page */
+async function attendreCutsceneSceneImage(page) {
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 10000,
+    });
+    await page.waitForFunction(
+        () =>
+            document
+                .getElementById('ecran-histoire-cutscene')
+                ?.classList.contains('cutscene-scene-image'),
+        null,
+        { timeout: 15000 }
+    );
+}
+
+/** @param {import('@playwright/test').Page} page @param {object} etat @param {string} mondeId */
+async function lancerMondeEtAttendreScene(page, etat, mondeId) {
+    await ouvrirCarteHistoire(page, etat);
+    await page.locator('#histoire-monde-clavier').selectOption(mondeId, { force: true });
+    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await attendreCutsceneSceneImage(page);
+}
+
+test('cutscene entree monde cosmos — fond scene observatoire', async ({ page }) => {
+    await lancerMondeEtAttendreScene(page, ETAT_ENTREE_COSMOS, 'monde_cosmos');
+});
+
+test('cutscene entree monde vide — fond scene vide_errance', async ({ page }) => {
+    await lancerMondeEtAttendreScene(page, ETAT_ENTREE_VIDE, 'monde_vide');
+});
+
+test('cutscene entree monde trame — fond scene trame', async ({ page }) => {
+    await lancerMondeEtAttendreScene(page, ETAT_ENTREE_TRAME, 'monde_trame');
 });
 
 test('cutscene narration active le mode voix off', async ({ page }) => {

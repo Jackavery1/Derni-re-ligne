@@ -13,6 +13,41 @@ const ETAT_PROLOGUE_PRET = {
     mondesDejaMontres: ['monde_prologue'],
 };
 
+/** Prépare les conditions Trame via localStorage (sans API inject de test). */
+/** @param {import('@playwright/test').Page} page */
+async function preparerConditionsTrameOrganiques(page) {
+    await page.evaluate(() => {
+        const brut = localStorage.getItem('derniereLigne_histoire');
+        const sauve = brut ? JSON.parse(brut) : {};
+        sauve.conditionsMiroir = { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 };
+        sauve.conditionsTrame = {
+            miroirComplete: true,
+            tousJournauxTrouves: true,
+            tousBossSansContinue: true,
+            actionDistorsionFaite: true,
+        };
+        const journauxRequis = [
+            'journal_1',
+            'journal_2',
+            'journal_3',
+            'journal_4',
+            'journal_5',
+            'journal_6',
+            'journal_7',
+            'journal_8',
+            'journal_9',
+        ];
+        sauve.journauxTrouves = [...new Set([...(sauve.journauxTrouves ?? []), ...journauxRequis])];
+        sauve.mondesCachesDebloques = [
+            ...new Set([...(sauve.mondesCachesDebloques ?? []), 'monde_miroir', 'monde_trame']),
+        ];
+        if (!sauve.mondesCompletes?.includes('monde_miroir')) {
+            sauve.mondesCompletes = [...(sauve.mondesCompletes ?? []), 'monde_miroir'];
+        }
+        localStorage.setItem('derniereLigne_histoire', JSON.stringify(sauve));
+    });
+}
+
 /** @param {import('@playwright/test').Page} page @param {number} [max] */
 async function avancerFluxPostVictoire(page, max = 60) {
     for (let i = 0; i < max; i++) {
@@ -175,9 +210,7 @@ test('campagne complete — progression simulee vers fin secrete', async ({ page
 
     for (const mondeId of MONDES_SECRETS_FIN_SECRETE) {
         if (mondeId === 'monde_trame' || mondeId === 'monde_finale') {
-            await page.evaluate(() => {
-                window.__NEO_TEST__?.injecterConditionsTrameDistorsion?.();
-            });
+            await preparerConditionsTrameOrganiques(page);
         }
         await page.evaluate(async (id) => {
             await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);

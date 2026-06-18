@@ -1,13 +1,14 @@
 /** Re-attache les handlers apres injection lazy-load de fragments HTML. */
+import { lierBoutonsCarteHistoire } from './histoire-boutons-carte.js';
+
 export async function assurerBoutonsApresFragments() {
-    const [nav, partie, histoire] = await Promise.all([
+    const [nav, partie] = await Promise.all([
         import('./ui-boutons-navigation.js'),
         import('./ui-boutons-partie.js'),
-        import('./histoire-map-ui.js'),
     ]);
     nav.initialiserBoutonsNavigation();
     partie.initialiserBoutonsPartie();
-    histoire.lierBoutonsCarteHistoire();
+    lierBoutonsCarteHistoire();
 }
 
 let ecouteurFragmentsOk = false;

@@ -143,7 +143,7 @@ function _humeurCompatDefaut(personnageId, parle) {
     const id = idPortraitRendu(personnageId);
     if (id === 'robo') return parle ? 'content' : 'neutre';
     if (id === 'brasier_voix' || id === 'sentinelle_voix') return 'vacillant';
-    if (PRESETS_VERA.neutre && id === 'vera') return 'neutre';
+    if (PRESETS_VERA.neutre && id === 'vera') return parle ? 'douce' : 'neutre';
     if (PRESETS_DISTORSION.menacante && id === 'distorsion') return 'menacante';
     if (
         PRESETS_BOSS.calme &&

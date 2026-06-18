@@ -204,6 +204,17 @@ describe('audit 2 — gameplay UX', () => {
     });
 
     describe('polish et contenu (audit 2 dims 9-10)', () => {
+        it('charge les infobulles modes depuis contenu-jeu.json', async () => {
+            const { chargerContenuJeu, INFOBULLES_MODES_JEU } =
+                await import('../js/contenu-jeu.js');
+            await chargerContenuJeu();
+            expect(INFOBULLES_MODES_JEU.sansFin?.titre).toBe('SANS FIN');
+            expect(INFOBULLES_MODES_JEU.sprint?.desc).toContain('chrono');
+            expect(INFOBULLES_MODES_JEU.oracle?.texte).toContain('Coop');
+            expect(INFOBULLES_MODES_JEU.coop?.titre).toBe('COOP');
+            expect(INFOBULLES_MODES_JEU.defiJour?.titre).toBe('DEFI DU JOUR');
+        });
+
         it('sansAccentsE retire les accents des libelles UI', async () => {
             const { sansAccentsE } = await import('../js/texte-jeu.js');
             expect(sansAccentsE('RÉSERVE')).toBe('RESERVE');

@@ -78,12 +78,24 @@ describe('portrait VERA canvas procedural', () => {
 
     it('dessine sans erreur pour chaque humeur', () => {
         const humeurs = ['neutre', 'douce', 'inquiete', 'determinee', 'glitch'];
+        const strokes = {};
         for (const humeur of humeurs) {
             const ctx = creerCtxMock();
             const params = obtenirParamsExpressionPortrait('vera', humeur, 1000);
-            expect(() => dessinerPortraitVeraCanon(ctx, 180, 260, 1.5, params)).not.toThrow();
+            dessinerPortraitVeraCanon(ctx, 180, 260, 1.5, params);
+            strokes[humeur] = ctx.stroke.mock.calls.length;
             expect(ctx.clearRect).toHaveBeenCalled();
         }
+        expect(strokes.inquiete).toBeGreaterThan(strokes.neutre);
+    });
+
+    it('yeux expressifs : pupilles animées selon tAnim', () => {
+        const ctx0 = creerCtxMock();
+        const ctx1 = creerCtxMock();
+        const params = obtenirParamsExpressionPortrait('vera', 'douce', 1000);
+        dessinerPortraitVeraCanon(ctx0, 180, 260, 0, params);
+        dessinerPortraitVeraCanon(ctx1, 180, 260, 2.5, params);
+        expect(ctx1.arc.mock.calls.length).toBeGreaterThan(ctx0.arc.mock.calls.length);
     });
 
     it('fallback canvas dessine un buste sans rectangles bruts', () => {
