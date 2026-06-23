@@ -216,81 +216,16 @@ export async function fermerRecapPostMonde(page) {
     await page.locator('#btn-recap-continuer').click({ force: true });
 }
 
-/** Ferme recap, journal et cutscenes sans assertion stricte (parcours campagne long). */
-/** @param {import('@playwright/test').Page} page @param {number} [max] */
-export async function viderOverlaysHistoireRapide(page, max = 12) {
-    for (let i = 0; i < max; i++) {
-        const etat = await page.evaluate(() => ({
-            recap: document
-                .getElementById('overlay-recap-monde')
-                ?.classList.contains('objectif-overlay-visible'),
-            cutscene: document
-                .getElementById('ecran-histoire-cutscene')
-                ?.classList.contains('actif'),
-            journal: document.getElementById('ecran-histoire-journal')?.classList.contains('actif'),
-        }));
-        if (!etat.recap && !etat.cutscene && !etat.journal) return;
-        if (etat.recap) {
-            await page.locator('#btn-recap-continuer').click({ force: true });
-            continue;
-        }
-        if (etat.journal) {
-            await page.evaluate(() => {
-                document.getElementById('btn-journal-fermer')?.click();
-            });
-            continue;
-        }
-        if (etat.cutscene) {
-            await page.evaluate(() => {
-                document.getElementById('btn-cutscene-passer')?.click();
-            });
-            continue;
-        }
-        await page.waitForTimeout(150);
-    }
-}
-
-/** @param {import('@playwright/test').Page} page */
-export async function passerCutsceneEntiere(page) {
-    await page.evaluate(() => {
-        document.getElementById('btn-cutscene-passer')?.click();
-    });
-}
-
-/** Passe toutes les cutscenes actives jusqu'à l'écran de fin histoire. */
-/** @param {import('@playwright/test').Page} page */
-export async function terminerCutscenesVersEcranFin(page) {
-    for (let tentative = 0; tentative < 20; tentative++) {
-        const finActif = await page
-            .locator('#ecran-histoire-fin')
-            .evaluate((el) => el.classList.contains('actif'))
-            .catch(() => false);
-        if (finActif) return;
-
-        const cutActif = await page
-            .locator('#ecran-histoire-cutscene')
-            .evaluate((el) => el.classList.contains('actif'))
-            .catch(() => false);
-        if (cutActif) {
-            await page.locator('#btn-cutscene-passer').click({ force: true });
-            continue;
-        }
-        await page.waitForTimeout(200);
-    }
-    await expect(page.locator('#ecran-histoire-fin')).toHaveClass(/actif/, { timeout: 5000 });
-}
-
-/** @param {import('@playwright/test').Page} page */
-export async function passerCutsceneActive(page) {
-    await page.evaluate(() => {
-        const passer = document.getElementById('btn-cutscene-passer');
-        if (passer) {
-            passer.click();
-            return;
-        }
-        document.getElementById('btn-cutscene-suivant')?.click();
-    });
-}
+export {
+    MARQUEURS_NARRATIFS_CAMPAGNE,
+    appliquerEncocheSimulee,
+    lireTexteCutsceneActive,
+    parcourirFluxPostVictoireAvecAssertions,
+    viderOverlaysHistoireRapide,
+    passerCutsceneEntiere,
+    terminerCutscenesVersEcranFin,
+    passerCutsceneActive,
+} from './helpers-narratif.mjs';
 
 /** @param {import('@playwright/test').Page} page @param {object} [etatHistoire] */
 export async function ouvrirCarteHistoire(page, etatHistoire = ETAT_HISTOIRE_BOSS_BRASIER) {

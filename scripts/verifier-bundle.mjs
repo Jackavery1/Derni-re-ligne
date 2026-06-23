@@ -1,10 +1,26 @@
-import { readdirSync, statSync } from 'fs';
+import { readdirSync, statSync, readFileSync, existsSync } from 'fs';
 
 const MAX_KO_TOTAL = 560;
 const WARN_KO_ENTREE = 80;
 const WARN_KO_TOTAL = 540;
 const dossier = 'dist/js';
-const fichiers = readdirSync(dossier).filter((f) => f.endsWith('.js') && !f.endsWith('.map'));
+
+/** @type {Set<string>} */
+const exclusBudget = new Set(['neo-test-init.js']);
+const exclusPath = `${dossier}/budget-exclus.json`;
+if (existsSync(exclusPath)) {
+    for (const nom of JSON.parse(readFileSync(exclusPath, 'utf8'))) {
+        exclusBudget.add(nom);
+    }
+}
+
+const fichiers = readdirSync(dossier).filter(
+    (f) =>
+        f.endsWith('.js') &&
+        !f.endsWith('.map') &&
+        f !== 'budget-exclus.json' &&
+        !exclusBudget.has(f)
+);
 const octets = fichiers.reduce(
     (total, fichier) => total + statSync(`${dossier}/${fichier}`).size,
     0

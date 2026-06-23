@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v57';
+const VERSION_SHELL = 'dl-shell-v58';
 const VERSION_MEDIAS = 'dl-medias-v4';
 
 const SCENES_CUTSCENE_PRECACHE = [
@@ -39,6 +39,7 @@ const FICHIERS_A_CACHER = [
     './styles/menu-narratif.css',
     './styles/mode-architecte.css',
     './styles/mode-histoire.css',
+    './styles/notifs-jeu.css',
     './styles/objectifs-histoire.css',
     './styles/overlays-meta.css',
     './styles/responsive.css',
@@ -141,6 +142,7 @@ const FICHIERS_A_CACHER = [
     './js/config-jeu.js',
     './js/config-sync.js',
     './js/config.js',
+    './js/constellation-evenements.js',
     './js/constellation-panneau.js',
     './js/constellation-rendu.js',
     './js/constellation-zone.js',
@@ -175,6 +177,7 @@ const FICHIERS_A_CACHER = [
     './js/haptique.js',
     './js/histoire-actions.js',
     './js/histoire-boss-continue.js',
+    './js/histoire-boutons-carte.js',
     './js/histoire-cutscene-config.js',
     './js/histoire-cutscene-fonds.js',
     './js/histoire-cutscene-moteur.js',
@@ -241,11 +244,13 @@ const FICHIERS_A_CACHER = [
     './js/moteur-config-actions.js',
     './js/moteur-init-interface.js',
     './js/moteur-init-systemes.js',
+    './js/moteur-init-test-api.js',
     './js/moteur-piece.js',
     './js/moteur.js',
     './js/navigation-ecrans.js',
     './js/navigation-lazy.js',
     './js/neo-test-api.js',
+    './js/neo-test-init.js',
     './js/notifications-file.js',
     './js/options-progression-ui.js',
     './js/options-sync-cloud-ui.js',
@@ -261,6 +266,7 @@ const FICHIERS_A_CACHER = [
     './js/portrait-archiviste-rendu.js',
     './js/portrait-avantgarde-rendu.js',
     './js/portrait-brasier-rendu.js',
+    './js/portrait-distorsion-parties.js',
     './js/portrait-distorsion-rendu.js',
     './js/portrait-rendu-utils.js',
     './js/portrait-sentinelle-rendu.js',

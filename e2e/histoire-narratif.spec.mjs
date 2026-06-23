@@ -5,6 +5,9 @@ import {
     passerCutsceneEntiere,
     passerFluxLancementMonde,
     terminerCutscenesVersEcranFin,
+    lireTexteCutsceneActive,
+    attendreApplicationPrete,
+    preparerPremierLancement,
     ETAT_HISTOIRE_BOSS_BRASIER,
     ETAT_FIN_SECRETE_PRET,
     ETAT_AVANT_FIN_SECRETE,
@@ -35,6 +38,29 @@ test('post-monde monde lave — fond scene seuil_brasier', async ({ page }) => {
         null,
         { timeout: 30000 }
     );
+});
+
+test('post-monde — audio narratif_cutscene sur mondes representatifs', async ({ page }) => {
+    test.setTimeout(180000);
+    const cas = [
+        { mondeId: 'monde_lave', etat: ETAT_HISTOIRE_BOSS_BRASIER },
+        { mondeId: 'monde_ocean', etat: ETAT_OCEAN_FRAGMENT_PRET },
+        { mondeId: 'monde_cyber', etat: ETAT_CYBER_LABO_PRET },
+    ];
+
+    for (const { mondeId, etat } of cas) {
+        await ouvrirCarteHistoire(page, etat);
+        await page.evaluate(async (id) => {
+            await window.__NEO_TEST__?.declencherPostMondeNarratif?.(id);
+        }, mondeId);
+        await fermerRecapPostMonde(page);
+        await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+            timeout: 15000,
+        });
+        const musique = await page.evaluate(() => window.__NEO_TEST__?.obtenirMusiqueActive?.());
+        expect(musique).toBe('narratif_cutscene');
+        await passerCutsceneEntiere(page);
+    }
 });
 
 test('fragment VERA ocean — signal parasite visible', async ({ page }) => {
@@ -235,8 +261,10 @@ test('fin vraie — outro harmonie et ecran de fin', async ({ page }) => {
     await expect(page.locator('#histoire-fin-titre')).toContainText(/HARMONIE/i);
 });
 
-test('apres fin secrete — monde paradoxe jouable avec cutscene entree', async ({ page }) => {
-    test.setTimeout(90000);
+test('apres fin secrete — debloque paradoxe organiquement sans reinjection etat', async ({
+    page,
+}) => {
+    test.setTimeout(120000);
     await ouvrirCarteHistoire(page, ETAT_FIN_SECRETE_PRET);
     await page.evaluate(async () => {
         await window.__NEO_TEST__?.declencherFinHistoire?.('fin_secrete');
@@ -244,27 +272,92 @@ test('apres fin secrete — monde paradoxe jouable avec cutscene entree', async 
     await terminerCutscenesVersEcranFin(page);
     await expect(page.locator('#ecran-histoire-fin')).toHaveAttribute('data-fin', 'fin_secrete');
 
-    const apresFin = await page.evaluate(() => {
+    await page.locator('#btn-fin-rejouer').click({ force: true });
+    await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/, { timeout: 10000 });
+
+    for (let i = 0; i < 3; i++) {
+        await page.evaluate(async () => {
+            await window.__NEO_TEST__?.simulerTopVolontairePrologue?.();
+        });
+    }
+
+    const debloque = await page.evaluate(() => {
         const brut = localStorage.getItem('derniereLigne_histoire');
         const sauve = brut ? JSON.parse(brut) : {};
-        return sauve.toutesFinObtenues ?? [];
+        return {
+            tops: sauve.conditionsParadoxe?.topsVolontairesPrologue ?? 0,
+            caches: sauve.mondesCachesDebloques ?? [],
+        };
     });
-    expect(apresFin).toContain('fin_secrete');
+    expect(debloque.tops).toBeGreaterThanOrEqual(3);
+    expect(debloque.caches).toContain('monde_paradoxe');
 
-    await ouvrirCarteHistoire(page, {
-        ...ETAT_FIN_SECRETE_PRET,
-        mondesCachesDebloques: [...ETAT_FIN_SECRETE_PRET.mondesCachesDebloques, 'monde_paradoxe'],
-        mondesDejaMontres: [...ETAT_FIN_SECRETE_PRET.mondesDejaMontres, 'monde_paradoxe'],
-        conditionsParadoxe: { finSecreteObtenue: true, topsVolontairesPrologue: 3 },
-        finObtenue: 'fin_secrete',
-        toutesFinObtenues: ['fin_secrete'],
-    });
+    await page.locator('#btn-histoire-retour').click({ force: true });
+    await expect(page.locator('#ecran-titre')).toHaveClass(/actif/, { timeout: 10000 });
+    await page.locator('#btn-continuer').click();
+    await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/, { timeout: 15000 });
+
     await page.locator('#histoire-monde-clavier').selectOption('monde_paradoxe', { force: true });
     await expect(page.locator('#histoire-monde-details')).not.toHaveClass(
         /histoire-panneau-masque/
     );
     await page.locator('.bouton-jouer-monde').click({ force: true });
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 10000 });
+});
+
+test('intro — changement de scene entre lignes d une cutscene', async ({ page }) => {
+    test.setTimeout(60000);
+    await preparerPremierLancement(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-nouvelle-partie').click();
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 15000,
+    });
+
+    const sceneObservatoire = await page.evaluate(
+        () => window.__NEO_TEST__?.obtenirSceneCutsceneActive?.() ?? null
+    );
+    expect(sceneObservatoire).toBe('observatoire');
+
+    for (let i = 0; i < 6; i++) {
+        const t = await lireTexteCutsceneActive(page);
+        if (/Trame/i.test(t)) break;
+        await page.locator('#btn-cutscene-suivant').click({ force: true });
+        await page.waitForTimeout(200);
+    }
+
+    await expect
+        .poll(() =>
+            page.evaluate(() => window.__NEO_TEST__?.obtenirSceneCutsceneActive?.() ?? null)
+        )
+        .toBe('trame');
+
+    for (let i = 0; i < 6; i++) {
+        const t = await lireTexteCutsceneActive(page);
+        if (/JOURNAL DE BORD/i.test(t)) break;
+        await page.locator('#btn-cutscene-suivant').click({ force: true });
+        await page.waitForTimeout(200);
+    }
+
+    await expect
+        .poll(() =>
+            page.evaluate(() => window.__NEO_TEST__?.obtenirSceneCutsceneActive?.() ?? null)
+        )
+        .toBe('observatoire');
+
+    for (let i = 0; i < 8; i++) {
+        const t = await lireTexteCutsceneActive(page);
+        if (/Jour 2 191/i.test(t)) break;
+        await page.locator('#btn-cutscene-suivant').click({ force: true });
+        await page.waitForTimeout(200);
+    }
+
+    await expect
+        .poll(() =>
+            page.evaluate(() => window.__NEO_TEST__?.obtenirSceneCutsceneActive?.() ?? null)
+        )
+        .toBe('fragmentation');
 });
 
 test('trame organique — typeFin fin_secrete sans API inject', async ({ page }) => {

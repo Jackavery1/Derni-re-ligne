@@ -9,5 +9,10 @@ describe('build prod', () => {
         expect(html).toMatch(
             /<script type="module" src="js\/bundle\.js" integrity="sha384-[^"]+" crossorigin="anonymous"><\/script>/
         );
+        expect(html).not.toMatch(/neo-test-init\.js/);
+        expect(readFileSync('dist/js/neo-test-init.js', 'utf8').length).toBeGreaterThan(100);
+        const exclus = JSON.parse(readFileSync('dist/js/budget-exclus.json', 'utf8'));
+        expect(exclus).toContain('neo-test-init.js');
+        expect(exclus.length).toBeGreaterThan(1);
     }, 15000);
 });

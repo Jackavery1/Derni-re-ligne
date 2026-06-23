@@ -413,7 +413,13 @@ test('ecran chargement — padding safe-area declare', async ({ page }) => {
     expect(padding).toBeTruthy();
 });
 
-test('iphone — contenu menu titre respecte encoche simulee', async ({ browser }) => {
+test('iphone — contenu menu titre respecte encoche simulee (audit C11)', async ({ browser }) => {
+    test.info().annotations.push({
+        type: 'note',
+        description:
+            'Validation physique sur iPhone reelle non automatisable ; simulation --safe-top: 47px (Dynamic Island).',
+    });
+
     const context = await browser.newContext({ ...devices['iPhone 14'] });
     const page = await context.newPage();
     await preparerPageSansSw(page);
@@ -430,11 +436,16 @@ test('iphone — contenu menu titre respecte encoche simulee', async ({ browser 
         const ecran = document.getElementById('ecran-titre');
         const btnRect = btn?.getBoundingClientRect();
         const ecranRect = ecran?.getBoundingClientRect();
+        const paddingTop = getComputedStyle(document.documentElement).getPropertyValue(
+            '--safe-top'
+        );
         return {
             topEcran: ecranRect?.top ?? -1,
             topBouton: btnRect?.top ?? -1,
+            safeTop: paddingTop.trim(),
         };
     });
+    expect(metriques.safeTop).toBe('47px');
     expect(metriques.topEcran).toBeGreaterThanOrEqual(46);
     expect(metriques.topBouton).toBeGreaterThanOrEqual(46);
 

@@ -26,7 +26,7 @@ Node 18+ (`.nvmrc`). Logs verbeux : `?debug=1`. Formatage : `.prettierrc` (Prett
 
 ### Tests E2E sur le bundle prod
 
-La CI définit `E2E_DIST=1` : Playwright sert `dist/` et non les modules ES. En local, lancer **`npm run build`** avant `npm run test:e2e` si cette variable est active, sinon les tests peuvent charger un build obsolète. Sans `E2E_DIST`, `npm run test:e2e` sert la racine du projet (modules dev).
+La CI exécute **smoke** et **perf** sur le bundle prod (`test:e2e:smoke:dist`, `test:e2e:perf` via `E2E_DIST=1` — `run-e2e-dist.mjs` injecte alors `neo-test-init.js` dans `dist/index.html`). La suite E2E complète (`npm run test:e2e`) sert les **modules ES sources** (`index.html` charge `js/neo-test-init.js`). Le budget bundle prod (`verifier-bundle.mjs`) exclut l’entrée test et ses chunks dédiés (`budget-exclus.json`).
 
 ### Environnements de déploiement
 

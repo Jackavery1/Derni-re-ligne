@@ -11,6 +11,7 @@ import {
 } from 'fs';
 import { execSync } from 'child_process';
 import { resolve } from 'path';
+import { listerSortiesTestUniquement } from './budget-exclus-test.mjs';
 
 const dist = 'dist';
 
@@ -26,13 +27,16 @@ cpSync('data', `${dist}/data`, { recursive: true });
 
 const racineJs = resolve('js');
 
-await esbuild.build({
-    entryPoints: ['js/main.js'],
+const buildResult = await esbuild.build({
+    entryPoints: {
+        bundle: 'js/main.js',
+        'neo-test-init': 'js/neo-test-init.js',
+    },
     bundle: true,
     splitting: true,
     format: 'esm',
     outdir: `${dist}/js`,
-    entryNames: 'bundle',
+    entryNames: '[name]',
     chunkNames: 'chunk-[hash]',
     minify: true,
     sourcemap: true,
@@ -40,6 +44,7 @@ await esbuild.build({
     logLevel: 'info',
     legalComments: 'none',
     drop: ['console', 'debugger'],
+    metafile: true,
     plugins: [
         {
             name: 'stub-histoire-textes-fallback',
@@ -51,6 +56,11 @@ await esbuild.build({
         },
     ],
 });
+
+writeFileSync(
+    `${dist}/js/budget-exclus.json`,
+    JSON.stringify(listerSortiesTestUniquement(buildResult.metafile), null, 0)
+);
 
 cpSync('styles', `${dist}/styles`, { recursive: true });
 cpSync('html', `${dist}/html`, { recursive: true });
@@ -65,10 +75,12 @@ const bundleIntegrity =
 const html = readFileSync('index.html', 'utf8');
 writeFileSync(
     `${dist}/index.html`,
-    html.replace(
-        /<script type="module" src="js\/main\.js\?v=[^"']+"><\/script>/,
-        `<script type="module" src="js/bundle.js" integrity="${bundleIntegrity}" crossorigin="anonymous"></script>`
-    )
+    html
+        .replace(
+            /<script type="module" src="js\/main\.js\?v=[^"']+"><\/script>/,
+            `<script type="module" src="js/bundle.js" integrity="${bundleIntegrity}" crossorigin="anonymous"></script>`
+        )
+        .replace(/\n?\s*<script type="module" src="js\/neo-test-init\.js[^"]*"><\/script>/, '')
 );
 
 cpSync('sw.js', `${dist}/sw.js`);

@@ -163,7 +163,7 @@ export function devCompleterMondeHistoire(mondeId) {
     return { suivant: _obtenirMondeSuivant(mondeId), dejaComplete };
 }
 
-export function surFinDeMondeHistoire(lignes, score) {
+export function surFinDeMondeHistoire(lignes, score, options = {}) {
     void score;
     if (!modeHistoireEnCours()) return;
     flushProuessesHistoire();
@@ -220,7 +220,9 @@ export function surFinDeMondeHistoire(lignes, score) {
 
     if (estComplete) {
         const etoilesFin = calculerEtoiles(mondeId, etatHist);
-        declencherNarratifPostMonde(monde, etatHist, premiereCompletionCeMonde, etoilesFin);
+        if (!options.sansNarratif) {
+            declencherNarratifPostMonde(monde, etatHist, premiereCompletionCeMonde, etoilesFin);
+        }
     } else {
         void import('./histoire-manager-ui.js').then(({ afficherBoutonCarteGameOver }) =>
             afficherBoutonCarteGameOver(true)

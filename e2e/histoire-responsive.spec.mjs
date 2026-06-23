@@ -1,9 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, devices } from '@playwright/test';
 import {
     ouvrirCarteHistoire,
     attendreApplicationPrete,
     attendreNotificationsInitiales,
     fermerRecapPostMonde,
+    appliquerEncocheSimulee,
     ETAT_HISTOIRE_BOSS_BRASIER,
 } from './helpers.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
@@ -131,4 +132,54 @@ test('carte histoire paysage mobile — header et retour accessibles', async ({ 
     expect(metriques.debord).toBe(false);
     expect(metriques.paddingTop).not.toBe('0px');
     expect(metriques.retourH).toBeGreaterThanOrEqual(48);
+});
+
+test('iphone — cutscene respecte encoche simulee (audit C11)', async ({ browser }) => {
+    test.info().annotations.push({
+        type: 'note',
+        description:
+            'Validation physique sur iPhone reelle non automatisable ; simulation --safe-top: 47px.',
+    });
+
+    const context = await browser.newContext({ ...devices['iPhone 14'] });
+    const page = await context.newPage();
+    await page.addInitScript((etat) => {
+        localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
+        localStorage.setItem('dl_migration_v1', '1');
+        localStorage.setItem('derniereLigne_tutorielVu', '1');
+        localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
+        localStorage.setItem('derniereLigne_introHistoireVue', '1');
+    }, ETAT_HISTOIRE_VIDE);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await appliquerEncocheSimulee(page);
+    await attendreNotificationsInitiales(page);
+    await page.locator('#btn-continuer').click();
+    await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });
+    await page.locator('.bouton-jouer-monde').click({ force: true });
+
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 15000,
+    });
+
+    const metriques = await page.evaluate(() => {
+        const cutscene = document.getElementById('ecran-histoire-cutscene');
+        const suivant = document.getElementById('btn-cutscene-suivant');
+        const style = cutscene ? getComputedStyle(cutscene) : null;
+        const rect = suivant?.getBoundingClientRect();
+        return {
+            paddingTop: style?.paddingTop ?? '',
+            safeTop: getComputedStyle(document.documentElement)
+                .getPropertyValue('--safe-top')
+                .trim(),
+            boutonDansEcran: Boolean(rect && rect.bottom <= window.innerHeight && rect.top >= 46),
+            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+        };
+    });
+    expect(metriques.safeTop).toBe('47px');
+    expect(metriques.paddingTop).toMatch(/47px|calc/);
+    expect(metriques.boutonDansEcran).toBe(true);
+    expect(metriques.debord).toBe(false);
+
+    await context.close();
 });

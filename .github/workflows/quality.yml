@@ -41,8 +41,6 @@ jobs:
             - name: Budget perf chargement
               run: npm run test:e2e:perf
             - run: npm run test:e2e
-              env:
-                  E2E_DIST: '1'
             - name: Artefact couverture
               if: inputs.upload_coverage
               uses: actions/upload-artifact@v4

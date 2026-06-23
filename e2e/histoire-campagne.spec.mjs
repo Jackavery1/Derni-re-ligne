@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import {
     ouvrirCarteHistoire,
     fermerRecapPostMonde,
-    viderOverlaysHistoireRapide,
+    parcourirFluxPostVictoireAvecAssertions,
     terminerCutscenesVersEcranFin,
 } from './helpers.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
@@ -26,6 +26,18 @@ async function preparerConditionsTrameOrganiques(page) {
             tousBossSansContinue: true,
             actionDistorsionFaite: true,
         };
+        sauve.nbContinuesUtilises = 0;
+        sauve.continuesParBoss = {};
+        sauve.bossVaincus = [
+            ...new Set([
+                ...(sauve.bossVaincus ?? []),
+                'brasier',
+                'sentinelle',
+                'archiviste',
+                'avantgarde',
+                'distorsion',
+            ]),
+        ];
         const journauxRequis = [
             'journal_1',
             'journal_2',
@@ -193,6 +205,60 @@ test('campagne — enchaine prologue puis inferno sans carte', async ({ page }) 
     expect(mondesCompletes).toContain('monde_lave');
 });
 
+test('campagne — cutscenes intermediaires boss et chapitres (audit D15)', async ({ page }) => {
+    test.setTimeout(240000);
+    const etatDepart = {
+        ...ETAT_HISTOIRE_VIDE,
+        mondesDejaMontres: ['monde_prologue'],
+    };
+    await ouvrirCarteHistoire(page, etatDepart);
+
+    const jalons = [
+        'monde_prologue',
+        'monde_boss_1',
+        'monde_rouille',
+        'monde_boss_2',
+        'monde_boss_3',
+        'monde_boss_4',
+    ];
+
+    for (const mondeId of jalons) {
+        await page.evaluate(async (id) => {
+            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
+        }, mondeId);
+        await parcourirFluxPostVictoireAvecAssertions(page, mondeId);
+    }
+});
+
+test('campagne secrets — cutscenes finales avec narratif', async ({ page }) => {
+    test.setTimeout(180000);
+    const etatDepart = {
+        ...ETAT_HISTOIRE_VIDE,
+        mondesCompletes: [...MONDES_CAMPAGNE_PRINCIPALE],
+        mondesCachesDebloques: ['monde_miroir'],
+        mondesDejaMontres: ['monde_prologue', 'monde_miroir'],
+        bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde'],
+        conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 },
+    };
+    await ouvrirCarteHistoire(page, etatDepart);
+
+    for (const mondeId of ['monde_miroir']) {
+        await page.evaluate(async (id) => {
+            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
+        }, mondeId);
+        await parcourirFluxPostVictoireAvecAssertions(page, mondeId);
+    }
+
+    await preparerConditionsTrameOrganiques(page);
+
+    for (const mondeId of ['monde_trame', 'monde_finale']) {
+        await page.evaluate(async (id) => {
+            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
+        }, mondeId);
+        await parcourirFluxPostVictoireAvecAssertions(page, mondeId);
+    }
+});
+
 test('campagne complete — progression simulee vers fin secrete', async ({ page }) => {
     test.setTimeout(300000);
     const etatDepart = {
@@ -203,9 +269,8 @@ test('campagne complete — progression simulee vers fin secrete', async ({ page
 
     for (const mondeId of MONDES_CAMPAGNE_PRINCIPALE) {
         await page.evaluate(async (id) => {
-            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
+            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99, true);
         }, mondeId);
-        await viderOverlaysHistoireRapide(page);
     }
 
     for (const mondeId of MONDES_SECRETS_FIN_SECRETE) {
@@ -213,9 +278,8 @@ test('campagne complete — progression simulee vers fin secrete', async ({ page
             await preparerConditionsTrameOrganiques(page);
         }
         await page.evaluate(async (id) => {
-            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
+            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99, true);
         }, mondeId);
-        await viderOverlaysHistoireRapide(page);
     }
 
     const progression = await page.evaluate(async () => {

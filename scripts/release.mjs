@@ -18,7 +18,7 @@ let swMaj = sw.replace(
 writeFileSync('sw.js', swMaj);
 
 const html = readFileSync('index.html', 'utf8');
-writeFileSync('index.html', html.replace(/js\/main\.js\?v=[^"']+/, `js/main.js?v=${next}`));
+writeFileSync('index.html', html.replace(/\?v=[\d.]+/g, `?v=${next}`));
 
 const readme = readFileSync('README.md', 'utf8');
 writeFileSync('README.md', readme.replace(/\*\*Version[^:]*: [\d.]+\*\*/, `**Version : ${next}**`));
