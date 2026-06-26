@@ -7,14 +7,21 @@ import { chargerHistoireTextes } from './charger-histoire-textes.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
 import { store } from './store-core.js';
 import { boucleSecondaireActive } from './planificateur-raf.js';
+import { emettre } from './bus-jeu.js';
+import { menuAnimActif } from './menu-fond.js';
 import { CONFIG } from './config.js';
 import { AudioMoteur } from './audio.js';
 
 export function initialiserNeoTestApi() {
     /** @type {(() => string | null) | null} */
     let obtenirSceneCutsceneActiveSync = null;
+    /** @type {(() => string) | null} */
+    let obtenirHumeurRoboCutsceneSync = null;
     void import('./histoire-cutscene-fonds.js').then((mod) => {
         obtenirSceneCutsceneActiveSync = mod.obtenirSceneCutsceneActive;
+    });
+    void import('./portraits-cutscene-etat.js').then((mod) => {
+        obtenirHumeurRoboCutsceneSync = mod.obtenirHumeurRoboCutscene;
     });
 
     void import('./neo-test-api.js').then(({ exposerNeoTestApi, estNeoTestAutorise }) => {
@@ -85,6 +92,7 @@ export function initialiserNeoTestApi() {
                 return obtenirTypeFin();
             },
             obtenirSceneCutsceneActive: () => obtenirSceneCutsceneActiveSync?.() ?? null,
+            obtenirHumeurPortraitCutscene: () => obtenirHumeurRoboCutsceneSync?.() ?? null,
             simulerTopVolontairePrologue: async () => {
                 activerModeHistoire();
                 store.histoire.mondeActuel = 'monde_prologue';
@@ -123,6 +131,28 @@ export function initialiserNeoTestApi() {
                 }
                 persisterEtatHistoire(etatHist);
                 store.histoire.etat = etatHist;
+            },
+            emettreEvenementBusJeu: (evenement, payload) => emettre(evenement, payload),
+            menuAnimActif: () => menuAnimActif,
+            simulerGameOverBossDistorsion: () => {
+                activerModeHistoire();
+                store.histoire.mondeActuel = 'monde_finale';
+                store.histoire.boss.actif = {
+                    id: 'distorsion',
+                    nom: 'LA DISTORSION',
+                    couleur: '#ff2d78',
+                    pvMax: 100,
+                };
+                store.histoire.boss.vaincu = false;
+                document.body.classList.add('histoire-active');
+                document.body.classList.add('partie-active');
+                const etatHist = obtenirEtatHistoirePersiste();
+                etatHist.continueGratuitDistorsionUtilise = false;
+                delete etatHist.continuesParBoss?.monde_finale;
+                etatHist.conditionsTrame.tousBossSansContinue = true;
+                persisterEtatHistoire(etatHist);
+                store.histoire.etat = etatHist;
+                obtenirActions().terminerPartie?.(false, { immediat: true });
             },
         });
     });

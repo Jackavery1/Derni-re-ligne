@@ -163,3 +163,21 @@ test('cutscene histoire sans violations accessibilité critiques', async ({ page
     const result = await new AxeBuilder({ page }).include('#ecran-histoire-cutscene').analyze();
     expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
 });
+
+test('selection biome paysage mobile — sans violations critiques (audit C)', async ({ page }) => {
+    await page.setViewportSize({ width: 844, height: 390 });
+    await preparerPageSansSw(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-jouer').click();
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    const result = await new AxeBuilder({ page }).include('#ecran-selection').analyze();
+    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
+});
+
+test('carte histoire paysage mobile — sans violations critiques (audit C)', async ({ page }) => {
+    await page.setViewportSize({ width: 844, height: 390 });
+    await ouvrirCarteHistoire(page, ETAT_DEBLOCAGE_COMPLET);
+    const result = await new AxeBuilder({ page }).include('#ecran-histoire-map').analyze();
+    expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
+});

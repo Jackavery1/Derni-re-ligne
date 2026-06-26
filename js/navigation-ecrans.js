@@ -176,6 +176,7 @@ async function _afficherEcranAvecFragments(idEcran) {
 export function cacherEcrans() {
     document.querySelectorAll('.ecran').forEach((el) => el.classList.remove('actif'));
     definirZoneJeuInerte(false);
+    arreterAnimationMenu();
     void _arreterConstellation();
     arreterFondMeta();
     void import('./histoire-map.js').then(({ arreterCarteHistoire }) => arreterCarteHistoire());

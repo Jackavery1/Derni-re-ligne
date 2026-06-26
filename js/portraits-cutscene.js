@@ -9,7 +9,7 @@ export { definirHumeurRoboCutscene, obtenirHumeurRoboCutscene } from './portrait
  * @param {number} h
  * @param {string} personnageId
  * @param {number} t
- * @param {{ humeur?: string, params?: Record<string, number | boolean> | null }} [options]
+ * @param {{ humeur?: string, params?: Record<string, number | boolean | number[]> | null }} [options]
  */
 export function dessinerPortraitCutscene(ctx, w, h, personnageId, t, options = {}) {
     try {

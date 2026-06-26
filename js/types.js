@@ -174,6 +174,7 @@
  *     declencherFinHistoire?: (finId: string) => Promise<void>,
  *     declencherPostMondeNarratif?: (mondeId: string) => Promise<void>,
  *     simulerVictoireMondeHistoire?: (mondeId: string, lignes?: number) => Promise<void>
+ *     simulerGameOverBossDistorsion?: () => void
  *   }
  * }} WindowEtendu
  */

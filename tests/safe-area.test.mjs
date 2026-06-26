@@ -1,8 +1,17 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const RACINE = join(import.meta.dirname, '..');
+
+function lireFichiersCssRecursif(dir, acc = []) {
+    for (const entree of readdirSync(dir, { withFileTypes: true })) {
+        const chemin = join(dir, entree.name);
+        if (entree.isDirectory()) lireFichiersCssRecursif(chemin, acc);
+        else if (entree.name.endsWith('.css')) acc.push(chemin);
+    }
+    return acc;
+}
 
 describe('safe-area audit C', () => {
     it('index.html declare viewport-fit=cover pour encoche iPhone', () => {
@@ -45,11 +54,29 @@ describe('safe-area audit C', () => {
         expect(objectifs).toMatch(/max-width:\s*768px\),\s*\(max-height:\s*600px\)/);
         expect(histoire).toMatch(/max-width:\s*768px\),\s*\(max-height:\s*600px\)/);
         expect(objectifs).toMatch(/orientation:\s*landscape/);
+        expect(objectifs).toMatch(/var\(--safe-top\)/);
+        expect(histoire).toMatch(/var\(--safe-top\)/);
         expect(cutscenesFrom(RACINE)).toMatch(/max-width:\s*319px/);
         expect(archi).toMatch(/var\(--safe-top\)/);
         expect(archi).toMatch(/overflow-y:\s*auto/);
+        expect(archi).toMatch(/#controles-archi \.btn-tactile/);
         expect(pause).toMatch(/orientation:\s*landscape/);
         expect(pause).toMatch(/var\(--safe-top\)/);
+    });
+
+    it('n utilise env(safe-area-inset) que dans variables.css', () => {
+        const cssRacine = join(RACINE, 'styles');
+        const cutscenesDir = join(RACINE, 'assets', 'cutscenes');
+        const fichiers = [
+            ...lireFichiersCssRecursif(cssRacine),
+            ...lireFichiersCssRecursif(cutscenesDir),
+        ];
+        const variables = join(RACINE, 'styles', 'variables.css');
+        for (const fichier of fichiers) {
+            if (fichier === variables) continue;
+            const contenu = readFileSync(fichier, 'utf8');
+            expect(contenu, fichier).not.toMatch(/env\(safe-area-inset/);
+        }
     });
 });
 

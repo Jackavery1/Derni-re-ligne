@@ -1,14 +1,30 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-const { arreterConstellation, arreterFondMeta, arreterCarteHistoire } = vi.hoisted(() => ({
+const { arreterConstellation, demarrerConstellation } = vi.hoisted(() => ({
     arreterConstellation: vi.fn(),
+    demarrerConstellation: vi.fn(),
+}));
+
+const { arreterAnimationMenu } = vi.hoisted(() => ({
+    arreterAnimationMenu: vi.fn(),
+}));
+
+const { arreterFondMeta } = vi.hoisted(() => ({
     arreterFondMeta: vi.fn(),
+}));
+
+const { arreterCarteHistoire } = vi.hoisted(() => ({
     arreterCarteHistoire: vi.fn(),
 }));
 
 vi.mock('../js/constellation.js', () => ({
-    demarrerConstellation: vi.fn(),
+    demarrerConstellation,
     arreterConstellation,
+}));
+
+vi.mock('../js/menu-fond.js', () => ({
+    demarrerAnimationMenu: vi.fn(),
+    arreterAnimationMenu,
 }));
 
 vi.mock('../js/fond-ecrans-meta.js', () => ({
@@ -19,11 +35,6 @@ vi.mock('../js/fond-ecrans-meta.js', () => ({
 vi.mock('../js/histoire-map.js', () => ({
     demarrerCarteHistoire: vi.fn(),
     arreterCarteHistoire,
-}));
-
-vi.mock('../js/menu-fond.js', () => ({
-    demarrerAnimationMenu: vi.fn(),
-    arreterAnimationMenu: vi.fn(),
 }));
 
 vi.mock('../js/audio.js', () => ({
@@ -78,8 +89,9 @@ describe('navigation-ecrans — boucles RAF menu', () => {
             '<div id="conteneur-principal"></div><div id="conteneur-principal-coop"></div>';
     });
 
-    it('cacherEcrans arrete constellation, fond meta et carte histoire', async () => {
+    it('cacherEcrans arrete constellation, fond meta, carte histoire et animation menu', async () => {
         cacherEcrans();
+        expect(arreterAnimationMenu).toHaveBeenCalledTimes(1);
         expect(arreterFondMeta).toHaveBeenCalledTimes(1);
         await vi.waitFor(() => {
             expect(arreterConstellation).toHaveBeenCalledTimes(1);

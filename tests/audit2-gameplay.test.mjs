@@ -152,6 +152,12 @@ describe('audit 2 — gameplay UX', () => {
     });
 
     describe('narration et progression (audit 2 dims 4-5)', () => {
+        it('expose chemins caches avec condition de debloquage', () => {
+            const textes = JSON.parse(readFileSync('data/codex-textes.json', 'utf8'));
+            expect(textes.chemins_caches.conditionTexte).toContain('Archiviste');
+            expect(textes.chemins_caches.texte.join(' ')).toContain('TRAME');
+        });
+
         it('debloque le codex Chemins caches apres archiviste', () => {
             const textes = JSON.parse(readFileSync('data/codex-textes.json', 'utf8'));
             const cheminsCaches = {
@@ -213,6 +219,18 @@ describe('audit 2 — gameplay UX', () => {
             expect(INFOBULLES_MODES_JEU.oracle?.texte).toContain('Coop');
             expect(INFOBULLES_MODES_JEU.coop?.titre).toBe('COOP');
             expect(INFOBULLES_MODES_JEU.defiJour?.titre).toBe('DEFI DU JOUR');
+        });
+
+        it('ne consomme pas une infobulle mode si overlay absent', async () => {
+            await import('../js/contenu-jeu.js').then(({ chargerContenuJeu }) =>
+                chargerContenuJeu()
+            );
+            const overlay = document.getElementById('overlay-infobulle-contexte');
+            overlay?.remove();
+            const { proposerInfobulleModeJeu } = await import('../js/infobulles-contexte.js');
+            proposerInfobulleModeJeu('sprint');
+            const raw = localStorage.getItem('derniereLigne_infobullesModesJeu') ?? '{}';
+            expect(JSON.parse(raw).sprint).toBeUndefined();
         });
 
         it('sansAccentsE retire les accents des libelles UI', async () => {

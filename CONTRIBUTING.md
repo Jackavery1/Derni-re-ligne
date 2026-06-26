@@ -44,9 +44,16 @@ La preview PR sert de **staging** : même pipeline `quality.yml` que la prod, sa
 | -------------- | -------------------------------------------------------------------------------------- |
 | **pre-commit** | lint-staged (ESLint + Prettier sur fichiers stagés)                                    |
 | **pre-push**   | lint, format, typecheck, cycles, tests unitaires, build, budget bundle, smoke E2E dist |
-| **commit-msg** | Conventional Commits                                                                   |
+| **commit-msg** | Conventional Commits (script Node, compatible Windows/Cursor)                          |
 
 Le pre-push est volontairement lourd pour éviter de pousser une régression. **`git push --no-verify`** ne doit être utilisé qu'en exception (urgence, CI en cours de réparation) : le pipeline GitHub exécutera quand même l'intégralité des checks. Ne jamais contourner les hooks pour merger du code non testé sur `main`.
+
+### Git sous Windows / Cursor
+
+- **Commit refusé** : le message doit respecter Conventional Commits (`feat:`, `fix:`, `feat(release): vX.Y.Z …`). L’UI Source Control de Cursor échoue silencieusement si le format est incorrect.
+- **Push lent ou bloqué** : le hook pre-push exécute lint + tests + build + E2E (~plusieurs minutes). Préférer le terminal intégré plutôt que le bouton Sync.
+- **Release complète** : `npm run release:publish` (bump, commit, tag, push). Push sans re-vérifier : `npm run release:push`.
+- **Contournement temporaire pre-push** : `$env:SKIP_PREPUSH='1'; git push origin main --tags` (PowerShell) — la CI GitHub validera quand même.
 
 ### Analyse et maintenance
 

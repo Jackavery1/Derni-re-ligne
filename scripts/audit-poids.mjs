@@ -93,11 +93,39 @@ function mesurerPrecache(cheminsPrecache, racine = '.') {
     return { total, details, nombre: cheminsPrecache.filter((c) => c !== '' && c !== '.').length };
 }
 
+function mesurerCssDeploye() {
+    const dossier = 'dist/styles';
+    if (!existsSync(dossier)) return null;
+    /** @type {{ cheminRelatif: string, octets: number }[]} */
+    const fichiers = [];
+    for (const entree of readdirSync(dossier, { withFileTypes: true })) {
+        if (!entree.isFile() || !entree.name.endsWith('.css') || entree.name === 'dev.css') {
+            continue;
+        }
+        const cheminAbsolu = join(dossier, entree.name);
+        fichiers.push({
+            cheminRelatif: `dist/styles/${entree.name}`,
+            octets: statSync(cheminAbsolu).size,
+        });
+    }
+    return fichiers;
+}
+
 function mesurerJsMinifie() {
     const dossier = 'dist/js';
     if (!existsSync(dossier)) return null;
+
+    /** @type {Set<string>} */
+    const exclusBudget = new Set(['neo-test-init.js', 'budget-exclus.json']);
+    const exclusPath = join(dossier, 'budget-exclus.json');
+    if (existsSync(exclusPath)) {
+        for (const nom of JSON.parse(readFileSync(exclusPath, 'utf8'))) {
+            exclusBudget.add(nom);
+        }
+    }
+
     const fichiers = readdirSync(dossier)
-        .filter((f) => f.endsWith('.js') && !f.endsWith('.map'))
+        .filter((f) => f.endsWith('.js') && !f.endsWith('.map') && !exclusBudget.has(f))
         .map((f) => ({ chemin: `dist/js/${f}`, octets: statSync(join(dossier, f)).size }));
     return { octets: sommeOctets(fichiers), fichiers: fichiers.length, details: fichiers };
 }
@@ -343,10 +371,11 @@ function resumerCategorie(fichiers) {
 
 const fichiersProjet = listerFichiersRecursif('.');
 const brutes = categoriser(fichiersProjet);
+const cssDeploye = mesurerCssDeploye();
 
 const categories = {
     jsSource: resumerCategorie(brutes.jsSource),
-    css: resumerCategorie(brutes.css),
+    css: resumerCategorie(cssDeploye ?? brutes.css),
     html: resumerCategorie(brutes.html),
     polices: resumerCategorie(brutes.polices),
     images: resumerCategorie(brutes.images),

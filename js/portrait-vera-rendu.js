@@ -1,6 +1,7 @@
 export { prechargerPortraitVera } from './portrait-vera-assets.js';
 export { PALETTE_VERA, PALETTE_VERA_DESAT } from './portrait-vera-donnees.js';
 
+import { obtenirImagePortraitVera, calculerCadrePortraitVera } from './portrait-vera-assets.js';
 import { dessinerBusteVeraCanon } from './portrait-vera-buste.js';
 import {
     dessinerHaloVera,
@@ -8,6 +9,47 @@ import {
     dessinerExpressionVera,
     appliquerBandesGlitchProcedural,
 } from './portrait-vera-effets.js';
+
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {number} w
+ * @param {number} h
+ * @param {number} s
+ * @param {Record<string, number | boolean | number[]>} p
+ * @param {boolean} glitch
+ * @param {boolean} effetsReduits
+ * @returns {boolean} true si le sprite PNG a été utilisé
+ */
+function dessinerBusteVera(ctx, w, h, s, p, glitch, effetsReduits) {
+    const img = obtenirImagePortraitVera();
+    if (img) {
+        const { dx, dy, dw, dh } = calculerCadrePortraitVera(
+            w,
+            h,
+            img.naturalWidth,
+            img.naturalHeight
+        );
+        if (glitch && !effetsReduits) {
+            ctx.save();
+            ctx.filter = 'saturate(0.35) brightness(0.88)';
+            ctx.drawImage(img, dx, dy, dw, dh);
+            ctx.restore();
+        } else {
+            ctx.drawImage(img, dx, dy, dw, dh);
+        }
+        return true;
+    }
+
+    if (glitch && !effetsReduits) {
+        ctx.save();
+        ctx.filter = 'saturate(0.35) brightness(0.88)';
+        dessinerBusteVeraCanon(ctx, w, h, s, p);
+        ctx.restore();
+    } else {
+        dessinerBusteVeraCanon(ctx, w, h, s, p);
+    }
+    return false;
+}
 
 /**
  * @param {CanvasRenderingContext2D} ctx
@@ -28,11 +70,9 @@ export function dessinerPortraitVeraCanon(ctx, w, h, t, params) {
 
     ctx.clearRect(0, 0, w, h);
 
+    const spriteUtilise = dessinerBusteVera(ctx, w, h, s, p, glitch, effetsReduits);
+
     if (glitch && !effetsReduits) {
-        ctx.save();
-        ctx.filter = 'saturate(0.35) brightness(0.88)';
-        dessinerBusteVeraCanon(ctx, w, h, s, p);
-        ctx.restore();
         appliquerBandesGlitchProcedural(
             ctx,
             w,
@@ -40,8 +80,6 @@ export function dessinerPortraitVeraCanon(ctx, w, h, t, params) {
             tAnim,
             /** @type {number[]} */ (p.decalagesGlitch ?? [0, 0, 0])
         );
-    } else {
-        dessinerBusteVeraCanon(ctx, w, h, s, p);
     }
 
     ctx.save();
@@ -53,7 +91,8 @@ export function dessinerPortraitVeraCanon(ctx, w, h, t, params) {
 
     dessinerHaloVera(ctx, cx, cy * 0.95, s, tAnim, p);
     dessinerParticulesVera(ctx, cx, cy, s, tAnim, p);
-    if (tAnim && !effetsReduits) {
+
+    if (!spriteUtilise && tAnim && !effetsReduits) {
         const y = h * 0.345 + Math.sin(tAnim * 2.8) * s;
         ctx.globalAlpha = 0.7;
         ctx.fillStyle = '#a8d4f0';
@@ -64,9 +103,12 @@ export function dessinerPortraitVeraCanon(ctx, w, h, t, params) {
         }
         ctx.globalAlpha = 1;
     }
-    dessinerExpressionVera(ctx, w, h, s, cx, p);
 
-    if (/** @type {number} */ (p.scanline ?? 1) > 1.2 && glitch) {
+    if (!spriteUtilise) {
+        dessinerExpressionVera(ctx, w, h, s, cx, p);
+    }
+
+    if (!spriteUtilise && /** @type {number} */ (p.scanline ?? 1) > 1.2 && glitch) {
         ctx.fillStyle = 'rgba(127,212,240,0.12)';
         for (let sy = h * 0.22; sy < h * 0.42; sy += 3 * s) {
             ctx.fillRect(cx - 32 * s, sy, 64 * s, 1 * s);
@@ -77,5 +119,5 @@ export function dessinerPortraitVeraCanon(ctx, w, h, t, params) {
 }
 
 export function viderCachePortraitVera() {
-    /* compat tests — sprite unique, pas de cache canvas */
+    /* compat tests */
 }

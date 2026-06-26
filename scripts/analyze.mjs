@@ -1,6 +1,9 @@
 import * as esbuild from 'esbuild';
-import { writeFileSync, readdirSync, readFileSync, statSync, mkdirSync } from 'fs';
+import { writeFileSync, readdirSync, readFileSync, statSync, mkdirSync, rmSync } from 'fs';
 import { join, relative } from 'path';
+import { optionsCommunesProd } from './esbuild-prod-options.mjs';
+import { listerSortiesTestUniquement } from './budget-exclus-test.mjs';
+import { sommerBundleProd } from './sommer-bundle-prod.mjs';
 
 const racine = '.';
 
@@ -59,19 +62,30 @@ const md = [
 
 writeFileSync('docs/modules-index.md', md);
 
+const dossierAnalyse = 'dist/analyze-js';
+rmSync(dossierAnalyse, { recursive: true, force: true });
+mkdirSync(dossierAnalyse, { recursive: true });
+
 const result = await esbuild.build({
-    entryPoints: ['js/main.js'],
-    bundle: true,
-    outfile: 'dist/analyze-bundle.js',
-    format: 'esm',
-    minify: true,
-    metafile: true,
-    write: false,
-    target: ['es2022'],
+    ...optionsCommunesProd,
+    entryPoints: {
+        bundle: 'js/main.js',
+        'neo-test-init': 'js/neo-test-init.js',
+    },
+    outdir: dossierAnalyse,
+    entryNames: '[name]',
+    chunkNames: 'chunk-[hash]',
+    sourcemap: false,
     logLevel: 'silent',
 });
 
+writeFileSync(
+    join(dossierAnalyse, 'budget-exclus.json'),
+    JSON.stringify(listerSortiesTestUniquement(result.metafile), null, 0)
+);
 writeFileSync('dist/metafile.json', JSON.stringify(result.metafile, null, 2));
+
+const bundle = sommerBundleProd(result.metafile, dossierAnalyse);
 
 const inputs = Object.entries(result.metafile.inputs)
     .map(([chemin, info]) => ({ chemin, octets: info.bytes }))
@@ -82,8 +96,11 @@ inputs.slice(0, 15).forEach(({ chemin, octets }) => {
     console.log(`  ${String(Math.round(octets / 1024)).padStart(4)} Ko  ${chemin}`);
 });
 
+if (bundle.koEntree != null) {
+    console.log(`Entree principale : ${bundle.koEntree} Ko (${bundle.entree})`);
+}
 console.log(
-    `\nTotal bundle : ${Math.round(result.metafile.outputs['dist/analyze-bundle.js'].bytes / 1024)} Ko`
+    `\nTotal bundle prod (hors test-only) : ${bundle.ko} Ko (${bundle.fichiers} fichiers, config identique au build)`
 );
 console.log(`Index modules : ${modules.length} fichiers → docs/modules-index.md`);
 if (hotspots.length > 0) {

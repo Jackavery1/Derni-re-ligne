@@ -114,9 +114,6 @@ function _lierSelectionEtModes() {
             mettreAJourToggleSprint();
             if (document.getElementById('toggle-coop')?.classList.contains('actif')) {
                 afficherTutorielContextuel('coop');
-                void import('./infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) =>
-                    proposerInfobulleModeJeu('coop')
-                );
             }
         })();
     });

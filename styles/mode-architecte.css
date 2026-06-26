@@ -296,6 +296,11 @@ body.archi-active #controles-paysage {
     z-index: 50;
 }
 
+#controles-archi .btn-tactile {
+    min-width: 48px;
+    min-height: 48px;
+}
+
 #controles-archi-paysage {
     display: none;
     position: fixed;

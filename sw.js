@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v58';
+const VERSION_SHELL = 'dl-shell-v59';
 const VERSION_MEDIAS = 'dl-medias-v4';
 
 const SCENES_CUTSCENE_PRECACHE = [
@@ -168,6 +168,7 @@ const FICHIERS_A_CACHER = [
     './js/ecrans-config.js',
     './js/ecrans-ui.js',
     './js/effets-partie.js',
+    './js/expressions-cutscene-presets.js',
     './js/expressions-cutscene.js',
     './js/file-narrative.js',
     './js/fin-bg-rendu.js',
@@ -252,6 +253,7 @@ const FICHIERS_A_CACHER = [
     './js/neo-test-api.js',
     './js/neo-test-init.js',
     './js/notifications-file.js',
+    './js/options-mute-ui.js',
     './js/options-progression-ui.js',
     './js/options-sync-cloud-ui.js',
     './js/options-ui.js',
@@ -353,6 +355,7 @@ const FICHIERS_A_CACHER = [
     './js/vivant.js',
     './img/icon-192.png',
     './img/robo-accueil.png',
+    './img/vera.png',
     /* PRECACHE:FIN */
 ];
 

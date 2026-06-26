@@ -41,6 +41,14 @@ export function obtenirCutsceneEntree(mondeId, premiereVisite) {
     return Array.isArray(entree) ? { lignes: entree } : entree;
 }
 
+export const SCENE_DEFAUT_VICTOIRE_BOSS = {
+    brasier: 'seuil_brasier',
+    sentinelle: 'seuil_sentinelle',
+    archiviste: 'labo',
+    avantgarde: 'seuil_avantgarde',
+    distorsion: 'fragmentation',
+};
+
 export function afficherVictoireBoss(bossId, typeFin = 'normal', onFin) {
     let cle = bossId;
     if (bossId === 'distorsion') {
@@ -52,9 +60,14 @@ export function afficherVictoireBoss(bossId, typeFin = 'normal', onFin) {
         onFin?.();
         return;
     }
+    const sceneDefaut = SCENE_DEFAUT_VICTOIRE_BOSS[bossId] ?? null;
+    const entree =
+        sceneDefaut && Array.isArray(lignesRaw)
+            ? { scene: lignesRaw[0]?.scene ?? sceneDefaut, lignes: lignesRaw }
+            : lignesRaw;
     void _importerUi()
         .then(({ afficherCutsceneHistoire }) => {
-            afficherCutsceneHistoire(lignesRaw, null, onFin);
+            afficherCutsceneHistoire(entree, null, onFin);
         })
         .catch(() => onFin?.());
 }

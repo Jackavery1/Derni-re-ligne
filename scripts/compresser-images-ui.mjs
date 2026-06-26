@@ -7,6 +7,7 @@ const FOND = { r: 18, g: 8, b: 24, alpha: 1 };
 const CIBLES = [
     { chemin: 'assets/splash-chargement.png', largeurMax: 512 },
     { chemin: 'img/robo-accueil.png', largeurMax: 640 },
+    { chemin: 'img/vera.png', largeurMax: 360 },
 ];
 
 for (const { chemin, largeurMax } of CIBLES) {

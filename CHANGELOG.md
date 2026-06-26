@@ -6,6 +6,7 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 
 | Version    | Date       | En bref                                                                                                 |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------- |
+| **2.5.34** | 2026-06-27 | Audits B/C/D E2E, portrait VERA sprite, presets cutscene, mute UI, pipeline esbuild/CSS prod            |
 | **2.5.33** | 2026-06-23 | Audit A/D : bundle test hors budget, E2E post-monde texte+scène, campagne secrets narratif, docs 560 Ko |
 | **2.5.32** | 2026-06-18 | Compléments audit : yeux VERA, haptique leaderboard, E2E entrées/fin vraie, ESLint 0 warn               |
 | **2.5.31** | 2026-06-18 | Remédiation audit D : E2E post-monde 15 mondes, paradoxe, audio cutscene, VERA expressif                |
@@ -46,6 +47,19 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 | **2.2.0**  | 2026-06-04 | `main.js` + `moteur.js`, logique pure, CI, perf particules                                              |
 | **2.1.0**  | 2026-06-04 | Sprint, musique, PWA offline, tests logique, accessibilité                                              |
 | **2.0.0**  | 2026-06-04 | Jeu complet : 7-bag, SRS, hold, FX, Web Audio                                                           |
+
+---
+
+## [2.5.34] — 2026-06-27
+
+### Remédiation audits B/C/D et pipeline prod
+
+- **Audit B** : E2E gameplay (`e2e/audit-b-gameplay.spec.mjs`) — infobulles, haptique, briefing Distorsion
+- **Audit C** : E2E responsive (`e2e/audit-c-responsive.spec.mjs`) — cutscenes &lt;320px, safe-area, paysage archi/pause
+- **Audit D** : E2E narratif (`e2e/audit-d-narratif.spec.mjs`) — campagne, post-monde, expressions cutscene
+- **VERA** : sprite `img/vera.png`, presets expressions (`expressions-cutscene-presets.js`), rendu portrait refactoré
+- **Build** : options esbuild prod partagées, compression CSS, somme bundle prod ; mute UI extrait (`options-mute-ui.js`)
+- **Git** : hooks Husky en Node (Windows/Cursor), `npm run release:publish` pour commit + tag + push
 
 ---
 

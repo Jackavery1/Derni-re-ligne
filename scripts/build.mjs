@@ -10,7 +10,7 @@ import {
     existsSync,
 } from 'fs';
 import { execSync } from 'child_process';
-import { resolve } from 'path';
+import { optionsCommunesProd } from './esbuild-prod-options.mjs';
 import { listerSortiesTestUniquement } from './budget-exclus-test.mjs';
 
 const dist = 'dist';
@@ -25,37 +25,20 @@ mkdirSync(`${dist}/data`, { recursive: true });
 
 cpSync('data', `${dist}/data`, { recursive: true });
 
-const racineJs = resolve('js');
-
 const buildResult = await esbuild.build({
+    ...optionsCommunesProd,
     entryPoints: {
         bundle: 'js/main.js',
         'neo-test-init': 'js/neo-test-init.js',
     },
-    bundle: true,
-    splitting: true,
-    format: 'esm',
     outdir: `${dist}/js`,
     entryNames: '[name]',
     chunkNames: 'chunk-[hash]',
-    minify: true,
-    sourcemap: true,
-    target: ['es2022'],
+    sourcemap: false,
     logLevel: 'info',
-    legalComments: 'none',
-    drop: ['console', 'debugger'],
-    metafile: true,
-    plugins: [
-        {
-            name: 'stub-histoire-textes-fallback',
-            setup(buildApi) {
-                buildApi.onResolve({ filter: /histoire-textes\.fallback\.js$/ }, () => ({
-                    path: resolve(racineJs, 'histoire-textes.fallback.stub.js'),
-                }));
-            },
-        },
-    ],
 });
+
+writeFileSync(`${dist}/js/metafile.json`, JSON.stringify(buildResult.metafile));
 
 writeFileSync(
     `${dist}/js/budget-exclus.json`,
@@ -63,6 +46,7 @@ writeFileSync(
 );
 
 cpSync('styles', `${dist}/styles`, { recursive: true });
+execSync('node scripts/compresser-css.mjs', { stdio: 'inherit' });
 cpSync('html', `${dist}/html`, { recursive: true });
 if (existsSync('assets')) cpSync('assets', `${dist}/assets`, { recursive: true });
 cpSync('manifest.json', `${dist}/manifest.json`);

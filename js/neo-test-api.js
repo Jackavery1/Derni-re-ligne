@@ -20,10 +20,14 @@ export function estNeoTestAutorise() {
  *   declencherFinHistoire?: (finId: string) => Promise<void>,
  *   declencherPostMondeNarratif?: (mondeId: string) => Promise<void>,
  *   simulerVictoireMondeHistoire?: (mondeId: string, lignes?: number, sansNarratif?: boolean) => Promise<void>,
- *   obtenirTypeFinHistoire?: () => Promise<string>
- *   obtenirSceneCutsceneActive?: () => string | null
+ *   obtenirTypeFinHistoire?: () => Promise<string>,
+ *   obtenirSceneCutsceneActive?: () => string | null,
+ *   obtenirHumeurPortraitCutscene?: () => string | null,
  *   simulerTopVolontairePrologue?: () => Promise<void>
  *   injecterConditionsTrameDistorsion?: () => void
+ *   emettreEvenementBusJeu?: (evenement: string, payload?: unknown) => void
+ *   menuAnimActif?: () => boolean
+ *   simulerGameOverBossDistorsion?: () => void
  * }} api
  */
 export function exposerNeoTestApi(api) {

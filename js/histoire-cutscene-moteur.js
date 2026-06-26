@@ -74,10 +74,21 @@ export async function prechargerScenesCutscene(entree) {
         if (s) ids.add(s);
     }
     if (ids.size === 0) {
-        await prechargerPortraitVera();
+        await Promise.all([
+            prechargerPortraitVera(),
+            import('./expressions-cutscene.js').then(({ prechargerPresetsExpressions }) =>
+                prechargerPresetsExpressions()
+            ),
+        ]);
         return;
     }
-    await Promise.all([prechargerPortraitVera(), prechargerScenes(ids)]);
+    await Promise.all([
+        prechargerPortraitVera(),
+        prechargerScenes(ids),
+        import('./expressions-cutscene.js').then(({ prechargerPresetsExpressions }) =>
+            prechargerPresetsExpressions()
+        ),
+    ]);
 }
 
 let _boutonsCutsceneOk = false;

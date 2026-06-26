@@ -7,12 +7,14 @@ import {
     obtenirHumeurEffectivePortrait,
     obtenirParamsExpressionPortrait,
     reinitExpressionsCutscene,
+    prechargerPresetsExpressions,
 } from '../js/expressions-cutscene.js';
 import { definirReduireEffetsAccessibilite } from '../js/accessibilite.js';
 
 describe('expressions cutscene', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         reinitExpressionsCutscene();
+        await prechargerPresetsExpressions();
         store.histoire.cutscene.enCours = true;
         definirReduireEffetsAccessibilite(false);
     });

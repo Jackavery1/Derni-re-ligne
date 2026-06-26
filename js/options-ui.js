@@ -14,6 +14,7 @@ import { obtenirMixBiome, persisterMixBiome } from './audio-mix-biome.js';
 import { initialiserSyncCloudOptions, mettreAJourUiSyncCloud } from './options-sync-cloud-ui.js';
 import { initialiserSauvegardeProgression } from './options-progression-ui.js';
 import { AudioMoteur } from './audio.js';
+import { mettreAJourBoutonsMute } from './options-mute-ui.js';
 import { obtenirInput, obtenirBouton } from './dom-utils.js';
 import {
     chargerAccessibiliteDepuisStockage,
@@ -87,20 +88,7 @@ export function mettreAJourBoutonEnchainementCampagne(btn) {
     btn.classList.toggle('actif', actif);
 }
 
-export function mettreAJourBoutonsMute() {
-    const symbole = AudioMoteur.muet ? '🔇' : '🔊';
-    const btnJeu = document.getElementById('btn-mute');
-    const btnOpts = document.getElementById('btn-toggle-mute');
-    if (btnJeu) {
-        btnJeu.textContent = symbole;
-        btnJeu.setAttribute('aria-pressed', AudioMoteur.muet ? 'true' : 'false');
-    }
-    if (btnOpts) {
-        btnOpts.textContent = AudioMoteur.muet ? '🔇 SON OFF' : '🔊 SON ON';
-        btnOpts.setAttribute('aria-pressed', AudioMoteur.muet ? 'true' : 'false');
-        btnOpts.classList.toggle('actif', AudioMoteur.muet);
-    }
-}
+export { mettreAJourBoutonsMute } from './options-mute-ui.js';
 
 export function afficherOngletOptions(onglet) {
     const estReglages = onglet === 'reglages';

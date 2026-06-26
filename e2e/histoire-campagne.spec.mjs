@@ -259,7 +259,48 @@ test('campagne secrets — cutscenes finales avec narratif', async ({ page }) =>
     }
 });
 
-test('campagne complete — progression simulee vers fin secrete', async ({ page }) => {
+const CAMPAGNE_NARRATIF_PARTIE_1 = MONDES_CAMPAGNE_PRINCIPALE.slice(0, 8);
+const CAMPAGNE_NARRATIF_PARTIE_2 = MONDES_CAMPAGNE_PRINCIPALE.slice(8);
+
+test('campagne principale narratif — mondes 1 à 8 (audit D)', async ({ page }) => {
+    test.setTimeout(360000);
+    const etatDepart = {
+        ...ETAT_HISTOIRE_VIDE,
+        mondesDejaMontres: ['monde_prologue'],
+    };
+    await ouvrirCarteHistoire(page, etatDepart);
+
+    for (const mondeId of CAMPAGNE_NARRATIF_PARTIE_1) {
+        await page.evaluate(async (id) => {
+            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
+        }, mondeId);
+        await parcourirFluxPostVictoireAvecAssertions(page, mondeId, undefined, 80, {
+            exigerCorpus: true,
+        });
+    }
+});
+
+test('campagne principale narratif — mondes 9 à 16 (audit D)', async ({ page }) => {
+    test.setTimeout(360000);
+    const etatDepart = {
+        ...ETAT_HISTOIRE_VIDE,
+        mondesCompletes: [...CAMPAGNE_NARRATIF_PARTIE_1],
+        bossVaincus: ['brasier', 'sentinelle'],
+        mondesDejaMontres: ['monde_prologue', ...CAMPAGNE_NARRATIF_PARTIE_1],
+    };
+    await ouvrirCarteHistoire(page, etatDepart);
+
+    for (const mondeId of CAMPAGNE_NARRATIF_PARTIE_2) {
+        await page.evaluate(async (id) => {
+            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
+        }, mondeId);
+        await parcourirFluxPostVictoireAvecAssertions(page, mondeId, undefined, 80, {
+            exigerCorpus: true,
+        });
+    }
+});
+
+test('campagne complete — progression simulee sans narratif vers fin secrete', async ({ page }) => {
     test.setTimeout(300000);
     const etatDepart = {
         ...ETAT_HISTOIRE_VIDE,

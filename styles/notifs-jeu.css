@@ -240,8 +240,8 @@ body.partie-active[data-notif-layout='beside-right'] .zone-notifs-jeu {
 
 body.partie-active .overlay-infobulle-contexte {
     position: fixed;
-    left: var(--notif-rail-left, max(16px, env(safe-area-inset-left, 0px)));
-    top: var(--notif-rail-top, max(16px, env(safe-area-inset-top, 0px)));
+    left: var(--notif-rail-left, max(16px, var(--safe-left)));
+    top: var(--notif-rail-top, max(16px, var(--safe-top)));
     width: var(--notif-rail-width, min(88vw, 300px));
     max-height: var(--notif-rail-height, auto);
     right: auto;

@@ -1,1 +1,1 @@
-npm run lint && npm run format:check && npm run typecheck && npm run check:circular && npm test && npm run build && node scripts/verifier-bundle.mjs && npm run test:e2e:smoke:dist
+node scripts/pre-push.mjs

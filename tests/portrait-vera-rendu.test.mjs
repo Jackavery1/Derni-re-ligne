@@ -9,6 +9,7 @@ import {
     obtenirParamsExpressionPortrait,
     infererHumeurVeraDepuisTexte,
     reinitExpressionsCutscene,
+    prechargerPresetsExpressions,
 } from '../js/expressions-cutscene.js';
 import {
     obtenirImagePortraitVera,
@@ -62,10 +63,11 @@ function creerCtxMock() {
 }
 
 describe('portrait VERA canvas procedural', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         viderCachePortraitVera();
         reinitialiserCachePortraitVeraAssets();
         reinitExpressionsCutscene();
+        await prechargerPresetsExpressions();
         store.histoire.cutscene.enCours = true;
         vi.mocked(obtenirImagePortraitVera).mockReturnValue(null);
     });
@@ -112,6 +114,22 @@ describe('portrait VERA canvas procedural', () => {
         dessinerPortraitVeraCanon(ctx, 180, 260, 0, params);
         expect(ctx.drawImage).not.toHaveBeenCalled();
         expect(ctx.ellipse.mock.calls.length).toBeGreaterThan(4);
+    });
+
+    it('utilise img/vera.png quand le sprite est charge', () => {
+        const img = { complete: true, naturalWidth: 360, naturalHeight: 520 };
+        vi.mocked(obtenirImagePortraitVera).mockReturnValue(/** @type {HTMLImageElement} */ (img));
+        const ctx = creerCtxMock();
+        const params = obtenirParamsExpressionPortrait('vera', 'douce', 1000);
+        dessinerPortraitVeraCanon(ctx, 180, 260, 1.5, params);
+        expect(ctx.drawImage).toHaveBeenCalledWith(
+            img,
+            expect.any(Number),
+            expect.any(Number),
+            expect.any(Number),
+            expect.any(Number)
+        );
+        expect(ctx.ellipse.mock.calls.length).toBe(0);
     });
 
     it('glitch procedural utilise getImageData quand disponible', () => {

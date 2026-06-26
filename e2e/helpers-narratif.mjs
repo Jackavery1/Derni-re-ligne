@@ -41,14 +41,32 @@ export const MARQUEURS_NARRATIFS_POST_MONDE = {
 /** Marqueurs narratifs attendus dans le flux post-victoire (audit D15). */
 export const MARQUEURS_NARRATIFS_CAMPAGNE = {
     monde_prologue: [/CHAPITRE I|FEU DES ORIGINES|Sa phrase s'est coupée/i],
-    monde_boss_1: [/Brasier|effondre|Inferno respire/i, /Descends|traces/i],
+    monde_lave: [/lave obéit|VERA aussi obéissait|Inferno respire/i],
+    monde_boss_1: [/Brasier|effondre|Inferno respire/i, /Descends|traces|VERA/i],
     monde_rouille: [/GARDIEN|ENTIT/i],
-    monde_boss_2: [/Sentinelle|gelait|disparaît/i, /CHAPITRE III|MÉMOIRE PERDUE|modélisé/i],
-    monde_boss_3: [/CHAPITRE IV|FRACTURE|archives/i],
+    monde_ocean: [/Sous l'eau|Je pense que c'était elle|SIGNAL PARASITE/i],
+    monde_foret: [/Forêt|espace libéré/i],
+    monde_boss_2: [
+        /Sentinelle|gelait|disparaît|transmission 05/i,
+        /CHAPITRE III|MÉMOIRE PERDUE|modélisé/i,
+    ],
+    monde_glace: [/retenait son souffle|patrouille au loin/i],
+    monde_desert: [/fragment de carnet|Continue\. — V/i],
+    monde_eclipse: [/lumière ou dans l'ombre|joue comme si/i],
+    monde_cyber: [/son laboratoire|ROBO — si tu lis ceci/i],
+    monde_boss_3: [/CHAPITRE IV|FRACTURE|archives|Archiviste/i],
+    monde_fuochi: [/feux d'artifice|inutiles sont les plus importantes/i],
+    monde_cosmos: [/Je l'ai entendue|VERA \? Ou elle/i],
+    monde_vide: [/Le Vide ne parle pas|joué à l'aveugle/i],
     monde_boss_4: [/Quatre chapitres|objectif|FINALE|RÉSOLUTION|Distorsion attend/i],
     monde_miroir: [/Miroir|fragmentation|Distorsion/i],
     monde_trame: [/Trame|TRAME PRIMORDIALE|Primordiale/i],
     monde_finale: [/Distorsion|Enfin|LIGNE PARFAITE/i],
+};
+
+export const SCENES_VICTOIRE_BOSS = {
+    brasier: { debut: 'seuil_brasier', fin: 'labo', pivot: /Inferno respire/i },
+    sentinelle: { debut: 'seuil_sentinelle', fin: 'labo', pivot: /dernière chose/i },
 };
 
 /** Simule l'encoche iPhone (audit C11 — validation physique non automatisable). */
@@ -79,12 +97,14 @@ export async function lireTexteCutsceneActive(page) {
  * @param {string} mondeId
  * @param {RegExp[]} [marqueurs]
  * @param {number} [max]
+ * @param {{ exigerCorpus?: boolean }} [options]
  */
 export async function parcourirFluxPostVictoireAvecAssertions(
     page,
     mondeId,
     marqueurs = MARQUEURS_NARRATIFS_CAMPAGNE[mondeId] ?? [],
-    max = 80
+    max = 80,
+    options = {}
 ) {
     const corpus = [];
 
@@ -165,6 +185,9 @@ export async function parcourirFluxPostVictoireAvecAssertions(
     }
 
     const texte = corpus.join('\n');
+    if (options.exigerCorpus) {
+        expect(texte.trim().length).toBeGreaterThan(8);
+    }
     if (marqueurs.length === 0) return;
     for (const re of marqueurs) {
         expect(texte).toMatch(re);

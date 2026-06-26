@@ -35,6 +35,9 @@ export function basculerModeCoop() {
     if (typeof document === 'undefined') return;
 
     if (modeCoopActif) {
+        void import('./infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) =>
+            proposerInfobulleModeJeu('coop')
+        );
         import('./mode-sprint.js').then(({ desactiverModeSprint, mettreAJourToggleSprint }) => {
             desactiverModeSprint();
             mettreAJourToggleSprint();

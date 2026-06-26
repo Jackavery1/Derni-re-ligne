@@ -18,10 +18,15 @@ Vérification : `npm run verify:versions`
 
 ```bash
 # 1. Rédiger la section [X.Y.Z] dans CHANGELOG.md
-npm run release          # bump patch + sync SW + README + index
+npm run release:publish  # bump + verify + test + build + commit + tag + push
+
+# Ou étape par étape (PowerShell — pas de &&) :
+npm run release
 npm run verify:versions
-npm test && npm run build
-git add -A && git commit -m "feat(release): vX.Y.Z …"
+npm test
+npm run build
+git add -A
+git commit -m "feat(release): vX.Y.Z …"
 git tag vX.Y.Z
 git push origin main --tags
 ```

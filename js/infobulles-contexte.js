@@ -35,11 +35,12 @@ function marquerVu(biomeId, type) {
 /** @param {{ titre: string, texte: string }} contenu */
 let _timerInfobulle = null;
 
+/** @param {{ titre: string, texte: string }} contenu @returns {boolean} */
 function afficherInfobulle(contenu) {
-    if (typeof document === 'undefined') return;
-    if (window.__NEO_SILENT_NOTIFS__) return;
+    if (typeof document === 'undefined') return false;
+    if (window.__NEO_SILENT_NOTIFS__) return false;
     const overlay = document.getElementById('overlay-infobulle-contexte');
-    if (!overlay) return;
+    if (!overlay) return false;
 
     const titre = document.getElementById('infobulle-contexte-titre');
     const texte = document.getElementById('infobulle-contexte-texte');
@@ -52,6 +53,7 @@ function afficherInfobulle(contenu) {
     if (btn) btn.onclick = fermer;
     clearTimeout(_timerInfobulle);
     _timerInfobulle = setTimeout(fermer, 12000);
+    return true;
 }
 
 /**
@@ -117,9 +119,9 @@ export function proposerInfobulleModeJeu(modeId) {
         vu = {};
     }
     if (vu[modeId]) return;
+    if (!afficherInfobulle(contenu)) return;
     vu[modeId] = true;
     ecrireStockage(CLE_MODES_JEU, JSON.stringify(vu));
-    afficherInfobulle(contenu);
 }
 
 export function proposerInfobulleOracleCoopExclusif() {
@@ -127,13 +129,17 @@ export function proposerInfobulleOracleCoopExclusif() {
     if (lireStockage(CLE_ORACLE_COOP, '0') === '1') return;
     const wrapOracle = document.getElementById('toggle-oracle-wrap');
     if (!wrapOracle?.classList.contains('mode-debloque')) return;
+    if (
+        !afficherInfobulle({
+            titre: 'ORACLE ET COOP',
+            texte:
+                "L'Oracle (solo) et le mode Coop ne peuvent pas etre actifs en meme temps. " +
+                'Choisissez l’un des deux avant de lancer la partie.',
+        })
+    ) {
+        return;
+    }
     ecrireStockage(CLE_ORACLE_COOP, '1');
-    afficherInfobulle({
-        titre: 'ORACLE ET COOP',
-        texte:
-            "L'Oracle (solo) et le mode Coop ne peuvent pas etre actifs en meme temps. " +
-            'Choisissez l’un des deux avant de lancer la partie.',
-    });
 }
 
 export function _reinitialiserInfobullesContexte() {

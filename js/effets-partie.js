@@ -85,13 +85,13 @@ export function initialiserEffetsPartie() {
         }
         // Condition Miroir (suivi tetris consecutifs CYBER) :
         // centralisee dans mecaniques-histoire.js via le bus — pas de duplication ici.
-        for (const l of lignesEffacees) creerParticulesLigne(l);
+        for (const l of lignesEffacees ?? []) creerParticulesLigne(l);
         const intensitesSecousse = { 1: 2, 2: 3.5, 3: 5, 4: 8 };
         declencherSecousse(intensitesSecousse[nbSupprimees] ?? 8);
         if (modeHistoireEnCours() && nbSupprimees > 0) {
             const mec = biomeActuelMecanique();
             if (mec === 'eclipse') {
-                const lignesBasseCount = lignesEffacees.filter(
+                const lignesBasseCount = (lignesEffacees ?? []).filter(
                     (l) => l > obtenirLigneEclipse()
                 ).length;
                 if (lignesBasseCount > 0) {

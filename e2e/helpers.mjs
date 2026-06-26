@@ -218,6 +218,7 @@ export async function fermerRecapPostMonde(page) {
 
 export {
     MARQUEURS_NARRATIFS_CAMPAGNE,
+    SCENES_VICTOIRE_BOSS,
     appliquerEncocheSimulee,
     lireTexteCutsceneActive,
     parcourirFluxPostVictoireAvecAssertions,

@@ -4,11 +4,21 @@ vi.mock('../js/charger-histoire-textes.js', () => ({
     obtenirHistoireTextesSync: vi.fn(),
 }));
 
+vi.mock('../js/histoire-manager-ui.js', () => ({
+    afficherCutsceneHistoire: vi.fn(),
+}));
+
 import { obtenirHistoireTextesSync } from '../js/charger-histoire-textes.js';
-import { obtenirCutsceneEntree, obtenirCutscenePostMonde } from '../js/histoire-narratif.js';
+import { afficherCutsceneHistoire } from '../js/histoire-manager-ui.js';
+import {
+    obtenirCutsceneEntree,
+    obtenirCutscenePostMonde,
+    afficherVictoireBoss,
+} from '../js/histoire-narratif.js';
 
 describe('histoire-narratif — metadata cutscene', () => {
     beforeEach(() => {
+        vi.clearAllMocks();
         obtenirHistoireTextesSync.mockReturnValue({
             CUTSCENES_ENTREE: {
                 monde_prologue: [
@@ -28,6 +38,7 @@ describe('histoire-narratif — metadata cutscene', () => {
                     { scene: 'trame', personnage: 'narrateur', texte: 'La Trame accumule.' },
                 ],
             },
+            CUTSCENES_VICTOIRE_BOSS: {},
         });
     });
 
@@ -66,9 +77,28 @@ describe('histoire-narratif — metadata cutscene', () => {
             CUTSCENES_POST_MONDE: {
                 monde_lave: [{ personnage: 'robo', texte: 'Le feu brûle plus fort.' }],
             },
+            CUTSCENES_VICTOIRE_BOSS: {},
         });
         const post = obtenirCutscenePostMonde('monde_lave', true);
         expect(post?.scene).toBe('seuil_brasier');
         expect(post?.lignes).toHaveLength(1);
+    });
+
+    it('afficherVictoireBoss enveloppe les lignes avec la scene par defaut du boss', async () => {
+        obtenirHistoireTextesSync.mockReturnValue({
+            CUTSCENES_ENTREE: {},
+            CUTSCENES_POST_MONDE: {},
+            CUTSCENES_VICTOIRE_BOSS: {
+                brasier: [
+                    { personnage: 'narrateur', texte: "Le Brasier s'effondre." },
+                    { scene: 'labo', personnage: 'narrateur', texte: 'Inferno respire.' },
+                ],
+            },
+        });
+        afficherVictoireBoss('brasier', 'normal', () => {});
+        await vi.waitFor(() => expect(afficherCutsceneHistoire).toHaveBeenCalled());
+        const entree = afficherCutsceneHistoire.mock.calls[0][0];
+        expect(entree.scene).toBe('seuil_brasier');
+        expect(entree.lignes[1].scene).toBe('labo');
     });
 });

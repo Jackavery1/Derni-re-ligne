@@ -4,6 +4,7 @@ import {
     PORTRAITS,
     CUTSCENES_ENTREE,
     CUTSCENES_POST_MONDE,
+    CUTSCENES_VICTOIRE_BOSS,
     EPILOGUES,
     DIALOGUES_COMBAT_BOSS,
     INTERLUDES,
@@ -16,13 +17,14 @@ import { SEQUENCE_HISTOIRE } from '../js/histoire-donnees.js';
 import { HUMEURS_PERSONNAGES } from '../js/expressions-cutscene.js';
 import { idPortraitRendu } from '../js/histoire-cutscene-config.js';
 import { CLE_FRAGMENT_PAR_MONDE } from '../js/histoire-manager-post-monde.js';
-import { SCENE_DEFAUT_POST_MONDE } from '../js/histoire-narratif.js';
+import { SCENE_DEFAUT_POST_MONDE, SCENE_DEFAUT_VICTOIRE_BOSS } from '../js/histoire-narratif.js';
 
 const BOSS_CONNUS = new Set(['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion']);
 
 const REGISTRES_NARRATIFS = [
     ['CUTSCENES_ENTREE', CUTSCENES_ENTREE],
     ['CUTSCENES_POST_MONDE', CUTSCENES_POST_MONDE],
+    ['CUTSCENES_VICTOIRE_BOSS', CUTSCENES_VICTOIRE_BOSS],
     ['INTERLUDES', INTERLUDES],
     ['EPILOGUES', EPILOGUES],
     ['OUTRO_FINS', OUTRO_FINS],
@@ -126,6 +128,21 @@ describe('histoire-textes — cohérence portraits', () => {
                 extraireLignesCutscene(entree)[0]?.scene ??
                 SCENE_DEFAUT_POST_MONDE[mondeId];
             expect(scene && ids.has(scene), `${mondeId} → ${scene}`).toBe(true);
+        }
+    });
+
+    it('cutscenes victoire boss brasier et sentinelle changent de scene en cours de dialogue', () => {
+        const ids = new Set(Object.keys(SCENES_CUTSCENE));
+        for (const bossId of ['brasier', 'sentinelle']) {
+            const lignes = extraireLignesCutscene(CUTSCENES_VICTOIRE_BOSS[bossId]);
+            const scenes = [...new Set(lignes.map((l) => l.scene).filter(Boolean))];
+            expect(scenes.length, bossId).toBeGreaterThan(1);
+            for (const scene of scenes) {
+                expect(ids.has(scene), `${bossId} → ${scene}`).toBe(true);
+            }
+            expect(lignes[0]?.scene ?? SCENE_DEFAUT_VICTOIRE_BOSS[bossId]).toBe(
+                SCENE_DEFAUT_VICTOIRE_BOSS[bossId]
+            );
         }
     });
 

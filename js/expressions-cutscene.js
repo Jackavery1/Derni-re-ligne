@@ -3,7 +3,7 @@ import { idPortraitRendu } from './histoire-cutscene-config.js';
 import { obtenirEffetsAccessibiliteReduits } from './accessibilite.js';
 import { store } from './store-core.js';
 
-/** @typedef {Record<string, number | boolean>} ParamsExpression */
+/** @typedef {Record<string, number | boolean | number[]>} ParamsExpression */
 
 export const HUMEURS_PERSONNAGES = {
     robo: ['neutre', 'content', 'excite', 'triste', 'alerte'],
@@ -22,104 +22,50 @@ export const HUMEURS_PERSONNAGES = {
 
 const DUREE_TRANSITION_MS = 400;
 
-const PRESETS_VERA = {
-    neutre: {
-        fragmentVitesse: 0.6,
-        fragmentRayon: 1,
-        lueurRose: 1,
-        inclinaison: 0,
-        sourcils: false,
-        scanline: 1,
-        glitchAleatoire: true,
-        glitchBandes: false,
-    },
-    douce: {
-        fragmentVitesse: 0.35,
-        fragmentRayon: 0.9,
-        lueurRose: 1.2,
-        inclinaison: 0.06,
-        sourcils: false,
-        scanline: 0.7,
-        glitchAleatoire: false,
-        glitchBandes: false,
-    },
-    inquiete: {
-        fragmentVitesse: 1.1,
-        fragmentRayon: 0.75,
-        lueurRose: 1,
-        inclinaison: 0,
-        sourcils: true,
-        scanline: 1.4,
-        glitchAleatoire: false,
-        glitchBandes: false,
-    },
-    determinee: {
-        fragmentVitesse: 0.5,
-        fragmentRayon: 1.05,
-        lueurRose: 1.1,
-        inclinaison: -0.04,
-        sourcils: false,
-        scanline: 0.85,
-        glitchAleatoire: false,
-        glitchBandes: false,
-        visiereLumineuse: true,
-    },
-    glitch: {
-        fragmentVitesse: 0.8,
-        fragmentRayon: 1.3,
-        lueurRose: 1,
-        inclinaison: 0,
-        sourcils: false,
-        scanline: 1.6,
-        glitchAleatoire: false,
-        glitchBandes: true,
-    },
-};
+/** @type {typeof import('./expressions-cutscene-presets.js') | null} */
+let _presets = null;
 
-const PRESETS_DISTORSION = {
-    menacante: {
-        vortexVitesse: 1.3,
-        aberrationChrom: 1,
-        yeuxRouge: true,
-        yeuxViolet: false,
-        vortexIrregulier: 0,
-    },
-    souffrante: {
-        vortexVitesse: 0.45,
-        aberrationChrom: 0.4,
-        yeuxRouge: true,
-        yeuxViolet: false,
-        vortexIrregulier: 0.7,
-        paupiere: true,
-    },
-    curieuse: {
-        vortexVitesse: 0.15,
-        aberrationChrom: 0.2,
-        yeuxRouge: true,
-        yeuxViolet: false,
-        vortexIrregulier: 0,
-        unOeil: true,
-    },
-    apaisee: {
-        vortexVitesse: 0.25,
-        aberrationChrom: 0,
-        yeuxRouge: false,
-        yeuxViolet: true,
-        vortexIrregulier: 0,
-        fragmentsStables: true,
-    },
-};
+/** @type {Promise<typeof import('./expressions-cutscene-presets.js')> | null} */
+let _chargementPresets = null;
 
-const PRESETS_BOSS = {
-    calme: { vitesseAnim: 0.7, glow: 0.75, echelle: 1, vacillant: false },
-    agressif: { vitesseAnim: 1.35, glow: 1.35, echelle: 1.05, vacillant: false },
-    vacillant: { vitesseAnim: 1.1, glow: 0.9, echelle: 1, vacillant: true },
-};
+export function prechargerPresetsExpressions() {
+    if (_presets) return Promise.resolve(_presets);
+    if (!_chargementPresets) {
+        _chargementPresets = import('./expressions-cutscene-presets.js').then((module) => {
+            _presets = module;
+            return module;
+        });
+    }
+    return _chargementPresets;
+}
 
-const PRESETS_SYSTEME = {
-    neutre: { alerte: false, clignotement: 1 },
-    alerte: { alerte: true, clignotement: 2.8 },
-};
+/** @returns {Record<string, Record<string, unknown>>} */
+function presetsVera() {
+    return /** @type {Record<string, Record<string, unknown>>} */ (
+        _presets?.PRESETS_VERA ?? { neutre: { fragmentVitesse: 0.6, fragmentRayon: 1 } }
+    );
+}
+
+/** @returns {Record<string, Record<string, unknown>>} */
+function presetsDistorsion() {
+    return /** @type {Record<string, Record<string, unknown>>} */ (
+        _presets?.PRESETS_DISTORSION ?? { menacante: { vortexVitesse: 1.3 } }
+    );
+}
+
+/** @returns {Record<string, Record<string, unknown>>} */
+function presetsBoss() {
+    return /** @type {Record<string, Record<string, unknown>>} */ (
+        _presets?.PRESETS_BOSS ?? { calme: { vitesseAnim: 0.7 } }
+    );
+}
+
+/** @returns {Record<string, Record<string, unknown>>} */
+function presetsSysteme() {
+    return /** @type {Record<string, Record<string, unknown>>} */ (
+        _presets?.PRESETS_SYSTEME ?? { neutre: { alerte: false } }
+    );
+}
 
 /** @type {Map<string, string>} */
 const _derniereHumeurParlee = new Map();
@@ -143,12 +89,9 @@ function _humeurCompatDefaut(personnageId, parle) {
     const id = idPortraitRendu(personnageId);
     if (id === 'robo') return parle ? 'content' : 'neutre';
     if (id === 'brasier_voix' || id === 'sentinelle_voix') return 'vacillant';
-    if (PRESETS_VERA.neutre && id === 'vera') return parle ? 'douce' : 'neutre';
-    if (PRESETS_DISTORSION.menacante && id === 'distorsion') return 'menacante';
-    if (
-        PRESETS_BOSS.calme &&
-        (id === 'brasier' || id === 'sentinelle' || id === 'archiviste' || id === 'avantgarde')
-    ) {
+    if (id === 'vera') return parle ? 'douce' : 'neutre';
+    if (id === 'distorsion') return 'menacante';
+    if (id === 'brasier' || id === 'sentinelle' || id === 'archiviste' || id === 'avantgarde') {
         return 'calme';
     }
     if (id === 'systeme') return 'neutre';
@@ -215,15 +158,22 @@ export function resoudreHumeurPortraitAvecTexte(
     return resoudreHumeurPortrait(personnageId, humeurDemandee, options);
 }
 
+/** @returns {ParamsExpression} */
 function _presetBrut(personnageId, humeur) {
     const id = idPortraitRendu(personnageId);
     switch (id) {
-        case 'vera':
-            return { ...(PRESETS_VERA[humeur] ?? PRESETS_VERA.neutre) };
-        case 'distorsion':
-            return { ...(PRESETS_DISTORSION[humeur] ?? PRESETS_DISTORSION.menacante) };
-        case 'systeme':
-            return { ...(PRESETS_SYSTEME[humeur] ?? PRESETS_SYSTEME.neutre) };
+        case 'vera': {
+            const presets = presetsVera();
+            return /** @type {ParamsExpression} */ ({ ...(presets[humeur] ?? presets.neutre) });
+        }
+        case 'distorsion': {
+            const presets = presetsDistorsion();
+            return /** @type {ParamsExpression} */ ({ ...(presets[humeur] ?? presets.menacante) });
+        }
+        case 'systeme': {
+            const presets = presetsSysteme();
+            return /** @type {ParamsExpression} */ ({ ...(presets[humeur] ?? presets.neutre) });
+        }
         case 'brasier':
         case 'brasier_voix':
         case 'sentinelle':
@@ -231,8 +181,10 @@ function _presetBrut(personnageId, humeur) {
         case 'archiviste':
         case 'archiviste_voix':
         case 'avantgarde':
-        case 'avantgarde_voix':
-            return { ...(PRESETS_BOSS[humeur] ?? PRESETS_BOSS.calme) };
+        case 'avantgarde_voix': {
+            const presets = presetsBoss();
+            return /** @type {ParamsExpression} */ ({ ...(presets[humeur] ?? presets.calme) });
+        }
         default:
             return {};
     }

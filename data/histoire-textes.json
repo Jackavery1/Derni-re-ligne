@@ -1261,116 +1261,140 @@
     "CUTSCENES_VICTOIRE_BOSS": {
         "brasier": [
             {
+                "scene": "seuil_brasier",
                 "personnage": "narrateur",
                 "texte": "Le Brasier ne s'éteint pas. Il s'effondre."
             },
             {
+                "scene": "seuil_brasier",
                 "personnage": "narrateur",
                 "texte": "Comme si quelque chose avait enfin décidé de se reposer."
             },
             {
+                "scene": "seuil_brasier",
                 "personnage": "brasier_voix",
                 "texte": "Tu... tu n'as pas compris.",
                 "humeur": "vacillant"
             },
             {
+                "scene": "seuil_brasier",
                 "personnage": "robo",
                 "texte": "Qu'est-ce que je n'ai pas compris ?",
                 "humeur": "neutre"
             },
             {
+                "scene": "seuil_brasier",
                 "personnage": "brasier_voix",
                 "texte": "Je ne brûlais pas pour détruire.",
                 "humeur": "vacillant"
             },
             {
+                "scene": "seuil_brasier",
                 "personnage": "brasier_voix",
                 "texte": "Je brûlais parce que personne ne m'avait dit comment m'arrêter.",
                 "humeur": "vacillant"
             },
             {
+                "scene": "seuil_brasier",
                 "personnage": "robo",
                 "texte": "...",
                 "humeur": "triste"
             },
             {
+                "scene": "seuil_brasier",
                 "personnage": "robo",
                 "texte": "Moi non plus je ne sais pas comment m'arrêter.",
                 "humeur": "triste"
             },
             {
+                "scene": "seuil_brasier",
                 "personnage": "robo",
                 "texte": "C'est peut-être pour ça que je comprends.",
                 "humeur": "triste"
             },
             {
+                "scene": "seuil_brasier",
                 "personnage": "brasier_voix",
                 "texte": "VERA... elle savait.",
                 "humeur": "vacillant"
             },
             {
+                "scene": "seuil_brasier",
                 "personnage": "brasier_voix",
                 "texte": "Elle m'a regardé brûler sans intervenir.",
                 "humeur": "vacillant"
             },
             {
+                "scene": "seuil_brasier",
                 "personnage": "brasier_voix",
                 "texte": "Peut-être... qu'elle attendait quelqu'un comme toi."
             },
             {
+                "scene": "labo",
                 "personnage": "narrateur",
                 "texte": "Le Brasier s'éteint. Pour la première fois en millénaires, le biome Inferno respire."
             },
             {
+                "scene": "labo",
                 "personnage": "narrateur",
                 "texte": "Dans les cendres encore chaudes : une capsule scellée. L'écriture de VERA."
             }
         ],
         "sentinelle": [
             {
+                "scene": "seuil_sentinelle",
                 "personnage": "sentinelle",
                 "texte": "Tu... bouges encore.",
                 "humeur": "vacillant"
             },
             {
+                "scene": "seuil_sentinelle",
                 "personnage": "robo",
                 "texte": "Oui.",
                 "humeur": "neutre"
             },
             {
+                "scene": "seuil_sentinelle",
                 "personnage": "sentinelle",
                 "texte": "Je ne comprends pas. Le mouvement corrompt. J'ai mesuré. J'ai des données.",
                 "humeur": "vacillant"
             },
             {
+                "scene": "seuil_sentinelle",
                 "personnage": "robo",
                 "texte": "Le mouvement corrompt. L'immobilité aussi. Juste plus lentement.",
                 "humeur": "neutre"
             },
             {
+                "scene": "seuil_sentinelle",
                 "personnage": "sentinelle",
                 "texte": "...",
                 "humeur": "vacillant"
             },
             {
+                "scene": "seuil_sentinelle",
                 "personnage": "sentinelle",
                 "texte": "Je n'avais pas modélisé cette variable.",
                 "humeur": "vacillant"
             },
             {
+                "scene": "fragmentation",
                 "personnage": "narrateur",
                 "texte": "La Sentinelle commence à se fragmenter en cristaux."
             },
             {
+                "scene": "fragmentation",
                 "personnage": "sentinelle",
                 "texte": "Si tu trouves VERA... dis-lui que j'avais tort.",
                 "humeur": "vacillant"
             },
             {
+                "scene": "labo",
                 "personnage": "narrateur",
                 "texte": "C'est la dernière chose qu'elle dit."
             },
             {
+                "scene": "labo",
                 "personnage": "narrateur",
                 "texte": "Dans les cristaux qui fondent : la transmission 05."
             }
