@@ -6,11 +6,12 @@ import {
     terminerPartieCourante,
     filtrerViolationsCritiques,
     preparerPageSansSw,
+    activerPausePartie,
     ETAT_DEBLOCAGE_MONDE_LIBRE,
     attendreApplicationPrete,
     attendreNotificationsInitiales,
     selectionnerBiomeClavier,
-    passerFluxPremierLancementCampagne,
+    passerCutsceneHistoire,
     preparerPremierLancement,
 } from './helpers.mjs';
 
@@ -144,7 +145,7 @@ test('nouvelle partie mobile ouvre la carte histoire', async ({ page }) => {
     await attendreNotificationsInitiales(page);
     await expect(page.locator('#btn-nouvelle-partie')).toBeVisible();
     await page.locator('#btn-nouvelle-partie').click();
-    await passerFluxPremierLancementCampagne(page);
+    await passerCutsceneHistoire(page);
     await expect(page.locator('#canvas-histoire-map')).toBeVisible();
 });
 
@@ -157,7 +158,7 @@ test('nouvelle partie tablette ouvre la carte histoire', async ({ page }) => {
     await attendreNotificationsInitiales(page);
     await expect(page.locator('#btn-nouvelle-partie')).toBeVisible();
     await page.locator('#btn-nouvelle-partie').click();
-    await passerFluxPremierLancementCampagne(page);
+    await passerCutsceneHistoire(page);
     await expect(page.locator('#canvas-histoire-map')).toBeVisible();
 });
 
@@ -238,9 +239,9 @@ test('partie solo desktop — contrôles tactiles masqués par défaut', async (
 });
 
 test('pause mobile sans débordement horizontal', async ({ page }) => {
-    await demarrerPartie(page);
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.keyboard.press('Escape');
+    await demarrerPartie(page);
+    await activerPausePartie(page);
     await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
 
     const debord = await page.evaluate(
@@ -262,9 +263,9 @@ test('game over mobile sans débordement horizontal', async ({ page }) => {
 });
 
 test('pause paysage mobile sans debordement', async ({ page }) => {
-    await demarrerPartie(page);
     await page.setViewportSize({ width: 667, height: 375 });
-    await page.keyboard.press('Escape');
+    await demarrerPartie(page);
+    await activerPausePartie(page);
     await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
 
     const metriques = await page.evaluate(() => {

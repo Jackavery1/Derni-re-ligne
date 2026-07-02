@@ -2,8 +2,12 @@ import { expect } from '@playwright/test';
 
 export {
     ETAT_DEBLOCAGE_MONDE_LIBRE,
+    ETAT_DEBLOCAGE_META_RAPIDE,
     ETAT_DEBLOCAGE_COMPLET,
     ETAT_HISTOIRE_BOSS_BRASIER,
+    ETAT_AVANT_BOSS_SENTINELLE,
+    ETAT_AVANT_BOSS_ARCHIVISTE,
+    ETAT_AVANT_BOSS_AVANTGARDE,
     ETAT_FIN_SECRETE_PRET,
     ETAT_AVANT_FIN_SECRETE,
     ETAT_INFERNO_PRET,
@@ -25,6 +29,7 @@ import {
     ETAT_DEBLOCAGE_COMPLET,
     ETAT_HISTOIRE_BOSS_BRASIER,
 } from './etats-histoire.mjs';
+import { attendreTypewriterInactif } from './helpers-narratif.mjs';
 
 /** Filtre les violations Axe bloquantes (hors contraste optionnel). */
 export function filtrerViolationsCritiques(violations, { inclureContraste = false } = {}) {
@@ -34,6 +39,70 @@ export function filtrerViolationsCritiques(violations, { inclureContraste = fals
         if (inclureContraste && v.id === 'color-contrast') return true;
         return false;
     });
+}
+
+/** @param {import('@playwright/test').Page} page @param {string} selector */
+export async function boutonEstVisible(page, selector) {
+    const loc = page.locator(selector);
+    if ((await loc.count()) === 0) return false;
+    return loc.isVisible();
+}
+
+/** @param {import('@playwright/test').Page} page */
+export async function fermerPanneauDetailSiOuvert(page) {
+    const panneau = page.locator('#panneau-detail');
+    if ((await panneau.count()) === 0) return;
+    if ((await panneau.getAttribute('aria-hidden')) !== 'false') return;
+    await page.locator('#btn-panneau-detail-fermer').click();
+    await expect(panneau).toHaveAttribute('aria-hidden', 'true');
+}
+
+/** @param {import('@playwright/test').Page} page */
+export async function activerPausePartie(page) {
+    await fermerPanneauDetailSiOuvert(page);
+    await page.locator('#btn-pause').click();
+}
+
+/** @param {import('@playwright/test').Page} page @param {string} elementId @param {string} className */
+export async function elementAClasse(page, elementId, className) {
+    return page.evaluate(
+        ([id, cls]) => document.getElementById(id)?.classList.contains(cls) === true,
+        [elementId, className]
+    );
+}
+
+/** Lance l'intro Jour 2 554 depuis l'écran titre (première visite). */
+export async function ouvrirIntroHistoire(page) {
+    await preparerPremierLancement(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
+    await page.locator('#btn-nouvelle-partie').click();
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 20000,
+    });
+}
+
+/** @param {import('@playwright/test').Page} page */
+export async function attendreRenduCarteHistoire(page) {
+    await expect(page.locator('#canvas-histoire-map')).toBeVisible();
+    await expect
+        .poll(
+            () =>
+                page.evaluate(() => {
+                    const canvas = document.getElementById('canvas-histoire-map');
+                    if (!(canvas instanceof HTMLCanvasElement)) return false;
+                    const ctx = canvas.getContext('2d');
+                    if (!ctx) return false;
+                    const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    for (let i = 3; i < data.length; i += 4) {
+                        if (data[i] > 0) return true;
+                    }
+                    return false;
+                }),
+            { timeout: 5000, intervals: [80, 150, 250] }
+        )
+        .toBe(true);
 }
 
 /** État vierge : aucun déblocage, comme un premier lancement. */
@@ -132,9 +201,8 @@ export async function attendrePartieVisible(page) {
 /** @param {import('@playwright/test').Page} page */
 export async function attendreNotificationsInitiales(page) {
     for (const sel of ['#notif-achievement', '#notif-niveau', '#notif-codex']) {
-        const el = page.locator(sel);
-        if (await el.isVisible().catch(() => false)) {
-            await expect(el).not.toHaveClass(/visible/, { timeout: 20000 });
+        if (await boutonEstVisible(page, sel)) {
+            await expect(page.locator(sel)).not.toHaveClass(/visible/, { timeout: 20000 });
         }
     }
 }
@@ -142,7 +210,7 @@ export async function attendreNotificationsInitiales(page) {
 /** @param {import('@playwright/test').Page} page */
 export async function fermerInfobulleContexteSiVisible(page) {
     const overlay = page.locator('#overlay-infobulle-contexte');
-    if (await overlay.isVisible().catch(() => false)) {
+    if (await boutonEstVisible(page, '#overlay-infobulle-contexte')) {
         await page.locator('#btn-infobulle-contexte-fermer').click({ force: true });
         await expect(overlay).toHaveClass(/element-masque/, { timeout: 5000 });
     }
@@ -162,36 +230,36 @@ export async function passerFluxLancementMonde(page) {
         }
 
         const commencer = page.locator('#btn-objectifs-commencer');
-        if (await commencer.isVisible().catch(() => false)) {
+        if (await boutonEstVisible(page, '#btn-objectifs-commencer')) {
             await commencer.click();
             continue;
         }
 
-        const passer = page.locator('#btn-cutscene-passer');
-        if (await passer.isVisible().catch(() => false)) {
-            await passer.click({ force: true });
+        if (await boutonEstVisible(page, '#btn-cutscene-passer')) {
+            await page.locator('#btn-cutscene-passer').click({ force: true });
             continue;
         }
 
-        const suivant = page.locator('#btn-cutscene-suivant');
-        if (await suivant.isVisible().catch(() => false)) {
-            await suivant.click({ force: true });
+        if (await boutonEstVisible(page, '#btn-cutscene-suivant')) {
+            await page.locator('#btn-cutscene-suivant').click({ force: true });
             continue;
         }
 
-        const tutoriel = page.locator('#btn-tutoriel-fermer');
-        if (await tutoriel.isVisible().catch(() => false)) {
-            await tutoriel.click();
+        if (await boutonEstVisible(page, '#btn-tutoriel-fermer')) {
+            await page.locator('#btn-tutoriel-fermer').click();
             continue;
         }
 
-        const journal = page.locator('#btn-journal-fermer');
-        if (await journal.isVisible().catch(() => false)) {
-            await journal.click({ force: true });
+        if (await boutonEstVisible(page, '#btn-journal-fermer')) {
+            await page.locator('#btn-journal-fermer').click({ force: true });
             continue;
         }
 
-        await page.waitForTimeout(200);
+        try {
+            await attendreTypewriterInactif(page, 500);
+        } catch {
+            /* attente courte entre étapes du flux */
+        }
     }
 
     await attendrePartieVisible(page);
@@ -221,12 +289,37 @@ export {
     SCENES_VICTOIRE_BOSS,
     appliquerEncocheSimulee,
     lireTexteCutsceneActive,
+    cliquerCutsceneSuivant,
+    attendreCutsceneVictoireBoss,
+    avancerCutsceneJusquaPivot,
+    attendreSceneCutsceneActive,
+    simulerVictoireBossHistoire,
+    assertHumeurPortraitCutscene,
+    parcourirVictoireBossJusquaPivot,
+    attendreJournalHistoire,
+    lancerMondeDepuisCarte,
     parcourirFluxPostVictoireAvecAssertions,
     viderOverlaysHistoireRapide,
     passerCutsceneEntiere,
     terminerCutscenesVersEcranFin,
-    passerCutsceneActive,
+    obtenirScenePostMonde,
+    attendreFinOverlaysHistoire,
+    attendreTypewriterInactif,
 } from './helpers-narratif.mjs';
+
+export {
+    installerJournalVibrations,
+    preparerSelectionPremiereVisiteModes,
+    selectionnerBiomeVerrouilleConstellation,
+    selectionnerMondeCarte,
+    attendreBarreModesPretes,
+    reinitialiserInfobulleMode,
+    attendreInfobulleMode,
+    basculerDefiJourDepuisSelection,
+    basculerSprintDepuisSelection,
+    basculerOracleDepuisSelection,
+    basculerCoopDepuisSelection,
+} from './helpers-audit-b.mjs';
 
 /** @param {import('@playwright/test').Page} page @param {object} [etatHistoire] */
 export async function ouvrirCarteHistoire(page, etatHistoire = ETAT_HISTOIRE_BOSS_BRASIER) {
@@ -242,12 +335,15 @@ export async function ouvrirCarteHistoire(page, etatHistoire = ETAT_HISTOIRE_BOS
     await attendreApplicationPrete(page);
     await attendreNotificationsInitiales(page);
     const continuer = page.locator('#btn-continuer');
-    if (await continuer.isVisible().catch(() => false)) {
+    if (await boutonEstVisible(page, '#btn-continuer')) {
         await continuer.click();
     } else {
         await page.locator('#btn-nouvelle-partie').click();
     }
     await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/);
+    await expect(page.locator('#histoire-prog-mondes')).toContainText(/\d+\/\d+\s+MONDES/i, {
+        timeout: 15000,
+    });
 }
 
 /** @param {import('@playwright/test').Page} page */
@@ -267,7 +363,7 @@ export async function demarrerPartieViaClavier(page) {
     await preparerPageSansSw(page);
     await page.goto('/');
     const fermerTutoriel = page.locator('#btn-tutoriel-fermer');
-    if (await fermerTutoriel.isVisible().catch(() => false)) {
+    if (await boutonEstVisible(page, '#btn-tutoriel-fermer')) {
         await fermerTutoriel.click();
     }
     await attendreApplicationPrete(page);
@@ -313,39 +409,31 @@ export async function terminerPartieCourante(page) {
 /** @param {import('@playwright/test').Page} page */
 export async function passerCutsceneHistoire(page) {
     for (let i = 0; i < 40; i++) {
-        if (
-            await page
-                .locator('#ecran-histoire-map')
-                .evaluate((el) => el.classList.contains('actif'))
-        ) {
+        if (await elementAClasse(page, 'ecran-histoire-map', 'actif')) {
             return;
         }
 
-        const passer = page.locator('#btn-cutscene-passer');
-        if (await passer.isVisible().catch(() => false)) {
-            await passer.click({ force: true });
+        if (await boutonEstVisible(page, '#btn-cutscene-passer')) {
+            await page.locator('#btn-cutscene-passer').click({ force: true });
             continue;
         }
 
-        const suivant = page.locator('#btn-cutscene-suivant');
-        if (await suivant.isVisible().catch(() => false)) {
-            await suivant.click({ force: true });
+        if (await boutonEstVisible(page, '#btn-cutscene-suivant')) {
+            await page.locator('#btn-cutscene-suivant').click({ force: true });
             continue;
         }
 
-        const tutoriel = page.locator('#btn-tutoriel-fermer');
-        if (await tutoriel.isVisible().catch(() => false)) {
-            await tutoriel.click();
+        if (await boutonEstVisible(page, '#btn-tutoriel-fermer')) {
+            await page.locator('#btn-tutoriel-fermer').click();
             continue;
         }
 
-        await page.waitForTimeout(200);
+        try {
+            await attendreTypewriterInactif(page, 400);
+        } catch {
+            /* typewriter ou cutscene inactive */
+        }
     }
 
     await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/, { timeout: 20000 });
-}
-
-/** @param {import('@playwright/test').Page} page */
-export async function passerFluxPremierLancementCampagne(page) {
-    await passerCutsceneHistoire(page);
 }

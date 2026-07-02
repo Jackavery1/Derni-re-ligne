@@ -10,10 +10,15 @@ const etapes = [
     'npm run format:check',
     'npm run typecheck',
     'npm run check:circular',
+    'npm run verify:data',
     'npm test',
     'npm run build',
+    'node scripts/generer-precache.mjs --prod',
     'node scripts/verifier-bundle.mjs',
+    'npm run test:e2e:audit',
     'npm run test:e2e:smoke:dist',
+    'npm run test:e2e:perf',
+    'npm run test:e2e',
 ];
 
 for (const cmd of etapes) {

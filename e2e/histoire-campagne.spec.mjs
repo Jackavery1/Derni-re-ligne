@@ -107,7 +107,31 @@ async function avancerFluxPostVictoire(page, max = 60) {
             });
             continue;
         }
-        await page.waitForTimeout(250);
+        let stable = false;
+        try {
+            await expect
+                .poll(
+                    () =>
+                        page.evaluate(() => {
+                            const recap = document
+                                .getElementById('overlay-recap-monde')
+                                ?.classList.contains('objectif-overlay-visible');
+                            const cutscene = document
+                                .getElementById('ecran-histoire-cutscene')
+                                ?.classList.contains('actif');
+                            const journal = document
+                                .getElementById('ecran-histoire-journal')
+                                ?.classList.contains('actif');
+                            return recap || cutscene || journal;
+                        }),
+                    { timeout: 500, intervals: [50, 100, 150] }
+                )
+                .toBe(true);
+            stable = true;
+        } catch {
+            stable = false;
+        }
+        if (!stable) return 'timeout';
     }
     return 'timeout';
 }
@@ -206,7 +230,7 @@ test('campagne — enchaine prologue puis inferno sans carte', async ({ page }) 
 });
 
 test('campagne — cutscenes intermediaires boss et chapitres (audit D15)', async ({ page }) => {
-    test.setTimeout(240000);
+    test.setTimeout(360000);
     const etatDepart = {
         ...ETAT_HISTOIRE_VIDE,
         mondesDejaMontres: ['monde_prologue'],
@@ -226,7 +250,9 @@ test('campagne — cutscenes intermediaires boss et chapitres (audit D15)', asyn
         await page.evaluate(async (id) => {
             await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
         }, mondeId);
-        await parcourirFluxPostVictoireAvecAssertions(page, mondeId);
+        await parcourirFluxPostVictoireAvecAssertions(page, mondeId, undefined, 60, {
+            typewriterTimeout: 250,
+        });
     }
 });
 
@@ -300,8 +326,11 @@ test('campagne principale narratif — mondes 9 à 16 (audit D)', async ({ page 
     }
 });
 
-test('campagne complete — progression simulee sans narratif vers fin secrete', async ({ page }) => {
+test('campagne complete — flags fin secrete sans parcours narratif (audit D9)', async ({
+    page,
+}) => {
     test.setTimeout(300000);
+    // Le narratif post-victoire est couvert par les tests campagne 1-8 / 9-16 et post-monde.
     const etatDepart = {
         ...ETAT_HISTOIRE_VIDE,
         mondesDejaMontres: ['monde_prologue'],

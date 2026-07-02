@@ -64,9 +64,11 @@ export default {
         ...(channel !== 'chromium' ? { channel } : {}),
     },
     webServer: {
-        command: serveDist ? 'npx --yes serve dist -p 3000' : 'python -m http.server 3000',
+        command: serveDist
+            ? 'npx --yes serve dist -p 3000'
+            : 'npx --yes serve . -c serve.json -l tcp://127.0.0.1:3000',
         url: 'http://127.0.0.1:3000',
         cwd: racineProjet,
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: process.env.CI !== 'true' && process.env.CI !== '1',
     },
 };
