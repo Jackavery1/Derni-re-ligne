@@ -72,7 +72,7 @@ export function pieceControlesActifs() {
 
 /**
  * @param {number} deltaTemps
- * @param {(zen: () => void) => void} [surCollisionSpawn]
+ * @param {() => void} [surCollisionSpawn]
  */
 export function mettreAJourGameFeel(deltaTemps, surCollisionSpawn) {
     if (store.areRestant > 0) {
@@ -90,7 +90,7 @@ export function mettreAJourGameFeel(deltaTemps, surCollisionSpawn) {
 }
 
 /**
- * @param {(zen: () => void) => void} [surCollisionSpawn] callback recevant la recuperation zen
+ * @param {() => void} [surCollisionSpawn] recuperation zen (monde paradoxe)
  */
 export function verifierCollisionSpawn(surCollisionSpawn) {
     if (!etat.pieceActuelle || estPositionValide(etat.pieceActuelle)) return;

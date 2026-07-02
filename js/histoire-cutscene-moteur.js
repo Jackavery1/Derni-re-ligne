@@ -24,7 +24,8 @@ import { logger } from './logger.js';
 /** @param {unknown} entree */
 export function extraireLignesCutscene(entree) {
     if (!entree) return [];
-    return Array.isArray(entree) ? entree : (entree.lignes ?? []);
+    if (Array.isArray(entree)) return entree;
+    return /** @type {{ lignes?: unknown[] }} */ (entree).lignes ?? [];
 }
 
 /** @param {unknown} textes @param {string[] | null | undefined} personnages */
