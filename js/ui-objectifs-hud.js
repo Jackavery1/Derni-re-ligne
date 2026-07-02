@@ -103,11 +103,15 @@ export function rafraichirHudObjectifsHistoire() {
         afficherObjectif('hud-objectif-lignes');
         texteObjectif(
             'hud-objectif-lignes-val',
-            `OBJECTIF ${suivi.lignesEffacees}/${suivi.lignesObjectif}`
+            `OBJECTIFS ${suivi.lignesEffacees}/${suivi.lignesObjectif}`
         );
     }
 
-    texteObjectif('hud-palier-val', `VITESSE P${suivi.palierCourant}`);
+    texteObjectif('hud-palier-val', `PALIER ${suivi.palierCourant}/14`);
+    const elPalier = elObjectif('hud-palier-val');
+    if (elPalier) {
+        elPalier.title = 'Vitesse de chute : palier 1 = lent, palier 14 = rapide';
+    }
 
     const modificateur = obtenirLibelleModificateurBiomeHud();
     const elMod = elObjectif('hud-modificateur-biome');

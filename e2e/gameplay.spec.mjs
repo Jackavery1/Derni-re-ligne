@@ -8,7 +8,7 @@ import {
     attendreNotificationsInitiales,
     selectionnerBiomeClavier,
     attendrePartieVisible,
-    passerFluxPremierLancementCampagne,
+    passerCutsceneHistoire,
     ETAT_DEBLOCAGE_MONDE_LIBRE,
     ETAT_DEBLOCAGE_COMPLET,
 } from './helpers.mjs';
@@ -17,7 +17,21 @@ test('réserve hold accepte une pièce via clavier', async ({ page }) => {
     await demarrerPartie(page);
     await page.locator('#canvas-plateau').focus();
     await page.keyboard.press('c');
-    await page.waitForTimeout(300);
+    await expect
+        .poll(async () => {
+            return page.evaluate(() => {
+                const canvas = document.getElementById('canvas-reserve');
+                if (!(canvas instanceof HTMLCanvasElement)) return false;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return false;
+                const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                for (let i = 3; i < data.length; i += 4) {
+                    if (data[i] > 0) return true;
+                }
+                return false;
+            });
+        })
+        .toBe(true);
     const reserveRemplie = await page.evaluate(() => {
         const canvas = document.getElementById('canvas-reserve');
         if (!(canvas instanceof HTMLCanvasElement)) return false;
@@ -59,7 +73,7 @@ test('premier lancement — nouvelle partie mène à la carte histoire', async (
     await expect(page.locator('#btn-continuer')).toBeHidden();
 
     await page.locator('#btn-nouvelle-partie').click();
-    await passerFluxPremierLancementCampagne(page);
+    await passerCutsceneHistoire(page);
     await expect(page.locator('#canvas-histoire-map')).toBeVisible();
 });
 
@@ -124,7 +138,21 @@ test('sprint 40L termine en victoire', async ({ page }) => {
 
 test('mascotte ROBO dessine pendant une partie', async ({ page }) => {
     await demarrerPartie(page);
-    await page.waitForTimeout(400);
+    await expect
+        .poll(async () => {
+            return page.evaluate(() => {
+                const canvas = document.getElementById('canvas-mascotte');
+                if (!(canvas instanceof HTMLCanvasElement)) return false;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return false;
+                const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                for (let i = 3; i < data.length; i += 4) {
+                    if (data[i] > 0) return true;
+                }
+                return false;
+            });
+        })
+        .toBe(true);
     const dessine = await page.evaluate(() => {
         const canvas = document.getElementById('canvas-mascotte');
         if (!(canvas instanceof HTMLCanvasElement)) return false;

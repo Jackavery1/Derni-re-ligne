@@ -3,10 +3,6 @@ import * as biomes from './codex-illustrations/biomes.js';
 import * as reliques from './codex-illustrations/reliques.js';
 import * as chroniques from './codex-illustrations/chroniques.js';
 
-export * from './codex-illustrations/biomes.js';
-export * from './codex-illustrations/reliques.js';
-export * from './codex-illustrations/chroniques.js';
-
 export const ILLUSTRATIONS_CODEX = {
     ...biomes,
     ...reliques,

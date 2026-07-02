@@ -2,6 +2,7 @@ import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { obtenirEtatHistoire, mondePeutEtreJoue } from './histoire-mondes.js';
 import { obtenirHistoireTextesSync } from './charger-histoire-textes.js';
 import { SCENES_CUTSCENE } from './scenes-cutscene.js';
+import { SCENE_DEFAUT_POST_MONDE } from './histoire-narratif.js';
 import { ECRANS } from './ecrans-config.js';
 import { store } from './store-core.js';
 import { logger } from './logger.js';
@@ -70,6 +71,29 @@ function urlSceneMonde(mondeId) {
     return null;
 }
 
+/**
+ * @param {string} mondeId
+ * @returns {string[]}
+ */
+function urlsScenesMonde(mondeId) {
+    const urls = new Set();
+    const entree = urlSceneMonde(mondeId);
+    if (entree) urls.add(entree);
+
+    const postScene = SCENE_DEFAUT_POST_MONDE[mondeId];
+    if (postScene) {
+        const src = SCENES_CUTSCENE[postScene]?.src;
+        if (src) urls.add(src);
+    }
+
+    if (mondeId === 'monde_vide' || postScene === 'vide_errance') {
+        const vide = SCENES_CUTSCENE.vide_errance?.src;
+        if (vide) urls.add(vide);
+    }
+
+    return [...urls];
+}
+
 export function annulerPrechargementMedias() {
     if (controleurActif) {
         logger.debug('[precharge] annule (partie lancee ou carte quittee)');
@@ -134,9 +158,9 @@ export function demarrerPrechargementCarte() {
 
         if (signal.aborted) return;
 
-        const scene = urlSceneMonde(mondeId);
-        if (scene) {
+        for (const scene of urlsScenesMonde(mondeId)) {
             await fetchSilencieux(scene, signal);
+            if (signal.aborted) return;
         }
 
         if (signal.aborted) return;

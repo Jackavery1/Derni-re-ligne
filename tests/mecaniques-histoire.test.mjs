@@ -191,4 +191,23 @@ describe('mecaniques-histoire', () => {
         expect(store.histoire.mecaniques.plateauRouille[4 * 10 + 2]).toBe(0);
         expect(celluleEstRouillee(2, 4)).toBe(false);
     });
+
+    it('obtenirFondTrame retourne le biome et alpha du cycle trame', async () => {
+        const { obtenirFondTrame } = await import('../js/mecaniques-histoire-trame.js');
+        store.histoire.mecaniques.trameBiomeIndex = 2;
+        store.histoire.mecaniques.trameAlphaMorph = 0.75;
+        const fond = obtenirFondTrame();
+        expect(fond.biomeId).toBe('ocean');
+        expect(fond.alpha).toBe(0.75);
+    });
+
+    it('tickTrame avance le cycle apres le fade', async () => {
+        const { tickTrame, obtenirFondTrame } = await import('../js/mecaniques-histoire-trame.js');
+        store.histoire.mecaniques.trameBiomeIndex = 0;
+        store.histoire.mecaniques.trameEnTransition = true;
+        store.histoire.mecaniques.trameAlphaMorph = 0.01;
+        tickTrame(50);
+        expect(store.histoire.mecaniques.trameBiomeIndex).toBe(1);
+        expect(obtenirFondTrame().biomeId).toBe('lave');
+    });
 });

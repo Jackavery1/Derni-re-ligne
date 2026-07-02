@@ -1,5 +1,4 @@
 import { etat, ECRANS } from './store-jeu.js';
-import { afficherOngletOptions } from './options-ui.js';
 import { afficherEcranDiffere as afficherEcran } from './navigation-lazy.js';
 import { jouerMelodie } from './melodie.js';
 import { AudioMoteur } from './audio.js';
@@ -18,6 +17,12 @@ function navVers(handler) {
         vibrerUi();
         handler();
     };
+}
+
+async function ouvrirOptions(onglet) {
+    const { afficherOngletOptions } = await import('./options-ui.js');
+    afficherOngletOptions(onglet);
+    afficherEcran(ECRANS.OPTIONS);
 }
 
 export function initialiserBoutonsNavigation() {
@@ -126,24 +131,26 @@ function _lierSelectionEtModes() {
         basculerDefiJour();
     });
     const ouvrirOptionsControles = navVers(() => {
-        afficherOngletOptions('controles');
-        afficherEcran(ECRANS.OPTIONS);
+        void ouvrirOptions('controles');
     });
     lierBouton('btn-aller-controles', ouvrirOptionsControles);
     lierBouton(
         'btn-options',
         navVers(() => {
-            afficherOngletOptions('reglages');
-            afficherEcran(ECRANS.OPTIONS);
+            void ouvrirOptions('reglages');
         })
     );
     lierBouton(
         'tab-reglages',
-        navVers(() => afficherOngletOptions('reglages'))
+        navVers(() => {
+            void ouvrirOptions('reglages');
+        })
     );
     lierBouton(
         'tab-controles',
-        navVers(() => afficherOngletOptions('controles'))
+        navVers(() => {
+            void ouvrirOptions('controles');
+        })
     );
     lierBouton('btn-mute', () => {
         vibrerUi();

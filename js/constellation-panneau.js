@@ -108,9 +108,10 @@ export function afficherBarreModesBiome(idBiome) {
     void import('./mode-defi-jour.js').then(({ mettreAJourToggleDefiJour }) =>
         mettreAJourToggleDefiJour()
     );
-    void import('./infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) =>
-        proposerInfobulleModeJeu(modeSprintActif ? 'sprint' : 'sansFin')
-    );
+    void import('./infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) => {
+        if (typeof window !== 'undefined' && window.__NEO_SUPPRESS_MODE_INFOBULLE_AUTO__) return;
+        proposerInfobulleModeJeu(modeSprintActif ? 'sprint' : 'sansFin');
+    });
 }
 
 export function masquerBarreModesBiome() {

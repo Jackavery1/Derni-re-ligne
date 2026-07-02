@@ -51,12 +51,42 @@ export const ETAT_DEBLOCAGE_MONDE_LIBRE = {
     },
 };
 
-/** État histoire pour Oracle, Coop, Codex et Architecte débloqués. */
-export const ETAT_DEBLOCAGE_COMPLET = {
+/** État E2E meta : débloque Oracle, Coop, Codex, Architecte (cohérent avec boss/journaux). */
+export const ETAT_DEBLOCAGE_META_RAPIDE = {
     ...ETAT_DEBLOCAGE_MONDE_LIBRE,
+    chapitreActuel: 'chapitre_5',
     bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion'],
-    mondesCompletes: ['monde_prologue'],
+    mondesCompletes: [
+        'monde_prologue',
+        'monde_lave',
+        'monde_rouille',
+        'monde_ocean',
+        'monde_foret',
+        'monde_glace',
+        'monde_desert',
+        'monde_eclipse',
+        'monde_cyber',
+        'monde_fuochi',
+        'monde_cosmos',
+        'monde_vide',
+    ],
+    journauxTrouves: [
+        'journal_1',
+        'journal_2',
+        'journal_3',
+        'journal_4',
+        'journal_5',
+        'journal_6',
+        'journal_7',
+        'journal_8',
+        'journal_9',
+    ],
+    mondesCachesDebloques: ['monde_miroir', 'monde_trame'],
+    laboDecouvert: true,
 };
+
+/** @deprecated Alias — préférer ETAT_DEBLOCAGE_META_RAPIDE */
+export const ETAT_DEBLOCAGE_COMPLET = ETAT_DEBLOCAGE_META_RAPIDE;
 
 /** État histoire minimal pour jouer le boss Brasier (monde_boss_1). */
 export const ETAT_HISTOIRE_BOSS_BRASIER = {
@@ -86,6 +116,30 @@ export const ETAT_HISTOIRE_BOSS_BRASIER = {
         precisionMiroirMax: 0,
         meilleurTimerBossMs: Infinity,
     },
+};
+
+/** État minimal pour jouer le boss Sentinelle (monde_boss_2). */
+export const ETAT_AVANT_BOSS_SENTINELLE = {
+    ...ETAT_HISTOIRE_BOSS_BRASIER,
+    chapitreActuel: 'chapitre_3',
+    mondesCompletes: [
+        'monde_prologue',
+        'monde_lave',
+        'monde_rouille',
+        'monde_ocean',
+        'monde_foret',
+        'monde_glace',
+    ],
+    bossVaincus: ['brasier'],
+    mondesDejaMontres: [
+        'monde_prologue',
+        'monde_lave',
+        'monde_rouille',
+        'monde_ocean',
+        'monde_foret',
+        'monde_glace',
+        'monde_boss_2',
+    ],
 };
 
 /** État prêt pour déclencher la fin secrète (Trame complétée + conditions). */
@@ -283,6 +337,84 @@ export const ETAT_CYBER_LABO_PRET = {
     interludesVusIds: ['interlude_gardiens', 'interlude_elle'],
 };
 
+/** État minimal pour jouer le boss Archiviste (monde_boss_3). */
+export const ETAT_AVANT_BOSS_ARCHIVISTE = {
+    ...ETAT_CYBER_LABO_PRET,
+    chapitreActuel: 'chapitre_4',
+    mondesCompletes: [
+        'monde_prologue',
+        'monde_lave',
+        'monde_rouille',
+        'monde_ocean',
+        'monde_foret',
+        'monde_glace',
+        'monde_desert',
+        'monde_eclipse',
+        'monde_cyber',
+    ],
+    bossVaincus: ['brasier', 'sentinelle'],
+    laboDecouvert: true,
+    journauxTrouves: [
+        'journal_1',
+        'journal_2',
+        'journal_3',
+        'journal_4',
+        'journal_5',
+        'journal_6',
+        'journal_7',
+    ],
+    mondesDejaMontres: [
+        'monde_prologue',
+        'monde_lave',
+        'monde_rouille',
+        'monde_ocean',
+        'monde_foret',
+        'monde_glace',
+        'monde_desert',
+        'monde_eclipse',
+        'monde_cyber',
+        'monde_boss_3',
+    ],
+};
+
+/** État minimal pour jouer le boss Avant-Garde (monde_boss_4). */
+export const ETAT_AVANT_BOSS_AVANTGARDE = {
+    ...ETAT_AVANT_BOSS_ARCHIVISTE,
+    chapitreActuel: 'chapitre_5',
+    mondesCompletes: [
+        'monde_prologue',
+        'monde_lave',
+        'monde_rouille',
+        'monde_ocean',
+        'monde_foret',
+        'monde_glace',
+        'monde_desert',
+        'monde_eclipse',
+        'monde_cyber',
+        'monde_boss_3',
+        'monde_fuochi',
+        'monde_cosmos',
+        'monde_vide',
+    ],
+    bossVaincus: ['brasier', 'sentinelle', 'archiviste'],
+    mondesDejaMontres: [
+        'monde_prologue',
+        'monde_lave',
+        'monde_rouille',
+        'monde_ocean',
+        'monde_foret',
+        'monde_glace',
+        'monde_desert',
+        'monde_eclipse',
+        'monde_cyber',
+        'monde_boss_3',
+        'monde_fuochi',
+        'monde_cosmos',
+        'monde_vide',
+        'monde_boss_4',
+    ],
+};
+
 /** État avec le monde Paradoxe débloqué (fin secrète + tops volontaires prologue). */
 export const ETAT_PARADOXE_DEBLOQUE = {
     ...ETAT_FIN_SECRETE_PRET,
@@ -298,6 +430,22 @@ export const ETAT_AVANT_FIN_VRAIE = {
     ...ETAT_FIN_VRAIE_PRET,
     mondesCompletes: ETAT_FIN_VRAIE_PRET.mondesCompletes.filter((id) => id !== 'monde_finale'),
     bossVaincus: ETAT_FIN_VRAIE_PRET.bossVaincus.filter((id) => id !== 'distorsion'),
+};
+
+/** État avant victoire Distorsion → fin normale (Miroir non complété). */
+export const ETAT_AVANT_FIN_NORMALE = {
+    ...ETAT_AVANT_BOSS_AVANTGARDE,
+    mondesCompletes: [...ETAT_AVANT_BOSS_AVANTGARDE.mondesCompletes, 'monde_boss_4'],
+    bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde'],
+    mondesCachesDebloques: ['monde_miroir'],
+    conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 0 },
+    conditionsTrame: {
+        miroirComplete: false,
+        tousJournauxTrouves: false,
+        tousBossSansContinue: true,
+        actionDistorsionFaite: false,
+    },
+    mondesDejaMontres: [...ETAT_AVANT_BOSS_AVANTGARDE.mondesDejaMontres, 'monde_finale'],
 };
 
 /** Première visite Cosmos — cutscene d'entrée observatoire. */

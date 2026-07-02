@@ -1,8 +1,8 @@
 import { obtenirHistoireTextesSync } from './charger-histoire-textes.js';
-import { ILLUSTRATIONS_JOURNAUX } from './histoire-illustrations.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
 import { creerFile } from './file-narrative.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
+import { extraireLignesCutscene } from './histoire-cutscene-moteur.js';
 import { logger } from './logger.js';
 
 function _obtenirEtatHistoireLocal() {
@@ -18,11 +18,6 @@ function _importerUi() {
     return import('./histoire-manager-ui.js');
 }
 
-function _extraireLignesCutscene(entree) {
-    if (!entree) return [];
-    return Array.isArray(entree) ? entree : (entree.lignes ?? []);
-}
-
 export function obtenirCutsceneEntree(mondeId, premiereVisite) {
     if (mondeId === 'monde_finale') {
         const etatHist = _obtenirEtatHistoireLocal();
@@ -30,13 +25,13 @@ export function obtenirCutsceneEntree(mondeId, premiereVisite) {
             ? 'monde_finale_miroir'
             : 'monde_finale';
         const entreeFinale = _textes().CUTSCENES_ENTREE[cleEntree];
-        const lignesFinale = _extraireLignesCutscene(entreeFinale);
+        const lignesFinale = extraireLignesCutscene(entreeFinale);
         if (!lignesFinale.length) return null;
         return Array.isArray(entreeFinale) ? { lignes: entreeFinale } : entreeFinale;
     }
     if (!premiereVisite) return null;
     const entree = _textes().CUTSCENES_ENTREE[mondeId];
-    const lignes = _extraireLignesCutscene(entree);
+    const lignes = extraireLignesCutscene(entree);
     if (!lignes.length) return null;
     return Array.isArray(entree) ? { lignes: entree } : entree;
 }
@@ -88,15 +83,17 @@ export function afficherJournalVera(journalData, onFermer) {
         onFermer?.();
         return;
     }
-    const dialogues = _textes().JOURNAUX_VERA_DIALOGUES?.[journalData.id];
-    const journalEnrichi = {
-        ...journalData,
-        texte: dialogues ?? journalData.texte,
-        _illustrerFn: ILLUSTRATIONS_JOURNAUX[journalData.id] ?? null,
-    };
-    void _importerUi().then(({ afficherJournalHistoire }) => {
+    void (async () => {
+        const { ILLUSTRATIONS_JOURNAUX } = await import('./histoire-illustrations.js');
+        const dialogues = _textes().JOURNAUX_VERA_DIALOGUES?.[journalData.id];
+        const journalEnrichi = {
+            ...journalData,
+            texte: dialogues ?? journalData.texte,
+            _illustrerFn: ILLUSTRATIONS_JOURNAUX[journalData.id] ?? null,
+        };
+        const { afficherJournalHistoire } = await _importerUi();
         afficherJournalHistoire(journalEnrichi, onFermer);
-    });
+    })();
 }
 
 export function declencherFin(finId) {
@@ -232,7 +229,7 @@ export const SCENE_DEFAUT_POST_MONDE = {
 export function obtenirCutscenePostMonde(mondeId, premiereCompletion) {
     if (!premiereCompletion) return null;
     const entree = _textes().CUTSCENES_POST_MONDE[mondeId];
-    const lignes = _extraireLignesCutscene(entree);
+    const lignes = extraireLignesCutscene(entree);
     if (!lignes.length) return null;
     if (Array.isArray(entree)) {
         const scene = lignes[0]?.scene ?? SCENE_DEFAUT_POST_MONDE[mondeId] ?? null;

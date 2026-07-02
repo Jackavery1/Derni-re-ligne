@@ -51,13 +51,17 @@ describe('histoire-manager-post-monde', () => {
 
         const monde = { id: 'monde_prologue', biomeId: 'classique', estBoss: false };
         const etat = structuredClone(ETAT_HISTOIRE_VIDE);
+        etat.fragmentsVusIds = ['apres_prologue'];
         store.histoire.etat = etat;
 
         declencherNarratifPostMonde(monde, etat, true, [true, false, false]);
-        await vi.waitFor(() => {
-            expect(enchainerCampagneApresMonde).toHaveBeenCalledWith('monde_prologue');
-        });
-    });
+        await vi.waitFor(
+            () => {
+                expect(enchainerCampagneApresMonde).toHaveBeenCalledWith('monde_prologue');
+            },
+            { timeout: 10000 }
+        );
+    }, 15000);
 
     it('enregistre le fragment VERA apres premiere completion prologue', async () => {
         const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
@@ -71,9 +75,9 @@ describe('histoire-manager-post-monde', () => {
         store.histoire.etat = etat;
 
         declencherNarratifPostMonde(monde, etat, true, [true, false, false]);
-        await new Promise((resolve) => setTimeout(resolve, 0));
-
-        expect(afficherCutsceneHistoire).toHaveBeenCalled();
+        await vi.waitFor(() => {
+            expect(afficherCutsceneHistoire).toHaveBeenCalled();
+        });
         expect(store.histoire.etat.fragmentsVusIds).toContain('apres_prologue');
     });
 

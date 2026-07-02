@@ -28,6 +28,18 @@ import {
     calculerSpawnXCoop,
     executerChuteRapide,
 } from './actions-piece-communes.js';
+import {
+    coopDemarrerAre,
+    coopDemarrerGraceSpawn,
+    coopAreActive,
+    coopGraceSpawnActive,
+    coopBufferiserInput,
+    coopPieceControlesActifs,
+    coopActiverPieceAuSol,
+    coopQuitterSolPiece,
+    coopMettreAJourGameFeel,
+    coopReinitialiserGameFeelJoueur,
+} from './coop-game-feel.js';
 
 /** `coop.actif` = partie coop en cours. */
 export function basculerModeCoop() {
@@ -59,6 +71,10 @@ function creerJoueurVide() {
         lockDelayRestant: 0,
         nbLockResets: 0,
         poseApresRotation: false,
+        areRestant: 0,
+        spawnGraceRestant: 0,
+        coyoteRestant: 0,
+        inputBuffer: null,
     };
 }
 
@@ -79,14 +95,23 @@ export function coop_reinitialiserLockDelay(joueur) {
 export function coop_mettreAJourGravite(joueur, dt) {
     const jData = coop[joueur];
     const piece = jData.pieceActuelle;
-    if (!piece) return;
+
+    coopMettreAJourGameFeel(joueur, dt, {
+        pieceValide: () => !piece || coop_estPositionValide(piece),
+        surCollision: () => terminerCoopCallback?.(joueur),
+        actions: {
+            tourner: (sens) => coop_tourner(joueur, sens),
+            reserve: () => coop_utiliserReserve(joueur),
+        },
+    });
+
+    if (!piece || coopAreActive(joueur)) return;
 
     const accKey = joueur === 'j1' ? 'accJ1' : 'accJ2';
     const vitesse = coop_vitesseChute();
 
     if (coop_estPositionValide(piece, 0, 1)) {
-        jData.pieceAuSol = false;
-        jData.lockDelayRestant = 0;
+        if (jData.pieceAuSol) coopQuitterSolPiece(joueur);
         coop[accKey] += dt;
         if (coop[accKey] >= vitesse) {
             coop[accKey] = 0;
@@ -96,9 +121,7 @@ export function coop_mettreAJourGravite(joueur, dt) {
     }
 
     if (!jData.pieceAuSol) {
-        jData.pieceAuSol = true;
-        jData.lockDelayRestant = CONFIG.lockDelay;
-        jData.nbLockResets = 0;
+        coopActiverPieceAuSol(joueur);
         return;
     }
 
@@ -184,15 +207,21 @@ export function coop_verrouillerPiece(joueur) {
     jData.lockDelayRestant = 0;
     jData.nbLockResets = 0;
 
+    coopDemarrerAre(joueur);
+    coopDemarrerGraceSpawn(joueur);
+
     if (!coop_estPositionValide(jData.pieceActuelle)) {
-        terminerCoopCallback?.(joueur);
+        if (!coopGraceSpawnActive(joueur)) {
+            terminerCoopCallback?.(joueur);
+        }
     }
 }
 
 export function coop_deplacerGauche(joueur) {
+    if (!coopPieceControlesActifs(joueur)) return;
     const jData = coop[joueur];
     const p = jData.pieceActuelle;
-    if (!p || coop.estEnPause) return;
+    if (!p) return;
     jData.poseApresRotation = false;
     if (deplacerPieceSiValide(p, -1, 0, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy))) {
         coop_reinitialiserLockDelay(joueur);
@@ -200,9 +229,10 @@ export function coop_deplacerGauche(joueur) {
 }
 
 export function coop_deplacerDroite(joueur) {
+    if (!coopPieceControlesActifs(joueur)) return;
     const jData = coop[joueur];
     const p = jData.pieceActuelle;
-    if (!p || coop.estEnPause) return;
+    if (!p) return;
     jData.poseApresRotation = false;
     if (deplacerPieceSiValide(p, 1, 0, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy))) {
         coop_reinitialiserLockDelay(joueur);
@@ -210,22 +240,27 @@ export function coop_deplacerDroite(joueur) {
 }
 
 export function coop_deplacerBas(joueur) {
+    if (!coopPieceControlesActifs(joueur)) return;
     const jData = coop[joueur];
     const p = jData.pieceActuelle;
-    if (!p || coop.estEnPause) return;
+    if (!p) return;
     jData.poseApresRotation = false;
     if (deplacerPieceSiValide(p, 0, 1, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy))) {
         coop.score += 1;
         coop_rafraichirStats();
-        jData.pieceAuSol = false;
-        jData.lockDelayRestant = 0;
+        coopQuitterSolPiece(joueur);
     }
 }
 
 export function coop_tourner(joueur, sens) {
+    if (coopAreActive(joueur)) {
+        coopBufferiserInput(joueur, sens > 0 ? 'tourner_cw' : 'tourner_ccw');
+        return;
+    }
+    if (!coopPieceControlesActifs(joueur)) return;
     const jData = coop[joueur];
     const p = jData.pieceActuelle;
-    if (!p || coop.estEnPause) return;
+    if (!p) return;
     if (
         tenterRotationSrs(p, sens, (piece, dx, dy, rotation) =>
             coop_estPositionValide(piece, dx, dy, rotation)
@@ -237,9 +272,10 @@ export function coop_tourner(joueur, sens) {
 }
 
 export function coop_chuteRapide(joueur) {
+    if (!coopPieceControlesActifs(joueur)) return;
     const jData = coop[joueur];
     const p = jData.pieceActuelle;
-    if (!p || coop.estEnPause) return;
+    if (!p) return;
     jData.poseApresRotation = false;
     const dist = executerChuteRapide(p, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy));
     coop.score += dist * 2;
@@ -249,7 +285,12 @@ export function coop_chuteRapide(joueur) {
 
 export function coop_utiliserReserve(joueur) {
     const jData = coop[joueur];
-    if (!jData.pieceActuelle || jData.reserveUtilisee || coop.estEnPause) return;
+    if (!jData.pieceActuelle || coop.estEnPause) return;
+    if (coopAreActive(joueur)) {
+        coopBufferiserInput(joueur, 'hold');
+        return;
+    }
+    if (jData.reserveUtilisee) return;
 
     const typeActuel = jData.pieceActuelle.type;
 
@@ -272,6 +313,7 @@ export function coop_utiliserReserve(joueur) {
     jData.pieceAuSol = false;
     jData.lockDelayRestant = 0;
     jData.nbLockResets = 0;
+    coopDemarrerGraceSpawn(joueur);
 }
 
 export function utiliserPasserelle(joueur) {
@@ -332,11 +374,15 @@ export function reinitialiserEtatCoop() {
     sacsCoop.j2 = [];
     coop.j1 = creerJoueurVide();
     coop.j2 = creerJoueurVide();
+    coopReinitialiserGameFeelJoueur('j1');
+    coopReinitialiserGameFeelJoueur('j2');
 
     coop.j1.pieceActuelle = coop_nouvellePiece('j1');
     coop.j1.prochainePiece = coop_nouvellePiece('j1');
     coop.j2.pieceActuelle = coop_nouvellePiece('j2');
     coop.j2.prochainePiece = coop_nouvellePiece('j2');
+    coopDemarrerGraceSpawn('j1');
+    coopDemarrerGraceSpawn('j2');
 }
 
 /** Préférence coop sur l'écran sélection (avant lancement). */

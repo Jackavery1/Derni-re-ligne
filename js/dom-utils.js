@@ -29,14 +29,6 @@ export function obtenirInput(id) {
     return /** @type {HTMLInputElement} */ (el);
 }
 
-/** @param {string} selecteur @returns {HTMLCanvasElement | null} */
-export function queryCanvas(selecteur) {
-    if (typeof document === 'undefined') return null;
-    const el = document.querySelector(selecteur);
-    if (!el || el.tagName !== 'CANVAS') return null;
-    return /** @type {HTMLCanvasElement} */ (el);
-}
-
 /** @returns {AudioContext | null} */
 export function creerContexteAudio() {
     if (typeof window === 'undefined') return null;

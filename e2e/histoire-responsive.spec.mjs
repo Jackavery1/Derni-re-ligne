@@ -5,7 +5,14 @@ import {
     attendreNotificationsInitiales,
     fermerRecapPostMonde,
     appliquerEncocheSimulee,
+    passerCutsceneEntiere,
+    attendreJournalHistoire,
+    lancerMondeDepuisCarte,
+    avancerCutsceneJusquaPivot,
+    assertHumeurPortraitCutscene,
     ETAT_HISTOIRE_BOSS_BRASIER,
+    ETAT_CYBER_LABO_PRET,
+    ETAT_INFERNO_PRET,
 } from './helpers.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 
@@ -84,6 +91,128 @@ test('cutscene ultra-etroit 319px — pas de debordement', async ({ page }) => {
     expect(metriques.dansEcran).toBe(true);
 });
 
+test('cutscene ultra-etroit 319px — portraits visibles sans debordement (audit D8)', async ({
+    page,
+}) => {
+    test.setTimeout(60000);
+    await page.setViewportSize({ width: 319, height: 568 });
+    await page.addInitScript((etat) => {
+        localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
+        localStorage.setItem('dl_migration_v1', '1');
+        localStorage.setItem('derniereLigne_tutorielVu', '1');
+        localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
+        localStorage.setItem('derniereLigne_introHistoireVue', '1');
+    }, ETAT_HISTOIRE_VIDE);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
+    await page.locator('#btn-continuer').click();
+    await lancerMondeDepuisCarte(page, 'monde_prologue');
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 15000,
+    });
+    await avancerCutsceneJusquaPivot(page, /Robo, tu m'entends/i);
+    await assertHumeurPortraitCutscene(page, 'vera', 'douce');
+
+    const metriques = await page.evaluate(() => {
+        const gauche = document.getElementById('canvas-portrait-gauche');
+        const droite = document.getElementById('canvas-portrait-droite');
+        const dialogue = document.getElementById('texte-dialogue-cutscene');
+        const rectG = gauche?.getBoundingClientRect();
+        const rectD = droite?.getBoundingClientRect();
+        const styleDialogue = dialogue ? getComputedStyle(dialogue) : null;
+        return {
+            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+            portraitGaucheVisible: Boolean(
+                gauche && !gauche.classList.contains('absent') && (rectG?.width ?? 0) > 0
+            ),
+            portraitDroiteVisible: Boolean(
+                droite && !droite.classList.contains('absent') && (rectD?.width ?? 0) > 0
+            ),
+            dialogueFontSize: parseFloat(styleDialogue?.fontSize ?? '0') || 0,
+            dansEcran: Boolean(
+                rectG &&
+                rectD &&
+                rectG.right <= window.innerWidth + 2 &&
+                rectD.left >= -2 &&
+                rectG.bottom <= window.innerHeight + 2
+            ),
+        };
+    });
+    expect(metriques.debord).toBe(false);
+    expect(metriques.portraitGaucheVisible || metriques.portraitDroiteVisible).toBe(true);
+    expect(metriques.dialogueFontSize).toBeGreaterThanOrEqual(12);
+    expect(metriques.dansEcran).toBe(true);
+});
+
+test('journal mobile ultra-etroit 319px — contenu scrollable (audit D8)', async ({ page }) => {
+    test.setTimeout(90000);
+    await page.setViewportSize({ width: 319, height: 568 });
+    await ouvrirCarteHistoire(page, ETAT_CYBER_LABO_PRET);
+    await page.evaluate(async () => {
+        await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.('monde_cyber', 99);
+    });
+    await expect(page.locator('#overlay-recap-monde')).toBeVisible({ timeout: 10000 });
+    await fermerRecapPostMonde(page);
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 15000,
+    });
+    await passerCutsceneEntiere(page);
+    await attendreJournalHistoire(page);
+
+    const metriques = await page.evaluate(() => {
+        const contenu = document.getElementById('histoire-journal-contenu');
+        const fermer = document.getElementById('btn-journal-fermer');
+        const style = contenu ? getComputedStyle(contenu) : null;
+        const para = document.querySelector('.histoire-journal-para');
+        const paraStyle = para ? getComputedStyle(para) : null;
+        return {
+            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+            overflowY: style?.overflowY ?? '',
+            paraFontSize: parseFloat(paraStyle?.fontSize ?? '0') || 0,
+            fermerH: fermer?.getBoundingClientRect().height ?? 0,
+        };
+    });
+    expect(metriques.debord).toBe(false);
+    expect(metriques.overflowY).toBe('auto');
+    expect(metriques.paraFontSize).toBeGreaterThanOrEqual(12);
+    expect(metriques.fermerH).toBeGreaterThanOrEqual(44);
+});
+
+test('carte histoire 319px — overlay objectifs pre-partie lisible (audit D8)', async ({ page }) => {
+    await page.setViewportSize({ width: 319, height: 568 });
+    await ouvrirCarteHistoire(page, ETAT_INFERNO_PRET);
+    await page.locator('#histoire-monde-clavier').selectOption('monde_lave', { force: true });
+    await page.locator('.bouton-jouer-monde').click({ force: true });
+
+    await expect(page.locator('#overlay-objectifs-pre')).toHaveClass(/objectif-overlay-visible/, {
+        timeout: 15000,
+    });
+
+    const metriques = await page.evaluate(() => {
+        const panneau = document.querySelector('#overlay-objectifs-pre .objectif-panneau');
+        const commencer = document.getElementById('btn-objectifs-commencer');
+        const stylePanneau = panneau ? getComputedStyle(panneau) : null;
+        const styleBtn = commencer ? getComputedStyle(commencer) : null;
+        const rectBtn = commencer?.getBoundingClientRect();
+        return {
+            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+            overflowY: stylePanneau?.overflowY ?? '',
+            btnH: rectBtn?.height ?? 0,
+            btnMinH: parseFloat(styleBtn?.minHeight ?? '0') || 0,
+            titre:
+                document.querySelector('#overlay-objectifs-pre .objectif-panneau-titre')
+                    ?.textContent ?? '',
+        };
+    });
+
+    expect(metriques.debord).toBe(false);
+    expect(metriques.overflowY).toBe('auto');
+    expect(metriques.btnH).toBeGreaterThanOrEqual(44);
+    expect(metriques.btnMinH).toBeGreaterThanOrEqual(44);
+    expect(metriques.titre.length).toBeGreaterThan(3);
+});
+
 test('recap post-monde paysage mobile — panneau scrollable', async ({ page }) => {
     test.setTimeout(60000);
     await page.setViewportSize({ width: 844, height: 390 });
@@ -114,6 +243,56 @@ test('recap post-monde paysage mobile — panneau scrollable', async ({ page }) 
     await fermerRecapPostMonde(page);
 });
 
+test('journal mobile paysage — contenu scrollable (audit D8)', async ({ page }) => {
+    test.setTimeout(90000);
+    await page.setViewportSize({ width: 844, height: 390 });
+    await ouvrirCarteHistoire(page, ETAT_CYBER_LABO_PRET);
+    await page.evaluate(async () => {
+        await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.('monde_cyber', 99);
+    });
+    await expect(page.locator('#overlay-recap-monde')).toBeVisible({ timeout: 10000 });
+    await fermerRecapPostMonde(page);
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 15000,
+    });
+    await passerCutsceneEntiere(page);
+    await attendreJournalHistoire(page);
+
+    const metriques = await page.evaluate(() => {
+        const contenu = document.getElementById('histoire-journal-contenu');
+        const fermer = document.getElementById('btn-journal-fermer');
+        const illust = document.getElementById('canvas-journal-illust');
+        const style = contenu ? getComputedStyle(contenu) : null;
+        const styleFermer = fermer ? getComputedStyle(fermer) : null;
+        const para = document.querySelector('.histoire-journal-para');
+        const paraStyle = para ? getComputedStyle(para) : null;
+        const rectFermer = fermer?.getBoundingClientRect();
+        const rectIllust = illust?.getBoundingClientRect();
+        return {
+            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+            overflowY: style?.overflowY ?? '',
+            dansEcran: Boolean(
+                contenu &&
+                contenu.getBoundingClientRect().bottom <= window.innerHeight + 2 &&
+                contenu.getBoundingClientRect().top >= -2
+            ),
+            fermerH: rectFermer?.height ?? 0,
+            fermerMinH: parseFloat(styleFermer?.minHeight ?? '0') || 0,
+            illustVisible: Boolean(rectIllust && rectIllust.width > 0),
+            texte: document.getElementById('histoire-journal-texte')?.textContent ?? '',
+            paraFontSize: parseFloat(paraStyle?.fontSize ?? '0') || 0,
+        };
+    });
+    expect(metriques.debord).toBe(false);
+    expect(metriques.overflowY).toBe('auto');
+    expect(metriques.dansEcran).toBe(true);
+    expect(metriques.fermerMinH).toBeGreaterThanOrEqual(48);
+    expect(metriques.fermerH).toBeGreaterThanOrEqual(44);
+    expect(metriques.illustVisible).toBe(true);
+    expect(metriques.paraFontSize).toBeGreaterThanOrEqual(12);
+    expect(metriques.texte).toMatch(/Si tu lis ceci|laboratoire|Trame/i);
+});
+
 test('carte histoire paysage mobile — header et retour accessibles', async ({ page }) => {
     await page.setViewportSize({ width: 844, height: 390 });
     await ouvrirCarteHistoire(page);
@@ -121,17 +300,23 @@ test('carte histoire paysage mobile — header et retour accessibles', async ({ 
     const metriques = await page.evaluate(() => {
         const header = document.getElementById('histoire-map-header');
         const retour = document.getElementById('btn-histoire-retour');
+        const trame = document.getElementById('btn-histoire-trame');
         const headerStyle = header ? getComputedStyle(header) : null;
         const rect = retour?.getBoundingClientRect();
+        const rectTrame = trame?.getBoundingClientRect();
         return {
             debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
             paddingTop: headerStyle?.paddingTop ?? '',
             retourH: rect?.height ?? 0,
+            trameH: rectTrame?.height ?? 0,
         };
     });
     expect(metriques.debord).toBe(false);
     expect(metriques.paddingTop).not.toBe('0px');
     expect(metriques.retourH).toBeGreaterThanOrEqual(48);
+    if (metriques.trameH > 0) {
+        expect(metriques.trameH).toBeGreaterThanOrEqual(48);
+    }
 });
 
 test('iphone — cutscene respecte encoche simulee (audit C11)', async ({ browser }) => {

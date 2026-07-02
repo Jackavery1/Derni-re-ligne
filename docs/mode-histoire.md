@@ -4,18 +4,18 @@ Campagne « La Fragmentation » : 17 mondes visibles + 3 secrets, 5 boss (Brasie
 
 ## Fichiers clés
 
-| Fichier                  | Rôle                                           |
-| ------------------------ | ---------------------------------------------- |
-| `histoire-donnees.js`    | Mondes, boss, seuils                           |
-| `histoire-manager.js`    | Carte, lancement, sauvegarde                   |
-| `histoire-map.js`        | Layout vertical, caméra                        |
-| `histoire-narratif.js`   | Cutscenes, journaux                            |
-| `histoire-textes/`       | Contenu narratif (barrel `histoire-textes.js`) |
-| `boss-jeu.js`            | Combats boss                                   |
-| `boss-dialogues.js`      | Répliques combat (phases, tetris, game over)   |
-| `texte-jeu.js`           | Normalisation UI (`sansAccentsE`)              |
-| `mecaniques-histoire.js` | Rouille, éclipse, vide…                        |
-| `conditions-secrets.js`  | Mondes miroir, trame, paradoxe                 |
+| Fichier                  | Rôle                                             |
+| ------------------------ | ------------------------------------------------ |
+| `histoire-donnees.js`    | Mondes, boss, seuils                             |
+| `histoire-manager.js`    | Carte, lancement, sauvegarde                     |
+| `histoire-map.js`        | Barrel carte (layout, scroll, focus, visibilité) |
+| `histoire-narratif.js`   | Cutscenes, journaux                              |
+| `histoire-textes/`       | Contenu narratif (barrel `histoire-textes.js`)   |
+| `boss-jeu.js`            | Combats boss                                     |
+| `boss-dialogues.js`      | Répliques combat (phases, tetris, game over)     |
+| `texte-jeu.js`           | Normalisation UI (`sansAccentsE`)                |
+| `mecaniques-histoire.js` | Rouille, éclipse, vide…                          |
+| `conditions-secrets.js`  | Mondes miroir, trame, paradoxe                   |
 
 ## Textes UI vs narration
 

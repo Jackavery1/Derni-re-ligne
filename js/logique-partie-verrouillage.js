@@ -56,11 +56,14 @@ import {
     enregistrerTopOut,
 } from './gestionnaire-difficulte.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
+import { demarrerAre, demarrerGraceSpawn, verifierCollisionSpawn } from './game-feel-jeu.js';
 import { consommerPoseApresRotation } from './logique-partie-pose.js';
 import { calculerScore } from './logique-partie-score.js';
 import { produireProchainePieceApresShift } from './logique-partie-hold.js';
 
-function _recupererZenApresTopOut() {
+export { recupererZenApresTopOut };
+
+function recupererZenApresTopOut() {
     enregistrerTopOut();
     etat.plateau = creerPlateau();
     reinitialiserMatricesRouille();
@@ -71,6 +74,7 @@ function _recupererZenApresTopOut() {
     definirPieceAuSol(false);
     definirLockDelayRestant(0);
     definirNbLockResets(0);
+    demarrerGraceSpawn();
     emettre('partie:nouvelle-piece');
     signalerApparitionPiece();
     annoncerPieceCourante();
@@ -133,7 +137,7 @@ export function verrouillerPiece() {
 
     if (gameOver) {
         if (modeHistoireEnCours() && estMondeZenActif()) {
-            _recupererZenApresTopOut();
+            recupererZenApresTopOut();
             return;
         }
         obtenirActions().terminerPartie?.();
@@ -176,16 +180,12 @@ export function verrouillerPiece() {
     definirLockDelayRestant(0);
     definirNbLockResets(0);
 
+    demarrerAre();
+    demarrerGraceSpawn();
     emettre('partie:nouvelle-piece');
     signalerApparitionPiece();
     annoncerPieceCourante();
     declencherCalculOracle();
 
-    if (!estPositionValide(etat.pieceActuelle)) {
-        if (modeHistoireEnCours() && estMondeZenActif()) {
-            _recupererZenApresTopOut();
-            return;
-        }
-        obtenirActions().terminerPartie?.();
-    }
+    verifierCollisionSpawn(recupererZenApresTopOut);
 }

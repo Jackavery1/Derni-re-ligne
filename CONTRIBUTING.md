@@ -57,7 +57,7 @@ Le pre-push est volontairement lourd pour éviter de pousser une régression. **
 
 ### Analyse et maintenance
 
-- `npm run analyze` — top 15 taille bundle + régénère `docs/modules-index.md`
+- `npm run analyze` — top 15 taille bundle + régénère `docs/modules-index.md` (hotspots uniquement)
 - `npm run check:circular` — dépendances circulaires depuis `js/main.js`
 
 ## Commits (usage interne)

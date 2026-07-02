@@ -21,6 +21,12 @@ import {
 } from './histoire-cutscene-typewriter.js';
 import { logger } from './logger.js';
 
+/** @param {unknown} entree */
+export function extraireLignesCutscene(entree) {
+    if (!entree) return [];
+    return Array.isArray(entree) ? entree : (entree.lignes ?? []);
+}
+
 /** @param {unknown} textes @param {string[] | null | undefined} personnages */
 export function normaliserEntreeCutscene(textes, personnages) {
     let sceneDefaut = null;

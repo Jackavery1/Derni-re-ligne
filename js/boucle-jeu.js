@@ -24,9 +24,7 @@ import {
     definirBoucleActive,
     definirIdFrame,
     definirDernierTimestamp,
-    definirPieceAuSol,
     definirLockDelayRestant,
-    definirNbLockResets,
     definirAccumulateur,
 } from './store-jeu.js';
 import { mettreAJourDas, mettreAJourIndicateurRelique, estPositionValide } from './piece-jeu.js';
@@ -59,7 +57,14 @@ import { mettreAJourVivant } from './vivant.js';
 import { dessinerAvertissementsVivant } from './rendu-vivant.js';
 import { mettreAJourBoss, bossEstActif, bossEstVaincu } from './boss-jeu.js';
 import { mettreAJourMecaniquesHistoire } from './mecaniques-histoire.js';
+import {
+    mettreAJourGameFeel,
+    areActive,
+    activerPieceAuSol,
+    quitterSolPiece,
+} from './game-feel-jeu.js';
 import { dessinerMotifsAccessibilite, dessinerMotifsPieceCourante } from './rendu-accessibilite.js';
+import { recupererZenApresTopOut } from './logique-partie-verrouillage.js';
 
 const SEUIL_ERREURS_BOUCLE = 5;
 let erreursConsecutivesBoucle = 0;
@@ -170,11 +175,10 @@ function dessinerFrameSolo(ctx, enPartie) {
 }
 
 function _mettreAJourGravitePiece(deltaTemps) {
-    if (!etat.pieceActuelle) return;
+    if (!etat.pieceActuelle || areActive()) return;
     const peutDescendre = estPositionValide(etat.pieceActuelle, 0, 1);
     if (peutDescendre) {
-        definirPieceAuSol(false);
-        definirLockDelayRestant(0);
+        quitterSolPiece();
         definirAccumulateur(obtenirAccumulateur() + deltaTemps);
         if (obtenirAccumulateur() >= vitesseChute()) {
             definirAccumulateur(0);
@@ -184,9 +188,7 @@ function _mettreAJourGravitePiece(deltaTemps) {
         return;
     }
     if (!obtenirPieceAuSol()) {
-        definirPieceAuSol(true);
-        definirLockDelayRestant(CONFIG.lockDelay);
-        definirNbLockResets(0);
+        activerPieceAuSol();
         return;
     }
     definirLockDelayRestant(obtenirLockDelayRestant() - deltaTemps);
@@ -216,13 +218,16 @@ function boucleJeu(timestamp) {
         const enPartie = etat.estEnCours && !etat.estEnPause;
 
         if (enPartie) {
-            mettreAJourMeteo(deltaTemps);
+            if (!modeHistoireEnCours()) {
+                mettreAJourMeteo(deltaTemps);
+            }
             mettreAJourMecaniquesHistoire(deltaTemps, timestamp);
             if (!modeHistoireEnCours()) {
                 mettreAJourVivant(deltaTemps);
             }
             mettreAJourDas(deltaTemps);
             if (!partieSpecialiseeActive()) mettreAJourGamepad(obtenirActions);
+            mettreAJourGameFeel(deltaTemps, recupererZenApresTopOut);
             _mettreAJourGravitePiece(deltaTemps);
 
             mettreAJourParticules(deltaTemps);

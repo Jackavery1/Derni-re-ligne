@@ -177,17 +177,6 @@ export function dessinerIconePixel(ctx, idIcone, x, y, taillePixel, options = {}
     dessinerGrille(ctx, icone, x, y, taillePixel, options);
 }
 
-export function invaliderCacheIconesPixel() {
-    _cache.clear();
-}
-
-/** Réinitialise le chargement (tests uniquement). */
-export function reinitialiserIconesPixel() {
-    ICONES_PIXEL = {};
-    chargePromise = null;
-    _cache.clear();
-}
-
 /**
  * @param {HTMLCanvasElement} canvas
  * @param {string} idIcone

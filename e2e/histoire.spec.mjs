@@ -10,6 +10,10 @@ import {
     attendreNotificationsInitiales,
     preparerPremierLancement,
     passerCutsceneHistoire,
+    attendreRenduCarteHistoire,
+    attendreTypewriterInactif,
+    boutonEstVisible,
+    elementAClasse,
     ETAT_HISTOIRE_BOSS_BRASIER,
 } from './helpers.mjs';
 import {
@@ -139,7 +143,7 @@ test('carte histoire accessible depuis le menu', async ({ page }) => {
 
 test('carte histoire sans violations accessibilité critiques', async ({ page }) => {
     await ouvrirCarteHistoire(page);
-    await page.waitForTimeout(400);
+    await attendreRenduCarteHistoire(page);
     const result = await new AxeBuilder({ page }).include('#ecran-histoire-map').analyze();
     expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
 });
@@ -164,7 +168,7 @@ test('sélection clavier d un monde sur la carte histoire', async ({ page }) => 
 
 test('carte histoire respecte le contraste des couleurs', async ({ page }) => {
     await ouvrirCarteHistoire(page);
-    await page.waitForTimeout(400);
+    await attendreRenduCarteHistoire(page);
     const result = await new AxeBuilder({ page }).include('#ecran-histoire-map').analyze();
     expect(filtrerViolationsCritiques(result.violations, { inclureContraste: true })).toEqual([]);
 });
@@ -352,18 +356,13 @@ test('monde caché Paradoxe affiche sa cutscene puis revient à la carte', async
         timeout: 10000,
     });
     for (let i = 0; i < 4; i++) {
-        if (
-            await page
-                .locator('#ecran-histoire-map')
-                .evaluate((el) => el.classList.contains('actif'))
-        ) {
+        if (await elementAClasse(page, 'ecran-histoire-map', 'actif')) {
             break;
         }
-        const passer = page.locator('#btn-cutscene-passer');
-        if (await passer.isVisible().catch(() => false)) {
-            await passer.click({ force: true });
+        if (await boutonEstVisible(page, '#btn-cutscene-passer')) {
+            await page.locator('#btn-cutscene-passer').click({ force: true });
         } else {
-            await page.waitForTimeout(200);
+            await attendreTypewriterInactif(page, 500).catch(() => {});
         }
     }
     await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/, { timeout: 10000 });

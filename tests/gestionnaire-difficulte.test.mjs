@@ -6,13 +6,22 @@ import {
     arreterSuiviMonde,
     enregistrerProgression,
     enregistrerPosePiece,
+    enregistrerTopOut,
     vitesseHistoireMs,
     fusionnerEtoilesPersistees,
     calculerEtoiles,
     libelleEtoile,
+    libelleObjectifPrincipal,
+    notifierPhaseBoss,
+    notifierPhaseBossParPv,
+    victoireObjectifDeclenchee,
+    estMondeZenActif,
+    obtenirEtoilesPersistees,
+    obtenirSuiviDifficulte,
+    suiviDifficulteActif,
 } from '../js/gestionnaire-difficulte.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-import { PALIERS_VITESSE_MS } from '../js/difficulte-mondes-chargement.js';
+import { PALIERS_VITESSE_MS, DIFFICULTE_MONDES } from '../js/difficulte-mondes-chargement.js';
 
 describe('gestionnaire-difficulte', () => {
     beforeEach(() => {
@@ -76,5 +85,53 @@ describe('gestionnaire-difficulte', () => {
         expect(calculerEtoiles('monde_cyber', etatHist)[2]).toBe(false);
         enregistrerProgression({ nbLignes: 3, estTetris: false, combo: 1 });
         expect(calculerEtoiles('monde_cyber', etatHist)[2]).toBe(true);
+    });
+
+    it('notifie les phases boss par paliers de PV', () => {
+        demarrerSuiviMonde('monde_boss_1');
+        notifierPhaseBossParPv('brasier', 60);
+        expect(store.histoire.difficulte?.palierEnAttente).toBeNull();
+        notifierPhaseBossParPv('brasier', 40);
+        expect(store.histoire.difficulte?.palierEnAttente).not.toBeNull();
+    });
+
+    it('enregistre top-out et etoile sans topout', () => {
+        demarrerSuiviMonde('monde_lave');
+        enregistrerTopOut();
+        expect(calculerEtoiles('monde_lave')[1]).toBe(false);
+    });
+
+    it('libelleObjectifPrincipal distingue boss et lignes', () => {
+        const cfgBoss = DIFFICULTE_MONDES.monde_boss_1;
+        expect(libelleObjectifPrincipal(cfgBoss, { pvMax: 120 })).toContain('120');
+        expect(libelleObjectifPrincipal(DIFFICULTE_MONDES.monde_prologue)).toContain('lignes');
+    });
+
+    it('expose le suivi actif et la victoire objectif', () => {
+        demarrerSuiviMonde('monde_prologue');
+        expect(suiviDifficulteActif()).toBe(true);
+        expect(victoireObjectifDeclenchee()).toBe(false);
+        enregistrerProgression({ nbLignes: 10, estTetris: false, combo: 1 });
+        expect(victoireObjectifDeclenchee()).toBe(true);
+        expect(obtenirSuiviDifficulte()?.mondeId).toBe('monde_prologue');
+    });
+
+    it('obtenirEtoilesPersistees retourne des etoiles par defaut', () => {
+        const etat = structuredClone(ETAT_HISTOIRE_VIDE);
+        expect(obtenirEtoilesPersistees(etat, 'monde_lave')).toEqual([false, false, false]);
+    });
+
+    it('estMondeZenActif pour les mondes zen', () => {
+        expect(estMondeZenActif()).toBe(false);
+        demarrerSuiviMonde('monde_paradoxe');
+        expect(estMondeZenActif()).toBe(true);
+    });
+
+    it('notifierPhaseBoss ignore les phases deja appliquees', () => {
+        demarrerSuiviMonde('monde_boss_1');
+        notifierPhaseBoss('brasier', 1);
+        const palierApres = store.histoire.difficulte?.palierEnAttente;
+        notifierPhaseBoss('brasier', 1);
+        expect(store.histoire.difficulte?.palierEnAttente).toBe(palierApres);
     });
 });

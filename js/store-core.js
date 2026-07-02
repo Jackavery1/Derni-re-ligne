@@ -63,6 +63,11 @@ export const store = {
     lockDelayRestant: 0,
     nbLockResets: 0,
     pieceAuSol: false,
+    areRestant: 0,
+    spawnGraceRestant: 0,
+    coyoteRestant: 0,
+    /** @type {'tourner_cw' | 'tourner_ccw' | 'hold' | null} */
+    inputBuffer: null,
     dasEtat: {
         [TOUCHES_DEFAUT.gauche]: { moment: 0, repete: false },
         [TOUCHES_DEFAUT.droite]: { moment: 0, repete: false },

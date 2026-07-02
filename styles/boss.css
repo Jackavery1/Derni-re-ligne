@@ -466,7 +466,7 @@ button.options-hint-controles:hover {
     .overlay-boss-presentation {
         align-items: flex-start;
         justify-content: center;
-        padding-top: max(10vh, calc(var(--safe-top) + 40px));
+        padding-top: max(10dvh, calc(var(--safe-top) + 40px));
         padding-bottom: calc(132px + var(--safe-bottom));
         box-sizing: border-box;
     }

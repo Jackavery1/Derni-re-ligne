@@ -41,24 +41,37 @@ writeFileSync(
 );
 
 const hotspots = modules.filter((m) => m.lignes > 450);
-const md = [
+const proches = modules.filter((m) => m.lignes > 400 && m.lignes <= 450);
+const lignesMd = [
     '# Index des modules JS',
     '',
     `Généré par \`npm run analyze\` — ${modules.length} fichiers sous \`js/\`.`,
+    'Liste complète : `dist/modules-index.json`.',
     '',
     '## Hotspots (> 450 lignes)',
     '',
-    '| Module | Lignes |',
-    '| ------ | ------ |',
-    ...hotspots.map((m) => `| \`${m.chemin}\` | ${m.lignes} |`),
-    '',
-    '## Tous les modules',
-    '',
-    '| Module | Lignes | Taille |',
-    '| ------ | ------ | ------ |',
-    ...modules.map((m) => `| \`${m.chemin}\` | ${m.lignes} | ${Math.round(m.octets / 1024)} Ko |`),
-    '',
-].join('\n');
+];
+if (hotspots.length === 0) {
+    lignesMd.push('_Aucun._', '');
+} else {
+    lignesMd.push(
+        '| Module | Lignes |',
+        '| ------ | ------ |',
+        ...hotspots.map((m) => `| \`${m.chemin}\` | ${m.lignes} |`),
+        ''
+    );
+}
+if (proches.length > 0) {
+    lignesMd.push(
+        '## Proche du seuil (400–450 lignes)',
+        '',
+        '| Module | Lignes |',
+        '| ------ | ------ |',
+        ...proches.map((m) => `| \`${m.chemin}\` | ${m.lignes} |`),
+        ''
+    );
+}
+const md = lignesMd.join('\n');
 
 writeFileSync('docs/modules-index.md', md);
 

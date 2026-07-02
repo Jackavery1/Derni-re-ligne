@@ -44,7 +44,21 @@
                 </div>
             </aside>
 
-            <main id="zone-jeu-coop"></main>
+            <main id="zone-jeu-coop">
+                <div
+                    id="coop-synchro-hud"
+                    class="coop-synchro-hud element-masque"
+                    aria-live="polite"
+                >
+                    <span class="coop-synchro-titre">SYNCHRO</span>
+                    <span class="coop-synchro-joueur"
+                        >J1 <strong id="coop-attente-j1">—</strong></span
+                    >
+                    <span class="coop-synchro-joueur"
+                        >J2 <strong id="coop-attente-j2">—</strong></span
+                    >
+                </div>
+            </main>
 
             <aside class="panneau panneau-coop panneau-j2">
                 <div class="section coop-joueur-badge j2-badge">

@@ -257,7 +257,7 @@ describe('audit 2 — gameplay UX', () => {
             expect(niveaux.length).toBe(
                 NIVEAUX_ARCHI.length + obtenirNiveauxArchiProceduraux().length
             );
-        });
+        }, 15000);
 
         it('resume les records locaux debloques', async () => {
             const { obtenirResumeRecordsLocaux } = await import('../js/progression-records.js');

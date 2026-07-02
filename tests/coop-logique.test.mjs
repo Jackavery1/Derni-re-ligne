@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CONFIG } from '../js/config.js';
 import { etat } from '../js/store-jeu.js';
 import { creerPlateau } from '../js/piece-jeu.js';
@@ -16,6 +16,7 @@ import {
     coop_tourner,
     coop_mettreAJourGravite,
     coop_verrouillerPiece,
+    configurerCoopLogique,
 } from '../js/coop-logique.js';
 import { initialiserChronometreCoop } from '../js/coop-jeu.js';
 
@@ -174,5 +175,44 @@ describe('coop-logique', () => {
         expect(etat.tempsDebut).toBeGreaterThan(0);
         expect(etat.tempsPauseAccumule).toBe(0);
         expect(etat.tempsPauseDebut).toBeNull();
+    });
+
+    it('grace spawn au démarrage coop', () => {
+        expect(coop.j1.spawnGraceRestant).toBe(CONFIG.spawnGraceMs);
+        expect(coop.j2.spawnGraceRestant).toBe(CONFIG.spawnGraceMs);
+    });
+
+    it('ARE bloque la gravité coop', () => {
+        coop.j1.areRestant = CONFIG.areMs;
+        coop.j1.pieceActuelle = { type: 'I', rotation: 0, x: 0, y: 0, joueur: 'j1' };
+        const yAvant = coop.j1.pieceActuelle.y;
+        coop_mettreAJourGravite('j1', 100);
+        expect(coop.j1.pieceActuelle.y).toBe(yAvant);
+    });
+
+    it('bufferise rotation pendant ARE puis consomme', () => {
+        etat.plateau = creerPlateau();
+        coop.j1.areRestant = 10;
+        coop.j1.pieceActuelle = { type: 'T', rotation: 0, x: 1, y: 0, joueur: 'j1' };
+        coop_tourner('j1', 1);
+        expect(coop.j1.inputBuffer).toBe('tourner_cw');
+        coop.j1.areRestant = 0;
+        coop_mettreAJourGravite('j1', 16);
+        expect(coop.j1.pieceActuelle.rotation).not.toBe(0);
+    });
+
+    it('grace spawn retarde le top-out après verrouillage', () => {
+        const terminer = vi.fn();
+        configurerCoopLogique({ terminerCooperatif: terminer });
+        etat.plateau = creerPlateau();
+        for (let c = 0; c < CONFIG.colonnes; c++) etat.plateau[0][c] = 1;
+        coop.j1.pieceActuelle = { type: 'O', rotation: 0, x: 1, y: 0, joueur: 'j1' };
+        coop.j1.prochainePiece = { type: 'O', rotation: 0, x: 1, y: 0, joueur: 'j1' };
+        coop.j1.spawnGraceRestant = CONFIG.spawnGraceMs;
+        coop_verrouillerPiece('j1');
+        expect(terminer).not.toHaveBeenCalled();
+        coop.j1.spawnGraceRestant = 0;
+        coop_mettreAJourGravite('j1', 16);
+        expect(terminer).toHaveBeenCalledWith('j1');
     });
 });

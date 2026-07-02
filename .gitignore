@@ -1,4 +1,5 @@
 node_modules/
+node_modules/.vite/
 test-results/
 playwright-report/
 .DS_Store
@@ -11,3 +12,4 @@ dist/
 dist-test/
 rapport-poids.json
 sources-bruts/
+assets/cutscenes/*.meta.json

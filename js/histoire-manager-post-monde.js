@@ -18,6 +18,7 @@ import { logger } from './logger.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { afficherRecapAvantNarratif } from './ui-panneau-objectifs.js';
 import { creerFile } from './file-narrative.js';
+import { extraireLignesCutscene } from './histoire-cutscene-moteur.js';
 import { JOURNAUX_VERA } from './histoire-donnees.js';
 
 const INTERLUDES_PAR_MONDE = {
@@ -114,10 +115,6 @@ function _executerFragmentVera(mondeId, suivant) {
     }
 }
 
-function _extraireLignesCutscene(entree) {
-    return Array.isArray(entree) ? entree : (entree?.lignes ?? []);
-}
-
 function _conditionInterlude(mondeId, premiereCompletion) {
     if (!modeHistoireEnCours() || !premiereCompletion) return false;
     const cleInterlude = INTERLUDES_PAR_MONDE[mondeId];
@@ -126,7 +123,7 @@ function _conditionInterlude(mondeId, premiereCompletion) {
     if (etatHist.interludesVusIds?.includes(cleInterlude)) return false;
     try {
         const interlude = obtenirHistoireTextesSync().INTERLUDES?.[cleInterlude];
-        return _extraireLignesCutscene(interlude).length > 0;
+        return extraireLignesCutscene(interlude).length > 0;
     } catch {
         return false;
     }

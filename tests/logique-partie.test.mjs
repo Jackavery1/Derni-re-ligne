@@ -53,6 +53,7 @@ import { etat, definirRefsCanvas } from '../js/store-jeu.js';
 import { CONFIG } from '../js/config.js';
 import { supprimerLignesDuPlateau } from '../js/logique-pure.js';
 import { creerPlateau, remplirSac } from '../js/piece-jeu.js';
+import { reinitialiserGameFeel } from '../js/game-feel-jeu.js';
 
 function creerCtxMock() {
     const gradient = { addColorStop: vi.fn() };
@@ -98,6 +99,7 @@ function creerCanvasMock(largeur = 120, hauteur = 120) {
 describe('logique-partie', () => {
     beforeEach(() => {
         reinitialiserBusJeu();
+        reinitialiserGameFeel();
         initialiserVivant();
         etat.estEnCours = false;
         etat.estEnPause = false;

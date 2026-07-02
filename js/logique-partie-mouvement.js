@@ -16,12 +16,18 @@ import { annoncer, annoncerPieceCourante } from './annonces.js';
 import { actionMiroir } from './mecaniques-histoire.js';
 import { obtenirControlesInversesBoss } from './boss-jeu.js';
 import { obtenirEssaisKick } from './logique-pure.js';
+import {
+    areActive,
+    bufferiserInput,
+    pieceControlesActifs,
+    demarrerGraceSpawn,
+} from './game-feel-jeu.js';
 import { marquerPoseApresRotation, reinitialiserPoseApresRotation } from './logique-partie-pose.js';
 import { verrouillerPiece } from './logique-partie-verrouillage.js';
 import { produireProchainePieceApresHold } from './logique-partie-hold.js';
 
 export function jouable() {
-    return etat.estEnCours && !etat.estEnPause && etat.pieceActuelle !== null;
+    return pieceControlesActifs();
 }
 
 function deplacerGaucheReel() {
@@ -103,6 +109,14 @@ export function chuteRapide() {
 }
 
 export function tourner(sens) {
+    if (!etat.pieceActuelle || !etat.estEnCours || etat.estEnPause) {
+        bufferiserInput(sens > 0 ? 'tourner_cw' : 'tourner_ccw');
+        return;
+    }
+    if (areActive()) {
+        bufferiserInput(sens > 0 ? 'tourner_cw' : 'tourner_ccw');
+        return;
+    }
     if (!jouable()) return;
     const piece = etat.pieceActuelle;
     const nbRots = TETROMINOS[piece.type].rotations.length;
@@ -125,6 +139,14 @@ export function tourner(sens) {
 }
 
 export function utiliserReserve() {
+    if (!etat.pieceActuelle || !etat.estEnCours || etat.estEnPause) {
+        bufferiserInput('hold');
+        return;
+    }
+    if (areActive()) {
+        bufferiserInput('hold');
+        return;
+    }
     if (!jouable()) return;
     if (etat.reserveUtilisee) return;
 
@@ -138,5 +160,6 @@ export function utiliserReserve() {
     signalerApparitionPiece();
     annoncerPieceCourante();
     declencherCalculOracle();
+    demarrerGraceSpawn();
     emettre('partie:reserve-preview', { reserve: etat.pieceEnReserve });
 }

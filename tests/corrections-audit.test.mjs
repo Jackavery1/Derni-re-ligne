@@ -9,7 +9,7 @@ import {
     sauvegarderRecordCoopBiome,
 } from '../js/progression.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-import { obtenirTypeFin } from '../js/histoire-narratif.js';
+import { obtenirTypeFin, SCENE_DEFAUT_POST_MONDE } from '../js/histoire-narratif.js';
 import { chargerDonneesCodex, codexDebloque, verifierCodex } from '../js/codex.js';
 import { statsGlobales } from '../js/achievements.js';
 import { meteo } from '../js/meteo.js';
@@ -59,6 +59,31 @@ describe('corrections audit', () => {
             statsGlobales.maxLignesUnCoup = 4;
             await verifierCodex();
             expect(codexDebloque.has('chronique_premier_tetris')).toBe(true);
+        });
+    });
+
+    describe('scènes post-monde', () => {
+        it('associe chaque monde narratif à une scène par défaut', () => {
+            const mondes = [
+                'monde_prologue',
+                'monde_lave',
+                'monde_rouille',
+                'monde_ocean',
+                'monde_foret',
+                'monde_glace',
+                'monde_desert',
+                'monde_eclipse',
+                'monde_cyber',
+                'monde_fuochi',
+                'monde_cosmos',
+                'monde_vide',
+                'monde_miroir',
+                'monde_trame',
+                'monde_paradoxe',
+            ];
+            for (const id of mondes) {
+                expect(SCENE_DEFAUT_POST_MONDE[id], id).toBeTruthy();
+            }
         });
     });
 

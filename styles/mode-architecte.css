@@ -319,18 +319,24 @@ body.archi-active #controles-paysage {
     pointer-events: auto;
 }
 
-@media (max-width: 768px), (max-height: 600px) {
+body.archi-active.controles-tactiles-actifs #controles-archi {
+    display: flex;
+}
+
+@media (max-width: 768px), (max-height: 768px), (pointer: coarse) {
     body.archi-active #controles-archi {
         display: flex;
     }
 }
 
 @media (max-height: 768px) and (orientation: landscape) {
-    body.archi-active #controles-archi {
+    body.archi-active #controles-archi,
+    body.archi-active.controles-tactiles-actifs #controles-archi {
         display: none !important;
     }
 
-    body.archi-active #controles-archi-paysage {
+    body.archi-active #controles-archi-paysage,
+    body.archi-active.controles-tactiles-actifs #controles-archi-paysage {
         display: block;
     }
 

@@ -39,4 +39,23 @@ describe('css viewport mobile', () => {
         }
         expect(violations).toEqual([]);
     });
+
+    it('n utilise pas de max-height en vh statique (preferer dvh)', () => {
+        const violations = [];
+        const ignorer = new Set(['dev.css']);
+        const fichiers = listerFichiersCss(STYLES_DIR);
+        for (const fichier of fichiers) {
+            const base = fichier.replace(/\\/g, '/').split('/').pop() ?? '';
+            if (ignorer.has(base)) continue;
+            const lignes = readFileSync(fichier, 'utf8').split('\n');
+            lignes.forEach((ligne, index) => {
+                if (/\bmax-height\s*:[^;]*\b\d+vh\b/.test(ligne) && !/\d+dvh/.test(ligne)) {
+                    violations.push(
+                        `${fichier.replace(/\\/g, '/').split('/').slice(-2).join('/')}:${index + 1}`
+                    );
+                }
+            });
+        }
+        expect(violations).toEqual([]);
+    });
 });

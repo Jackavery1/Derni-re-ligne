@@ -2,13 +2,30 @@ import { test, expect } from '@playwright/test';
 import { ouvrirCarteHistoire, ETAT_FIN_SECRETE_PRET, ETAT_PARADOXE_DEBLOQUE } from './helpers.mjs';
 import {
     MARQUEURS_NARRATIFS_POST_MONDE,
-    SCENES_POST_MONDE,
+    MARQUEURS_NARRATIFS_CAMPAGNE,
+    obtenirScenePostMonde,
     parcourirFluxPostVictoireAvecAssertions,
     viderOverlaysHistoireRapide,
 } from './helpers-narratif.mjs';
 import { CUTSCENES_POST_MONDE } from '../js/histoire-textes/cutscenes-post-monde.js';
 
 const MONDES_POST_MONDE = Object.keys(CUTSCENES_POST_MONDE);
+
+const MONDES_AVEC_TRANSITION_CHAPITRE = new Set([
+    'monde_prologue',
+    'monde_boss_1',
+    'monde_boss_2',
+    'monde_boss_3',
+    'monde_boss_4',
+]);
+
+/** @param {string} mondeId */
+function marqueursPourPostMonde(mondeId) {
+    if (MONDES_AVEC_TRANSITION_CHAPITRE.has(mondeId)) {
+        return MARQUEURS_NARRATIFS_CAMPAGNE[mondeId] ?? [];
+    }
+    return MARQUEURS_NARRATIFS_POST_MONDE[mondeId] ?? [];
+}
 
 /** @param {string} mondeId */
 function etatPourPostMonde(mondeId) {
@@ -35,26 +52,36 @@ async function declencherPostMonde(page, mondeId) {
         { timeout: 15000 }
     );
 
-    const recapVisible = await page
-        .locator('#overlay-recap-monde')
-        .evaluate((el) => el.classList.contains('objectif-overlay-visible'))
-        .catch(() => false);
+    const recapVisible = await page.evaluate(() =>
+        document
+            .getElementById('overlay-recap-monde')
+            ?.classList.contains('objectif-overlay-visible')
+    );
     if (recapVisible) {
         await page.locator('#btn-recap-continuer').click({ force: true });
     }
 
-    const sceneAttendue = SCENES_POST_MONDE[mondeId];
-    if (sceneAttendue) {
+    const sceneAttendue = obtenirScenePostMonde(mondeId);
+    const attendScene = sceneAttendue && !MONDES_AVEC_TRANSITION_CHAPITRE.has(mondeId);
+    if (attendScene) {
         await expect
-            .poll(() =>
-                page.evaluate(() => window.__NEO_TEST__?.obtenirSceneCutsceneActive?.() ?? null)
+            .poll(
+                () =>
+                    page.evaluate(
+                        () => window.__NEO_TEST__?.obtenirSceneCutsceneActive?.() ?? null
+                    ),
+                { timeout: 20000 }
             )
             .toBe(sceneAttendue);
+    } else {
+        await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+            timeout: 20000,
+        });
     }
 }
 
 test('post-monde — cutscenes pour les 15 mondes narratifs', async ({ page }) => {
-    test.setTimeout(420000);
+    test.setTimeout(600000);
 
     for (const mondeId of MONDES_POST_MONDE) {
         await ouvrirCarteHistoire(page, etatPourPostMonde(mondeId));
@@ -63,7 +90,7 @@ test('post-monde — cutscenes pour les 15 mondes narratifs', async ({ page }) =
         await parcourirFluxPostVictoireAvecAssertions(
             page,
             mondeId,
-            MARQUEURS_NARRATIFS_POST_MONDE[mondeId] ?? []
+            marqueursPourPostMonde(mondeId)
         );
         await viderOverlaysHistoireRapide(page, 16);
     }

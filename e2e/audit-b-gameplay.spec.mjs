@@ -2,7 +2,6 @@ import { test, expect } from '@playwright/test';
 import {
     preparerPageSansSw,
     attendreApplicationPrete,
-    attendreNotificationsInitiales,
     demarrerPartie,
     selectionnerBiomeClavier,
     ouvrirCarteHistoire,
@@ -11,135 +10,30 @@ import {
     ETAT_DEBLOCAGE_MONDE_LIBRE,
     ETAT_FIN_VRAIE_PRET,
     ETAT_AVANT_FIN_SECRETE,
+    installerJournalVibrations,
+    preparerSelectionPremiereVisiteModes,
+    selectionnerBiomeVerrouilleConstellation,
+    selectionnerMondeCarte,
+    attendreBarreModesPretes,
+    reinitialiserInfobulleMode,
+    attendreInfobulleMode,
+    basculerDefiJourDepuisSelection,
+    basculerSprintDepuisSelection,
+    basculerOracleDepuisSelection,
+    basculerCoopDepuisSelection,
 } from './helpers.mjs';
 
-async function installerJournalVibrations(page) {
-    await page.addInitScript(() => {
-        window.__NEO_VIBRATE_LOG__ = [];
-        Object.defineProperty(navigator, 'vibrate', {
-            configurable: true,
-            value: (pattern) => {
-                window.__NEO_VIBRATE_LOG__.push(pattern);
-                return true;
-            },
-        });
-        localStorage.setItem('derniereLigne_haptique', 'true');
-    });
-}
-
-async function preparerSelectionPremiereVisiteModes(page, etat = ETAT_DEBLOCAGE_COMPLET) {
-    await installerJournalVibrations(page);
-    await page.route('**/sw.js', (route) => route.abort());
-    await page.addInitScript((e) => {
-        window.__NEO_SILENT_NOTIFS__ = false;
-        localStorage.setItem('dl_migration_v1', '1');
-        localStorage.setItem('derniereLigne_tutorielVu', '1');
-        localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
-        localStorage.setItem('derniereLigne_tutorielCoopVu', '1');
-        localStorage.setItem('derniereLigne_tutorielArchitecteVu', '1');
-        localStorage.setItem('derniereLigne_tutorielOracleVu', '1');
-        localStorage.setItem('derniereLigne_introHistoireVue', '1');
-        localStorage.removeItem('derniereLigne_infobullesModesJeu');
-        localStorage.removeItem('derniereLigne_infobulleOracleCoop');
-        localStorage.setItem('derniereLigne_histoire', JSON.stringify(e));
-        if ('serviceWorker' in navigator) {
-            void navigator.serviceWorker.getRegistrations().then((regs) => {
-                for (const reg of regs) void reg.unregister();
-            });
-        }
-    }, etat);
-}
-
-async function selectionnerBiomeVerrouilleConstellation(page, biomeId) {
-    await page.evaluate((id) => {
-        const select = document.getElementById('sel-biome-clavier');
-        if (!select) return;
-        for (const opt of select.options) {
-            if (opt.value === id) {
-                opt.disabled = false;
-                select.value = id;
-                select.dispatchEvent(new Event('change', { bubbles: true }));
-                break;
-            }
-        }
-    }, biomeId);
-}
-
-async function selectionnerMondeCarte(page, mondeId) {
-    await expect(page.locator(`#histoire-monde-clavier option[value="${mondeId}"]`)).toBeAttached({
-        timeout: 15000,
-    });
-    await page.evaluate((id) => {
-        const select = document.getElementById('histoire-monde-clavier');
-        if (!select) return;
-        for (const opt of select.options) {
-            if (opt.value === id) {
-                opt.disabled = false;
-                select.value = id;
-                select.dispatchEvent(new Event('change', { bubbles: true }));
-                break;
-            }
-        }
-    }, mondeId);
-}
-
-async function attendreBarreModesPretes(page) {
-    await expect(page.locator('#sel-barre-modes')).not.toHaveClass(/element-masque/, {
-        timeout: 10000,
-    });
-    await expect(page.locator('#toggle-sprint')).toBeVisible();
-}
-
-async function reinitialiserInfobulleMode(page, modeId) {
-    await page.evaluate((id) => {
-        try {
-            const raw = localStorage.getItem('derniereLigne_infobullesModesJeu');
-            const vu = raw ? JSON.parse(raw) : {};
-            delete vu[id];
-            localStorage.setItem('derniereLigne_infobullesModesJeu', JSON.stringify(vu));
-        } catch {
-            /* ignore */
-        }
-    }, modeId);
-}
-
-async function attendreInfobulleMode(page, titrePartiel) {
-    const overlay = page.locator('#overlay-infobulle-contexte');
-    await expect(overlay).not.toHaveClass(/element-masque/, { timeout: 10000 });
-    await expect(page.locator('#infobulle-contexte-titre')).toContainText(titrePartiel, {
-        ignoreCase: true,
-    });
+async function ouvrirSelectionModes(page, etat = ETAT_DEBLOCAGE_COMPLET) {
+    await preparerSelectionPremiereVisiteModes(page, etat);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
     await page.evaluate(() => {
-        document.getElementById('overlay-infobulle-contexte')?.classList.add('element-masque');
+        window.__NEO_SILENT_NOTIFS__ = false;
     });
-    await expect(overlay).toHaveClass(/element-masque/);
-}
-
-async function basculerSprintDepuisSelection(page) {
-    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
-    await expect(page.locator('body')).not.toHaveClass(/partie-active/);
-    await page.evaluate(async () => {
-        const { basculerModeSprint } = await import('/js/mode-sprint.js');
-        basculerModeSprint();
-    });
-}
-
-async function basculerOracleDepuisSelection(page) {
-    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
-    await expect(page.locator('body')).not.toHaveClass(/partie-active/);
-    await page.evaluate(async () => {
-        const { basculerOracle } = await import('/js/oracle-jeu.js');
-        basculerOracle();
-    });
-}
-
-async function basculerCoopDepuisSelection(page) {
-    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
-    await expect(page.locator('body')).not.toHaveClass(/partie-active/);
-    await page.evaluate(async () => {
-        const { basculerModeCoop } = await import('/js/coop-jeu.js');
-        basculerModeCoop();
-    });
+    await page.locator('#btn-jouer').click();
+    await selectionnerBiomeClavier(page);
+    await attendreBarreModesPretes(page);
+    await fermerInfobulleContexteSiVisible(page);
 }
 
 test('audit B — haptique en partie via bus lignes effacees', async ({ page }) => {
@@ -178,17 +72,10 @@ test('audit B — animation menu arretee en partie', async ({ page }) => {
 });
 
 test('audit B — infobulles modes sprint et sans fin', async ({ page }) => {
-    await preparerSelectionPremiereVisiteModes(page);
-    await page.goto('/');
-    await attendreApplicationPrete(page);
-    await attendreNotificationsInitiales(page);
-    await page.locator('#btn-jouer').click();
-    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
-    await selectionnerBiomeClavier(page);
-    await attendreBarreModesPretes(page);
-    await fermerInfobulleContexteSiVisible(page);
-
+    await ouvrirSelectionModes(page);
     await reinitialiserInfobulleMode(page, 'sprint');
+    await reinitialiserInfobulleMode(page, 'sansFin');
+
     await basculerSprintDepuisSelection(page);
     await attendreInfobulleMode(page, 'SPRINT');
 
@@ -198,13 +85,7 @@ test('audit B — infobulles modes sprint et sans fin', async ({ page }) => {
 });
 
 test('audit B — infobulles oracle et coop', async ({ page }) => {
-    await preparerSelectionPremiereVisiteModes(page);
-    await page.goto('/');
-    await attendreApplicationPrete(page);
-    await page.locator('#btn-jouer').click();
-    await selectionnerBiomeClavier(page);
-    await attendreBarreModesPretes(page);
-    await fermerInfobulleContexteSiVisible(page);
+    await ouvrirSelectionModes(page);
 
     await reinitialiserInfobulleMode(page, 'oracle');
     await basculerOracleDepuisSelection(page);
@@ -220,12 +101,15 @@ test('audit B — infobulle defi du jour', async ({ page }) => {
     await preparerSelectionPremiereVisiteModes(page);
     await page.goto('/');
     await attendreApplicationPrete(page);
+    await page.evaluate(() => {
+        window.__NEO_SILENT_NOTIFS__ = false;
+    });
     await page.locator('#btn-jouer').click();
     await selectionnerBiomeClavier(page);
     await fermerInfobulleContexteSiVisible(page);
 
     await expect(page.locator('#toggle-defi-jour-wrap')).not.toHaveClass(/element-masque/);
-    await page.locator('#toggle-defi-jour').click({ force: true });
+    await basculerDefiJourDepuisSelection(page);
     await attendreInfobulleMode(page, 'DEFI');
 });
 
@@ -260,7 +144,9 @@ test('audit B — codex chemins caches verrouille avec condition', async ({ page
 
 test('audit B — carte histoire compteur et modal Trame', async ({ page }) => {
     await ouvrirCarteHistoire(page, ETAT_FIN_VRAIE_PRET);
-    await expect(page.locator('#histoire-prog-trame')).toContainText(/TRAME\s+2\/4/i);
+    await expect(page.locator('#histoire-prog-trame')).toContainText(/TRAME\s+2\/4/i, {
+        timeout: 15000,
+    });
     await page.locator('#btn-histoire-trame').click();
     await expect(page.locator('#overlay-trame-conditions')).not.toHaveClass(/element-masque/);
     await expect(page.locator('#histoire-trame-detail-liste li')).toHaveCount(4);

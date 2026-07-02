@@ -8,6 +8,8 @@ import {
     lireTexteCutsceneActive,
     attendreApplicationPrete,
     preparerPremierLancement,
+    attendreTypewriterInactif,
+    elementAClasse,
     ETAT_HISTOIRE_BOSS_BRASIER,
     ETAT_FIN_SECRETE_PRET,
     ETAT_AVANT_FIN_SECRETE,
@@ -130,41 +132,42 @@ test('decouverte labo cyber — journal VERA', async ({ page }) => {
     });
     await fermerRecapPostMonde(page);
 
-    for (let tentative = 0; tentative < 24; tentative++) {
-        const etat = await page.evaluate(() => {
-            const brut = localStorage.getItem('derniereLigne_histoire');
-            const sauve = brut ? JSON.parse(brut) : {};
-            return {
-                laboDecouvert: sauve.laboDecouvert === true,
-                journal7: sauve.journauxTrouves?.includes('journal_7') === true,
-            };
-        });
-        if (etat.laboDecouvert && etat.journal7) break;
+    await expect
+        .poll(
+            async () => {
+                const etat = await page.evaluate(() => {
+                    const brut = localStorage.getItem('derniereLigne_histoire');
+                    const sauve = brut ? JSON.parse(brut) : {};
+                    return {
+                        laboDecouvert: sauve.laboDecouvert === true,
+                        journal7: sauve.journauxTrouves?.includes('journal_7') === true,
+                    };
+                });
+                if (etat.laboDecouvert && etat.journal7) return true;
 
-        const cutsceneActive = await page
-            .locator('#ecran-histoire-cutscene')
-            .evaluate((el) => el.classList.contains('actif'))
-            .catch(() => false);
-        if (cutsceneActive) {
-            await page.evaluate(() => {
-                document.getElementById('btn-cutscene-passer')?.click();
-            });
-            continue;
-        }
+                if (await elementAClasse(page, 'ecran-histoire-cutscene', 'actif')) {
+                    await page.evaluate(() => {
+                        document.getElementById('btn-cutscene-passer')?.click();
+                    });
+                    return false;
+                }
 
-        const journalActif = await page
-            .locator('#ecran-histoire-journal')
-            .evaluate((el) => el.classList.contains('actif'))
-            .catch(() => false);
-        if (journalActif) {
-            await page.evaluate(() => {
-                document.getElementById('btn-journal-fermer')?.click();
-            });
-            continue;
-        }
+                if (await elementAClasse(page, 'ecran-histoire-journal', 'actif')) {
+                    const texteJournal = await page
+                        .locator('#histoire-journal-texte')
+                        .textContent();
+                    expect(texteJournal ?? '').toMatch(/Si tu lis ceci|laboratoire|Trame/i);
+                    await page.evaluate(() => {
+                        document.getElementById('btn-journal-fermer')?.click();
+                    });
+                    return false;
+                }
 
-        await page.waitForTimeout(250);
-    }
+                return false;
+            },
+            { timeout: 30000, intervals: [150, 250, 400] }
+        )
+        .toBe(true);
 
     const final = await page.evaluate(() => {
         const brut = localStorage.getItem('derniereLigne_histoire');
@@ -324,7 +327,7 @@ test('intro — changement de scene entre lignes d une cutscene', async ({ page 
         const t = await lireTexteCutsceneActive(page);
         if (/Trame/i.test(t)) break;
         await page.locator('#btn-cutscene-suivant').click({ force: true });
-        await page.waitForTimeout(200);
+        await attendreTypewriterInactif(page, 2000);
     }
 
     await expect
@@ -337,7 +340,7 @@ test('intro — changement de scene entre lignes d une cutscene', async ({ page 
         const t = await lireTexteCutsceneActive(page);
         if (/JOURNAL DE BORD/i.test(t)) break;
         await page.locator('#btn-cutscene-suivant').click({ force: true });
-        await page.waitForTimeout(200);
+        await attendreTypewriterInactif(page, 2000);
     }
 
     await expect
@@ -350,7 +353,7 @@ test('intro — changement de scene entre lignes d une cutscene', async ({ page 
         const t = await lireTexteCutsceneActive(page);
         if (/Jour 2 191/i.test(t)) break;
         await page.locator('#btn-cutscene-suivant').click({ force: true });
-        await page.waitForTimeout(200);
+        await attendreTypewriterInactif(page, 2000);
     }
 
     await expect

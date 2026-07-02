@@ -61,7 +61,7 @@ export function rafraichirStats() {
     const score = obtenirScoreAffiche();
     const suiviHistoire = modeHistoireEnCours() ? obtenirSuiviDifficulte() : null;
     const niveauAffiche = suiviHistoire?.actif
-        ? `P${suiviHistoire.palierCourant}`
+        ? `P${suiviHistoire.palierCourant}/14`
         : String(etat.niveau);
     const ids = {
         'affichage-score': score.toLocaleString('fr-FR'),
@@ -72,6 +72,9 @@ export function rafraichirStats() {
         const el = document.getElementById(id);
         if (!el) continue;
         el.textContent = valeur;
+        if (id === 'affichage-niveau' && suiviHistoire?.actif) {
+            el.title = 'Palier de vitesse de chute (1 = lent, 14 = rapide)';
+        }
         el.classList.remove('anime');
         void el.offsetWidth;
         el.classList.add('anime');

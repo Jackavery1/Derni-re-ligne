@@ -77,6 +77,17 @@ describe('expressions cutscene', () => {
         expect(obtenirHumeurEffectivePortrait('vera', null, false)).toBe('douce');
     });
 
+    it('expose la dernière humeur parlée pour l’API test', async () => {
+        const { obtenirDerniereHumeurParleePortrait } =
+            await import('../js/expressions-cutscene.js');
+        notifierChangementLigneCutscene(
+            0,
+            { personnage: 'vera', texte: 'a', humeur: 'douce' },
+            1000
+        );
+        expect(obtenirDerniereHumeurParleePortrait('vera')).toBe('douce');
+    });
+
     it('effets réduits : paramètres statiques', () => {
         definirReduireEffetsAccessibilite(true);
         notifierChangementLigneCutscene(

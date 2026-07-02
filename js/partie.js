@@ -76,6 +76,7 @@ import {
 } from './oracle-jeu.js';
 import { demarrerFondBiome, arreterFondBiome } from './rendu-fond-biome.js';
 import { reinitialiserTimerNiveau } from './timer-niveau.js';
+import { reinitialiserGameFeel, demarrerGraceSpawn } from './game-feel-jeu.js';
 import { rafraichirHudObjectifsHistoire } from './ui-panneau-objectifs.js';
 export { initialiserCanvas } from './partie-canvas.js';
 export { terminerPartie } from './partie-fin.js';
@@ -164,7 +165,12 @@ function initialiserEtatPartie() {
     definirSeuilProchRelique(Math.floor(Math.random() * 6) + 15);
     definirReliqueEnAttente(false);
     definirReliqueActive(null);
-    initialiserMeteo();
+    reinitialiserGameFeel();
+    if (modeHistoireEnCours()) {
+        annulerMeteo();
+    } else {
+        initialiserMeteo();
+    }
     if (modeHistoireEnCours()) {
         annulerTimersVivant();
     } else {
@@ -174,6 +180,7 @@ function initialiserEtatPartie() {
     etat.pieceActuelle = genererProchainePiece();
     activerReliqueSurPiece(etat.pieceActuelle);
     etat.filePieces = [genererProchainePiece(), genererProchainePiece(), genererProchainePiece()];
+    demarrerGraceSpawn();
     signalerApparitionPiece();
     annoncerPieceCourante();
 }

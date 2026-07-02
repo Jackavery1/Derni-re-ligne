@@ -210,7 +210,7 @@ body.histoire-active.partie-active #bandeau-trame-run {
 }
 
 .objectif-hud-titre {
-    font-size: 0.28rem;
+    font-size: clamp(0.38rem, 1.6vw, 0.48rem);
     letter-spacing: 1px;
 }
 
@@ -439,16 +439,16 @@ body.histoire-active.partie-active #bandeau-trame-run {
     }
 
     .objectif-hud-titre {
-        font-size: clamp(0.24rem, 1.4vw, 0.28rem);
+        font-size: clamp(0.38rem, 2vw, 0.48rem);
     }
 
     .objectif-hud-lignes {
-        font-size: clamp(0.42rem, 2.2vw, 0.55rem);
+        font-size: clamp(0.48rem, 2.4vw, 0.58rem);
     }
 
     .objectif-hud-palier,
     .objectif-hud-modificateur {
-        font-size: clamp(0.28rem, 1.6vw, 0.35rem);
+        font-size: clamp(0.34rem, 1.8vw, 0.4rem);
         word-break: break-word;
     }
 

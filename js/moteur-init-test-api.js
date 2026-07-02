@@ -17,15 +17,28 @@ export function initialiserNeoTestApi() {
     let obtenirSceneCutsceneActiveSync = null;
     /** @type {(() => string) | null} */
     let obtenirHumeurRoboCutsceneSync = null;
-    void import('./histoire-cutscene-fonds.js').then((mod) => {
-        obtenirSceneCutsceneActiveSync = mod.obtenirSceneCutsceneActive;
-    });
-    void import('./portraits-cutscene-etat.js').then((mod) => {
-        obtenirHumeurRoboCutsceneSync = mod.obtenirHumeurRoboCutscene;
-    });
+    /** @type {((personnageId: string) => string | null) | null} */
+    let obtenirDerniereHumeurParleeSync = null;
+    /** @type {(() => boolean) | null} */
+    let typewriterEstActifSync = null;
+    const depsTestApi = Promise.all([
+        import('./histoire-cutscene-fonds.js').then((mod) => {
+            obtenirSceneCutsceneActiveSync = mod.obtenirSceneCutsceneActive;
+        }),
+        import('./portraits-cutscene-etat.js').then((mod) => {
+            obtenirHumeurRoboCutsceneSync = mod.obtenirHumeurRoboCutscene;
+        }),
+        import('./expressions-cutscene.js').then((mod) => {
+            obtenirDerniereHumeurParleeSync = mod.obtenirDerniereHumeurParleePortrait;
+        }),
+        import('./histoire-cutscene-typewriter.js').then((mod) => {
+            typewriterEstActifSync = mod.typewriterEstActif;
+        }),
+    ]);
 
-    void import('./neo-test-api.js').then(({ exposerNeoTestApi, estNeoTestAutorise }) => {
+    void import('./neo-test-api.js').then(async ({ exposerNeoTestApi, estNeoTestAutorise }) => {
         if (!estNeoTestAutorise()) return;
+        await depsTestApi;
         exposerNeoTestApi({
             terminerPartie: (victoire, options) =>
                 obtenirActions().terminerPartie?.(victoire, options),
@@ -92,7 +105,15 @@ export function initialiserNeoTestApi() {
                 return obtenirTypeFin();
             },
             obtenirSceneCutsceneActive: () => obtenirSceneCutsceneActiveSync?.() ?? null,
-            obtenirHumeurPortraitCutscene: () => obtenirHumeurRoboCutsceneSync?.() ?? null,
+            typewriterEstActif: () => typewriterEstActifSync?.() ?? false,
+            obtenirHumeurPortraitCutscene: (personnageId = 'robo') => {
+                const depuisLigne = obtenirDerniereHumeurParleeSync?.(personnageId);
+                if (depuisLigne) return depuisLigne;
+                if (!personnageId || personnageId === 'robo') {
+                    return obtenirHumeurRoboCutsceneSync?.() ?? null;
+                }
+                return null;
+            },
             simulerTopVolontairePrologue: async () => {
                 activerModeHistoire();
                 store.histoire.mondeActuel = 'monde_prologue';

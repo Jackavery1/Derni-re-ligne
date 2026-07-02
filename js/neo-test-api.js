@@ -22,7 +22,8 @@ export function estNeoTestAutorise() {
  *   simulerVictoireMondeHistoire?: (mondeId: string, lignes?: number, sansNarratif?: boolean) => Promise<void>,
  *   obtenirTypeFinHistoire?: () => Promise<string>,
  *   obtenirSceneCutsceneActive?: () => string | null,
- *   obtenirHumeurPortraitCutscene?: () => string | null,
+ *   typewriterEstActif?: () => boolean,
+ *   obtenirHumeurPortraitCutscene?: (personnageId?: string) => string | null,
  *   simulerTopVolontairePrologue?: () => Promise<void>
  *   injecterConditionsTrameDistorsion?: () => void
  *   emettreEvenementBusJeu?: (evenement: string, payload?: unknown) => void

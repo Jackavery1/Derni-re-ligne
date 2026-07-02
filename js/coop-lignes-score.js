@@ -74,6 +74,18 @@ export function afficherNotifTSpinCoop(tSpin) {
     });
 }
 
+function afficherNotifLigneEnAttenteCoop(cote) {
+    if (typeof document === 'undefined') return;
+    const notif = document.getElementById('notif-niveau');
+    if (!notif) return;
+    notif.textContent = cote === 'j1' ? 'J1 PRET — ATTENTE J2' : 'J2 PRET — ATTENTE J1';
+    notif.classList.remove('notif-niveau-vert');
+    notif.classList.add('notif-synchro');
+    notif.classList.remove('visible');
+    void notif.offsetWidth;
+    notif.classList.add('visible');
+}
+
 export function coop_verifierLignes() {
     const xMinJ1 = 0;
     const xMaxJ1 = DEMI_LARGEUR;
@@ -96,10 +108,17 @@ export function coop_verifierLignes() {
             nbSupprimees++;
             l++;
         } else {
-            if (moitieGaucheComplete && !moitieDroiteComplete) coop.lignesEnAttenteJ1 = l;
-            if (moitieDroiteComplete && !moitieGaucheComplete) coop.lignesEnAttenteJ2 = l;
+            if (moitieGaucheComplete && !moitieDroiteComplete) {
+                coop.lignesEnAttenteJ1 = l;
+                afficherNotifLigneEnAttenteCoop('j1');
+            }
+            if (moitieDroiteComplete && !moitieGaucheComplete) {
+                coop.lignesEnAttenteJ2 = l;
+                afficherNotifLigneEnAttenteCoop('j2');
+            }
         }
     }
 
+    coop_rafraichirStats();
     return nbSupprimees;
 }

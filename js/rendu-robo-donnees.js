@@ -10,8 +10,6 @@ export const PALETTE_ROBO = {
     REFLET_SEC: '#b8e8ff',
     BOUCHE_FOND: '#0d2b2e',
     BOUCHE_NEON: '#35e0e6',
-    /** @deprecated alias canon — préférer BOUCHE_NEON */
-    DENTS: '#35e0e6',
     TORSE: '#7a4fc0',
     TORSE_OMB: '#5533aa',
     TORSE_REF: '#7755dd',

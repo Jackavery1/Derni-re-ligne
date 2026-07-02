@@ -56,11 +56,17 @@ function _remplirEtAfficherJournal(journal, onFermer) {
 
     if (elTexte) {
         elTexte.textContent = '';
-        journal.texte.forEach((para) => {
+        journal.texte.forEach((para, index) => {
             const el = document.createElement('div');
             el.className = 'histoire-journal-para';
             const ligne = typeof para === 'string' ? { personnage: null, texte: para } : para;
-            if (journal.estEndommage && ligne.personnage === 'vera' && Math.random() < 0.3) {
+            const endommager =
+                journal.estEndommage &&
+                ligne.personnage === 'vera' &&
+                (typeof window !== 'undefined' && window.__NEO_TEST__
+                    ? index % 3 === 0
+                    : Math.random() < 0.3);
+            if (endommager) {
                 el.classList.add('histoire-journal-para-endommage');
             }
             if (ligne.personnage) {

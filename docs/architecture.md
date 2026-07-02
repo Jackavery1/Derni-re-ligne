@@ -51,6 +51,36 @@ Vanilla ES modules en dev, bundle esbuild en prod.
 | `logique-partie-verrouillage.js` | `verrouillerPiece()`             |
 | `logique-partie-mouvement.js`    | Déplacements, rotation, chute    |
 
+## Découpage mecaniques-histoire
+
+| Module                           | Rôle                                        |
+| -------------------------------- | ------------------------------------------- |
+| `mecaniques-histoire.js`         | Barrel + lifecycle (init, bus, game over)   |
+| `mecaniques-histoire-queries.js` | `biomeActuelMecanique()`, états miroir/vide |
+| `mecaniques-histoire-rouille.js` | Timestamps, effondrement, décalage matrices |
+| `mecaniques-histoire-eclipse.js` | Ligne éclipse, vitesse, libellé HUD         |
+| `mecaniques-histoire-vide.js`    | Invisibilité pièce, fantôme, HUD vide       |
+| `mecaniques-histoire-trame.js`   | Morph fond trame                            |
+| `mecaniques-histoire-miroir.js`  | CSS miroir, inversion actions               |
+
+## Découpage histoire-map-ui
+
+| Module                            | Rôle                                           |
+| --------------------------------- | ---------------------------------------------- |
+| `histoire-map-ui.js`              | Barrel public (consommé par `histoire-map.js`) |
+| `histoire-map-modal-trame.js`     | Overlay conditions Trame                       |
+| `histoire-map-interactions.js`    | Pointer, clavier, sélection nœud               |
+| `histoire-map-panneau-details.js` | Panneau détail monde                           |
+| `histoire-map-entete.js`          | Progression mondes / journaux / trame          |
+
+## Découpage rendu-fond-biome
+
+| Module                           | Rôle                                     |
+| -------------------------------- | ---------------------------------------- |
+| `rendu-fond-biome.js`            | Lifecycle RAF, couche statique offscreen |
+| `rendu-fond-biome-donnees.js`    | Configs 17 biomes + alias                |
+| `rendu-fond-biome-particules.js` | Init (`Math.random`) + dessin particules |
+
 ## Boucles RAF
 
 - **Principale (partie)** — `boucle-jeu.js` : gravité, DAS, rendu plateau. Suspendue en coop/archi.
@@ -98,7 +128,7 @@ flowchart TB
 2. **Store** — lectures via `store-jeu.js` / `store-histoire.js` ; éviter `store-core` hors modules état.
 3. **Cycles** — vérifiés par `npm run check:circular` depuis `main.js`.
 4. **Barrels** — `logique-partie.js`, `rendu-jeu.js`, `progression.js` : point d'entrée stable pour les consommateurs.
-5. **Index modules** — `docs/modules-index.md` (régénéré par `npm run analyze`) pour repérer les hotspots.
+5. **Index modules** — `docs/modules-index.md` (hotspots > 450 L, régénéré par `npm run analyze` ; détail dans `dist/modules-index.json`).
 
 ## Gestion des erreurs
 
@@ -112,7 +142,7 @@ flowchart TB
 
 - **RAF conditionnelle** — `aBesoinDeBoucle()` suspend la boucle principale quand inutile.
 - **FPS adaptatif** — EWMA dans `boucle-jeu.js` ; effets réduits si FPS < 45 ou `prefers-reduced-motion`.
-- **Cache canvas** — gradients statiques (vignette, ambiance bas, masque météo) en offscreen dans `rendu-plateau.js` ; fonds biome/méta pré-générés.
+- **Cache canvas** — gradients statiques (vignette, ambiance bas, masque météo) en offscreen dans `rendu-plateau.js` ; fonds biome/méta pré-générés (`rendu-fond-biome-donnees.js` + couche statique, particules isolées dans `rendu-fond-biome-particules.js`).
 - **Budget bundle** — `scripts/verifier-bundle.mjs` en CI (max **560 Ko**, confort 540 Ko ; chunks test exclus via `budget-exclus.json`) ; `npm run analyze` après build.
 
 ## Guides

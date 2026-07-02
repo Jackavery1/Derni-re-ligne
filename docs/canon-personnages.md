@@ -2,8 +2,6 @@
 
 ## D'après les références Leonardo validées (12 juin 2026)
 
-### À placer dans le dépôt : docs/canon-personnages.md
-
 Ce document est la SOURCE DE VÉRITÉ pour le rendu Canvas des portraits.
 Les images Leonardo sont des RÉFÉRENCES de design — les portraits du jeu
 restent dessinés en Canvas (décision actée). Règle de conflit : quand un
@@ -69,15 +67,17 @@ table d'états.
 première (regard levé). VERA regarde le joueur — c'est la bonne pose pour
 le dialogue.
 
-**Silhouette — consignes ANTI-DALLE (le rendu actuel en jeu est une
-plaque rectangulaire à corriger)** :
+**Silhouette — rendu en jeu (v2.5.34)** :
 
+- **Primaire** : sprite `img/vera.png` (buste de face, regard joueur) via
+  `js/portrait-vera-assets.js` / `js/portrait-vera-rendu.js`.
+- **Fallback** : canvas procédural (expressions `glitch`, scanlines) si le
+  sprite n'est pas encore chargé.
 - Le buste N'EST PAS un rectangle : épaules tombantes distinctes, cou
-  visible, tête détachée du tronc.
+  visible, tête détachée du tronc (le sprite respecte cette lecture).
 - Proportions à l'échelle du portrait : tête (casque compris) ≈ 40 % de
   la hauteur du buste ; largeur d'épaules ≈ 2,2× la largeur du cou.
-- Le visage est STRUCTURÉ : sourcils, yeux, nez (2–3 px d'ombre), lèvres,
-  menton/mâchoire. Pas de visage-bille.
+- Le visage est STRUCTURÉ : sourcils, yeux, nez, lèvres, menton/mâchoire.
 
 **Palette**
 

@@ -134,7 +134,7 @@ export function coop_dessinerLignesEnAttente() {
     if (!ctx) return;
 
     const t = performance.now() / 400;
-    const pulse = 0.08 + Math.sin(t) * 0.06;
+    const pulse = 0.15 + Math.sin(t) * 0.1;
 
     if (coop.lignesEnAttenteJ1 >= 0) {
         const l = coop.lignesEnAttenteJ1;

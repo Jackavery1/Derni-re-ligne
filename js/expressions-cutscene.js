@@ -42,7 +42,9 @@ export function prechargerPresetsExpressions() {
 /** @returns {Record<string, Record<string, unknown>>} */
 function presetsVera() {
     return /** @type {Record<string, Record<string, unknown>>} */ (
-        _presets?.PRESETS_VERA ?? { neutre: { fragmentVitesse: 0.6, fragmentRayon: 1 } }
+        _presets?.PRESETS_VERA ?? {
+            neutre: { fragmentVitesse: 0.6, fragmentRayon: 1, lueurRose: 1 },
+        }
     );
 }
 
@@ -54,16 +56,16 @@ function presetsDistorsion() {
 }
 
 /** @returns {Record<string, Record<string, unknown>>} */
-function presetsBoss() {
+function presetsSysteme() {
     return /** @type {Record<string, Record<string, unknown>>} */ (
-        _presets?.PRESETS_BOSS ?? { calme: { vitesseAnim: 0.7 } }
+        _presets?.PRESETS_SYSTEME ?? { neutre: { alerte: false, clignotement: 1 } }
     );
 }
 
 /** @returns {Record<string, Record<string, unknown>>} */
-function presetsSysteme() {
+function presetsBoss() {
     return /** @type {Record<string, Record<string, unknown>>} */ (
-        _presets?.PRESETS_SYSTEME ?? { neutre: { alerte: false } }
+        _presets?.PRESETS_BOSS ?? { calme: { vitesseAnim: 0.7 } }
     );
 }
 
@@ -302,6 +304,12 @@ export function obtenirParamsExpressionPortrait(personnageId, humeur, timestamp)
 export function obtenirHumeurRoboCutsceneDepuisLigne(personnageId, humeur, parle) {
     if (idPortraitRendu(personnageId) !== 'robo') return 'neutre';
     return resoudreHumeurPortrait(personnageId, humeur, { parle });
+}
+
+/** @param {string} personnageId */
+export function obtenirDerniereHumeurParleePortrait(personnageId) {
+    const id = idPortraitRendu(personnageId);
+    return _derniereHumeurParlee.get(personnageId) ?? _derniereHumeurParlee.get(id) ?? null;
 }
 
 export function reinitExpressionsCutscene() {
