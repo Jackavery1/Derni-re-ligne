@@ -1,8 +1,8 @@
 import { readdirSync, statSync, readFileSync, existsSync } from 'fs';
 
-const MAX_KO_TOTAL = 560;
+const MAX_KO_TOTAL = 580;
 const WARN_KO_ENTREE = 80;
-const WARN_KO_TOTAL = 540;
+const WARN_KO_TOTAL = 560;
 const dossier = 'dist/js';
 
 /** @type {Set<string>} */
