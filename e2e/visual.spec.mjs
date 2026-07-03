@@ -92,6 +92,7 @@ test.describe('régressions visuelles mobile', () => {
     });
 
     test('pause mobile portrait', { tag: '@viewport-mobile-portrait' }, async ({ page }) => {
+        await page.setViewportSize({ width: 844, height: 390 });
         await page.goto('/');
         await attendreApplicationPrete(page);
         await demarrerPartie(page);
@@ -107,6 +108,7 @@ test.describe('régressions visuelles mobile', () => {
 
     test('pause coop mobile portrait', { tag: '@viewport-mobile-portrait' }, async ({ page }) => {
         const { demarrerPartieCoop, activerPauseCoopTactile } = await import('./helpers.mjs');
+        await page.setViewportSize({ width: 844, height: 390 });
         await page.goto('/');
         await attendreApplicationPrete(page);
         await demarrerPartieCoop(page);
