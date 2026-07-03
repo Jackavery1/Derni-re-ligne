@@ -400,10 +400,26 @@ export async function demarrerPartieViaClavier(page) {
 
 /** @param {import('@playwright/test').Page} page */
 export async function activerPauseCoopTactile(page) {
-    await page.evaluate(async () => {
-        const { basculerPauseCoop } = await import('/js/coop-jeu.js');
-        basculerPauseCoop();
+    const viaTest = await page.evaluate(async () => {
+        if (typeof window.__NEO_TEST__?.basculerPauseCoop === 'function') {
+            await window.__NEO_TEST__.basculerPauseCoop();
+            return true;
+        }
+        return false;
     });
+    if (!viaTest) {
+        const clique = await page.evaluate(() => {
+            for (const id of ['btn-pause-coop-mobile', 'btn-pause-coop']) {
+                const btn = document.getElementById(id);
+                if (btn && getComputedStyle(btn).display !== 'none') {
+                    btn.click();
+                    return true;
+                }
+            }
+            return false;
+        });
+        if (!clique) await page.keyboard.press('KeyP');
+    }
     await expect(page.locator('#ecran-pause-coop')).toHaveClass(/actif/, { timeout: 10000 });
 }
 
@@ -416,10 +432,7 @@ export async function demarrerPartieCoop(page) {
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await fermerInfobulleContexteSiVisible(page);
-    await page.evaluate(async () => {
-        const { assurerInputCoop } = await import('/js/modes-input-lazy.js');
-        await assurerInputCoop();
-    });
+    await fermerPanneauDetailSiOuvert(page);
     await basculerCoopDepuisSelection(page);
     await expect(page.locator('#coop-toggle-label')).toHaveText('COOP : ON');
     await expect(page.locator('#conteneur-principal-coop')).toBeAttached({ timeout: 10000 });
@@ -433,10 +446,11 @@ export async function demarrerPartieCoop(page) {
 export async function terminerPartieCoopCourante(page) {
     await expect(page.locator('body')).toHaveClass(/coop-active/, { timeout: 15000 });
     const declenche = await page.evaluate(async () => {
-        const { terminerCooperatif } = await import('/js/coop-jeu.js');
-        if (typeof terminerCooperatif !== 'function') return false;
-        terminerCooperatif('j1');
-        return true;
+        if (typeof window.__NEO_TEST__?.terminerPartieCoop === 'function') {
+            await window.__NEO_TEST__.terminerPartieCoop();
+            return true;
+        }
+        return false;
     });
     expect(declenche).toBe(true);
     await expect(page.locator('#ecran-game-over-coop')).toHaveClass(/actif/, { timeout: 5000 });

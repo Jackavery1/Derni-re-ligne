@@ -29,6 +29,8 @@ export function estNeoTestAutorise() {
  *   emettreEvenementBusJeu?: (evenement: string, payload?: unknown) => void
  *   menuAnimActif?: () => boolean
  *   simulerGameOverBossDistorsion?: () => void
+ *   terminerPartieCoop?: () => Promise<void>
+ *   basculerPauseCoop?: () => Promise<void>
  * }} api
  */
 export function exposerNeoTestApi(api) {

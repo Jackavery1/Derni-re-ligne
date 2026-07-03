@@ -165,6 +165,16 @@ export function initialiserNeoTestApi() {
                 store.histoire.etat = etatHist;
                 obtenirActions().terminerPartie?.(false, { immediat: true });
             },
+            terminerPartieCoop: async () => {
+                const { terminerCooperatif } = await import('./coop-jeu.js');
+                terminerCooperatif('j1');
+            },
+            basculerPauseCoop: async () => {
+                const { assurerInputCoop } = await import('./modes-input-lazy.js');
+                await assurerInputCoop();
+                const { basculerPauseCoop } = await import('./coop-jeu.js');
+                basculerPauseCoop();
+            },
         });
     });
 }

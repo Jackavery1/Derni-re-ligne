@@ -148,8 +148,7 @@ export async function basculerOracleDepuisSelection(page) {
 export async function basculerCoopDepuisSelection(page) {
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await expect(page.locator('body')).not.toHaveClass(/partie-active/);
-    await page.evaluate(async () => {
-        const { basculerModeCoop } = await import('/js/coop-jeu.js');
-        basculerModeCoop();
-    });
+    await page.evaluate(() => document.getElementById('btn-panneau-detail-fermer')?.click());
+    await page.evaluate(() => document.getElementById('toggle-coop')?.click());
+    await expect(page.locator('#toggle-coop')).toHaveClass(/actif/);
 }
