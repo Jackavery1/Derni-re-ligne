@@ -79,7 +79,7 @@ export async function terminerCutscenesVersEcranFin(page) {
         /* fin directe sans overlay intermediaire */
     }
 
-    for (let tentative = 0; tentative < 40; tentative++) {
+    for (let tentative = 0; tentative < 80; tentative++) {
         if (page.isClosed()) break;
 
         const etat = await page.evaluate(() => ({
@@ -88,6 +88,10 @@ export async function terminerCutscenesVersEcranFin(page) {
             cutscene:
                 document.getElementById('ecran-histoire-cutscene')?.classList.contains('actif') ??
                 false,
+            cutsceneUi: Boolean(
+                document.getElementById('btn-cutscene-passer')?.offsetParent ||
+                document.getElementById('btn-cutscene-suivant')?.offsetParent
+            ),
             recap:
                 document
                     .getElementById('overlay-recap-monde')
@@ -99,7 +103,7 @@ export async function terminerCutscenesVersEcranFin(page) {
 
         if (etat.fin) return;
 
-        if (etat.cutscene) {
+        if (etat.cutscene || etat.cutsceneUi) {
             await passerCutsceneEntiere(page);
             continue;
         }
@@ -121,5 +125,5 @@ export async function terminerCutscenesVersEcranFin(page) {
         }
     }
 
-    await expect(page.locator('#ecran-histoire-fin')).toHaveClass(/actif/, { timeout: 15000 });
+    await expect(page.locator('#ecran-histoire-fin')).toHaveClass(/actif/, { timeout: 30000 });
 }

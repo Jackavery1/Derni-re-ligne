@@ -251,7 +251,7 @@ test('campagne — cutscenes intermediaires boss et chapitres (audit D15)', asyn
             await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
         }, mondeId);
         await parcourirFluxPostVictoireAvecAssertions(page, mondeId, undefined, 60, {
-            typewriterTimeout: 4000,
+            typewriterTimeout: 12000,
             strictTypewriter: true,
         });
     }

@@ -1,7 +1,17 @@
-import { ETAT_HISTOIRE_VIDE, SEQUENCE_HISTOIRE } from '../js/histoire-donnees.js';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 import { ETAT_HISTOIRE_BOSS_BRASIER } from './etats-histoire-base.mjs';
 import { CLE_FRAGMENT_PAR_MONDE } from '../js/histoire-manager-post-monde.js';
 import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
+
+const { SEQUENCE_HISTOIRE } = JSON.parse(
+    readFileSync(
+        join(dirname(fileURLToPath(import.meta.url)), '../data/histoire-donnees.json'),
+        'utf8'
+    )
+);
 
 const INTERLUDES_PAR_MONDE = {
     monde_rouille: 'interlude_gardiens',
