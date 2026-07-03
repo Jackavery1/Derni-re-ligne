@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { store } from '../js/store-core.js';
+import { store } from '../js/store-jeu.js';
 import {
     chargerEtatHistoire,
     sauvegarderEtatHistoire,
@@ -10,6 +10,13 @@ import {
 } from '../js/progression.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 import { obtenirTypeFin, SCENE_DEFAUT_POST_MONDE } from '../js/histoire-narratif.js';
+import { CUTSCENES_POST_MONDE } from '../js/histoire-textes/cutscenes-post-monde.js';
+import { CUTSCENES_VICTOIRE_BOSS } from '../js/histoire-textes/cutscenes-boss-victoire.js';
+import { TRANSITIONS_CHAPITRE } from '../js/histoire-textes/chapitres.js';
+import {
+    MARQUEURS_NARRATIFS_POST_MONDE,
+    MARQUEURS_NARRATIFS_CAMPAGNE,
+} from '../e2e/helpers-narratif.mjs';
 import { chargerDonneesCodex, codexDebloque, verifierCodex } from '../js/codex.js';
 import { statsGlobales } from '../js/achievements.js';
 import { meteo } from '../js/meteo.js';
@@ -87,6 +94,69 @@ describe('corrections audit', () => {
         });
     });
 
+    describe('marqueurs narratifs post-monde', () => {
+        function extraireCorpus(entree) {
+            const lignes = Array.isArray(entree) ? entree : (entree?.lignes ?? []);
+            return lignes.map((l) => l.texte).join('\n');
+        }
+
+        for (const [mondeId, marqueurs] of Object.entries(MARQUEURS_NARRATIFS_POST_MONDE)) {
+            it(`${mondeId} — marqueurs présents dans CUTSCENES_POST_MONDE`, () => {
+                const entree = CUTSCENES_POST_MONDE[mondeId];
+                expect(entree, mondeId).toBeTruthy();
+                const corpus = extraireCorpus(entree);
+                for (const re of marqueurs) {
+                    expect(corpus, `${mondeId} → ${re}`).toMatch(re);
+                }
+            });
+        }
+
+        const TRANSITION_PAR_MONDE = {
+            monde_prologue: 'vers_chapitre_1',
+            monde_boss_1: 'vers_chapitre_2',
+            monde_boss_2: 'vers_chapitre_3',
+            monde_boss_3: 'vers_chapitre_4',
+            monde_boss_4: 'vers_finale',
+        };
+
+        const VICTOIRE_BOSS_PAR_MONDE = {
+            monde_boss_1: 'brasier',
+            monde_boss_2: 'sentinelle',
+            monde_boss_3: 'archiviste',
+            monde_boss_4: 'avantgarde',
+        };
+
+        for (const [mondeId, marqueurs] of Object.entries(MARQUEURS_NARRATIFS_CAMPAGNE)) {
+            it(`${mondeId} — marqueurs campagne dans le corpus narratif`, () => {
+                const parties = [];
+                if (CUTSCENES_POST_MONDE[mondeId]) {
+                    parties.push(extraireCorpus(CUTSCENES_POST_MONDE[mondeId]));
+                }
+                const cleTransition = TRANSITION_PAR_MONDE[mondeId];
+                if (cleTransition && TRANSITIONS_CHAPITRE[cleTransition]) {
+                    parties.push(extraireCorpus(TRANSITIONS_CHAPITRE[cleTransition]));
+                }
+                const bossId = VICTOIRE_BOSS_PAR_MONDE[mondeId];
+                if (bossId && CUTSCENES_VICTOIRE_BOSS[bossId]) {
+                    parties.push(extraireCorpus(CUTSCENES_VICTOIRE_BOSS[bossId]));
+                }
+                if (mondeId === 'monde_finale') {
+                    for (const suffixe of ['normal', 'vrai', 'secret']) {
+                        const cle = `distorsion_${suffixe}`;
+                        if (CUTSCENES_VICTOIRE_BOSS[cle]) {
+                            parties.push(extraireCorpus(CUTSCENES_VICTOIRE_BOSS[cle]));
+                        }
+                    }
+                }
+                const corpus = parties.join('\n');
+                expect(corpus.length, mondeId).toBeGreaterThan(0);
+                for (const re of marqueurs) {
+                    expect(corpus, `${mondeId} → ${re}`).toMatch(re);
+                }
+            });
+        }
+    });
+
     describe('fin secrète', () => {
         it('exige la complétion de LA TRAME en plus des conditions Trame', () => {
             const e = etatHistoireComplet();
@@ -155,6 +225,12 @@ describe('corrections audit', () => {
             sauvegarderRecordCoopBiome('classique', 99999);
             expect(obtenirRecordBiome('classique')).toBe(1000);
             expect(obtenirRecordCoopBiome('classique')).toBe(99999);
+        });
+
+        it('sauvegarderRecordBiome ignore un score inférieur en défaite', () => {
+            sauvegarderRecordBiome('classique', 5000, 3);
+            expect(sauvegarderRecordBiome('classique', 2000, 2)).toBe(false);
+            expect(obtenirRecordBiome('classique')).toBe(5000);
         });
     });
 

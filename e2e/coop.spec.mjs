@@ -7,11 +7,11 @@ import {
     attendreApplicationPrete,
     attendreNotificationsInitiales,
     fermerInfobulleContexteSiVisible,
-    ETAT_DEBLOCAGE_COMPLET,
+    ETAT_DEBLOCAGE_META_RAPIDE,
 } from './helpers.mjs';
 
 test('toggle coop active le mode coopératif', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await attendreNotificationsInitiales(page);
@@ -32,7 +32,7 @@ test('partie coop affiche le plateau partagé', async ({ page }) => {
 });
 
 test('codex accessible depuis le menu', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-codex').click();
@@ -74,7 +74,7 @@ test('coop paysage mobile — contrôles latéraux visibles', async ({ page }) =
 });
 
 test('codex sans violations accessibilité critiques', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await page.locator('#btn-codex').click();
     const result = await new AxeBuilder({ page }).include('#ecran-codex').analyze();

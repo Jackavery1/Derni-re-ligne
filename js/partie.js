@@ -9,6 +9,7 @@ import {
     secousse,
     flashVerrou,
     flashLignes,
+    flashTopout,
     dasEtat,
     obtenirBiomeActif,
     obtenirSacPieces,
@@ -59,7 +60,7 @@ import {
     signalerApparitionPiece,
 } from './profil-jeu.js';
 import { annoncerPieceCourante } from './annonces.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { obtenirIdBiomeFond } from './biome-fond.js';
 import { initialiserAudioBiome } from './audio-partie.js';
@@ -153,6 +154,7 @@ function initialiserEtatPartie() {
     flashVerrou.cellules = [];
     flashLignes.timer = 0;
     flashLignes.lignes = [];
+    flashTopout.timer = 0;
     definirDerniereSecondeTemps(-1);
     obtenirSacPieces().length = 0;
     remplirSac();

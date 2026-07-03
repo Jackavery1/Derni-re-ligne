@@ -156,6 +156,7 @@
  * @property {{ timer: number, intensite: number, duree: number }} secousse
  * @property {{ cellules: { x: number, y: number }[], timer: number, duree: number }} flashVerrou
  * @property {{ lignes: number[], timer: number, duree: number }} flashLignes
+ * @property {{ timer: number, duree: number }} flashTopout
  * @property {Record<string, boolean>} touchesActives
  * @property {ReturnType<import('./store-histoire.js').creerEtatHistoireRuntime>} histoire
  */

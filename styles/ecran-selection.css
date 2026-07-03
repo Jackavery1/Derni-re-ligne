@@ -183,7 +183,7 @@
 
 .sel-biome-select {
     width: 100%;
-    min-height: 44px;
+    min-height: 48px;
     padding: 10px 12px;
     font-family: inherit;
     font-size: 0.45rem;
@@ -1199,13 +1199,15 @@ body.effets-reduits .panneau-detail-progression-fill {
     display: none;
     align-items: center;
     justify-content: center;
-    width: 100vw;
+    box-sizing: border-box;
+    width: 100dvw;
     height: 100dvh;
     overflow: visible;
 }
 
 body.coop-active #conteneur-principal-coop {
     display: flex;
+    padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
 }
 
 body.coop-active #conteneur-principal {
@@ -1369,6 +1371,52 @@ body.coop-active #conteneur-principal {
     color: var(--texte-dim);
     letter-spacing: 2px;
     text-align: center;
+}
+
+.btn-pause-coop-mobile {
+    display: none;
+    position: fixed;
+    top: max(4px, var(--safe-top));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9600;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 8px 14px;
+    background: rgba(0, 0, 0, 0.72);
+    border: 1px solid var(--bordure);
+    color: var(--texte);
+    font-family: var(--police);
+    font-size: 0.42rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body.coop-active.controles-tactiles-actifs .btn-pause-coop-mobile {
+    display: flex;
+}
+
+@media (pointer: coarse) {
+    body.coop-active .btn-pause-coop-mobile {
+        display: flex;
+    }
+}
+
+@media (max-width: 768px) {
+    body.coop-active .btn-pause-coop-mobile {
+        display: flex;
+    }
+}
+
+@media (max-height: 768px) and (orientation: landscape) {
+    body.coop-active .btn-pause-coop-mobile {
+        display: flex;
+    }
 }
 
 @media (pointer: coarse) {

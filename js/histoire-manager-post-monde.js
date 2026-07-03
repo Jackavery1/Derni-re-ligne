@@ -10,7 +10,7 @@ import {
     afficherDecouverteLabo,
     obtenirCutscenePostMonde,
 } from './histoire-narratif.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
 import { sauvegarderEtatHistoire } from './progression.js';
 import { definirExpressionVera } from './portraits-vera.js';

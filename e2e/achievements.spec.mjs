@@ -3,11 +3,11 @@ import {
     preparerPageSansSw,
     attendreApplicationPrete,
     attendreNotificationsInitiales,
-    ETAT_DEBLOCAGE_COMPLET,
+    ETAT_DEBLOCAGE_META_RAPIDE,
 } from './helpers.mjs';
 
 test('navigation achievements affiche le memorial et la grille', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await attendreNotificationsInitiales(page);
@@ -19,7 +19,7 @@ test('navigation achievements affiche le memorial et la grille', async ({ page }
 });
 
 test('filtres achievements activent un bouton', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-achievements').click();
@@ -30,7 +30,7 @@ test('filtres achievements activent un bouton', async ({ page }) => {
 });
 
 test('retour depuis achievements revient au titre', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-achievements').click();

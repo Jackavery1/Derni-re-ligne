@@ -6,7 +6,15 @@ import {
 } from './store-jeu.js';
 import { etat } from './store-jeu.js';
 import { obtenirCouleurPieceParType } from './piece-jeu.js';
-import { dessinerCellule, dessinerPreview, dessinerParticules } from './rendu-jeu.js';
+import {
+    dessinerCellule,
+    dessinerPreview,
+    dessinerParticules,
+    dessinerFlashLignes,
+    dessinerFlashVerrou,
+    dessinerFlashTopout,
+    obtenirDecalageSecousse,
+} from './rendu-jeu.js';
 import { coop, DEMI_LARGEUR, coop_estPositionValide } from './coop-logique.js';
 import { obtenirCanvas } from './dom-utils.js';
 import { dessinerMotifsAccessibilite, dessinerMotifsCoopPieces } from './rendu-accessibilite.js';
@@ -184,7 +192,14 @@ export function coop_dessinerFlashSynchro() {
 
 export function coop_rendreFrame() {
     const ctx = obtenirCtx();
+    const canvasPlateau = obtenirCanvasPlateau();
+    if (ctx && canvasPlateau) {
+        const dec = obtenirDecalageSecousse();
+        ctx.save();
+        ctx.translate(dec.x, dec.y);
+    }
     coop_dessinerPlateau();
+    dessinerFlashLignes();
     const piecesCoop = [];
     for (const j of ['j1', 'j2']) {
         const piece = coop[j].pieceActuelle;
@@ -197,6 +212,9 @@ export function coop_rendreFrame() {
     coop_dessinerPiecesActives();
     if (ctx) dessinerMotifsCoopPieces(ctx, piecesCoop, obtenirFormeCoop);
     coop_dessinerLignesEnAttente();
+    dessinerFlashVerrou();
     coop_dessinerFlashSynchro();
+    dessinerFlashTopout();
     dessinerParticules();
+    if (ctx && canvasPlateau) ctx.restore();
 }

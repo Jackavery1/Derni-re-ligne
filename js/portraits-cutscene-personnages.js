@@ -16,7 +16,7 @@ function _portraitVera(ctx, w, h, t, params) {
 
 /** @param {Record<string, number | boolean | number[]> | null | undefined} params */
 function _portraitDistorsion(ctx, w, h, t, params) {
-    dessinerPortraitDistorsion(ctx, w, h, t, params);
+    dessinerPortraitDistorsion(ctx, w, h, t, { ...(params ?? {}), fondTransparent: true });
 }
 
 /** @param {Record<string, number | boolean | number[]> | null | undefined} params */

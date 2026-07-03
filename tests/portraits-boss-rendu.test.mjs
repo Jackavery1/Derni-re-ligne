@@ -23,7 +23,7 @@ import {
     obtenirParamsExpressionPortrait,
     reinitExpressionsCutscene,
 } from '../js/expressions-cutscene.js';
-import { store } from '../js/store-core.js';
+import { store } from '../js/store-jeu.js';
 
 function creerCtxMock() {
     const gradient = { addColorStop: vi.fn() };

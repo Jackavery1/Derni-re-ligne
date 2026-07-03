@@ -1,6 +1,6 @@
 import { dessinerMotifBiome } from './rendu-motifs-biome.js';
 import { obtenirEffetsAccessibiliteReduits } from './accessibilite.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { resoudreConfigFondBiome, obtenirConfigFondBiome } from './rendu-fond-biome-donnees.js';
 import {
     creerParticulesFondBiome,

@@ -6,7 +6,7 @@ import {
     selectionnerBiomeClavier,
     ouvrirCarteHistoire,
     fermerInfobulleContexteSiVisible,
-    ETAT_DEBLOCAGE_COMPLET,
+    ETAT_DEBLOCAGE_META_RAPIDE,
     ETAT_DEBLOCAGE_MONDE_LIBRE,
     ETAT_FIN_VRAIE_PRET,
     ETAT_AVANT_FIN_SECRETE,
@@ -23,7 +23,7 @@ import {
     basculerCoopDepuisSelection,
 } from './helpers.mjs';
 
-async function ouvrirSelectionModes(page, etat = ETAT_DEBLOCAGE_COMPLET) {
+async function ouvrirSelectionModes(page, etat = ETAT_DEBLOCAGE_META_RAPIDE) {
     await preparerSelectionPremiereVisiteModes(page, etat);
     await page.goto('/');
     await attendreApplicationPrete(page);
@@ -52,6 +52,34 @@ test('audit B — haptique en partie via bus lignes effacees', async ({ page }) 
 
     const motif = await page.evaluate(() => window.__NEO_VIBRATE_LOG__?.[0] ?? null);
     expect(motif).toEqual([15, 40, 15, 40, 20]);
+});
+
+test('audit B — haptique sur mute en partie', async ({ page }) => {
+    await installerJournalVibrations(page);
+    await demarrerPartie(page);
+
+    const ok = await page.evaluate(() => {
+        window.__NEO_VIBRATE_LOG__ = [];
+        document.getElementById('btn-mute')?.click();
+        return Array.isArray(window.__NEO_VIBRATE_LOG__) && window.__NEO_VIBRATE_LOG__.length > 0;
+    });
+    expect(ok).toBe(true);
+});
+
+test('audit B — haptique sur rafraichir leaderboard', async ({ page }) => {
+    await installerJournalVibrations(page);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-options').click();
+    await expect(page.locator('#ecran-options')).toHaveClass(/actif/);
+
+    const ok = await page.evaluate(() => {
+        window.__NEO_VIBRATE_LOG__ = [];
+        document.getElementById('btn-rafraichir-leaderboard')?.click();
+        return Array.isArray(window.__NEO_VIBRATE_LOG__) && window.__NEO_VIBRATE_LOG__.length > 0;
+    });
+    expect(ok).toBe(true);
 });
 
 test('audit B — animation menu arretee en partie', async ({ page }) => {
@@ -128,7 +156,7 @@ test('audit B — constellation biome verrouille oriente vers histoire', async (
 });
 
 test('audit B — codex chemins caches verrouille avec condition', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-codex').click();

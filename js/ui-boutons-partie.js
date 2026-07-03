@@ -34,6 +34,9 @@ export function initialiserBoutonsPartie() {
     lierBouton('btn-pause-coop', () => {
         void avecCoop().then((m) => m.basculerPauseCoop());
     });
+    lierBouton('btn-pause-coop-mobile', () => {
+        void avecCoop().then((m) => m.basculerPauseCoop());
+    });
     lierBouton('btn-coop-reprendre', () => {
         void avecCoop().then((m) => m.basculerPauseCoop());
     });
@@ -77,6 +80,10 @@ export function initialiserBoutonsPartie() {
         });
     });
     lierBouton('btn-pause', () => {
+        if (modeArchiActif()) void avecArchi().then((m) => m.archi_basculerPause());
+        else obtenirActions().basculerPause?.();
+    });
+    lierBouton('btn-pause-mobile', () => {
         if (modeArchiActif()) void avecArchi().then((m) => m.archi_basculerPause());
         else obtenirActions().basculerPause?.();
     });

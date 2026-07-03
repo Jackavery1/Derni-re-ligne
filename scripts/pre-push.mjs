@@ -17,6 +17,8 @@ const etapes = [
     'node scripts/verifier-bundle.mjs',
     'npm run test:e2e:audit',
     'npm run test:e2e:smoke:dist',
+    'npm run test:e2e:responsive:dist',
+    'npm run test:e2e:responsive',
     'npm run test:e2e:perf',
     'npm run test:e2e',
 ];

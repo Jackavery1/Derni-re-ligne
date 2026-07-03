@@ -28,7 +28,7 @@ describe('coop-game-feel', () => {
             areRestant: 0,
             spawnGraceRestant: 0,
             coyoteRestant: 0,
-            inputBuffer: null,
+            inputBuffer: [],
         };
         coopReinitialiserGameFeelJoueur('j1');
         coop.j1.pieceActuelle = { type: 'O', rotation: 0, x: 1, y: 0, joueur: 'j1' };
@@ -44,7 +44,7 @@ describe('coop-game-feel', () => {
     it('bufferise puis consomme une rotation après ARE', () => {
         coopDemarrerAre('j1');
         coopBufferiserInput('j1', 'tourner_cw');
-        expect(coop.j1.inputBuffer).toBe('tourner_cw');
+        expect(coop.j1.inputBuffer).toEqual(['tourner_cw']);
         coop.j1.areRestant = 0;
         const tourner = vi.fn();
         coopMettreAJourGameFeel('j1', 16, {
@@ -52,12 +52,40 @@ describe('coop-game-feel', () => {
             actions: { tourner },
         });
         expect(tourner).toHaveBeenCalledWith(1);
-        expect(coop.j1.inputBuffer).toBeNull();
+        expect(coop.j1.inputBuffer).toEqual([]);
+    });
+
+    it('conserve deux inputs coop sans écrasement', () => {
+        coopBufferiserInput('j1', 'gauche');
+        coopBufferiserInput('j1', 'tourner_cw');
+        expect(coop.j1.inputBuffer).toEqual(['gauche', 'tourner_cw']);
+        const gauche = vi.fn();
+        coopMettreAJourGameFeel('j1', 16, {
+            pieceValide: () => true,
+            actions: { gauche },
+        });
+        expect(gauche).toHaveBeenCalled();
+        expect(coop.j1.inputBuffer).toEqual(['tourner_cw']);
+    });
+
+    it('bufferise puis consomme un déplacement après pause', () => {
+        coop.estEnPause = true;
+        coopBufferiserInput('j1', 'gauche');
+        expect(coop.j1.inputBuffer).toEqual(['gauche']);
+        coop.estEnPause = false;
+        const gauche = vi.fn();
+        coopMettreAJourGameFeel('j1', 16, {
+            pieceValide: () => true,
+            actions: { gauche },
+        });
+        expect(gauche).toHaveBeenCalled();
+        expect(coop.j1.inputBuffer).toEqual([]);
     });
 
     it('grace spawn retarde le game over sur collision', () => {
         const surCollision = vi.fn();
         coopDemarrerGraceSpawn('j1');
+        expect(coopGraceSpawnActive('j1')).toBe(true);
         coopMettreAJourGameFeel('j1', 16, {
             pieceValide: () => false,
             surCollision,

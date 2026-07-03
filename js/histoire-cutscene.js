@@ -1,5 +1,5 @@
 /** Cutscene histoire — orchestration (état séquence, navigation, callbacks). */
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { ECRANS } from './ecrans-config.js';
 import { etat } from './store-jeu.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
@@ -13,7 +13,7 @@ import {
 } from './histoire-cutscene-fonds.js';
 import { reinitialiserCacheScenes } from './scenes-cutscene.js';
 import {
-    initDomCutscene,
+    initialiserDomCutscene,
     viderTextesCutscene,
     overlayNarratifVisible,
     mettreAJourProgressCutscene,
@@ -28,7 +28,7 @@ import {
 import { reinitExpressionsCutscene } from './expressions-cutscene.js';
 import { assurerFeuilleStyle } from './charger-feuille-style.js';
 import { AudioMoteur } from './audio.js';
-import { stopTypewriter } from './histoire-cutscene-typewriter.js';
+import { arreterMachineAEcrire } from './histoire-cutscene-typewriter.js';
 import {
     normaliserEntreeCutscene,
     prechargerScenesCutscene,
@@ -120,7 +120,7 @@ function _terminerCutscene() {
     if (!store.histoire.cutscene.enCours && !cutsceneCallbackFin) return;
     _finCutsceneEnCours = true;
 
-    stopTypewriter();
+    arreterMachineAEcrire();
     viderTextesCutscene();
     viderProgressCutscene();
     stopBouclePortraitsCutscene();
@@ -169,7 +169,7 @@ function _demarrerCutsceneHistoire(textes, personnages, onFin, options = {}) {
         () => passerCutscene()
     );
 
-    if (!initDomCutscene()) {
+    if (!initialiserDomCutscene()) {
         logger.warn('[cutscene] éléments portrait introuvables dans le DOM');
     }
     reinitVisuelPortraitsCutscene();
@@ -258,7 +258,7 @@ async function _demarrerAffichageCutscene(entree, options = {}) {
     detecterParticipantsCutscene(_obtenirSequenceCutscene());
     definirHumeurRoboCutscene(options.humeurRobo ?? 'content');
 
-    stopTypewriter();
+    arreterMachineAEcrire();
     stopBouclePortraitsCutscene();
     stopFondCutscene();
     viderTextesCutscene();

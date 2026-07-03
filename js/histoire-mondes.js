@@ -1,7 +1,7 @@
 import { JOURNAUX_VERA, SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
 import { chargerEtatHistoire, sauvegarderEtatHistoire } from './progression.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 
 export const SEUILS_COMPLETION = {
     classique: 10,

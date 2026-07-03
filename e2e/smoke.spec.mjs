@@ -231,6 +231,42 @@ test('partie marathon paysage mobile — timer et panneau stats visibles', async
     expect(metriques.timerVisible).toBe(true);
 });
 
+test('partie laptop 1366x768 — panneaux sans scroll horizontal', async ({ page }) => {
+    await page.setViewportSize({ width: 1366, height: 768 });
+    await demarrerPartie(page);
+
+    const metriques = await page.evaluate(() => {
+        const panneaux = [...document.querySelectorAll('#interface-jeu .panneau')];
+        const preview = document.getElementById('canvas-preview');
+        const previewRect = preview?.getBoundingClientRect();
+        const sectionNext = preview?.closest('.section')?.getBoundingClientRect();
+        return {
+            panneaux: panneaux.map((p) => {
+                const style = getComputedStyle(p);
+                return {
+                    barreHorizontaleVisible:
+                        style.overflowX !== 'hidden' &&
+                        style.overflowX !== 'clip' &&
+                        p.scrollWidth > p.clientWidth + 1,
+                };
+            }),
+            previewDansSection: Boolean(
+                previewRect &&
+                sectionNext &&
+                previewRect.left >= sectionNext.left - 1 &&
+                previewRect.right <= sectionNext.right + 1
+            ),
+            largeurPanneau: panneaux[0]?.getBoundingClientRect().width ?? 0,
+        };
+    });
+
+    expect(metriques.largeurPanneau).toBeGreaterThanOrEqual(120);
+    expect(metriques.previewDansSection).toBe(true);
+    for (const p of metriques.panneaux) {
+        expect(p.barreHorizontaleVisible).toBe(false);
+    }
+});
+
 test('partie solo desktop — contrôles tactiles masqués par défaut', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await demarrerPartie(page);

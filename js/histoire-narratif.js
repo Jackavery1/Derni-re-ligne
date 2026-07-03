@@ -4,6 +4,9 @@ import { creerFile } from './file-narrative.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { extraireLignesCutscene } from './histoire-cutscene-moteur.js';
 import { logger } from './logger.js';
+import { SCENE_DEFAUT_POST_MONDE } from './histoire-narratif-scenes.js';
+
+export { SCENE_DEFAUT_POST_MONDE } from './histoire-narratif-scenes.js';
 
 function _obtenirEtatHistoireLocal() {
     return obtenirEtatHistoirePersiste();
@@ -208,24 +211,6 @@ export function typeFinVersCleBoss(finId) {
  * @param {boolean} premiereCompletion
  * @returns {{ scene?: string, lignes: Array<{ personnage?: string, texte: string, scene?: string, humeur?: string }> } | null}
  */
-export const SCENE_DEFAUT_POST_MONDE = {
-    monde_prologue: 'labo',
-    monde_lave: 'seuil_brasier',
-    monde_rouille: 'labo',
-    monde_ocean: 'observatoire',
-    monde_foret: 'fragmentation',
-    monde_glace: 'seuil_sentinelle',
-    monde_desert: 'observatoire',
-    monde_eclipse: 'fragmentation',
-    monde_cyber: 'labo',
-    monde_fuochi: 'seuil_brasier',
-    monde_cosmos: 'observatoire',
-    monde_vide: 'vide_errance',
-    monde_miroir: 'fragmentation',
-    monde_trame: 'trame',
-    monde_paradoxe: 'trame',
-};
-
 export function obtenirCutscenePostMonde(mondeId, premiereCompletion) {
     if (!premiereCompletion) return null;
     const entree = _textes().CUTSCENES_POST_MONDE[mondeId];

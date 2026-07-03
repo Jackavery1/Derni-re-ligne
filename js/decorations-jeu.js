@@ -1,6 +1,6 @@
 import { CONFIG, BIOMES } from './config.js';
 import { statsGlobales } from './achievements.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import {
     etat,
     obtenirBiomeActif,

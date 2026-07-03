@@ -7,6 +7,7 @@ import {
     archi_changerPiece,
     archi_annuler,
 } from './archi-logique.js';
+import { emettre } from './bus-jeu.js';
 import {
     archi_basculerPause,
     archi_terminerNiveau,
@@ -21,17 +22,26 @@ function archiPeutRecevoirInput() {
 
 function archiDeplacerGauche() {
     if (!archiPeutRecevoirInput()) return;
-    if (archi_estPositionValide(archi.pieceActuelle, -1, 0)) archi.pieceActuelle.x--;
+    if (archi_estPositionValide(archi.pieceActuelle, -1, 0)) {
+        archi.pieceActuelle.x--;
+        emettre('piece:son', { type: 'deplacement' });
+    }
 }
 
 function archiDeplacerDroite() {
     if (!archiPeutRecevoirInput()) return;
-    if (archi_estPositionValide(archi.pieceActuelle, 1, 0)) archi.pieceActuelle.x++;
+    if (archi_estPositionValide(archi.pieceActuelle, 1, 0)) {
+        archi.pieceActuelle.x++;
+        emettre('piece:son', { type: 'deplacement' });
+    }
 }
 
 function archiDeplacerBas() {
     if (!archiPeutRecevoirInput()) return;
-    if (archi_estPositionValide(archi.pieceActuelle, 0, 1)) archi.pieceActuelle.y++;
+    if (archi_estPositionValide(archi.pieceActuelle, 0, 1)) {
+        archi.pieceActuelle.y++;
+        emettre('piece:son', { type: 'deplacement' });
+    }
 }
 
 function archiTourner() {

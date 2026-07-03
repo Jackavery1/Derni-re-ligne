@@ -16,7 +16,7 @@ import {
     reinitExpressionsCutscene,
     expressionsCutsceneActives,
 } from './expressions-cutscene.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 
 let _personnageGauche = null;
 let _personnageDroite = null;

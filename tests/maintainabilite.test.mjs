@@ -9,6 +9,15 @@ const SEUIL_HOTSPOT_LIGNES = 450;
 const MARQUEUR_DEBUT = '/* PRECACHE:DEBUT */';
 const MARQUEUR_FIN = '/* PRECACHE:FIN */';
 
+const ALLOWLIST_STORE_CORE = new Set([
+    'store-core.js',
+    'store-jeu.js',
+    'store-etat-partie.js',
+    'store-refs-canvas.js',
+    'accessibilite.js',
+    'mode-histoire.js',
+]);
+
 function listerFichiersJs(dossier) {
     /** @type {string[]} */
     const fichiers = [];
@@ -23,20 +32,39 @@ function listerFichiersJs(dossier) {
     return fichiers;
 }
 
+function compterLignes(chemin) {
+    return readFileSync(chemin, 'utf8').split('\n').length;
+}
+
 describe('maintainabilite', () => {
     it('store.histoire.actif est encapsule dans mode-histoire.js', () => {
-        const fichiers = readdirSync(racineJs).filter((f) => f.endsWith('.js'));
-        for (const fichier of fichiers) {
-            if (fichier === 'mode-histoire.js') continue;
-            const contenu = readFileSync(join(racineJs, fichier), 'utf8');
-            expect(contenu, fichier).not.toMatch(/store\.histoire\.actif/);
+        for (const chemin of listerFichiersJs(racineJs)) {
+            const nom = chemin.split(/[/\\]/).pop();
+            if (nom === 'mode-histoire.js') continue;
+            const contenu = readFileSync(chemin, 'utf8');
+            expect(contenu, chemin).not.toMatch(/store\.histoire\.actif/);
         }
+    });
+
+    it('store-core est importe uniquement par la couche etat', () => {
+        const violations = [];
+        for (const chemin of listerFichiersJs(racineJs)) {
+            const nom = chemin.split(/[/\\]/).pop();
+            if (ALLOWLIST_STORE_CORE.has(nom)) continue;
+            const contenu = readFileSync(chemin, 'utf8');
+            if (/from ['"]\.\/store-core\.js['"]/.test(contenu)) {
+                violations.push(
+                    chemin.replace(racineJs + '\\', 'js\\').replace(racineJs + '/', 'js/')
+                );
+            }
+        }
+        expect(violations, JSON.stringify(violations, null, 2)).toEqual([]);
     });
 
     it(`aucun module js ne depasse ${SEUIL_HOTSPOT_LIGNES} lignes`, () => {
         const depassements = [];
         for (const chemin of listerFichiersJs(racineJs)) {
-            const lignes = readFileSync(chemin, 'utf8').split('\n').length;
+            const lignes = compterLignes(chemin);
             if (lignes > SEUIL_HOTSPOT_LIGNES) {
                 depassements.push({ chemin: chemin.replace(racineJs + '\\', 'js\\'), lignes });
             }
@@ -44,13 +72,18 @@ describe('maintainabilite', () => {
         expect(depassements, JSON.stringify(depassements, null, 2)).toEqual([]);
     });
 
+    it(`sw.js ne depasse pas ${SEUIL_HOTSPOT_LIGNES} lignes`, () => {
+        const lignes = compterLignes(join(racineProjet, 'sw.js'));
+        expect(lignes).toBeLessThanOrEqual(SEUIL_HOTSPOT_LIGNES);
+    });
+
     it('tous les modules js racine sont listes dans le precache SW dev', () => {
-        const sw = readFileSync(join(racineProjet, 'sw.js'), 'utf8');
-        const debut = sw.indexOf(MARQUEUR_DEBUT);
-        const fin = sw.indexOf(MARQUEUR_FIN);
+        const swPrecache = readFileSync(join(racineProjet, 'sw-precache.js'), 'utf8');
+        const debut = swPrecache.indexOf(MARQUEUR_DEBUT);
+        const fin = swPrecache.indexOf(MARQUEUR_FIN);
         expect(debut).toBeGreaterThanOrEqual(0);
         expect(fin).toBeGreaterThan(debut);
-        const blocPrecache = sw.slice(debut, fin);
+        const blocPrecache = swPrecache.slice(debut, fin);
 
         const manquants = readdirSync(racineJs)
             .filter((f) => f.endsWith('.js'))

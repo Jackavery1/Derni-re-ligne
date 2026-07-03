@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { ETAT_DEBLOCAGE_COMPLET } from './etats-histoire.mjs';
+import { ETAT_DEBLOCAGE_META_RAPIDE } from './etats-histoire.mjs';
 
 /** @param {import('@playwright/test').Page} page */
 export async function installerJournalVibrations(page) {
@@ -17,7 +17,10 @@ export async function installerJournalVibrations(page) {
 }
 
 /** @param {import('@playwright/test').Page} page @param {object} [etat] */
-export async function preparerSelectionPremiereVisiteModes(page, etat = ETAT_DEBLOCAGE_COMPLET) {
+export async function preparerSelectionPremiereVisiteModes(
+    page,
+    etat = ETAT_DEBLOCAGE_META_RAPIDE
+) {
     await installerJournalVibrations(page);
     await page.route('**/sw.js', (route) => route.abort());
     await page.addInitScript((e) => {

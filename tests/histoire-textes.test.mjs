@@ -11,6 +11,7 @@ import {
 } from '../js/histoire-textes.js';
 import { ACHIEVEMENTS_HISTOIRE } from '../js/achievements-histoire.js';
 import { INTRO_HISTOIRE, OUTRO_FINS } from '../js/histoire-textes/intro-interludes.js';
+import { TRANSITIONS_CHAPITRE } from '../js/histoire-textes/chapitres.js';
 import { SCENES_CUTSCENE } from '../js/scenes-cutscene.js';
 import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
 import { SEQUENCE_HISTOIRE } from '../js/histoire-donnees.js';
@@ -146,6 +147,14 @@ describe('histoire-textes — cohérence portraits', () => {
         }
     });
 
+    it('cutscenes victoire archiviste et avantgarde declarent une scene explicite', () => {
+        for (const bossId of ['archiviste', 'avantgarde']) {
+            const lignes = extraireLignesCutscene(CUTSCENES_VICTOIRE_BOSS[bossId]);
+            expect(lignes[0]?.scene, bossId).toBe(SCENE_DEFAUT_VICTOIRE_BOSS[bossId]);
+            expect(lignes.every((l) => l.scene)).toBe(true);
+        }
+    });
+
     it('narration francaise sans typos connues audit D', () => {
         const motifs = [
             /\btu as avance\b/i,
@@ -255,6 +264,33 @@ describe('histoire-textes — cohérence portraits', () => {
 
     it('humeurs de cutscene sont valides pour chaque personnage', () => {
         for (const { nomRegistre, cle, ligne } of itererLignesNarratives(REGISTRES_NARRATIFS)) {
+            if (!ligne.humeur) continue;
+            const pid = ligne.personnage ?? 'narrateur';
+            const rendu = idPortraitRendu(pid);
+            const valides = HUMEURS_PERSONNAGES[rendu] ?? HUMEURS_PERSONNAGES[pid];
+            expect(valides, `${nomRegistre}.${cle} ${pid}`).toBeTruthy();
+            expect(valides.includes(ligne.humeur), `${nomRegistre}.${cle} ${ligne.humeur}`).toBe(
+                true
+            );
+        }
+    });
+
+    it('humeurs intro et transitions chapitre sont valides', () => {
+        const lignes = [
+            ...(INTRO_HISTOIRE.lignes ?? []).map((ligne) => ({
+                nomRegistre: 'INTRO_HISTOIRE',
+                cle: 'intro',
+                ligne,
+            })),
+            ...Object.entries(TRANSITIONS_CHAPITRE).flatMap(([cle, entree]) =>
+                extraireLignesCutscene(entree).map((ligne) => ({
+                    nomRegistre: 'TRANSITIONS_CHAPITRE',
+                    cle,
+                    ligne,
+                }))
+            ),
+        ];
+        for (const { nomRegistre, cle, ligne } of lignes) {
             if (!ligne.humeur) continue;
             const pid = ligne.personnage ?? 'narrateur';
             const rendu = idPortraitRendu(pid);

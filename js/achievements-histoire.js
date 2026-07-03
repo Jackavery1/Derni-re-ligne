@@ -1,4 +1,4 @@
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { chargerEtatHistoire, sauvegarderEtatHistoire } from './progression.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { ETAT_HISTOIRE_VIDE } from './histoire-donnees.js';

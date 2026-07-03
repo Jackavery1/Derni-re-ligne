@@ -31,10 +31,18 @@ Vanilla ES modules en dev, bundle esbuild en prod.
 ## Règles utiles
 
 1. **Scoring partagé** — `score-partie.js` (`appliquerScoreLignes`) pour solo, coop et archi.
-2. **Mode histoire** — `modeHistoireEnCours()` pour toute lecture ; `activerModeHistoire()` / `desactiverModeHistoire()` pour les écritures (source unique dans `mode-histoire.js`).
+2. **Store** — lectures via `store-jeu.js` ; `store.histoire` via `mode-histoire.js` (`modeHistoireEnCours()` / `activerModeHistoire()` / `desactiverModeHistoire()`) ; `store-core.js` réservé à la couche état (garde-fou `maintainabilite.test.mjs`).
 3. **Événements** — `bus-jeu.js` pour découpler logique et effets (`effets-partie.js`).
 4. **HTML** — fragments `html/*.html` chargés par `charger-ecrans.js` (pas d'`innerHTML`).
-5. **PWA** — cache listé dans `sw.js`, régénéré par `npm run sync:sw`.
+5. **PWA** — cache listé dans `sw-precache.js` (généré), logique dans `sw.js` ; régénéré par `npm run sync:sw`.
+
+## Découpage coop-logique
+
+| Module                      | Rôle                                      |
+| --------------------------- | ----------------------------------------- |
+| `coop-logique.js`           | Barrel, gravité, init partie, préférences |
+| `coop-logique-piece.js`     | Spawn, validation, verrouillage           |
+| `coop-logique-mouvement.js` | Déplacements, rotation, hold, passerelle  |
 
 ## Partie solo (résumé)
 

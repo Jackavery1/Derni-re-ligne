@@ -12,7 +12,7 @@ import {
     reinitialiserTouches,
     formaterCodeTouche,
 } from '../js/touches-config.js';
-import { store } from '../js/store-core.js';
+import { store } from '../js/store-jeu.js';
 import { _reinitialiserInfobullesContexte } from '../js/infobulles-contexte.js';
 import { readFileSync } from 'fs';
 import { CONDITIONS_CODEX } from '../js/codex-conditions.js';

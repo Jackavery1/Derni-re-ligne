@@ -46,8 +46,13 @@ export function initialiserHaptique() {
 
     ecouter('piece:son', ({ type }) => {
         if (type === 'deplacement') vibrer('deplacement');
+        else if (type === 'rotation') vibrer('rotation');
+        else if (type === 'hold') vibrer('ui');
+        else if (type === 'chute') vibrer('chute');
         else if (type === 'verrou') vibrer('verrou');
     });
+
+    ecouter('partie:topout', () => vibrerFinPartie(false));
 
     ecouter('lignes:effacees', ({ nbSupprimees }) => {
         if (nbSupprimees >= 4) vibrer('tetris');

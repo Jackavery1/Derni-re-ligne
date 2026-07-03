@@ -8,7 +8,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 100vw;
+    max-width: 100dvw;
     height: 100dvh;
     overflow: visible;
     box-sizing: border-box;
@@ -329,7 +329,7 @@ body.archi-active.controles-tactiles-actifs #controles-archi {
     }
 }
 
-@media (max-height: 768px) and (orientation: landscape) {
+@media (max-height: 768px) and (max-width: 1024px) and (orientation: landscape) {
     body.archi-active #controles-archi,
     body.archi-active.controles-tactiles-actifs #controles-archi {
         display: none !important;
@@ -341,8 +341,9 @@ body.archi-active.controles-tactiles-actifs #controles-archi {
     }
 
     body.archi-active #interface-jeu-archi .panneau-archi {
-        width: 90px;
+        width: 112px;
         max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 16px);
+        overflow-x: hidden;
         overflow-y: auto;
         overscroll-behavior: contain;
         -webkit-overflow-scrolling: touch;

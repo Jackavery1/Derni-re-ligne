@@ -3,12 +3,18 @@ import {
     preparerPageSansSw,
     attendreApplicationPrete,
     demarrerPartie,
+    demarrerPartieCoop,
     demarrerPartieViaClavier,
     terminerPartieCourante,
+    terminerPartieCoopCourante,
     appliquerEncocheSimulee,
     ouvrirCarteHistoire,
-    ETAT_DEBLOCAGE_COMPLET,
+    lancerMondeDepuisCarte,
+    activerPausePartieTactile,
+    activerPauseCoopTactile,
+    ETAT_DEBLOCAGE_META_RAPIDE,
 } from './helpers.mjs';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 
 const ANNOTATION_C11 = {
     type: 'note',
@@ -74,10 +80,57 @@ test('audit C11 — game over paysage respecte encoche simulee', async ({ page }
     expect(metriques.boutonH).toBeGreaterThanOrEqual(48);
 });
 
+test('audit C11 — pause coop paysage respecte encoche simulee', async ({ page }) => {
+    test.info().annotations.push(ANNOTATION_C11);
+    await demarrerPartieCoop(page);
+    await page.setViewportSize({ width: 667, height: 375 });
+    await appliquerEncocheSimulee(page);
+    await activerPauseCoopTactile(page);
+    await expect(page.locator('#ecran-pause-coop')).toHaveClass(/actif/);
+
+    const metriques = await page.evaluate(() => {
+        const ecran = document.getElementById('ecran-pause-coop');
+        const style = ecran ? getComputedStyle(ecran) : null;
+        const reprendre = document.getElementById('btn-coop-reprendre');
+        const rect = reprendre?.getBoundingClientRect();
+        return {
+            paddingTop: style?.paddingTop ?? '',
+            topBouton: rect?.top ?? -1,
+            boutonH: rect?.height ?? 0,
+        };
+    });
+    expect(parseFloat(metriques.paddingTop)).toBeGreaterThanOrEqual(46);
+    expect(metriques.topBouton).toBeGreaterThanOrEqual(46);
+    expect(metriques.boutonH).toBeGreaterThanOrEqual(48);
+});
+
+test('audit C11 — game over coop paysage respecte encoche simulee', async ({ page }) => {
+    test.info().annotations.push(ANNOTATION_C11);
+    await demarrerPartieCoop(page);
+    await page.setViewportSize({ width: 667, height: 375 });
+    await appliquerEncocheSimulee(page);
+    await terminerPartieCoopCourante(page);
+
+    const metriques = await page.evaluate(() => {
+        const ecran = document.getElementById('ecran-game-over-coop');
+        const style = ecran ? getComputedStyle(ecran) : null;
+        const bouton = document.querySelector('#ecran-game-over-coop .go-boutons .bouton');
+        const rect = bouton?.getBoundingClientRect();
+        return {
+            paddingTop: style?.paddingTop ?? '',
+            topBouton: rect?.top ?? -1,
+            boutonH: rect?.height ?? 0,
+        };
+    });
+    expect(parseFloat(metriques.paddingTop)).toBeGreaterThanOrEqual(46);
+    expect(metriques.topBouton).toBeGreaterThanOrEqual(46);
+    expect(metriques.boutonH).toBeGreaterThanOrEqual(48);
+});
+
 test('audit C11 — architecte paysage respecte encoche simulee', async ({ page }) => {
     test.info().annotations.push(ANNOTATION_C11);
     await page.setViewportSize({ width: 667, height: 375 });
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await appliquerEncocheSimulee(page);
@@ -108,7 +161,7 @@ test('audit C11 — architecte paysage respecte encoche simulee', async ({ page 
 
 test('audit C1 — architecte telephone paysage tactile valider', async ({ page }) => {
     await page.setViewportSize({ width: 667, height: 375 });
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-architecte').click();
@@ -142,7 +195,7 @@ test('audit C11 — carte histoire iPhone respecte encoche simulee', async ({ br
     test.info().annotations.push(ANNOTATION_C11);
     const context = await browser.newContext({ ...devices['iPhone 14'] });
     const page = await context.newPage();
-    await ouvrirCarteHistoire(page, ETAT_DEBLOCAGE_COMPLET);
+    await ouvrirCarteHistoire(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await appliquerEncocheSimulee(page);
 
     const metriques = await page.evaluate(() => {
@@ -164,4 +217,109 @@ test('audit C11 — carte histoire iPhone respecte encoche simulee', async ({ br
     expect(metriques.topRetour).toBeGreaterThanOrEqual(46);
     expect(metriques.retourH).toBeGreaterThanOrEqual(48);
     await context.close();
+});
+
+test('audit C12 — pause portrait au touch', { tag: '@touch-only' }, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await demarrerPartie(page);
+    await activerPausePartieTactile(page);
+    await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
+
+    const metriques = await page.evaluate(() => {
+        const reprendre = document.getElementById('btn-reprendre');
+        const pauseMobile = document.getElementById('btn-pause-mobile');
+        const rect = reprendre?.getBoundingClientRect();
+        const pauseRect = pauseMobile?.getBoundingClientRect();
+        return {
+            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+            boutonH: rect?.height ?? 0,
+            boutonW: rect?.width ?? 0,
+            pauseH: pauseRect?.height ?? 0,
+            pauseW: pauseRect?.width ?? 0,
+        };
+    });
+    expect(metriques.debord).toBe(false);
+    expect(metriques.boutonH).toBeGreaterThanOrEqual(48);
+    expect(metriques.boutonW).toBeGreaterThanOrEqual(48);
+    expect(metriques.pauseH).toBeGreaterThanOrEqual(48);
+    expect(metriques.pauseW).toBeGreaterThanOrEqual(48);
+});
+
+test('audit C12 — pause coop portrait au touch', { tag: '@touch-only' }, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await demarrerPartieCoop(page);
+    await activerPauseCoopTactile(page);
+    await expect(page.locator('#ecran-pause-coop')).toHaveClass(/actif/);
+
+    const metriques = await page.evaluate(() => {
+        const reprendre = document.getElementById('btn-coop-reprendre');
+        const pauseMobile = document.getElementById('btn-pause-coop-mobile');
+        const rect = reprendre?.getBoundingClientRect();
+        const pauseRect = pauseMobile?.getBoundingClientRect();
+        return {
+            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+            boutonH: rect?.height ?? 0,
+            boutonW: rect?.width ?? 0,
+            pauseH: pauseRect?.height ?? 0,
+            pauseW: pauseRect?.width ?? 0,
+        };
+    });
+    expect(metriques.debord).toBe(false);
+    expect(metriques.boutonH).toBeGreaterThanOrEqual(48);
+    expect(metriques.boutonW).toBeGreaterThanOrEqual(48);
+    expect(metriques.pauseH).toBeGreaterThanOrEqual(48);
+    expect(metriques.pauseW).toBeGreaterThanOrEqual(48);
+});
+
+test(
+    'audit C13 — overlay orientation portrait en partie solo',
+    { tag: '@viewport-mobile-portrait' },
+    async ({ page }) => {
+        await page.setViewportSize({ width: 390, height: 844 });
+        await demarrerPartie(page);
+        await expect(page.locator('#overlay-orientation')).toHaveClass(/visible/);
+
+        await page.setViewportSize({ width: 844, height: 390 });
+        await expect(page.locator('#overlay-orientation')).not.toHaveClass(/visible/);
+    }
+);
+
+test(
+    'audit C13 — overlay orientation portrait en coop',
+    { tag: '@viewport-mobile-portrait' },
+    async ({ page }) => {
+        const { demarrerPartieCoop } = await import('./helpers.mjs');
+        await page.setViewportSize({ width: 390, height: 844 });
+        await demarrerPartieCoop(page);
+        await expect(page.locator('#overlay-orientation')).toHaveClass(/visible/);
+
+        await page.setViewportSize({ width: 844, height: 390 });
+        await expect(page.locator('#overlay-orientation')).not.toHaveClass(/visible/);
+    }
+);
+
+test(
+    'audit C13 — overlay orientation portrait en architecte',
+    { tag: '@viewport-mobile-portrait' },
+    async ({ page }) => {
+        await page.setViewportSize({ width: 390, height: 844 });
+        await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+        await page.locator('#btn-architecte').click();
+        await ouvrirPremierNiveauArchitecte(page);
+        await expect(page.locator('#interface-jeu-archi')).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('#overlay-orientation')).toHaveClass(/visible/);
+
+        await page.setViewportSize({ width: 844, height: 390 });
+        await expect(page.locator('#overlay-orientation')).not.toHaveClass(/visible/);
+    }
+);
+
+test('audit C13 — pas d overlay orientation pendant cutscene histoire', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await ouvrirCarteHistoire(page, ETAT_HISTOIRE_VIDE);
+    await lancerMondeDepuisCarte(page, 'monde_prologue');
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 20000 });
+    await expect(page.locator('#overlay-orientation')).not.toHaveClass(/visible/);
 });

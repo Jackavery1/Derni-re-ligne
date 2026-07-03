@@ -1,4 +1,4 @@
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { etat } from './store-jeu.js';
 import { BOSS } from './histoire-donnees.js';
 import { AudioMoteur } from './audio.js';

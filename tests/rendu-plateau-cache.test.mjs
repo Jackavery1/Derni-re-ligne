@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { _invaliderCacheGradientsPlateau } from '../js/rendu-plateau.js';
+import { _invaliderCacheGradientsPlateau } from '../js/rendu-plateau-cache.js';
 
 describe('rendu-plateau cache gradients', () => {
     it('_invaliderCacheGradientsPlateau reinitialise sans erreur', () => {

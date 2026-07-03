@@ -15,7 +15,7 @@ import {
     obtenirImagePortraitVera,
     reinitialiserCachePortraitVeraAssets,
 } from '../js/portrait-vera-assets.js';
-import { store } from '../js/store-core.js';
+import { store } from '../js/store-jeu.js';
 
 vi.mock('../js/portrait-vera-assets.js', async (importOriginal) => {
     const original = await importOriginal();

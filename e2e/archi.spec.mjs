@@ -4,7 +4,7 @@ import {
     filtrerViolationsCritiques,
     preparerPageSansSw,
     attendreApplicationPrete,
-    ETAT_DEBLOCAGE_COMPLET,
+    ETAT_DEBLOCAGE_META_RAPIDE,
 } from './helpers.mjs';
 
 test('écran sélection constellation sans violations critiques', async ({ page }) => {
@@ -28,7 +28,7 @@ test('écran options sans violations critiques', async ({ page }) => {
 });
 
 test('navigation vers la sélection architecte', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-architecte').click();
@@ -37,7 +37,7 @@ test('navigation vers la sélection architecte', async ({ page }) => {
 });
 
 test('sélection architecte sans violations critiques', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-architecte').click();
@@ -53,7 +53,7 @@ async function ouvrirPremierNiveauArchitecte(page) {
 }
 
 test('lancement niveau architecte affiche le plateau', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-architecte').click();
@@ -64,7 +64,7 @@ test('lancement niveau architecte affiche le plateau', async ({ page }) => {
 });
 
 test('retour menu depuis sélection architecte', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-architecte').click();
@@ -73,7 +73,7 @@ test('retour menu depuis sélection architecte', async ({ page }) => {
 });
 
 test('undo architecte restaure un placement', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-architecte').click();
@@ -87,22 +87,22 @@ test('undo architecte restaure un placement', async ({ page }) => {
     await expect(page.locator('#archi-pieces-used')).toHaveText(piecesAvant ?? '0');
 });
 
-test('architecte tactile portrait — valider via bouton', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+test('architecte tactile paysage — valider via bouton', async ({ page }) => {
+    await page.setViewportSize({ width: 844, height: 390 });
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-architecte').click();
     await ouvrirPremierNiveauArchitecte(page);
     await expect(page.locator('#interface-jeu-archi')).toBeVisible({ timeout: 5000 });
-    await expect(page.locator('#controles-archi')).toBeVisible();
+    await expect(page.locator('#controles-archi-paysage')).toBeVisible();
 
     const piecesAvant = (await page.locator('#archi-pieces-used').textContent()) ?? '0';
-    await page.locator('#btn-archi-valider').click();
+    await page.locator('#btn-archi-valider-p').click();
     await expect(page.locator('#archi-pieces-used')).not.toHaveText(piecesAvant);
 
     const metriques = await page.evaluate(() => {
-        const btn = document.getElementById('btn-archi-valider');
+        const btn = document.getElementById('btn-archi-valider-p');
         const rect = btn?.getBoundingClientRect();
         return { h: rect?.height ?? 0, w: rect?.width ?? 0 };
     });
@@ -110,9 +110,20 @@ test('architecte tactile portrait — valider via bouton', async ({ page }) => {
     expect(metriques.w).toBeGreaterThanOrEqual(48);
 });
 
+test('architecte portrait — overlay orientation bloque le jeu', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-architecte').click();
+    await ouvrirPremierNiveauArchitecte(page);
+    await expect(page.locator('#interface-jeu-archi')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('#overlay-orientation')).toHaveClass(/visible/);
+});
+
 test('sélection architecte mobile — grille et filtres utilisables', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-architecte').click();
@@ -134,7 +145,7 @@ test('sélection architecte mobile — grille et filtres utilisables', async ({ 
 
 test('architecte paysage tablette — contrôles paysage visibles', async ({ page }) => {
     await page.setViewportSize({ width: 1024, height: 768 });
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-architecte').click();
@@ -161,7 +172,7 @@ test('architecte paysage tablette — contrôles paysage visibles', async ({ pag
 
 test('architecte telephone paysage — panneau stats scrollable', async ({ page }) => {
     await page.setViewportSize({ width: 667, height: 375 });
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-architecte').click();

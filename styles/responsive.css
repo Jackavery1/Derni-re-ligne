@@ -35,7 +35,7 @@ body.contraste-eleve .bouton {
     }
 }
 
-@media (max-height: 768px) and (orientation: landscape) {
+@media (max-height: 768px) and (max-width: 900px) and (orientation: landscape) {
     #controles-mobile {
         display: none !important;
     }
@@ -52,7 +52,7 @@ body.contraste-eleve .bouton {
     }
 
     .panneau {
-        width: 90px;
+        width: 112px;
         gap: 6px;
         justify-content: center;
     }
@@ -133,6 +133,7 @@ body.contraste-eleve .bouton {
 
     body.partie-active .panneau {
         max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 8px);
+        overflow-x: hidden;
         overflow-y: auto;
         overscroll-behavior: contain;
         -webkit-overflow-scrolling: touch;
@@ -173,7 +174,7 @@ body.contraste-eleve .bouton {
     font-size: 0.9rem;
 }
 
-@media (max-height: 768px) and (orientation: landscape) {
+@media (max-height: 768px) and (max-width: 900px) and (orientation: landscape) {
     body.partie-active.controles-tactiles-actifs #controles-paysage {
         display: block;
     }
@@ -206,5 +207,63 @@ body.coop-active #controles-paysage {
     }
     .menu-contenu {
         gap: 8px;
+    }
+}
+
+.overlay-orientation {
+    position: fixed;
+    inset: 0;
+    z-index: 9500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: max(16px, var(--safe-top)) max(16px, var(--safe-right)) max(16px, var(--safe-bottom))
+        max(16px, var(--safe-left));
+    background: rgba(6, 4, 14, 0.94);
+    color: var(--texte);
+    text-align: center;
+    pointer-events: all;
+}
+
+.overlay-orientation.visible {
+    display: flex;
+}
+
+.overlay-orientation-contenu {
+    max-width: min(92vw, 360px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.overlay-orientation-titre {
+    font-family: var(--police);
+    font-size: clamp(0.55rem, 3.5vw, 0.75rem);
+    color: var(--cyan);
+    letter-spacing: 0.08em;
+}
+
+.overlay-orientation-message {
+    font-family: var(--police-ui);
+    font-size: clamp(0.95rem, 4vw, 1.1rem);
+    color: var(--texte-dim);
+    line-height: 1.4;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .overlay-orientation.visible .overlay-orientation-contenu {
+        animation: overlay-orientation-pulse 2.4s ease-in-out infinite;
+    }
+}
+
+@keyframes overlay-orientation-pulse {
+    0%,
+    100% {
+        opacity: 0.88;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.02);
     }
 }

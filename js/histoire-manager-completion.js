@@ -1,6 +1,6 @@
 import { JOURNAUX_VERA, SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { SEUILS_COMPLETION } from './histoire-mondes.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
 import { sauvegarderEtatHistoire } from './progression.js';
 import { statsGlobales, sauvegarderStats, verifierAchievements } from './achievements.js';

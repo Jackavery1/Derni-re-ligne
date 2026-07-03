@@ -12,7 +12,7 @@ export const TRANSITIONS_CHAPITRE = {
         },
         {
             personnage: 'robo',
-            texte: "Je commence à comprendre que ce n'était peut-être pas les lignes qu'elle voulait que je complète.",
+            texte: "Elle n'a jamais fini sa phrase. Moi, je finirai les lignes. C'est un début.",
             humeur: 'neutre',
         },
         { personnage: 'systeme', texte: '> CHAPITRE I — LE FEU DES ORIGINES', humeur: 'neutre' },
@@ -93,10 +93,6 @@ export const TRANSITIONS_CHAPITRE = {
         { personnage: 'robo', texte: 'Je ne sais pas si je suis à la hauteur.', humeur: 'neutre' },
         { personnage: 'robo', texte: 'Mais je vais essayer quand même.', humeur: 'neutre' },
         {
-            personnage: 'narrateur',
-            texte: "C'est la première fois que Robo exprime un doute et continue malgré tout.",
-        },
-        {
             personnage: 'systeme',
             texte: '> CHAPITRE IV — LA FRACTURE DE LA TRAME',
             humeur: 'alerte',
@@ -128,6 +124,11 @@ export const EPILOGUES = {
         { personnage: 'narrateur', texte: 'VERA est libre. La Distorsion est vaincue.' },
         {
             personnage: 'vera',
+            texte: "C'est fini. Écoute... même le silence a changé.",
+            humeur: 'douce',
+        },
+        {
+            personnage: 'vera',
             texte: "Dans mille ans, peut-être, quelqu'un d'autre devra refaire le chemin.",
             humeur: 'douce',
         },
@@ -156,7 +157,7 @@ export const EPILOGUES = {
         { personnage: 'narrateur', texte: 'Quelque chose de nouveau existe maintenant.' },
         {
             personnage: 'narrateur',
-            texte: 'Ni completion pure ni incompletude pure — quelque chose entre les deux.',
+            texte: 'Ni complétion pure ni incomplétude pure — quelque chose entre les deux.',
         },
         {
             personnage: 'distorsion',

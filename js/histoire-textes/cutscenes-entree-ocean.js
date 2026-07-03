@@ -86,7 +86,7 @@ export const CUTSCENES_ENTREE_OCEAN = {
             scene: 'seuil_sentinelle',
             personnage: 'sentinelle',
             texte: "Vous bougez. Ça suffit. Le mouvement corrompt, l'immobilité protège — je le mesure depuis des millénaires, alors arrêtez-vous.",
-            humeur: 'calme',
+            humeur: 'agressif',
         },
         {
             scene: 'seuil_sentinelle',

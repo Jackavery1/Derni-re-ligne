@@ -1,5 +1,11 @@
+import {
+    ajouterBufferInput,
+    creerBufferInputVide,
+    premierBufferInput,
+    retirerPremierBufferInput,
+} from './buffer-input-jeu.js';
 import { CONFIG } from './config.js';
-import { store, etat } from './store-core.js';
+import { store, etat } from './store-jeu.js';
 import {
     obtenirPieceAuSol,
     definirPieceAuSol,
@@ -7,6 +13,7 @@ import {
     definirNbLockResets,
 } from './store-etat-partie.js';
 import { estPositionValide } from './piece-jeu.js';
+import { emettre } from './bus-jeu.js';
 import { obtenirActions } from './actions-jeu.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { estMondeZenActif } from './gestionnaire-difficulte.js';
@@ -15,7 +22,7 @@ export function reinitialiserGameFeel() {
     store.areRestant = 0;
     store.spawnGraceRestant = 0;
     store.coyoteRestant = 0;
-    store.inputBuffer = null;
+    store.inputBuffer = creerBufferInputVide();
 }
 
 export function demarrerAre() {
@@ -38,18 +45,21 @@ export function coyoteActif() {
     return store.coyoteRestant > 0;
 }
 
-/** @param {'tourner_cw' | 'tourner_ccw' | 'hold'} action */
+/** @param {'tourner_cw' | 'tourner_ccw' | 'hold' | 'gauche' | 'droite' | 'bas' | 'chute'} action */
 export function bufferiserInput(action) {
-    store.inputBuffer = action;
+    store.inputBuffer = ajouterBufferInput(store.inputBuffer, action);
 }
 
 export function consommerBufferInput() {
-    const action = store.inputBuffer;
+    const action = premierBufferInput(store.inputBuffer);
     if (!action || areActive()) return;
     if (!etat.estEnCours || etat.estEnPause || !etat.pieceActuelle) return;
-    store.inputBuffer = null;
+    const suivant = retirerPremierBufferInput(store.inputBuffer);
+    store.inputBuffer = suivant.file;
+    const actionConsommee = suivant.action;
+    if (!actionConsommee) return;
     const actions = obtenirActions();
-    switch (action) {
+    switch (actionConsommee) {
         case 'tourner_cw':
             actions.tourner?.(1);
             break;
@@ -58,6 +68,18 @@ export function consommerBufferInput() {
             break;
         case 'hold':
             actions.utiliserReserve?.();
+            break;
+        case 'gauche':
+            actions.deplacerGauche?.();
+            break;
+        case 'droite':
+            actions.deplacerDroite?.();
+            break;
+        case 'bas':
+            actions.deplacerBas?.();
+            break;
+        case 'chute':
+            actions.chuteRapide?.();
             break;
     }
 }
@@ -99,6 +121,7 @@ export function verifierCollisionSpawn(surCollisionSpawn) {
         surCollisionSpawn?.();
         return;
     }
+    emettre('partie:topout');
     obtenirActions().terminerPartie?.();
 }
 

@@ -7,10 +7,12 @@ export { dessinerCellule, mettreAJourAmbiante } from './rendu-cellule.js';
 
 export {
     declencherSecousse,
-    getDecalageSecousse,
+    obtenirDecalageSecousse,
     mettreAJourSecousse,
     dessinerFlashVerrou,
     dessinerFlashLignes,
+    declencherFlashTopout,
+    dessinerFlashTopout,
     demarrerTransition,
     mettreAJourTransition,
     afficherTexteFlottant,

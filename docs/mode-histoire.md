@@ -74,9 +74,11 @@ Lecture/écriture du flag actif : `modeHistoireEnCours()`, `activerModeHistoire(
 
 ## Tests
 
-| Type      | Fichiers                                                                                                                                                                                                 |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Unitaires | `tests/histoire-*.test.mjs`, `tests/boss-dialogues.test.mjs`, `tests/cutscene-ui.test.mjs`, `tests/mecaniques-histoire.test.mjs`                                                                         |
-| E2E       | `e2e/histoire.spec.mjs`, `e2e/histoire-campagne.spec.mjs`, `e2e/histoire-narratif.spec.mjs`, `e2e/histoire-post-monde.spec.mjs`, `e2e/histoire-responsive.spec.mjs`, `e2e/prologue-trame-modal.spec.mjs` |
+| Type      | Fichiers                                                                                                                                                                                                                                  |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unitaires | `tests/histoire-*.test.mjs`, `tests/boss-dialogues.test.mjs`, `tests/cutscene-ui.test.mjs`, `tests/mecaniques-histoire.test.mjs`                                                                                                          |
+| E2E       | `e2e/audit-d-narratif.spec.mjs`, `e2e/histoire.spec.mjs`, `e2e/histoire-campagne.spec.mjs`, `e2e/histoire-narratif.spec.mjs`, `e2e/histoire-post-monde.spec.mjs`, `e2e/histoire-responsive.spec.mjs`, `e2e/prologue-trame-modal.spec.mjs` |
+
+`npm run test:e2e:audit` exécute les specs audit gameplay, responsive, narratif (`audit-d-narratif`, `histoire-post-monde`, extraits campagne).
 
 Voir aussi [Ajouter un boss](ajouter-un-boss.md) pour les dialogues de combat.

@@ -15,7 +15,7 @@ import {
 } from './histoire-cutscene-portraits.js';
 import {
     typewriterEstActif,
-    stopTypewriter,
+    arreterMachineAEcrire,
     demarrerTypewriter,
     afficherTexteComplet,
 } from './histoire-cutscene-typewriter.js';
@@ -99,6 +99,15 @@ export async function prechargerScenesCutscene(entree) {
 }
 
 let _boutonsCutsceneOk = false;
+let _dernierAvancementCutscene = 0;
+let _ignorerProchainClickCutscene = false;
+
+function avancerCutsceneUneFois(avancer) {
+    const now = performance.now();
+    if (now - _dernierAvancementCutscene < 220) return;
+    _dernierAvancementCutscene = now;
+    avancer();
+}
 
 /** @param {() => void} avancer @param {() => void} passer */
 export function lierBoutonsCutsceneDom(avancer, passer) {
@@ -109,7 +118,23 @@ export function lierBoutonsCutsceneDom(avancer, passer) {
         const el = document.getElementById(id);
         if (!el || el.hasAttribute?.(marqueur) || typeof el.addEventListener !== 'function') return;
         el.setAttribute?.(marqueur, '1');
-        el.addEventListener('click', handler);
+        let ignorerClick = false;
+        el.addEventListener('click', () => {
+            if (ignorerClick) return;
+            avancerCutsceneUneFois(handler);
+        });
+        el.addEventListener(
+            'touchend',
+            (e) => {
+                e.preventDefault();
+                ignorerClick = true;
+                avancerCutsceneUneFois(handler);
+                window.setTimeout(() => {
+                    ignorerClick = false;
+                }, 400);
+            },
+            { passive: false }
+        );
     };
     lier('btn-cutscene-suivant', avancer);
     lier('btn-cutscene-passer', passer);
@@ -120,10 +145,24 @@ export function lierBoutonsCutsceneDom(avancer, passer) {
         typeof ecranCutscene.addEventListener === 'function'
     ) {
         ecranCutscene.setAttribute?.(marqueur, '1');
-        ecranCutscene.addEventListener('click', (e) => {
-            if (e.target instanceof HTMLElement && !e.target.closest('.cutscene-controles')) {
-                avancer();
+        const zoneAvance = (/** @type {Event} */ e) => {
+            if (!(e.target instanceof HTMLElement) || e.target.closest('.cutscene-controles')) {
+                return false;
             }
+            return true;
+        };
+        ecranCutscene.addEventListener('touchend', (e) => {
+            if (!zoneAvance(e)) return;
+            e.preventDefault();
+            _ignorerProchainClickCutscene = true;
+            avancerCutsceneUneFois(avancer);
+            window.setTimeout(() => {
+                _ignorerProchainClickCutscene = false;
+            }, 400);
+        });
+        ecranCutscene.addEventListener('click', (e) => {
+            if (_ignorerProchainClickCutscene || !zoneAvance(e)) return;
+            avancerCutsceneUneFois(avancer);
         });
     }
 }
@@ -182,7 +221,7 @@ export function afficherProchaineLigneCutscene(session) {
 /** @param {{ enCours: () => boolean; index: number; lignes: string[]; personnages: string[]; mettreAJourProgress: (index: number, total: number) => void; afficherLigne: () => void; terminer: () => void }} ctx */
 export function passerCutsceneLignes(ctx) {
     if (!ctx.enCours()) return;
-    stopTypewriter();
+    arreterMachineAEcrire();
     ctx.index = ctx.lignes.length - 1;
     avancerCutsceneLignes(ctx);
 }

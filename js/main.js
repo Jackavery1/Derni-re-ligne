@@ -26,7 +26,7 @@ window.addEventListener('error', (ev) => {
 });
 
 window.addEventListener('unhandledrejection', (ev) => {
-    logger.error('Promesse rejetee:', ev.reason);
+    logger.error('Promesse rejetée :', ev.reason);
     afficherErreurUtilisateur('Erreur de chargement asynchrone. Rechargez la page.');
 });
 
@@ -34,21 +34,21 @@ async function demarrer() {
     if (await libererSwEnDevLocal()) return;
 
     definirProgressionChargement(0.08);
-    definirMessageChargement('Preparation…');
+    definirMessageChargement('Préparation…');
 
     document.body?.classList.toggle(
         'contraste-eleve',
         lireStockage('derniereLigne_contraste', 'false') === 'true'
     );
     try {
-        definirMessageChargement('Chargement des ecrans…');
+        definirMessageChargement('Chargement des écrans…');
         definirProgressionChargement(0.25);
         await chargerEcrans();
     } catch (err) {
-        logger.error('Échec chargement ecrans:', err);
+        logger.error('Échec chargement écrans :', err);
         masquerEcranChargement();
         afficherErreurUtilisateur(
-            'Impossible de charger les ecrans du jeu. Verifiez votre connexion et rechargez.'
+            'Impossible de charger les écrans du jeu. Vérifiez votre connexion et rechargez.'
         );
         return;
     }
@@ -93,7 +93,7 @@ if ('serviceWorker' in navigator && swAutorise()) {
         navigator.serviceWorker
             .register('sw.js')
             .then((reg) => {
-                logger.info('Service Worker PWA enregistre');
+                logger.info('Service Worker PWA enregistré');
                 reg.addEventListener('updatefound', () => {
                     const nw = reg.installing;
                     nw?.addEventListener('statechange', () => {

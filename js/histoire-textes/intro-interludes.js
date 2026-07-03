@@ -278,6 +278,11 @@ export const OUTRO_FINS = {
         },
         { personnage: 'distorsion', texte: 'Bienvenue au club.', humeur: 'apaisee' },
         {
+            personnage: 'robo',
+            texte: "J'ai quelque chose qui ressemble à de la joie. Je ne le note plus. Je le garde.",
+            humeur: 'content',
+        },
+        {
             personnage: 'systeme',
             texte: "FIN — L'HARMONIE",
             humeur: 'neutre',

@@ -5,7 +5,7 @@ import { obtenirActions } from './actions-jeu.js';
 import { activerModeHistoire } from './mode-histoire.js';
 import { chargerHistoireTextes } from './charger-histoire-textes.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { boucleSecondaireActive } from './planificateur-raf.js';
 import { emettre } from './bus-jeu.js';
 import { menuAnimActif } from './menu-fond.js';
@@ -97,6 +97,28 @@ export function initialiserNeoTestApi() {
                 const { surFinDeMondeHistoire } = await import('./histoire-manager-completion.js');
                 surFinDeMondeHistoire(lignes, 0, { sansNarratif });
             },
+            simulerVictoireObjectifHistoire: async (mondeId, options = {}) => {
+                const { immediat = true } = options;
+                activerModeHistoire();
+                await chargerHistoireTextes();
+                const { SEQUENCE_HISTOIRE } = await import('./histoire-donnees.js');
+                const monde = SEQUENCE_HISTOIRE.find((m) => m.id === mondeId);
+                if (!monde || monde.estBoss) return;
+                store.histoire.mondeActuel = mondeId;
+                const { chargerEtatHistoire } = await import('./progression.js');
+                store.histoire.etat = chargerEtatHistoire();
+                document.body.classList.add('histoire-active');
+                etat.estEnCours = true;
+                etat.modeJeu = 'marathon';
+                const { demarrerSuiviMonde } = await import('./gestionnaire-difficulte.js');
+                demarrerSuiviMonde(mondeId);
+                const d = store.histoire.difficulte;
+                if (!d?.actif) return;
+                d.lignesEffacees = d.lignesObjectif;
+                d.victoireDeclenchee = true;
+                emettre('monde:objectif-atteint', { mondeId });
+                obtenirActions().terminerPartie?.(true, { immediat });
+            },
             obtenirTypeFinHistoire: async () => {
                 activerModeHistoire();
                 const { chargerEtatHistoire } = await import('./progression.js');
@@ -120,38 +142,6 @@ export function initialiserNeoTestApi() {
                 etat.lignes = 0;
                 const { onGameOverHistoire } = await import('./mecaniques-histoire.js');
                 onGameOverHistoire(0, 'monde_prologue');
-            },
-            injecterConditionsTrameDistorsion: () => {
-                activerModeHistoire();
-                const etatHist = obtenirEtatHistoirePersiste();
-                etatHist.conditionsTrame.miroirComplete = true;
-                etatHist.conditionsTrame.tousJournauxTrouves = true;
-                etatHist.conditionsTrame.tousBossSansContinue = true;
-                etatHist.conditionsTrame.actionDistorsionFaite = true;
-                const journauxRequis = [
-                    'journal_1',
-                    'journal_2',
-                    'journal_3',
-                    'journal_4',
-                    'journal_5',
-                    'journal_6',
-                    'journal_7',
-                    'journal_8',
-                    'journal_9',
-                ];
-                for (const id of journauxRequis) {
-                    if (!etatHist.journauxTrouves.includes(id)) {
-                        etatHist.journauxTrouves.push(id);
-                    }
-                }
-                if (!etatHist.mondesCachesDebloques.includes('monde_miroir')) {
-                    etatHist.mondesCachesDebloques.push('monde_miroir');
-                }
-                if (!etatHist.mondesCachesDebloques.includes('monde_trame')) {
-                    etatHist.mondesCachesDebloques.push('monde_trame');
-                }
-                persisterEtatHistoire(etatHist);
-                store.histoire.etat = etatHist;
             },
             emettreEvenementBusJeu: (evenement, payload) => emettre(evenement, payload),
             menuAnimActif: () => menuAnimActif,

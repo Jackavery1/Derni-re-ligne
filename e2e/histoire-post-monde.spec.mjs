@@ -6,6 +6,9 @@ import {
     obtenirScenePostMonde,
     parcourirFluxPostVictoireAvecAssertions,
     viderOverlaysHistoireRapide,
+    assertHumeurPortraitCutscene,
+    avancerCutsceneJusquaPivot,
+    assertAudioNarratifCutscene,
 } from './helpers-narratif.mjs';
 import { CUTSCENES_POST_MONDE } from '../js/histoire-textes/cutscenes-post-monde.js';
 
@@ -78,12 +81,13 @@ async function declencherPostMonde(page, mondeId) {
             timeout: 20000,
         });
     }
+
+    await assertAudioNarratifCutscene(page);
 }
 
-test('post-monde — cutscenes pour les 15 mondes narratifs', async ({ page }) => {
-    test.setTimeout(600000);
-
-    for (const mondeId of MONDES_POST_MONDE) {
+for (const mondeId of MONDES_POST_MONDE) {
+    test(`post-monde — ${mondeId} (audit D)`, async ({ page }) => {
+        test.setTimeout(120000);
         await ouvrirCarteHistoire(page, etatPourPostMonde(mondeId));
         await declencherPostMonde(page, mondeId);
 
@@ -93,7 +97,27 @@ test('post-monde — cutscenes pour les 15 mondes narratifs', async ({ page }) =
             marqueursPourPostMonde(mondeId)
         );
         await viderOverlaysHistoireRapide(page, 16);
-    }
+    });
+}
 
+test('post-monde — prologue humeur ROBO content (audit D)', async ({ page }) => {
+    test.setTimeout(120000);
+    await ouvrirCarteHistoire(page, etatPourPostMonde('monde_prologue'));
+    await declencherPostMonde(page, 'monde_prologue');
+    await avancerCutsceneJusquaPivot(page, /Sa phrase s'est coupée/i);
+    await assertHumeurPortraitCutscene(page, 'robo', 'content');
+    await viderOverlaysHistoireRapide(page, 16);
+});
+
+test('post-monde — paradoxe humeur VERA douce (audit D)', async ({ page }) => {
+    test.setTimeout(120000);
+    await ouvrirCarteHistoire(page, ETAT_PARADOXE_DEBLOQUE);
+    await declencherPostMonde(page, 'monde_paradoxe');
+    await avancerCutsceneJusquaPivot(page, /lire entre les blocs/i);
+    await assertHumeurPortraitCutscene(page, 'vera', 'douce');
+    await viderOverlaysHistoireRapide(page, 16);
+});
+
+test('post-monde — couvre les 15 mondes narratifs', () => {
     expect(MONDES_POST_MONDE).toHaveLength(15);
 });

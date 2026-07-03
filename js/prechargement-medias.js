@@ -2,9 +2,9 @@ import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { obtenirEtatHistoire, mondePeutEtreJoue } from './histoire-mondes.js';
 import { obtenirHistoireTextesSync } from './charger-histoire-textes.js';
 import { SCENES_CUTSCENE } from './scenes-cutscene.js';
-import { SCENE_DEFAUT_POST_MONDE } from './histoire-narratif.js';
+import { SCENE_DEFAUT_POST_MONDE } from './histoire-narratif-scenes.js';
 import { ECRANS } from './ecrans-config.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { logger } from './logger.js';
 
 /** @type {AbortController | null} */
@@ -43,32 +43,20 @@ function urlsMusiqueNarratifCutscene() {
 }
 
 /**
- * @param {string} mondeId
- * @returns {string | null}
+ * @param {unknown} entree
+ * @returns {Array<{ scene?: string }>}
  */
-function urlSceneMonde(mondeId) {
-    const entree = obtenirHistoireTextesSync()?.CUTSCENES_ENTREE?.[mondeId];
-    if (!entree) return null;
+function extraireLignesCutscene(entree) {
+    if (!entree) return [];
+    if (Array.isArray(entree)) return entree;
+    return /** @type {{ lignes?: Array<{ scene?: string }> }} */ (entree).lignes ?? [];
+}
 
-    /** @param {string} sceneId */
-    const srcScene = (sceneId) => {
-        const scene = SCENES_CUTSCENE[sceneId];
-        return scene?.type === 'image' ? scene.src : null;
-    };
-
-    if (typeof entree === 'object' && !Array.isArray(entree)) {
-        if ('scene' in entree && entree.scene) return srcScene(entree.scene);
-        const lignes = entree.lignes ?? [];
-        for (const ligne of lignes) {
-            if (ligne?.scene) return srcScene(ligne.scene);
-        }
-        return null;
-    }
-
-    for (const ligne of entree) {
-        if (ligne?.scene) return srcScene(ligne.scene);
-    }
-    return null;
+/** @param {Set<string>} urls @param {string | null | undefined} sceneId */
+function ajouterSrcScene(urls, sceneId) {
+    if (!sceneId) return;
+    const src = SCENES_CUTSCENE[sceneId]?.src;
+    if (src) urls.add(src);
 }
 
 /**
@@ -77,21 +65,36 @@ function urlSceneMonde(mondeId) {
  */
 function urlsScenesMonde(mondeId) {
     const urls = new Set();
-    const entree = urlSceneMonde(mondeId);
-    if (entree) urls.add(entree);
+    const textes = obtenirHistoireTextesSync();
 
-    const postScene = SCENE_DEFAUT_POST_MONDE[mondeId];
-    if (postScene) {
-        const src = SCENES_CUTSCENE[postScene]?.src;
-        if (src) urls.add(src);
+    for (const entree of [
+        textes?.CUTSCENES_ENTREE?.[mondeId],
+        textes?.CUTSCENES_POST_MONDE?.[mondeId],
+    ]) {
+        if (!entree) continue;
+        if (typeof entree === 'object' && !Array.isArray(entree) && 'scene' in entree) {
+            ajouterSrcScene(urls, /** @type {{ scene?: string }} */ (entree).scene);
+        }
+        for (const ligne of extraireLignesCutscene(entree)) {
+            ajouterSrcScene(urls, ligne?.scene);
+        }
     }
 
-    if (mondeId === 'monde_vide' || postScene === 'vide_errance') {
-        const vide = SCENES_CUTSCENE.vide_errance?.src;
-        if (vide) urls.add(vide);
+    ajouterSrcScene(urls, SCENE_DEFAUT_POST_MONDE[mondeId]);
+
+    if (mondeId === 'monde_cosmos' || mondeId === 'monde_vide') {
+        ajouterSrcScene(urls, 'vide_errance');
     }
 
     return [...urls];
+}
+
+/**
+ * @param {string} mondeId
+ * @returns {string[]}
+ */
+export function listerUrlsScenesPrechargeMonde(mondeId) {
+    return urlsScenesMonde(mondeId);
 }
 
 export function annulerPrechargementMedias() {

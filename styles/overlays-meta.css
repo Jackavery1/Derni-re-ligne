@@ -595,3 +595,19 @@
     background: var(--meteo-actif-couleur, var(--jaune));
     transition: width 0.5s linear;
 }
+#indicateur-meteo.meteo-telegraphie {
+    animation: meteo-pulse 0.8s ease-in-out infinite alternate;
+    border-color: var(--meteo-actif-couleur, var(--jaune));
+}
+#indicateur-meteo.meteo-proche {
+    opacity: 0.8;
+    border-color: rgba(255, 230, 0, 0.35);
+}
+@keyframes meteo-pulse {
+    from {
+        opacity: 0.65;
+    }
+    to {
+        opacity: 1;
+    }
+}

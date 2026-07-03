@@ -1,4 +1,4 @@
-import { BIOMES } from './config.js';
+import { BIOMES, CONFIG } from './config.js';
 import { annulerMeteo } from './meteo.js';
 import { AudioMoteur } from './audio.js';
 import {
@@ -23,7 +23,7 @@ import { planifierBoucle } from './boucle-jeu.js';
 import { afficherMelodieGameOver } from './melodie.js';
 import { finaliserPartieCommune } from './partie-fin-commun.js';
 import { modeCoopEnCours } from './registre-modes.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { defiJourActif } from './mode-defi-jour.js';
 import { obtenirDefiDuJour, enregistrerScoreDefiJour } from './defi-jour.js';
@@ -99,6 +99,7 @@ export function terminerPartie(victoire = false, options = {}) {
         reagirRoboGameOver();
     }
     if (!victoire) setTimeout(() => AudioMoteur.son('game_over'), 250);
+    else setTimeout(() => AudioMoteur.son('niveau'), 250);
     vibrerFinPartie(victoire);
     const annonceVictoire = modeHistoireEnCours()
         ? 'Monde termine ! Victoire'
@@ -113,7 +114,7 @@ export function terminerPartie(victoire = false, options = {}) {
     const scoreFinal = obtenirScoreFinalOracle();
     _appliquerStatsOracleFinPartie(scoreFinal);
 
-    const nouveauRecord = sauvegarderRecord(scoreFinal);
+    const nouveauRecord = modeHistoireEnCours() ? false : sauvegarderRecord(scoreFinal);
     const nouveauRecordSprint = _enregistrerRecordsFinPartie(victoire, scoreFinal);
     _soumettreLeaderboardSiRecord(nouveauRecord, nouveauRecordSprint, scoreFinal);
     _appliquerProgressionFinPartie(scoreFinal);
@@ -129,7 +130,7 @@ export function terminerPartie(victoire = false, options = {}) {
         annonceVictoire,
         annonceDefaite: 'Partie terminee',
     });
-    _afficherActionsFinHistoire();
+    _afficherActionsFinHistoire(victoire);
 
     if (!victoire) {
         appliquerRepliqueGameOverBoss(true, bossIdDefaite);
@@ -137,17 +138,14 @@ export function terminerPartie(victoire = false, options = {}) {
         appliquerRepliqueGameOverBoss(false);
     }
 
-    const afficherGameOver = !(modeHistoireEnCours() && victoire);
-    if (afficherGameOver) {
-        const montrerGameOver = () => {
-            afficherEcran(ECRANS.GAME_OVER);
-            planifierBoucle();
-        };
-        if (immediat) {
-            montrerGameOver();
-        } else {
-            setTimeout(montrerGameOver, 350);
-        }
+    const montrerGameOver = () => {
+        afficherEcran(ECRANS.GAME_OVER);
+        planifierBoucle();
+    };
+    if (immediat) {
+        montrerGameOver();
+    } else {
+        setTimeout(montrerGameOver, 350);
     }
 
     setTimeout(() => afficherMelodieGameOver(), 400);
@@ -213,7 +211,7 @@ function _afficherContinuesCampagneGameOver() {
     el.classList.remove('element-masque');
 }
 
-function _afficherActionsFinHistoire() {
+function _afficherActionsFinHistoire(victoire = false) {
     const btnContinue = document.getElementById('btn-continue-boss');
     const btnCarte = document.getElementById('btn-histoire-carte');
     if (!modeHistoireEnCours()) {
@@ -223,7 +221,12 @@ function _afficherActionsFinHistoire() {
         document.getElementById('go-continues-campagne')?.classList.add('element-masque');
         arreterSuiviMonde();
     } else {
-        surFinDeMondeHistoire(etat.lignes, etat.score);
+        const lancerFinMonde = () => surFinDeMondeHistoire(etat.lignes, etat.score);
+        if (victoire) {
+            setTimeout(lancerFinMonde, CONFIG.delaiNarratifVictoireHistoireMs);
+        } else {
+            lancerFinMonde();
+        }
         const continueGratuit = peutContinuerBossGratuit();
         btnContinue?.classList.toggle('element-masque', !continueGratuit);
         if (continueGratuit) btnCarte?.classList.add('element-masque');

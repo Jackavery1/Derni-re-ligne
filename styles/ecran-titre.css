@@ -42,7 +42,7 @@
     align-items: center;
     gap: 20px;
     padding: 28px 24px;
-    max-height: 100dvh;
+    max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom));
     overflow-y: auto;
     scrollbar-width: none;
 }

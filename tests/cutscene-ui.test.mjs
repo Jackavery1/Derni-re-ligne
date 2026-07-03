@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import * as textesHistoire from '../js/histoire-textes.js';
-import { store } from '../js/store-core.js';
+import { store } from '../js/store-jeu.js';
 
 vi.mock('../js/navigation-ecrans.js', () => ({
     afficherEcran: vi.fn(),

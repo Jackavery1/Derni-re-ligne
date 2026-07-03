@@ -1,4 +1,4 @@
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { chargerEtatHistoire, sauvegarderEtatHistoire } from './progression.js';
 
 /** @returns {typeof import('./histoire-donnees.js').ETAT_HISTOIRE_VIDE} */

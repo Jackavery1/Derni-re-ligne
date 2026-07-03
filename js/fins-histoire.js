@@ -1,4 +1,4 @@
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { logger } from './logger.js';
 import { FINS, ETAT_HISTOIRE_VIDE } from './histoire-donnees.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';

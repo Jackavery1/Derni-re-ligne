@@ -290,7 +290,8 @@
 }
 
 @media (max-height: 768px) and (orientation: landscape) {
-    #ecran-game-over.actif {
+    #ecran-game-over.actif,
+    #ecran-game-over-coop.actif {
         align-items: flex-start;
         overflow-y: auto;
         padding-top: max(8px, var(--safe-top));

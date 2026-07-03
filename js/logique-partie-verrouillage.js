@@ -140,6 +140,7 @@ export function verrouillerPiece() {
             recupererZenApresTopOut();
             return;
         }
+        emettre('partie:topout');
         obtenirActions().terminerPartie?.();
         return;
     }

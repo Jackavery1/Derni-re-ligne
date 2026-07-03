@@ -106,7 +106,7 @@ export const CUTSCENES_POST_MONDE = {
             },
             {
                 personnage: 'robo',
-                texte: "Un bloc efface n'est pas un bloc détruit. C'est de l'espace libéré.",
+                texte: "Un bloc effacé n'est pas un bloc détruit. C'est de l'espace libéré.",
                 humeur: 'neutre',
             },
             {

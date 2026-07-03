@@ -1,16 +1,11 @@
 import { logger } from './logger.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { obtenirEffetsAccessibiliteReduits } from './accessibilite.js';
+import { PRESETS_BOSS } from './expressions-cutscene-presets.js';
 
 const DUREE_TRANSITION_MS = 400;
 const DUREE_TETRIS_AGRESSIF_MS = 1500;
-
-const PRESETS = {
-    calme: { vitesseAnim: 0.7, glow: 0.75, echelle: 1, vacillant: false },
-    agressif: { vitesseAnim: 1.35, glow: 1.35, echelle: 1.05, vacillant: false },
-    vacillant: { vitesseAnim: 1.1, glow: 0.9, echelle: 1, vacillant: true },
-};
 
 /** @typedef {'calme'|'agressif'|'vacillant'} ExpressionBoss */
 
@@ -49,7 +44,7 @@ function _easing(t) {
 
 /** @param {ExpressionBoss} humeur */
 function _preset(humeur) {
-    return { ...(PRESETS[humeur] ?? PRESETS.calme) };
+    return { ...(PRESETS_BOSS[humeur] ?? PRESETS_BOSS.calme) };
 }
 
 function _actif() {
@@ -71,7 +66,7 @@ function _definirExpression(expression, timestamp = performance.now()) {
 
 /** @param {number} timestamp @returns {ParamsPortraitBossCombat} */
 export function obtenirParamsPortraitBossCombat(timestamp = performance.now()) {
-    if (!_actif()) return { ...PRESETS.calme, effetsReduits: true };
+    if (!_actif()) return { ...PRESETS_BOSS.calme, effetsReduits: true };
     const cible = _preset(_expressionCible);
     const effetsReduits = obtenirEffetsAccessibiliteReduits();
     if (effetsReduits || !_paramsDepart) {

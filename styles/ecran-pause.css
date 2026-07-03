@@ -57,7 +57,7 @@
 @media (max-width: 768px) {
     .pause-contenu {
         padding: 16px;
-        width: min(100%, 100vw);
+        width: min(100%, 100dvw);
         box-sizing: border-box;
     }
 

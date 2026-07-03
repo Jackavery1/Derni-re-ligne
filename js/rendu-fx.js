@@ -1,10 +1,11 @@
 import { CONFIG } from './config.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import {
     textesFlottants,
     secousse,
     flashVerrou,
     flashLignes,
+    flashTopout,
     DUREE_TRANSITION,
     obtenirCanvasPlateau,
     obtenirCtx,
@@ -23,7 +24,7 @@ export function declencherSecousse(intensite) {
     secousse.intensite = force;
 }
 
-export function getDecalageSecousse() {
+export function obtenirDecalageSecousse() {
     if (obtenirEffetsAccessibiliteReduits() || secousse.timer <= 0) return { x: 0, y: 0 };
     const force = secousse.intensite * (secousse.timer / secousse.duree);
     const t = secousse.timer * 0.05;
@@ -63,6 +64,22 @@ export function dessinerFlashLignes() {
     for (const l of flashLignes.lignes) {
         obtenirCtx().fillRect(0, l * CONFIG.taille, obtenirCanvasPlateau().width, CONFIG.taille);
     }
+    obtenirCtx().restore();
+}
+
+export function declencherFlashTopout() {
+    flashTopout.timer = flashTopout.duree;
+}
+
+export function dessinerFlashTopout() {
+    if (obtenirEffetsAccessibiliteReduits() || flashTopout.timer <= 0) return;
+    const canvasPlateau = obtenirCanvasPlateau();
+    if (!canvasPlateau) return;
+    const opacite = (flashTopout.timer / flashTopout.duree) * 0.5;
+    obtenirCtx().save();
+    obtenirCtx().globalAlpha = opacite;
+    obtenirCtx().fillStyle = '#ff2244';
+    obtenirCtx().fillRect(0, 0, canvasPlateau.width, canvasPlateau.height);
     obtenirCtx().restore();
 }
 

@@ -6,7 +6,7 @@ import {
     preparerPageSansSw,
     attendreApplicationPrete,
     demarrerPartie,
-    ETAT_DEBLOCAGE_COMPLET,
+    ETAT_DEBLOCAGE_META_RAPIDE,
     ouvrirCarteHistoire,
     attendreTypewriterInactif,
     ETAT_HISTOIRE_BOSS_BRASIER,
@@ -46,7 +46,7 @@ test('sélection biome — contraste des couleurs', async ({ page }) => {
 });
 
 test('achievements — contraste des couleurs', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-achievements').click();
@@ -59,7 +59,7 @@ test('achievements — contraste des couleurs', async ({ page }) => {
 });
 
 test('profil — contraste des couleurs', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-profil').click();
@@ -72,7 +72,7 @@ test('profil — contraste des couleurs', async ({ page }) => {
 });
 
 test('codex — contraste des couleurs', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-codex').click();
@@ -85,7 +85,7 @@ test('codex — contraste des couleurs', async ({ page }) => {
 });
 
 test('achievements sans violations accessibilité critiques', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-achievements').click();
@@ -95,7 +95,7 @@ test('achievements sans violations accessibilité critiques', async ({ page }) =
 });
 
 test('profil sans violations accessibilité critiques', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-profil').click();
@@ -132,7 +132,7 @@ test('game over sans violations accessibilité critiques', async ({ page }) => {
 });
 
 test('codex sans violations accessibilité critiques', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-codex').click();
@@ -178,7 +178,7 @@ test('selection biome paysage mobile — sans violations critiques (audit C)', a
 
 test('carte histoire paysage mobile — sans violations critiques (audit C)', async ({ page }) => {
     await page.setViewportSize({ width: 844, height: 390 });
-    await ouvrirCarteHistoire(page, ETAT_DEBLOCAGE_COMPLET);
+    await ouvrirCarteHistoire(page, ETAT_DEBLOCAGE_META_RAPIDE);
     const result = await new AxeBuilder({ page }).include('#ecran-histoire-map').analyze();
     expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
 });

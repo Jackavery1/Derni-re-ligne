@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { store } from '../js/store-core.js';
+import { store } from '../js/store-jeu.js';
 import { archi } from '../js/archi-logique.js';
 import { coop, reinitialiserEtatCoop } from '../js/coop-logique.js';
 import {

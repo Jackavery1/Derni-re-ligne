@@ -1,6 +1,15 @@
 import { BIOMES } from './config.js';
 import { AudioMoteur } from './audio.js';
-import { etat, particules, obtenirBiomeActif, definirCouleurAmbRgb, ECRANS } from './store-jeu.js';
+import {
+    etat,
+    particules,
+    obtenirBiomeActif,
+    definirCouleurAmbRgb,
+    ECRANS,
+    flashVerrou,
+    flashLignes,
+    flashTopout,
+} from './store-jeu.js';
 import { hexVersRgb, lierCouleursTetrominos } from './piece-jeu.js';
 import {
     changerHumeur,
@@ -15,6 +24,7 @@ import { finaliserPartieCommune } from './partie-fin-commun.js';
 import { planifierBoucle, suspendreBoucleSolo } from './boucle-jeu.js';
 import { obtenirBouton } from './dom-utils.js';
 import { mettreAJourParticules } from './particules-jeu.js';
+import { mettreAJourSecousse } from './rendu-jeu.js';
 import { initialiserAudioBiome } from './audio-partie.js';
 import { basculerOracle, oracle } from './oracle-jeu.js';
 import { afficherTutorielContextuel } from './tutoriel.js';
@@ -101,7 +111,9 @@ export function initialiserChronometreCoop() {
     etat.tempsPauseDebut = null;
 }
 
-export function demarrerCooperatif() {
+let demarrageCoopEnCours = false;
+
+function demarrerCooperatifInterne() {
     coopGameOverDeclenche = false;
     definirCoopPartieEnCours(true);
     etat.estEnCours = false;
@@ -140,6 +152,22 @@ export function demarrerCooperatif() {
     idFrameCoop = requestAnimationFrame(boucleCooperatif);
 }
 
+async function executerDemarrageCooperatif() {
+    if (demarrageCoopEnCours) return;
+    demarrageCoopEnCours = true;
+    try {
+        const { assurerFragmentsCoop } = await import('./charger-ecrans.js');
+        await assurerFragmentsCoop();
+        demarrerCooperatifInterne();
+    } finally {
+        demarrageCoopEnCours = false;
+    }
+}
+
+export function demarrerCooperatif() {
+    void executerDemarrageCooperatif();
+}
+
 function boucleCooperatif(timestamp) {
     if (!coop.actif) return;
 
@@ -154,8 +182,13 @@ function boucleCooperatif(timestamp) {
         coop_dessinerPreview('j2');
 
         if (coop.flashSynchro > 0) coop.flashSynchro -= dt;
-        mettreAJourParticules(dt);
     }
+
+    if (flashVerrou.timer > 0) flashVerrou.timer -= dt;
+    if (flashLignes.timer > 0) flashLignes.timer -= dt;
+    if (flashTopout.timer > 0) flashTopout.timer -= dt;
+    mettreAJourSecousse(dt);
+    if (particules.length > 0) mettreAJourParticules(dt);
 
     coop_rendreFrame();
     idFrameCoop = requestAnimationFrame(boucleCooperatif);
@@ -167,20 +200,25 @@ export function basculerPauseCoop() {
 
     if (coop.estEnPause) {
         etat.tempsPauseDebut = Date.now();
+        AudioMoteur.definirVolumePauseMusique(true);
         const elS = document.getElementById('coop-pause-score');
         const elN = document.getElementById('coop-pause-niveau');
         if (elS) elS.textContent = coop.score.toLocaleString('fr-FR');
         if (elN) elN.textContent = String(coop.niveau);
         afficherEcran(ECRANS.PAUSE_COOP);
     } else {
+        AudioMoteur.definirVolumePauseMusique(false);
         if (etat.tempsPauseDebut) {
             etat.tempsPauseAccumule += Date.now() - etat.tempsPauseDebut;
             etat.tempsPauseDebut = null;
         }
         cacherEcrans();
         dernierTimestampCoop = performance.now();
-        const btn = document.getElementById('btn-pause-coop');
-        if (btn) btn.textContent = '⏸ PAUSE';
+        const libellePause = '⏸ PAUSE';
+        for (const id of ['btn-pause-coop', 'btn-pause-coop-mobile']) {
+            const btn = document.getElementById(id);
+            if (btn) btn.textContent = libellePause;
+        }
     }
 }
 

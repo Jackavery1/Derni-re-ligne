@@ -9,7 +9,7 @@ vi.mock('../js/accessibilite.js', () => ({
 }));
 
 import { modeHistoireEnCours } from '../js/mode-histoire.js';
-import { store } from '../js/store-core.js';
+import { store } from '../js/store-jeu.js';
 import {
     obtenirExpressionBossCombat,
     notifierPresentationBossPortrait,

@@ -5,7 +5,7 @@ export function typewriterEstActif() {
     return _typewriterActif;
 }
 
-export function stopTypewriter() {
+export function arreterMachineAEcrire() {
     if (_typewriterTimeout !== null) {
         clearTimeout(_typewriterTimeout);
         _typewriterTimeout = null;
@@ -14,7 +14,7 @@ export function stopTypewriter() {
 }
 
 export function demarrerTypewriter(el, texte, vitesseMs) {
-    stopTypewriter();
+    arreterMachineAEcrire();
     el.textContent = '';
     _typewriterActif = true;
     let i = 0;
@@ -34,6 +34,6 @@ export function demarrerTypewriter(el, texte, vitesseMs) {
 }
 
 export function afficherTexteComplet(el, texte) {
-    stopTypewriter();
+    arreterMachineAEcrire();
     el.textContent = texte;
 }

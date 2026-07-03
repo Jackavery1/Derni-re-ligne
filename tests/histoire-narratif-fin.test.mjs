@@ -1,8 +1,12 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest';
 import * as textesHistoire from '../js/histoire-textes.js';
+import { activerModeHistoire, desactiverModeHistoire } from '../js/mode-histoire.js';
+import { attendreMock } from './helpers-narratif-async.mjs';
 
-const afficherCutsceneHistoire = vi.fn((_textes, _persos, onFin) => onFin?.());
-const executerFin = vi.fn();
+const { afficherCutsceneHistoire, executerFin } = vi.hoisted(() => ({
+    afficherCutsceneHistoire: vi.fn((_textes, _persos, onFin) => onFin?.()),
+    executerFin: vi.fn(),
+}));
 
 vi.mock('../js/histoire-manager-ui.js', () => ({
     afficherCutsceneHistoire,
@@ -27,9 +31,10 @@ vi.mock('../js/histoire-etat.js', () => ({
 }));
 
 describe('declencherFin — épilogue puis outro', () => {
-    beforeEach(async () => {
-        vi.clearAllMocks();
-        vi.resetModules();
+    /** @type {typeof import('../js/histoire-narratif.js').declencherFin} */
+    let declencherFin;
+
+    beforeAll(async () => {
         globalThis.fetch = async (url) => {
             if (String(url).includes('histoire-textes.json')) {
                 return { ok: true, json: async () => textesHistoire };
@@ -38,16 +43,18 @@ describe('declencherFin — épilogue puis outro', () => {
         };
         const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
         await chargerHistoireTextes();
+        ({ declencherFin } = await import('../js/histoire-narratif.js'));
+    }, 30000);
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+        desactiverModeHistoire();
+        activerModeHistoire();
     });
 
     it('enchaîne épilogue, outro LE CYCLE et executerFin pour fin_normale', async () => {
-        const { store } = await import('../js/store-core.js');
-        store.histoire.actif = true;
-        const { declencherFin } = await import('../js/histoire-narratif.js');
-
         declencherFin('fin_normale');
-
-        await vi.waitFor(() => expect(afficherCutsceneHistoire).toHaveBeenCalledTimes(2));
+        await attendreMock(afficherCutsceneHistoire, 2);
 
         const [textesEpilogue] = afficherCutsceneHistoire.mock.calls[0];
         const [textesOutro] = afficherCutsceneHistoire.mock.calls[1];
@@ -55,7 +62,7 @@ describe('declencherFin — épilogue puis outro', () => {
         expect(textesEpilogue.length).toBeGreaterThan(0);
         expect(textesOutro.some((l) => String(l.texte ?? l).includes('LE CYCLE'))).toBe(true);
         expect(executerFin).toHaveBeenCalledWith('fin_normale');
-    }, 15_000);
+    });
 
     it('expose OUTRO_FINS pour les trois IDs de fin', async () => {
         const { obtenirHistoireTextesSync } = await import('../js/charger-histoire-textes.js');
@@ -70,32 +77,22 @@ describe('declencherFin — épilogue puis outro', () => {
     });
 
     it('enchaîne épilogue, outro et executerFin pour fin_secrete', async () => {
-        const { store } = await import('../js/store-core.js');
-        store.histoire.actif = true;
-        const { declencherFin } = await import('../js/histoire-narratif.js');
-
         declencherFin('fin_secrete');
-
-        await vi.waitFor(() => expect(afficherCutsceneHistoire).toHaveBeenCalledTimes(2));
+        await attendreMock(afficherCutsceneHistoire, 2);
 
         const [textesOutro] = afficherCutsceneHistoire.mock.calls[1];
         expect(textesOutro.some((l) => String(l.texte ?? l).includes('LA LIGNE PARFAITE'))).toBe(
             true
         );
         expect(executerFin).toHaveBeenCalledWith('fin_secrete');
-    }, 15_000);
+    });
 
     it('enchaîne épilogue, outro et executerFin pour fin_vraie', async () => {
-        const { store } = await import('../js/store-core.js');
-        store.histoire.actif = true;
-        const { declencherFin } = await import('../js/histoire-narratif.js');
-
         declencherFin('fin_vraie');
-
-        await vi.waitFor(() => expect(afficherCutsceneHistoire).toHaveBeenCalledTimes(2));
+        await attendreMock(afficherCutsceneHistoire, 2);
 
         const [textesOutro] = afficherCutsceneHistoire.mock.calls[1];
         expect(textesOutro.some((l) => String(l.texte ?? l).includes("L'HARMONIE"))).toBe(true);
         expect(executerFin).toHaveBeenCalledWith('fin_vraie');
-    }, 15_000);
+    });
 });

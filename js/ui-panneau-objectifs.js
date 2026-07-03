@@ -1,7 +1,7 @@
 import { BOSS } from './histoire-donnees.js';
 
 /** @typedef {import('./histoire-donnees.js').SEQUENCE_HISTOIRE[number]} MondeHistoire */
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { obtenirEtatHistoire } from './histoire-mondes.js';
 import { ecouter } from './bus-jeu.js';

@@ -26,7 +26,6 @@ export function obtenirCouleurPieceParType(type) {
     return biome.couleursBlocs[index] ?? biome.couleursBlocs[0];
 }
 
-/** @deprecated Utiliser obtenirCouleurPieceParType — alias conserve pour compatibilite tests */
 export function lierCouleursTetrominos() {
     for (const type of Object.keys(TETROMINOS)) {
         Object.defineProperty(TETROMINOS[type], 'couleur', {

@@ -47,6 +47,7 @@
 .btn-nouvelle-partie {
     width: 100%;
     min-height: 48px;
+    min-width: 48px;
     padding: 12px 18px;
     flex-direction: column;
     gap: 4px;
@@ -404,4 +405,11 @@
 .btn-achievements:hover:not(.btn-verrouille) {
     box-shadow: 0 0 18px rgba(255, 153, 0, 0.6);
     transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .btn-menu:not(.btn-verrouille) {
+        min-height: 48px;
+        min-width: 48px;
+    }
 }

@@ -192,7 +192,7 @@ export const FRAGMENTS_VERA_SIGNAL = {
     ],
 
     apres_rouille: [
-        { personnage: 'systeme', texte: '> INTERFERENCE METALLIQUE', humeur: 'alerte' },
+        { personnage: 'systeme', texte: '> INTERFÉRENCE MÉTALLIQUE', humeur: 'alerte' },
         {
             personnage: 'vera',
             texte: '...ces machines rouillées... elles gardent la mémoire de ce qui a été abandonné...',
@@ -215,7 +215,7 @@ export const FRAGMENTS_VERA_SIGNAL = {
         { personnage: 'systeme', texte: '> ÉCHO SONORE — 0.7 SECONDES', humeur: 'alerte' },
         {
             personnage: 'vera',
-            texte: '...ces feux... je les ai allumés pour toi... pour que tu saches que la joie existe encore...',
+            texte: '...ces feux... regarde-les bien... rien ne brille tout seul, ici...',
             humeur: 'douce',
         },
         { personnage: 'systeme', texte: "> FIN DE L'ÉCHO", humeur: 'alerte' },
@@ -248,11 +248,11 @@ export const FRAGMENTS_VERA_SIGNAL = {
             texte: "...de l'autre côté du miroir... tu as vu ce qu'elle voit... n'oublie pas que ce n'est pas toi...",
             humeur: 'inquiete',
         },
-        { personnage: 'systeme', texte: '> IMAGE INVERSEE', humeur: 'alerte' },
+        { personnage: 'systeme', texte: '> IMAGE INVERSÉE', humeur: 'alerte' },
     ],
 
     apres_trame: [
-        { personnage: 'systeme', texte: '> DEPOT DANS LA TRAME — 1.4 SECONDES', humeur: 'neutre' },
+        { personnage: 'systeme', texte: '> DÉPÔT DANS LA TRAME — 1.4 SECONDES', humeur: 'neutre' },
         {
             personnage: 'vera',
             texte: "...tu as tout gardé jusqu'au bout... la phrase que j'ai laissée... tu l'as lue...",
@@ -263,13 +263,13 @@ export const FRAGMENTS_VERA_SIGNAL = {
             texte: '...maintenant tu peux choisir... partir ou rester... les deux comptent...',
             humeur: 'determinee',
         },
-        { personnage: 'systeme', texte: '> FIN DU DEPOT', humeur: 'alerte' },
+        { personnage: 'systeme', texte: '> FIN DU DÉPÔT', humeur: 'alerte' },
     ],
 
     apres_paradoxe: [
         {
             personnage: 'systeme',
-            texte: '> ANOMALIE VOLONTAIRE — TOP NON DEMANDE',
+            texte: '> ANOMALIE VOLONTAIRE — TOP NON DEMANDÉ',
             humeur: 'alerte',
         },
         {
@@ -277,6 +277,6 @@ export const FRAGMENTS_VERA_SIGNAL = {
             texte: "...tu es revenu ici sans qu'on te le demande... trois fois... c'est comme ça qu'on trouve les portes secrètes...",
             humeur: 'douce',
         },
-        { personnage: 'systeme', texte: '> BOUCLE PARADOXALE FERMEE', humeur: 'alerte' },
+        { personnage: 'systeme', texte: '> BOUCLE PARADOXALE FERMÉE', humeur: 'alerte' },
     ],
 };

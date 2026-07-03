@@ -24,12 +24,12 @@ describe('timer-niveau', () => {
         reinitialiserTimerNiveau();
     });
 
-    it('budget niveau 1 = 150 s', () => {
-        expect(budgetNiveauMs(1)).toBe(150_000);
+    it('budget niveau 1 = 165 s', () => {
+        expect(budgetNiveauMs(1)).toBe(165_000);
     });
 
     it('budget augmente avec le niveau', () => {
-        expect(budgetNiveauMs(3)).toBe(174_000);
+        expect(budgetNiveauMs(3)).toBe(189_000);
         expect(budgetNiveauMs(99)).toBe(240_000);
     });
 
@@ -44,7 +44,7 @@ describe('timer-niveau', () => {
 
     it('temps restant proche du budget au demarrage', () => {
         const restant = obtenirTempsRestantNiveauMs();
-        expect(restant).toBeGreaterThan(149_000);
-        expect(restant).toBeLessThanOrEqual(150_000);
+        expect(restant).toBeGreaterThan(164_000);
+        expect(restant).toBeLessThanOrEqual(165_000);
     });
 });

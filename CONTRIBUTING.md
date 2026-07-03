@@ -19,6 +19,8 @@ npm run format:check
 npm run typecheck
 npm run verify:versions
 npm run prepare:e2e
+npm run test:e2e:audit
+npm run test:e2e:responsive
 npm run test:e2e
 ```
 
@@ -26,7 +28,25 @@ Node 18+ (`.nvmrc`). Logs verbeux : `?debug=1`. Formatage : `.prettierrc` (Prett
 
 ### Tests E2E sur le bundle prod
 
-La CI exécute **smoke** et **perf** sur le bundle prod (`test:e2e:smoke:dist`, `test:e2e:perf` via `E2E_DIST=1` — `run-e2e-dist.mjs` injecte alors `neo-test-init.js` dans `dist/index.html`). La suite E2E complète (`npm run test:e2e`) sert les **modules ES sources** (`index.html` charge `js/neo-test-init.js`). Le budget bundle prod (`verifier-bundle.mjs`) exclut l’entrée test et ses chunks dédiés (`budget-exclus.json`).
+La CI exécute **smoke** sur le bundle prod (`test:e2e:smoke:dist`), puis **responsive multi-viewport** (`test:e2e:responsive:dist` sur `dist/`, `test:e2e:responsive` sur les sources), **perf** (`test:e2e:perf` via `E2E_DIST=1` — `run-e2e-dist.mjs` injecte `neo-test-init.js` dans `dist/index.html`). La suite E2E complète (`npm run test:e2e`) sert les **modules ES sources** avec la matrice Playwright : `desktop`, `mobile-portrait`, `mobile-landscape`, `iphone-14` (+ projets visuels mobile). Audits gameplay/narratif : `npm run test:e2e:audit`.
+
+### Piège Live Server / file://
+
+Le jeu charge des modules ES (`import` depuis `js/`). **Live Server** et l’ouverture directe de `index.html` ne bundlent pas → écran « Chargement… » infini. Utiliser **`npm run dev`** (Vite) ou **`npm start`** (serve + bundle précompilé). Voir le watchdog dans `js/chargement-watchdog.js`.
+
+### Checklist manuelle iPhone (encoches réelles)
+
+Les specs `audit-c-responsive` simulent `--safe-top: 47px` (Dynamic Island). Avant une release mobile, valider sur **iPhone physique** en PWA standalone :
+
+1. Pause solo paysage — bouton Reprendre sous l’encoche, zone tactile ≥ 48 px
+2. Pause coop paysage — bouton Reprendre sous l’encoche, pause HUD mobile ≥ 48 px
+3. Game over solo et coop paysage — boutons visibles sans scroll horizontal
+4. Carte histoire — en-tête et retour accessibles (safe-area)
+5. Journal histoire — scrollable, fermer ≥ 48 px
+6. Cutscene portrait 319 px de large — portraits et boutons Suivant/Passer visibles
+7. Architecte paysage — contrôles latéraux utilisables au doigt (portrait = overlay orientation)
+
+Annoter les écarts dans une issue ; ne pas supprimer la simulation CSS tant que le test physique n’est pas couvert.
 
 ### Environnements de déploiement
 

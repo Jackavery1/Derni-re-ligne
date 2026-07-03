@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { store } from '../js/store-core.js';
+import { store } from '../js/store-jeu.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 import { persisterEtatHistoire } from '../js/histoire-etat.js';
 import {

@@ -251,7 +251,8 @@ test('campagne — cutscenes intermediaires boss et chapitres (audit D15)', asyn
             await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
         }, mondeId);
         await parcourirFluxPostVictoireAvecAssertions(page, mondeId, undefined, 60, {
-            typewriterTimeout: 250,
+            typewriterTimeout: 4000,
+            strictTypewriter: true,
         });
     }
 });
@@ -302,6 +303,7 @@ test('campagne principale narratif — mondes 1 à 8 (audit D)', async ({ page }
         }, mondeId);
         await parcourirFluxPostVictoireAvecAssertions(page, mondeId, undefined, 80, {
             exigerCorpus: true,
+            verifierAudio: true,
         });
     }
 });
@@ -322,15 +324,15 @@ test('campagne principale narratif — mondes 9 à 16 (audit D)', async ({ page 
         }, mondeId);
         await parcourirFluxPostVictoireAvecAssertions(page, mondeId, undefined, 80, {
             exigerCorpus: true,
+            verifierAudio: true,
         });
     }
 });
 
-test('campagne complete — flags fin secrete sans parcours narratif (audit D9)', async ({
+test('campagne complete — flags fin secrete sans narratif post-victoire (audit D9 flags)', async ({
     page,
 }) => {
     test.setTimeout(300000);
-    // Le narratif post-victoire est couvert par les tests campagne 1-8 / 9-16 et post-monde.
     const etatDepart = {
         ...ETAT_HISTOIRE_VIDE,
         mondesDejaMontres: ['monde_prologue'],
@@ -341,6 +343,14 @@ test('campagne complete — flags fin secrete sans parcours narratif (audit D9)'
         await page.evaluate(async (id) => {
             await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99, true);
         }, mondeId);
+        const sansNarratif = await page.evaluate(
+            () =>
+                !document.getElementById('ecran-histoire-cutscene')?.classList.contains('actif') &&
+                !document
+                    .getElementById('overlay-recap-monde')
+                    ?.classList.contains('objectif-overlay-visible')
+        );
+        expect(sansNarratif).toBe(true);
     }
 
     for (const mondeId of MONDES_SECRETS_FIN_SECRETE) {
@@ -384,4 +394,45 @@ test('campagne complete — flags fin secrete sans parcours narratif (audit D9)'
     });
     expect(apresOutro.toutesFin).toContain('fin_secrete');
     expect(apresOutro.finSecreteObtenue).toBe(true);
+});
+
+test('campagne complete — fin secrete avec narratif complet (audit D9b)', async ({ page }) => {
+    test.setTimeout(360000);
+    const etatDepart = {
+        ...ETAT_HISTOIRE_VIDE,
+        mondesCompletes: [...MONDES_CAMPAGNE_PRINCIPALE],
+        mondesCachesDebloques: ['monde_miroir'],
+        mondesDejaMontres: ['monde_prologue', ...MONDES_CAMPAGNE_PRINCIPALE],
+        bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde'],
+        conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 },
+    };
+    await ouvrirCarteHistoire(page, etatDepart);
+
+    for (const mondeId of ['monde_miroir']) {
+        await page.evaluate(async (id) => {
+            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
+        }, mondeId);
+        await parcourirFluxPostVictoireAvecAssertions(page, mondeId, undefined, 80, {
+            exigerCorpus: true,
+            verifierAudio: true,
+        });
+    }
+
+    await preparerConditionsTrameOrganiques(page);
+
+    for (const mondeId of ['monde_trame', 'monde_finale']) {
+        await page.evaluate(async (id) => {
+            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
+        }, mondeId);
+        await parcourirFluxPostVictoireAvecAssertions(page, mondeId, undefined, 80, {
+            exigerCorpus: true,
+            verifierAudio: true,
+        });
+    }
+
+    await page.evaluate(async () => {
+        await window.__NEO_TEST__?.declencherFinHistoire?.('fin_secrete');
+    });
+    await terminerCutscenesVersEcranFin(page);
+    await expect(page.locator('#ecran-histoire-fin')).toHaveAttribute('data-fin', 'fin_secrete');
 });

@@ -132,7 +132,12 @@ export const CUTSCENES_ENTREE_PROLOGUE = {
             texte: 'Je comprends ça. Un peu trop bien, même.',
             humeur: 'triste',
         },
-        { scene: 'seuil_brasier', personnage: 'brasier', texte: 'QUI APPROCHE ?', humeur: 'calme' },
+        {
+            scene: 'seuil_brasier',
+            personnage: 'brasier',
+            texte: 'QUI APPROCHE ?',
+            humeur: 'agressif',
+        },
         {
             scene: 'seuil_brasier',
             personnage: 'robo',
@@ -147,9 +152,15 @@ export const CUTSCENES_ENTREE_PROLOGUE = {
         },
         {
             scene: 'seuil_brasier',
+            personnage: 'brasier',
+            texte: "Mais approche, et c'est l'autre partie de moi qui te répondra.",
+            humeur: 'calme',
+        },
+        {
+            scene: 'seuil_brasier',
             personnage: 'robo',
             texte: "Alors je vais devoir t'éteindre.",
-            humeur: 'content',
+            humeur: 'neutre',
         },
         {
             scene: 'seuil_brasier',

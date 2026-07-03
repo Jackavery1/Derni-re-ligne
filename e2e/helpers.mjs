@@ -3,7 +3,6 @@ import { expect } from '@playwright/test';
 export {
     ETAT_DEBLOCAGE_MONDE_LIBRE,
     ETAT_DEBLOCAGE_META_RAPIDE,
-    ETAT_DEBLOCAGE_COMPLET,
     ETAT_HISTOIRE_BOSS_BRASIER,
     ETAT_AVANT_BOSS_SENTINELLE,
     ETAT_AVANT_BOSS_ARCHIVISTE,
@@ -13,6 +12,8 @@ export {
     ETAT_INFERNO_PRET,
     ETAT_FIN_VRAIE_PRET,
     ETAT_OCEAN_FRAGMENT_PRET,
+    ETAT_FORET_FRAGMENT_PRET,
+    ETAT_GLACE_FRAGMENT_PRET,
     ETAT_CYBER_LABO_PRET,
     ETAT_AVANT_DESERT,
     ETAT_PARADOXE_DEBLOQUE,
@@ -26,10 +27,11 @@ export {
 
 import {
     ETAT_DEBLOCAGE_MONDE_LIBRE,
-    ETAT_DEBLOCAGE_COMPLET,
+    ETAT_DEBLOCAGE_META_RAPIDE,
     ETAT_HISTOIRE_BOSS_BRASIER,
 } from './etats-histoire.mjs';
 import { attendreTypewriterInactif } from './helpers-narratif.mjs';
+import { basculerCoopDepuisSelection } from './helpers-audit-b.mjs';
 
 /** Filtre les violations Axe bloquantes (hors contraste optionnel). */
 export function filtrerViolationsCritiques(violations, { inclureContraste = false } = {}) {
@@ -50,6 +52,7 @@ export async function boutonEstVisible(page, selector) {
 
 /** @param {import('@playwright/test').Page} page */
 export async function fermerPanneauDetailSiOuvert(page) {
+    if (await page.locator('#overlay-orientation.visible').count()) return;
     const panneau = page.locator('#panneau-detail');
     if ((await panneau.count()) === 0) return;
     if ((await panneau.getAttribute('aria-hidden')) !== 'false') return;
@@ -60,7 +63,27 @@ export async function fermerPanneauDetailSiOuvert(page) {
 /** @param {import('@playwright/test').Page} page */
 export async function activerPausePartie(page) {
     await fermerPanneauDetailSiOuvert(page);
+    const pauseMobile = page.locator('#btn-pause-mobile');
+    if (await pauseMobile.isVisible()) {
+        await pauseMobile.click();
+        return;
+    }
     await page.locator('#btn-pause').click();
+}
+
+/** @param {import('@playwright/test').Page} page */
+export async function activerPausePartieTactile(page) {
+    await fermerPanneauDetailSiOuvert(page);
+    const pauseViaDom = await page.evaluate(() => {
+        const mobile = document.getElementById('btn-pause-mobile');
+        if (mobile && getComputedStyle(mobile).display !== 'none') {
+            mobile.click();
+            return true;
+        }
+        document.getElementById('btn-pause')?.click();
+        return true;
+    });
+    expect(pauseViaDom).toBe(true);
 }
 
 /** @param {import('@playwright/test').Page} page @param {string} elementId @param {string} className */
@@ -376,19 +399,47 @@ export async function demarrerPartieViaClavier(page) {
 }
 
 /** @param {import('@playwright/test').Page} page */
+export async function activerPauseCoopTactile(page) {
+    await page.evaluate(async () => {
+        const { basculerPauseCoop } = await import('/js/coop-jeu.js');
+        basculerPauseCoop();
+    });
+    await expect(page.locator('#ecran-pause-coop')).toHaveClass(/actif/, { timeout: 10000 });
+}
+
+/** @param {import('@playwright/test').Page} page */
 export async function demarrerPartieCoop(page) {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await attendreNotificationsInitiales(page);
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await fermerInfobulleContexteSiVisible(page);
-    await page.locator('#toggle-coop').click({ force: true });
-    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    await page.evaluate(async () => {
+        const { assurerInputCoop } = await import('/js/modes-input-lazy.js');
+        await assurerInputCoop();
+    });
+    await basculerCoopDepuisSelection(page);
+    await expect(page.locator('#coop-toggle-label')).toHaveText('COOP : ON');
+    await expect(page.locator('#conteneur-principal-coop')).toBeAttached({ timeout: 10000 });
     await selectionnerBiomeClavier(page);
-    await page.locator('#btn-panneau-detail-jouer').click({ force: true });
-    await expect(page.locator('#interface-jeu-coop')).toBeVisible({ timeout: 5000 });
+    await page.evaluate(() => document.getElementById('btn-panneau-detail-jouer')?.click());
+    await expect(page.locator('body')).toHaveClass(/coop-active/, { timeout: 15000 });
+    await expect(page.locator('#conteneur-principal-coop')).toBeVisible({ timeout: 10000 });
+}
+
+/** @param {import('@playwright/test').Page} page */
+export async function terminerPartieCoopCourante(page) {
+    await expect(page.locator('body')).toHaveClass(/coop-active/, { timeout: 15000 });
+    const declenche = await page.evaluate(async () => {
+        const { terminerCooperatif } = await import('/js/coop-jeu.js');
+        if (typeof terminerCooperatif !== 'function') return false;
+        terminerCooperatif('j1');
+        return true;
+    });
+    expect(declenche).toBe(true);
+    await expect(page.locator('#ecran-game-over-coop')).toHaveClass(/actif/, { timeout: 5000 });
 }
 
 /** @param {import('@playwright/test').Page} page */

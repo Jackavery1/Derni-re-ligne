@@ -1,5 +1,4 @@
 import { TETROMINOS } from './config.js';
-import { AudioMoteur } from './audio.js';
 import { meteo, ETATS_METEO } from './meteo.js';
 import { emettre } from './bus-jeu.js';
 import { etat, definirLockDelayRestant, definirPieceAuSol } from './store-jeu.js';
@@ -30,6 +29,15 @@ export function jouable() {
     return pieceControlesActifs();
 }
 
+function tenterBufferMouvement(action) {
+    if (!etat.pieceActuelle || !etat.estEnCours) return false;
+    if (etat.estEnPause || areActive()) {
+        bufferiserInput(action);
+        return true;
+    }
+    return false;
+}
+
 function deplacerGaucheReel() {
     if (!jouable()) return;
     reinitialiserPoseApresRotation();
@@ -54,17 +62,21 @@ function deplacerDroiteReel() {
 
 export function deplacerGauche() {
     if (meteo.controleInverse || obtenirControlesInversesBoss()) {
+        if (tenterBufferMouvement('droite')) return;
         deplacerDroiteReel();
         return;
     }
+    if (tenterBufferMouvement('gauche')) return;
     deplacerGaucheReel();
 }
 
 export function deplacerDroite() {
     if (meteo.controleInverse || obtenirControlesInversesBoss()) {
+        if (tenterBufferMouvement('gauche')) return;
         deplacerGaucheReel();
         return;
     }
+    if (tenterBufferMouvement('droite')) return;
     deplacerDroiteReel();
 }
 
@@ -73,7 +85,7 @@ export function deplacerBas() {
         chuteRapide();
         return;
     }
-    if (!jouable()) return;
+    if (tenterBufferMouvement('bas')) return;
     reinitialiserPoseApresRotation();
     if (estPositionValide(etat.pieceActuelle, 0, 1)) {
         etat.pieceActuelle.y++;
@@ -86,6 +98,7 @@ export function deplacerBas() {
 
 export function chuteRapide() {
     if (actionMiroir('chute') === 'bas') {
+        if (tenterBufferMouvement('bas')) return;
         if (!jouable()) return;
         if (estPositionValide(etat.pieceActuelle, 0, 1)) {
             etat.pieceActuelle.y++;
@@ -96,6 +109,14 @@ export function chuteRapide() {
         }
         return;
     }
+    if (!etat.pieceActuelle || !etat.estEnCours || etat.estEnPause) {
+        bufferiserInput('chute');
+        return;
+    }
+    if (areActive()) {
+        bufferiserInput('chute');
+        return;
+    }
     if (!jouable()) return;
     reinitialiserPoseApresRotation();
     if (meteo.etat === ETATS_METEO.ACTIF && meteo.evenementActuel?.effet === 'microgravite') return;
@@ -103,7 +124,7 @@ export function chuteRapide() {
     const dist = calculerDistanceChute(etat.pieceActuelle);
     etat.pieceActuelle.y += dist;
     etat.score += dist * 2;
-    AudioMoteur.son('chute');
+    emettre('piece:son', { type: 'chute' });
     emettre('partie:stats');
     verrouillerPiece();
 }

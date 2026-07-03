@@ -1,3 +1,4 @@
+/** Orchestration du rendu Canvas du plateau de jeu (fond, blocs, pièces, particules). */
 import { CONFIG } from './config.js';
 import { meteo } from './meteo.js';
 import { logger, afficherErreurUtilisateur } from './logger.js';
@@ -7,169 +8,45 @@ import {
     couleurAmbRgb,
     obtenirEffetsReduits,
     obtenirPrefererMoinsAnimations,
-    obtenirEffetsAccessibiliteReduits,
-    obtenirReliqueActive,
-    obtenirBiomeActif,
     obtenirCanvasPlateau,
     obtenirCtx,
 } from './store-jeu.js';
-import { obtenirForme, obtenirCouleurPiece, calculerDistanceChute } from './piece-jeu.js';
-import { obtenirFauxFantomeActif, COULEUR_BRAISE } from './boss-jeu.js';
-import { dessinerCellule } from './rendu-cellule.js';
-import { dessinerCelluleStyle } from './rendu-blocs.js';
 import { dessinerFondBiome } from './rendu-ambiance.js';
 import { dessinerSignesVie } from './rendu-vivant.js';
+import { dessinerMotifsAccessibilite, dessinerMotifsPieceCourante } from './rendu-accessibilite.js';
 import {
-    celluleEstRouillee,
-    opacitePieceCourante,
-    ghostEstDesactive,
-} from './mecaniques-histoire.js';
+    _invaliderCacheGradientsPlateau,
+    obtenirCacheMasqueMeteo,
+    dessinerAmbiancePlateauCache,
+    dessinerVignettePlateauCache,
+} from './rendu-plateau-cache.js';
+import { dessinerBlocsVerrouilles } from './rendu-plateau-blocs.js';
 import {
-    dessinerMotifsAccessibilite,
-    dessinerMotifsPieceCourante,
-    dessinerPulsePieceActive,
-} from './rendu-accessibilite.js';
+    dessinerPieceFantome,
+    dessinerOverlayBraise,
+    dessinerPieceActive,
+} from './rendu-plateau-pieces.js';
 
-/** @type {HTMLCanvasElement | OffscreenCanvas | null} */
-let cacheVignette = null;
-let cacheVignetteCle = '';
-/** @type {HTMLCanvasElement | OffscreenCanvas | null} */
-let cacheAmbBas = null;
-let cacheAmbBasCle = '';
-/** @type {HTMLCanvasElement | OffscreenCanvas | null} */
-let cacheMasqueMeteo = null;
-let cacheMasqueMeteoCle = '';
-
-function creerSurfaceCache(w, h) {
-    if (typeof OffscreenCanvas !== 'undefined') {
-        return new OffscreenCanvas(w, h);
-    }
-    const surface = document.createElement('canvas');
-    surface.width = w;
-    surface.height = h;
-    return surface;
-}
-
-function obtenirCacheVignette(w, h) {
-    const cle = `${w}x${h}`;
-    if (cacheVignette && cacheVignetteCle === cle) return cacheVignette;
-    const surface = creerSurfaceCache(w, h);
-    const ctx = /** @type {CanvasRenderingContext2D} */ (surface.getContext('2d'));
-    const grad = ctx.createRadialGradient(w / 2, h / 2, h * 0.25, w / 2, h / 2, h * 0.78);
-    grad.addColorStop(0, 'rgba(0,0,0,0)');
-    grad.addColorStop(1, 'rgba(0,0,0,0.40)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, w, h);
-    cacheVignette = surface;
-    cacheVignetteCle = cle;
-    return cacheVignette;
-}
-
-function obtenirCacheAmbBas(w, h, r, g, b) {
-    const cle = `${w}x${h}x${r},${g},${b}`;
-    if (cacheAmbBas && cacheAmbBasCle === cle) return cacheAmbBas;
-    const surface = creerSurfaceCache(w, h);
-    const ctx = /** @type {CanvasRenderingContext2D} */ (surface.getContext('2d'));
-    const amb = `rgba(${r},${g},${b}`;
-    const gradBas = ctx.createRadialGradient(w / 2, h * 0.85, 0, w / 2, h * 0.85, w * 0.9);
-    gradBas.addColorStop(0, `${amb},0.11)`);
-    gradBas.addColorStop(1, `${amb},0)`);
-    ctx.fillStyle = gradBas;
-    ctx.fillRect(0, 0, w, h);
-    cacheAmbBas = surface;
-    cacheAmbBasCle = cle;
-    return cacheAmbBas;
-}
-
-function obtenirCacheMasqueMeteo(w, h) {
-    const yMasque = (CONFIG.lignes - 4) * CONFIG.taille;
-    const cle = `${w}x${h}x${yMasque}`;
-    if (cacheMasqueMeteo && cacheMasqueMeteoCle === cle) return cacheMasqueMeteo;
-    const surface = creerSurfaceCache(w, h);
-    const ctx = /** @type {CanvasRenderingContext2D} */ (surface.getContext('2d'));
-    const grad = ctx.createLinearGradient(0, yMasque, 0, h);
-    grad.addColorStop(0, 'rgba(180,230,255,0)');
-    grad.addColorStop(0.4, 'rgba(180,230,255,0.55)');
-    grad.addColorStop(1, 'rgba(180,230,255,0.85)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, yMasque, w, h - yMasque);
-    cacheMasqueMeteo = surface;
-    cacheMasqueMeteoCle = cle;
-    return cacheMasqueMeteo;
-}
-
-/** Visible en tests uniquement. */
-export function _invaliderCacheGradientsPlateau() {
-    cacheVignette = null;
-    cacheVignetteCle = '';
-    cacheAmbBas = null;
-    cacheAmbBasCle = '';
-    cacheMasqueMeteo = null;
-    cacheMasqueMeteoCle = '';
-}
+export {
+    _invaliderCacheGradientsPlateau,
+    dessinerPieceFantome,
+    dessinerOverlayBraise,
+    dessinerPieceActive,
+};
 
 function dessinerAmbianceJeu() {
     if (obtenirEffetsReduits()) return;
     const w = obtenirCanvasPlateau().width;
     const h = obtenirCanvasPlateau().height;
-    const r = Math.round(couleurAmbRgb[0]);
-    const g = Math.round(couleurAmbRgb[1]);
-    const b = Math.round(couleurAmbRgb[2]);
-    const amb = `rgba(${r},${g},${b}`;
-
-    const cacheBas = obtenirCacheAmbBas(w, h, r, g, b);
-    if (cacheBas) obtenirCtx().drawImage(cacheBas, 0, 0);
-
-    if (etat.pieceActuelle) {
-        const cx = etat.pieceActuelle.x * CONFIG.taille;
-        const gradHaut = obtenirCtx().createRadialGradient(cx, 0, 0, cx, 0, w * 0.7);
-        gradHaut.addColorStop(0, `${amb},0.07)`);
-        gradHaut.addColorStop(1, `${amb},0)`);
-        obtenirCtx().fillStyle = gradHaut;
-        obtenirCtx().fillRect(0, 0, w, h);
-    }
+    const pieceX = etat.pieceActuelle ? etat.pieceActuelle.x * CONFIG.taille : null;
+    dessinerAmbiancePlateauCache(obtenirCtx(), w, h, couleurAmbRgb, pieceX);
 }
 
 function dessinerVignette() {
     if (obtenirEffetsReduits()) return;
     const w = obtenirCanvasPlateau().width;
     const h = obtenirCanvasPlateau().height;
-    const cache = obtenirCacheVignette(w, h);
-    if (cache) obtenirCtx().drawImage(cache, 0, 0);
-}
-
-function dessinerBlocsVerrouilles() {
-    for (let l = 0; l < CONFIG.lignes; l++) {
-        for (let c = 0; c < CONFIG.colonnes; c++) {
-            if (!etat.plateau[l][c]) continue;
-            dessinerCellule(obtenirCtx(), c, l, etat.plateau[l][c]);
-            if (celluleEstRouillee(c, l)) {
-                _dessinerOverlayRouille(c, l);
-            }
-        }
-    }
-}
-
-function _dessinerOverlayRouille(c, l) {
-    const ctx = obtenirCtx();
-    ctx.save();
-    ctx.globalAlpha = 0.38;
-    ctx.fillStyle = '#5c2a00';
-    ctx.fillRect(
-        c * CONFIG.taille + 2,
-        l * CONFIG.taille + 2,
-        CONFIG.taille - 4,
-        CONFIG.taille - 4
-    );
-    ctx.globalAlpha = 0.22;
-    ctx.fillStyle = '#8b3a00';
-    const graine = c * 31 + l * 17;
-    for (let i = 0; i < 4; i++) {
-        const rx = (((graine + i * 13) % 7) / 7) * (CONFIG.taille - 6) + 1;
-        const ry = (((graine + i * 19) % 7) / 7) * (CONFIG.taille - 6) + 1;
-        ctx.fillRect(c * CONFIG.taille + rx, l * CONFIG.taille + ry, 3, 3);
-    }
-    ctx.restore();
+    dessinerVignettePlateauCache(obtenirCtx(), w, h);
 }
 
 export function dessinerPlateau() {
@@ -216,122 +93,6 @@ export function rendreFrameJeu() {
     } catch (err) {
         logger.error('Erreur rendu plateau:', err);
         afficherErreurUtilisateur('Erreur d’affichage du jeu. Rechargez la page (Ctrl+Shift+R).');
-    }
-}
-
-export function dessinerPieceFantome() {
-    if (!etat.pieceActuelle) return;
-    if (ghostEstDesactive()) return;
-    const distance = calculerDistanceChute(etat.pieceActuelle);
-    const forme = obtenirForme(etat.pieceActuelle);
-    const couleur = obtenirCouleurPiece(etat.pieceActuelle);
-
-    let offsetFaux = 0;
-    if (obtenirFauxFantomeActif()) {
-        const tick = Math.floor(performance.now() / 800);
-        offsetFaux = ((tick * 7 + 3) % 7) - 3;
-    }
-
-    const distAffichee = distance;
-    const xAffiche = etat.pieceActuelle.x + offsetFaux;
-    const opaciteFantome = 0.22;
-
-    for (let l = 0; l < forme.length; l++) {
-        for (let c = 0; c < forme[l].length; c++) {
-            if (!forme[l][c]) continue;
-            const x = xAffiche + c;
-            const y = etat.pieceActuelle.y + l + distAffichee;
-            if (y >= 0 && x >= 0 && x < CONFIG.colonnes) {
-                dessinerCellule(obtenirCtx(), x, y, couleur, CONFIG.taille, opaciteFantome);
-            }
-        }
-    }
-}
-
-export function dessinerOverlayBraise() {
-    if (!obtenirCtx() || !obtenirCanvasPlateau()) return;
-    if (obtenirEffetsAccessibiliteReduits()) return;
-    const pulse = 0.12 + 0.1 * Math.sin(performance.now() / 220);
-    for (let l = 0; l < CONFIG.lignes; l++) {
-        for (let c = 0; c < CONFIG.colonnes; c++) {
-            if (etat.plateau[l][c] === COULEUR_BRAISE) {
-                obtenirCtx().save();
-                obtenirCtx().globalAlpha = pulse;
-                obtenirCtx().fillStyle = '#ff8800';
-                obtenirCtx().fillRect(
-                    c * CONFIG.taille,
-                    l * CONFIG.taille,
-                    CONFIG.taille,
-                    CONFIG.taille
-                );
-                obtenirCtx().restore();
-            }
-        }
-    }
-}
-
-export function dessinerPieceActive() {
-    if (!etat.pieceActuelle) return;
-    const opacitePiece = opacitePieceCourante();
-    const forme = obtenirForme(etat.pieceActuelle);
-    const couleur = obtenirCouleurPiece(etat.pieceActuelle);
-    const relique = obtenirReliqueActive() ?? etat.pieceActuelle.reliqueData;
-
-    if (meteo.masquerPiece) {
-        obtenirCtx().fillStyle = 'rgba(255,180,50,0.18)';
-        for (let i = 0; i < 20; i++) {
-            const sx = ((performance.now() * 0.15 + i * 53.7) % 1) * obtenirCanvasPlateau().width;
-            const sy = ((i * 17.3) % 1) * obtenirCanvasPlateau().height;
-            obtenirCtx().fillRect(sx, sy, 8, 1);
-        }
-    }
-
-    if (relique) {
-        obtenirCtx().save();
-        obtenirCtx().shadowBlur = 20 + Math.sin(performance.now() / 200) * 8;
-        obtenirCtx().shadowColor = relique.couleur;
-    }
-
-    if (meteo.masquerPiece) obtenirCtx().globalAlpha = 0.08;
-
-    for (let l = 0; l < forme.length; l++) {
-        for (let c = 0; c < forme[l].length; c++) {
-            if (!forme[l][c]) continue;
-            const x = etat.pieceActuelle.x + c;
-            const y = etat.pieceActuelle.y + l;
-            if (y >= 0) {
-                dessinerCelluleStyle(
-                    obtenirCtx(),
-                    x,
-                    y,
-                    couleur,
-                    CONFIG.taille,
-                    opacitePiece,
-                    obtenirBiomeActif(),
-                    {
-                        effetsReduits: obtenirEffetsReduits(),
-                        prefererMoinsAnimations: obtenirPrefererMoinsAnimations(),
-                        sansOmbreExterne: true,
-                    }
-                );
-            }
-        }
-    }
-
-    if (meteo.masquerPiece) obtenirCtx().globalAlpha = 1;
-
-    dessinerPulsePieceActive(obtenirCtx());
-
-    if (relique) {
-        obtenirCtx().restore();
-        obtenirCtx().font = `${CONFIG.taille * 0.7}px serif`;
-        obtenirCtx().fillStyle = relique.couleur;
-        obtenirCtx().textAlign = 'left';
-        obtenirCtx().fillText(
-            relique.icone,
-            (etat.pieceActuelle.x + 1) * CONFIG.taille,
-            Math.max(12, (etat.pieceActuelle.y - 0.2) * CONFIG.taille)
-        );
     }
 }
 

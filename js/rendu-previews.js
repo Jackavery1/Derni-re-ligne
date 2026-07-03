@@ -20,6 +20,12 @@ function dessinerPieceDansPreview(ctx2d, canvasEl, piece, slotY, slotHauteurPx) 
     const offsetX = Math.floor((canvasEl.width / tailleCell - largeur) / 2);
     const offsetY =
         Math.floor(slotY / tailleCell) + Math.floor((slotHauteurPx / tailleCell - hauteur) / 2);
+
+    ctx2d.save();
+    ctx2d.beginPath();
+    ctx2d.rect(0, slotY, canvasEl.width, slotHauteurPx);
+    ctx2d.clip();
+
     for (let l = 0; l < forme.length; l++) {
         for (let c = 0; c < forme[l].length; c++) {
             if (!forme[l][c]) continue;
@@ -27,6 +33,7 @@ function dessinerPieceDansPreview(ctx2d, canvasEl, piece, slotY, slotHauteurPx) 
         }
     }
     dessinerMotifsPreview(ctx2d, piece, offsetX, offsetY, tailleCell);
+    ctx2d.restore();
 }
 
 export function dessinerPreview(ctx2d, canvasEl, piece) {

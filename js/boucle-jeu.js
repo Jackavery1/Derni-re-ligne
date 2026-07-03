@@ -7,6 +7,7 @@ import {
     textesFlottants,
     flashVerrou,
     flashLignes,
+    flashTopout,
     secousse,
     obtenirTransitionAlpha,
     obtenirLockDelayRestant,
@@ -38,13 +39,14 @@ import {
     dessinerPieceActive,
     dessinerFlashLignes,
     dessinerFlashVerrou,
+    dessinerFlashTopout,
     dessinerParticules,
     dessinerTextesFlottants,
     mettreAJourAmbiante,
     mettreAJourTransition,
     mettreAJourParticulesAmbiance,
     mettreAJourTextesFlottants,
-    getDecalageSecousse,
+    obtenirDecalageSecousse,
     mettreAJourSecousse,
 } from './rendu-jeu.js';
 import { mettreAJourParticules } from './particules-jeu.js';
@@ -109,6 +111,7 @@ function aBesoinDeBoucle() {
         textesFlottants.length > 0 ||
         flashVerrou.timer > 0 ||
         flashLignes.timer > 0 ||
+        flashTopout.timer > 0 ||
         secousse.timer > 0
     );
 }
@@ -143,7 +146,7 @@ export function planifierBoucle() {
 function dessinerFrameSolo(ctx, enPartie) {
     const canvasPlateau = obtenirCanvasPlateau();
     ctx.save();
-    const dec = getDecalageSecousse();
+    const dec = obtenirDecalageSecousse();
     ctx.translate(dec.x, dec.y);
     ctx.globalCompositeOperation = 'source-over';
     dessinerPlateau();
@@ -157,6 +160,7 @@ function dessinerFrameSolo(ctx, enPartie) {
         dessinerMotifsPieceCourante(ctx);
     }
     dessinerFlashVerrou();
+    dessinerFlashTopout();
     dessinerParticules();
     if (enPartie) dessinerDecorations();
 
@@ -195,6 +199,50 @@ function _mettreAJourGravitePiece(deltaTemps) {
     if (obtenirLockDelayRestant() <= 0) verrouillerPiece();
 }
 
+function _mettreAJourPartieActive(deltaTemps, timestamp) {
+    if (!modeHistoireEnCours()) {
+        mettreAJourMeteo(deltaTemps);
+    }
+    mettreAJourMecaniquesHistoire(deltaTemps, timestamp);
+    if (!modeHistoireEnCours()) {
+        mettreAJourVivant(deltaTemps);
+    }
+    mettreAJourDas(deltaTemps);
+    if (!partieSpecialiseeActive()) mettreAJourGamepad(obtenirActions);
+    mettreAJourGameFeel(deltaTemps, recupererZenApresTopOut);
+    _mettreAJourGravitePiece(deltaTemps);
+    mettreAJourParticules(deltaTemps);
+    mettreAJourParticulesAmbiance(deltaTemps);
+    mettreAJourTextesFlottants(deltaTemps);
+    mettreAJourAffichageTemps();
+    tickTimerNiveau();
+    if (bossEstActif()) {
+        if (!bossEstVaincu()) mettreAJourBoss(deltaTemps);
+        void _rendrePortraitBossLazy(timestamp);
+    }
+    mettreAJourAmbiante(deltaTemps);
+    mettreAJourIndicateurRelique();
+}
+
+function _mettreAJourTimersEffets(deltaTemps) {
+    if (flashVerrou.timer > 0) flashVerrou.timer -= deltaTemps;
+    if (flashLignes.timer > 0) flashLignes.timer -= deltaTemps;
+    if (flashTopout.timer > 0) flashTopout.timer -= deltaTemps;
+    mettreAJourSecousse(deltaTemps);
+}
+
+function _effetsVisuelsActifs() {
+    return (
+        obtenirTransitionAlpha() < 1 ||
+        particules.length > 0 ||
+        textesFlottants.length > 0 ||
+        flashVerrou.timer > 0 ||
+        flashLignes.timer > 0 ||
+        flashTopout.timer > 0 ||
+        secousse.timer > 0
+    );
+}
+
 function boucleJeu(timestamp) {
     if (partieSpecialiseeActive()) {
         suspendreBoucleSolo();
@@ -218,47 +266,14 @@ function boucleJeu(timestamp) {
         const enPartie = etat.estEnCours && !etat.estEnPause;
 
         if (enPartie) {
-            if (!modeHistoireEnCours()) {
-                mettreAJourMeteo(deltaTemps);
-            }
-            mettreAJourMecaniquesHistoire(deltaTemps, timestamp);
-            if (!modeHistoireEnCours()) {
-                mettreAJourVivant(deltaTemps);
-            }
-            mettreAJourDas(deltaTemps);
-            if (!partieSpecialiseeActive()) mettreAJourGamepad(obtenirActions);
-            mettreAJourGameFeel(deltaTemps, recupererZenApresTopOut);
-            _mettreAJourGravitePiece(deltaTemps);
-
-            mettreAJourParticules(deltaTemps);
-            mettreAJourParticulesAmbiance(deltaTemps);
-            mettreAJourTextesFlottants(deltaTemps);
-            mettreAJourAffichageTemps();
-            tickTimerNiveau();
-            if (bossEstActif()) {
-                if (!bossEstVaincu()) mettreAJourBoss(deltaTemps);
-                void _rendrePortraitBossLazy(timestamp);
-            }
-            mettreAJourAmbiante(deltaTemps);
-            mettreAJourIndicateurRelique();
+            _mettreAJourPartieActive(deltaTemps, timestamp);
         }
 
         if (obtenirTransitionAlpha() < 1) mettreAJourTransition();
 
-        if (flashVerrou.timer > 0) flashVerrou.timer -= deltaTemps;
-        if (flashLignes.timer > 0) flashLignes.timer -= deltaTemps;
-        mettreAJourSecousse(deltaTemps);
+        _mettreAJourTimersEffets(deltaTemps);
 
-        const doitDessiner =
-            enPartie ||
-            obtenirTransitionAlpha() < 1 ||
-            particules.length > 0 ||
-            textesFlottants.length > 0 ||
-            flashVerrou.timer > 0 ||
-            flashLignes.timer > 0 ||
-            secousse.timer > 0;
-
-        if (doitDessiner) {
+        if (enPartie || _effetsVisuelsActifs()) {
             dessinerFrameSolo(ctx, enPartie);
         }
         erreursConsecutivesBoucle = 0;

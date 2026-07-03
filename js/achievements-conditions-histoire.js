@@ -1,4 +1,4 @@
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { chargerEtatHistoire } from './progression.js';
 
 function etatH() {

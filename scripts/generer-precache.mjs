@@ -15,7 +15,7 @@ const EXCLUS_PRECACHE = new Set([
 const modeProd = process.argv.includes('--prod');
 const enforceBudget = process.argv.includes('--enforce-budget') || modeProd;
 const racine = modeProd ? 'dist' : '.';
-const swPath = modeProd ? 'dist/sw.js' : 'sw.js';
+const precachePath = modeProd ? 'dist/sw-precache.js' : 'sw-precache.js';
 
 /** @param {string} dossier @param {string} prefixe @param {string} ext */
 function listerPlat(dossier, prefixe, ext) {
@@ -33,6 +33,7 @@ function construireListePrecache() {
         './',
         './index.html',
         './manifest.json',
+        './sw-precache.js',
         ...listerPlat('styles', './styles/', '.css'),
         ...listerPlat('html', './html/', '.html'),
         ...listerPlat('data', './data/', '.json'),
@@ -75,8 +76,8 @@ function mesurerPoids(fichiers) {
     return total;
 }
 
-if (modeProd && !existsSync(swPath)) {
-    console.error(`Mode prod : ${swPath} introuvable (lancez npm run build d abord).`);
+if (modeProd && !existsSync(precachePath)) {
+    console.error(`Mode prod : ${precachePath} introuvable (lancez npm run build d abord).`);
     process.exit(1);
 }
 
@@ -84,24 +85,24 @@ const fichiers = construireListePrecache();
 const lignes = fichiers.map((f) => `    '${f}',`).join('\n');
 const blocPrecache = `${MARQUEUR_DEBUT}\n${lignes}\n    ${MARQUEUR_FIN}`;
 
-let sw = readFileSync(swPath, 'utf8');
+let precache = readFileSync(precachePath, 'utf8');
 const regexPrecache = new RegExp(
     `${MARQUEUR_DEBUT.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\S]*?${MARQUEUR_FIN.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`
 );
 
-if (!regexPrecache.test(sw)) {
-    console.error(`Marqueurs PRECACHE introuvables dans ${swPath}`);
+if (!regexPrecache.test(precache)) {
+    console.error(`Marqueurs PRECACHE introuvables dans ${precachePath}`);
     process.exit(1);
 }
 
-sw = sw.replace(regexPrecache, blocPrecache);
-writeFileSync(swPath, sw);
+precache = precache.replace(regexPrecache, blocPrecache);
+writeFileSync(precachePath, precache);
 
 const octets = mesurerPoids(fichiers);
 const ko = Math.round((octets / 1024) * 10) / 10;
 const label = modeProd ? 'prod' : 'dev';
 
-console.log(`Precache ${label} : ${fichiers.length} fichiers, ${ko} Ko (${swPath})`);
+console.log(`Precache ${label} : ${fichiers.length} fichiers, ${ko} Ko (${precachePath})`);
 
 if (octets > BUDGET_APP_SHELL_KO * 1024) {
     const msg = `App shell trop lourd : ${ko} Ko (max ${BUDGET_APP_SHELL_KO} Ko)`;

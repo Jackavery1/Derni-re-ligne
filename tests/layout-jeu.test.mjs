@@ -136,6 +136,26 @@ describe('layout-jeu', () => {
         expect(hPaysage).not.toBe(hPortrait);
     });
 
+    it('exclut les laptops larges du mode paysage compact', () => {
+        window.innerWidth = 1366;
+        window.innerHeight = 768;
+        adapterInterfaceArchi();
+        const hLaptop = document
+            .getElementById('interface-echelle-archi')
+            .style.setProperty.mock.calls.find((c) => c[0] === '--iface-echelle-h')?.[1];
+
+        window.innerWidth = 667;
+        window.innerHeight = 375;
+        adapterInterfaceArchi();
+        const hMobile = document
+            .getElementById('interface-echelle-archi')
+            .style.setProperty.mock.calls.findLast((c) => c[0] === '--iface-echelle-h')?.[1];
+
+        expect(hLaptop).toBeTruthy();
+        expect(hMobile).toBeTruthy();
+        expect(hLaptop).not.toBe(hMobile);
+    });
+
     it('adapterInterface ne plante pas si le DOM est absent', () => {
         vi.stubGlobal('document', { getElementById: () => null });
         expect(() => adapterInterface()).not.toThrow();

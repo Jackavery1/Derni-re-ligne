@@ -10,7 +10,7 @@ import {
     attendrePartieVisible,
     passerCutsceneHistoire,
     ETAT_DEBLOCAGE_MONDE_LIBRE,
-    ETAT_DEBLOCAGE_COMPLET,
+    ETAT_DEBLOCAGE_META_RAPIDE,
 } from './helpers.mjs';
 
 test('réserve hold accepte une pièce via clavier', async ({ page }) => {
@@ -120,7 +120,7 @@ test('sprint 40L termine en victoire', async ({ page }) => {
     await page.evaluate(() => {
         document.getElementById('toggle-sprint')?.click();
     });
-    await expect(page.locator('#sprint-toggle-label')).toHaveText(/ON/);
+    await expect(page.locator('#sprint-toggle-label')).toHaveText('SPRINT');
     await page.evaluate(() => {
         document.getElementById('btn-panneau-detail-jouer')?.click();
     });
@@ -168,24 +168,27 @@ test('mascotte ROBO dessine pendant une partie', async ({ page }) => {
 });
 
 test('codex — icone pixel visible sur une entree debloquee', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-codex').click();
     await expect(page.locator('#ecran-codex')).toHaveClass(/actif/);
 
-    const iconeDessinee = await page.evaluate(() => {
-        const canvas = document.querySelector('#ecran-codex canvas');
-        if (!(canvas instanceof HTMLCanvasElement)) return false;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return false;
-        const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        for (let i = 3; i < data.length; i += 4) {
-            if (data[i] > 0) return true;
-        }
-        return false;
-    });
-    expect(iconeDessinee).toBe(true);
+    await expect
+        .poll(async () => {
+            return page.evaluate(() => {
+                const canvas = document.querySelector('#ecran-codex canvas');
+                if (!(canvas instanceof HTMLCanvasElement)) return false;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return false;
+                const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                for (let i = 3; i < data.length; i += 4) {
+                    if (data[i] > 0) return true;
+                }
+                return false;
+            });
+        })
+        .toBe(true);
 });
 
 test('boucle menu unifiee inactive hors ecran selection', async ({ page }) => {
@@ -207,10 +210,11 @@ test('boucle menu unifiee inactive hors ecran selection', async ({ page }) => {
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
 
-    const selectionActive = await page.evaluate(
-        () => window.__NEO_TEST__?.boucleMenuUnifieActive?.() ?? null
-    );
-    expect(selectionActive).toBe(true);
+    await expect
+        .poll(async () => {
+            return page.evaluate(() => window.__NEO_TEST__?.boucleMenuUnifieActive?.() ?? null);
+        })
+        .toBe(true);
 
     await page.locator('#btn-selection-retour').click();
     await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);

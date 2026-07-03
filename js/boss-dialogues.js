@@ -1,4 +1,4 @@
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { obtenirHistoireTextesSync } from './charger-histoire-textes.js';
 import { logger } from './logger.js';

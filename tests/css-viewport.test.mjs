@@ -58,4 +58,40 @@ describe('css viewport mobile', () => {
         }
         expect(violations).toEqual([]);
     });
+
+    it('cibles tactiles secondaires utilisent 48px minimum (pas 44px)', () => {
+        const fichiers = ['ecran-selection.css', 'boss.css'];
+        const violations = [];
+        for (const nom of fichiers) {
+            const contenu = readFileSync(join(STYLES_DIR, nom), 'utf8');
+            if (/min-height:\s*44px/.test(contenu)) {
+                violations.push(nom);
+            }
+        }
+        expect(violations).toEqual([]);
+    });
+
+    it('journal et fin histoire utilisent dvh avec safe-area en max-height de base', () => {
+        const css = readFileSync(join(STYLES_DIR, 'mode-histoire.css'), 'utf8');
+        expect(css).toMatch(
+            /#histoire-journal-contenu[\s\S]*?max-height:\s*calc\(90dvh - var\(--safe-top\) - var\(--safe-bottom\)\)/
+        );
+        expect(css).toMatch(
+            /#histoire-fin-contenu[\s\S]*?max-height:\s*calc\(90dvh - var\(--safe-top\) - var\(--safe-bottom\)\)/
+        );
+    });
+
+    it('conteneur jeu utilise 100dvw (pas 100vw)', () => {
+        const css = readFileSync(join(STYLES_DIR, 'interface-jeu.css'), 'utf8');
+        expect(css).toMatch(/#conteneur-principal[\s\S]*?width:\s*100dvw/);
+        expect(css).not.toMatch(/#conteneur-principal[\s\S]*?width:\s*100vw[^d]/);
+    });
+
+    it('conteneur coop utilise 100dvw et safe-area comme solo', () => {
+        const css = readFileSync(join(STYLES_DIR, 'ecran-selection.css'), 'utf8');
+        expect(css).toMatch(/#conteneur-principal-coop[\s\S]*?width:\s*100dvw/);
+        expect(css).toMatch(
+            /body\.coop-active #conteneur-principal-coop[\s\S]*?padding:\s*var\(--safe-top\)/
+        );
+    });
 });

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { store } from '../js/store-core.js';
+import { store } from '../js/store-jeu.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 
 vi.mock('../js/histoire-narratif.js', () => ({
@@ -92,9 +92,9 @@ describe('histoire-manager-post-monde', () => {
         store.histoire.etat = etat;
 
         declencherNarratifPostMonde(monde, etat, true, [true, false, false]);
-        await new Promise((resolve) => setTimeout(resolve, 0));
-
-        expect(store.histoire.etat.fragmentsVusIds).toContain('apres_vide');
+        await vi.waitFor(() => {
+            expect(store.histoire.etat.fragmentsVusIds).toContain('apres_vide');
+        });
     });
 
     it('joue interlude_gardiens apres premiere completion rouille', async () => {
@@ -116,5 +116,18 @@ describe('histoire-manager-post-monde', () => {
         const lignes = Array.isArray(textes) ? textes : (textes?.lignes ?? []);
         expect(lignes.some((l) => String(l.texte ?? l).includes('GARDIEN'))).toBe(true);
         expect(store.histoire.etat.interludesVusIds).toContain('interlude_gardiens');
+    });
+
+    it('chaque monde post-monde a un fragment VERA defini', async () => {
+        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        await chargerHistoireTextes();
+        const { CLE_FRAGMENT_PAR_MONDE } = await import('../js/histoire-manager-post-monde.js');
+        const { FRAGMENTS_VERA_SIGNAL } = await import('../js/histoire-textes/journaux.js');
+
+        for (const cle of Object.values(CLE_FRAGMENT_PAR_MONDE)) {
+            const fragment = FRAGMENTS_VERA_SIGNAL[cle];
+            expect(fragment, cle).toBeTruthy();
+            expect(fragment.length, cle).toBeGreaterThan(0);
+        }
     });
 });

@@ -50,11 +50,15 @@ export const CONFIG_FOND_CUTSCENE = {
 const ALIAS_PORTRAIT_META = {
     archiviste_voix: 'archiviste',
     avantgarde_voix: 'avantgarde',
+    brasier_voix: 'brasier',
+    sentinelle_voix: 'sentinelle',
 };
 
 const ALIAS_PORTRAIT_RENDU = {
     archiviste_voix: 'archiviste',
     avantgarde_voix: 'avantgarde',
+    brasier_voix: 'brasier',
+    sentinelle_voix: 'sentinelle',
 };
 
 export function idPortraitMeta(personnageId) {

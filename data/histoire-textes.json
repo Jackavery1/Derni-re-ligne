@@ -148,7 +148,7 @@
                 "scene": "seuil_brasier",
                 "personnage": "brasier",
                 "texte": "QUI APPROCHE ?",
-                "humeur": "calme"
+                "humeur": "agressif"
             },
             {
                 "scene": "seuil_brasier",
@@ -164,9 +164,15 @@
             },
             {
                 "scene": "seuil_brasier",
+                "personnage": "brasier",
+                "texte": "Mais approche, et c'est l'autre partie de moi qui te répondra.",
+                "humeur": "calme"
+            },
+            {
+                "scene": "seuil_brasier",
                 "personnage": "robo",
                 "texte": "Alors je vais devoir t'éteindre.",
-                "humeur": "content"
+                "humeur": "neutre"
             },
             {
                 "scene": "seuil_brasier",
@@ -268,7 +274,7 @@
                 "scene": "seuil_sentinelle",
                 "personnage": "sentinelle",
                 "texte": "Vous bougez. Ça suffit. Le mouvement corrompt, l'immobilité protège — je le mesure depuis des millénaires, alors arrêtez-vous.",
-                "humeur": "calme"
+                "humeur": "agressif"
             },
             {
                 "scene": "seuil_sentinelle",
@@ -990,7 +996,7 @@
                 },
                 {
                     "personnage": "robo",
-                    "texte": "Un bloc efface n'est pas un bloc détruit. C'est de l'espace libéré.",
+                    "texte": "Un bloc effacé n'est pas un bloc détruit. C'est de l'espace libéré.",
                     "humeur": "neutre"
                 },
                 {
@@ -1327,7 +1333,8 @@
             {
                 "scene": "seuil_brasier",
                 "personnage": "brasier_voix",
-                "texte": "Peut-être... qu'elle attendait quelqu'un comme toi."
+                "texte": "Peut-être... qu'elle attendait quelqu'un comme toi.",
+                "humeur": "vacillant"
             },
             {
                 "scene": "labo",
@@ -1401,122 +1408,148 @@
         ],
         "archiviste": [
             {
+                "scene": "labo",
                 "personnage": "archiviste",
                 "texte": "ERREUR_CRITIQUE : logique_introuvable.",
                 "humeur": "vacillant"
             },
             {
+                "scene": "labo",
                 "personnage": "robo",
                 "texte": "Tu m'as dit que je crée des trous.",
                 "humeur": "neutre"
             },
             {
+                "scene": "labo",
                 "personnage": "archiviste",
                 "texte": "Affirme.",
                 "humeur": "calme"
             },
             {
+                "scene": "labo",
                 "personnage": "robo",
                 "texte": "C'est vrai. Mais je les comble aussi.",
                 "humeur": "neutre"
             },
             {
+                "scene": "labo",
                 "personnage": "archiviste",
                 "texte": "...",
                 "humeur": "vacillant"
             },
             {
+                "scene": "labo",
                 "personnage": "archiviste",
                 "texte": "ANALYSE EN COURS...",
                 "humeur": "vacillant"
             },
             {
+                "scene": "labo",
                 "personnage": "archiviste",
                 "texte": "RÉSULTAT : paradoxe acceptable.",
                 "humeur": "vacillant"
             },
             {
+                "scene": "labo",
                 "personnage": "archiviste",
                 "texte": "Les archives de VERA sont maintenant accessibles.",
                 "humeur": "calme"
             },
             {
+                "scene": "labo",
                 "personnage": "archiviste",
                 "texte": "Elle avait prévu que tu viendrais.",
                 "humeur": "calme"
             },
             {
+                "scene": "labo",
                 "personnage": "robo",
                 "texte": "Comment elle savait ?",
                 "humeur": "neutre"
             },
             {
+                "scene": "labo",
                 "personnage": "archiviste",
                 "texte": "Elle te connaissait mieux que toi-même. C'est écrit dans ses fichiers.",
                 "humeur": "vacillant"
             },
             {
+                "scene": "labo",
                 "personnage": "archiviste",
-                "texte": "Tout ce qu'elle savait de toi — elle l'avait inventé. Puis tu es devenu exactement ça."
+                "texte": "Tout ce qu'elle savait de toi — elle l'avait inventé. Puis tu es devenu exactement ça.",
+                "humeur": "vacillant"
             }
         ],
         "avantgarde": [
             {
+                "scene": "seuil_avantgarde",
                 "personnage": "avantgarde",
                 "texte": "Tu es prêt.",
                 "humeur": "calme"
             },
             {
+                "scene": "seuil_avantgarde",
                 "personnage": "robo",
                 "texte": "Je ne me sens pas prêt.",
                 "humeur": "neutre"
             },
             {
+                "scene": "seuil_avantgarde",
                 "personnage": "avantgarde",
                 "texte": "Je sais. C'est pour ça que tu l'es. Ceux qui se sentent prêts n'ont rien compris à ce qui les attend.",
                 "humeur": "calme"
             },
             {
+                "scene": "seuil_avantgarde",
                 "personnage": "robo",
                 "texte": "Qu'est-ce qui m'attend ?",
                 "humeur": "neutre"
             },
             {
+                "scene": "seuil_avantgarde",
                 "personnage": "avantgarde",
                 "texte": "Quelque chose qui souffre. Quelque chose qui a attendu très longtemps.",
                 "humeur": "calme"
             },
             {
+                "scene": "seuil_avantgarde",
                 "personnage": "avantgarde",
                 "texte": "Elle m'a confié trois mots pour toi.",
                 "humeur": "calme"
             },
             {
+                "scene": "seuil_avantgarde",
                 "personnage": "robo",
                 "texte": "Lesquels ?",
                 "humeur": "neutre"
             },
             {
+                "scene": "seuil_avantgarde",
                 "personnage": "avantgarde",
                 "texte": "« Elle dit bonjour. »",
                 "humeur": "calme"
             },
             {
+                "scene": "seuil_avantgarde",
                 "personnage": "narrateur",
                 "texte": "L'Avant-Garde se dissout sans combattre sa propre fin. La route vers la Finale est ouverte."
             },
             {
+                "scene": "seuil_avantgarde",
                 "personnage": "narrateur",
                 "texte": "Robo reste immobile trente secondes. C'est la première fois qu'il s'arrête depuis le début du voyage."
             },
             {
+                "scene": "seuil_avantgarde",
                 "personnage": "robo",
                 "texte": "Trois mots. Des années de silence, et elle commence par « bonjour ».",
                 "humeur": "neutre"
             },
             {
+                "scene": "seuil_avantgarde",
                 "personnage": "robo",
-                "texte": "... Moi aussi, je crois."
+                "texte": "... Moi aussi, je crois.",
+                "humeur": "neutre"
             }
         ],
         "distorsion_normal": [
@@ -1623,7 +1656,8 @@
             },
             {
                 "personnage": "distorsion",
-                "texte": "C'est ça. C'est ça que je cherchais."
+                "texte": "C'est ça. C'est ça que je cherchais.",
+                "humeur": "apaisee"
             },
             {
                 "personnage": "distorsion",
@@ -1693,7 +1727,7 @@
             },
             {
                 "personnage": "distorsion",
-                "texte": "Je pleure. En binaire. 0 et 1. 0 pour ce que j'étais. 1 pour ce que je deviens.",
+                "texte": "Je pleure. En binaire.",
                 "humeur": "apaisee"
             },
             {
@@ -1790,12 +1824,12 @@
             "epithete": "Elle protège ce monde contre le mouvement. Y compris le sien.",
             "debut": "PROTOCOLE : IMMOBILISATION.",
             "phases": [
-                "Tes pièces bougent trop. Le mouvement corrompt. J'ai des MILLÉNAIRES de données.",
+                "Vos pièces bougent trop. Le mouvement corrompt. J'ai des MILLÉNAIRES de données.",
                 "Erreur de modèle... tu bouges, et rien ne se corrompt..."
             ],
             "reactionTetris": "Quatre lignes d'un coup. Variable... non modélisée.",
             "quasiVaincu": "Recalcul... recalcul... pourquoi mes certitudes fondent plus vite que ma glace ?",
-            "gameOver": "Le gel t'a eu. Reste immobile. C'est plus sûr."
+            "gameOver": "Le gel vous a eu. Restez immobile. C'est plus sûr."
         },
         "archiviste": {
             "epithete": "Il garde la vérité de VERA. Même contre elle.",
@@ -1844,6 +1878,11 @@
             },
             {
                 "personnage": "vera",
+                "texte": "C'est fini. Écoute... même le silence a changé.",
+                "humeur": "douce"
+            },
+            {
+                "personnage": "vera",
                 "texte": "Dans mille ans, peut-être, quelqu'un d'autre devra refaire le chemin.",
                 "humeur": "douce"
             },
@@ -1874,7 +1913,7 @@
             },
             {
                 "personnage": "narrateur",
-                "texte": "Ni completion pure ni incompletude pure — quelque chose entre les deux."
+                "texte": "Ni complétion pure ni incomplétude pure — quelque chose entre les deux."
             },
             {
                 "personnage": "distorsion",
@@ -2109,7 +2148,7 @@
         "apres_rouille": [
             {
                 "personnage": "systeme",
-                "texte": "> INTERFERENCE METALLIQUE",
+                "texte": "> INTERFÉRENCE MÉTALLIQUE",
                 "humeur": "alerte"
             },
             {
@@ -2148,7 +2187,7 @@
             },
             {
                 "personnage": "vera",
-                "texte": "...ces feux... je les ai allumés pour toi... pour que tu saches que la joie existe encore...",
+                "texte": "...ces feux... regarde-les bien... rien ne brille tout seul, ici...",
                 "humeur": "douce"
             },
             {
@@ -2204,14 +2243,14 @@
             },
             {
                 "personnage": "systeme",
-                "texte": "> IMAGE INVERSEE",
+                "texte": "> IMAGE INVERSÉE",
                 "humeur": "alerte"
             }
         ],
         "apres_trame": [
             {
                 "personnage": "systeme",
-                "texte": "> DEPOT DANS LA TRAME — 1.4 SECONDES",
+                "texte": "> DÉPÔT DANS LA TRAME — 1.4 SECONDES",
                 "humeur": "neutre"
             },
             {
@@ -2226,14 +2265,14 @@
             },
             {
                 "personnage": "systeme",
-                "texte": "> FIN DU DEPOT",
+                "texte": "> FIN DU DÉPÔT",
                 "humeur": "alerte"
             }
         ],
         "apres_paradoxe": [
             {
                 "personnage": "systeme",
-                "texte": "> ANOMALIE VOLONTAIRE — TOP NON DEMANDE",
+                "texte": "> ANOMALIE VOLONTAIRE — TOP NON DEMANDÉ",
                 "humeur": "alerte"
             },
             {
@@ -2243,7 +2282,7 @@
             },
             {
                 "personnage": "systeme",
-                "texte": "> BOUCLE PARADOXALE FERMEE",
+                "texte": "> BOUCLE PARADOXALE FERMÉE",
                 "humeur": "alerte"
             }
         ]
@@ -2573,6 +2612,11 @@
                 "humeur": "apaisee"
             },
             {
+                "personnage": "robo",
+                "texte": "J'ai quelque chose qui ressemble à de la joie. Je ne le note plus. Je le garde.",
+                "humeur": "content"
+            },
+            {
                 "personnage": "systeme",
                 "texte": "FIN — L'HARMONIE",
                 "humeur": "neutre"
@@ -2767,7 +2811,7 @@
             },
             {
                 "personnage": "robo",
-                "texte": "Je commence à comprendre que ce n'était peut-être pas les lignes qu'elle voulait que je complète.",
+                "texte": "Elle n'a jamais fini sa phrase. Moi, je finirai les lignes. C'est un début.",
                 "humeur": "neutre"
             },
             {
@@ -2863,10 +2907,6 @@
                 "personnage": "robo",
                 "texte": "Mais je vais essayer quand même.",
                 "humeur": "neutre"
-            },
-            {
-                "personnage": "narrateur",
-                "texte": "C'est la première fois que Robo exprime un doute et continue malgré tout."
             },
             {
                 "personnage": "systeme",

@@ -1,7 +1,7 @@
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { enchainementCampagneActif } from './preferences-campagne.js';
 import { afficherNotificationTransitionCampagne } from './ui-notifications.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { definirBiomeActif } from './store-etat-partie.js';
 import { sauvegarderBiomeActif, sauvegarderEtatHistoire } from './progression.js';
 import { obtenirActions } from './actions-jeu.js';

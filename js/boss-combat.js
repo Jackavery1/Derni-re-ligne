@@ -1,5 +1,6 @@
+/** Combat boss — dégâts, phases, victoire et attaques spéciales. */
 import { CONFIG } from './config.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { etat } from './store-jeu.js';
 import { AudioMoteur } from './audio.js';
 import { modeHistoireEnCours } from './mode-histoire.js';

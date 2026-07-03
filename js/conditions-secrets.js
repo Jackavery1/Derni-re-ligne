@@ -1,4 +1,4 @@
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { etat } from './store-jeu.js';
 import { CONFIG } from './config.js';
 import { ETAT_HISTOIRE_VIDE } from './histoire-donnees.js';

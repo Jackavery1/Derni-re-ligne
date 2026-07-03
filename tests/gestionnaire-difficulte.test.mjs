@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { reinitialiserBusJeu } from '../js/bus-jeu.js';
-import { store } from '../js/store-core.js';
+import { reinitialiserBusJeu, emettre } from '../js/bus-jeu.js';
+import { store } from '../js/store-jeu.js';
+import { activerModeHistoire, desactiverModeHistoire } from '../js/mode-histoire.js';
 import {
     demarrerSuiviMonde,
     arreterSuiviMonde,
@@ -26,7 +27,8 @@ import { PALIERS_VITESSE_MS, DIFFICULTE_MONDES } from '../js/difficulte-mondes-c
 describe('gestionnaire-difficulte', () => {
     beforeEach(() => {
         reinitialiserBusJeu();
-        store.histoire.actif = true;
+        desactiverModeHistoire();
+        activerModeHistoire();
         arreterSuiviMonde();
     });
 
@@ -133,5 +135,77 @@ describe('gestionnaire-difficulte', () => {
         const palierApres = store.histoire.difficulte?.palierEnAttente;
         notifierPhaseBoss('brasier', 1);
         expect(store.histoire.difficulte?.palierEnAttente).toBe(palierApres);
+    });
+
+    it('notifie la phase boss 2 sous 25% PV restants', () => {
+        demarrerSuiviMonde('monde_boss_1');
+        notifierPhaseBossParPv('brasier', 20);
+        expect(store.histoire.difficulte?.phasesBossAppliquees).toContain(2);
+        expect(store.histoire.difficulte?.palierEnAttente).not.toBeNull();
+    });
+
+    it('monde boss ignore la victoire par lignes effacees', () => {
+        demarrerSuiviMonde('monde_boss_1');
+        enregistrerProgression({ nbLignes: 50, estTetris: true, combo: 4 });
+        expect(store.histoire.difficulte?.lignesEffacees).toBe(50);
+        expect(store.histoire.difficulte?.victoireDeclenchee).toBe(false);
+    });
+
+    it('retarde la montee de palier en surtension jusqu a musique:section', () => {
+        demarrerSuiviMonde('monde_prologue');
+        store.surtensionActive = true;
+        enregistrerProgression({ nbLignes: 6, estTetris: false, combo: 1 });
+        expect(store.histoire.difficulte?.palierEnAttente).toBeNull();
+        emettre('musique:section');
+        expect(store.histoire.difficulte?.palierEnAttente).toBe(2);
+    });
+
+    it('arreterSuiviMonde detache l ecouteur surtension', () => {
+        demarrerSuiviMonde('monde_prologue');
+        store.surtensionActive = true;
+        enregistrerProgression({ nbLignes: 6, estTetris: false, combo: 1 });
+        expect(store.histoire.difficulte?.ecouteurSurtension).toBeTruthy();
+        arreterSuiviMonde();
+        emettre('musique:section');
+        expect(store.histoire.difficulte).toBeNull();
+    });
+
+    it('vitesseHistoireMs applique multGraviteMusique', () => {
+        demarrerSuiviMonde('monde_prologue');
+        store.multGraviteMusique = 2;
+        const vitesseBase = PALIERS_VITESSE_MS[1];
+        expect(vitesseHistoireMs()).toBe(Math.max(120, vitesseBase / 2));
+    });
+
+    it('demarre un monde inconnu avec objectif depuis SEUILS_COMPLETION', () => {
+        demarrerSuiviMonde('monde_inexistant_audit');
+        expect(store.histoire.difficulte?.lignesObjectif).toBeGreaterThan(0);
+        expect(store.histoire.difficulte?.palierCourant).toBe(5);
+    });
+
+    it('evaluerDefi couvre les types d etoiles principaux', () => {
+        demarrerSuiviMonde('monde_lave');
+        const etatHist = structuredClone(ETAT_HISTOIRE_VIDE);
+        etatHist.continuesParBoss.monde_lave = 1;
+        etatHist.conditionsTrame.actionDistorsionFaite = true;
+        etatHist.conditionsParadoxe.topsVolontairesPrologue = 3;
+
+        enregistrerProgression({ nbLignes: 4, estTetris: true, combo: 3 });
+        enregistrerPosePiece();
+        enregistrerPosePiece();
+
+        const cfg = DIFFICULTE_MONDES.monde_lave;
+        expect(calculerEtoiles('monde_lave', etatHist)[1]).toBe(true);
+
+        demarrerSuiviMonde('monde_lave');
+        enregistrerTopOut();
+        expect(calculerEtoiles('monde_lave', etatHist)[1]).toBe(false);
+
+        expect(libelleEtoile(cfg?.etoile2)).toBeTruthy();
+        expect(libelleEtoile({ type: 'sans_continue' })).toContain('échec');
+        expect(libelleEtoile({ type: 'tetris', valeur: 2 })).toContain('2');
+        expect(libelleEtoile({ type: 'combo', valeur: 4 })).toContain('4');
+        expect(libelleEtoile({ type: 'pieces_max', valeur: 40 })).toContain('40');
+        expect(libelleEtoile({ type: 'tops_volontaires', valeur: 3 })).toContain('3');
     });
 });

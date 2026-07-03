@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { BIOMES } from '../js/config.js';
-import { store } from '../js/store-core.js';
+import { store } from '../js/store-jeu.js';
 import { etat, definirBiomeActif } from '../js/store-jeu.js';
 import { creerPlateau } from '../js/piece-jeu.js';
 import { demarrerSuiviMonde } from '../js/gestionnaire-difficulte.js';

@@ -5,10 +5,12 @@ import { SCENES_CUTSCENE } from '../js/scenes-cutscene.js';
 import {
     CUTSCENES_ENTREE,
     CUTSCENES_POST_MONDE,
+    CUTSCENES_VICTOIRE_BOSS,
     EPILOGUES,
     INTERLUDES,
 } from '../js/histoire-textes.js';
 import { INTRO_HISTOIRE, OUTRO_FINS } from '../js/histoire-textes/intro-interludes.js';
+import { TRANSITIONS_CHAPITRE } from '../js/histoire-textes/chapitres.js';
 import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
 
 const racine = join(import.meta.dirname, '..');
@@ -45,7 +47,7 @@ describe('scenes-cutscene — assets et registre', () => {
             expect(swSource).toContain(src);
         }
         expect(SCENES_CUTSCENE.vide_errance?.lazy).toBe(true);
-        expect(swSource).not.toContain('scene_vide_errance');
+        expect(swSource).toContain('scene_vide_errance');
     });
 
     it('vide_errance est annotee lazy et referencee par une cutscene entree', () => {
@@ -59,6 +61,8 @@ describe('scenes-cutscene — assets et registre', () => {
         const toutes = new Set([
             ...collecterScenes(CUTSCENES_ENTREE),
             ...collecterScenes(CUTSCENES_POST_MONDE),
+            ...collecterScenes(CUTSCENES_VICTOIRE_BOSS),
+            ...collecterScenes(TRANSITIONS_CHAPITRE),
             ...collecterScenes(INTERLUDES),
             ...collecterScenes(EPILOGUES),
             ...collecterScenes(OUTRO_FINS),

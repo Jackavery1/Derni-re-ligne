@@ -12,6 +12,7 @@ import {
     afficherTexteFlottant,
     obtenirYHautTas,
     declencherSecousse,
+    declencherFlashTopout,
 } from './rendu-jeu.js';
 import {
     reagirRoboAuxLignes,
@@ -65,6 +66,8 @@ export function initialiserEffetsPartie() {
     effetsInitialises = true;
     brancherBusReactionsMascotte(ecouter);
     ecouter('piece:son', ({ type }) => AudioMoteur.son(type));
+
+    ecouter('partie:topout', () => declencherFlashTopout());
 
     ecouter('partie:stats', () => rafraichirStats());
 

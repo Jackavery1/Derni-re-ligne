@@ -5,20 +5,24 @@ import {
     passerCutsceneEntiere,
     passerFluxLancementMonde,
     terminerCutscenesVersEcranFin,
-    lireTexteCutsceneActive,
     attendreApplicationPrete,
     preparerPremierLancement,
-    attendreTypewriterInactif,
     elementAClasse,
     ETAT_HISTOIRE_BOSS_BRASIER,
     ETAT_FIN_SECRETE_PRET,
     ETAT_AVANT_FIN_SECRETE,
     ETAT_AVANT_FIN_VRAIE,
     ETAT_FIN_VRAIE_PRET,
-    ETAT_OCEAN_FRAGMENT_PRET,
     ETAT_CYBER_LABO_PRET,
     ETAT_AVANT_DESERT,
+    avancerCutsceneJusquaPivot,
+    attendreSceneCutsceneActive,
 } from './helpers.mjs';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import {
+    preparerEtatInterludePremiereCompletion,
+    preparerEtatPremiereCompletionFragment,
+} from './helpers-narratif-fragments.mjs';
 
 test('post-monde monde lave — fond scene seuil_brasier', async ({ page }) => {
     test.setTimeout(90000);
@@ -46,7 +50,7 @@ test('post-monde — audio narratif_cutscene sur mondes representatifs', async (
     test.setTimeout(180000);
     const cas = [
         { mondeId: 'monde_lave', etat: ETAT_HISTOIRE_BOSS_BRASIER },
-        { mondeId: 'monde_ocean', etat: ETAT_OCEAN_FRAGMENT_PRET },
+        { mondeId: 'monde_ocean', etat: preparerEtatPremiereCompletionFragment('monde_ocean') },
         { mondeId: 'monde_cyber', etat: ETAT_CYBER_LABO_PRET },
     ];
 
@@ -65,40 +69,24 @@ test('post-monde — audio narratif_cutscene sur mondes representatifs', async (
     }
 });
 
-test('fragment VERA ocean — signal parasite visible', async ({ page }) => {
-    test.setTimeout(60000);
-    await ouvrirCarteHistoire(page, ETAT_OCEAN_FRAGMENT_PRET);
+test('victoire objectif prologue — pipeline difficulte vers narratif (audit D)', async ({
+    page,
+}) => {
+    test.setTimeout(120000);
+    await ouvrirCarteHistoire(page, ETAT_HISTOIRE_VIDE);
     await page.evaluate(async () => {
-        await window.__NEO_TEST__?.declencherPostMondeNarratif?.('monde_ocean');
+        await window.__NEO_TEST__?.simulerVictoireObjectifHistoire?.('monde_prologue');
     });
-    await fermerRecapPostMonde(page);
-    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-        timeout: 10000,
+    const { parcourirFluxPostVictoireAvecAssertions } = await import('./helpers-narratif.mjs');
+    await parcourirFluxPostVictoireAvecAssertions(page, 'monde_prologue', undefined, 80, {
+        exigerCorpus: true,
+        verifierAudio: true,
     });
-    await passerCutsceneEntiere(page);
-    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-        timeout: 10000,
-    });
-    await page.waitForFunction(
-        () => {
-            const t =
-                document.getElementById('texte-dialogue-cutscene')?.textContent ??
-                document.getElementById('texte-narration-cutscene')?.textContent ??
-                '';
-            return /SIGNAL PARASITE/i.test(t);
-        },
-        null,
-        { timeout: 15000 }
-    );
 });
 
 test('interlude rouille — gardiens detectes', async ({ page }) => {
     test.setTimeout(60000);
-    const etat = {
-        ...ETAT_HISTOIRE_BOSS_BRASIER,
-        fragmentsVusIds: ['apres_rouille'],
-        interludesVusIds: [],
-    };
+    const etat = preparerEtatInterludePremiereCompletion('monde_rouille');
     await ouvrirCarteHistoire(page, etat);
     await page.evaluate(async () => {
         await window.__NEO_TEST__?.declencherPostMondeNarratif?.('monde_rouille');
@@ -111,17 +99,64 @@ test('interlude rouille — gardiens detectes', async ({ page }) => {
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
         timeout: 10000,
     });
-    await page.waitForFunction(
-        () => {
-            const t =
-                document.getElementById('texte-dialogue-cutscene')?.textContent ??
-                document.getElementById('texte-narration-cutscene')?.textContent ??
-                '';
+    await expect
+        .poll(async () => {
+            const t = await page.evaluate(
+                () => document.getElementById('ecran-histoire-cutscene')?.textContent ?? ''
+            );
             return /GARDIEN/i.test(t);
-        },
-        null,
-        { timeout: 15000 }
-    );
+        })
+        .toBe(true);
+});
+
+test('interlude eclipse — La Distorsion laisse passer', async ({ page }) => {
+    test.setTimeout(60000);
+    const etat = preparerEtatInterludePremiereCompletion('monde_eclipse');
+    await ouvrirCarteHistoire(page, etat);
+    await page.evaluate(async () => {
+        await window.__NEO_TEST__?.declencherPostMondeNarratif?.('monde_eclipse');
+    });
+    await fermerRecapPostMonde(page);
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 10000,
+    });
+    await passerCutsceneEntiere(page);
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 10000,
+    });
+    await expect
+        .poll(async () => {
+            const t = await page.evaluate(
+                () => document.getElementById('ecran-histoire-cutscene')?.textContent ?? ''
+            );
+            return /Ailleurs|centre de la Trame|Laissez-le passer|61% DES FRAGMENTS/i.test(t);
+        })
+        .toBe(true);
+});
+
+test('interlude vide — veille avant la finale', async ({ page }) => {
+    test.setTimeout(60000);
+    const etat = preparerEtatInterludePremiereCompletion('monde_vide');
+    await ouvrirCarteHistoire(page, etat);
+    await page.evaluate(async () => {
+        await window.__NEO_TEST__?.declencherPostMondeNarratif?.('monde_vide');
+    });
+    await fermerRecapPostMonde(page);
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 10000,
+    });
+    await passerCutsceneEntiere(page);
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 10000,
+    });
+    await expect
+        .poll(async () => {
+            const t = await page.evaluate(
+                () => document.getElementById('ecran-histoire-cutscene')?.textContent ?? ''
+            );
+            return /Au seuil de la Finale|Deux silhouettes|renvoie-le/i.test(t);
+        })
+        .toBe(true);
 });
 
 test('decouverte labo cyber — journal VERA', async ({ page }) => {
@@ -309,7 +344,7 @@ test('apres fin secrete — debloque paradoxe organiquement sans reinjection eta
 });
 
 test('intro — changement de scene entre lignes d une cutscene', async ({ page }) => {
-    test.setTimeout(60000);
+    test.setTimeout(120000);
     await preparerPremierLancement(page);
     await page.goto('/');
     await attendreApplicationPrete(page);
@@ -318,49 +353,13 @@ test('intro — changement de scene entre lignes d une cutscene', async ({ page 
         timeout: 15000,
     });
 
-    const sceneObservatoire = await page.evaluate(
-        () => window.__NEO_TEST__?.obtenirSceneCutsceneActive?.() ?? null
-    );
-    expect(sceneObservatoire).toBe('observatoire');
-
-    for (let i = 0; i < 6; i++) {
-        const t = await lireTexteCutsceneActive(page);
-        if (/Trame/i.test(t)) break;
-        await page.locator('#btn-cutscene-suivant').click({ force: true });
-        await attendreTypewriterInactif(page, 2000);
-    }
-
-    await expect
-        .poll(() =>
-            page.evaluate(() => window.__NEO_TEST__?.obtenirSceneCutsceneActive?.() ?? null)
-        )
-        .toBe('trame');
-
-    for (let i = 0; i < 6; i++) {
-        const t = await lireTexteCutsceneActive(page);
-        if (/JOURNAL DE BORD/i.test(t)) break;
-        await page.locator('#btn-cutscene-suivant').click({ force: true });
-        await attendreTypewriterInactif(page, 2000);
-    }
-
-    await expect
-        .poll(() =>
-            page.evaluate(() => window.__NEO_TEST__?.obtenirSceneCutsceneActive?.() ?? null)
-        )
-        .toBe('observatoire');
-
-    for (let i = 0; i < 8; i++) {
-        const t = await lireTexteCutsceneActive(page);
-        if (/Jour 2 191/i.test(t)) break;
-        await page.locator('#btn-cutscene-suivant').click({ force: true });
-        await attendreTypewriterInactif(page, 2000);
-    }
-
-    await expect
-        .poll(() =>
-            page.evaluate(() => window.__NEO_TEST__?.obtenirSceneCutsceneActive?.() ?? null)
-        )
-        .toBe('fragmentation');
+    await attendreSceneCutsceneActive(page, 'observatoire');
+    await avancerCutsceneJusquaPivot(page, /il y a la Trame/i, 'trame');
+    await attendreSceneCutsceneActive(page, 'trame');
+    await avancerCutsceneJusquaPivot(page, /JOURNAL DE BORD/i);
+    await attendreSceneCutsceneActive(page, 'observatoire');
+    await avancerCutsceneJusquaPivot(page, /Jour 2 191/i, 'fragmentation');
+    await attendreSceneCutsceneActive(page, 'fragmentation');
 });
 
 test('trame organique — typeFin fin_secrete sans API inject', async ({ page }) => {

@@ -20,12 +20,12 @@ export function estNeoTestAutorise() {
  *   declencherFinHistoire?: (finId: string) => Promise<void>,
  *   declencherPostMondeNarratif?: (mondeId: string) => Promise<void>,
  *   simulerVictoireMondeHistoire?: (mondeId: string, lignes?: number, sansNarratif?: boolean) => Promise<void>,
+ *   simulerVictoireObjectifHistoire?: (mondeId: string, options?: { immediat?: boolean }) => Promise<void>,
  *   obtenirTypeFinHistoire?: () => Promise<string>,
  *   obtenirSceneCutsceneActive?: () => string | null,
  *   typewriterEstActif?: () => boolean,
  *   obtenirHumeurPortraitCutscene?: (personnageId?: string) => string | null,
  *   simulerTopVolontairePrologue?: () => Promise<void>
- *   injecterConditionsTrameDistorsion?: () => void
  *   emettreEvenementBusJeu?: (evenement: string, payload?: unknown) => void
  *   menuAnimActif?: () => boolean
  *   simulerGameOverBossDistorsion?: () => void

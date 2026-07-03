@@ -1,5 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CONFIG } from '../js/config.js';
+
+vi.mock('../js/bus-jeu.js', () => ({
+    emettre: vi.fn(),
+}));
+
+import { emettre } from '../js/bus-jeu.js';
 import {
     archi,
     archi_parserSilhouette,
@@ -119,6 +125,7 @@ describe('archi_verrouillerPiece et archi_annuler', () => {
         expect(archi.piecesUtilisees).toBe(1);
         expect(archi.pieceActuelle).not.toBeNull();
         expect(archi.inventaire[0].qteDispo).toBe(3);
+        expect(emettre).toHaveBeenCalledWith('piece:son', { type: 'verrou' });
     });
 
     it('archi_annuler restaure le snapshot précédent', () => {

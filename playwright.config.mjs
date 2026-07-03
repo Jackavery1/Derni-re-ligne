@@ -1,6 +1,7 @@
 import { existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { defineConfig, devices } from '@playwright/test';
 
 const racineProjet = dirname(fileURLToPath(import.meta.url));
 
@@ -46,8 +47,31 @@ function detecterChannelNavigateur() {
 }
 
 const channel = detecterChannelNavigateur();
+const channelUse = channel !== 'chromium' ? { channel } : {};
 
-export default {
+const specsMatriceResponsive = [
+    '**/audit-c-responsive.spec.mjs',
+    '**/histoire-responsive.spec.mjs',
+];
+
+const iphone14Chromium = {
+    viewport: devices['iPhone 14'].viewport,
+    userAgent: devices['iPhone 14'].userAgent,
+    deviceScaleFactor: devices['iPhone 14'].deviceScaleFactor,
+    isMobile: true,
+    hasTouch: true,
+};
+
+const webServer = {
+    command: serveDist
+        ? 'npx --yes serve dist -p 3000'
+        : 'npx --yes serve . -c serve.json -l tcp://127.0.0.1:3000',
+    url: 'http://127.0.0.1:3000',
+    cwd: racineProjet,
+    reuseExistingServer: process.env.CI !== 'true' && process.env.CI !== '1',
+};
+
+export default defineConfig({
     testDir: './e2e',
     workers: process.env.CI ? undefined : 1,
     timeout: 30000,
@@ -61,14 +85,60 @@ export default {
     use: {
         baseURL: 'http://127.0.0.1:3000',
         headless: true,
-        ...(channel !== 'chromium' ? { channel } : {}),
     },
-    webServer: {
-        command: serveDist
-            ? 'npx --yes serve dist -p 3000'
-            : 'npx --yes serve . -c serve.json -l tcp://127.0.0.1:3000',
-        url: 'http://127.0.0.1:3000',
-        cwd: racineProjet,
-        reuseExistingServer: process.env.CI !== 'true' && process.env.CI !== '1',
-    },
-};
+    webServer,
+    projects: [
+        {
+            name: 'desktop',
+            grepInvert: /@viewport-mobile-portrait|@viewport-mobile-etroit|@touch-only/,
+            use: { ...channelUse, viewport: { width: 1280, height: 800 } },
+        },
+        {
+            name: 'mobile-portrait',
+            testMatch: specsMatriceResponsive,
+            use: {
+                ...channelUse,
+                viewport: { width: 390, height: 844 },
+                hasTouch: true,
+                isMobile: true,
+            },
+        },
+        {
+            name: 'mobile-landscape',
+            testMatch: specsMatriceResponsive,
+            use: {
+                ...channelUse,
+                viewport: { width: 667, height: 375 },
+                hasTouch: true,
+                isMobile: true,
+            },
+        },
+        {
+            name: 'iphone-14',
+            testMatch: specsMatriceResponsive,
+            use: { ...channelUse, ...iphone14Chromium },
+        },
+        {
+            name: 'mobile-portrait-visuels',
+            grep: /@viewport-mobile-portrait/,
+            testMatch: '**/visual.spec.mjs',
+            use: {
+                ...channelUse,
+                viewport: { width: 390, height: 844 },
+                hasTouch: true,
+                isMobile: true,
+            },
+        },
+        {
+            name: 'mobile-etroit-visuels',
+            grep: /@viewport-mobile-etroit/,
+            testMatch: '**/visual.spec.mjs',
+            use: {
+                ...channelUse,
+                viewport: { width: 319, height: 568 },
+                hasTouch: true,
+                isMobile: true,
+            },
+        },
+    ],
+});

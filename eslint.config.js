@@ -32,8 +32,26 @@ export default [
         },
     },
     {
+        files: ['sw.js'],
+        languageOptions: {
+            globals: {
+                ...globals.serviceworker,
+                FICHIERS_A_CACHER: 'readonly',
+            },
+        },
+        rules: {
+            'max-lines': 'off',
+            complexity: 'off',
+        },
+    },
+    {
+        files: ['sw-precache.js'],
+        rules: {
+            'no-unused-vars': ['warn', { varsIgnorePattern: '^FICHIERS_A_CACHER$' }],
+        },
+    },
+    {
         files: [
-            'sw.js',
             'js/histoire-textes.js',
             'js/portraits-cutscene.js',
             'js/portraits-cutscene-personnages.js',

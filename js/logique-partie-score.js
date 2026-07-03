@@ -3,7 +3,7 @@ import { majStatsScorePartie } from './achievements.js';
 import { enregistrerLignesParNiveau } from './profil-jeu.js';
 import { emettre } from './bus-jeu.js';
 import { etat } from './store-jeu.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { appliquerScoreLignes } from './score-partie.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { suiviDifficulteActif } from './gestionnaire-difficulte.js';

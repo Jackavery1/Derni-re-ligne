@@ -1,7 +1,7 @@
 import { logger } from './logger.js';
 import { idPortraitRendu } from './histoire-cutscene-config.js';
 import { obtenirEffetsAccessibiliteReduits } from './accessibilite.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 
 /** @typedef {Record<string, number | boolean | number[]>} ParamsExpression */
 
@@ -88,9 +88,9 @@ function _listeValide(personnageId) {
 }
 
 function _humeurCompatDefaut(personnageId, parle) {
+    if (personnageId.endsWith('_voix')) return 'vacillant';
     const id = idPortraitRendu(personnageId);
     if (id === 'robo') return parle ? 'content' : 'neutre';
-    if (id === 'brasier_voix' || id === 'sentinelle_voix') return 'vacillant';
     if (id === 'vera') return parle ? 'douce' : 'neutre';
     if (id === 'distorsion') return 'menacante';
     if (id === 'brasier' || id === 'sentinelle' || id === 'archiviste' || id === 'avantgarde') {

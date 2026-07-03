@@ -5,7 +5,7 @@ import {
     chargerEtatHistoire,
     sauvegarderEtatHistoire,
 } from './progression.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { obtenirBiomeActif } from './store-jeu.js';
 import { melodie } from './melodie.js';
 import { creerFileNotifications } from './notifications-file.js';

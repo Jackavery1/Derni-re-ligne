@@ -68,6 +68,7 @@ writeFileSync(
 );
 
 cpSync('sw.js', `${dist}/sw.js`);
+cpSync('sw-precache.js', `${dist}/sw-precache.js`);
 execSync('node scripts/generer-precache.mjs --prod', { stdio: 'inherit' });
 
 const jsFiles = readdirSync(`${dist}/js`).filter((f) => f.endsWith('.js') && !f.endsWith('.map'));

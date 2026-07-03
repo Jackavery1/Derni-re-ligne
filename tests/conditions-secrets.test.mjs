@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { CONFIG } from '../js/config.js';
-import { store } from '../js/store-core.js';
+import { store } from '../js/store-jeu.js';
 import { etat } from '../js/store-jeu.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 import { creerPlateau } from '../js/piece-jeu.js';

@@ -14,13 +14,13 @@ export const DIALOGUES_COMBAT_BOSS = {
         epithete: 'Elle protège ce monde contre le mouvement. Y compris le sien.',
         debut: 'PROTOCOLE : IMMOBILISATION.',
         phases: [
-            "Tes pièces bougent trop. Le mouvement corrompt. J'ai des MILLÉNAIRES de données.",
+            "Vos pièces bougent trop. Le mouvement corrompt. J'ai des MILLÉNAIRES de données.",
             'Erreur de modèle... tu bouges, et rien ne se corrompt...',
         ],
         reactionTetris: "Quatre lignes d'un coup. Variable... non modélisée.",
         quasiVaincu:
             'Recalcul... recalcul... pourquoi mes certitudes fondent plus vite que ma glace ?',
-        gameOver: "Le gel t'a eu. Reste immobile. C'est plus sûr.",
+        gameOver: "Le gel vous a eu. Restez immobile. C'est plus sûr.",
     },
     archiviste: {
         epithete: 'Il garde la vérité de VERA. Même contre elle.',

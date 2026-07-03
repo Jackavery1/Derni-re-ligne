@@ -1,4 +1,4 @@
-/** Etat partage portraits cutscene (evite cycle import). */
+/** Etat partage humeur ROBO en cutscene (module volontairement limite a ROBO). */
 
 /** @type {'neutre'|'content'|'excite'|'triste'|'alerte'} */
 let _humeurRoboCutscene = 'content';

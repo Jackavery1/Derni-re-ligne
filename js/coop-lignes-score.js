@@ -3,8 +3,8 @@ import { appliquerScoreLignes } from './score-partie.js';
 import { statsGlobales } from './achievements.js';
 import { afficherNotificationNiveau } from './ui-notifications.js';
 import { obtenirBouton } from './dom-utils.js';
-import { creerParticulesLigne } from './particules-jeu.js';
-import { etat } from './store-jeu.js';
+import { emettre } from './bus-jeu.js';
+import { etat, flashLignes } from './store-jeu.js';
 import { coop, DEMI_LARGEUR, coop_rafraichirStats } from './coop-etat.js';
 
 export function afficherNotifSynchro(nbLignes) {
@@ -93,6 +93,7 @@ export function coop_verifierLignes() {
     const xMaxJ2 = CONFIG.colonnes;
 
     let nbSupprimees = 0;
+    const lignesEffacees = [];
     coop.lignesEnAttenteJ1 = -1;
     coop.lignesEnAttenteJ2 = -1;
 
@@ -102,7 +103,7 @@ export function coop_verifierLignes() {
 
         if (moitieGaucheComplete && moitieDroiteComplete) {
             coop.flashSynchro = 300;
-            creerParticulesLigne(l);
+            lignesEffacees.push(l);
             etat.plateau.splice(l, 1);
             etat.plateau.unshift(Array(CONFIG.colonnes).fill(0));
             nbSupprimees++;
@@ -117,6 +118,12 @@ export function coop_verifierLignes() {
                 afficherNotifLigneEnAttenteCoop('j2');
             }
         }
+    }
+
+    if (nbSupprimees > 0) {
+        flashLignes.lignes = [...lignesEffacees];
+        flashLignes.timer = flashLignes.duree;
+        emettre('lignes:effacees', { nbSupprimees, lignesEffacees });
     }
 
     coop_rafraichirStats();

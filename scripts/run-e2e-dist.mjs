@@ -4,7 +4,8 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
 const racine = join(dirname(fileURLToPath(import.meta.url)), '..');
-const spec = process.argv[2] ?? 'e2e/smoke.spec.mjs';
+const specs = process.argv.slice(2);
+const specArgs = specs.length > 0 ? specs : ['e2e/smoke.spec.mjs'];
 const indexDist = join(racine, 'dist', 'index.html');
 const marqueurTest = 'neo-test-init.js';
 
@@ -28,7 +29,7 @@ function restaurerIndexDist() {
 
 activerApiTestDist();
 
-const resultat = spawnSync('npx', ['playwright', 'test', spec], {
+const resultat = spawnSync('npx', ['playwright', 'test', ...specArgs], {
     cwd: racine,
     stdio: 'inherit',
     shell: true,

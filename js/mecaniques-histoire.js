@@ -1,42 +1,26 @@
 import { CONFIG } from './config.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { etat, obtenirBiomeActif } from './store-jeu.js';
 import { ecouter } from './bus-jeu.js';
 import { logger } from './logger.js';
 import { obtenirEtatHistoire, sauvegarderEtatHistoireStore } from './histoire-mondes.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { verifierConditionMiroir, verifierConditionC3 } from './conditions-secrets.js';
-import {
-    biomeActuelMecanique,
-    biomeActuelEstMiroir,
-    biomeActuelEstVide,
-} from './mecaniques-histoire-queries.js';
+import { biomeActuelMecanique } from './mecaniques-histoire-queries.js';
 import {
     reinitialiserCellulesRouilleActives,
-    enregistrerTimestampCellules,
     tickRouille,
     effondrerRouilleExpiree,
-    reinitialiserMatricesRouille,
     decalerMatricesRouille,
-    celluleEstRouillee,
 } from './mecaniques-histoire-rouille.js';
-import {
-    initialiserEclipse,
-    tickEclipse,
-    obtenirVitesseChuteModifiee,
-    obtenirLigneEclipse,
-    obtenirLibelleModificateurBiomeHud,
-} from './mecaniques-histoire-eclipse.js';
+import { initialiserEclipse, tickEclipse } from './mecaniques-histoire-eclipse.js';
 import {
     initialiserVide,
     reinitialiserVideSurNouvellePiece,
     tickVide,
-    pieceEstInvisible,
-    opacitePieceCourante,
-    ghostEstDesactive,
 } from './mecaniques-histoire-vide.js';
-import { initialiserTrame, tickTrame, obtenirFondTrame } from './mecaniques-histoire-trame.js';
-import { appliquerCSSMiroir, actionMiroir } from './mecaniques-histoire-miroir.js';
+import { initialiserTrame, tickTrame } from './mecaniques-histoire-trame.js';
+import { appliquerCSSMiroir } from './mecaniques-histoire-miroir.js';
 
 export {
     biomeActuelMecanique,

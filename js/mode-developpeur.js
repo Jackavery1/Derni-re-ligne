@@ -4,7 +4,7 @@ import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 import { reinitialiserCampagneComplete } from './reinitialiser-campagne.js';
 import { afficherEcran } from './ecrans-ui.js';
 import { ECRANS } from './store-jeu.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 import { modeDevActif, activerSessionDev, desactiverSessionDev } from './mode-dev-etat.js';
 
 export { modeDevActif } from './mode-dev-etat.js';

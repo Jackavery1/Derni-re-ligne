@@ -66,8 +66,8 @@ export const store = {
     areRestant: 0,
     spawnGraceRestant: 0,
     coyoteRestant: 0,
-    /** @type {'tourner_cw' | 'tourner_ccw' | 'hold' | null} */
-    inputBuffer: null,
+    /** @type {import('./buffer-input-jeu.js').ActionBufferisee[]} */
+    inputBuffer: [],
     dasEtat: {
         [TOUCHES_DEFAUT.gauche]: { moment: 0, repete: false },
         [TOUCHES_DEFAUT.droite]: { moment: 0, repete: false },
@@ -102,6 +102,7 @@ export const store = {
     secousse: { timer: 0, intensite: 0, duree: 260 },
     flashVerrou: { cellules: [], timer: 0, duree: 75 },
     flashLignes: { lignes: [], timer: 0, duree: 160 },
+    flashTopout: { timer: 0, duree: 220 },
     touchesActives: {},
     histoire: creerEtatHistoireRuntime(),
     multGraviteMusique: 1.0,
@@ -115,6 +116,7 @@ export const textesFlottants = store.textesFlottants;
 export const secousse = store.secousse;
 export const flashVerrou = store.flashVerrou;
 export const flashLignes = store.flashLignes;
+export const flashTopout = store.flashTopout;
 export const touchesActives = store.touchesActives;
 export const couleurAmbRgb = store.couleurAmbRgb;
 export const dasEtat = store.dasEtat;

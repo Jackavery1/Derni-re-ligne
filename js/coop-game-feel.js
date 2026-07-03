@@ -1,12 +1,30 @@
 import { CONFIG } from './config.js';
 import { coop } from './coop-etat.js';
+import {
+    ajouterBufferInput,
+    creerBufferInputVide,
+    premierBufferInput,
+    retirerPremierBufferInput,
+} from './buffer-input-jeu.js';
+
+/** @typedef {'tourner_cw' | 'tourner_ccw' | 'hold' | 'gauche' | 'droite' | 'bas' | 'chute'} CoopInputBuffer */
+
+const EXECUTEURS_BUFFER = {
+    tourner_cw: (actions) => actions?.tourner?.(1),
+    tourner_ccw: (actions) => actions?.tourner?.(-1),
+    hold: (actions) => actions?.reserve?.(),
+    gauche: (actions) => actions?.gauche?.(),
+    droite: (actions) => actions?.droite?.(),
+    bas: (actions) => actions?.bas?.(),
+    chute: (actions) => actions?.chute?.(),
+};
 
 export function coopReinitialiserGameFeelJoueur(joueur) {
     const j = coop[joueur];
     j.areRestant = 0;
     j.spawnGraceRestant = 0;
     j.coyoteRestant = 0;
-    j.inputBuffer = null;
+    j.inputBuffer = creerBufferInputVide();
 }
 
 export function coopDemarrerAre(joueur) {
@@ -33,9 +51,9 @@ export function coopCoyoteActif(joueur) {
     return coop[joueur].coyoteRestant > 0;
 }
 
-/** @param {'tourner_cw' | 'tourner_ccw' | 'hold'} action */
+/** @param {CoopInputBuffer} action */
 export function coopBufferiserInput(joueur, action) {
-    coop[joueur].inputBuffer = action;
+    coop[joueur].inputBuffer = ajouterBufferInput(coop[joueur].inputBuffer, action);
 }
 
 export function coopPieceControlesActifs(joueur) {
@@ -69,7 +87,7 @@ export function coopQuitterSolPiece(joueur) {
 /**
  * @param {'j1' | 'j2'} joueur
  * @param {number} dt
- * @param {{ pieceValide: () => boolean, surCollision?: () => void, actions?: { tourner?: (sens: number) => void, reserve?: () => void } }} opts
+ * @param {{ pieceValide: () => boolean, surCollision?: () => void, actions?: { tourner?: (sens: number) => void, reserve?: () => void, gauche?: () => void, droite?: () => void, bas?: () => void, chute?: () => void } }} opts
  */
 export function coopMettreAJourGameFeel(joueur, dt, opts) {
     const j = coop[joueur];
@@ -87,23 +105,16 @@ export function coopMettreAJourGameFeel(joueur, dt, opts) {
 
 /**
  * @param {'j1' | 'j2'} joueur
- * @param {{ tourner?: (sens: number) => void, reserve?: () => void } | undefined} actions
+ * @param {{ tourner?: (sens: number) => void, reserve?: () => void, gauche?: () => void, droite?: () => void, bas?: () => void, chute?: () => void } | undefined} actions
  */
 export function coopConsommerBufferInput(joueur, actions) {
     const j = coop[joueur];
-    const action = j.inputBuffer;
+    const action = premierBufferInput(j.inputBuffer);
     if (!action || coopAreActive(joueur)) return;
     if (!coop.estEnCours || coop.estEnPause || !j.pieceActuelle) return;
-    j.inputBuffer = null;
-    switch (action) {
-        case 'tourner_cw':
-            actions?.tourner?.(1);
-            break;
-        case 'tourner_ccw':
-            actions?.tourner?.(-1);
-            break;
-        case 'hold':
-            actions?.reserve?.();
-            break;
-    }
+    const suivant = retirerPremierBufferInput(j.inputBuffer);
+    j.inputBuffer = suivant.file;
+    const actionConsommee = suivant.action;
+    if (!actionConsommee) return;
+    EXECUTEURS_BUFFER[actionConsommee]?.(actions);
 }

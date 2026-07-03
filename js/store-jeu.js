@@ -3,6 +3,8 @@
  * store-refs-canvas et helpers accessibilité. Point d'entrée unique pour la
  * logique solo/coop qui lit ou modifie l'état runtime.
  */
+export { store } from './store-core.js';
+
 export {
     ECRANS,
     MAX_PARTICULES,
@@ -17,6 +19,7 @@ export {
     secousse,
     flashVerrou,
     flashLignes,
+    flashTopout,
     touchesActives,
     couleurAmbRgb,
     dasEtat,

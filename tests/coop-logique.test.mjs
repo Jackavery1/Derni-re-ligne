@@ -195,7 +195,7 @@ describe('coop-logique', () => {
         coop.j1.areRestant = 10;
         coop.j1.pieceActuelle = { type: 'T', rotation: 0, x: 1, y: 0, joueur: 'j1' };
         coop_tourner('j1', 1);
-        expect(coop.j1.inputBuffer).toBe('tourner_cw');
+        expect(coop.j1.inputBuffer).toEqual(['tourner_cw']);
         coop.j1.areRestant = 0;
         coop_mettreAJourGravite('j1', 16);
         expect(coop.j1.pieceActuelle.rotation).not.toBe(0);

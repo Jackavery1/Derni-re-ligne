@@ -27,12 +27,17 @@ export function dessinerPortraitDistorsion(ctx, w, h, t, params) {
     const unOeil = p.unOeil === true;
     const paupiere = p.paupiere === true;
     const stables = p.fragmentsStables === true;
+    const fondTransparent = p.fondTransparent === true;
 
     const glitchChrom = ab > 0.5 && !effetsReduits && Math.sin(tAnim * 13) > 0.7;
     const glitchBandes = !effetsReduits && Math.sin(tAnim * 0.4) > 0.92 && ab > 0.8;
 
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, w, h);
+    if (fondTransparent) {
+        ctx.clearRect(0, 0, w, h);
+    } else {
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, w, h);
+    }
 
     if (glitchChrom) {
         ctx.save();

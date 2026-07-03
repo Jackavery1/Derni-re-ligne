@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { store } from '../js/store-core.js';
+import { store } from '../js/store-jeu.js';
 import { ECRANS } from '../js/ecrans-config.js';
 import { SCENE_DEFAUT_POST_MONDE } from '../js/histoire-narratif.js';
 import { SCENES_CUTSCENE } from '../js/scenes-cutscene.js';
@@ -7,11 +7,13 @@ import { chargerHistoireTextes } from '../js/charger-histoire-textes.js';
 import {
     demarrerPrechargementCarte,
     annulerPrechargementMedias,
+    listerUrlsScenesPrechargeMonde,
 } from '../js/prechargement-medias.js';
 
 describe('prechargement-medias', () => {
     beforeEach(async () => {
         store.ecranActuel = ECRANS.HISTOIRE_MAP;
+        store.histoire.etat = null;
         vi.stubGlobal('navigator', { connection: undefined });
         await chargerHistoireTextes();
         annulerPrechargementMedias();
@@ -36,5 +38,12 @@ describe('prechargement-medias', () => {
     it('inclut vide_errance pour monde_vide dans le registre post-monde', () => {
         expect(SCENE_DEFAUT_POST_MONDE.monde_vide).toBe('vide_errance');
         expect(SCENES_CUTSCENE.vide_errance?.src).toContain('scene_vide_errance');
+    });
+
+    it('liste vide_errance pour monde_cosmos avant partie (scene lazy)', async () => {
+        await chargerHistoireTextes();
+        const urls = listerUrlsScenesPrechargeMonde('monde_cosmos');
+        expect(urls).toContain(SCENES_CUTSCENE.vide_errance.src);
+        expect(urls.some((u) => u.includes('scene_vide_errance'))).toBe(true);
     });
 });

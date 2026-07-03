@@ -2,11 +2,11 @@ import { test, expect } from '@playwright/test';
 import {
     preparerPageSansSw,
     attendreApplicationPrete,
-    ETAT_DEBLOCAGE_COMPLET,
+    ETAT_DEBLOCAGE_META_RAPIDE,
 } from './helpers.mjs';
 
 test('retour codex revient au titre', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-codex').click();
@@ -16,7 +16,7 @@ test('retour codex revient au titre', async ({ page }) => {
 });
 
 test('retour profil revient au titre', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-profil').click();
@@ -26,7 +26,7 @@ test('retour profil revient au titre', async ({ page }) => {
 });
 
 test('architecte retour selection revient au titre', async ({ page }) => {
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_COMPLET);
+    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-architecte').click();

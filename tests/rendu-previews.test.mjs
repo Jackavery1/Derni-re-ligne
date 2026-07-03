@@ -30,7 +30,14 @@ const { dessinerCellule } = await import('../js/rendu-cellule.js');
 describe('rendu-previews', () => {
     it('adapte la taille des cellules pour tenir dans le canvas hold', () => {
         const canvas = { width: 104, height: 72 };
-        const ctx = { clearRect: vi.fn() };
+        const ctx = {
+            clearRect: vi.fn(),
+            save: vi.fn(),
+            restore: vi.fn(),
+            beginPath: vi.fn(),
+            rect: vi.fn(),
+            clip: vi.fn(),
+        };
         dessinerPreview(ctx, canvas, { type: 'I', rotation: 0 });
         expect(dessinerCellule).toHaveBeenCalled();
         const tailleCell = dessinerCellule.mock.calls[0][4];

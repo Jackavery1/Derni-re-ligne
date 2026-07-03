@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CONFIG } from '../js/config.js';
-import { store, etat } from '../js/store-core.js';
+import { store, etat } from '../js/store-jeu.js';
 import {
     reinitialiserGameFeel,
     demarrerAre,
@@ -35,6 +35,7 @@ describe('game-feel-jeu', () => {
         configurerActionsJeu({
             tourner: vi.fn(),
             utiliserReserve: vi.fn(),
+            deplacerGauche: vi.fn(),
             terminerPartie: vi.fn(),
         });
     });
@@ -49,11 +50,30 @@ describe('game-feel-jeu', () => {
     it('bufferise puis consomme une rotation apres ARE', () => {
         demarrerAre();
         bufferiserInput('tourner_cw');
-        expect(store.inputBuffer).toBe('tourner_cw');
+        expect(store.inputBuffer).toEqual(['tourner_cw']);
         store.areRestant = 0;
         consommerBufferInput();
         expect(obtenirActions().tourner).toHaveBeenCalledWith(1);
-        expect(store.inputBuffer).toBeNull();
+        expect(store.inputBuffer).toEqual([]);
+    });
+
+    it('conserve deux inputs rapides sans écrasement', () => {
+        bufferiserInput('gauche');
+        bufferiserInput('tourner_cw');
+        expect(store.inputBuffer).toEqual(['gauche', 'tourner_cw']);
+        consommerBufferInput();
+        expect(obtenirActions().deplacerGauche).toHaveBeenCalled();
+        expect(store.inputBuffer).toEqual(['tourner_cw']);
+    });
+
+    it('bufferise puis consomme un deplacement lateral apres pause', () => {
+        etat.estEnPause = true;
+        bufferiserInput('gauche');
+        expect(store.inputBuffer).toEqual(['gauche']);
+        etat.estEnPause = false;
+        consommerBufferInput();
+        expect(obtenirActions().deplacerGauche).toHaveBeenCalled();
+        expect(store.inputBuffer).toEqual([]);
     });
 
     it('grace spawn retarde le game over sur collision', () => {

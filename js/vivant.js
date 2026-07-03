@@ -99,7 +99,7 @@ export const vivant = {
     tempsJeu: 0,
     phase: 'repos',
     timerAlerte: 0,
-    DUREE_ALERTE: 5000,
+    DUREE_ALERTE: 8000,
     cellulesAlerte: [],
     couleurAlerte: '#ffffff',
     plateauTemps: [],
@@ -282,6 +282,12 @@ export function mettreAJourIndicateurVivant() {
         elBar.style.width = `${Math.min(100, pct)}%`;
         elBar.style.background =
             vivant.phase === 'alerte' ? config.couleurAlerte : `${config.couleurAlerte}88`;
+    }
+
+    if (vivant.phase === 'alerte') {
+        sect.classList.add('vivant-phase-alerte');
+    } else {
+        sect.classList.remove('vivant-phase-alerte');
     }
 }
 

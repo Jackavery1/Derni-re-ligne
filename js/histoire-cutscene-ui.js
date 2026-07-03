@@ -94,7 +94,7 @@ export function assurerZoneNarrationCutscene() {
     logger.debug('[cutscene] zone narration injectee (HTML cache obsolete)');
 }
 
-export function initDomCutscene() {
+export function initialiserDomCutscene() {
     refsDomCutscene.canvasGauche = /** @type {HTMLCanvasElement | null} */ (
         document.getElementById('canvas-portrait-gauche')
     );

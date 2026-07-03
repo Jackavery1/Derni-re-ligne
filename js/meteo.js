@@ -62,6 +62,7 @@ function afficherAlerteMeteo(evenement) {
         barre.style.animation = '';
     }
     banniere.classList.add('visible');
+    mettreAJourIndicateurMeteo();
     const biomeId = deps.obtenirBiomeActif?.() ?? 'classique';
     proposerInfobulleMeteo(biomeId, evenement);
     meteo.timeoutAlerteTexte = setTimeout(() => {
@@ -73,16 +74,51 @@ function afficherAlerteMeteo(evenement) {
 export function mettreAJourIndicateurMeteo() {
     const indic = document.getElementById('indicateur-meteo');
     if (!indic) return;
+
+    const iconeEl = document.getElementById('meteo-actif-icone');
+    const nomEl = document.getElementById('meteo-actif-nom');
+    const barreEl = document.getElementById('meteo-barre-duree');
+
+    if (meteo.etat === ETATS_METEO.ALERTE && meteo.evenementActuel) {
+        indic.style.display = 'block';
+        indic.classList.add('meteo-telegraphie');
+        indic.classList.remove('meteo-proche');
+        indic.style.setProperty('--meteo-actif-couleur', meteo.evenementActuel.couleur);
+        if (iconeEl) iconeEl.textContent = meteo.evenementActuel.icone + ' ';
+        if (nomEl) nomEl.textContent = meteo.evenementActuel.alerte;
+        if (barreEl) {
+            const pct = ((meteo.timerAlerte / 5000) * 100).toFixed(1);
+            barreEl.style.width = pct + '%';
+        }
+        return;
+    }
+
+    if (
+        meteo.etat === ETATS_METEO.REPOS &&
+        meteo.timerProchain > 0 &&
+        meteo.timerProchain <= 10000
+    ) {
+        indic.style.display = 'block';
+        indic.classList.add('meteo-proche');
+        indic.classList.remove('meteo-telegraphie');
+        indic.style.setProperty('--meteo-actif-couleur', 'rgba(255, 230, 0, 0.6)');
+        if (iconeEl) iconeEl.textContent = '⚠ ';
+        if (nomEl) nomEl.textContent = 'Météo imminente';
+        if (barreEl) {
+            const pct = ((1 - meteo.timerProchain / 10000) * 100).toFixed(1);
+            barreEl.style.width = pct + '%';
+        }
+        return;
+    }
+
     if (
         meteo.etat === ETATS_METEO.ACTIF &&
         meteo.evenementActuel &&
         meteo.evenementActuel.duree > 0
     ) {
+        indic.classList.remove('meteo-telegraphie', 'meteo-proche');
         indic.style.display = 'block';
         indic.style.setProperty('--meteo-actif-couleur', meteo.evenementActuel.couleur);
-        const iconeEl = document.getElementById('meteo-actif-icone');
-        const nomEl = document.getElementById('meteo-actif-nom');
-        const barreEl = document.getElementById('meteo-barre-duree');
         if (iconeEl) iconeEl.textContent = meteo.evenementActuel.icone + ' ';
         if (nomEl) nomEl.textContent = meteo.evenementActuel.actif;
         if (barreEl) {
@@ -91,6 +127,7 @@ export function mettreAJourIndicateurMeteo() {
         }
     } else {
         indic.style.display = 'none';
+        indic.classList.remove('meteo-telegraphie', 'meteo-proche');
     }
 }
 
@@ -246,6 +283,7 @@ export function mettreAJourMeteo(dt) {
     switch (meteo.etat) {
         case ETATS_METEO.REPOS:
             meteo.timerProchain -= dt;
+            if (meteo.timerProchain <= 8000) mettreAJourIndicateurMeteo();
             if (meteo.timerProchain <= 0) {
                 meteo.evenementActuel =
                     METEO_BIOMES[deps.obtenirBiomeActif()] ?? METEO_BIOMES.classique;
@@ -257,6 +295,7 @@ export function mettreAJourMeteo(dt) {
 
         case ETATS_METEO.ALERTE:
             meteo.timerAlerte -= dt;
+            mettreAJourIndicateurMeteo();
             if (meteo.timerAlerte <= 0) {
                 declencherEffetMeteo(meteo.evenementActuel);
                 if (meteo.evenementActuel.duree === 0) {

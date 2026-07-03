@@ -2,6 +2,7 @@ import { CONFIG, TETROMINOS } from './config.js';
 import { creerPlateau, obtenirCouleurPieceParType, obtenirForme } from './piece-jeu.js';
 import { estPositionValidePiece } from './moteur-piece.js';
 import { creerParticulesExplosion } from './particules-jeu.js';
+import { emettre } from './bus-jeu.js';
 
 export const archi = {
     actif: false,
@@ -142,6 +143,7 @@ export function archi_verrouillerPiece() {
     );
 
     archi_calculerScoreTempsReel();
+    emettre('piece:son', { type: 'verrou' });
 
     const restantes = archi.inventaire.reduce((s, p) => s + p.qteDispo, 0);
     if (restantes === 0) {
@@ -162,6 +164,7 @@ export function archi_tourner(sens) {
         if (archi_estPositionValide(p, off, 0, newR)) {
             p.rotation = newR;
             p.x += off;
+            emettre('piece:son', { type: 'rotation' });
             return;
         }
     }
@@ -171,6 +174,7 @@ export function archi_descendreEnBas() {
     const p = archi.pieceActuelle;
     if (!p) return;
     while (archi_estPositionValide(p, 0, 1)) p.y++;
+    emettre('piece:son', { type: 'chute' });
 }
 
 export function archi_changerPiece() {

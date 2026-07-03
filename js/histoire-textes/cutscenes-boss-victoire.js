@@ -63,6 +63,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
             scene: 'seuil_brasier',
             personnage: 'brasier_voix',
             texte: "Peut-être... qu'elle attendait quelqu'un comme toi.",
+            humeur: 'vacillant',
         },
         {
             scene: 'labo',
@@ -128,81 +129,130 @@ export const CUTSCENES_VICTOIRE_BOSS = {
 
     archiviste: [
         {
+            scene: 'labo',
             personnage: 'archiviste',
             texte: 'ERREUR_CRITIQUE : logique_introuvable.',
             humeur: 'vacillant',
         },
         {
+            scene: 'labo',
             personnage: 'robo',
             texte: "Tu m'as dit que je crée des trous.",
             humeur: 'neutre',
         },
-        { personnage: 'archiviste', texte: 'Affirme.', humeur: 'calme' },
+        { scene: 'labo', personnage: 'archiviste', texte: 'Affirme.', humeur: 'calme' },
         {
+            scene: 'labo',
             personnage: 'robo',
             texte: "C'est vrai. Mais je les comble aussi.",
             humeur: 'neutre',
         },
-        { personnage: 'archiviste', texte: '...', humeur: 'vacillant' },
-        { personnage: 'archiviste', texte: 'ANALYSE EN COURS...', humeur: 'vacillant' },
-        { personnage: 'archiviste', texte: 'RÉSULTAT : paradoxe acceptable.', humeur: 'vacillant' },
+        { scene: 'labo', personnage: 'archiviste', texte: '...', humeur: 'vacillant' },
         {
+            scene: 'labo',
+            personnage: 'archiviste',
+            texte: 'ANALYSE EN COURS...',
+            humeur: 'vacillant',
+        },
+        {
+            scene: 'labo',
+            personnage: 'archiviste',
+            texte: 'RÉSULTAT : paradoxe acceptable.',
+            humeur: 'vacillant',
+        },
+        {
+            scene: 'labo',
             personnage: 'archiviste',
             texte: 'Les archives de VERA sont maintenant accessibles.',
             humeur: 'calme',
         },
-        { personnage: 'archiviste', texte: 'Elle avait prévu que tu viendrais.', humeur: 'calme' },
-        { personnage: 'robo', texte: 'Comment elle savait ?', humeur: 'neutre' },
         {
+            scene: 'labo',
+            personnage: 'archiviste',
+            texte: 'Elle avait prévu que tu viendrais.',
+            humeur: 'calme',
+        },
+        { scene: 'labo', personnage: 'robo', texte: 'Comment elle savait ?', humeur: 'neutre' },
+        {
+            scene: 'labo',
             personnage: 'archiviste',
             texte: "Elle te connaissait mieux que toi-même. C'est écrit dans ses fichiers.",
             humeur: 'vacillant',
         },
         {
+            scene: 'labo',
             personnage: 'archiviste',
             texte: "Tout ce qu'elle savait de toi — elle l'avait inventé. Puis tu es devenu exactement ça.",
+            humeur: 'vacillant',
         },
     ],
 
     avantgarde: [
-        { personnage: 'avantgarde', texte: 'Tu es prêt.', humeur: 'calme' },
-        { personnage: 'robo', texte: 'Je ne me sens pas prêt.', humeur: 'neutre' },
         {
+            scene: 'seuil_avantgarde',
+            personnage: 'avantgarde',
+            texte: 'Tu es prêt.',
+            humeur: 'calme',
+        },
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'robo',
+            texte: 'Je ne me sens pas prêt.',
+            humeur: 'neutre',
+        },
+        {
+            scene: 'seuil_avantgarde',
             personnage: 'avantgarde',
             texte: "Je sais. C'est pour ça que tu l'es. Ceux qui se sentent prêts n'ont rien compris à ce qui les attend.",
             humeur: 'calme',
         },
         {
+            scene: 'seuil_avantgarde',
             personnage: 'robo',
             texte: "Qu'est-ce qui m'attend ?",
             humeur: 'neutre',
         },
         {
+            scene: 'seuil_avantgarde',
             personnage: 'avantgarde',
             texte: 'Quelque chose qui souffre. Quelque chose qui a attendu très longtemps.',
             humeur: 'calme',
         },
         {
+            scene: 'seuil_avantgarde',
             personnage: 'avantgarde',
             texte: "Elle m'a confié trois mots pour toi.",
             humeur: 'calme',
         },
-        { personnage: 'robo', texte: 'Lesquels ?', humeur: 'neutre' },
-        { personnage: 'avantgarde', texte: '« Elle dit bonjour. »', humeur: 'calme' },
+        { scene: 'seuil_avantgarde', personnage: 'robo', texte: 'Lesquels ?', humeur: 'neutre' },
         {
+            scene: 'seuil_avantgarde',
+            personnage: 'avantgarde',
+            texte: '« Elle dit bonjour. »',
+            humeur: 'calme',
+        },
+        {
+            scene: 'seuil_avantgarde',
             personnage: 'narrateur',
             texte: "L'Avant-Garde se dissout sans combattre sa propre fin. La route vers la Finale est ouverte.",
         },
         {
+            scene: 'seuil_avantgarde',
             personnage: 'narrateur',
             texte: "Robo reste immobile trente secondes. C'est la première fois qu'il s'arrête depuis le début du voyage.",
         },
         {
+            scene: 'seuil_avantgarde',
             personnage: 'robo',
             texte: 'Trois mots. Des années de silence, et elle commence par « bonjour ».',
             humeur: 'neutre',
         },
-        { personnage: 'robo', texte: '... Moi aussi, je crois.' },
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'robo',
+            texte: '... Moi aussi, je crois.',
+            humeur: 'neutre',
+        },
     ],
 
     distorsion_normal: [
@@ -287,6 +337,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         {
             personnage: 'distorsion',
             texte: "C'est ça. C'est ça que je cherchais.",
+            humeur: 'apaisee',
         },
         {
             personnage: 'distorsion',
@@ -353,7 +404,7 @@ export const CUTSCENES_VICTOIRE_BOSS = {
         },
         {
             personnage: 'distorsion',
-            texte: "Je pleure. En binaire. 0 et 1. 0 pour ce que j'étais. 1 pour ce que je deviens.",
+            texte: 'Je pleure. En binaire.',
             humeur: 'apaisee',
         },
         { personnage: 'vera', texte: 'Bienvenue dans le monde, mon amie.', humeur: 'douce' },

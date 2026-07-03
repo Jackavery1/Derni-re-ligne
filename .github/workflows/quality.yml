@@ -38,8 +38,14 @@ jobs:
             - run: npx playwright install --with-deps chromium
             - name: Smoke E2E dist
               run: npm run test:e2e:smoke:dist
+            - name: Responsive multi-viewport (dist)
+              run: npm run test:e2e:responsive:dist
             - name: Budget perf chargement
               run: npm run test:e2e:perf
+            - name: Responsive multi-viewport (sources)
+              run: npm run test:e2e:responsive
+            - name: Audits gameplay, responsive et narratif
+              run: npm run test:e2e:audit
             - run: npm run test:e2e
             - name: Artefact couverture
               if: inputs.upload_coverage

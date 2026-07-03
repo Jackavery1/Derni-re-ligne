@@ -1,5 +1,5 @@
 import { BIOMES } from './config.js';
-import { store } from './store-core.js';
+import { store } from './store-jeu.js';
 
 const TRAME_BIOMES_CYCLE = [
     'classique',
