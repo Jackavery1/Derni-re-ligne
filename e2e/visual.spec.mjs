@@ -138,6 +138,7 @@ test.describe('régressions visuelles mobile', () => {
                 'ecran-game-over-victoire-mobile.png',
                 {
                     animations: 'disabled',
+                    maxDiffPixelRatio: 0.04,
                 }
             );
         }

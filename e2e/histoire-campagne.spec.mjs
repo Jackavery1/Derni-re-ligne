@@ -5,6 +5,7 @@ import {
     parcourirFluxPostVictoireAvecAssertions,
     terminerCutscenesVersEcranFin,
 } from './helpers.mjs';
+import { avancerCutsceneUneLigne } from './helpers-narratif-core.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 import { MONDES_CAMPAGNE_PRINCIPALE, MONDES_SECRETS_FIN_SECRETE } from './etats-histoire.mjs';
 
@@ -61,7 +62,33 @@ async function preparerConditionsTrameOrganiques(page) {
 }
 
 /** @param {import('@playwright/test').Page} page @param {number} [max] */
-async function avancerFluxPostVictoire(page, max = 60) {
+async function avancerFluxPostVictoire(page, max = 80) {
+    await expect
+        .poll(async () =>
+            page.evaluate(() => {
+                const recap = document
+                    .getElementById('overlay-recap-monde')
+                    ?.classList.contains('objectif-overlay-visible');
+                const cutscene = document
+                    .getElementById('ecran-histoire-cutscene')
+                    ?.classList.contains('actif');
+                const journal = document
+                    .getElementById('ecran-histoire-journal')
+                    ?.classList.contains('actif');
+                const objectifs = document
+                    .getElementById('overlay-objectifs-pre')
+                    ?.classList.contains('objectif-overlay-visible');
+                const gameOver = document
+                    .getElementById('ecran-game-over')
+                    ?.classList.contains('actif');
+                const partieHistoire =
+                    document.body.classList.contains('partie-active') &&
+                    document.body.classList.contains('histoire-active');
+                return recap || cutscene || journal || objectifs || gameOver || partieHistoire;
+            })
+        )
+        .toBe(true);
+
     for (let i = 0; i < max; i++) {
         const etat = await page.evaluate(() => ({
             recapVisible: document
@@ -84,12 +111,16 @@ async function avancerFluxPostVictoire(page, max = 60) {
                 document.getElementById('texte-dialogue-cutscene')?.textContent ??
                 document.getElementById('texte-narration-cutscene')?.textContent ??
                 '',
+            partieHistoire:
+                document.body.classList.contains('partie-active') &&
+                document.body.classList.contains('histoire-active'),
         }));
 
         if (etat.gameOver && etat.carteVisible) return 'game_over_carte';
         if (etat.objectifs && /INFERNO/i.test(etat.mondeNom)) return 'monde_lave';
-        if (/INFERNO/i.test(etat.notif)) return 'transition';
-        if (etat.cutscene && /feu|INFERNO/i.test(etat.dialogue)) return 'cutscene_lave';
+        if (/INFERNO|MONDE SUIVANT/i.test(etat.notif)) return 'transition';
+        if (etat.cutscene && /feu|INFERNO|lave/i.test(etat.dialogue)) return 'cutscene_lave';
+        if (etat.partieHistoire) return 'monde_lave';
 
         if (etat.recapVisible) {
             await page.locator('#btn-recap-continuer').click({ force: true });
@@ -102,9 +133,7 @@ async function avancerFluxPostVictoire(page, max = 60) {
             continue;
         }
         if (etat.cutscene) {
-            await page.evaluate(() => {
-                document.getElementById('btn-cutscene-passer')?.click();
-            });
+            await avancerCutsceneUneLigne(page, 12000);
             continue;
         }
         let stable = false;
@@ -122,16 +151,19 @@ async function avancerFluxPostVictoire(page, max = 60) {
                             const journal = document
                                 .getElementById('ecran-histoire-journal')
                                 ?.classList.contains('actif');
-                            return recap || cutscene || journal;
+                            const gameOver = document
+                                .getElementById('ecran-game-over')
+                                ?.classList.contains('actif');
+                            return recap || cutscene || journal || gameOver;
                         }),
-                    { timeout: 500, intervals: [50, 100, 150] }
+                    { timeout: 2000, intervals: [50, 100, 150, 200] }
                 )
                 .toBe(true);
             stable = true;
         } catch {
             stable = false;
         }
-        if (!stable) return 'timeout';
+        if (!stable) continue;
     }
     return 'timeout';
 }

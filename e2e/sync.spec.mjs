@@ -113,7 +113,13 @@ test('sync cloud — push envoie les records locaux', async ({ page }) => {
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-options').click();
+    await expect(page.locator('#panneau-sync-config')).toBeVisible();
+    const pushRequest = page.waitForRequest(
+        (req) => req.method() === 'POST' && req.url().includes('progression_snapshots'),
+        { timeout: 15000 }
+    );
     await page.locator('#btn-sync-maintenant').click();
+    await pushRequest;
     await expect(page.locator('#options-sync-statut')).toContainText(/a jour/i, {
         timeout: 10000,
     });
@@ -132,6 +138,10 @@ test('import progression — fusionne un fichier JSON', async ({ page }) => {
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-options').click();
+    await expect(page.locator('#btn-import-progression')).toBeVisible();
+    await page.waitForFunction(() =>
+        document.getElementById('input-import-progression')?.hasAttribute('data-neo-import-lie')
+    );
 
     const payload = {
         version: 1,
@@ -146,10 +156,11 @@ test('import progression — fusionne un fichier JSON', async ({ page }) => {
         buffer: Buffer.from(JSON.stringify(payload)),
     });
 
-    const record = await page.evaluate(() =>
-        localStorage.getItem('derniereLigne_record_classique')
-    );
-    expect(record).toBe('4200');
+    await expect
+        .poll(async () =>
+            page.evaluate(() => localStorage.getItem('derniereLigne_record_classique'))
+        )
+        .toBe('4200');
 });
 
 test('options — toggle haptique persiste', async ({ page }) => {

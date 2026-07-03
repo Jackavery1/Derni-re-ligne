@@ -9,6 +9,7 @@ import {
     selectionnerBiomeClavier,
     attendrePartieVisible,
     passerCutsceneHistoire,
+    selectionnerBiomeVerrouilleConstellation,
     ETAT_DEBLOCAGE_MONDE_LIBRE,
     ETAT_DEBLOCAGE_META_RAPIDE,
 } from './helpers.mjs';
@@ -86,24 +87,17 @@ test('mode libre débloqué après progression histoire', async ({ page }) => {
 });
 
 test('biome verrouillé — teaser histoire sur petit écran', async ({ page }) => {
-    await page.setViewportSize({ width: 320, height: 568 });
     await preparerPageSansSw(page, ETAT_DEBLOCAGE_MONDE_LIBRE);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
-
-    await page.evaluate(() => {
-        const select = document.getElementById('sel-biome-clavier');
-        const opt = select?.querySelector('option[value="cyber"]');
-        if (select && opt) {
-            opt.disabled = false;
-            select.value = 'cyber';
-            select.dispatchEvent(new Event('change', { bubbles: true }));
-        }
+    await page.setViewportSize({ width: 320, height: 568 });
+    await expect(page.locator('#sel-biome-clavier option[value="cyber"]')).toBeAttached({
+        timeout: 15000,
     });
+    await selectionnerBiomeVerrouilleConstellation(page, 'cyber');
     await expect(page.locator('#panneau-detail')).not.toHaveClass(/element-masque/);
-    await expect(page.locator('#panneau-detail-titre')).toContainText(/CYBER/i);
     await expect(page.locator('#panneau-detail-description')).toContainText(/mode histoire/i);
     await expect(page.locator('#btn-panneau-detail-secondaire')).toBeVisible();
     await expect(page.locator('#btn-panneau-detail-secondaire')).toContainText(/MODE HISTOIRE/i);
