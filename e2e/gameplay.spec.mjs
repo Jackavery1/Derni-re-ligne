@@ -93,10 +93,10 @@ test('biome verrouillé — teaser histoire sur petit écran', async ({ page }) 
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await page.setViewportSize({ width: 320, height: 568 });
-    await expect(page.locator('#sel-biome-clavier option[value="cyber"]')).toBeAttached({
+    await expect(page.locator('#sel-biome-clavier option[value="eclipse"]')).toBeAttached({
         timeout: 15000,
     });
-    await selectionnerBiomeVerrouilleConstellation(page, 'cyber');
+    await selectionnerBiomeVerrouilleConstellation(page, 'eclipse');
     await expect(page.locator('#panneau-detail')).not.toHaveClass(/element-masque/);
     await expect(page.locator('#panneau-detail-description')).toContainText(/mode histoire/i);
     await expect(page.locator('#btn-panneau-detail-secondaire')).toBeVisible();
@@ -213,8 +213,9 @@ test('boucle menu unifiee inactive hors ecran selection', async ({ page }) => {
     await page.locator('#btn-selection-retour').click();
     await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
 
-    const retourInactif = await page.evaluate(
-        () => window.__NEO_TEST__?.boucleMenuUnifieActive?.() ?? null
-    );
-    expect(retourInactif).toBe(false);
+    await expect
+        .poll(async () =>
+            page.evaluate(() => window.__NEO_TEST__?.boucleMenuUnifieActive?.() ?? null)
+        )
+        .toBe(false);
 });
