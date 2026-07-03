@@ -275,7 +275,7 @@ test('partie solo desktop — contrôles tactiles masqués par défaut', async (
 });
 
 test('pause mobile sans débordement horizontal', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
+    await page.setViewportSize({ width: 844, height: 390 });
     await demarrerPartie(page);
     await activerPausePartie(page);
     await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
