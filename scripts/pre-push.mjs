@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
 
 if (process.env.SKIP_PREPUSH === '1') {
-    console.warn('pre-push ignoré (SKIP_PREPUSH=1) — la CI GitHub validera le push.');
+    console.log('pre-push ignoré (SKIP_PREPUSH=1) — la CI GitHub validera le push.');
     process.exit(0);
 }
 
@@ -32,9 +32,9 @@ const etapes =
     process.env.PRE_PUSH_FULL === '1' ? [...etapesRapides, ...etapesE2eCompletes] : etapesRapides;
 
 if (process.env.PRE_PUSH_FULL === '1') {
-    console.warn('pre-push complet (PRE_PUSH_FULL=1) — audits + responsive + perf + E2E.');
+    console.log('pre-push complet (PRE_PUSH_FULL=1) — audits + responsive + perf + E2E.');
 } else {
-    console.warn(
+    console.log(
         'pre-push rapide — E2E complets en CI uniquement. Pour tout lancer en local : PRE_PUSH_FULL=1 git push'
     );
 }

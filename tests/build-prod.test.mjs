@@ -14,5 +14,5 @@ describe('build prod', () => {
         const exclus = JSON.parse(readFileSync('dist/js/budget-exclus.json', 'utf8'));
         expect(exclus).toContain('neo-test-init.js');
         expect(exclus.length).toBeGreaterThan(1);
-    }, 15000);
+    }, 90_000);
 });

@@ -16,7 +16,7 @@ import { DIALOGUES_COMBAT_BOSS } from '../js/histoire-textes/dialogues-boss.js';
 import { EPILOGUES, TRANSITIONS_CHAPITRE } from '../js/histoire-textes/chapitres.js';
 import { OUTRO_FINS } from '../js/histoire-textes/intro-interludes.js';
 import { CUTSCENES_ENTREE } from '../js/histoire-textes/cutscenes-entree.js';
-import { JOURNAUX_VERA_DIALOGUES, FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
+import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
 import {
     MARQUEURS_NARRATIFS_POST_MONDE,
     MARQUEURS_NARRATIFS_CAMPAGNE,
