@@ -71,7 +71,7 @@ Les fichiers bruts (Suno/Udio, Leonardo.ai) ne sont **jamais** commités. Dépos
 | `npm run format:check`        | Prettier (config `.prettierrc`)                      |
 | `npm run verify:versions`     | Alignement package / index / SW / README / CHANGELOG |
 
-Hooks **husky pre-push** : lint, format, typecheck, `check:circular`, tests unitaires + smoke E2E dist.
+Hooks **husky pre-push** : lint, format, typecheck, `check:circular`, tests unitaires, build, budget bundle, smoke E2E dist (~3–5 min). E2E complets en CI ; option locale `PRE_PUSH_FULL=1`.
 
 E2E bundle prod : voir [CONTRIBUTING.md](CONTRIBUTING.md) (`E2E_DIST=1`). Release : [docs/versioning.md](docs/versioning.md) — `npm run release` puis tag `vX.Y.Z`.
 

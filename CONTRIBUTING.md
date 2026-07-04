@@ -60,20 +60,20 @@ La preview PR sert de **staging** : même pipeline `quality.yml` que la prod, sa
 
 ### Hooks Git (Husky)
 
-| Hook           | Contenu                                                                                |
-| -------------- | -------------------------------------------------------------------------------------- |
-| **pre-commit** | lint-staged (ESLint + Prettier sur fichiers stagés)                                    |
-| **pre-push**   | lint, format, typecheck, cycles, tests unitaires, build, budget bundle, smoke E2E dist |
-| **commit-msg** | Conventional Commits (script Node, compatible Windows/Cursor)                          |
+| Hook           | Contenu                                                                                           |
+| -------------- | ------------------------------------------------------------------------------------------------- |
+| **pre-commit** | lint-staged (ESLint + Prettier sur fichiers stagés)                                               |
+| **pre-push**   | lint, format, typecheck, cycles, tests unitaires, build, budget bundle, smoke E2E dist (~3–5 min) |
+| **commit-msg** | Conventional Commits (script Node, compatible Windows/Cursor)                                     |
 
-Le pre-push est volontairement lourd pour éviter de pousser une régression. **`git push --no-verify`** ne doit être utilisé qu'en exception (urgence, CI en cours de réparation) : le pipeline GitHub exécutera quand même l'intégralité des checks. Ne jamais contourner les hooks pour merger du code non testé sur `main`.
+Le pre-push local est **léger** : audits, responsive et E2E complets tournent sur **GitHub Actions** (`quality.yml`). Pour tout rejouer avant un push : `PRE_PUSH_FULL=1 git push` (PowerShell : `$env:PRE_PUSH_FULL='1'; git push`). Contournement d'urgence : `$env:SKIP_PREPUSH='1'; git push` — la CI validera quand même.
 
 ### Git sous Windows / Cursor
 
 - **Commit refusé** : le message doit respecter Conventional Commits (`feat:`, `fix:`, `feat(release): vX.Y.Z …`). L’UI Source Control de Cursor échoue silencieusement si le format est incorrect.
-- **Push lent ou bloqué** : le hook pre-push exécute lint + tests + build + E2E (~plusieurs minutes). Préférer le terminal intégré plutôt que le bouton Sync.
+- **Push lent** : pre-push rapide ~3–5 min. E2E complets en CI ; local : `$env:PRE_PUSH_FULL='1'; git push`.
 - **Release complète** : `npm run release:publish` (bump, commit, tag, push). Push sans re-vérifier : `npm run release:push`.
-- **Contournement temporaire pre-push** : `$env:SKIP_PREPUSH='1'; git push origin main --tags` (PowerShell) — la CI GitHub validera quand même.
+- **Contournement d'urgence** : `$env:SKIP_PREPUSH='1'; git push origin main --tags` (PowerShell) — la CI GitHub validera quand même.
 
 ### Analyse et maintenance
 
