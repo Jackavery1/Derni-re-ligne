@@ -11,7 +11,7 @@ jobs:
     release:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
             - name: Extraire version du tag
               id: version
               run: echo "tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"

@@ -31,7 +31,7 @@ jobs:
               with:
                   name: dist
                   path: dist/
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
             - name: Préparer artefact statique (bundle prod)
               run: |
                   mkdir -p _site
