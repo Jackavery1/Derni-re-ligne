@@ -44,6 +44,8 @@ Vanilla ES modules en dev, bundle esbuild en prod.
 | `coop-logique-piece.js`     | Spawn, validation, verrouillage           |
 | `coop-logique-mouvement.js` | Déplacements, rotation, hold, passerelle  |
 
+**Rotation coop vs solo** — le coop et le solo utilisent la même table SRS via `tenterRotationSrs()` dans `actions-piece-communes.js` (`coop-logique-mouvement.js` et `logique-partie-mouvement.js`). `tenterRotationSimple` (5 essais horizontaux) existe pour les tests unitaires uniquement.
+
 ## Partie solo (résumé)
 
 `demarrerJeu()` → boucle RAF → gravité / DAS / lock → `verrouillerPiece()` → `score-partie.js` → rendu.

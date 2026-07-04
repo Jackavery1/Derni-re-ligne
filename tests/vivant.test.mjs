@@ -16,6 +16,8 @@ import {
     calculerCellulesAffectees,
     mettreAJourVivant,
     declencherComportementVivant,
+    intervalleVivantEffectif,
+    delaiMinimumVivantEffectif,
 } from '../js/vivant.js';
 
 describe('vivant', () => {
@@ -31,6 +33,14 @@ describe('vivant', () => {
         expect(COMPORTEMENTS_VIVANT.classique).toBeNull();
         mettreAJourVivant(60000);
         expect(vivant.phase).toBe('repos');
+    });
+
+    it('ralentit les événements vivant aux niveaux bas (marathon casual)', () => {
+        const config = COMPORTEMENTS_VIVANT.lave;
+        expect(intervalleVivantEffectif(config, 3)).toBeGreaterThan(config.intervalle);
+        expect(delaiMinimumVivantEffectif(config, 3)).toBeGreaterThan(config.delaiMinimum);
+        expect(intervalleVivantEffectif(config, 10)).toBe(config.intervalle);
+        expect(delaiMinimumVivantEffectif(config, 10)).toBe(config.delaiMinimum);
     });
 
     it('vivant_supprimerCellule respecte les bornes du plateau', () => {
@@ -82,8 +92,11 @@ describe('vivant', () => {
     it('passe en alerte avant l’intervalle complet', () => {
         definirBiomeActif('cyber');
         initialiserVivant();
-        vivant.tempsJeu = COMPORTEMENTS_VIVANT.cyber.delaiMinimum;
-        mettreAJourVivant(COMPORTEMENTS_VIVANT.cyber.intervalle - vivant.DUREE_ALERTE);
+        const config = COMPORTEMENTS_VIVANT.cyber;
+        const delaiMin = delaiMinimumVivantEffectif(config, etat.niveau ?? 1);
+        const intervalle = intervalleVivantEffectif(config, etat.niveau ?? 1);
+        vivant.tempsJeu = delaiMin;
+        mettreAJourVivant(intervalle - vivant.DUREE_ALERTE);
         expect(vivant.phase).toBe('alerte');
         expect(vivant.cellulesAlerte.length).toBeGreaterThanOrEqual(0);
     });

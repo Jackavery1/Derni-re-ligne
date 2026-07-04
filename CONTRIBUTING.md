@@ -28,7 +28,29 @@ Node 18+ (`.nvmrc`). Logs verbeux : `?debug=1`. Formatage : `.prettierrc` (Prett
 
 ### Tests E2E sur le bundle prod
 
-La CI exécute **smoke** sur le bundle prod (`test:e2e:smoke:dist`), puis **responsive multi-viewport** (`test:e2e:responsive:dist` sur `dist/`, `test:e2e:responsive` sur les sources), **perf** (`test:e2e:perf` via `E2E_DIST=1` — `run-e2e-dist.mjs` injecte `neo-test-init.js` dans `dist/index.html`). La suite E2E complète (`npm run test:e2e`) sert les **modules ES sources** avec la matrice Playwright : `desktop`, `mobile-portrait`, `mobile-landscape`, `iphone-14` (+ projets visuels mobile). Audits gameplay/narratif : `npm run test:e2e:audit`.
+La CI exécute **smoke** sur le bundle prod (`test:e2e:smoke:dist`), puis **responsive multi-viewport** (`test:e2e:responsive:dist` sur `dist/`, `test:e2e:responsive` sur les sources), **perf** (`test:e2e:perf` via `E2E_DIST=1` — `run-e2e-dist.mjs` injecte `neo-test-init.js` dans `dist/index.html`), **Lighthouse** desktop + mobile (`lighthouserc.cjs`, `lighthouserc-mobile.cjs`, warn non bloquant). La suite E2E complète (`npm run test:e2e`) sert les **modules ES sources** avec la matrice Playwright : `desktop`, `mobile-portrait`, `mobile-landscape`, `iphone-14` (+ projets visuels mobile). Audits gameplay/narratif : `npm run test:e2e:audit`. Local : `npm run audit:lighthouse` / `audit:lighthouse:mobile` après build.
+
+### Campagne complète D9 (narratif, ~10 min)
+
+Parcours fin secrète **avec narratif post-victoire** (sans `sansNarratif`) :
+
+```bash
+npm run test:e2e:d9
+```
+
+Timeout spec : 600 s. Helpers : `e2e/helpers-campagne-narratif.mjs`. **CI :** workflow `e2e-d9-nightly.yml` (dimanche 03:00 UTC, `workflow_dispatch` manuel).
+
+### Helpers E2E (`e2e/`)
+
+| Fichier                         | Rôle                                                         |
+| ------------------------------- | ------------------------------------------------------------ |
+| `helpers.mjs`                   | Barrel — réexporte tout (importer depuis ici dans les specs) |
+| `helpers-page.mjs`              | Prep page, attente `data-neo-test-ready`                     |
+| `helpers-partie.mjs`            | Solo : pause, démarrage, fin de partie                       |
+| `helpers-coop.mjs`              | Coop 2 joueurs                                               |
+| `helpers-histoire.mjs`          | Carte histoire, cutscenes, recap                             |
+| `helpers-campagne-narratif.mjs` | Parcours campagne avec narratif (D9, D9b)                    |
+| `helpers-narratif*.mjs`         | Flux cutscene, fragments VERA, overlays                      |
 
 ### Piège Live Server / file://
 
@@ -60,18 +82,18 @@ La preview PR sert de **staging** : même pipeline `quality.yml` que la prod, sa
 
 ### Hooks Git (Husky)
 
-| Hook           | Contenu                                                                                           |
-| -------------- | ------------------------------------------------------------------------------------------------- |
-| **pre-commit** | lint-staged (ESLint + Prettier sur fichiers stagés)                                               |
-| **pre-push**   | lint, format, typecheck, cycles, tests unitaires, build, budget bundle, smoke E2E dist (~3–5 min) |
-| **commit-msg** | Conventional Commits (script Node, compatible Windows/Cursor)                                     |
+| Hook           | Contenu                                                                  |
+| -------------- | ------------------------------------------------------------------------ |
+| **pre-commit** | lint-staged (ESLint + Prettier sur fichiers stagés)                      |
+| **pre-push**   | lint, format, typecheck, cycles, verify:data, tests unitaires (~1–2 min) |
+| **commit-msg** | Conventional Commits (script Node, compatible Windows/Cursor)            |
 
-Le pre-push local est **léger** : audits, responsive et E2E complets tournent sur **GitHub Actions** (`quality.yml`). Pour tout rejouer avant un push : `PRE_PUSH_FULL=1 git push` (PowerShell : `$env:PRE_PUSH_FULL='1'; git push`). Contournement d'urgence : `$env:SKIP_PREPUSH='1'; git push` — la CI validera quand même.
+Le pre-push local est **rapide** (~1–2 min) : build, budget bundle, smoke E2E dist et audits complets tournent sur **GitHub Actions** (`quality.yml`). Options locales : `$env:PRE_PUSH_BUILD='1'; git push` (build + smoke dist, ~2–3 min) ; `$env:PRE_PUSH_FULL='1'; git push` (suite E2E complète, ~20–30 min). Rejouer les mêmes étapes sans push : `npm run verify:pre-push`. Contournement d'urgence : `$env:SKIP_PREPUSH='1'; git push` — la CI validera quand même.
 
 ### Git sous Windows / Cursor
 
 - **Commit refusé** : le message doit respecter Conventional Commits (`feat:`, `fix:`, `feat(release): vX.Y.Z …`). L’UI Source Control de Cursor échoue silencieusement si le format est incorrect.
-- **Push lent** : pre-push rapide ~3–5 min. E2E complets en CI ; local : `$env:PRE_PUSH_FULL='1'; git push`.
+- **Push lent** : pre-push rapide ~1–2 min. Build/smoke en CI ; local : `$env:PRE_PUSH_BUILD='1'; git push`. E2E complets : `$env:PRE_PUSH_FULL='1'; git push`.
 - **Release complète** : `npm run release:publish` (bump, commit, tag, push). Push sans re-vérifier : `npm run release:push`.
 - **Contournement d'urgence** : `$env:SKIP_PREPUSH='1'; git push origin main --tags` (PowerShell) — la CI GitHub validera quand même.
 

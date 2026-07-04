@@ -5,7 +5,7 @@ if (process.env.SKIP_PREPUSH === '1') {
     process.exit(0);
 }
 
-/** Vérifications rapides avant push manuel (~3–5 min). La CI exécute la suite E2E complète. */
+/** Vérifications rapides avant push manuel (~1–2 min). Build, bundle et E2E dist : CI GitHub. */
 const etapesRapides = [
     'npm run lint',
     'npm run format:check',
@@ -13,6 +13,10 @@ const etapesRapides = [
     'npm run check:circular',
     'npm run verify:data',
     'npm test',
+];
+
+/** Build + smoke dist (~2–3 min) — PRE_PUSH_BUILD=1 */
+const etapesBuild = [
     'npm run build',
     'node scripts/generer-precache.mjs --prod',
     'node scripts/verifier-bundle.mjs',
@@ -28,14 +32,18 @@ const etapesE2eCompletes = [
     'npm run test:e2e',
 ];
 
-const etapes =
-    process.env.PRE_PUSH_FULL === '1' ? [...etapesRapides, ...etapesE2eCompletes] : etapesRapides;
+let etapes = [...etapesRapides];
+if (process.env.PRE_PUSH_BUILD === '1') etapes = [...etapes, ...etapesBuild];
+if (process.env.PRE_PUSH_FULL === '1')
+    etapes = [...etapesRapides, ...etapesBuild, ...etapesE2eCompletes];
 
 if (process.env.PRE_PUSH_FULL === '1') {
-    console.log('pre-push complet (PRE_PUSH_FULL=1) — audits + responsive + perf + E2E.');
+    console.log('pre-push complet (PRE_PUSH_FULL=1) — build + smoke + audits + E2E.');
+} else if (process.env.PRE_PUSH_BUILD === '1') {
+    console.log('pre-push build (PRE_PUSH_BUILD=1) — lint/tests + build + smoke dist.');
 } else {
     console.log(
-        'pre-push rapide — E2E complets en CI uniquement. Pour tout lancer en local : PRE_PUSH_FULL=1 git push'
+        'pre-push rapide (~1–2 min) — build/smoke/E2E en CI. Options : PRE_PUSH_BUILD=1 ou PRE_PUSH_FULL=1 git push'
     );
 }
 

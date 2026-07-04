@@ -190,6 +190,18 @@ function obtenirConfigVivant() {
     return COMPORTEMENTS_VIVANT[obtenirBiomeActif()];
 }
 
+/** @param {{ intervalle: number, delaiMinimum: number }} config @param {number} [niveau] */
+export function intervalleVivantEffectif(config, niveau = 1) {
+    const facteur = niveau <= 5 ? 1.35 : niveau <= 8 ? 1.15 : 1;
+    return Math.round(config.intervalle * facteur);
+}
+
+/** @param {{ intervalle: number, delaiMinimum: number }} config @param {number} [niveau] */
+export function delaiMinimumVivantEffectif(config, niveau = 1) {
+    const facteur = niveau <= 5 ? 1.25 : niveau <= 8 ? 1.1 : 1;
+    return Math.round(config.delaiMinimum * facteur);
+}
+
 function pousserParticuleVivant(config) {
     pousserParticuleJeu({ type: 'defaut', ...config });
 }
@@ -278,7 +290,8 @@ export function mettreAJourIndicateurVivant() {
     }
 
     if (elBar) {
-        const pct = (vivant.timer / config.intervalle) * 100;
+        const intervalle = intervalleVivantEffectif(config, etat.niveau ?? 1);
+        const pct = (vivant.timer / intervalle) * 100;
         elBar.style.width = `${Math.min(100, pct)}%`;
         elBar.style.background =
             vivant.phase === 'alerte' ? config.couleurAlerte : `${config.couleurAlerte}88`;
@@ -299,15 +312,18 @@ export function mettreAJourVivant(dt) {
     if (!config) return;
 
     vivant.tempsJeu += dt;
-    if (vivant.tempsJeu < config.delaiMinimum) {
+    const delaiMinimum = delaiMinimumVivantEffectif(config, etat.niveau ?? 1);
+    if (vivant.tempsJeu < delaiMinimum) {
         mettreAJourIndicateurVivant();
         return;
     }
 
+    const intervalle = intervalleVivantEffectif(config, etat.niveau ?? 1);
+
     switch (vivant.phase) {
         case 'repos':
             vivant.timer += dt;
-            if (vivant.timer >= config.intervalle - vivant.DUREE_ALERTE) {
+            if (vivant.timer >= intervalle - vivant.DUREE_ALERTE) {
                 vivant.phase = 'alerte';
                 vivant.timerAlerte = vivant.DUREE_ALERTE;
                 vivant.couleurAlerte = config.couleurAlerte;

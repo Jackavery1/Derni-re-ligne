@@ -273,6 +273,7 @@ const FICHIERS_A_CACHER = [
     './js/options-sync-cloud-ui.js',
     './js/options-ui.js',
     './js/oracle-jeu.js',
+    './js/oracle-placement.js',
     './js/orientation-jeu.js',
     './js/particules-jeu.js',
     './js/partie-canvas.js',

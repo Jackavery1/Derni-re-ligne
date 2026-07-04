@@ -8,6 +8,14 @@ import {
 import { modeDevActif } from './mode-dev-etat.js';
 import { definirTexteUi } from './texte-jeu.js';
 import { mettreAJourPanneauDetails } from './histoire-map-panneau-details.js';
+import { precharger } from './scenes-cutscene.js';
+
+const MONDES_PRECHARGE_VIDE_ERRANCE = new Set(['monde_vide', 'monde_cosmos']);
+
+function prechargerSceneLazyMonde(noeudId) {
+    if (!noeudId || !MONDES_PRECHARGE_VIDE_ERRANCE.has(noeudId)) return;
+    void precharger('vide_errance');
+}
 
 export function mettreAJourAriaCarteHistoire(etatCarte) {
     const canvas = etatCarte.canvasCarte;
@@ -96,6 +104,7 @@ export function attacherEvenementsCarteHistoire(
         if (etatCarte.noeudSurvole !== precedent) {
             canvasCarte.style.cursor = noeud ? 'pointer' : 'default';
             mettreAJourAriaCarteHistoire(etatCarte);
+            if (noeud?.id) prechargerSceneLazyMonde(noeud.id);
         }
     });
 
@@ -140,6 +149,7 @@ export function traiterSelectionNoeud(etatCarte, noeud, doubleTap, lancerMondeDe
     }
 
     etatCarte.noeudSelectionne = noeud.id;
+    prechargerSceneLazyMonde(noeud.id);
     mettreAJourPanneauDetails(
         etatCarte,
         noeud.monde,

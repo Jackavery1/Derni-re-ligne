@@ -99,8 +99,8 @@
 .profil-contenu {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 24px 20px 32px;
+    gap: var(--space-5);
+    padding: var(--space-5) var(--space-5) var(--space-6);
     max-height: 100dvh;
     overflow-y: auto;
     scrollbar-width: none;
@@ -117,14 +117,14 @@
 .profil-grille {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: var(--space-5);
     width: 100%;
 }
 .profil-col-gauche,
 .profil-col-droite {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--space-5);
     min-width: 0;
 }
 .profil-rapport-header {
@@ -135,8 +135,8 @@
     flex-wrap: wrap;
     align-items: baseline;
     justify-content: center;
-    gap: 10px 18px;
-    margin-bottom: 10px;
+    gap: var(--space-3) var(--space-4);
+    margin-bottom: var(--space-3);
 }
 .profil-rapport-meta {
     font-family: 'Rajdhani', var(--font-ui);
@@ -162,7 +162,7 @@
     font-family: var(--font-titre);
     font-size: var(--typo-titre-ecran);
     letter-spacing: 3px;
-    margin-top: 8px;
+    margin-top: var(--space-2);
     background: linear-gradient(90deg, #ffbb44 0%, #ff2d78 100%);
     background-clip: text;
     -webkit-background-clip: text;
@@ -175,7 +175,7 @@
     font-size: var(--typo-narratif);
     font-style: italic;
     color: rgba(255, 153, 255, 0.82);
-    margin: 12px auto 0;
+    margin: var(--space-3) auto 0;
     max-width: 36rem;
     line-height: 1.55;
 }
@@ -184,7 +184,7 @@
     font-size: var(--typo-narratif);
     font-style: italic;
     color: rgba(255, 153, 255, 0.75);
-    margin: 14px auto 0;
+    margin: var(--space-4) auto 0;
     max-width: 28rem;
     line-height: 1.6;
 }
@@ -193,15 +193,15 @@
     font-size: var(--typo-stat);
     color: rgba(0, 221, 200, 0.7);
     letter-spacing: 3px;
-    margin-top: 8px;
+    margin-top: var(--space-2);
 }
 .profil-section {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
-    padding: 22px 20px;
+    gap: var(--space-3);
+    padding: var(--space-5) var(--space-5);
     min-width: 0;
 }
 .profil-section-label {
@@ -272,8 +272,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    padding: 28px 20px 36px;
+    gap: var(--space-5);
+    padding: var(--space-6) var(--space-5) var(--space-6);
     max-height: 100dvh;
     overflow-y: auto;
     scrollbar-width: none;
@@ -301,7 +301,7 @@
 .ach-galerie-grille {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    gap: var(--space-4);
     width: 100%;
 }
 .ach-carte {
@@ -311,11 +311,11 @@
     box-shadow:
         0 0 10px color-mix(in srgb, var(--accent-carte) 20%, transparent),
         inset 0 0 24px rgba(0, 0, 0, 0.45);
-    padding: 16px 12px;
+    padding: var(--space-4) var(--space-3);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
     text-align: center;
     min-height: 188px;
     transition:

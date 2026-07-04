@@ -18,6 +18,8 @@ export function initialiserNeoTestApi() {
     /** @type {(() => string) | null} */
     let obtenirHumeurRoboCutsceneSync = null;
     /** @type {((personnageId: string) => string | null) | null} */
+    let obtenirHumeurPortraitCutsceneEtatSync = null;
+    /** @type {((personnageId: string) => string | null) | null} */
     let obtenirDerniereHumeurParleeSync = null;
     /** @type {(() => boolean) | null} */
     let typewriterEstActifSync = null;
@@ -27,6 +29,7 @@ export function initialiserNeoTestApi() {
         }),
         import('./portraits-cutscene-etat.js').then((mod) => {
             obtenirHumeurRoboCutsceneSync = mod.obtenirHumeurRoboCutscene;
+            obtenirHumeurPortraitCutsceneEtatSync = mod.obtenirHumeurPortraitCutsceneEtat;
         }),
         import('./expressions-cutscene.js').then((mod) => {
             obtenirDerniereHumeurParleeSync = mod.obtenirDerniereHumeurParleePortrait;
@@ -131,6 +134,8 @@ export function initialiserNeoTestApi() {
             obtenirHumeurPortraitCutscene: (personnageId = 'robo') => {
                 const depuisLigne = obtenirDerniereHumeurParleeSync?.(personnageId);
                 if (depuisLigne) return depuisLigne;
+                const depuisEtat = obtenirHumeurPortraitCutsceneEtatSync?.(personnageId);
+                if (depuisEtat) return depuisEtat;
                 if (!personnageId || personnageId === 'robo') {
                     return obtenirHumeurRoboCutsceneSync?.() ?? null;
                 }

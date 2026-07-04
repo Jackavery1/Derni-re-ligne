@@ -18,33 +18,36 @@ import { dessinerCelluleStyle } from './rendu-blocs.js';
 import { opacitePieceCourante, ghostEstDesactive } from './mecaniques-histoire.js';
 import { dessinerPulsePieceActive } from './rendu-accessibilite.js';
 
+function dessinerCellulesFantome(forme, xOrigine, yOrigine, distance, couleur, opacite) {
+    for (let l = 0; l < forme.length; l++) {
+        for (let c = 0; c < forme[l].length; c++) {
+            if (!forme[l][c]) continue;
+            const x = xOrigine + c;
+            const y = yOrigine + l + distance;
+            if (y >= 0 && x >= 0 && x < CONFIG.colonnes) {
+                dessinerCellule(obtenirCtx(), x, y, couleur, CONFIG.taille, opacite);
+            }
+        }
+    }
+}
+
 export function dessinerPieceFantome() {
     if (!etat.pieceActuelle) return;
     if (ghostEstDesactive()) return;
     const distance = calculerDistanceChute(etat.pieceActuelle);
     const forme = obtenirForme(etat.pieceActuelle);
     const couleur = obtenirCouleurPiece(etat.pieceActuelle);
+    const piece = etat.pieceActuelle;
 
-    let offsetFaux = 0;
     if (obtenirFauxFantomeActif()) {
+        dessinerCellulesFantome(forme, piece.x, piece.y, distance, '#00f5ff', 0.14);
         const tick = Math.floor(performance.now() / 800);
-        offsetFaux = ((tick * 7 + 3) % 7) - 3;
+        const offsetFaux = ((tick * 7 + 3) % 7) - 3;
+        dessinerCellulesFantome(forme, piece.x + offsetFaux, piece.y, distance, '#ff2d78', 0.28);
+        return;
     }
 
-    const distAffichee = distance;
-    const xAffiche = etat.pieceActuelle.x + offsetFaux;
-    const opaciteFantome = 0.22;
-
-    for (let l = 0; l < forme.length; l++) {
-        for (let c = 0; c < forme[l].length; c++) {
-            if (!forme[l][c]) continue;
-            const x = xAffiche + c;
-            const y = etat.pieceActuelle.y + l + distAffichee;
-            if (y >= 0 && x >= 0 && x < CONFIG.colonnes) {
-                dessinerCellule(obtenirCtx(), x, y, couleur, CONFIG.taille, opaciteFantome);
-            }
-        }
-    }
+    dessinerCellulesFantome(forme, piece.x, piece.y, distance, couleur, 0.22);
 }
 
 export function dessinerOverlayBraise() {

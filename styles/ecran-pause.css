@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: var(--space-5);
 }
 
 .pause-titre {
@@ -19,7 +19,7 @@
 
 .pause-stats-jeu {
     display: flex;
-    gap: 28px;
+    gap: var(--space-6);
     font-size: var(--typo-corps);
     color: var(--texte-dim);
     letter-spacing: 0.06em;
@@ -29,14 +29,14 @@
     font-size: var(--typo-stat);
     color: var(--jaune);
     text-shadow: 0 0 8px var(--jaune);
-    margin-top: 4px;
+    margin-top: var(--space-1);
     text-align: center;
 }
 
 .pause-boutons {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--space-3);
     align-items: center;
     width: min(280px, 85vw);
 }
@@ -56,7 +56,7 @@
 
 @media (max-width: 768px) {
     .pause-contenu {
-        padding: 16px;
+        padding: var(--space-4);
         width: min(100%, 100dvw);
         box-sizing: border-box;
     }
@@ -77,15 +77,15 @@
 
     .pause-contenu {
         width: min(100%, 520px);
-        padding: 12px 16px;
-        gap: 12px;
+        padding: var(--space-3) var(--space-4);
+        gap: var(--space-3);
         margin: auto;
     }
 
     .pause-stats-jeu {
         flex-wrap: wrap;
         justify-content: center;
-        gap: 16px;
+        gap: var(--space-4);
     }
 
     .pause-boutons {

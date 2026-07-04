@@ -1,7 +1,15 @@
 import { logger } from './logger.js';
 import { dessinerPortraitCutsceneInterne } from './portraits-cutscene-personnages.js';
 
-export { definirHumeurRoboCutscene, obtenirHumeurRoboCutscene } from './portraits-cutscene-etat.js';
+export {
+    definirHumeurRoboCutscene,
+    obtenirHumeurRoboCutscene,
+    definirHumeurVeraCutscene,
+    obtenirHumeurVeraCutscene,
+    definirHumeurBossCutscene,
+    obtenirHumeurBossCutscene,
+    obtenirHumeurPortraitCutsceneEtat,
+} from './portraits-cutscene-etat.js';
 
 /**
  * @param {CanvasRenderingContext2D} ctx

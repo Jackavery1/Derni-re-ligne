@@ -2,6 +2,7 @@ import { CONFIG, METEO_BIOMES } from './config.js';
 import { majStatsMeteo } from './achievements.js';
 import { reagirRoboMeteoActive } from './mascotte-robo.js';
 import { proposerInfobulleMeteo } from './infobulles-contexte.js';
+import { etat } from './store-jeu.js';
 
 export const ETATS_METEO = { REPOS: 'repos', ALERTE: 'alerte', ACTIF: 'actif' };
 
@@ -27,8 +28,20 @@ export function configurerMeteo(dependances) {
     deps = dependances;
 }
 
+/** @param {number} [niveau] */
+export function intervalleProchainMeteoMs(niveau = 1) {
+    const minSec = niveau <= 5 ? 120 : 90;
+    const maxSec = niveau <= 5 ? 180 : 150;
+    return (Math.floor(Math.random() * (maxSec - minSec + 1)) + minSec) * 1000;
+}
+
+/** @param {number} [niveau] */
+export function nombreCellulesBarrageMeteo(niveau = 1) {
+    return niveau <= 8 ? 3 : 6;
+}
+
 function tirerProchainMeteo() {
-    return (Math.floor(Math.random() * 61) + 90) * 1000;
+    return intervalleProchainMeteoMs(etat.niveau ?? 1);
 }
 
 function effacerTimeoutsMeteo() {
@@ -200,7 +213,7 @@ function declencherEffetMeteo(evenement) {
             }
             cellulesBasse
                 .sort(() => Math.random() - 0.5)
-                .slice(0, 6)
+                .slice(0, nombreCellulesBarrageMeteo(etat.niveau ?? 1))
                 .forEach(({ x, y }) => {
                     deps.creerParticulesExplosion(x, y, etat.plateau[y][x]);
                     etat.plateau[y][x] = 0;

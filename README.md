@@ -25,14 +25,18 @@ Contrôles complets : **Options → Contrôles**.
 
 ```bash
 npm install
-npm start          # http://127.0.0.1:3000
+npm start          # http://127.0.0.1:3000 — pas Live Server (modules ES)
 npm test
 npm run build      # → dist/
 ```
 
+**Important :** n’ouvrez pas `index.html` via Live Server ou `file://` — les imports ES échouent et l’écran reste sur « Chargement… ». Utilisez **`npm start`** (voir [CONTRIBUTING.md](CONTRIBUTING.md)).
+
 Utile : `npm run lint` · `npm run format:check` · `npm run typecheck` · `npm run verify:versions` · `npm run test:e2e` · `npm run sync:sw`
 
 **Dev :** préférer `127.0.0.1` à `localhost` (HSTS). Après MAJ du SW : Ctrl+Shift+R. Debug : `?debug=1`.
+
+**Mobile en partie :** en portrait (<768 px), `#overlay-orientation` bloque volontairement le jeu (paysage requis) — voir E2E audit C13 et [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Node 18+ (`.nvmrc`).
 
@@ -71,7 +75,7 @@ Les fichiers bruts (Suno/Udio, Leonardo.ai) ne sont **jamais** commités. Dépos
 | `npm run format:check`        | Prettier (config `.prettierrc`)                      |
 | `npm run verify:versions`     | Alignement package / index / SW / README / CHANGELOG |
 
-Hooks **husky pre-push** : lint, format, typecheck, `check:circular`, tests unitaires, build, budget bundle, smoke E2E dist (~3–5 min). E2E complets en CI ; option locale `PRE_PUSH_FULL=1`.
+Hooks **husky pre-push** : lint, format, typecheck, cycles, tests unitaires (~1–2 min). Build/smoke/E2E en CI ; options `$env:PRE_PUSH_BUILD='1'` ou `PRE_PUSH_FULL=1`.
 
 E2E bundle prod : voir [CONTRIBUTING.md](CONTRIBUTING.md) (`E2E_DIST=1`). Release : [docs/versioning.md](docs/versioning.md) — `npm run release` puis tag `vX.Y.Z`.
 

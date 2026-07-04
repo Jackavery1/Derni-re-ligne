@@ -63,7 +63,7 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: var(--space-3);
     padding: 20px 18px 24px;
     text-align: left;
     overflow-y: auto;
@@ -497,7 +497,7 @@ body.effets-reduits #sel-info-biome {
 
 .option-boutons {
     display: flex;
-    gap: 10px;
+    gap: var(--space-3);
     flex-wrap: wrap;
     justify-content: center;
 }
@@ -581,8 +581,8 @@ body.effets-reduits #sel-info-biome {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14px;
-    padding: 24px 16px 32px;
+    gap: var(--space-4);
+    padding: var(--space-5) var(--space-4) var(--space-6);
     max-height: 100dvh;
     overflow-y: auto;
     scrollbar-width: none;
@@ -613,11 +613,11 @@ body.effets-reduits #sel-info-biome {
     font-size: var(--typo-stat);
     color: var(--texte-dim);
     letter-spacing: 2px;
-    margin-top: 4px;
+    margin-top: var(--space-1);
 }
 .codex-onglets {
     display: flex;
-    gap: 8px;
+    gap: var(--space-2);
     flex-wrap: wrap;
     justify-content: center;
 }
@@ -628,7 +628,7 @@ body.effets-reduits #sel-info-biome {
     color: var(--texte-dim);
     font-family: var(--police);
     font-size: clamp(0.45rem, 1.2vw, 0.6rem);
-    padding: 10px 16px;
+    padding: var(--space-3) var(--space-4);
     cursor: pointer;
     letter-spacing: 1px;
     transition: all 0.15s;
@@ -648,7 +648,7 @@ body.effets-reduits #sel-info-biome {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(168px, 220px));
     justify-content: center;
-    gap: 10px;
+    gap: var(--space-3);
     width: 100%;
     max-width: min(1100px, 92vw);
     margin-inline: auto;
@@ -754,7 +754,7 @@ body.effets-reduits #sel-info-biome {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: var(--space-3);
     overflow-y: auto;
     scrollbar-width: thin;
     border-radius: 6px 0 0 6px;
@@ -1168,7 +1168,7 @@ body.coop-active #conteneur-principal {
 #interface-jeu-coop {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
+    gap: var(--space-3);
     transform-origin: top left;
 }
 
