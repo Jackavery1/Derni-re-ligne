@@ -136,8 +136,11 @@ export async function preparerPremierLancement(page) {
         localStorage.removeItem('derniereLigne_introHistoireVue');
         localStorage.removeItem('derniereLigne_tutorielVu');
         localStorage.removeItem('derniereLigne_tutorielHistoireVu');
+        localStorage.removeItem('derniereLigne_tutorielLibreVu');
         localStorage.removeItem('derniereLigne_tutorielCoopVu');
         localStorage.removeItem('derniereLigne_tutorielArchitecteVu');
+        localStorage.removeItem('derniereLigne_tutorielOracleVu');
+        localStorage.removeItem('derniereLigne_tutorielDistorsionVu');
     });
 }
 
@@ -149,8 +152,11 @@ export async function preparerPageSansSw(page, etatHistoire = ETAT_DEBLOCAGE_MON
         localStorage.setItem('dl_migration_v1', '1');
         localStorage.setItem('derniereLigne_tutorielVu', '1');
         localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
+        localStorage.setItem('derniereLigne_tutorielLibreVu', '1');
         localStorage.setItem('derniereLigne_tutorielCoopVu', '1');
         localStorage.setItem('derniereLigne_tutorielArchitecteVu', '1');
+        localStorage.setItem('derniereLigne_tutorielOracleVu', '1');
+        localStorage.setItem('derniereLigne_tutorielDistorsionVu', '1');
         localStorage.setItem('derniereLigne_introHistoireVue', '1');
         localStorage.setItem('derniereLigne_infobulleOracleCoop', '1');
         localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));

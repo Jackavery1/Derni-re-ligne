@@ -4,6 +4,7 @@ import {
     attendreApplicationPrete,
     demarrerPartie,
     selectionnerBiomeClavier,
+    attendrePartieVisible,
     ouvrirCarteHistoire,
     fermerInfobulleContexteSiVisible,
     ETAT_DEBLOCAGE_META_RAPIDE,
@@ -93,7 +94,7 @@ test('audit B — animation menu arretee en partie', async ({ page }) => {
     await page.evaluate(() => {
         document.getElementById('btn-panneau-detail-jouer')?.click();
     });
-    await expect(page.locator('body')).toHaveClass(/partie-active/, { timeout: 20000 });
+    await attendrePartieVisible(page);
 
     const menuInactif = await page.evaluate(() => window.__NEO_TEST__?.menuAnimActif?.() ?? null);
     expect(menuInactif).toBe(false);

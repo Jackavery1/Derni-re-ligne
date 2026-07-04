@@ -29,9 +29,11 @@ export async function preparerSelectionPremiereVisiteModes(
         localStorage.setItem('dl_migration_v1', '1');
         localStorage.setItem('derniereLigne_tutorielVu', '1');
         localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
+        localStorage.setItem('derniereLigne_tutorielLibreVu', '1');
         localStorage.setItem('derniereLigne_tutorielCoopVu', '1');
         localStorage.setItem('derniereLigne_tutorielArchitecteVu', '1');
         localStorage.setItem('derniereLigne_tutorielOracleVu', '1');
+        localStorage.setItem('derniereLigne_tutorielDistorsionVu', '1');
         localStorage.setItem('derniereLigne_introHistoireVue', '1');
         localStorage.removeItem('derniereLigne_infobullesModesJeu');
         localStorage.removeItem('derniereLigne_infobulleOracleCoop');
