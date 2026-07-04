@@ -32,7 +32,7 @@ La CI exécute **smoke** sur le bundle prod (`test:e2e:smoke:dist`), puis **resp
 
 ### Piège Live Server / file://
 
-Le jeu charge des modules ES (`import` depuis `js/`). **Live Server** et l’ouverture directe de `index.html` ne bundlent pas → écran « Chargement… » infini. Utiliser **`npm run dev`** (Vite) ou **`npm start`** (serve + bundle précompilé). Voir le watchdog dans `js/chargement-watchdog.js`.
+Le jeu charge des modules ES (`import` depuis `js/`). **Live Server** et l’ouverture directe de `index.html` ne servent pas correctement les modules → écran « Chargement… » infini. Utiliser **`npm start`** (`serve` sur `127.0.0.1:3000`). Pour le bundle prod : `npm run build` puis `npx serve dist`. Voir le watchdog dans `js/chargement-watchdog.js`.
 
 ### Checklist manuelle iPhone (encoches réelles)
 
@@ -79,6 +79,10 @@ Le pre-push est volontairement lourd pour éviter de pousser une régression. **
 
 - `npm run analyze` — top 15 taille bundle + régénère `docs/modules-index.md` (hotspots uniquement)
 - `npm run check:circular` — dépendances circulaires depuis `js/main.js`
+
+### Textes narratifs (`js/histoire-textes/`)
+
+Les cutscenes et dialogues sont découpés par domaine (`cutscenes-post-monde-*.js`, `cutscenes-entree-*.js`, etc.). Le barrel `js/histoire-textes.js` réexporte l’API publique ; la prod charge `data/histoire-textes.json` (généré par `npm run sync:data`). Après modification des sources JS : `npm run sync:data` puis `npm run verify:data`. Les PNG de cutscene **eager** sont precachés par le SW (`sw.js` → `SCENES_CUTSCENE_PRECACHE`) ; les scènes `lazy: true` (ex. `vide_errance`) restent en chargement runtime. Scripts one-shot archivés : `scripts/archive/decouper-histoire-textes.mjs`, `scripts/archive/split-textes-narratifs.mjs`, `scripts/archive/split-modules-audit.mjs`.
 
 ## Commits (usage interne)
 

@@ -55,7 +55,12 @@
                     </div>
                     <div id="section-timer-niveau" class="stat element-masque">
                         <span class="stat-label">TEMPS NIV.</span>
-                        <span class="stat-valeur" id="affichage-temps-niveau">02:30</span>
+                        <span class="stat-valeur" id="affichage-temps-niveau" aria-live="polite"
+                            >02:30</span
+                        >
+                        <div class="timer-niveau-piste" aria-hidden="true">
+                            <div id="timer-niveau-barre" class="timer-niveau-barre"></div>
+                        </div>
                     </div>
                 </div>
                 <div id="section-vivant" class="section element-masque">
@@ -244,7 +249,12 @@
                 <span class="objectif-etoile-libelle"></span>
             </div>
         </div>
-        <button type="button" class="bouton objectif-btn-commencer" id="btn-objectifs-commencer">
+        <button
+            type="button"
+            class="bouton objectif-btn-commencer"
+            id="btn-objectifs-commencer"
+            aria-label="Commencer la partie"
+        >
             COMMENCER
         </button>
     </div>
@@ -266,7 +276,12 @@
             <span id="recap-etoile-2" class="objectif-recap-etoile" aria-hidden="true">★</span>
         </div>
         <p class="objectif-recap-revelation element-masque" id="recap-etoile-3-libelle"></p>
-        <button type="button" class="bouton objectif-btn-commencer" id="btn-recap-continuer">
+        <button
+            type="button"
+            class="bouton objectif-btn-commencer"
+            id="btn-recap-continuer"
+            aria-label="Continuer apres le recap"
+        >
             CONTINUER
         </button>
     </div>

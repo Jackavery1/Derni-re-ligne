@@ -1,15 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-/** @param {number} base */
-function parametresSpiraleConstellation(base) {
-    const compact = base < 400;
-    return {
-        compact,
-        rayonInit: base * (compact ? 0.05 : 0.12),
-        croissance: base * (compact ? 0.022 : 0.06),
-        angleIncr: compact ? 2.15 : 2.4,
-    };
-}
+import { parametresSpiraleConstellation } from '../js/constellation-spirale.js';
 
 describe('constellation — spirale responsive', () => {
     it('resserre la spirale sur viewport compact', () => {

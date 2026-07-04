@@ -194,13 +194,13 @@ test('cutscene narration — piste audio dediee', async ({ page }) => {
         .toBe('narratif_cutscene');
 });
 
-test('ecran titre — mascotte ROBO image visible', async ({ page }) => {
+test('ecran titre — logo et menu principal visibles', async ({ page }) => {
     await preparerPageSansSw(page);
     await page.goto('/');
     await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
-    const img = page.locator('.menu-robot');
-    await expect(img).toBeVisible();
-    await expect(img).toHaveAttribute('src', /robo-accueil\.png/);
+    await expect(page.locator('.menu-robot')).toHaveCount(0);
+    await expect(page.locator('#menu-titre-dl')).toBeVisible();
+    await expect(page.locator('#btn-nouvelle-partie')).toBeVisible();
 });
 
 test('sync cloud — leaderboard marathon affiche le top', async ({ page }) => {

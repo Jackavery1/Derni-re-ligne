@@ -1,4 +1,4 @@
-import { PALETTE_ROBO } from './rendu-robo-donnees.js';
+import { PALETTE_ROBO, PROPORTIONS_ROBO as P } from './rendu-robo-donnees.js';
 
 function _rectArrondi(ctx, x, y, w, h, r) {
     const rad = Math.min(r, w / 2, h / 2);
@@ -16,97 +16,85 @@ function _rectArrondi(ctx, x, y, w, h, r) {
 }
 
 /**
- * Sprite ROBO pour la carte histoire (palette canon, yeux expressifs, halo).
+ * Sprite ROBO v3 pour la carte histoire (capsule + glyphes cyan).
  * @param {CanvasRenderingContext2D} ctx
  */
 export function dessinerRoboMiniature(ctx, x, y, timestamp) {
     const C = PALETTE_ROBO;
-    const bounce = Math.sin(timestamp / 380) * 3;
-    const E = 1.2;
+    const bounce = Math.sin(timestamp / 380) * 2.5;
+    const E = 0.55;
     const cx = Math.round(x);
     const baseY = Math.round(y + bounce);
-
-    const headW = 15 * E;
-    const headH = 12 * E;
-    const torsoW = 12 * E;
-    const torsoH = 9 * E;
-    const headX = cx - headW / 2;
-    const headY = baseY - headH - torsoH + 3;
+    const capW = P.CAPSULE_W * E;
+    const capH = P.CAPSULE_H * E;
+    const capX = cx - capW / 2;
+    const capY = baseY - capH + 4;
 
     ctx.save();
 
-    const glowPulse = 0.3 + 0.25 * Math.sin(timestamp / 520);
-    ctx.globalAlpha = glowPulse;
-    ctx.fillStyle = 'rgba(0, 245, 255, 0.22)';
+    ctx.globalAlpha = 0.25 + 0.15 * Math.sin(timestamp / 520);
+    ctx.fillStyle = 'rgba(0, 245, 255, 0.2)';
     ctx.beginPath();
-    ctx.ellipse(cx, baseY + 2, 15 * E, 4.5 * E, 0, 0, Math.PI * 2);
+    ctx.ellipse(cx, baseY + 2, 12 * E, 3.5 * E, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.globalAlpha = 1;
 
-    ctx.strokeStyle = 'rgba(0, 245, 255, 0.45)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.ellipse(cx, baseY + 1, 13 * E, 3.5 * E, 0, 0, Math.PI * 2);
-    ctx.stroke();
-
-    const torsoX = cx - torsoW / 2;
-    const torsoY = headY + headH - 1;
-    const torsoGrad = ctx.createLinearGradient(torsoX, torsoY, torsoX, torsoY + torsoH);
-    torsoGrad.addColorStop(0, C.TORSE_REF);
-    torsoGrad.addColorStop(1, C.TORSE_OMB);
-    ctx.fillStyle = torsoGrad;
-    _rectArrondi(ctx, torsoX, torsoY, torsoW, torsoH, 2.5);
+    ctx.fillStyle = C.COQUE_OMBRE;
+    _rectArrondi(ctx, capX + 0.8, capY + 1.2, capW, capH, capW * 0.38);
     ctx.fill();
-    ctx.strokeStyle = C.CIRCUIT_CYAN;
-    ctx.lineWidth = 0.8;
-    ctx.strokeRect(torsoX + 2, torsoY + 2, torsoW - 4, 2);
-
-    const headGrad = ctx.createLinearGradient(headX, headY, headX, headY + headH);
-    headGrad.addColorStop(0, C.TETE_REF);
-    headGrad.addColorStop(0.45, C.TETE);
-    headGrad.addColorStop(1, C.TETE_BAND);
-    ctx.fillStyle = headGrad;
-    _rectArrondi(ctx, headX, headY, headW, headH, 3.5);
+    ctx.fillStyle = C.COQUE;
+    _rectArrondi(ctx, capX, capY, capW, capH, capW * 0.38);
     ctx.fill();
-    ctx.strokeStyle = 'rgba(255, 85, 110, 0.7)';
-    ctx.lineWidth = 0.8;
-    ctx.stroke();
 
-    const eyeY = headY + 4 * E;
-    for (const ex of [headX + 3 * E, headX + headW - 7 * E]) {
-        ctx.fillStyle = C.OEIL_CONTOUR;
-        ctx.fillRect(ex - 0.5, eyeY - 0.5, 4.5 * E, 4 * E);
-        ctx.fillStyle = C.SCLERE;
-        ctx.fillRect(ex, eyeY, 4 * E, 3.5 * E);
-        ctx.fillStyle = C.PUPILLE;
-        ctx.fillRect(ex + 1.1 * E, eyeY + 0.9 * E, 2 * E, 2 * E);
-        ctx.fillStyle = C.REFLET;
-        ctx.fillRect(ex + 2.4 * E, eyeY + 0.6 * E, 1.2 * E, 1.2 * E);
+    const inset = capW * P.ECRAN_INSET;
+    const eh = capH * P.ECRAN_RATIO - inset;
+    const ex = capX + inset;
+    const ey = capY + inset;
+    ctx.fillStyle = C.ECRAN;
+    _rectArrondi(ctx, ex, ey, capW - inset * 2, eh, (capW - inset * 2) * 0.22);
+    ctx.fill();
+
+    const eyeY = ey + eh * 0.42;
+    ctx.fillStyle = C.GLYPHE;
+    for (const ox of [-4.5 * E, 4.5 * E]) {
+        ctx.beginPath();
+        ctx.arc(cx + ox, eyeY, 2.8 * E, 0, Math.PI * 2);
+        ctx.fill();
     }
 
-    ctx.strokeStyle = C.BOUCHE_NEON;
-    ctx.lineWidth = 1.3;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.arc(cx, headY + headH - 2.5, 4.2 * E, 0.2 * Math.PI, 0.8 * Math.PI);
-    ctx.stroke();
+    const fw = capW * P.FENETRE_W_RATIO;
+    const fh = P.FENETRE_H * E * 0.85;
+    const fx = cx - fw / 2;
+    const fy = capY + capH - fh - 3 * E;
+    ctx.fillStyle = C.ECRAN;
+    _rectArrondi(ctx, fx, fy, fw, fh, 2 * E);
+    ctx.fill();
+    let idx = 0;
+    for (let row = 0; row < 2; row++) {
+        for (let col = 0; col < 3; col++) {
+            ctx.fillStyle = idx === 5 ? C.GRILLE_ETEINTE : C.GRILLE_CELLULE;
+            ctx.fillRect(
+                fx + 1.5 + col * (fw / 3),
+                fy + 1.5 + row * (fh / 2),
+                fw / 3 - 2,
+                fh / 2 - 2
+            );
+            idx++;
+        }
+    }
 
-    const alphaBlink = 0.5 + 0.5 * Math.sin(timestamp / 700);
+    const alphaBlink = 0.55 + 0.45 * Math.sin(timestamp / 700);
     ctx.globalAlpha = alphaBlink;
-    ctx.strokeStyle = C.ANTENNE;
+    ctx.strokeStyle = C.LISERE;
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(cx, headY + 1);
-    ctx.lineTo(cx, headY - 5.5 * E);
+    ctx.moveTo(cx, capY + 1);
+    ctx.lineTo(cx, capY - 5 * E);
     ctx.stroke();
-    ctx.fillStyle = C.LED;
+    ctx.fillStyle = C.GLYPHE;
     ctx.beginPath();
-    ctx.arc(cx, headY - 6.5 * E, 2 * E, 0, Math.PI * 2);
+    ctx.arc(cx, capY - 6 * E, 2 * E, 0, Math.PI * 2);
     ctx.fill();
-    ctx.shadowColor = C.LED;
-    ctx.shadowBlur = 4;
-    ctx.fill();
-    ctx.shadowBlur = 0;
     ctx.globalAlpha = 1;
 
     ctx.restore();

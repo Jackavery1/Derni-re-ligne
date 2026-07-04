@@ -122,16 +122,6 @@
     animation-delay: 1.05s;
 }
 
-@keyframes flotterLettre {
-    0%,
-    100% {
-        transform: translateY(0) scale(1);
-    }
-    50% {
-        transform: translateY(-5px) scale(1.05);
-    }
-}
-
 .menu-titre-2 {
     font-size: clamp(2.2rem, 11vw, 4.5rem);
     color: var(--rose);
@@ -164,27 +154,6 @@
     display: none;
 }
 
-/* Mascotte menu */
-.menu-robot {
-    display: block;
-    width: clamp(84px, 15vw, 108px);
-    height: auto;
-    object-fit: contain;
-    image-rendering: pixelated;
-    filter: drop-shadow(0 0 8px rgba(0, 245, 255, 0.35));
-    animation: flotterRobot 3s ease-in-out infinite;
-    flex-shrink: 0;
-}
-@keyframes flotterRobot {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-6px);
-    }
-}
-
 /* Affichage du record */
 .menu-record {
     display: flex;
@@ -215,19 +184,6 @@
     padding: 18px 48px !important;
     letter-spacing: 5px;
     animation: pulseBordureJouer 3s ease-in-out infinite;
-}
-@keyframes pulseBordureJouer {
-    0%,
-    100% {
-        box-shadow:
-            0 0 10px rgba(0, 245, 255, 0.3),
-            inset 0 0 10px rgba(0, 245, 255, 0.08);
-    }
-    50% {
-        box-shadow:
-            0 0 28px rgba(0, 245, 255, 0.7),
-            inset 0 0 20px rgba(0, 245, 255, 0.18);
-    }
 }
 
 .menu-modes {

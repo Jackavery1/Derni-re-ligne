@@ -2,6 +2,7 @@ import { logger } from './logger.js';
 import { abonnerBoucleMenuUnifiee, desabonnerBoucleMenuUnifiee } from './planificateur-raf.js';
 import {
     calculerAnimRobo,
+    calculerBoundsEcran,
     dessinerCorpsRobo,
     dessinerAntenneRobo,
     dessinerCouronneRobo,
@@ -23,13 +24,13 @@ let _boucleAbonnee = false;
 let _observateurVisibilite = null;
 
 /**
- * Dessine ROBO pixel art sur le canvas.
+ * Dessine ROBO v3 (capsule écran-visage) sur le canvas.
  * @param {CanvasRenderingContext2D} ctx
  * @param {number} w
  * @param {number} h
  * @param {'neutre'|'content'|'excite'|'triste'|'alerte'} humeur
  * @param {number} t
- * @param {{ arcEnCiel?: boolean, couronne?: boolean }} [options]
+ * @param {{ arcEnCiel?: boolean, couronne?: boolean, fondTransparent?: boolean }} [options]
  */
 const FOND_MASCOTTE = '#08081a';
 
@@ -44,17 +45,29 @@ export function dessinerRobo(ctx, w, h, humeur, t, options = {}) {
     const cx = w / 2;
     const anim = calculerAnimRobo(humeur, t, E);
     const offsetY = anim.offsetY;
+    const ecranBounds = calculerBoundsEcran(cx, E, offsetY, h);
 
     ctx.save();
-    ctx.imageSmoothingEnabled = false;
+    ctx.imageSmoothingEnabled = true;
 
     if (options.arcEnCiel) {
         ctx.filter = `hue-rotate(${(t * 80) % 360}deg)`;
     }
 
     dessinerCorpsRobo(ctx, cx, E, offsetY, h, humeur, t, anim);
-    dessinerVisageRobo(ctx, cx, E, offsetY, h, humeur, t, anim.inclinaisonTete, _clignementInactif);
-    dessinerAntenneRobo(ctx, cx, E, offsetY, h, anim, t, humeur);
+    dessinerVisageRobo(
+        ctx,
+        cx,
+        E,
+        offsetY,
+        h,
+        humeur,
+        t,
+        anim.inclinaisonTete,
+        _clignementInactif,
+        ecranBounds
+    );
+    dessinerAntenneRobo(ctx, cx, E, offsetY, h, anim);
 
     if (options.couronne) {
         dessinerCouronneRobo(ctx, cx, E, offsetY, h, t);

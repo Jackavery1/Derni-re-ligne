@@ -42,31 +42,13 @@ body.histoire-active [data-biome='rouille'] #canvas-plateau {
 }
 
 body.histoire-active [data-biome='trame'] #canvas-plateau {
-    border-color: #7700ff !important;
+    border-color: var(--violet) !important;
     animation: tramePulse 2.5s ease-in-out infinite;
-}
-@keyframes tramePulse {
-    0%,
-    100% {
-        box-shadow:
-            0 0 15px #7700ff,
-            0 0 40px rgba(119, 0, 255, 0.3);
-    }
-    33% {
-        box-shadow:
-            0 0 15px #ff006e,
-            0 0 40px rgba(255, 0, 110, 0.3);
-    }
-    66% {
-        box-shadow:
-            0 0 15px #00f5ff,
-            0 0 40px rgba(0, 245, 255, 0.3);
-    }
 }
 
 #indicateur-vide-actif {
-    font-size: 0.28rem;
-    color: rgba(180, 150, 190, 0.35);
+    font-size: var(--typo-hud-micro);
+    color: var(--texte-vide-indicateur);
     letter-spacing: 2px;
     text-align: center;
     padding: 3px 0;
@@ -157,19 +139,9 @@ body.histoire-active #indicateur-vide-actif {
     border-left-color: rgba(255, 255, 255, 0.25);
     color: #ffffff;
 }
-@keyframes apparitionLigneCutscene {
-    from {
-        opacity: 0;
-        transform: translateX(-6px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
 
 #btn-cutscene-passer {
-    font-size: 0.28rem;
+    font-size: var(--typo-hud-micro);
     padding: 4px 12px;
     opacity: 0.45;
     margin-top: -8px;
@@ -187,7 +159,7 @@ body.histoire-active #indicateur-vide-actif {
 }
 
 .histoire-journal-dommage {
-    font-size: 0.28rem;
+    font-size: var(--typo-hud-micro);
     color: var(--jaune);
     letter-spacing: 2px;
     text-align: center;

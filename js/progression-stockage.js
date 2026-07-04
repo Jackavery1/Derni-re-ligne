@@ -28,6 +28,7 @@ export const CLES_STOCKAGE = new Set([
     'derniereLigne_introHistoireVue',
     'derniereLigne_tutorielVu',
     'derniereLigne_tutorielHistoireVu',
+    'derniereLigne_tutorielLibreVu',
     'derniereLigne_tutorielCoopVu',
     'derniereLigne_tutorielArchitecteVu',
     'derniereLigne_tutorielOracleVu',

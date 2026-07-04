@@ -47,7 +47,7 @@ describe('scenes-cutscene — assets et registre', () => {
             expect(swSource).toContain(src);
         }
         expect(SCENES_CUTSCENE.vide_errance?.lazy).toBe(true);
-        expect(swSource).toContain('scene_vide_errance');
+        expect(swSource).not.toContain('scene_vide_errance');
     });
 
     it('vide_errance est annotee lazy et referencee par une cutscene entree', () => {

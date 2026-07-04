@@ -12,16 +12,6 @@
     box-shadow: 0 0 12px rgba(255, 0, 110, 0.08);
     animation: apparitionBoss 0.4s ease-out;
 }
-@keyframes apparitionBoss {
-    from {
-        opacity: 0;
-        transform: scaleY(0.6);
-    }
-    to {
-        opacity: 1;
-        transform: scaleY(1);
-    }
-}
 
 .boss-nom {
     font-size: 0.3rem;
@@ -45,7 +35,7 @@
     box-shadow: 0 0 6px var(--rose);
 }
 .boss-hp-label {
-    font-size: 0.28rem;
+    font-size: var(--typo-hud-micro);
     color: var(--texte-dim);
     letter-spacing: 1px;
     text-align: center;
@@ -78,24 +68,6 @@
     animation:
         clignoteBoss 0.8s ease-in-out infinite,
         bossDialogueDefile 7s ease-in-out infinite alternate;
-}
-
-@keyframes bossDialogueDefile {
-    from {
-        margin-top: 0;
-    }
-    to {
-        margin-top: calc(-1 * var(--boss-defile-distance, 0px));
-    }
-}
-@keyframes clignoteBoss {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
 }
 
 .boss-timer-label {
@@ -205,16 +177,6 @@
 .histoire-prog-trame-btn.histoire-prog-trame--en-cours {
     color: var(--rose, #ff2d78);
     border-color: rgba(255, 45, 120, 0.55);
-}
-
-@keyframes pulse-trame {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.72;
-    }
 }
 
 .menu-actions-secondaires {
@@ -525,7 +487,7 @@ button.options-hint-controles:hover {
     padding: 5px 3px;
     text-align: center;
     border: 1px solid rgba(255, 0, 110, 0.3);
-    font-size: 0.28rem;
+    font-size: var(--typo-hud-micro);
     letter-spacing: 1px;
     color: var(--rose);
     background: rgba(255, 0, 110, 0.04);

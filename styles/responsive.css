@@ -64,7 +64,7 @@ body.contraste-eleve .bouton {
         font-size: 0.3rem;
     }
     .stat-label {
-        font-size: 0.28rem;
+        font-size: var(--typo-hud-micro);
         margin-bottom: 2px;
     }
     .stat-valeur {
@@ -195,12 +195,6 @@ body.coop-active #controles-paysage {
     }
 }
 
-/* Robot menu : masquer uniquement sur très petits écrans */
-@media (max-height: 420px) and (max-width: 520px) {
-    .menu-robot {
-        display: none;
-    }
-}
 @media (max-height: 480px) {
     .guide {
         display: none;
@@ -253,17 +247,5 @@ body.coop-active #controles-paysage {
 @media (prefers-reduced-motion: no-preference) {
     .overlay-orientation.visible .overlay-orientation-contenu {
         animation: overlay-orientation-pulse 2.4s ease-in-out infinite;
-    }
-}
-
-@keyframes overlay-orientation-pulse {
-    0%,
-    100% {
-        opacity: 0.88;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1.02);
     }
 }

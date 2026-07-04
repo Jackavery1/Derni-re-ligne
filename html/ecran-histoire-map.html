@@ -61,7 +61,12 @@
                     class="histoire-trame-detail-liste"
                     aria-label="Conditions Trame"
                 ></ul>
-                <button type="button" class="bouton objectif-btn-commencer" id="btn-trame-fermer">
+                <button
+                    type="button"
+                    class="bouton objectif-btn-commencer"
+                    id="btn-trame-fermer"
+                    aria-label="Fermer le panneau Trame"
+                >
                     FERMER
                 </button>
             </div>
@@ -180,7 +185,9 @@
         <div class="histoire-journal-titre" id="histoire-journal-titre"></div>
         <div class="histoire-journal-ss-titre" id="histoire-journal-soustitre"></div>
         <div id="histoire-journal-texte" class="histoire-journal-texte-wrap"></div>
-        <button class="bouton" type="button" id="btn-journal-fermer">✕ FERMER</button>
+        <button class="bouton" type="button" id="btn-journal-fermer" aria-label="Fermer le journal">
+            ✕ FERMER
+        </button>
     </div>
 </div>
 
@@ -194,8 +201,20 @@
         <div class="go-separateur histoire-fin-sep-fin"></div>
         <div id="histoire-fin-stats" class="histoire-fin-stats"></div>
         <div class="histoire-fin-boutons">
-            <button class="bouton" type="button" id="btn-fin-menu">RETOUR AU MENU</button>
-            <button class="bouton discret" type="button" id="btn-fin-rejouer">
+            <button
+                class="bouton"
+                type="button"
+                id="btn-fin-menu"
+                aria-label="Retour au menu principal"
+            >
+                RETOUR AU MENU
+            </button>
+            <button
+                class="bouton discret"
+                type="button"
+                id="btn-fin-rejouer"
+                aria-label="Rejouer la campagne"
+            >
                 ↺ REJOUER LE MODE HISTOIRE
             </button>
         </div>

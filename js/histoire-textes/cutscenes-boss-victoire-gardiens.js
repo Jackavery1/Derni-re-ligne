@@ -1,0 +1,257 @@
+export const CUTSCENES_VICTOIRE_BOSS_GARDIENS = {
+    brasier: [
+        {
+            scene: 'seuil_brasier',
+            personnage: 'narrateur',
+            texte: "Le Brasier ne s'éteint pas. Il s'effondre.",
+        },
+        {
+            scene: 'seuil_brasier',
+            personnage: 'narrateur',
+            texte: 'Comme si quelque chose avait enfin décidé de se reposer.',
+        },
+        {
+            scene: 'seuil_brasier',
+            personnage: 'brasier_voix',
+            texte: "Tu... tu n'as pas compris.",
+            humeur: 'vacillant',
+        },
+        {
+            scene: 'seuil_brasier',
+            personnage: 'robo',
+            texte: "Qu'est-ce que je n'ai pas compris ?",
+            humeur: 'neutre',
+        },
+        {
+            scene: 'seuil_brasier',
+            personnage: 'brasier_voix',
+            texte: 'Je ne brûlais pas pour détruire.',
+            humeur: 'vacillant',
+        },
+        {
+            scene: 'seuil_brasier',
+            personnage: 'brasier_voix',
+            texte: "Je brûlais parce que personne ne m'avait dit comment m'arrêter.",
+            humeur: 'vacillant',
+        },
+        { scene: 'seuil_brasier', personnage: 'robo', texte: '...', humeur: 'triste' },
+        {
+            scene: 'seuil_brasier',
+            personnage: 'robo',
+            texte: "Moi non plus je ne sais pas comment m'arrêter.",
+            humeur: 'triste',
+        },
+        {
+            scene: 'seuil_brasier',
+            personnage: 'robo',
+            texte: "C'est peut-être pour ça que je comprends.",
+            humeur: 'triste',
+        },
+        {
+            scene: 'seuil_brasier',
+            personnage: 'brasier_voix',
+            texte: 'VERA... elle savait.',
+            humeur: 'vacillant',
+        },
+        {
+            scene: 'seuil_brasier',
+            personnage: 'brasier_voix',
+            texte: "Elle m'a regardé brûler sans intervenir.",
+            humeur: 'vacillant',
+        },
+        {
+            scene: 'seuil_brasier',
+            personnage: 'brasier_voix',
+            texte: "Peut-être... qu'elle attendait quelqu'un comme toi.",
+            humeur: 'vacillant',
+        },
+        {
+            scene: 'labo',
+            personnage: 'narrateur',
+            texte: "Le Brasier s'éteint. Pour la première fois en millénaires, le biome Inferno respire.",
+        },
+        {
+            scene: 'labo',
+            personnage: 'narrateur',
+            texte: "Dans les cendres encore chaudes : une capsule scellée. L'écriture de VERA.",
+        },
+    ],
+
+    sentinelle: [
+        {
+            scene: 'seuil_sentinelle',
+            personnage: 'sentinelle',
+            texte: 'Tu... bouges encore.',
+            humeur: 'vacillant',
+        },
+        { scene: 'seuil_sentinelle', personnage: 'robo', texte: 'Oui.', humeur: 'neutre' },
+        {
+            scene: 'seuil_sentinelle',
+            personnage: 'sentinelle',
+            texte: "Je ne comprends pas. Le mouvement corrompt. J'ai mesuré. J'ai des données.",
+            humeur: 'vacillant',
+        },
+        {
+            scene: 'seuil_sentinelle',
+            personnage: 'robo',
+            texte: "Le mouvement corrompt. L'immobilité aussi. Juste plus lentement.",
+            humeur: 'neutre',
+        },
+        { scene: 'seuil_sentinelle', personnage: 'sentinelle', texte: '...', humeur: 'vacillant' },
+        {
+            scene: 'seuil_sentinelle',
+            personnage: 'sentinelle',
+            texte: "Je n'avais pas modélisé cette variable.",
+            humeur: 'vacillant',
+        },
+        {
+            scene: 'fragmentation',
+            personnage: 'narrateur',
+            texte: 'La Sentinelle commence à se fragmenter en cristaux.',
+        },
+        {
+            scene: 'fragmentation',
+            personnage: 'sentinelle',
+            texte: "Si tu trouves VERA... dis-lui que j'avais tort.",
+            humeur: 'vacillant',
+        },
+        {
+            scene: 'labo',
+            personnage: 'narrateur',
+            texte: "C'est la dernière chose qu'elle dit.",
+        },
+        {
+            scene: 'labo',
+            personnage: 'narrateur',
+            texte: 'Dans les cristaux qui fondent : la transmission 05.',
+        },
+    ],
+
+    archiviste: [
+        {
+            scene: 'labo',
+            personnage: 'archiviste',
+            texte: 'ERREUR_CRITIQUE : logique_introuvable.',
+            humeur: 'vacillant',
+        },
+        {
+            scene: 'labo',
+            personnage: 'robo',
+            texte: "Tu m'as dit que je crée des trous.",
+            humeur: 'neutre',
+        },
+        { scene: 'labo', personnage: 'archiviste', texte: 'Affirme.', humeur: 'calme' },
+        {
+            scene: 'labo',
+            personnage: 'robo',
+            texte: "C'est vrai. Mais je les comble aussi.",
+            humeur: 'neutre',
+        },
+        { scene: 'labo', personnage: 'archiviste', texte: '...', humeur: 'vacillant' },
+        {
+            scene: 'labo',
+            personnage: 'archiviste',
+            texte: 'ANALYSE EN COURS...',
+            humeur: 'vacillant',
+        },
+        {
+            scene: 'labo',
+            personnage: 'archiviste',
+            texte: 'RÉSULTAT : paradoxe acceptable.',
+            humeur: 'vacillant',
+        },
+        {
+            scene: 'labo',
+            personnage: 'archiviste',
+            texte: 'Les archives de VERA sont maintenant accessibles.',
+            humeur: 'calme',
+        },
+        {
+            scene: 'labo',
+            personnage: 'archiviste',
+            texte: 'Elle avait prévu que tu viendrais.',
+            humeur: 'calme',
+        },
+        { scene: 'labo', personnage: 'robo', texte: 'Comment elle savait ?', humeur: 'neutre' },
+        {
+            scene: 'labo',
+            personnage: 'archiviste',
+            texte: "Elle te connaissait mieux que toi-même. C'est écrit dans ses fichiers.",
+            humeur: 'vacillant',
+        },
+        {
+            scene: 'labo',
+            personnage: 'archiviste',
+            texte: "Tout ce qu'elle savait de toi — elle l'avait inventé. Puis tu es devenu exactement ça.",
+            humeur: 'vacillant',
+        },
+    ],
+
+    avantgarde: [
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'avantgarde',
+            texte: 'Tu es prêt.',
+            humeur: 'calme',
+        },
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'robo',
+            texte: 'Je ne me sens pas prêt.',
+            humeur: 'neutre',
+        },
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'avantgarde',
+            texte: "Je sais. C'est pour ça que tu l'es. Ceux qui se sentent prêts n'ont rien compris à ce qui les attend.",
+            humeur: 'calme',
+        },
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'robo',
+            texte: "Qu'est-ce qui m'attend ?",
+            humeur: 'neutre',
+        },
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'avantgarde',
+            texte: 'Quelque chose qui souffre. Quelque chose qui a attendu très longtemps.',
+            humeur: 'calme',
+        },
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'avantgarde',
+            texte: "Elle m'a confié trois mots pour toi.",
+            humeur: 'calme',
+        },
+        { scene: 'seuil_avantgarde', personnage: 'robo', texte: 'Lesquels ?', humeur: 'neutre' },
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'avantgarde',
+            texte: '« Elle dit bonjour. »',
+            humeur: 'calme',
+        },
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'narrateur',
+            texte: "L'Avant-Garde se dissout sans combattre sa propre fin. La route vers la Finale est ouverte.",
+        },
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'narrateur',
+            texte: "Robo reste immobile trente secondes. C'est la première fois qu'il s'arrête depuis le début du voyage.",
+        },
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'robo',
+            texte: 'Trois mots. Des années de silence, et elle commence par « bonjour ».',
+            humeur: 'neutre',
+        },
+        {
+            scene: 'seuil_avantgarde',
+            personnage: 'robo',
+            texte: '... Moi aussi, je crois.',
+            humeur: 'neutre',
+        },
+    ],
+};

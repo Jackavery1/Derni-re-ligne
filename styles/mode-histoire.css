@@ -206,16 +206,6 @@
     animation: apparitionDetail 0.2s ease-out;
     pointer-events: auto;
 }
-@keyframes apparitionDetail {
-    from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
-}
 .histoire-detail-nom {
     font-size: clamp(0.45rem, 1.8vw, 0.62rem);
     letter-spacing: 3px;
@@ -241,7 +231,7 @@
     color: var(--texte-dim);
 }
 .histoire-detail-journal {
-    font-size: 0.28rem;
+    font-size: var(--typo-hud-micro);
     color: var(--violet);
     letter-spacing: 1px;
     min-height: 1em;
@@ -282,14 +272,6 @@
     overflow: hidden;
     scrollbar-width: thin;
 }
-@keyframes apparitionJournal {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
 .histoire-journal-numero {
     font-size: 0.27rem;
     color: rgba(255, 0, 110, 0.6);
@@ -308,7 +290,7 @@
     text-align: center;
 }
 .histoire-journal-ss-titre {
-    font-size: 0.28rem;
+    font-size: var(--typo-hud-micro);
     color: var(--texte-dim);
     letter-spacing: 2px;
     text-align: center;
@@ -484,16 +466,6 @@
 .histoire-fin-para:nth-child(7) {
     animation-delay: 1.3s;
 }
-@keyframes apparitionParaFin {
-    from {
-        opacity: 0;
-        transform: translateY(4px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 .histoire-fin-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -568,24 +540,6 @@
     animation: apparitionSecret 4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-@keyframes apparitionSecret {
-    0% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 0;
-    }
-    15% {
-        transform: translate(-50%, -50%) scale(1.08);
-        opacity: 1;
-    }
-    75% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 0;
-    }
-}
 .noeud-cache-debloque-label {
     font-size: 0.26rem;
     color: rgba(255, 230, 0, 0.55);

@@ -89,49 +89,6 @@
     letter-spacing: 4px;
     animation: glitch 5s ease-in-out infinite;
 }
-@keyframes glitch {
-    0%,
-    85%,
-    100% {
-        transform: translate(0);
-        text-shadow:
-            0 0 20px var(--rose),
-            0 0 50px rgba(255, 0, 110, 0.3);
-    }
-    87% {
-        transform: translate(-4px, 1px);
-        text-shadow:
-            4px 0 var(--cyan),
-            -4px 0 var(--rose),
-            0 0 20px var(--rose);
-    }
-    89% {
-        transform: translate(4px, -1px);
-        text-shadow:
-            -4px 0 var(--violet),
-            4px 0 var(--rose),
-            0 0 20px var(--rose);
-    }
-    91% {
-        transform: translate(-2px, 2px);
-        text-shadow:
-            2px 0 var(--vert),
-            -2px 0 var(--rose),
-            0 0 20px var(--rose);
-    }
-    93% {
-        transform: translate(2px, -2px);
-        text-shadow:
-            -2px 0 var(--cyan),
-            2px 0 var(--violet);
-    }
-    95% {
-        transform: translate(0);
-        text-shadow:
-            0 0 20px var(--rose),
-            0 0 50px rgba(255, 0, 110, 0.3);
-    }
-}
 
 /* Pièces décoratives en haut du game over */
 .go-deco {
@@ -257,17 +214,6 @@
     text-shadow: 0 0 10px var(--jaune);
     animation: recordPulse 1.5s ease-in-out infinite;
     display: none;
-}
-@keyframes recordPulse {
-    0%,
-    100% {
-        box-shadow: 0 0 8px rgba(255, 230, 0, 0.3);
-    }
-    50% {
-        box-shadow:
-            0 0 22px rgba(255, 230, 0, 0.7),
-            0 0 45px rgba(255, 230, 0, 0.3);
-    }
 }
 
 .go-boutons {

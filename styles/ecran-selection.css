@@ -425,7 +425,7 @@ body.effets-reduits #sel-info-biome {
 .options-sync-id-champ .option-texte {
     flex: 1;
     min-width: 0;
-    font-size: 0.28rem;
+    font-size: var(--typo-hud-micro);
 }
 .options-leaderboard-filtres {
     display: grid;
@@ -566,7 +566,7 @@ body.effets-reduits #sel-info-biome {
     text-shadow: 0 0 6px var(--violet);
 }
 .codex-notif-chapitre {
-    font-size: 0.28rem;
+    font-size: var(--typo-hud-micro);
     color: var(--texte-dim);
     letter-spacing: 2px;
 }
@@ -695,19 +695,6 @@ body.effets-reduits #sel-info-biome {
 .codex-item.nouveau {
     border-color: color-mix(in srgb, var(--accent-carte) 80%, transparent);
     animation: pulseBordureCodex 1.5s ease-in-out infinite;
-}
-@keyframes pulseBordureCodex {
-    0%,
-    100% {
-        box-shadow:
-            0 0 8px color-mix(in srgb, var(--accent-carte) 30%, transparent),
-            inset 0 0 24px rgba(0, 0, 0, 0.45);
-    }
-    50% {
-        box-shadow:
-            0 0 20px color-mix(in srgb, var(--accent-carte) 55%, transparent),
-            inset 0 0 24px rgba(0, 0, 0, 0.45);
-    }
 }
 .icone-carte-codex {
     display: block;
@@ -1124,24 +1111,6 @@ body.effets-reduits .panneau-detail-progression-fill {
 #notif-oracle.visible {
     animation: feedbackOracleCoin 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
-@keyframes feedbackOracleCoin {
-    0% {
-        bottom: -80px;
-        opacity: 0;
-    }
-    20% {
-        bottom: max(100px, calc(88px + var(--safe-bottom)));
-        opacity: 1;
-    }
-    80% {
-        bottom: max(100px, calc(88px + var(--safe-bottom)));
-        opacity: 1;
-    }
-    100% {
-        bottom: -80px;
-        opacity: 0;
-    }
-}
 #notif-oracle.oracle-feedback-succes {
     color: #ffe600;
     border-color: #ffe600;
@@ -1151,24 +1120,6 @@ body.effets-reduits .panneau-detail-progression-fill {
     color: #ff006e;
     border-color: #ff006e;
     box-shadow: 0 0 20px rgba(255, 0, 110, 0.4);
-}
-@keyframes feedbackOracle {
-    0% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 0;
-    }
-    15% {
-        transform: translate(-50%, -50%) scale(1.1);
-        opacity: 1;
-    }
-    75% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 0;
-    }
 }
 
 .oracle-mult-vert {

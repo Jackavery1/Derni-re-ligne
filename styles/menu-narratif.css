@@ -125,20 +125,6 @@
     box-shadow: 0 0 12px rgba(0, 245, 255, 0.2);
 }
 
-@keyframes continuer-pulse {
-    0%,
-    100% {
-        box-shadow:
-            0 0 12px rgba(0, 229, 255, 0.45),
-            0 0 28px rgba(0, 229, 255, 0.15);
-    }
-    50% {
-        box-shadow:
-            0 0 20px rgba(0, 229, 255, 0.7),
-            0 0 40px rgba(0, 229, 255, 0.28);
-    }
-}
-
 .dialog-nouvelle-partie {
     position: fixed;
     inset: 0;
@@ -231,30 +217,6 @@
 
 .btn-icone {
     margin-right: 6px;
-}
-
-@keyframes histoire-pulse {
-    0%,
-    100% {
-        box-shadow:
-            0 0 12px rgba(221, 0, 255, 0.5),
-            0 0 28px rgba(221, 0, 255, 0.2);
-    }
-    50% {
-        box-shadow:
-            0 0 22px rgba(221, 0, 255, 0.8),
-            0 0 45px rgba(221, 0, 255, 0.35),
-            0 0 70px rgba(221, 0, 255, 0.1);
-    }
-}
-
-@keyframes histoire-shimmer {
-    0% {
-        left: -150%;
-    }
-    100% {
-        left: 150%;
-    }
 }
 
 .menu-separateur {

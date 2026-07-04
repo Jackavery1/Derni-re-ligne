@@ -155,17 +155,6 @@
     animation: etoileRevelation 0.6s ease;
 }
 
-@keyframes etoileRevelation {
-    0% {
-        transform: scale(0.5);
-        filter: brightness(3);
-    }
-    100% {
-        transform: scale(1.2);
-        filter: brightness(1);
-    }
-}
-
 .objectif-recap-revelation {
     font-family: 'Rajdhani', sans-serif;
     font-size: 0.9rem;

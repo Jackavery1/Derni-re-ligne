@@ -34,48 +34,12 @@
     text-shadow: 0 0 8px var(--cyan);
     animation: apparitionNiveauBandeauCampagne 2.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
-@keyframes apparitionNiveauBandeauCampagne {
-    0% {
-        transform: translate(-50%, -120%) scale(0.85);
-        opacity: 0;
-    }
-    12% {
-        transform: translate(-50%, 0) scale(1);
-        opacity: 1;
-    }
-    82% {
-        transform: translate(-50%, 0) scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -120%) scale(0.85);
-        opacity: 0;
-    }
-}
 #notif-niveau.visible {
     visibility: visible;
     border-color: var(--vert);
     box-shadow: 0 0 20px rgba(0, 255, 136, 0.25);
     text-shadow: 0 0 8px var(--vert);
     animation: apparitionNiveauBandeau 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-@keyframes apparitionNiveauBandeau {
-    0% {
-        transform: translate(-50%, -120%) scale(0.85);
-        opacity: 0;
-    }
-    18% {
-        transform: translate(-50%, 0) scale(1);
-        opacity: 1;
-    }
-    78% {
-        transform: translate(-50%, 0) scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -120%) scale(0.85);
-        opacity: 0;
-    }
 }
 
 #notif-achievement {
@@ -103,17 +67,8 @@
     filter: drop-shadow(0 0 8px var(--jaune));
     animation: tourneBadge 3s linear infinite;
 }
-@keyframes tourneBadge {
-    0%,
-    100% {
-        transform: rotateY(0deg);
-    }
-    50% {
-        transform: rotateY(180deg);
-    }
-}
 .ach-entete {
-    font-size: 0.28rem;
+    font-size: var(--typo-hud-micro);
     color: var(--jaune);
     letter-spacing: 3px;
     text-shadow: 0 0 6px var(--jaune);
@@ -513,16 +468,6 @@
 #banniere-vivant.visible {
     display: flex;
 }
-@keyframes apparitionVivantCoin {
-    from {
-        opacity: 0;
-        transform: translateY(-8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 #vivant-icone {
     font-size: 1.5rem;
 }
@@ -536,7 +481,7 @@
     letter-spacing: 2px;
 }
 #vivant-desc {
-    font-size: 0.28rem;
+    font-size: var(--typo-hud-micro);
     color: var(--texte-dim);
     letter-spacing: 1px;
 }
@@ -570,16 +515,6 @@
     background: var(--meteo-couleur, #ffe600);
     animation: videBarreAlerte 5s linear forwards;
 }
-@keyframes videBarreAlerte {
-    from {
-        transform: scaleX(1);
-        transform-origin: left;
-    }
-    to {
-        transform: scaleX(0);
-        transform-origin: left;
-    }
-}
 
 #indicateur-meteo {
     padding: 6px 4px;
@@ -602,12 +537,4 @@
 #indicateur-meteo.meteo-proche {
     opacity: 0.8;
     border-color: rgba(255, 230, 0, 0.35);
-}
-@keyframes meteo-pulse {
-    from {
-        opacity: 0.65;
-    }
-    to {
-        opacity: 1;
-    }
 }

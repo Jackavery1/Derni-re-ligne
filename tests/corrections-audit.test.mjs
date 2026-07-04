@@ -12,7 +12,11 @@ import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 import { obtenirTypeFin, SCENE_DEFAUT_POST_MONDE } from '../js/histoire-narratif.js';
 import { CUTSCENES_POST_MONDE } from '../js/histoire-textes/cutscenes-post-monde.js';
 import { CUTSCENES_VICTOIRE_BOSS } from '../js/histoire-textes/cutscenes-boss-victoire.js';
-import { TRANSITIONS_CHAPITRE } from '../js/histoire-textes/chapitres.js';
+import { DIALOGUES_COMBAT_BOSS } from '../js/histoire-textes/dialogues-boss.js';
+import { EPILOGUES, TRANSITIONS_CHAPITRE } from '../js/histoire-textes/chapitres.js';
+import { OUTRO_FINS } from '../js/histoire-textes/intro-interludes.js';
+import { CUTSCENES_ENTREE } from '../js/histoire-textes/cutscenes-entree.js';
+import { JOURNAUX_VERA_DIALOGUES, FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
 import {
     MARQUEURS_NARRATIFS_POST_MONDE,
     MARQUEURS_NARRATIFS_CAMPAGNE,
@@ -20,7 +24,7 @@ import {
 import { chargerDonneesCodex, codexDebloque, verifierCodex } from '../js/codex.js';
 import { statsGlobales } from '../js/achievements.js';
 import { meteo } from '../js/meteo.js';
-import { CONFIG } from '../js/config.js';
+import { CONFIG, METEO_BIOMES, chargerContenuJeu } from '../js/config.js';
 import { vitesseChute } from '../js/logique-partie.js';
 import { etat } from '../js/store-jeu.js';
 
@@ -244,6 +248,99 @@ describe('corrections audit', () => {
             meteo.facteurVitesse = 1;
             expect(vitesseAcceleree).toBeLessThan(vitesseNormale);
             expect(CONFIG.vitesseBase).toBe(vitesseBaseAvant);
+        });
+
+        it('le courant océan télégraphie la dérive au verrouillage', async () => {
+            await chargerContenuJeu();
+            const ocean = METEO_BIOMES.ocean;
+            expect(ocean.alerte).toContain('VERROUILLAGE');
+            expect(ocean.actif).toContain('VERROUILLAGE');
+        });
+    });
+
+    describe('polish narratif éditorial', () => {
+        it('vers_chapitre_1 sans révélation prématurée', () => {
+            const textes = TRANSITIONS_CHAPITRE.vers_chapitre_1.map((l) => l.texte).join(' ');
+            expect(textes).toContain("Elle n'a jamais fini sa phrase");
+            expect(textes).not.toContain('comprendre que ce n');
+        });
+
+        it('fin_normale avec battement avant mille ans', () => {
+            const vera = EPILOGUES.fin_normale.filter((l) => l.personnage === 'vera');
+            expect(vera[0].texte).toContain('silence a changé');
+        });
+
+        it('fin_vraie accents complétion / incomplétude', () => {
+            const narrateur = EPILOGUES.fin_vraie.find(
+                (l) => l.personnage === 'narrateur' && l.texte.includes('complétion')
+            );
+            expect(narrateur.texte).toContain('incomplétude');
+        });
+
+        it('Sentinelle vouvoie en phase 1 et game over', () => {
+            expect(DIALOGUES_COMBAT_BOSS.sentinelle.phases[0]).toContain('Vos pièces');
+            expect(DIALOGUES_COMBAT_BOSS.sentinelle.gameOver).toContain('vous a eu');
+        });
+
+        it('distorsion_secret sans métaphore binaire explicite', () => {
+            const ligne = CUTSCENES_VICTOIRE_BOSS.distorsion_secret.find(
+                (l) => l.personnage === 'distorsion' && l.texte.includes('binaire')
+            );
+            expect(ligne.texte).toBe('Je pleure. En binaire.');
+        });
+
+        it('fin_vraie outro boucle le motif joie', () => {
+            const robo = OUTRO_FINS.fin_vraie.find(
+                (l) => l.personnage === 'robo' && l.texte.includes('ressemble')
+            );
+            expect(robo.texte).toContain('Je le garde');
+        });
+
+        it('vers_chapitre_4 sans meta narrateur intrusif', () => {
+            const corpus = TRANSITIONS_CHAPITRE.vers_chapitre_4.map((l) => l.texte).join(' ');
+            expect(corpus).not.toMatch(/première fois que Robo/i);
+        });
+
+        it('apres_fuochi — feux sans formulation corrigée', () => {
+            const texte = FRAGMENTS_VERA_SIGNAL.apres_fuochi.map((l) => l.texte).join(' ');
+            expect(texte).toContain('regarde-les bien');
+            expect(texte).not.toContain('je les ai allumés');
+        });
+
+        it('humeurs boss entrée — Brasier, ROBO, Sentinelle', () => {
+            const brasier = CUTSCENES_ENTREE.monde_boss_1.find(
+                (l) => l.personnage === 'brasier' && l.texte.includes('QUI APPROCHE')
+            );
+            expect(brasier.humeur).toBe('agressif');
+
+            const roboEteindre = CUTSCENES_ENTREE.monde_boss_1.find((l) =>
+                l.texte.includes("t'éteindre")
+            );
+            expect(roboEteindre.humeur).toBe('neutre');
+
+            const sentinelleEntree = CUTSCENES_ENTREE.monde_boss_2[0];
+            expect(sentinelleEntree.personnage).toBe('sentinelle');
+            expect(sentinelleEntree.humeur).toBe('agressif');
+        });
+
+        it('journaux — accents éditoriaux verrouillés', () => {
+            const corpus = Object.values(FRAGMENTS_VERA_SIGNAL)
+                .flat()
+                .map((l) => l.texte)
+                .join('\n');
+            expect(corpus).toContain('INTERFÉRENCE MÉTALLIQUE');
+            expect(corpus).toContain('FERMÉE');
+            expect(corpus).toContain('INVERSÉE');
+            expect(corpus).toContain('DÉPÔT');
+            expect(corpus).toContain('DEMANDÉ');
+        });
+
+        it('Brasier — battement Mais approche avant réplique ROBO', () => {
+            const lignes = CUTSCENES_ENTREE.monde_boss_1;
+            const idxApproche = lignes.findIndex((l) => l.texte.includes('Mais approche'));
+            const idxEteindre = lignes.findIndex((l) => l.texte.includes("t'éteindre"));
+            expect(idxApproche).toBeGreaterThan(-1);
+            expect(idxEteindre).toBeGreaterThan(idxApproche);
         });
     });
 });

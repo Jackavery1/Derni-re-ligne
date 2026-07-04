@@ -1,6 +1,6 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v61';
-const VERSION_MEDIAS = 'dl-medias-v4';
+const VERSION_SHELL = 'dl-shell-v63';
+const VERSION_MEDIAS = 'dl-medias-v5';
 
 const SCENES_CUTSCENE_PRECACHE = [
     './assets/splash-chargement.png',
@@ -13,7 +13,6 @@ const SCENES_CUTSCENE_PRECACHE = [
     './assets/cutscenes/scene_seuil_sentinelle.png',
     './assets/cutscenes/scene_seuil_archiviste.png',
     './assets/cutscenes/scene_seuil_avantgarde.png',
-    './assets/cutscenes/scene_vide_errance.png',
 ];
 
 const MAX_PISTES_EN_CACHE = 12;

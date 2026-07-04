@@ -142,20 +142,40 @@ body.partie-active #conteneur-principal {
     opacity: 1;
 }
 
+#section-timer-niveau.timer-niveau-urgent .stat-valeur {
+    color: var(--orange);
+    text-shadow: 0 0 8px var(--orange);
+}
+
 #section-timer-niveau.timer-niveau-alerte .stat-valeur {
     color: var(--rose);
     text-shadow: 0 0 10px var(--rose);
     animation: pulseTimerNiveau 0.9s ease-in-out infinite;
 }
 
-@keyframes pulseTimerNiveau {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.65;
-    }
+.timer-niveau-piste {
+    width: 100%;
+    height: 4px;
+    margin-top: var(--space-1);
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.timer-niveau-barre {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, var(--cyan), var(--vert));
+    border-radius: 2px;
+    transition: width 0.35s linear;
+}
+
+#section-timer-niveau.timer-niveau-urgent .timer-niveau-barre {
+    background: linear-gradient(90deg, var(--orange), var(--jaune));
+}
+
+#section-timer-niveau.timer-niveau-alerte .timer-niveau-barre {
+    background: linear-gradient(90deg, var(--rose), var(--orange));
 }
 
 .stat-valeur.cyan {
@@ -317,26 +337,6 @@ body.partie-active.controles-tactiles-actifs:not(.coop-active) .btn-pause-mobile
 }
 #canvas-boss-portrait.etat-vaincu {
     opacity: 0.85;
-}
-@keyframes boss-portrait-tremble {
-    0%,
-    100% {
-        transform: translate(0, 0);
-    }
-    25% {
-        transform: translate(2px, -1px);
-    }
-    75% {
-        transform: translate(-2px, 1px);
-    }
-}
-@keyframes boss-portrait-flash {
-    0% {
-        filter: brightness(2.5);
-    }
-    100% {
-        filter: brightness(1);
-    }
 }
 
 #btn-pause {

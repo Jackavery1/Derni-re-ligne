@@ -9,6 +9,8 @@ import {
     obtenirBiomeActif,
     obtenirSacPieces,
     obtenirReliqueEnAttente,
+    obtenirCompteurPieces,
+    obtenirSeuilProchRelique,
     obtenirNbLockResets,
     obtenirPieceAuSol,
     obtenirCanvasPreview,
@@ -17,6 +19,8 @@ import {
     definirNbLockResets,
 } from './store-jeu.js';
 import { obtenirTouches } from './touches-config.js';
+import { modeHistoireEnCours } from './mode-histoire.js';
+import { sansAccentsE } from './texte-jeu.js';
 
 const INDEX_COULEUR_PIECE = { I: 0, O: 1, T: 2, S: 3, Z: 4, J: 5, L: 6 };
 
@@ -88,16 +92,37 @@ export function mettreAJourIndicateurRelique() {
         canvasPreview.classList.toggle('relique-imminente', !!prochaineRelique);
     }
     if (!indic) return;
+
+    const iconeEl = document.getElementById('relique-icone');
+    const nomEl = document.getElementById('relique-nom');
+
     if (prochaineRelique) {
         indic.style.display = 'block';
+        indic.classList.remove('relique-compte-a-rebours');
         indic.style.color = prochaineRelique.couleur;
-        const iconeEl = document.getElementById('relique-icone');
-        const nomEl = document.getElementById('relique-nom');
         if (iconeEl) iconeEl.textContent = prochaineRelique.icone + ' ';
         if (nomEl) nomEl.textContent = prochaineRelique.nom;
-    } else {
-        indic.style.display = 'none';
+        return;
     }
+
+    if (!modeHistoireEnCours() && RELIQUES[obtenirBiomeActif()]) {
+        const restant = obtenirSeuilProchRelique() - obtenirCompteurPieces();
+        if (restant > 0) {
+            indic.style.display = 'block';
+            indic.classList.add('relique-compte-a-rebours');
+            indic.style.color = 'var(--texte-dim)';
+            if (iconeEl) iconeEl.textContent = '◇ ';
+            if (nomEl) {
+                nomEl.textContent = sansAccentsE(
+                    `Relique dans ${restant} piece${restant > 1 ? 's' : ''}`
+                );
+            }
+            return;
+        }
+    }
+
+    indic.style.display = 'none';
+    indic.classList.remove('relique-compte-a-rebours');
 }
 
 export function reinitialiserLockDelay() {

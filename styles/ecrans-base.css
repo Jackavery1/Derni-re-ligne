@@ -112,3 +112,17 @@
     background: #b8b8e0;
     color: var(--fond);
 }
+
+.bouton:focus-visible,
+.btn-menu:focus-visible,
+.btn-tactile:focus-visible,
+.btn-coop-tactile:focus-visible,
+.btn-pause-style:focus-visible,
+.ach-filtre-btn:focus-visible,
+.options-onglet:focus-visible,
+.toggle-oracle:focus-visible,
+.histoire-prog-trame-btn:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--jaune);
+    outline-offset: 2px;
+}

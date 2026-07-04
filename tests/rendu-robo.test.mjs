@@ -48,7 +48,7 @@ describe('rendu-robo', () => {
         dessinerRobo(ctx, 120, 150, 'neutre', 0);
         expect(ctx.clearRect).toHaveBeenCalled();
         expect(ctx.fillRect).toHaveBeenCalledWith(0, 0, 120, 150);
-        expect(ctx.fillRect.mock.calls.length + ctx.arc.mock.calls.length).toBeGreaterThan(5);
+        expect(ctx.fill.mock.calls.length + ctx.arc.mock.calls.length).toBeGreaterThan(5);
     });
 
     it('fond transparent en cutscene sans remplissage plein ecran', () => {
@@ -72,47 +72,41 @@ describe('rendu-robo', () => {
         expect(() => definirHumeurRobo('content')).not.toThrow();
     });
 
-    it('expose PALETTE_ROBO canon', () => {
-        expect(PALETTE_ROBO.SCLERE).toBe('#eaf6ff');
-        expect(PALETTE_ROBO.PUPILLE).toBe('#1a3c46');
-        expect(PALETTE_ROBO.BOUCHE_NEON).toBe('#35e0e6');
+    it('expose PALETTE_ROBO v3 canon', () => {
+        expect(PALETTE_ROBO.COQUE).toBe('#e6ecf7');
+        expect(PALETTE_ROBO.ECRAN).toBe('#070a1c');
+        expect(PALETTE_ROBO.GLYPHE).toBe('#00f5ff');
     });
 
-    it('utilise un arc neon en neutre (pas de grille de dents)', () => {
+    it('neutre dessine des glyphes ronds (pas de bouche par defaut)', () => {
         const ctx = creerCtxMock();
         dessinerRobo(ctx, 120, 150, 'neutre', 0);
-        expect(ctx.quadraticCurveTo.mock.calls.length).toBeGreaterThan(0);
-        expect(ctx.lineWidth).toBeGreaterThan(1);
-        expect(ctx.fillRect.mock.calls.length).toBeLessThan(20);
+        expect(ctx.arc.mock.calls.length).toBeGreaterThan(0);
     });
 
-    it('triste dessine un arc inverse via courbe negative', () => {
+    it('content dessine des arcs yeux et une bouche optionnelle', () => {
         const ctx = creerCtxMock();
-        dessinerRobo(ctx, 120, 150, 'triste', 0);
-        const bouche = ctx.quadraticCurveTo.mock.calls.find(
-            ([, , ctrlY]) => typeof ctrlY === 'number'
-        );
-        expect(bouche).toBeTruthy();
+        dessinerRobo(ctx, 120, 150, 'content', 0);
+        expect(ctx.quadraticCurveTo.mock.calls.length).toBeGreaterThan(0);
     });
 
-    it('alerte dessine un trait horizontal (pas de grille)', () => {
+    it('alerte dessine des barres verticales', () => {
         const ctx = creerCtxMock();
         dessinerRobo(ctx, 120, 150, 'alerte', 0);
-        expect(ctx.moveTo.mock.calls.length).toBeGreaterThan(0);
-        expect(ctx.lineTo.mock.calls.length).toBeGreaterThan(0);
+        expect(ctx.fillRect.mock.calls.length).toBeGreaterThan(0);
     });
 
-    it('utilise un sourire ouvert en excite', () => {
+    it('excite agrandit les glyphes', () => {
         const ctx = creerCtxMock();
         dessinerRobo(ctx, 120, 150, 'excite', 0);
-        expect(ctx.ellipse.mock.calls.length).toBeGreaterThan(0);
+        expect(ctx.arc.mock.calls.length).toBeGreaterThan(2);
     });
 
     it('dessine chaque humeur canvas sans erreur', () => {
         for (const humeur of ['neutre', 'content', 'excite', 'triste', 'alerte']) {
             const ctx = creerCtxMock();
             dessinerRobo(ctx, 120, 150, humeur, 2);
-            expect(ctx.arc.mock.calls.length).toBeGreaterThan(0);
+            expect(ctx.arc.mock.calls.length + ctx.fillRect.mock.calls.length).toBeGreaterThan(0);
         }
     });
 });

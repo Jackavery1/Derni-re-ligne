@@ -3,7 +3,9 @@ import {
     initialiserTutoriel,
     afficherTutorielContextuel,
     afficherTutorielPrologueApresCutscene,
+    afficherTutorielLibreAvantPartie,
     NOMBRE_SLIDES_PROLOGUE,
+    NOMBRE_SLIDES_LIBRE,
 } from '../js/tutoriel.js';
 
 function creerElement(initialClasses = ['element-masque']) {
@@ -105,5 +107,23 @@ describe('tutoriel', () => {
         btnFermer.onclick?.();
         afficherTutorielContextuel('coop');
         expect(overlay.classList.contains('element-masque')).toBe(true);
+    });
+
+    it('affiche le tutoriel libre la première fois', () => {
+        afficherTutorielLibreAvantPartie();
+        expect(overlay.classList.contains('element-masque')).toBe(false);
+        expect(corps.replaceChildren).toHaveBeenCalled();
+    });
+
+    it('le tutoriel libre compte 3 slides', () => {
+        expect(NOMBRE_SLIDES_LIBRE).toBe(3);
+    });
+
+    it('appelle onCompris directement si le tutoriel libre a déjà été vu', () => {
+        const cb = vi.fn();
+        afficherTutorielLibreAvantPartie();
+        for (let i = 0; i < NOMBRE_SLIDES_LIBRE; i++) btnFermer.onclick?.();
+        afficherTutorielLibreAvantPartie(cb);
+        expect(cb).toHaveBeenCalledTimes(1);
     });
 });

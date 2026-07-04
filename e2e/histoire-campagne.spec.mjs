@@ -8,6 +8,12 @@ import {
 import { avancerCutsceneUneLigne } from './helpers-narratif-core.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 import { MONDES_CAMPAGNE_PRINCIPALE, MONDES_SECRETS_FIN_SECRETE } from './etats-histoire.mjs';
+import {
+    OPTIONS_CAMPAGNE_BULK,
+    OPTIONS_CAMPAGNE_JALON,
+    parcourirMondesCampagneNarratif,
+    victoireMondeAvecNarratif,
+} from './helpers-campagne-narratif.mjs';
 
 const ETAT_PROLOGUE_PRET = {
     ...ETAT_HISTOIRE_VIDE,
@@ -289,76 +295,70 @@ test('campagne — cutscenes intermediaires boss et chapitres (audit D15)', asyn
     }
 });
 
-test('campagne secrets — cutscenes finales avec narratif', async ({ page }) => {
-    test.setTimeout(180000);
-    const etatDepart = {
-        ...ETAT_HISTOIRE_VIDE,
-        mondesCompletes: [...MONDES_CAMPAGNE_PRINCIPALE],
-        mondesCachesDebloques: ['monde_miroir'],
-        mondesDejaMontres: ['monde_prologue', 'monde_miroir'],
-        bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde'],
-        conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 },
-    };
-    await ouvrirCarteHistoire(page, etatDepart);
-
-    for (const mondeId of ['monde_miroir']) {
-        await page.evaluate(async (id) => {
-            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
-        }, mondeId);
-        await parcourirFluxPostVictoireAvecAssertions(page, mondeId);
-    }
-
-    await preparerConditionsTrameOrganiques(page);
-
-    for (const mondeId of ['monde_trame', 'monde_finale']) {
-        await page.evaluate(async (id) => {
-            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
-        }, mondeId);
-        await parcourirFluxPostVictoireAvecAssertions(page, mondeId);
-    }
-});
-
 const CAMPAGNE_NARRATIF_PARTIE_1 = MONDES_CAMPAGNE_PRINCIPALE.slice(0, 8);
 const CAMPAGNE_NARRATIF_PARTIE_2 = MONDES_CAMPAGNE_PRINCIPALE.slice(8);
 
-test('campagne principale narratif — mondes 1 à 8 (audit D)', async ({ page }) => {
-    test.setTimeout(360000);
-    const etatDepart = {
-        ...ETAT_HISTOIRE_VIDE,
-        mondesDejaMontres: ['monde_prologue'],
-    };
-    await ouvrirCarteHistoire(page, etatDepart);
+test.describe.serial('audit D9b — campagne complete avec narratif', () => {
+    test('partie principale — mondes 1 à 8', async ({ page }) => {
+        test.setTimeout(300000);
+        const etatDepart = {
+            ...ETAT_HISTOIRE_VIDE,
+            mondesDejaMontres: ['monde_prologue'],
+        };
+        await ouvrirCarteHistoire(page, etatDepart);
+        await parcourirMondesCampagneNarratif(
+            page,
+            CAMPAGNE_NARRATIF_PARTIE_1,
+            OPTIONS_CAMPAGNE_BULK
+        );
+    });
 
-    for (const mondeId of CAMPAGNE_NARRATIF_PARTIE_1) {
-        await page.evaluate(async (id) => {
-            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
-        }, mondeId);
-        await parcourirFluxPostVictoireAvecAssertions(page, mondeId, undefined, 80, {
-            exigerCorpus: true,
-            verifierAudio: true,
+    test('partie principale — mondes 9 à 16', async ({ page }) => {
+        test.setTimeout(300000);
+        const etatDepart = {
+            ...ETAT_HISTOIRE_VIDE,
+            mondesCompletes: [...CAMPAGNE_NARRATIF_PARTIE_1],
+            bossVaincus: ['brasier', 'sentinelle'],
+            mondesDejaMontres: ['monde_prologue', ...CAMPAGNE_NARRATIF_PARTIE_1],
+        };
+        await ouvrirCarteHistoire(page, etatDepart);
+        await parcourirMondesCampagneNarratif(
+            page,
+            CAMPAGNE_NARRATIF_PARTIE_2,
+            OPTIONS_CAMPAGNE_BULK
+        );
+    });
+
+    test('secrets et fin secrete — narratif complet', async ({ page }) => {
+        test.setTimeout(240000);
+        const etatDepart = {
+            ...ETAT_HISTOIRE_VIDE,
+            mondesCompletes: [...MONDES_CAMPAGNE_PRINCIPALE],
+            mondesCachesDebloques: ['monde_miroir'],
+            mondesDejaMontres: ['monde_prologue', ...MONDES_CAMPAGNE_PRINCIPALE],
+            bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde'],
+            conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 },
+        };
+        await ouvrirCarteHistoire(page, etatDepart);
+
+        await victoireMondeAvecNarratif(page, 'monde_miroir', OPTIONS_CAMPAGNE_JALON);
+        await preparerConditionsTrameOrganiques(page);
+        await parcourirMondesCampagneNarratif(
+            page,
+            ['monde_trame', 'monde_finale'],
+            OPTIONS_CAMPAGNE_JALON
+        );
+
+        await page.evaluate(async () => {
+            await window.__NEO_TEST__?.declencherFinHistoire?.('fin_secrete');
         });
-    }
-});
-
-test('campagne principale narratif — mondes 9 à 16 (audit D)', async ({ page }) => {
-    test.setTimeout(360000);
-    const etatDepart = {
-        ...ETAT_HISTOIRE_VIDE,
-        mondesCompletes: [...CAMPAGNE_NARRATIF_PARTIE_1],
-        bossVaincus: ['brasier', 'sentinelle'],
-        mondesDejaMontres: ['monde_prologue', ...CAMPAGNE_NARRATIF_PARTIE_1],
-    };
-    await ouvrirCarteHistoire(page, etatDepart);
-
-    for (const mondeId of CAMPAGNE_NARRATIF_PARTIE_2) {
-        await page.evaluate(async (id) => {
-            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
-        }, mondeId);
-        await parcourirFluxPostVictoireAvecAssertions(page, mondeId, undefined, 80, {
-            exigerCorpus: true,
-            verifierAudio: true,
-        });
-    }
+        await terminerCutscenesVersEcranFin(page);
+        await expect(page.locator('#ecran-histoire-fin')).toHaveAttribute(
+            'data-fin',
+            'fin_secrete'
+        );
+        await expect(page.locator('#histoire-fin-titre')).toContainText(/LIGNE PARFAITE/i);
+    });
 });
 
 test('campagne complete — flags fin secrete sans narratif post-victoire (audit D9 flags)', async ({
@@ -426,45 +426,4 @@ test('campagne complete — flags fin secrete sans narratif post-victoire (audit
     });
     expect(apresOutro.toutesFin).toContain('fin_secrete');
     expect(apresOutro.finSecreteObtenue).toBe(true);
-});
-
-test('campagne complete — fin secrete avec narratif complet (audit D9b)', async ({ page }) => {
-    test.setTimeout(360000);
-    const etatDepart = {
-        ...ETAT_HISTOIRE_VIDE,
-        mondesCompletes: [...MONDES_CAMPAGNE_PRINCIPALE],
-        mondesCachesDebloques: ['monde_miroir'],
-        mondesDejaMontres: ['monde_prologue', ...MONDES_CAMPAGNE_PRINCIPALE],
-        bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde'],
-        conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 },
-    };
-    await ouvrirCarteHistoire(page, etatDepart);
-
-    for (const mondeId of ['monde_miroir']) {
-        await page.evaluate(async (id) => {
-            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
-        }, mondeId);
-        await parcourirFluxPostVictoireAvecAssertions(page, mondeId, undefined, 80, {
-            exigerCorpus: true,
-            verifierAudio: true,
-        });
-    }
-
-    await preparerConditionsTrameOrganiques(page);
-
-    for (const mondeId of ['monde_trame', 'monde_finale']) {
-        await page.evaluate(async (id) => {
-            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
-        }, mondeId);
-        await parcourirFluxPostVictoireAvecAssertions(page, mondeId, undefined, 80, {
-            exigerCorpus: true,
-            verifierAudio: true,
-        });
-    }
-
-    await page.evaluate(async () => {
-        await window.__NEO_TEST__?.declencherFinHistoire?.('fin_secrete');
-    });
-    await terminerCutscenesVersEcranFin(page);
-    await expect(page.locator('#ecran-histoire-fin')).toHaveAttribute('data-fin', 'fin_secrete');
 });

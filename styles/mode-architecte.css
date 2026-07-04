@@ -87,7 +87,7 @@ body.archi-active #controles-paysage {
 }
 
 .archi-guide {
-    font-size: 0.28rem;
+    font-size: var(--typo-hud-micro);
     color: var(--texte-dim);
     line-height: 2.2;
     letter-spacing: 0.5px;

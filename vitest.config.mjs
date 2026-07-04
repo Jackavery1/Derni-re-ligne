@@ -79,6 +79,11 @@ export default defineConfig({
                 'js/boss-combat.js',
                 'js/mode-histoire.js',
                 'js/rendu-plateau-cache.js',
+                'js/navigation-ecrans.js',
+                'js/histoire-cutscene-fonds-animes.js',
+                'js/histoire-cutscene-fonds-scenes.js',
+                'js/tutoriel-contenus.js',
+                'js/scenes-cutscene.js',
             ],
             thresholds: {
                 lines: 54,

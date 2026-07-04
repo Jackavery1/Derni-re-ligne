@@ -19,6 +19,7 @@ export const CONFIG = {
     tempsNiveauBaseSec: 165,
     tempsNiveauBonusSec: 12,
     tempsNiveauMaxSec: 240,
+    tempsAvertissementNiveauSec: 60,
     tempsAlerteFinSec: 30,
 };
 

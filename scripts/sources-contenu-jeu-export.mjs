@@ -125,8 +125,8 @@ export const METEO_BIOMES = {
     ocean: {
         nom: 'COURANT',
         icone: '🌊',
-        alerte: 'COURANT SOUS-MARIN',
-        actif: 'DÉRIVE EN COURS',
+        alerte: 'COURANT — DÉRIVE AU VERROUILLAGE',
+        actif: 'DÉRIVE HORIZONTALE AU VERROUILLAGE',
         couleur: '#00cfff',
         duree: 18000,
         effet: 'courant',

@@ -10,8 +10,13 @@ vi.mock('../js/registre-modes.js', () => ({
     modeCoopEnCours: () => false,
 }));
 
-const { budgetNiveauMs, timerNiveauActif, obtenirTempsRestantNiveauMs, reinitialiserTimerNiveau } =
-    await import('../js/timer-niveau.js');
+const {
+    budgetNiveauMs,
+    timerNiveauActif,
+    obtenirTempsRestantNiveauMs,
+    reinitialiserTimerNiveau,
+    mettreAJourAffichageTimerNiveau,
+} = await import('../js/timer-niveau.js');
 
 describe('timer-niveau', () => {
     beforeEach(() => {
@@ -46,5 +51,40 @@ describe('timer-niveau', () => {
         const restant = obtenirTempsRestantNiveauMs();
         expect(restant).toBeGreaterThan(164_000);
         expect(restant).toBeLessThanOrEqual(165_000);
+    });
+
+    it('barre de progression et etats urgent/alerte dans le DOM', () => {
+        vi.useFakeTimers();
+        vi.setSystemTime(1_050_000);
+        const section = {
+            classList: {
+                classes: new Set(),
+                toggle(cls, actif) {
+                    if (actif) this.classes.add(cls);
+                    else this.classes.delete(cls);
+                },
+                contains(cls) {
+                    return this.classes.has(cls);
+                },
+            },
+        };
+        const affichage = { textContent: '' };
+        const barre = { style: { width: '' } };
+        const getElementByIdOrig = document.getElementById;
+        document.getElementById = (id) => {
+            if (id === 'section-timer-niveau') return section;
+            if (id === 'affichage-temps-niveau') return affichage;
+            if (id === 'timer-niveau-barre') return barre;
+            return getElementByIdOrig(id);
+        };
+        etat.tempsNiveauBudgetMs = 100_000;
+        etat.tempsNiveauDebut = 1_000_000;
+        etat.tempsPauseAccumule = 0;
+        mettreAJourAffichageTimerNiveau();
+        document.getElementById = getElementByIdOrig;
+        expect(barre.style.width).toBe('50%');
+        expect(section.classList.contains('timer-niveau-urgent')).toBe(true);
+        expect(section.classList.contains('timer-niveau-alerte')).toBe(false);
+        vi.useRealTimers();
     });
 });

@@ -67,12 +67,18 @@ export function mettreAJourAffichageTimerNiveau() {
 
     const el = document.getElementById('affichage-temps-niveau');
     const section = document.getElementById('section-timer-niveau');
+    const barre = document.getElementById('timer-niveau-barre');
+    const budget = etat.tempsNiveauBudgetMs || budgetNiveauMs(etat.niveau);
     if (el) {
         const mm = Math.floor(sec / 60);
         const ss = sec % 60;
         el.textContent = `${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
     }
+    if (barre && budget > 0) {
+        barre.style.width = `${Math.round((restantMs / budget) * 100)}%`;
+    }
     if (section) {
+        section.classList.toggle('timer-niveau-urgent', sec <= CONFIG.tempsAvertissementNiveauSec);
         section.classList.toggle('timer-niveau-alerte', sec <= CONFIG.tempsAlerteFinSec);
     }
 
