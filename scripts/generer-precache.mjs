@@ -38,7 +38,7 @@ function construireListePrecache() {
         ...listerPlat('styles', './styles/', '.css'),
         ...listerPlat('html', './html/', '.html'),
         ...listerPlat('data', './data/', '.json'),
-        ...listerPlat('assets/polices', './assets/polices/', '.woff2'),
+        ...listerPlat('assets/fonts-dist', './assets/fonts-dist/', '.woff2'),
     ];
 
     if (modeProd) {

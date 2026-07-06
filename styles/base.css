@@ -138,7 +138,7 @@ body.effets-reduits .boss-portrait-cadre.flash {
 
 @font-face {
     font-family: 'Press Start 2P';
-    src: url('../assets/polices/press-start-2p-latin-400-normal.woff2') format('woff2');
+    src: url('../assets/fonts-dist/press-start-2p-latin-400-normal.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -146,7 +146,7 @@ body.effets-reduits .boss-portrait-cadre.flash {
 
 @font-face {
     font-family: 'Orbitron';
-    src: url('../assets/polices/orbitron-latin-600-normal.woff2') format('woff2');
+    src: url('../assets/fonts-dist/orbitron-latin-600-normal.woff2') format('woff2');
     font-weight: 600;
     font-style: normal;
     font-display: swap;
@@ -154,7 +154,7 @@ body.effets-reduits .boss-portrait-cadre.flash {
 
 @font-face {
     font-family: 'Orbitron';
-    src: url('../assets/polices/orbitron-latin-700-normal.woff2') format('woff2');
+    src: url('../assets/fonts-dist/orbitron-latin-700-normal.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -162,7 +162,7 @@ body.effets-reduits .boss-portrait-cadre.flash {
 
 @font-face {
     font-family: 'Rajdhani';
-    src: url('../assets/polices/rajdhani-latin-400-normal.woff2') format('woff2');
+    src: url('../assets/fonts-dist/rajdhani-latin-400-normal.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -170,7 +170,7 @@ body.effets-reduits .boss-portrait-cadre.flash {
 
 @font-face {
     font-family: 'Rajdhani';
-    src: url('../assets/polices/rajdhani-latin-500-normal.woff2') format('woff2');
+    src: url('../assets/fonts-dist/rajdhani-latin-500-normal.woff2') format('woff2');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -178,7 +178,7 @@ body.effets-reduits .boss-portrait-cadre.flash {
 
 @font-face {
     font-family: 'Rajdhani';
-    src: url('../assets/polices/rajdhani-latin-600-normal.woff2') format('woff2');
+    src: url('../assets/fonts-dist/rajdhani-latin-600-normal.woff2') format('woff2');
     font-weight: 600;
     font-style: normal;
     font-display: swap;
@@ -186,7 +186,7 @@ body.effets-reduits .boss-portrait-cadre.flash {
 
 @font-face {
     font-family: 'Rajdhani';
-    src: url('../assets/polices/rajdhani-latin-700-normal.woff2') format('woff2');
+    src: url('../assets/fonts-dist/rajdhani-latin-700-normal.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -194,7 +194,7 @@ body.effets-reduits .boss-portrait-cadre.flash {
 
 @font-face {
     font-family: 'Crimson Pro';
-    src: url('../assets/polices/crimson-pro-latin-400-normal.woff2') format('woff2');
+    src: url('../assets/fonts-dist/crimson-pro-latin-400-normal.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -202,7 +202,7 @@ body.effets-reduits .boss-portrait-cadre.flash {
 
 @font-face {
     font-family: 'Crimson Pro';
-    src: url('../assets/polices/crimson-pro-latin-400-italic.woff2') format('woff2');
+    src: url('../assets/fonts-dist/crimson-pro-latin-400-italic.woff2') format('woff2');
     font-weight: 400;
     font-style: italic;
     font-display: swap;

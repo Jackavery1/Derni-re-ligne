@@ -32,7 +32,7 @@ test('post-monde monde lave — fond scene seuil_brasier', async ({ page }) => {
     });
     await fermerRecapPostMonde(page);
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-        timeout: 15000,
+        timeout: 10000,
     });
     const musique = await page.evaluate(() => window.__NEO_TEST__?.obtenirMusiqueActive?.());
     expect(musique).toBe('narratif_cutscene');
@@ -61,7 +61,7 @@ test('post-monde — audio narratif_cutscene sur mondes representatifs', async (
         }, mondeId);
         await fermerRecapPostMonde(page);
         await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-            timeout: 15000,
+            timeout: 10000,
         });
         const musique = await page.evaluate(() => window.__NEO_TEST__?.obtenirMusiqueActive?.());
         expect(musique).toBe('narratif_cutscene');
@@ -252,7 +252,7 @@ test('fin secrete — victoire finale detecte fin_secrete', async ({ page }) => 
     expect(mondesCompletes).toContain('monde_trame');
 
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-        timeout: 15000,
+        timeout: 10000,
     });
 });
 
@@ -333,7 +333,7 @@ test('apres fin secrete — debloque paradoxe organiquement sans reinjection eta
     await page.locator('#btn-histoire-retour').click({ force: true });
     await expect(page.locator('#ecran-titre')).toHaveClass(/actif/, { timeout: 10000 });
     await page.locator('#btn-continuer').click();
-    await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/, { timeout: 15000 });
+    await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/, { timeout: 10000 });
 
     await page.locator('#histoire-monde-clavier').selectOption('monde_paradoxe', { force: true });
     await expect(page.locator('#histoire-monde-details')).not.toHaveClass(
@@ -350,7 +350,7 @@ test('intro — changement de scene entre lignes d une cutscene', async ({ page 
     await attendreApplicationPrete(page);
     await page.locator('#btn-nouvelle-partie').click();
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-        timeout: 15000,
+        timeout: 10000,
     });
 
     await attendreSceneCutsceneActive(page, 'observatoire');

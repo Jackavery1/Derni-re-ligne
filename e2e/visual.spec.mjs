@@ -18,7 +18,7 @@ test.describe('régressions visuelles', () => {
     test('écran titre', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('body')).toHaveAttribute('data-neo-test-ready', '1', {
-            timeout: 15000,
+            timeout: 10000,
         });
         await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
         await expect(page.locator('#ecran-titre')).toHaveScreenshot('ecran-titre.png', {
@@ -80,7 +80,7 @@ test.describe('régressions visuelles mobile', () => {
     test('écran titre mobile portrait', { tag: '@viewport-mobile-portrait' }, async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('body')).toHaveAttribute('data-neo-test-ready', '1', {
-            timeout: 15000,
+            timeout: 10000,
         });
         await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
         await expect(page.locator('#ecran-titre')).toHaveScreenshot(
@@ -162,7 +162,7 @@ test.describe('régressions visuelles mobile', () => {
             .selectOption('monde_prologue', { force: true });
         await page.locator('.bouton-jouer-monde').click({ force: true });
         await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-            timeout: 15000,
+            timeout: 10000,
         });
         await expect(page.locator('#ecran-histoire-cutscene')).toHaveScreenshot(
             'cutscene-prologue-319.png',

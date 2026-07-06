@@ -320,6 +320,6 @@ test('audit C13 — pas d overlay orientation pendant cutscene histoire', async 
     await page.setViewportSize({ width: 390, height: 844 });
     await ouvrirCarteHistoire(page, ETAT_HISTOIRE_VIDE);
     await lancerMondeDepuisCarte(page, 'monde_prologue');
-    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 20000 });
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 10000 });
     await expect(page.locator('#overlay-orientation')).not.toHaveClass(/visible/);
 });

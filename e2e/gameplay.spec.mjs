@@ -94,7 +94,7 @@ test('biome verrouillé — teaser histoire sur petit écran', async ({ page }) 
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await page.setViewportSize({ width: 320, height: 568 });
     await expect(page.locator('#sel-biome-clavier option[value="eclipse"]')).toBeAttached({
-        timeout: 15000,
+        timeout: 10000,
     });
     await selectionnerBiomeVerrouilleConstellation(page, 'eclipse');
     await expect(page.locator('#panneau-detail')).not.toHaveClass(/element-masque/);

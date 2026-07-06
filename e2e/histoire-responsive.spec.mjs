@@ -33,7 +33,7 @@ test('cutscene paysage mobile — boutons dans la zone visible', async ({ page }
     await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });
     await page.locator('.bouton-jouer-monde').click({ force: true });
 
-    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 15000 });
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 10000 });
 
     const metriques = await page.evaluate(() => {
         const suivant = document.getElementById('btn-cutscene-suivant');
@@ -66,7 +66,7 @@ test('cutscene ultra-etroit 319px — pas de debordement', async ({ page }) => {
     await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });
     await page.locator('.bouton-jouer-monde').click({ force: true });
 
-    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 15000 });
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 10000 });
 
     const metriques = await page.evaluate(() => {
         const suivant = document.getElementById('btn-cutscene-suivant');
@@ -109,7 +109,7 @@ test('cutscene ultra-etroit 319px — portraits visibles sans debordement (audit
     await page.locator('#btn-continuer').click();
     await lancerMondeDepuisCarte(page, 'monde_prologue');
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-        timeout: 15000,
+        timeout: 10000,
     });
     await avancerCutsceneJusquaPivot(page, /Robo, tu m'entends/i);
     await assertHumeurPortraitCutscene(page, 'vera', 'douce');
@@ -156,7 +156,7 @@ test('journal mobile ultra-etroit 319px — contenu scrollable (audit D8)', asyn
     await expect(page.locator('#overlay-recap-monde')).toBeVisible({ timeout: 10000 });
     await fermerRecapPostMonde(page);
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-        timeout: 15000,
+        timeout: 10000,
     });
     await passerCutsceneEntiere(page);
     await attendreJournalHistoire(page);
@@ -198,7 +198,7 @@ test('carte histoire 319px — overlay objectifs pre-partie lisible (audit D8)',
     await page.locator('.bouton-jouer-monde').click({ force: true });
 
     await expect(page.locator('#overlay-objectifs-pre')).toHaveClass(/objectif-overlay-visible/, {
-        timeout: 15000,
+        timeout: 10000,
     });
 
     const metriques = await page.evaluate(() => {
@@ -332,7 +332,7 @@ test('journal mobile paysage — contenu scrollable (audit D8)', async ({ page }
     await expect(page.locator('#overlay-recap-monde')).toBeVisible({ timeout: 10000 });
     await fermerRecapPostMonde(page);
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-        timeout: 15000,
+        timeout: 10000,
     });
     await passerCutsceneEntiere(page);
     await attendreJournalHistoire(page);
@@ -424,7 +424,7 @@ test('iphone — cutscene respecte encoche simulee (audit C11)', async ({ browse
     await page.locator('.bouton-jouer-monde').click({ force: true });
 
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-        timeout: 15000,
+        timeout: 10000,
     });
 
     const metriques = await page.evaluate(() => {

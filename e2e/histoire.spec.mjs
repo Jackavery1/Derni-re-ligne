@@ -57,7 +57,7 @@ test('intro Jour 2 554 — première visite depuis Nouvelle partie', async ({ pa
     await page.locator('#btn-nouvelle-partie').click();
 
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-        timeout: 15000,
+        timeout: 10000,
     });
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/cutscene-mode-narration/);
     await expect(page.locator('#texte-narration-cutscene')).toContainText(/invent.*jeu/i);
@@ -122,7 +122,7 @@ test('nouvelle partie après progression — reset et rejoue l intro', async ({ 
     await page.locator('#btn-confirm-nouvelle-partie').click();
 
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-        timeout: 15000,
+        timeout: 10000,
     });
     await expect(page.locator('#texte-narration-cutscene')).toContainText(/invent.*jeu/i);
 
@@ -207,7 +207,7 @@ test('panneau objectifs prologue mobile sans debordement horizontal', async ({ p
     await page.locator('.bouton-jouer-monde').click({ force: true });
 
     const btnCommencer = page.locator('#btn-objectifs-commencer');
-    await expect(btnCommencer).toBeVisible({ timeout: 15000 });
+    await expect(btnCommencer).toBeVisible({ timeout: 10000 });
 
     const metriques = await page.evaluate(() => {
         const doc = document.documentElement;
@@ -270,7 +270,7 @@ test('cutscene mobile — boutons tactiles et pas de débordement', async ({ pag
     await page.locator('.bouton-jouer-monde').click({ force: true });
 
     const cutscene = page.locator('#ecran-histoire-cutscene');
-    await expect(cutscene).toHaveClass(/actif/, { timeout: 15000 });
+    await expect(cutscene).toHaveClass(/actif/, { timeout: 10000 });
 
     const metriques = await page.evaluate(() => {
         const doc = document.documentElement;
@@ -387,7 +387,7 @@ test('cutscene entree monde lave — fond scene seuil_brasier', async ({ page })
                 .getElementById('ecran-histoire-cutscene')
                 ?.classList.contains('cutscene-scene-image'),
         null,
-        { timeout: 15000 }
+        { timeout: 10000 }
     );
     const statsCanvas = await page.evaluate(() => {
         const canvas = document.getElementById('canvas-cutscene-bg');
@@ -425,7 +425,7 @@ async function attendreCutsceneSceneImage(page) {
                 .getElementById('ecran-histoire-cutscene')
                 ?.classList.contains('cutscene-scene-image'),
         null,
-        { timeout: 15000 }
+        { timeout: 10000 }
     );
 }
 

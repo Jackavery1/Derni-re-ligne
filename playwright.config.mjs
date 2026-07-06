@@ -74,7 +74,7 @@ const webServer = {
 export default defineConfig({
     testDir: './e2e',
     workers: process.env.CI ? undefined : 1,
-    timeout: 30000,
+    timeout: 25000,
     snapshotPathTemplate: '{testDir}/__snapshots__/{testFilePath}/{arg}{ext}',
     expect: {
         toHaveScreenshot: {

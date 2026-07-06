@@ -52,7 +52,7 @@ async function declencherPostMonde(page, mondeId) {
             return recap || cutscene;
         },
         null,
-        { timeout: 15000 }
+        { timeout: 10000 }
     );
 
     const recapVisible = await page.evaluate(() =>
@@ -73,12 +73,12 @@ async function declencherPostMonde(page, mondeId) {
                     page.evaluate(
                         () => window.__NEO_TEST__?.obtenirSceneCutsceneActive?.() ?? null
                     ),
-                { timeout: 20000 }
+                { timeout: 10000 }
             )
             .toBe(sceneAttendue);
     } else {
         await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-            timeout: 20000,
+            timeout: 10000,
         });
     }
 

@@ -24,7 +24,7 @@ test('écran titre et navigation vers la sélection', async ({ page }) => {
     await preparerPageSansSw(page);
     await page.goto('/');
     await expect(page.locator('body')).toHaveAttribute('data-neo-test-ready', '1', {
-        timeout: 15000,
+        timeout: 10000,
     });
     await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
     await attendreNotificationsInitiales(page);

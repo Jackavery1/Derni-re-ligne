@@ -30,7 +30,7 @@ for (const { mondeId, cleFragment, marqueur } of CAS_FRAGMENTS_VERA) {
                 return new RegExp(source, 'i').test(t);
             },
             marqueur.source,
-            { timeout: 15000 }
+            { timeout: 10000 }
         );
     });
 }

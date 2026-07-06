@@ -116,7 +116,7 @@ test('sync cloud — push envoie les records locaux', async ({ page }) => {
     await expect(page.locator('#panneau-sync-config')).toBeVisible();
     const pushRequest = page.waitForRequest(
         (req) => req.method() === 'POST' && req.url().includes('progression_snapshots'),
-        { timeout: 15000 }
+        { timeout: 10000 }
     );
     await page.locator('#btn-sync-maintenant').click();
     await pushRequest;

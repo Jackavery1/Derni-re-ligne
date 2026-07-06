@@ -150,7 +150,7 @@ test('audit B — constellation biome verrouille oriente vers histoire', async (
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await expect(page.locator('#sel-biome-clavier option[value="eclipse"]')).toBeAttached({
-        timeout: 15000,
+        timeout: 10000,
     });
     await selectionnerBiomeVerrouilleConstellation(page, 'eclipse');
     await expect(page.locator('#panneau-detail-description')).toContainText(/MODE HISTOIRE/i);
@@ -175,7 +175,7 @@ test('audit B — codex chemins caches verrouille avec condition', async ({ page
 test('audit B — carte histoire compteur et modal Trame', async ({ page }) => {
     await ouvrirCarteHistoire(page, ETAT_FIN_VRAIE_PRET);
     await expect(page.locator('#histoire-prog-trame')).toContainText(/TRAME\s+2\/4/i, {
-        timeout: 15000,
+        timeout: 10000,
     });
     await page.locator('#btn-histoire-trame').click();
     await expect(page.locator('#overlay-trame-conditions')).not.toHaveClass(/element-masque/);

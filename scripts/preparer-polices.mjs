@@ -1,7 +1,7 @@
 import { cpSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
-const OUT_DIR = 'assets/polices';
+const OUT_DIR = 'assets/fonts-dist';
 
 /** @type {{ package: string, fichier: string, destination: string }[]} */
 const FICHIERS = [

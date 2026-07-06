@@ -143,7 +143,7 @@ function categoriser(fichiersProjet) {
             f.cheminRelatif.endsWith('.html')
         ),
     ];
-    const polices = filtrerParPrefixe(fichiersProjet, ['assets/polices/']);
+    const polices = filtrerParPrefixe(fichiersProjet, ['assets/fonts-dist/']);
     const images = [
         ...filtrerParPrefixe(fichiersProjet, ['img/']),
         ...filtrerParPrefixe(fichiersProjet, ['assets/']).filter(
@@ -282,7 +282,7 @@ function afficherTableau(categories, jsMinifie, appShell, evaluations) {
             budget: null,
         },
         {
-            nom: 'Polices (assets/polices/)',
+            nom: 'Polices (assets/fonts-dist/)',
             fichiers: categories.polices.fichiers,
             octets: categories.polices.octets,
             budget: BUDGETS.policesKo,
