@@ -5,7 +5,7 @@
 
 body.partie-active .zone-notifs-jeu {
     position: fixed;
-    z-index: 350;
+    z-index: 9500;
     left: var(--notif-rail-left, 0);
     top: var(--notif-rail-top, 0);
     width: var(--notif-rail-width, 100%);
@@ -186,6 +186,7 @@ body.partie-active[data-notif-layout='beside-right'] .zone-notifs-jeu {
 
 body.partie-active .overlay-infobulle-contexte {
     position: fixed;
+    z-index: 9500;
     left: var(--notif-rail-left, max(16px, var(--safe-left)));
     top: var(--notif-rail-top, max(16px, var(--safe-top)));
     width: var(--notif-rail-width, min(88vw, 300px));
