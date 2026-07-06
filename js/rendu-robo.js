@@ -12,7 +12,7 @@ import { dessinerVisageRobo } from './rendu-robo-visage.js';
 export { PALETTE_ROBO } from './rendu-robo-donnees.js';
 export { dessinerRoboMiniature } from './rendu-robo-mini.js';
 
-/** @type {'neutre'|'content'|'excite'|'triste'|'alerte'} */
+/** @type {'neutre'|'content'|'excite'|'triste'|'alerte'|'tetris'} */
 let _humeurActuelle = 'neutre';
 /** @type {HTMLCanvasElement|null} */
 let _canvas = null;
@@ -22,6 +22,8 @@ let _clignementInactif = false;
 let _boucleAbonnee = false;
 /** @type {MutationObserver|null} */
 let _observateurVisibilite = null;
+/** @type {number|null} */
+let _timeoutTetris = null;
 
 /**
  * Dessine ROBO v3 (capsule écran-visage) sur le canvas.
@@ -91,6 +93,17 @@ export function definirArcEnCiel(actif) {
 
 export function definirCouronne(actif) {
     _couronneActif = actif;
+}
+
+export function notifierTetrisRobo() {
+    if (_timeoutTetris !== null) {
+        clearTimeout(_timeoutTetris);
+    }
+    _humeurActuelle = 'tetris';
+    _timeoutTetris = setTimeout(() => {
+        _humeurActuelle = 'neutre';
+        _timeoutTetris = null;
+    }, 600);
 }
 
 function _mascotteVisible() {

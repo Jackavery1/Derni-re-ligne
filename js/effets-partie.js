@@ -29,6 +29,7 @@ import { mettreAJourIndicateurRelique } from './piece-jeu.js';
 import { enregistrerProgression, suiviDifficulteActif } from './gestionnaire-difficulte.js';
 import { modeHistoireEnCours } from './mode-histoire.js';
 import { brancherBusReactionsMascotte } from './mascotte-robo.js';
+import { notifierTetrisRobo } from './rendu-robo.js';
 import { reinitialiserTimerNiveau } from './timer-niveau.js';
 
 let effetsInitialises = false;
@@ -135,6 +136,7 @@ export function initialiserEffetsPartie() {
         if (nbLignes > 0) {
             if (result.tetris) {
                 if (bossEstActif() && !bossEstVaincu()) notifierTetrisBoss();
+                notifierTetrisRobo();
                 afficherTexteFlottant('TETRIS !', '#ffe600', 16);
                 annoncer('Tetris ! Quatre lignes effacees');
                 if (result.backToBack) {

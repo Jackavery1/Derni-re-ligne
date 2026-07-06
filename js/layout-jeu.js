@@ -164,12 +164,27 @@ export function adapterInterface() {
     const iface = document.getElementById('interface-jeu');
     if (!echelle || !iface) return;
 
-    const largeurTotale = LAYOUT.panneauLargeur * 2 + LAYOUT.gap * 2 + LAYOUT.plateauLargeur;
-    const hauteurTotale = obtenirHauteurInterface();
+    const { largeur, hauteur } = obtenirDimensionsViewport();
+    const estPortrait = hauteur > largeur;
 
     const mobileControles = hauteurControlesTactiles();
 
-    const { largeur, hauteur } = obtenirDimensionsViewport();
+    let largeurTotale;
+    let hauteurTotale;
+
+    if (estPortrait) {
+        iface.style.flexDirection = 'column';
+        iface.style.alignItems = 'center';
+        iface.style.justifyContent = 'center';
+        largeurTotale = LAYOUT.plateauLargeur + LAYOUT.margeScale;
+        hauteurTotale = obtenirHauteurInterface() + LAYOUT.margeScale;
+    } else {
+        iface.style.flexDirection = 'row';
+        iface.style.alignItems = 'flex-start';
+        iface.style.justifyContent = 'center';
+        largeurTotale = LAYOUT.panneauLargeur * 2 + LAYOUT.gap * 2 + LAYOUT.plateauLargeur;
+        hauteurTotale = obtenirHauteurInterface();
+    }
 
     const scale = calculerEchelleInterface(largeur, hauteur, largeurTotale, hauteurTotale, {
         margeScale: LAYOUT.margeScale,

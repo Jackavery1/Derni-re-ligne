@@ -53,6 +53,16 @@ body.partie-active #conteneur-principal {
     overflow-x: hidden;
 }
 
+@media (orientation: portrait) {
+    #interface-jeu .panneau {
+        width: auto;
+        max-width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        gap: 16px;
+    }
+}
+
 .section {
     background: var(--theme-fond, var(--fond-panneau));
     border: 1px solid var(--theme-bordure, var(--bordure));

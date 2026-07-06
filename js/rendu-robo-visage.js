@@ -25,6 +25,12 @@ function dessinerGlyphOeil(ctx, cx, cy, E, humeur, cote) {
         return;
     }
 
+    if (humeur === 'tetris') {
+        const size = 2.5 * E;
+        ctx.fillRect(cx - size / 2, cy - size / 2, size, size);
+        return;
+    }
+
     if (humeur === 'content') {
         ctx.lineWidth = Math.max(1.5, 2.2 * E);
         ctx.beginPath();
