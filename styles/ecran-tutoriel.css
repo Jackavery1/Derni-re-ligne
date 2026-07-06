@@ -20,7 +20,7 @@
     position: relative;
     z-index: 1;
     max-width: 90vw;
-    max-height: 90vh;
+    max-height: 90dvh;
     padding: clamp(20px, 5vw, 60px);
     border: 2px solid var(--cyan);
     border-radius: 8px;
@@ -176,7 +176,7 @@
 @media (max-width: 768px) {
     .tutoriel-contenu {
         max-width: 95vw;
-        max-height: 95vh;
+        max-height: 95dvh;
         padding: clamp(15px, 4vw, 30px);
     }
 
