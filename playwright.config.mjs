@@ -119,6 +119,16 @@ export default defineConfig({
             use: { ...channelUse, ...iphone14Chromium },
         },
         {
+            name: 'tablet-landscape',
+            testMatch: specsMatriceResponsive,
+            use: {
+                ...channelUse,
+                viewport: { width: 1024, height: 768 },
+                hasTouch: true,
+                isMobile: true,
+            },
+        },
+        {
             name: 'mobile-portrait-visuels',
             grep: /@viewport-mobile-portrait/,
             testMatch: '**/visual.spec.mjs',

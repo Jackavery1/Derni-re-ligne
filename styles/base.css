@@ -87,7 +87,7 @@ body.effets-reduits .boss-portrait-cadre.flash {
 
 .section-vide-msg {
     font-size: 0.26rem;
-    color: rgba(255, 255, 255, 0.15);
+    color: var(--texte-discret);
     letter-spacing: 1px;
     text-align: center;
 }

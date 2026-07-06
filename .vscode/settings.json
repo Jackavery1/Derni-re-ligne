@@ -1,1 +1,6 @@
-﻿{}
+{
+    "liveServer.settings.port": 5501,
+    "qwen-code.provider": "coding-plan",
+    "qwen-code.codingPlanRegion": "global",
+    "qwen-code.apiKey": "3be074b5c8ba45979d6db30e4535fb04.Q1CcrmQbGB6yB6JY"
+}

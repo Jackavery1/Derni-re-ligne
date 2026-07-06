@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v63';
+const VERSION_SHELL = 'dl-shell-v64';
 const VERSION_MEDIAS = 'dl-medias-v5';
 
 const SCENES_CUTSCENE_PRECACHE = [
@@ -14,6 +14,9 @@ const SCENES_CUTSCENE_PRECACHE = [
     './assets/cutscenes/scene_seuil_archiviste.png',
     './assets/cutscenes/scene_seuil_avantgarde.png',
 ];
+
+/** PNG portraits cutscene — aligné sur js/portraits-precache.js */
+const PORTRAITS_SHELL_PRECACHE = ['./img/vera.png'];
 
 const MAX_PISTES_EN_CACHE = 12;
 const META_ORDRE_MUSIQUE = './__meta_ordre_musique__';

@@ -233,6 +233,15 @@ describe('audit 2 — gameplay UX', () => {
             expect(JSON.parse(raw).sprint).toBeUndefined();
         });
 
+        it('ne consomme pas une infobulle attaque boss si overlay absent', async () => {
+            const overlay = document.getElementById('overlay-infobulle-contexte');
+            overlay?.remove();
+            const { proposerInfobulleAttaqueBoss } = await import('../js/infobulles-contexte.js');
+            proposerInfobulleAttaqueBoss('faux_fantome');
+            const raw = localStorage.getItem('derniereLigne_infobullesBoss') ?? '{}';
+            expect(JSON.parse(raw).faux_fantome).toBeUndefined();
+        });
+
         it('sansAccentsE retire les accents des libelles UI', async () => {
             const { sansAccentsE } = await import('../js/texte-jeu.js');
             expect(sansAccentsE('RÉSERVE')).toBe('RESERVE');

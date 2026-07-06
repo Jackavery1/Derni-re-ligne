@@ -1,5 +1,6 @@
 import { BIOMES, RELIQUES } from './config.js';
 import { INFOBULLES_MODES_JEU } from './contenu-jeu.js';
+import { obtenirInfobulleAttaqueBoss } from './histoire-map-briefings-boss.js';
 import { lireStockage, ecrireStockage } from './progression.js';
 import { sansAccentsE } from './texte-jeu.js';
 
@@ -105,6 +106,7 @@ export function proposerInfobulleRelique(biomeId, relique) {
 
 const CLE_ORACLE_COOP = 'derniereLigne_infobulleOracleCoop';
 const CLE_MODES_JEU = 'derniereLigne_infobullesModesJeu';
+const CLE_ATTAQUES_BOSS = 'derniereLigne_infobullesBoss';
 
 /** @param {'sansFin' | 'sprint' | 'oracle' | 'coop' | 'defiJour'} modeId */
 export function proposerInfobulleModeJeu(modeId) {
@@ -142,8 +144,27 @@ export function proposerInfobulleOracleCoopExclusif() {
     ecrireStockage(CLE_ORACLE_COOP, '1');
 }
 
+/** @param {string} typeAttaque */
+export function proposerInfobulleAttaqueBoss(typeAttaque) {
+    if (typeof window !== 'undefined' && window.__NEO_SILENT_NOTIFS__) return;
+    const contenu = obtenirInfobulleAttaqueBoss(typeAttaque);
+    if (!contenu) return;
+
+    let vu = {};
+    try {
+        vu = JSON.parse(lireStockage(CLE_ATTAQUES_BOSS, '{}')) || {};
+    } catch {
+        vu = {};
+    }
+    if (vu[typeAttaque]) return;
+    if (!afficherInfobulle(contenu)) return;
+    vu[typeAttaque] = true;
+    ecrireStockage(CLE_ATTAQUES_BOSS, JSON.stringify(vu));
+}
+
 export function _reinitialiserInfobullesContexte() {
     ecrireStockage(CLE_STOCKAGE, '{}');
     ecrireStockage(CLE_ORACLE_COOP, '0');
     ecrireStockage(CLE_MODES_JEU, '{}');
+    ecrireStockage(CLE_ATTAQUES_BOSS, '{}');
 }

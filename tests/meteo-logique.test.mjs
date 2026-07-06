@@ -18,4 +18,11 @@ describe('météo — courbe marathon casual', () => {
         expect(nombreCellulesBarrageMeteo(5)).toBe(3);
         expect(nombreCellulesBarrageMeteo(9)).toBe(6);
     });
+
+    it('intervalle plus long en late game (niveau 10+)', () => {
+        const standard = intervalleProchainMeteoMs(6);
+        const late = intervalleProchainMeteoMs(10);
+        expect(late).toBeGreaterThanOrEqual(120_000);
+        expect(standard).toBeLessThanOrEqual(150_000);
+    });
 });

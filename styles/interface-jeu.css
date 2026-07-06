@@ -103,12 +103,11 @@ body.partie-active #conteneur-principal {
 .stat-label {
     display: block;
     font-family: var(--font-stats);
-    font-size: 9px;
+    font-size: var(--typo-hud-micro);
     font-weight: 600;
     color: var(--texte-dim);
     letter-spacing: var(--espacement-label-stats);
     text-transform: uppercase;
-    opacity: 0.75;
     margin-bottom: 5px;
 }
 .stat-valeur {

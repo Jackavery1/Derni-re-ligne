@@ -5,6 +5,7 @@ import { modeDevActif } from './mode-dev-etat.js';
 import { obtenirEtoilesPersistees } from './gestionnaire-difficulte.js';
 import { definirTexteUi, sansAccentsE } from './texte-jeu.js';
 import { obtenirGuideMondeSecret } from './conditions-secrets.js';
+import { obtenirBriefingMecaniqueBoss } from './histoire-map-briefings-boss.js';
 
 function _mettreAJourGuideEtAvertissement(monde, etatMonde, estBoss) {
     const elGuide = document.getElementById('histoire-detail-guide');
@@ -29,12 +30,15 @@ function _mettreAJourGuideEtAvertissement(monde, etatMonde, estBoss) {
         'monde_finale',
     ];
     if (elAvert) {
-        const afficherAvert =
-            etatMonde === 'disponible' && mondesDifficiles.includes(monde.id) && !estBoss;
-        if (afficherAvert) {
-            elAvert.textContent = sansAccentsE(
-                'Monde exigeant — prenez le temps de lire les objectifs et les mécaniques du biome.'
-            );
+        let texteAvert = '';
+        if (estBoss && etatMonde === 'disponible' && monde.bossId) {
+            texteAvert = obtenirBriefingMecaniqueBoss(monde.bossId);
+        } else if (etatMonde === 'disponible' && mondesDifficiles.includes(monde.id) && !estBoss) {
+            texteAvert =
+                'Monde exigeant — prenez le temps de lire les objectifs et les mécaniques du biome.';
+        }
+        if (texteAvert) {
+            elAvert.textContent = sansAccentsE(texteAvert);
             elAvert.classList.remove('element-masque');
         } else {
             elAvert.textContent = '';

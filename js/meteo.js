@@ -30,8 +30,12 @@ export function configurerMeteo(dependances) {
 
 /** @param {number} [niveau] */
 export function intervalleProchainMeteoMs(niveau = 1) {
-    const minSec = niveau <= 5 ? 120 : 90;
-    const maxSec = niveau <= 5 ? 180 : 150;
+    let minSec = niveau <= 5 ? 120 : 90;
+    let maxSec = niveau <= 5 ? 180 : 150;
+    if (niveau >= 10) {
+        minSec += 30;
+        maxSec += 45;
+    }
     return (Math.floor(Math.random() * (maxSec - minSec + 1)) + minSec) * 1000;
 }
 

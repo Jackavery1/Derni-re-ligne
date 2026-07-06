@@ -28,7 +28,7 @@ Node 18+ (`.nvmrc`). Logs verbeux : `?debug=1`. Formatage : `.prettierrc` (Prett
 
 ### Tests E2E sur le bundle prod
 
-La CI exécute **smoke** sur le bundle prod (`test:e2e:smoke:dist`), puis **responsive multi-viewport** (`test:e2e:responsive:dist` sur `dist/`, `test:e2e:responsive` sur les sources), **perf** (`test:e2e:perf` via `E2E_DIST=1` — `run-e2e-dist.mjs` injecte `neo-test-init.js` dans `dist/index.html`), **Lighthouse** desktop + mobile (`lighthouserc.cjs`, `lighthouserc-mobile.cjs`, warn non bloquant). La suite E2E complète (`npm run test:e2e`) sert les **modules ES sources** avec la matrice Playwright : `desktop`, `mobile-portrait`, `mobile-landscape`, `iphone-14` (+ projets visuels mobile). Audits gameplay/narratif : `npm run test:e2e:audit`. Local : `npm run audit:lighthouse` / `audit:lighthouse:mobile` après build.
+La CI exécute **smoke** sur le bundle prod (`test:e2e:smoke:dist`), puis **responsive multi-viewport** (`test:e2e:responsive:dist` sur `dist/`, `test:e2e:responsive` sur les sources), **perf** (`test:e2e:perf` via `E2E_DIST=1` — `run-e2e-dist.mjs` injecte `neo-test-init.js` dans `dist/index.html`), **Lighthouse** desktop + mobile (`lighthouserc.cjs`, `lighthouserc-mobile.cjs`, warn non bloquant). La suite E2E complète (`npm run test:e2e`) sert les **modules ES sources** avec la matrice Playwright : `desktop`, `mobile-portrait`, `mobile-landscape`, `iphone-14`, `tablet-landscape` (1024×768) (+ projets visuels mobile). Audits gameplay/narratif : `npm run test:e2e:audit`. Local : `npm run audit:lighthouse` / `audit:lighthouse:mobile` après build.
 
 ### Campagne complète D9 (narratif, ~10 min)
 
@@ -54,7 +54,11 @@ Timeout spec : 600 s. Helpers : `e2e/helpers-campagne-narratif.mjs`. **CI :** wo
 
 ### Piège Live Server / file://
 
-Le jeu charge des modules ES (`import` depuis `js/`). **Live Server** et l’ouverture directe de `index.html` ne servent pas correctement les modules → écran « Chargement… » infini. Utiliser **`npm start`** (`serve` sur `127.0.0.1:3000`). Pour le bundle prod : `npm run build` puis `npx serve dist`. Voir le watchdog dans `js/chargement-watchdog.js`.
+Le jeu charge des modules ES (`import` depuis `js/`). **Live Server** et l’ouverture directe de `index.html` ne servent pas correctement les modules → écran « Chargement… » infini. Utiliser **`npm start`** (`serve` sur `127.0.0.1:3000`). Pour le bundle prod : `npm run build` puis `npx serve dist`. Voir le watchdog dans `js/chargement-watchdog.js`. En dev, le SW est désactivé sur localhost sauf **`?pwa=1`** (`js/sw-dev.js`).
+
+### Couverture Vitest (modules ciblés)
+
+`npm run test:coverage` mesure une **liste blanche** (~90 modules domaine / responsive / narratif core) définie dans `vitest.config.mjs` — pas l’intégralité des ~350 fichiers JS (rendu canvas lourd, UI écrans, portraits exclus volontairement). Seuils CI : lines 54 %, functions 56 %, statements 52 %, branches 46 %. Les modules **export-only** (`js/codex-histoire.js`) sont exclus du precache SW dev mais restent versionnés pour `npm run sync:data`.
 
 ### Checklist manuelle iPhone (encoches réelles)
 

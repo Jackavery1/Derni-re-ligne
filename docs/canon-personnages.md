@@ -11,53 +11,78 @@ Convention générale : fond du portrait transparent (le fond atmosphérique
 par personnage existe déjà dans le système de cutscenes). Tous les hex sont
 des constantes à coder en dur (leçon du premier renderer ROBO cassé).
 
+**ROBO** : canon v3 « écran-visage » (implémenté dans `js/rendu-robo-donnees.js`).
+L'ancien design rouge/violet est obsolète.
+
 ---
 
-## 1. ROBO — protagoniste (référence : image saut, anneaux spirale)
+## 1. ROBO — protagoniste (canon v3 « L'écran-visage »)
 
-**Rôle visuel** : attachant, souriant, énergique. C'est le visage du jeu.
+**Rôle visuel** : attachant, minimaliste, cohérent avec l'univers navy/cyan.
+C'est le visage du jeu.
+
+**Principe** : capsule douce à écran-visage — une masse arrondie, un écran
+sombre bombé sur la face avant, yeux en glyphes cyan. Expressivité via trois
+canaux : glyphes des yeux, antenne, fenêtre-compartiment du torse.
+
+**Silhouette**
+
+- Corps unique : capsule verticale (ratio largeur/hauteur ≈ 0,72), pas de tête séparée
+- Écran-visage : ~65–70 % de la moitié supérieure, rectangle très arrondi, léger bombé
+- Fenêtre-compartiment : ~22 % de la largeur, mini-grille 3×2 — cinq cellules cyan,
+  **une cellule éteinte** (ligne incomplète qu'il porte ; peut s'allumer en fin)
+- Mains flottantes : deux mitaines arrondies détachées
+- Pieds : deux demi-capsules courtes sous le corps
+- Antenne : fine, bout sphérique cyan — amplificateur émotionnel n°1
+- Lisible en 24×24 px (4 masses : capsule, deux mains, antenne)
 
 **Palette**
 
-- Tête : rouge `#d62b2b`, bande inférieure plus sombre `#a81f1f`,
-  rivets `#7a1515`
-- Yeux : NOUVEAU CANON (décision Joris, 12 juin) — alignés sur l'image
-  de référence : grands yeux ronds à sclère blanche `#eaf6ff`, pupilles
-  larges bleu-canard sombre `#1a3c46`, point de brillance blanc en haut à
-  gauche de chaque œil + micro-reflet secondaire, léger écart asymétrique
-  des pupilles qui donne la vie, contour d'œil fin sombre `#5a1010`.
-  **ANTI-REGARD-VIDE (défaut constaté sur le rendu actuel, 13 juin)** :
-  pupilles GRANDES (≈ 45–55 % du diamètre de l'œil, pas des billes) et
-  CENTRÉES vers le joueur en humeur neutre — jamais petites et fuyantes
-  vers le côté. Les yeux occupent une part généreuse de la tête (chaque
-  œil ≈ 30 % de la largeur du visage).
-- Bouche : **GRILLE DE DENTS SUPPRIMÉE** (décision Joris, 13 juin — elle
-  éteignait le visage). Nouveau système :
-    - Repos / neutre : ARC NÉON cyan `#35e0e6`, trait épais (~6–8 % de la
-      largeur de la tête) à bouts arrondis, coins nettement remontants —
-      un sourire franc, lisible même à la taille mascotte.
-    - Joie / excitation : SOURIRE OUVERT — demi-lune sombre `#0d2b2e`
-      bordée de cyan `#35e0e6`, petite langue cyan en bas. Réservé aux
-      humeurs joyeuses (Tetris, victoire, achievement).
-    - Les autres humeurs déclinent l'arc : tristesse = arc inversé court,
-      surprise = petit « o », alerte = trait court horizontal, etc. —
-      adapter chaque humeur existante de rendu-robo.js à ce vocabulaire.
-- Antenne : tige grise `#9aa3ad`, lumière verte `#4bff5a` avec halo de
-  3–4 pixels satellites
-- Torse : violet `#7a4fc0`, panneau central sombre `#2a1840` avec circuits
-  magenta `#ff2d78` et nœuds cyan `#35e0e6`
-- Bras/jambes : ressorts gris `#9aa3ad` (4–5 spires), pinces violettes
-  `#5a3a8a`, bottes rouges `#d62b2b`
+| Élément                | Hex            | Note                        |
+| ---------------------- | -------------- | --------------------------- |
+| Coque                  | `#e6ecf7`      | Blanc lunaire bleuté        |
+| Ombre de coque         | `#b8c4dd`      | Une teinte, pas de dégradés |
+| Écran-visage           | `#070a1c`      | Navy distinct du fond       |
+| Glyphes yeux + glow    | `#00f5ff`      | Cyan canonique ROBO         |
+| Bout d'antenne         | `#00f5ff`      | Halo doux                   |
+| Mini-grille torse      | `#00f5ff` 60 % | Cellule éteinte : `#1a2340` |
+| Liseré écran / fenêtre | `#b8c4dd`      | Fin, discret                |
 
-**Lecture de pose (référence)** : saut joyeux, bras levés, lignes de
-mouvement sous les bottes, ombre portée elliptique. À transposer en
-animation d'idle : oscillation verticale ±2 px sur les ressorts,
-clignement des yeux toutes les 3–5 s (déterministe sur timestamp),
-pulsation douce de la lumière d'antenne.
+**Interdits** : rouge, violet (Distorsion), rose (VERA), jaune (SYSTÈME).
+Aucun dégradé complexe, rivet ni texture métallique.
 
-**Humeurs** : DÉLÉGUÉES à rendu-robo.js (vocabulaire existant — ne pas
-dupliquer). Le portrait cutscene consomme le même renderer ou la même
-table d'états.
+**Yeux-glyphes (humeurs narratives)**
+
+| Humeur           | Glyphes       | Description                            |
+| ---------------- | ------------- | -------------------------------------- |
+| `neutre`         | `( ● ● )`     | Deux disques moyens, légèrement ovales |
+| `content`        | `( ^ ^ )`     | Deux arcs convexes (sourire)           |
+| `excite`         | `( ✦ ✦ )`     | Yeux ~130 %, antenne dressée           |
+| `triste`         | `( ● ● )` bas | Disques ~80 %, coins tombants          |
+| `alerte`         | `( ▮ ▮ )`     | Traits verticaux fins                  |
+| _(bonus Tetris)_ | `( ▪ ▪ )`     | 600 ms post-Tetris : mini-carrés       |
+
+Pas de bouche par défaut. En `content` fort ou fins : petit arc cyan sous les yeux autorisé.
+
+**Antenne (second canal)**
+
+| Humeur    | Position                                 |
+| --------- | ---------------------------------------- |
+| `neutre`  | Verticale, oscillation lente (timestamp) |
+| `content` | Légèrement inclinée, rebond doux         |
+| `excite`  | Dressée + bout qui pulse                 |
+| `triste`  | Tombante, bout à 40 %                    |
+| `alerte`  | Rigide, bout clignotant                  |
+
+**Cohérence inter-écrans**
+
+- Cutscenes : capsule + mains + pieds + antenne
+- Panneau in-game : buste (capsule + antenne), humeurs liées aux événements
+- Portraits dialogue : cadrage écran-visage + antenne
+- Même palette et glyphes partout
+
+**Humeurs** : implémentées dans `js/rendu-robo.js` et `js/rendu-robo-donnees.js`.
+Le portrait cutscene consomme le même vocabulaire.
 
 ---
 
@@ -267,4 +292,3 @@ observatoire, comme pour les 18 scènes.)
 
 - La Distorsion (mélancolie imposée — humeurs menacante/souffrante/curieuse/apaisee)
 - Le Système (neutre/alerte)
-- Variantes d'humeur ROBO si besoin de références supplémentaires

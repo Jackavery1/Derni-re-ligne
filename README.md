@@ -34,7 +34,7 @@ npm run build      # → dist/
 
 Utile : `npm run lint` · `npm run format:check` · `npm run typecheck` · `npm run verify:versions` · `npm run test:e2e` · `npm run sync:sw`
 
-**Dev :** préférer `127.0.0.1` à `localhost` (HSTS). Après MAJ du SW : Ctrl+Shift+R. Debug : `?debug=1`.
+**Dev :** préférer `127.0.0.1` à `localhost` (HSTS). Après MAJ du SW : Ctrl+Shift+R. Debug : `?debug=1`. PWA locale : `?pwa=1` (SW actif en dev ; sinon désactivé sur localhost — voir `js/sw-dev.js`).
 
 **Mobile en partie :** en portrait (<768 px), `#overlay-orientation` bloque volontairement le jeu (paysage requis) — voir E2E audit C13 et [CONTRIBUTING.md](CONTRIBUTING.md).
 

@@ -5,11 +5,12 @@ const BUDGET_APP_SHELL_KO = 2048;
 const MARQUEUR_DEBUT = '/* PRECACHE:DEBUT */';
 const MARQUEUR_FIN = '/* PRECACHE:FIN */';
 
-/** Fichiers exclus du precache (fetch runtime ou trop lourds pour le shell). */
+/** Fichiers exclus du precache (fetch runtime, trop lourds, ou sources export-only). */
 const EXCLUS_PRECACHE = new Set([
     './styles/dev.css',
     './img/icon-512.png',
     './img/icon-maskable-512.png',
+    './js/codex-histoire.js',
 ]);
 
 const modeProd = process.argv.includes('--prod');

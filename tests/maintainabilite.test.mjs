@@ -85,9 +85,12 @@ describe('maintainabilite', () => {
         expect(fin).toBeGreaterThan(debut);
         const blocPrecache = swPrecache.slice(debut, fin);
 
+        const exclusPrecache = new Set(['./js/codex-histoire.js']);
+
         const manquants = readdirSync(racineJs)
             .filter((f) => f.endsWith('.js'))
             .map((f) => `./js/${f}`)
+            .filter((entree) => !exclusPrecache.has(entree))
             .filter((entree) => !blocPrecache.includes(`'${entree}'`));
 
         expect(manquants, `Relancez npm run sync:sw — manquants: ${manquants.join(', ')}`).toEqual(

@@ -192,13 +192,15 @@ function obtenirConfigVivant() {
 
 /** @param {{ intervalle: number, delaiMinimum: number }} config @param {number} [niveau] */
 export function intervalleVivantEffectif(config, niveau = 1) {
-    const facteur = niveau <= 5 ? 1.35 : niveau <= 8 ? 1.15 : 1;
+    let facteur = niveau <= 5 ? 1.35 : niveau <= 8 ? 1.15 : 1;
+    if (niveau >= 10) facteur *= 1.2;
     return Math.round(config.intervalle * facteur);
 }
 
 /** @param {{ intervalle: number, delaiMinimum: number }} config @param {number} [niveau] */
 export function delaiMinimumVivantEffectif(config, niveau = 1) {
-    const facteur = niveau <= 5 ? 1.25 : niveau <= 8 ? 1.1 : 1;
+    let facteur = niveau <= 5 ? 1.25 : niveau <= 8 ? 1.1 : 1;
+    if (niveau >= 10) facteur *= 1.15;
     return Math.round(config.delaiMinimum * facteur);
 }
 

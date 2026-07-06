@@ -3,29 +3,68 @@
    ============================================ */
 
 .btn-menu {
+    --btn-accent: var(--cyan);
+    --btn-texte: #aaf8ff;
+    --btn-fond-1: #001525;
+    --btn-fond-2: #002a4a;
+    --btn-glow: rgba(0, 245, 255, 0.35);
+    --btn-glow-fort: rgba(0, 245, 255, 0.55);
     font-family: var(--font-titre);
     font-size: 0.55rem;
     letter-spacing: 2px;
-    padding: 10px 14px;
-    border: 2px solid;
-    border-radius: 4px;
+    padding: 10px 14px 10px 16px;
+    border: 2px solid var(--btn-accent);
+    border-left-width: 4px;
+    border-radius: 0;
+    clip-path: polygon(
+        10px 0,
+        100% 0,
+        100% calc(100% - 10px),
+        calc(100% - 10px) 100%,
+        0 100%,
+        0 10px
+    );
+    color: var(--btn-texte);
+    background-color: var(--btn-fond-1);
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.12) 2px,
+            rgba(0, 0, 0, 0.12) 4px
+        ),
+        linear-gradient(135deg, var(--btn-fond-1) 0%, var(--btn-fond-2) 52%, var(--btn-fond-1) 100%);
+    box-shadow:
+        0 0 10px var(--btn-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+    text-shadow: 0 0 10px color-mix(in srgb, var(--btn-accent) 55%, transparent);
     cursor: pointer;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
     transition:
-        box-shadow 0.3s ease,
+        box-shadow 0.25s ease,
         transform 0.15s ease,
         opacity 0.2s ease,
-        filter 0.15s ease;
+        filter 0.15s ease,
+        border-color 0.2s ease;
     backface-visibility: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-menu:hover:not(.btn-verrouille) {
-    filter: brightness(1.15);
+    filter: brightness(1.12);
+    box-shadow:
+        0 0 16px var(--btn-glow-fort),
+        0 0 32px var(--btn-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.35);
 }
 
 .btn-menu:active:not(.btn-verrouille) {
@@ -75,23 +114,27 @@
 }
 
 .btn-continuer {
-    background: linear-gradient(135deg, #001a28 0%, #003850 50%, #001a28 100%);
-    border: 2px solid #00e5ff;
-    color: #aaf8ff;
-    box-shadow:
-        0 0 12px rgba(0, 229, 255, 0.45),
-        0 0 28px rgba(0, 229, 255, 0.15);
+    --btn-accent: #00e5ff;
+    --btn-texte: #aaf8ff;
+    --btn-fond-1: #001a28;
+    --btn-fond-2: #003850;
+    --btn-glow: rgba(0, 229, 255, 0.4);
+    --btn-glow-fort: rgba(0, 229, 255, 0.65);
     animation: continuer-pulse 2.2s ease-in-out infinite;
 }
 
 .btn-nouvelle-partie {
-    background: linear-gradient(135deg, #1a0030 0%, #3d0060 50%, #1a0030 100%);
-    border: 2px solid #dd00ff;
-    color: #ff88ff;
+    --btn-accent: #dd00ff;
+    --btn-texte: #ff88ff;
+    --btn-fond-1: #1a0030;
+    --btn-fond-2: #3d0060;
+    --btn-glow: rgba(221, 0, 255, 0.45);
+    --btn-glow-fort: rgba(221, 0, 255, 0.7);
     box-shadow:
-        0 0 12px rgba(221, 0, 255, 0.5),
-        0 0 28px rgba(221, 0, 255, 0.2),
-        inset 0 0 16px rgba(221, 0, 255, 0.08);
+        0 0 12px var(--btn-glow),
+        0 0 28px rgba(221, 0, 255, 0.18),
+        inset 0 0 16px rgba(221, 0, 255, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 
 .btn-nouvelle-partie--seul {
@@ -111,18 +154,24 @@
 }
 
 .btn-options-titre {
-    width: 100%;
-    padding: 12px 20px;
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    color: var(--texte-dim);
-    gap: 6px;
+    --btn-accent: rgba(180, 180, 220, 0.55);
+    --btn-texte: #c8c8ee;
+    --btn-fond-1: rgba(8, 8, 26, 0.85);
+    --btn-fond-2: rgba(18, 18, 42, 0.9);
+    --btn-glow: rgba(0, 245, 255, 0.12);
+    --btn-glow-fort: rgba(0, 245, 255, 0.28);
+    width: auto;
+    min-width: 160px;
+    padding: 10px 20px;
+    font-size: 0.48rem;
+    gap: 8px;
+    text-shadow: none;
 }
 
 .btn-options-titre:hover:not(.btn-verrouille) {
-    border-color: rgba(0, 245, 255, 0.45);
-    color: var(--cyan);
-    box-shadow: 0 0 12px rgba(0, 245, 255, 0.2);
+    --btn-accent: rgba(0, 245, 255, 0.65);
+    --btn-texte: var(--cyan);
+    filter: none;
 }
 
 .dialog-nouvelle-partie {
@@ -216,17 +265,37 @@
 }
 
 .btn-icone {
-    margin-right: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.65em;
+    height: 1.65em;
+    margin-right: 8px;
+    font-size: 0.95em;
+    line-height: 1;
+    border: 1px solid color-mix(in srgb, var(--btn-accent) 70%, transparent);
+    background: rgba(0, 0, 0, 0.35);
+    box-shadow:
+        inset 0 0 8px rgba(0, 0, 0, 0.45),
+        0 0 8px color-mix(in srgb, var(--btn-accent) 25%, transparent);
+    clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
 }
 
 .menu-separateur {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: rgba(255, 255, 255, 0.2);
+    color: rgba(0, 245, 255, 0.42);
     font-size: 0.42em;
     letter-spacing: 4px;
     margin: 10px 0 6px;
+    width: min(100%, 320px);
+}
+
+.menu-separateur span {
+    padding: 0 4px;
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.25);
 }
 
 .menu-separateur::before,
@@ -234,7 +303,7 @@
     content: '';
     flex: 1;
     height: 1px;
-    background: rgba(255, 255, 255, 0.1);
+    background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.28), transparent);
 }
 
 .menu-bloc-libre {
@@ -279,55 +348,61 @@
 }
 
 .btn-jouer {
-    background: linear-gradient(135deg, #001525 0%, #002a4a 50%, #001525 100%);
-    border: 2px solid #00ccff;
-    color: #88eeff;
-    box-shadow:
-        0 0 10px rgba(0, 204, 255, 0.3),
-        0 0 20px rgba(0, 204, 255, 0.1);
+    --btn-accent: #00ccff;
+    --btn-texte: #88eeff;
+    --btn-fond-1: #001525;
+    --btn-fond-2: #002a4a;
+    --btn-glow: rgba(0, 204, 255, 0.32);
+    --btn-glow-fort: rgba(0, 204, 255, 0.58);
 }
 
 .btn-jouer:hover:not(.btn-verrouille) {
-    box-shadow:
-        0 0 18px rgba(0, 204, 255, 0.6),
-        0 0 35px rgba(0, 204, 255, 0.2);
     transform: translateY(-2px);
 }
 
 .btn-architecte {
-    background:
+    --btn-accent: #8899cc;
+    --btn-texte: #aabbdd;
+    --btn-fond-1: #0a1020;
+    --btn-fond-2: #1a2840;
+    --btn-glow: rgba(136, 153, 204, 0.28);
+    --btn-glow-fort: rgba(136, 153, 204, 0.52);
+    background-image:
         repeating-linear-gradient(
             0deg,
-            rgba(136, 153, 204, 0.04) 0px,
-            rgba(136, 153, 204, 0.04) 1px,
+            rgba(136, 153, 204, 0.05) 0px,
+            rgba(136, 153, 204, 0.05) 1px,
             transparent 1px,
-            transparent 20px
+            transparent 16px
         ),
         repeating-linear-gradient(
             90deg,
-            rgba(136, 153, 204, 0.04) 0px,
-            rgba(136, 153, 204, 0.04) 1px,
+            rgba(136, 153, 204, 0.05) 0px,
+            rgba(136, 153, 204, 0.05) 1px,
             transparent 1px,
-            transparent 20px
+            transparent 16px
         ),
-        linear-gradient(135deg, #0a1020, #1a2840);
-    border: 2px solid #8899cc;
-    color: #aabbdd;
-    box-shadow: 0 0 8px rgba(136, 153, 204, 0.25);
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.1) 2px,
+            rgba(0, 0, 0, 0.1) 4px
+        ),
+        linear-gradient(135deg, var(--btn-fond-1), var(--btn-fond-2), var(--btn-fond-1));
 }
 
 .btn-architecte:hover:not(.btn-verrouille) {
-    box-shadow: 0 0 16px rgba(136, 153, 204, 0.5);
     transform: translateY(-2px);
 }
 
 .btn-codex {
-    background: linear-gradient(135deg, #1a1000, #2e1f00, #1a1000);
-    border: 2px solid #cc9900;
-    color: #ffcc44;
-    box-shadow: 0 0 8px rgba(204, 153, 0, 0.3);
-    position: relative;
-    overflow: hidden;
+    --btn-accent: #cc9900;
+    --btn-texte: #ffcc44;
+    --btn-fond-1: #1a1000;
+    --btn-fond-2: #2e1f00;
+    --btn-glow: rgba(204, 153, 0, 0.32);
+    --btn-glow-fort: rgba(204, 153, 0, 0.55);
 }
 
 .btn-codex::after {
@@ -335,37 +410,40 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: 0;
-    height: 0;
-    border-left: 12px solid transparent;
-    border-top: 12px solid rgba(204, 153, 0, 0.5);
+    width: 14px;
+    height: 14px;
+    background: linear-gradient(135deg, rgba(255, 204, 68, 0.55), rgba(204, 153, 0, 0.15));
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+    pointer-events: none;
 }
 
 .btn-codex:hover:not(.btn-verrouille) {
-    box-shadow: 0 0 16px rgba(204, 153, 0, 0.5);
+    transform: translateY(-1px);
 }
 
 .btn-profil {
-    background: linear-gradient(135deg, #000f22, #001844, #000f22);
-    border: 2px solid #0066ff;
-    color: #88aaff;
-    box-shadow: 0 0 8px rgba(0, 102, 255, 0.3);
+    --btn-accent: #0066ff;
+    --btn-texte: #88aaff;
+    --btn-fond-1: #000f22;
+    --btn-fond-2: #001844;
+    --btn-glow: rgba(0, 102, 255, 0.32);
+    --btn-glow-fort: rgba(0, 102, 255, 0.58);
 }
 
 .btn-profil:hover:not(.btn-verrouille) {
-    box-shadow: 0 0 18px rgba(0, 102, 255, 0.6);
     transform: translateY(-2px);
 }
 
 .btn-achievements {
-    background: linear-gradient(135deg, #1a0e00, #2e1800, #1a0e00);
-    border: 2px solid #ff9900;
-    color: #ffbb44;
-    box-shadow: 0 0 8px rgba(255, 153, 0, 0.3);
+    --btn-accent: #ff9900;
+    --btn-texte: #ffbb44;
+    --btn-fond-1: #1a0e00;
+    --btn-fond-2: #2e1800;
+    --btn-glow: rgba(255, 153, 0, 0.32);
+    --btn-glow-fort: rgba(255, 153, 0, 0.58);
 }
 
 .btn-achievements:hover:not(.btn-verrouille) {
-    box-shadow: 0 0 18px rgba(255, 153, 0, 0.6);
     transform: translateY(-2px);
 }
 

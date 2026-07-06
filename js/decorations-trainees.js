@@ -3,7 +3,7 @@ import { etat, obtenirCtx } from './store-jeu.js';
 import { obtenirForme, obtenirCouleurPiece } from './piece-jeu.js';
 
 const MAX_HISTORIQUE = 6;
-export const historiquePositions = [];
+const historiquePositions = [];
 
 export function reinitialiserHistoriquePositions() {
     historiquePositions.length = 0;

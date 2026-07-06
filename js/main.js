@@ -15,6 +15,7 @@ import {
     definirMessageChargement,
     masquerEcranChargement,
 } from './ecran-chargement.js';
+import { prechargerPortraitsCutscene } from './portraits-precache.js';
 
 if (window.top !== window.self) {
     window.top.location.replace(window.self.location.href);
@@ -67,9 +68,10 @@ async function demarrer() {
 
         definirMessageChargement('Initialisation…');
         definirProgressionChargement(0.72);
-        if (document.fonts?.ready) {
-            await document.fonts.ready;
-        }
+        await Promise.all([
+            document.fonts?.ready ?? Promise.resolve(),
+            prechargerPortraitsCutscene(),
+        ]);
         definirProgressionChargement(0.9);
         initialiserApplication();
         await attendreBoutonsPretes();

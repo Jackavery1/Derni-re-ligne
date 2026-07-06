@@ -26,6 +26,7 @@ import {
 } from './boss-dialogues.js';
 import { DUREE_VICTOIRE_BOSS_MS } from './boss-jeu-constantes.js';
 import { afficherTexteBoss, mettreAJourHPBarBoss } from './boss-ui-hud.js';
+import { proposerInfobulleAttaqueBoss } from './infobulles-contexte.js';
 
 /** @returns {import('./boss-attaques.js').ContexteAttaqueBoss} */
 function ctxAttaque() {
@@ -110,6 +111,7 @@ export function executerAttaqueBossCombat() {
  * @param {unknown} resultat
  */
 function afficherEffetAttaqueBoss(type, dureeMs, resultat) {
+    proposerInfobulleAttaqueBoss(type);
     switch (type) {
         case 'rangee_braise':
             if (resultat === false) {
@@ -132,7 +134,7 @@ function afficherEffetAttaqueBoss(type, dureeMs, resultat) {
             if (!AudioMoteur.muet) AudioMoteur.son('niveau');
             break;
         case 'faux_fantome':
-            enqueueDialogueBoss('⚠ SIGNAL BROUILLÉ');
+            enqueueDialogueBoss('⚠ FANTOME ROSE = PIÈGE');
             if (!AudioMoteur.muet) AudioMoteur.son('rotation');
             break;
         case 'distorsion_plateau':

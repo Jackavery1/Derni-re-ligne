@@ -3,6 +3,7 @@ import { obtenirEtatHistoire, mondePeutEtreJoue } from './histoire-mondes.js';
 import { obtenirHistoireTextesSync } from './charger-histoire-textes.js';
 import { SCENES_CUTSCENE } from './scenes-cutscene.js';
 import { SCENE_DEFAUT_POST_MONDE } from './histoire-narratif-scenes.js';
+import { URLS_PORTRAITS_PRECACHE } from './portraits-precache.js';
 import { ECRANS } from './ecrans-config.js';
 import { store } from './store-jeu.js';
 import { logger } from './logger.js';
@@ -171,6 +172,11 @@ export function demarrerPrechargementCarte() {
         for (const piste of urlsMusiqueNarratifCutscene()) {
             if (signal.aborted) return;
             await fetchSilencieux(piste, signal);
+        }
+
+        for (const portrait of URLS_PORTRAITS_PRECACHE) {
+            if (signal.aborted) return;
+            await fetchSilencieux(portrait, signal);
         }
     })().catch((err) => {
         if (/** @type {Error} */ (err).name !== 'AbortError') {

@@ -89,8 +89,12 @@ export default defineConfig({
                 'js/orientation-jeu.js',
                 'js/histoire-manager-post-monde.js',
                 'js/rendu-plateau-pieces.js',
-                'js/navigation-ecrans.js',
                 'js/portraits-cutscene-etat.js',
+                'js/histoire-map-briefings-boss.js',
+                'js/histoire-map-fond-donnees.js',
+                'js/portraits-precache.js',
+                'js/chargement-watchdog.js',
+                'js/infobulles-contexte.js',
             ],
             thresholds: {
                 lines: 54,

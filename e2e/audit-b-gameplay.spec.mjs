@@ -11,6 +11,7 @@ import {
     ETAT_DEBLOCAGE_MONDE_LIBRE,
     ETAT_FIN_VRAIE_PRET,
     ETAT_AVANT_FIN_SECRETE,
+    ETAT_AVANT_BOSS_ARCHIVISTE,
     installerJournalVibrations,
     preparerSelectionPremiereVisiteModes,
     selectionnerBiomeVerrouilleConstellation,
@@ -192,6 +193,13 @@ test('audit B — briefing Distorsion sur monde finale', async ({ page }) => {
     await page.locator('#btn-histoire-briefing-distorsion').click({ force: true });
     await expect(page.locator('#overlay-tutoriel')).not.toHaveClass(/element-masque/);
     await expect(page.locator('#tutoriel-titre')).toContainText(/DISTORSION/i);
+});
+
+test('audit B — briefing mécanique Archiviste sur carte histoire', async ({ page }) => {
+    await ouvrirCarteHistoire(page, ETAT_AVANT_BOSS_ARCHIVISTE);
+    await selectionnerMondeCarte(page, 'monde_boss_3');
+    await expect(page.locator('#histoire-detail-avert')).not.toHaveClass(/element-masque/);
+    await expect(page.locator('#histoire-detail-avert')).toContainText(/faux fant[oô]me/i);
 });
 
 test('audit B — game over histoire avertissement continue Trame', async ({ page }) => {

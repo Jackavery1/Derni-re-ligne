@@ -111,10 +111,10 @@
 .label-oracle,
 .label-reserve,
 .label-suivant {
-    font-size: 9px;
+    font-size: var(--typo-hud-micro);
     font-weight: 600;
     letter-spacing: 2px;
-    opacity: 0.75;
+    color: var(--texte-dim);
     text-transform: uppercase;
 }
 

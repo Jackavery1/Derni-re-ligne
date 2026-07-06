@@ -1,4 +1,4 @@
-/** Palette et proportions ROBO v3 — capsule écran-visage (canon-robo-v3.md). */
+/** Palette et proportions ROBO v3 — capsule écran-visage (docs/canon-personnages.md §1). */
 export const PALETTE_ROBO = {
     COQUE: '#e6ecf7',
     COQUE_OMBRE: '#b8c4dd',

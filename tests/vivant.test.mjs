@@ -39,8 +39,14 @@ describe('vivant', () => {
         const config = COMPORTEMENTS_VIVANT.lave;
         expect(intervalleVivantEffectif(config, 3)).toBeGreaterThan(config.intervalle);
         expect(delaiMinimumVivantEffectif(config, 3)).toBeGreaterThan(config.delaiMinimum);
-        expect(intervalleVivantEffectif(config, 10)).toBe(config.intervalle);
-        expect(delaiMinimumVivantEffectif(config, 10)).toBe(config.delaiMinimum);
+        expect(intervalleVivantEffectif(config, 9)).toBe(config.intervalle);
+        expect(delaiMinimumVivantEffectif(config, 9)).toBe(config.delaiMinimum);
+    });
+
+    it('ralentit les événements vivant en late game (niveau 10+)', () => {
+        const config = COMPORTEMENTS_VIVANT.lave;
+        expect(intervalleVivantEffectif(config, 10)).toBeGreaterThan(config.intervalle);
+        expect(delaiMinimumVivantEffectif(config, 10)).toBeGreaterThan(config.delaiMinimum);
     });
 
     it('vivant_supprimerCellule respecte les bornes du plateau', () => {

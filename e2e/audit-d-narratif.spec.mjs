@@ -182,6 +182,104 @@ test('intro Jour 2 554 — humeur VERA inquiete (audit D)', async ({ page }) => 
     await assertHumeurPortraitCutscene(page, 'vera', 'inquiete');
 });
 
+test.describe('audit D8 — UI mobile histoire', () => {
+    test.use({ viewport: { width: 375, height: 667 } }); // iPhone SE portrait
+
+    test("cutscene et dialogue s'affichent correctement en portrait mobile", async ({ page }) => {
+        test.setTimeout(120000);
+        await ouvrirCarteHistoire(page, ETAT_HISTOIRE_BOSS_BRASIER);
+        await simulerVictoireBossHistoire(page, 'monde_boss_1');
+        await attendreCutsceneVictoireBoss(page);
+        await avancerCutsceneJusquaPivot(page, /Moi non plus je ne sais pas comment m'arrêter/i);
+
+        // Vérifier que le texte de dialogue est visible et ne déborde pas
+        const dialogueBox = page.locator('#zone-dialogue-cutscene');
+        await expect(dialogueBox).toBeVisible();
+        await expect(dialogueBox).toHaveCSS('left', /auto/);
+        await expect(dialogueBox).toHaveCSS('right', /auto/);
+        await expect(dialogueBox).toHaveCSS('width', /.+/); // Vérifier qu'une largeur est définie
+
+        // Vérifier la présence des portraits sans débordement
+        await expect(page.locator('#canvas-portrait-gauche')).toBeVisible();
+        await expect(page.locator('#canvas-portrait-droite')).toBeVisible();
+
+        // Vérifier que le bouton suivant est visible
+        await expect(page.locator('#btn-cutscene-suivant')).toBeVisible();
+    });
+
+    test("journal s'affiche correctement en portrait mobile", async ({ page }) => {
+        test.setTimeout(120000);
+        await ouvrirCarteHistoire(page, ETAT_AVANT_FIN_NORMALE);
+        await page.evaluate(async () => {
+            await window.__NEO_TEST__?.afficherJournalHistoire(
+                {
+                    numero: 1,
+                    titre: 'TRANSMISSION ENDOMMAGEE',
+                    sousTitre: 'MESSAGE DE VERA',
+                    texte: [
+                        {
+                            personnage: 'vera',
+                            texte: "Robo, si tu lis ça, c'est que j'ai échoué. Le temps s'est fracturé. Je suis désolée. J'aurais dû te dire plus tôt. Le miroir n'est pas ce que tu crois. Il nous observe. Il nous dévore.",
+                        },
+                        {
+                            personnage: 'narrateur',
+                            texte: "Le texte est saturé d'interférences. Des bribes s'échappent.",
+                        },
+                        {
+                            personnage: 'vera',
+                            texte: "Trouve la ligne. La dernière ligne. Avant qu'il ne soit trop tard.",
+                        },
+                    ],
+                    estEndommage: true,
+                    illustration: 'journal_generic_damages',
+                },
+                () => {}
+            );
+        });
+
+        const journalOverlay = page.locator('#ecran-histoire-journal');
+        await expect(journalOverlay).toBeVisible();
+
+        const journalContenu = page.locator('#histoire-journal-contenu');
+        await expect(journalContenu).toBeVisible();
+        await expect(journalContenu).toHaveCSS('max-height', /.+/); // S'assurer que la hauteur est limitée
+        await expect(journalContenu).toHaveCSS('overflow-y', 'auto'); // S'assurer qu'il y a un scroll
+
+        // Vérifier que le titre et le texte sont visibles
+        await expect(page.locator('#histoire-journal-titre')).toBeVisible();
+        await expect(page.locator('#histoire-journal-texte')).toBeVisible();
+        await expect(page.locator('.histoire-journal-para').first()).toBeVisible();
+
+        // Vérifier que le bouton fermer est visible
+        await expect(page.locator('#btn-journal-fermer')).toBeVisible();
+    });
+
+    test.use({ viewport: { width: 800, height: 400 } }); // Largeur compacte paysage
+
+    test("carte histoire et panneau de détails s'affichent correctement en paysage mobile", async ({
+        page,
+    }) => {
+        test.setTimeout(120000);
+        await ouvrirCarteHistoire(page, ETAT_HISTOIRE_BOSS_BRASIER);
+        await page.locator('#histoire-monde-clavier').selectOption('monde_boss_1', { force: true });
+
+        const panneauDetails = page.locator('#histoire-monde-details');
+        await expect(panneauDetails).toBeVisible();
+        await expect(panneauDetails).toHaveCSS('bottom', /.+/); // Vérifier qu'il est positionné en bas
+        await expect(panneauDetails).toHaveCSS('left', '50%'); // Centré
+        await expect(panneauDetails).toHaveCSS('transform', /translateX\(-50%\)/); // Centré
+        await expect(panneauDetails).toHaveCSS('max-width', /.+/); // Largeur limitée
+        await expect(panneauDetails).toHaveCSS('overflow-y', 'auto'); // Scroll si contenu long
+
+        await expect(page.locator('.histoire-detail-nom')).toBeVisible();
+        await expect(page.locator('.bouton-jouer-monde')).toBeVisible();
+
+        // Vérifier que le header et le footer sont visibles
+        await expect(page.locator('#histoire-map-header')).toBeVisible();
+        await expect(page.locator('#histoire-map-footer')).toBeVisible();
+    });
+});
+
 test('intro Jour 2 554 — humeur VERA determinee (audit D)', async ({ page }) => {
     test.setTimeout(120000);
     await ouvrirIntroHistoire(page);
