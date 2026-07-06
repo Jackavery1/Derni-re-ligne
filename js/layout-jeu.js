@@ -8,7 +8,6 @@ import { modeArchiEnCours } from './registre-modes.js';
 import { obtenirIdBiomeFond } from './biome-fond.js';
 import { demarrerFondBiome, invaliderCacheFond } from './rendu-fond-biome.js';
 import { etat } from './store-jeu.js';
-import { initialiserOverlayOrientation, mettreAJourOverlayOrientation } from './orientation-jeu.js';
 
 const SEUIL_PAYSAGE_COMPACT = 768;
 
@@ -215,11 +214,9 @@ export function adapterInterfaceArchi() {
 }
 
 export function initialiserLayout() {
-    initialiserOverlayOrientation();
     ecouterViewport(() => {
         adapterInterface();
         if (modeArchiEnCours()) adapterInterfaceArchi();
-        mettreAJourOverlayOrientation();
         void import('./constellation.js').then(({ redimensionnerConstellation }) =>
             redimensionnerConstellation()
         );

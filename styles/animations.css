@@ -494,18 +494,6 @@
     }
 }
 
-@keyframes overlay-orientation-pulse {
-    0%,
-    100% {
-        opacity: 0.88;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1.02);
-    }
-}
-
 @keyframes defiGrille {
     from {
         background-position:
