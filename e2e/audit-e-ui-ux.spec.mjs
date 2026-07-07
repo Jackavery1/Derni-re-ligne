@@ -71,8 +71,8 @@ test.describe('audit E — UI/UX', () => {
         const hasTypoVars = await page.evaluate(() => {
             const root = document.documentElement;
             const style = getComputedStyle(root);
-            const typoVars = ['--police', '--police-ui'];
-            return typoVars.some((v) => style.getPropertyValue(v).length > 0);
+            const typoVars = ['--police', '--font-ui', '--police-ui'];
+            return typoVars.every((v) => style.getPropertyValue(v).trim().length > 0);
         });
         expect(hasTypoVars).toBe(true);
     });

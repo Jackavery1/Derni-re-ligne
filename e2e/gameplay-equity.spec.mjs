@@ -1,0 +1,65 @@
+import { test, expect } from '@playwright/test';
+import { demarrerPartie } from './helpers.mjs';
+
+test.describe('gameplay equity', () => {
+    test('grace spawn active au demarrage de partie', async ({ page }) => {
+        await demarrerPartie(page);
+        const graceActive = await page.evaluate(
+            () => window.__NEO_TEST__?.graceSpawnActiveTest?.() ?? false
+        );
+        expect(graceActive).toBe(true);
+    });
+
+    test('ARE bloque les controles puis libere le buffer', async ({ page }) => {
+        await demarrerPartie(page);
+        const apresAre = await page.evaluate(() => {
+            const api = window.__NEO_TEST__;
+            if (!api?.forcerAreTest || !api.bufferiserInputTest || !api.tickGameFeel) return null;
+            api.forcerAreTest();
+            api.bufferiserInputTest('gauche');
+            const pendantAre = api.pieceControlesActifsTest?.() ?? true;
+            const bufferPendantAre = api.obtenirGameFeel?.().inputBuffer ?? [];
+            api.tickGameFeel(200);
+            const bufferApresAre = api.obtenirGameFeel?.().inputBuffer ?? [];
+            const areRestant = api.obtenirGameFeel?.().areRestant ?? -1;
+            return { pendantAre, bufferPendantAre, bufferApresAre, areRestant };
+        });
+        expect(apresAre).not.toBeNull();
+        expect(apresAre.pendantAre).toBe(false);
+        expect(apresAre.bufferPendantAre).toEqual(['gauche']);
+        expect(apresAre.areRestant).toBe(0);
+        expect(apresAre.bufferApresAre).toEqual([]);
+    });
+
+    test('buffer conserve deux inputs sans ecrasement', async ({ page }) => {
+        await demarrerPartie(page);
+        const buffer = await page.evaluate(() => {
+            const api = window.__NEO_TEST__;
+            api?.bufferiserInputTest?.('gauche');
+            api?.bufferiserInputTest?.('tourner_cw');
+            return api?.obtenirGameFeel?.().inputBuffer ?? [];
+        });
+        expect(buffer).toEqual(['gauche', 'tourner_cw']);
+    });
+
+    test('HUD paysage — labels lisibles (>= 9px)', async ({ page }) => {
+        await page.setViewportSize({ width: 667, height: 375 });
+        await demarrerPartie(page);
+        const tailles = await page.evaluate(() => {
+            const selecteurs = [
+                '.panneau .section:nth-child(2) .stat-label',
+                '#affichage-restant',
+                '#section-timer-niveau .stat-label',
+            ];
+            return selecteurs.map((sel) => {
+                const el = document.querySelector(sel);
+                if (!el) return null;
+                const px = parseFloat(getComputedStyle(el).fontSize);
+                return Number.isFinite(px) ? px : 0;
+            });
+        });
+        for (const taille of tailles.filter((t) => t !== null)) {
+            expect(taille).toBeGreaterThanOrEqual(9);
+        }
+    });
+});

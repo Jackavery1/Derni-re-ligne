@@ -8,12 +8,14 @@ import {
     demarrerCoyote,
     areActive,
     coyoteActif,
+    graceSpawnActive,
     bufferiserInput,
     consommerBufferInput,
     pieceControlesActifs,
     activerPieceAuSol,
     quitterSolPiece,
     verifierCollisionSpawn,
+    mettreAJourGameFeel,
 } from '../js/logique/game-feel-jeu.js';
 import {
     definirPieceAuSol,
@@ -23,7 +25,21 @@ import {
     obtenirNbLockResets,
 } from '../js/etat/store-etat-partie.js';
 import { creerPlateau } from '../js/logique/piece-jeu.js';
-import { configurerActionsJeu, obtenirActions } from '../js/actions-jeu.js';
+import { configurerActionsJeu, obtenirActions } from '../js/logique/actions-jeu.js';
+import { modeHistoireEnCours } from '../js/etat/mode-histoire.js';
+import { estMondeZenActif } from '../js/logique/gestionnaire-difficulte.js';
+
+vi.mock('../js/etat/mode-histoire.js', () => ({
+    modeHistoireEnCours: vi.fn(() => false),
+}));
+
+vi.mock('../js/logique/gestionnaire-difficulte.js', async (importOriginal) => {
+    const actual = await importOriginal();
+    return {
+        ...actual,
+        estMondeZenActif: vi.fn(() => false),
+    };
+});
 
 describe('game-feel-jeu', () => {
     beforeEach(() => {
@@ -36,6 +52,9 @@ describe('game-feel-jeu', () => {
             tourner: vi.fn(),
             utiliserReserve: vi.fn(),
             deplacerGauche: vi.fn(),
+            deplacerDroite: vi.fn(),
+            deplacerBas: vi.fn(),
+            chuteRapide: vi.fn(),
             terminerPartie: vi.fn(),
         });
     });
@@ -117,5 +136,88 @@ describe('game-feel-jeu', () => {
         activerPieceAuSol();
         expect(obtenirLockDelayRestant()).toBe(CONFIG.lockDelay);
         expect(obtenirNbLockResets()).toBe(0);
+    });
+
+    it('graceSpawnActive reflete le timer de grace', () => {
+        expect(graceSpawnActive()).toBe(false);
+        demarrerGraceSpawn();
+        expect(graceSpawnActive()).toBe(true);
+    });
+
+    it('mettreAJourGameFeel decremente ARE puis consomme le buffer', () => {
+        demarrerAre();
+        bufferiserInput('gauche');
+        mettreAJourGameFeel(100);
+        expect(store.areRestant).toBe(CONFIG.areMs - 100);
+        expect(obtenirActions().deplacerGauche).not.toHaveBeenCalled();
+        mettreAJourGameFeel(100);
+        expect(store.areRestant).toBe(0);
+        expect(obtenirActions().deplacerGauche).toHaveBeenCalled();
+    });
+
+    it('mettreAJourGameFeel decremente coyote hors sol uniquement', () => {
+        definirPieceAuSol(false);
+        demarrerCoyote();
+        mettreAJourGameFeel(40);
+        expect(store.coyoteRestant).toBe(CONFIG.coyoteTimeMs - 40);
+        definirPieceAuSol(true);
+        mettreAJourGameFeel(40);
+        expect(store.coyoteRestant).toBe(CONFIG.coyoteTimeMs - 40);
+    });
+
+    it('ignore le buffer quand la partie est terminee', () => {
+        etat.estEnCours = false;
+        bufferiserInput('gauche');
+        consommerBufferInput();
+        expect(obtenirActions().deplacerGauche).not.toHaveBeenCalled();
+    });
+
+    it('consomme toutes les actions du buffer', () => {
+        const actions = [
+            ['tourner_ccw', 'tourner', -1],
+            ['hold', 'utiliserReserve'],
+            ['droite', 'deplacerDroite'],
+            ['bas', 'deplacerBas'],
+            ['chute', 'chuteRapide'],
+        ];
+        for (const [input, methode, arg] of actions) {
+            reinitialiserGameFeel();
+            etat.estEnCours = true;
+            bufferiserInput(input);
+            consommerBufferInput();
+            const spy = obtenirActions()[methode];
+            if (arg !== undefined) {
+                expect(spy).toHaveBeenCalledWith(arg);
+            } else {
+                expect(spy).toHaveBeenCalled();
+            }
+        }
+    });
+
+    it('mettreAJourGameFeel decremente grace spawn', () => {
+        demarrerGraceSpawn();
+        const avant = store.spawnGraceRestant;
+        mettreAJourGameFeel(100);
+        expect(store.spawnGraceRestant).toBe(avant - 100);
+    });
+
+    it('quitterSolPiece sans coyote reinitialise lock delay a zero', () => {
+        definirPieceAuSol(false);
+        definirLockDelayRestant(200);
+        store.coyoteRestant = 0;
+        quitterSolPiece();
+        expect(obtenirLockDelayRestant()).toBe(0);
+    });
+
+    it('topout zen delegue au callback sans terminer la partie', () => {
+        vi.mocked(modeHistoireEnCours).mockReturnValue(true);
+        vi.mocked(estMondeZenActif).mockReturnValue(true);
+        etat.pieceActuelle = { type: 'O', rotation: 0, x: 4, y: 0 };
+        etat.plateau[0][4] = 1;
+        etat.plateau[0][5] = 1;
+        const recuperation = vi.fn();
+        verifierCollisionSpawn(recuperation);
+        expect(recuperation).toHaveBeenCalled();
+        expect(obtenirActions().terminerPartie).not.toHaveBeenCalled();
     });
 });

@@ -73,21 +73,6 @@
 #sel-info-biome.element-masque {
     display: none !important;
 }
-.sel-panneau-fermer {
-    align-self: flex-end;
-    background: transparent;
-    border: 1px solid var(--bordure);
-    color: var(--texte-dim);
-    font-family: var(--police);
-    font-size: 0.55rem;
-    padding: 4px 10px;
-    cursor: pointer;
-    line-height: 1;
-}
-.sel-panneau-fermer:hover {
-    color: var(--texte);
-    border-color: var(--accent-carte);
-}
 .sel-biome-entete {
     display: flex;
     align-items: center;

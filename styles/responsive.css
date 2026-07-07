@@ -61,7 +61,7 @@ body.contraste-eleve .bouton {
         gap: 4px;
     }
     .section-titre {
-        font-size: 0.3rem;
+        font-size: var(--typo-hud-micro);
     }
     .stat-label {
         font-size: var(--typo-hud-micro);
@@ -78,7 +78,7 @@ body.contraste-eleve .bouton {
         gap: 2px;
     }
     #section-mascotte .section-titre {
-        font-size: 0.26rem;
+        font-size: var(--typo-hud-micro);
     }
 
     .panneau .section:nth-child(2) {
@@ -93,7 +93,7 @@ body.contraste-eleve .bouton {
     }
 
     .panneau .section:nth-child(2) .stat-label {
-        font-size: 0.24rem;
+        font-size: var(--typo-hud-micro);
         margin-bottom: 0;
     }
 
@@ -110,7 +110,7 @@ body.contraste-eleve .bouton {
     }
 
     #section-progression #affichage-restant {
-        font-size: 0.24rem;
+        font-size: var(--typo-hud-micro);
         line-height: 1.2;
     }
 
@@ -123,7 +123,7 @@ body.contraste-eleve .bouton {
     }
 
     #section-timer-niveau .stat-label {
-        font-size: 0.24rem;
+        font-size: var(--typo-hud-micro);
     }
 
     #section-timer-niveau .stat-valeur {

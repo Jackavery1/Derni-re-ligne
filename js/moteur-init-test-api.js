@@ -1,7 +1,7 @@
 import { demarrerJeu } from './partie.js';
 import { definirBiomeActif, etat } from './etat/store-jeu.js';
 import { sauvegarderBiomeActif } from './io/progression.js';
-import { obtenirActions } from './actions-jeu.js';
+import { obtenirActions } from './logique/actions-jeu.js';
 import { activerModeHistoire } from './etat/mode-histoire.js';
 import { chargerHistoireTextes } from './io/charger-histoire-textes.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire/histoire-etat.js';
@@ -11,6 +11,15 @@ import { emettre } from './etat/bus-jeu.js';
 import { menuAnimActif } from './menu-fond.js';
 import { CONFIG } from './config/config.js';
 import { AudioMoteur } from './audio/audio.js';
+import {
+    bufferiserInput,
+    mettreAJourGameFeel,
+    pieceControlesActifs,
+    areActive,
+    coyoteActif,
+    graceSpawnActive,
+    demarrerAre,
+} from './logique/game-feel-jeu.js';
 
 export function initialiserNeoTestApi() {
     /** @type {(() => string | null) | null} */
@@ -27,11 +36,11 @@ export function initialiserNeoTestApi() {
         import('./histoire/histoire-cutscene-fonds.js').then((mod) => {
             obtenirSceneCutsceneActiveSync = mod.obtenirSceneCutsceneActive;
         }),
-        import('./portraits-cutscene-etat.js').then((mod) => {
+        import('./rendu/portraits-cutscene-etat.js').then((mod) => {
             obtenirHumeurRoboCutsceneSync = mod.obtenirHumeurRoboCutscene;
             obtenirHumeurPortraitCutsceneEtatSync = mod.obtenirHumeurPortraitCutsceneEtat;
         }),
-        import('./expressions-cutscene.js').then((mod) => {
+        import('./rendu/expressions-cutscene.js').then((mod) => {
             obtenirDerniereHumeurParleeSync = mod.obtenirDerniereHumeurParleePortrait;
         }),
         import('./histoire/histoire-cutscene-typewriter.js').then((mod) => {
@@ -114,7 +123,7 @@ export function initialiserNeoTestApi() {
                 document.body.classList.add('histoire-active');
                 etat.estEnCours = true;
                 etat.modeJeu = 'marathon';
-                const { demarrerSuiviMonde } = await import('./gestionnaire-difficulte.js');
+                const { demarrerSuiviMonde } = await import('./logique/gestionnaire-difficulte.js');
                 demarrerSuiviMonde(mondeId);
                 const d = store.histoire.difficulte;
                 if (!d?.actif) return;
@@ -146,7 +155,7 @@ export function initialiserNeoTestApi() {
                 activerModeHistoire();
                 store.histoire.mondeActuel = 'monde_prologue';
                 etat.lignes = 0;
-                const { onGameOverHistoire } = await import('./mecaniques-histoire.js');
+                const { onGameOverHistoire } = await import('./histoire/mecaniques-histoire.js');
                 onGameOverHistoire(0, 'monde_prologue');
             },
             emettreEvenementBusJeu: (evenement, payload) => emettre(evenement, payload),
@@ -172,15 +181,28 @@ export function initialiserNeoTestApi() {
                 obtenirActions().terminerPartie?.(false, { immediat: true });
             },
             terminerPartieCoop: async () => {
-                const { terminerCooperatif } = await import('./coop-jeu.js');
+                const { terminerCooperatif } = await import('./logique/coop-jeu.js');
                 terminerCooperatif('j1');
             },
             basculerPauseCoop: async () => {
                 const { assurerInputCoop } = await import('./modes-input-lazy.js');
                 await assurerInputCoop();
-                const { basculerPauseCoop } = await import('./coop-jeu.js');
+                const { basculerPauseCoop } = await import('./logique/coop-jeu.js');
                 basculerPauseCoop();
             },
+            obtenirGameFeel: () => ({
+                areRestant: store.areRestant,
+                coyoteRestant: store.coyoteRestant,
+                spawnGraceRestant: store.spawnGraceRestant,
+                inputBuffer: [...store.inputBuffer],
+            }),
+            bufferiserInputTest: (action) => bufferiserInput(action),
+            tickGameFeel: (deltaMs) => mettreAJourGameFeel(deltaMs),
+            forcerAreTest: () => demarrerAre(),
+            pieceControlesActifsTest: () => pieceControlesActifs(),
+            areActiveTest: () => areActive(),
+            coyoteActifTest: () => coyoteActif(),
+            graceSpawnActiveTest: () => graceSpawnActive(),
         });
     });
 }

@@ -16,6 +16,7 @@
     --texte-dim: rgba(224, 224, 255, 0.75);
     --texte-discret: rgba(224, 224, 255, 0.52);
     --police: 'Press Start 2P', monospace;
+    --police-ui: var(--font-ui);
 
     /* ===== FONTS ===== */
     --font-titre: 'Press Start 2P', monospace;
