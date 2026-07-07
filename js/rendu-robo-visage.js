@@ -8,7 +8,7 @@ const C = PALETTE_ROBO;
  * @param {number} cx
  * @param {number} cy
  * @param {number} E
- * @param {'neutre'|'content'|'excite'|'triste'|'alerte'} humeur
+ * @param {'neutre'|'content'|'excite'|'triste'|'alerte'|'tetris'} humeur
  * @param {'g'|'d'} cote
  */
 function dessinerGlyphOeil(ctx, cx, cy, E, humeur, cote) {
