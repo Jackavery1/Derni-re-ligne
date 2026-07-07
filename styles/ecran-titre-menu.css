@@ -1,0 +1,81 @@
+@media (max-width: 520px) {
+    #ecran-titre .menu-titre-dl .dl-mot-1 {
+        font-size: clamp(0.95rem, 5.8vw, 1.45rem);
+        letter-spacing: 2px;
+        white-space: nowrap;
+    }
+
+    #ecran-titre .menu-titre-dl .dl-mot-2 {
+        font-size: clamp(1.35rem, 8.5vw, 2rem);
+        letter-spacing: 2px;
+    }
+
+    #ecran-titre .menu-etoiles {
+        letter-spacing: 6px;
+    }
+}
+
+/* Boutons menu — identité arcade (priorité sur typographie.css) */
+#ecran-titre .btn-menu {
+    font-family: var(--font-titre);
+}
+
+#ecran-titre .menu-bloc-campagne .btn-menu {
+    letter-spacing: 3px;
+}
+
+#ecran-titre .menu-bloc-libre .btn-menu,
+#ecran-titre .menu-bloc-collection .btn-menu {
+    font-family: var(--font-stats);
+    font-size: clamp(0.38rem, 2.8vw, 0.48rem);
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 8px 10px;
+    min-height: 68px;
+}
+
+#ecran-titre .menu-bloc-libre .btn-icone,
+#ecran-titre .menu-bloc-collection .btn-icone,
+#ecran-titre .menu-bloc-campagne .btn-icone {
+    margin-right: 0;
+    width: 2em;
+    height: 2em;
+}
+
+#ecran-titre .btn-options-titre .btn-icone {
+    margin-right: 0;
+    width: 1.5em;
+    height: 1.5em;
+}
+
+#ecran-titre .btn-options-titre {
+    flex-direction: row;
+    font-family: var(--font-stats);
+    letter-spacing: 3px;
+}
+
+#ecran-titre .btn-sous-titre {
+    font-family: var(--font-ui);
+    font-weight: 500;
+    text-transform: none;
+}
+
+#ecran-titre .menu-bloc-principal,
+#ecran-titre .menu-separateur,
+#ecran-titre .menu-bloc-libre,
+#ecran-titre .menu-bloc-collection {
+    width: min(100%, 340px);
+}
+
+#ecran-titre .menu-bloc-collection {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#ecran-titre .menu-actions-secondaires {
+    margin-top: 4px;
+}
+
+#ecran-titre .btn-menu:focus-visible {
+    outline: 2px solid var(--btn-accent, var(--cyan));
+    outline-offset: 3px;
+}

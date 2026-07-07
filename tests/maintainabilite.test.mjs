@@ -103,6 +103,7 @@ describe('maintainabilite', () => {
         const stylesDir = join(racineProjet, 'styles');
         const agregateurs = new Set([
             'main.css',
+            'ecran-titre.css',
             'ecran-selection.css',
             'animations.css',
             'mode-histoire.css',
