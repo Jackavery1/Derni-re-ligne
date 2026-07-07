@@ -1,7 +1,11 @@
-import { PALETTE_ROBO, PROPORTIONS_ROBO as P } from './rendu-robo-donnees.js';
+import { PALETTE_ROBO, PROPORTIONS_ROBO as P, RATIOS_ROBO as R } from './rendu-robo-donnees.js';
 import { pyRobo, rectArrondiRobo } from './rendu-robo-geometrie.js';
 
 const C = PALETTE_ROBO;
+
+/**
+ * @typedef {{ capX: number, capY: number, capW: number, capH: number, cx: number }} BoundsCapsule
+ */
 
 /**
  * @param {'neutre'|'content'|'excite'|'triste'|'alerte'} humeur
@@ -68,53 +72,55 @@ function dessinerHaloExcite(ctx, cx, cy, E, t) {
     ctx.restore();
 }
 
-function dessinerPieds(ctx, cx, E, offsetY, h) {
-    const y = pyRobo(P.PIED_Y, E, offsetY, h);
-    const demi = P.PIED_ECART * E;
+/** @param {BoundsCapsule} bounds @param {number} E */
+function dessinerPieds(ctx, bounds, E) {
+    const { capX, capY, capW, capH, cx } = bounds;
+    const piedW = capW * R.PIED_W;
+    const piedH = capH * R.PIED_H;
+    const gap = capW * R.PIED_GAP;
+    const y = capY + capH * R.PIED_TOP;
+    const demi = (piedW + gap) / 2;
+
     for (const signe of [-1, 1]) {
-        const x = cx + signe * demi - (P.PIED_W * E) / 2;
+        const x = cx + signe * demi - piedW / 2;
         ctx.fillStyle = C.COQUE_OMBRE;
         ctx.beginPath();
-        ctx.ellipse(
-            x + (P.PIED_W * E) / 2,
-            y + P.PIED_H * E + E,
-            8 * E,
-            2.5 * E,
-            0,
-            0,
-            Math.PI * 2
-        );
+        ctx.ellipse(x + piedW / 2, y + piedH + E, 8 * E, 2.5 * E, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.fillStyle = C.COQUE;
-        rectArrondiRobo(ctx, x, y, P.PIED_W * E, P.PIED_H * E, 5 * E);
+        rectArrondiRobo(ctx, x, y, piedW, piedH, piedW * 0.45);
         ctx.fill();
-        ctx.strokeStyle = C.LISERE;
+        ctx.strokeStyle = C.COQUE_OMBRE;
         ctx.lineWidth = Math.max(0.8, E * 0.8);
         ctx.stroke();
     }
 }
 
-function dessinerMains(ctx, cx, E, offsetY, h, mainOffsetY) {
-    const y = pyRobo(P.MAIN_Y, E, offsetY + mainOffsetY, h);
-    const ecart = P.MAIN_ECART_X * E;
-    const r = P.MAIN_R * E;
+/** @param {BoundsCapsule} bounds @param {number} E @param {number} mainOffsetY */
+function dessinerMains(ctx, bounds, E, mainOffsetY) {
+    const { capX, capW, capH, cx } = bounds;
+    const y = bounds.capY + capH * R.MAIN_Y + mainOffsetY;
+    const ecart = capW / 2 + capW * R.MAIN_ECART;
+    const r = (capW * R.MAIN_D) / 2;
     for (const signe of [-1, 1]) {
         const mx = cx + signe * ecart;
         ctx.fillStyle = C.COQUE;
         ctx.beginPath();
         ctx.arc(mx, y, r, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = C.LISERE;
+        ctx.strokeStyle = C.COQUE_OMBRE;
         ctx.lineWidth = Math.max(0.8, E * 0.8);
         ctx.stroke();
     }
 }
 
-function dessinerFenetreGrille(ctx, cx, capX, capY, capW, capH, E) {
-    const fw = capW * P.FENETRE_W_RATIO;
-    const fh = P.FENETRE_H * E;
+/** @param {BoundsCapsule} bounds @param {number} E */
+function dessinerFenetreGrille(ctx, bounds, E) {
+    const { capX, capY, capW, capH, cx } = bounds;
+    const fw = capW * R.FENETRE_W;
+    const fh = capH * (1 - R.FENETRE_TOP) * 0.85;
     const fx = cx - fw / 2;
-    const fy = capY + capH - fh - 6 * E;
+    const fy = capY + capH * R.FENETRE_TOP;
 
     ctx.fillStyle = C.ECRAN;
     rectArrondiRobo(ctx, fx, fy, fw, fh, 3 * E);
@@ -148,28 +154,39 @@ function dessinerFenetreGrille(ctx, cx, capX, capY, capW, capH, E) {
 }
 
 /**
- * @returns {{ x: number, y: number, w: number, h: number }}
+ * @param {number} cx
+ * @param {number} E
+ * @param {number} offsetY
+ * @param {number} h
+ * @returns {BoundsCapsule}
  */
-export function calculerBoundsEcran(cx, E, offsetY, h) {
+export function calculerBoundsCapsule(cx, E, offsetY, h) {
     const capW = P.CAPSULE_W * E;
     const capH = P.CAPSULE_H * E;
     const capX = cx - capW / 2;
     const capY = pyRobo(P.CAPSULE_Y, E, offsetY, h);
-    const inset = capW * P.ECRAN_INSET;
-    const eh = capH * P.ECRAN_RATIO - inset;
+    return { capX, capY, capW, capH, cx };
+}
+
+/**
+ * @param {BoundsCapsule} bounds
+ * @returns {{ x: number, y: number, w: number, h: number }}
+ */
+export function calculerBoundsEcran(bounds) {
+    const { capX, capY, capW, capH } = bounds;
+    const w = capW * R.ECRAN_W;
+    const eh = capH * R.ECRAN_H;
     return {
-        x: capX + inset,
-        y: capY + inset,
-        w: capW - inset * 2,
+        x: capX + (capW - w) / 2,
+        y: capY + capH * R.ECRAN_TOP,
+        w,
         h: eh,
     };
 }
 
-function dessinerCapsule(ctx, cx, E, offsetY, h) {
-    const capW = P.CAPSULE_W * E;
-    const capH = P.CAPSULE_H * E;
-    const capX = cx - capW / 2;
-    const capY = pyRobo(P.CAPSULE_Y, E, offsetY, h);
+/** @param {BoundsCapsule} bounds @param {number} E @param {number} offsetY @param {number} h */
+function dessinerCapsule(ctx, bounds, E) {
+    const { capX, capY, capW, capH } = bounds;
 
     ctx.fillStyle = C.COQUE_OMBRE;
     rectArrondiRobo(ctx, capX + E, capY + 2 * E, capW, capH, capW * 0.38);
@@ -181,14 +198,13 @@ function dessinerCapsule(ctx, cx, E, offsetY, h) {
     ctx.strokeStyle = C.LISERE;
     ctx.lineWidth = Math.max(1, E);
     ctx.stroke();
-
-    return { capX, capY, capW, capH };
 }
 
-export function dessinerAntenneRobo(ctx, cx, E, offsetY, h, anim) {
-    const capY = pyRobo(P.CAPSULE_Y, E, offsetY, h);
+export function dessinerAntenneRobo(ctx, bounds, E, anim) {
+    const { capY, capH, cx } = bounds;
     const baseY = capY + 2 * E;
-    const tipY = baseY - P.ANTENNE_H * E;
+    const tipY = baseY - capH * R.ANTENNE_H;
+    const tipR = anim.antenneTipR;
 
     ctx.save();
     ctx.translate(cx, baseY);
@@ -205,9 +221,11 @@ export function dessinerAntenneRobo(ctx, cx, E, offsetY, h, anim) {
 
     ctx.save();
     ctx.globalAlpha = anim.antenneTipAlpha;
+    ctx.shadowColor = C.GLYPHE;
+    ctx.shadowBlur = tipR * R.OEIL_HALO;
     ctx.fillStyle = C.GLYPHE;
     ctx.beginPath();
-    ctx.arc(cx, tipY, anim.antenneTipR, 0, Math.PI * 2);
+    ctx.arc(cx, tipY, tipR, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
     ctx.restore();
@@ -230,15 +248,21 @@ export function dessinerCouronneRobo(ctx, cx, E, offsetY, h, t) {
 /**
  * @param {CanvasRenderingContext2D} ctx
  * @param {ReturnType<typeof calculerAnimRobo>} anim
+ * @param {'complet'|'mini'} niveauDetail
  */
-export function dessinerCorpsRobo(ctx, cx, E, offsetY, h, humeur, t, anim) {
-    const cyCorps = pyRobo(P.CAPSULE_Y + P.CAPSULE_H / 2, E, offsetY, h);
+export function dessinerCorpsRobo(ctx, bounds, E, humeur, t, anim, niveauDetail = 'complet') {
+    const { cx, capY, capH } = bounds;
+    const cyCorps = capY + capH / 2;
     if (anim.dessinerHaloExcite) {
         dessinerHaloExcite(ctx, cx, cyCorps, E, t);
     }
 
-    dessinerPieds(ctx, cx, E, offsetY, h);
-    const { capX, capY, capW, capH } = dessinerCapsule(ctx, cx, E, offsetY, h);
-    dessinerFenetreGrille(ctx, cx, capX, capY, capW, capH, E);
-    dessinerMains(ctx, cx, E, offsetY, h, anim.mainOffsetY);
+    if (niveauDetail === 'complet') {
+        dessinerPieds(ctx, bounds, E);
+    }
+    dessinerCapsule(ctx, bounds, E);
+    if (niveauDetail === 'complet') {
+        dessinerFenetreGrille(ctx, bounds, E);
+        dessinerMains(ctx, bounds, E, anim.mainOffsetY);
+    }
 }

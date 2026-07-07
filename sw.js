@@ -1,6 +1,6 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v64';
-const VERSION_MEDIAS = 'dl-medias-v5';
+const VERSION_SHELL = 'dl-shell-v65';
+const VERSION_MEDIAS = 'dl-medias-v6';
 
 const SCENES_CUTSCENE_PRECACHE = [
     './assets/splash-chargement.png',
@@ -13,6 +13,15 @@ const SCENES_CUTSCENE_PRECACHE = [
     './assets/cutscenes/scene_seuil_sentinelle.png',
     './assets/cutscenes/scene_seuil_archiviste.png',
     './assets/cutscenes/scene_seuil_avantgarde.png',
+    './assets/cutscenes/scene_antre_distorsion.png',
+    './assets/cutscenes/scene_miroir.png',
+    './assets/cutscenes/scene_trame_primordiale.png',
+    './assets/cutscenes/scene_interlude_gardiens.png',
+    './assets/cutscenes/scene_interlude_veille.png',
+    './assets/cutscenes/scene_interlude_elle.png',
+    './assets/cutscenes/scene_fin_crepuscule.png',
+    './assets/cutscenes/scene_fin_lumineuse.png',
+    './assets/cutscenes/scene_fin_recommencement.png',
 ];
 
 /** PNG portraits cutscene — aligné sur js/portraits-precache.js */
