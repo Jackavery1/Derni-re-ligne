@@ -25,12 +25,27 @@ export function estNeoTestAutorise() {
  *   obtenirSceneCutsceneActive?: () => string | null,
  *   typewriterEstActif?: () => boolean,
  *   obtenirHumeurPortraitCutscene?: (personnageId?: string) => string | null,
- *   simulerTopVolontairePrologue?: () => Promise<void>
- *   emettreEvenementBusJeu?: (evenement: string, payload?: unknown) => void
- *   menuAnimActif?: () => boolean
- *   simulerGameOverBossDistorsion?: () => void
- *   terminerPartieCoop?: () => Promise<void>
- *   basculerPauseCoop?: () => Promise<void>
+ *   simulerTopVolontairePrologue?: () => Promise<void>,
+ *   emettreEvenementBusJeu?: (evenement: string, payload?: unknown) => void,
+ *   menuAnimActif?: () => boolean,
+ *   simulerGameOverBossDistorsion?: () => void,
+ *   terminerPartieCoop?: () => Promise<void>,
+ *   basculerPauseCoop?: () => Promise<void>,
+ *   obtenirGameFeel?: () => {
+ *     areRestant: number,
+ *     coyoteRestant: number,
+ *     spawnGraceRestant: number,
+ *     inputBuffer: string[],
+ *   },
+ *   bufferiserInputTest?: (
+ *     action: 'tourner_cw' | 'tourner_ccw' | 'hold' | 'gauche' | 'droite' | 'bas' | 'chute'
+ *   ) => void,
+ *   tickGameFeel?: (deltaMs: number) => void,
+ *   forcerAreTest?: () => void,
+ *   pieceControlesActifsTest?: () => boolean,
+ *   areActiveTest?: () => boolean,
+ *   coyoteActifTest?: () => boolean,
+ *   graceSpawnActiveTest?: () => boolean,
  * }} api
  */
 export function exposerNeoTestApi(api) {
