@@ -33,4 +33,4 @@ Regenerer le precache prod apres build : `npm run build` (inclut `generer-precac
 
 ## Polices
 
-Les polices legacy `fonts/*.ttf` ne sont plus deployees : uniquement `assets/polices/*.woff2` dans le precache.
+Les polices legacy `fonts/*.ttf` ne sont plus deployees : uniquement `assets/fonts-dist/*.woff2` dans le precache.

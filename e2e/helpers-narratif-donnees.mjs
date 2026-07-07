@@ -1,5 +1,24 @@
 import { CUTSCENES_POST_MONDE } from '../js/histoire-textes/cutscenes-post-monde.js';
+import { CUTSCENES_ENTREE } from '../js/histoire-textes/cutscenes-entree.js';
 import { SCENE_DEFAUT_POST_MONDE } from '../js/histoire-narratif.js';
+import { MONDES_CAMPAGNE_PRINCIPALE } from './etats-histoire-base.mjs';
+
+/** @param {unknown} cutscene */
+function obtenirSceneEntreeCutscene(cutscene) {
+    if (!cutscene) return null;
+    if (Array.isArray(cutscene)) return cutscene[0]?.scene ?? null;
+    if (typeof cutscene === 'object' && cutscene !== null) {
+        if ('scene' in cutscene && cutscene.scene) return cutscene.scene;
+        const lignes = /** @type {{ lignes?: { scene?: string }[] }} */ (cutscene).lignes;
+        return lignes?.[0]?.scene ?? null;
+    }
+    return null;
+}
+
+/** Scène PNG attendue à la première visite (16 mondes campagne principale). */
+export const SCENES_ENTREE_CAMPAGNE = Object.fromEntries(
+    MONDES_CAMPAGNE_PRINCIPALE.map((id) => [id, obtenirSceneEntreeCutscene(CUTSCENES_ENTREE[id])])
+);
 
 /** @param {string} mondeId */
 export function obtenirScenePostMonde(mondeId) {

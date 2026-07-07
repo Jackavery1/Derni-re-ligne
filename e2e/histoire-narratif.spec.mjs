@@ -12,6 +12,8 @@ import {
     ETAT_FIN_SECRETE_PRET,
     ETAT_AVANT_FIN_SECRETE,
     ETAT_AVANT_FIN_VRAIE,
+    ETAT_AVANT_FIN_NORMALE,
+    ETAT_FIN_NORMALE_PRET,
     ETAT_FIN_VRAIE_PRET,
     ETAT_CYBER_LABO_PRET,
     ETAT_AVANT_DESERT,
@@ -297,6 +299,71 @@ test('fin vraie — outro harmonie et ecran de fin', async ({ page }) => {
     await terminerCutscenesVersEcranFin(page);
     await expect(page.locator('#ecran-histoire-fin')).toHaveAttribute('data-fin', 'fin_vraie');
     await expect(page.locator('#histoire-fin-titre')).toContainText(/HARMONIE/i);
+});
+
+test('fin normale — victoire finale detecte fin_normale', async ({ page }) => {
+    test.setTimeout(60000);
+    await ouvrirCarteHistoire(page, ETAT_AVANT_FIN_NORMALE);
+    await page.evaluate(async () => {
+        await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.('monde_finale', 99);
+    });
+    await fermerRecapPostMonde(page);
+
+    const typeFin = await page.evaluate(async () => {
+        return window.__NEO_TEST__?.obtenirTypeFinHistoire?.();
+    });
+    expect(typeFin).toBe('fin_normale');
+    expect(ETAT_AVANT_FIN_NORMALE.conditionsTrame.miroirComplete).toBe(false);
+
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 10000,
+    });
+});
+
+test('fin normale — outro et ecran de fin', async ({ page }) => {
+    test.setTimeout(90000);
+    await ouvrirCarteHistoire(page, ETAT_FIN_NORMALE_PRET);
+    await page.evaluate(async () => {
+        await window.__NEO_TEST__?.declencherFinHistoire?.('fin_normale');
+    });
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 10000,
+    });
+    await terminerCutscenesVersEcranFin(page);
+    await expect(page.locator('#ecran-histoire-fin')).toHaveAttribute('data-fin', 'fin_normale');
+    await expect(page.locator('#histoire-fin-titre')).toContainText(/LE CYCLE/i);
+    await expect(page.locator('#histoire-fin-hint')).toContainText(/D'autres fins existent/i);
+});
+
+test('fin normale — parcours victoire jusqu a outro et ecran de fin (audit D7)', async ({
+    page,
+}) => {
+    test.setTimeout(180000);
+    await ouvrirCarteHistoire(page, ETAT_AVANT_FIN_NORMALE);
+    await page.evaluate(async () => {
+        await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.('monde_finale', 99);
+    });
+    await fermerRecapPostMonde(page);
+
+    const typeFin = await page.evaluate(async () => {
+        return window.__NEO_TEST__?.obtenirTypeFinHistoire?.();
+    });
+    expect(typeFin).toBe('fin_normale');
+
+    await terminerCutscenesVersEcranFin(page);
+    await expect(page.locator('#ecran-histoire-fin')).toHaveAttribute('data-fin', 'fin_normale');
+    await expect(page.locator('#histoire-fin-titre')).toContainText(/LE CYCLE/i);
+
+    const apresOutro = await page.evaluate(() => {
+        const brut = localStorage.getItem('derniereLigne_histoire');
+        const sauve = brut ? JSON.parse(brut) : {};
+        return {
+            finObtenue: sauve.finObtenue,
+            toutesFin: sauve.toutesFinObtenues ?? [],
+        };
+    });
+    expect(apresOutro.finObtenue).toBe('fin_normale');
+    expect(apresOutro.toutesFin).toContain('fin_normale');
 });
 
 test('apres fin secrete — debloque paradoxe organiquement sans reinjection etat', async ({

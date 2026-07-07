@@ -223,23 +223,14 @@ test('campagne — enchaine prologue puis inferno sans carte', async ({ page }) 
 });
 
 test('campagne — cutscenes intermediaires boss et chapitres (audit D15)', async ({ page }) => {
-    test.setTimeout(360000);
+    test.setTimeout(900000);
     const etatDepart = {
         ...ETAT_HISTOIRE_VIDE,
         mondesDejaMontres: ['monde_prologue'],
     };
     await ouvrirCarteHistoire(page, etatDepart);
 
-    const jalons = [
-        'monde_prologue',
-        'monde_boss_1',
-        'monde_rouille',
-        'monde_boss_2',
-        'monde_boss_3',
-        'monde_boss_4',
-    ];
-
-    for (const mondeId of jalons) {
+    for (const mondeId of MONDES_CAMPAGNE_PRINCIPALE) {
         await page.evaluate(async (id) => {
             await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.(id, 99);
         }, mondeId);

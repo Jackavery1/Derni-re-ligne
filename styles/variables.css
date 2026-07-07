@@ -13,7 +13,7 @@
     --orange: #ff8800;
     --bleu: #4488ff;
     --texte: #e0e0ff;
-    --texte-dim: rgba(224, 224, 255, 0.68);
+    --texte-dim: rgba(224, 224, 255, 0.75);
     --texte-discret: rgba(224, 224, 255, 0.52);
     --police: 'Press Start 2P', monospace;
 
@@ -45,7 +45,7 @@
     --space-4: 16px;
     --space-5: 24px;
     --space-6: 32px;
-    --typo-hud-micro: clamp(10px, 0.4rem, 12px);
+    --typo-hud-micro: clamp(11px, 0.45rem, 13px);
     --texte-vide-indicateur: rgba(180, 150, 190, 0.72);
 
     --theme-primaire: var(--cyan);

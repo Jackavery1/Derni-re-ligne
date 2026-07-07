@@ -161,7 +161,9 @@ function reponseErreurReseau() {
 self.addEventListener('install', (evenement) => {
     evenement.waitUntil(
         Promise.all([
-            caches.open(VERSION_SHELL).then((cache) => cache.addAll(FICHIERS_A_CACHER)),
+            caches
+                .open(VERSION_SHELL)
+                .then((cache) => cache.addAll([...FICHIERS_A_CACHER, ...PORTRAITS_SHELL_PRECACHE])),
             caches.open(VERSION_MEDIAS).then((cache) => cache.addAll(SCENES_CUTSCENE_PRECACHE)),
         ]).then(() => self.skipWaiting())
     );

@@ -342,6 +342,13 @@ export const ETAT_AVANT_FIN_NORMALE = {
     mondesDejaMontres: [...ETAT_AVANT_BOSS_AVANTGARDE.mondesDejaMontres, 'monde_finale'],
 };
 
+/** État prêt pour déclencher la fin normale (Distorsion vaincue, sans Miroir). */
+export const ETAT_FIN_NORMALE_PRET = {
+    ...ETAT_AVANT_FIN_NORMALE,
+    mondesCompletes: [...ETAT_AVANT_FIN_NORMALE.mondesCompletes, 'monde_finale'],
+    bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion'],
+};
+
 /** Première visite Cosmos — cutscene d'entrée observatoire. */
 export const ETAT_ENTREE_COSMOS = {
     ...ETAT_FIN_VRAIE_PRET,

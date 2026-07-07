@@ -8,7 +8,7 @@ export const OPTIONS_CAMPAGNE_BULK = {
     max: 45,
     typewriterTimeout: 2500,
     exigerCorpus: true,
-    verifierAudio: false,
+    verifierAudio: true,
 };
 
 /** Jalons boss / chapitres — assertions plus strictes. */
@@ -24,7 +24,7 @@ export const OPTIONS_CAMPAGNE_D9 = {
     max: 55,
     typewriterTimeout: 3500,
     exigerCorpus: true,
-    verifierAudio: false,
+    verifierAudio: true,
 };
 
 /** Prépare les conditions Trame via localStorage (sans API inject de test). */

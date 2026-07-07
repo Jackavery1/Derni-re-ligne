@@ -207,8 +207,7 @@ test.describe('audit E — UI/UX', () => {
         await preparerPageSansSw(page);
         await page.goto('/');
         const errorBanner = page.locator('#banniere-erreur');
-        const exists = await errorBanner.isVisible({ timeout: 1000 }).catch(() => false);
-        expect(errorBanner).toBeDefined();
+        await expect(errorBanner).toBeAttached();
     });
 
     test('E17 — success feedback provided (achievements, notifications)', async ({ page }) => {

@@ -48,7 +48,7 @@ Les fichiers bruts (Suno/Udio, Leonardo.ai) ne sont **jamais** commités. Dépos
 | ----------------------- | ------------------------------------- | --------------------------------------- |
 | `npm run media:musique` | `sources-bruts/musique/{mondeId}.wav` | `assets/musique/` (.ogg + .m4a ou .mp3) |
 | `npm run media:scenes`  | `sources-bruts/scenes/scene_{id}.png` | `assets/cutscenes/` (960×540, palette)  |
-| `npm run media:polices` | packages `@fontsource/*` (npm)        | `assets/polices/` (.woff2 latin)        |
+| `npm run media:polices` | packages `@fontsource/*` (npm)        | `assets/fonts-dist/` (.woff2 latin)     |
 
 **Prérequis audio :** [ffmpeg](https://ffmpeg.org/) (`winget install --id Gyan.FFmpeg -e`). Format cible : constante `FORMAT_CIBLE` dans `scripts/convertir-musique.mjs` (`opus` ou `mp3`).
 
