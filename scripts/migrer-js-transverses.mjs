@@ -2,8 +2,8 @@
  * Vague 2 — migration des modules transverses js/*.js → js/<domaine>/
  * Usage : node scripts/migrer-js-transverses.mjs [--dry-run]
  */
-import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from 'fs';
-import { basename, dirname, join, normalize, relative, sep } from 'path';
+import { mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from 'fs';
+import { dirname, join, normalize, relative, sep } from 'path';
 import { fileURLToPath } from 'url';
 
 const racine = join(dirname(fileURLToPath(import.meta.url)), '..');
