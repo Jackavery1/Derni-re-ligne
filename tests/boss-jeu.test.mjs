@@ -12,7 +12,7 @@ import {
     bossEstVaincu,
     DUREE_VICTOIRE_BOSS_MS,
     COULEUR_GLACE_B,
-} from '../js/boss-jeu.js';
+} from '../js/logique/boss-jeu.js';
 
 describe('boss-jeu', () => {
     beforeEach(() => {

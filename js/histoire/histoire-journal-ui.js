@@ -1,8 +1,8 @@
 /** Journal narratif histoire. */
-import { definirExpressionVera } from '../portraits-vera.js';
+import { definirExpressionVera } from '../rendu/portraits-vera.js';
 import { ECRANS } from '../ui/ecrans-config.js';
 import { logger } from '../logger.js';
-import { obtenirCanvas } from '../dom-utils.js';
+import { obtenirCanvas } from '../logique/dom-utils.js';
 import { afficherEcranHistoire } from './histoire-cutscene-nav.js';
 
 let journalCallbackFermer = null;
@@ -89,7 +89,7 @@ function _remplirEtAfficherJournal(journal, onFermer) {
                     illustrationFallback(ctx2d, canvas.width, canvas.height);
                 }
             } else if (journal.illustration) {
-                void import('../codex-illustrations.js')
+                void import('../codex/codex-illustrations.js')
                     .then(({ ILLUSTRATIONS_CODEX }) => {
                         const fn = ILLUSTRATIONS_CODEX[journal.illustration];
                         if (typeof fn === 'function') fn(ctx2d, canvas.width, canvas.height);

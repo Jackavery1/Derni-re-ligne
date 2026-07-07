@@ -12,7 +12,7 @@ import {
     coop_calculerScore,
     coop_verifierLignes,
 } from './coop-lignes-score.js';
-import { coop, DEMI_LARGEUR } from '../coop-etat.js';
+import { coop, DEMI_LARGEUR } from './coop-etat.js';
 import {
     poserPieceSurPlateau,
     vitesseChuteDepuisNiveau,

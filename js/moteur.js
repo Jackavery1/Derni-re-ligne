@@ -1,4 +1,4 @@
-import { configurerActionsMoteur } from './moteur-config-actions.js';
+import { configurerActionsMoteur } from './logique/moteur-config-actions.js';
 import { initialiserSystemesMoteur } from './moteur-init-systemes.js';
 import { initialiserInterfaceMoteur } from './moteur-init-interface.js';
 import { obtenirEcranActuel } from './etat/store-jeu.js';

@@ -9,13 +9,13 @@ import {
     DIALOGUES_COMBAT_BOSS,
     INTERLUDES,
 } from '../js/histoire-textes.js';
-import { ACHIEVEMENTS_HISTOIRE } from '../js/achievements-histoire.js';
+import { ACHIEVEMENTS_HISTOIRE } from '../js/achievements/achievements-histoire.js';
 import { INTRO_HISTOIRE, OUTRO_FINS } from '../js/histoire-textes/intro-interludes.js';
 import { TRANSITIONS_CHAPITRE } from '../js/histoire-textes/chapitres.js';
-import { SCENES_CUTSCENE } from '../js/scenes-cutscene.js';
+import { SCENES_CUTSCENE } from '../js/rendu/scenes-cutscene.js';
 import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
 import { SEQUENCE_HISTOIRE } from '../js/histoire-donnees.js';
-import { HUMEURS_PERSONNAGES } from '../js/expressions-cutscene.js';
+import { HUMEURS_PERSONNAGES } from '../js/rendu/expressions-cutscene.js';
 import { idPortraitRendu } from '../js/histoire/histoire-cutscene-config.js';
 import { CLE_FRAGMENT_PAR_MONDE } from '../js/histoire/histoire-manager-post-monde.js';
 import {

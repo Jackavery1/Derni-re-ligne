@@ -4,7 +4,7 @@ vi.mock('../js/etat/mode-histoire.js', () => ({
     modeHistoireEnCours: vi.fn(() => true),
 }));
 
-vi.mock('../js/accessibilite.js', () => ({
+vi.mock('../js/ui/accessibilite.js', () => ({
     obtenirEffetsAccessibiliteReduits: vi.fn(() => true),
 }));
 
@@ -18,7 +18,7 @@ import {
     notifierQuasiVaincuBossPortrait,
     notifierGameOverBossPortrait,
     reinitialiserReactionsBossPortrait,
-} from '../js/reactions-boss-portrait.js';
+} from '../js/histoire/reactions-boss-portrait.js';
 
 describe('reactions-boss-portrait', () => {
     beforeEach(() => {

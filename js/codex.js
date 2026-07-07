@@ -1,9 +1,9 @@
 import { statsGlobales } from './achievements.js';
 import { lireStockageJson, ecrireStockageJson, estTableauIds } from './io/progression.js';
-import { creerFileNotifications } from './notifications-file.js';
+import { creerFileNotifications } from './ui/notifications-file.js';
 import { logger } from './logger.js';
-import { sansAccentsE } from './texte-jeu.js';
-import { rendreIconeSurCanvas } from './icones-pixel.js';
+import { sansAccentsE } from './logique/texte-jeu.js';
+import { rendreIconeSurCanvas } from './rendu/icones-pixel.js';
 import { obtenirIdIcone, obtenirAccentEntree } from './codex-icones-map.js';
 import {
     ouvrirPanneauDetail,

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 const chargerClassementLeaderboard = vi.fn();
 
-vi.mock('../js/leaderboard-cloud.js', () => ({
+vi.mock('../js/io/leaderboard-cloud.js', () => ({
     chargerClassementLeaderboard,
 }));
 
@@ -56,7 +56,7 @@ describe('options-sync-cloud-ui — leaderboard', () => {
     it('peuple les biomes et charge selon les filtres', async () => {
         const { BIOMES, ORDRE_BIOMES_LIBRE } = await import('../js/config/config.js');
         const { peuplerSelectsLeaderboardOptions, rafraichirLeaderboardOptions } =
-            await import('../js/options-sync-cloud-ui.js');
+            await import('../js/ui/options-sync-cloud-ui.js');
 
         peuplerSelectsLeaderboardOptions();
         const selectBiome = /** @type {{ value: string, options: { value: string }[] }} */ (

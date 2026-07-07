@@ -5,10 +5,10 @@ import {
     obtenirEtatMonde,
     masquerPanneauDetails,
 } from './histoire-mondes.js';
-import { modeDevActif } from '../mode-dev-etat.js';
-import { definirTexteUi } from '../texte-jeu.js';
+import { modeDevActif } from '../logique/mode-dev-etat.js';
+import { definirTexteUi } from '../logique/texte-jeu.js';
 import { mettreAJourPanneauDetails } from './histoire-map-panneau-details.js';
-import { precharger } from '../scenes-cutscene.js';
+import { precharger } from '../rendu/scenes-cutscene.js';
 
 const MONDES_PRECHARGE_VIDE_ERRANCE = new Set(['monde_vide', 'monde_cosmos']);
 

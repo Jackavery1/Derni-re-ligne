@@ -2,7 +2,7 @@
 import { CONFIG } from '../config/config.js';
 import { etat, obtenirCtx } from '../etat/store-jeu.js';
 import { dessinerCellule } from './rendu-cellule.js';
-import { celluleEstRouillee } from '../mecaniques-histoire.js';
+import { celluleEstRouillee } from '../histoire/mecaniques-histoire.js';
 
 function dessinerOverlayRouille(c, l) {
     const ctx = obtenirCtx();

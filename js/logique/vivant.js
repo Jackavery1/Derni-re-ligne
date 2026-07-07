@@ -1,6 +1,6 @@
 import { CONFIG } from '../config/config.js';
 import { etat, obtenirBiomeActif } from '../etat/store-jeu.js';
-import { creerParticulesExplosion, pousserParticuleJeu } from '../particules-jeu.js';
+import { creerParticulesExplosion, pousserParticuleJeu } from '../rendu/particules-jeu.js';
 import { statsGlobales, verifierAchievements } from '../achievements.js';
 import {
     REGISTRE_CALCUL_VIVANT,

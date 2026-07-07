@@ -22,7 +22,7 @@ import {
     arreterMecaniquesHistoire,
     reinitialiserMatricesRouille,
     obtenirLibelleModificateurBiomeHud,
-} from '../js/mecaniques-histoire.js';
+} from '../js/histoire/mecaniques-histoire.js';
 
 describe('mecaniques-histoire', () => {
     beforeEach(() => {
@@ -193,7 +193,7 @@ describe('mecaniques-histoire', () => {
     });
 
     it('obtenirFondTrame retourne le biome et alpha du cycle trame', async () => {
-        const { obtenirFondTrame } = await import('../js/mecaniques-histoire-trame.js');
+        const { obtenirFondTrame } = await import('../js/histoire/mecaniques-histoire-trame.js');
         store.histoire.mecaniques.trameBiomeIndex = 2;
         store.histoire.mecaniques.trameAlphaMorph = 0.75;
         const fond = obtenirFondTrame();
@@ -202,7 +202,8 @@ describe('mecaniques-histoire', () => {
     });
 
     it('tickTrame avance le cycle apres le fade', async () => {
-        const { tickTrame, obtenirFondTrame } = await import('../js/mecaniques-histoire-trame.js');
+        const { tickTrame, obtenirFondTrame } =
+            await import('../js/histoire/mecaniques-histoire-trame.js');
         store.histoire.mecaniques.trameBiomeIndex = 0;
         store.histoire.mecaniques.trameEnTransition = true;
         store.histoire.mecaniques.trameAlphaMorph = 0.01;

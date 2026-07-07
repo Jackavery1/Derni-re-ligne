@@ -58,11 +58,11 @@ vi.mock('../js/codex.js', () => ({
     planifierVerifierCodex: vi.fn(),
 }));
 
-vi.mock('../js/profil-jeu.js', () => ({
+vi.mock('../js/ui/profil-jeu.js', () => ({
     sauvegarderSnapshotProfil: vi.fn(),
 }));
 
-vi.mock('../js/gestionnaire-difficulte.js', () => ({
+vi.mock('../js/logique/gestionnaire-difficulte.js', () => ({
     enregistrerTopOut: vi.fn(),
     arreterSuiviMonde: vi.fn(),
 }));
@@ -81,7 +81,7 @@ vi.mock('../js/etat/registre-modes.js', () => ({
     modeCoopEnCours: vi.fn(() => false),
 }));
 
-vi.mock('../js/mode-defi-jour.js', () => ({
+vi.mock('../js/logique/mode-defi-jour.js', () => ({
     defiJourActif: false,
 }));
 
@@ -89,22 +89,22 @@ vi.mock('../js/audio/haptique.js', () => ({
     vibrerFinPartie: vi.fn(),
 }));
 
-vi.mock('../js/leaderboard-cloud.js', () => ({
+vi.mock('../js/io/leaderboard-cloud.js', () => ({
     planifierSoumissionLeaderboard: vi.fn(),
 }));
 
-vi.mock('../js/partie-fin-commun.js', () => ({
+vi.mock('../js/logique/partie-fin-commun.js', () => ({
     finaliserPartieCommune: vi.fn(),
 }));
 
-vi.mock('../js/boss-jeu.js', () => ({
+vi.mock('../js/logique/boss-jeu.js', () => ({
     bossEstActif: vi.fn(() => false),
     arreterBoss: vi.fn(),
     obtenirBossIdActif: vi.fn(() => null),
     appliquerRepliqueGameOverBoss: vi.fn(),
 }));
 
-vi.mock('../js/mecaniques-histoire.js', () => ({
+vi.mock('../js/histoire/mecaniques-histoire.js', () => ({
     onGameOverHistoire: vi.fn(),
 }));
 
@@ -121,7 +121,7 @@ vi.mock('../js/logique/coop-logique.js', () => ({
     coop: { actif: false },
 }));
 
-import { terminerPartie } from '../js/partie-fin.js';
+import { terminerPartie } from '../js/logique/partie-fin.js';
 import { surFinDeMondeHistoire } from '../js/histoire/histoire-manager.js';
 import { etat } from '../js/etat/store-jeu.js';
 import { sauvegarderRecord } from '../js/ui/ecrans-ui.js';

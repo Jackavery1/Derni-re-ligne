@@ -8,8 +8,8 @@ import {
     obtenirParamsExpressionPortrait,
     reinitExpressionsCutscene,
     prechargerPresetsExpressions,
-} from '../js/expressions-cutscene.js';
-import { definirReduireEffetsAccessibilite } from '../js/accessibilite.js';
+} from '../js/rendu/expressions-cutscene.js';
+import { definirReduireEffetsAccessibilite } from '../js/ui/accessibilite.js';
 
 describe('expressions cutscene', () => {
     beforeEach(async () => {
@@ -79,7 +79,7 @@ describe('expressions cutscene', () => {
 
     it('expose la dernière humeur parlée pour l’API test', async () => {
         const { obtenirDerniereHumeurParleePortrait } =
-            await import('../js/expressions-cutscene.js');
+            await import('../js/rendu/expressions-cutscene.js');
         notifierChangementLigneCutscene(
             0,
             { personnage: 'vera', texte: 'a', humeur: 'douce' },

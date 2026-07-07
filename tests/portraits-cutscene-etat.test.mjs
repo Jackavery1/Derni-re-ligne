@@ -7,7 +7,7 @@ import {
     definirHumeurBossCutscene,
     obtenirHumeurBossCutscene,
     obtenirHumeurPortraitCutsceneEtat,
-} from '../js/portraits-cutscene-etat.js';
+} from '../js/rendu/portraits-cutscene-etat.js';
 
 describe('portraits-cutscene-etat', () => {
     beforeEach(() => {

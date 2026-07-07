@@ -1,6 +1,6 @@
 /** Initialisation audio et thème visuel au démarrage d'une partie (solo ou coop). */
 import { AudioMoteur } from './audio.js';
-import { appliquerThemeBiome, appliquerTextesBiome } from '../themes-biome.js';
+import { appliquerThemeBiome, appliquerTextesBiome } from '../rendu/themes-biome.js';
 import { arreterAnimationMenu } from '../menu-fond.js';
 
 /**

@@ -17,7 +17,7 @@ const achievementsHistoireJson = JSON.parse(
 
 import { chargerBiomesJeu } from '../js/config/biomes.js';
 import { chargerContenuJeu } from '../js/config/contenu-jeu.js';
-import { chargerDifficulteMondes } from '../js/difficulte-mondes-chargement.js';
+import { chargerDifficulteMondes } from '../js/io/difficulte-mondes-chargement.js';
 import { chargerAchievementsDonnees } from '../js/achievements-donnees.js';
 import { chargerHistoireDonneesMetier } from '../js/histoire-donnees.js';
 

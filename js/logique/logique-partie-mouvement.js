@@ -9,11 +9,11 @@ import {
     compterHardDrop,
     compterHold,
     signalerApparitionPiece,
-} from '../profil-jeu.js';
+} from '../ui/profil-jeu.js';
 import { declencherCalculOracle } from './oracle-jeu.js';
-import { annoncer, annoncerPieceCourante } from '../annonces.js';
-import { actionMiroir } from '../mecaniques-histoire.js';
-import { obtenirControlesInversesBoss } from '../boss-jeu.js';
+import { annoncer, annoncerPieceCourante } from '../ui/annonces.js';
+import { actionMiroir } from '../histoire/mecaniques-histoire.js';
+import { obtenirControlesInversesBoss } from './boss-jeu.js';
 import { obtenirEssaisKick } from './logique-pure.js';
 import {
     areActive,

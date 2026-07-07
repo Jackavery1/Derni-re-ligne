@@ -1,7 +1,7 @@
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { modeArchiActif } from '../etat/registre-modes.js';
 import { afficherEcranDiffere as afficherEcran } from './navigation-lazy.js';
-import { obtenirActions } from '../actions-jeu.js';
+import { obtenirActions } from '../logique/actions-jeu.js';
 import { ECRANS } from '../etat/store-jeu.js';
 import { retournerAuMondeActuel } from '../histoire/histoire-manager.js';
 import { quitterVersCarteHistoire } from '../partie.js';
@@ -10,17 +10,17 @@ import { lierBouton } from './ui-lier-bouton.js';
 
 async function avecCoop() {
     await assurerInputCoop();
-    return import('../coop-jeu.js');
+    return import('../logique/coop-jeu.js');
 }
 
 async function avecCoopRendu() {
     await assurerInputCoop();
-    return import('../coop-rendu.js');
+    return import('../rendu/coop-rendu.js');
 }
 
 async function avecArchi() {
     await assurerInputArchi();
-    return import('../archi-jeu.js');
+    return import('../logique/archi-jeu.js');
 }
 
 export function initialiserBoutonsPartie() {

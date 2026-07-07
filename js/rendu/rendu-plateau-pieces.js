@@ -12,10 +12,10 @@ import {
     obtenirCtx,
 } from '../etat/store-jeu.js';
 import { obtenirForme, obtenirCouleurPiece, calculerDistanceChute } from '../logique/piece-jeu.js';
-import { obtenirFauxFantomeActif, COULEUR_BRAISE } from '../boss-jeu.js';
+import { obtenirFauxFantomeActif, COULEUR_BRAISE } from '../logique/boss-jeu.js';
 import { dessinerCellule } from './rendu-cellule.js';
 import { dessinerCelluleStyle } from './rendu-blocs.js';
-import { opacitePieceCourante, ghostEstDesactive } from '../mecaniques-histoire.js';
+import { opacitePieceCourante, ghostEstDesactive } from '../histoire/mecaniques-histoire.js';
 import { dessinerPulsePieceActive } from './rendu-accessibilite.js';
 
 function dessinerCellulesFantome(forme, xOrigine, yOrigine, distance, couleur, opacite) {

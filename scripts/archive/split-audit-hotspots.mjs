@@ -35,8 +35,8 @@ function splitCoopLogique() {
         "import { appliquerScoreLignes } from '../../js/logique/score-partie.js';",
         "import { statsGlobales } from '../../js/achievements.js';",
         "import { afficherNotificationNiveau } from '../../js/ui/ui-notifications.js';",
-        "import { obtenirBouton } from '../../js/dom-utils.js';",
-        "import { creerParticulesLigne } from '../../js/particules-jeu.js';",
+        "import { obtenirBouton } from '../../js/logique/dom-utils.js';",
+        "import { creerParticulesLigne } from '../../js/rendu/particules-jeu.js';",
         "import { etat } from '../../js/etat/store-jeu.js';",
         "import { coop, DEMI_LARGEUR, coop_rafraichirStats } from '../../js/logique/coop-logique.js';",
         '',
@@ -69,9 +69,9 @@ function splitBossJeu() {
         '    obtenirSecondesRestantesAttenteTrame,',
         '    obtenirProgressionAttenteTrameMs,',
         '    conditionsRuntime,',
-        "} from '../../js/conditions-secrets.js';",
+        "} from '../../js/histoire/conditions-secrets.js';",
         "import { obtenirEtatHistoire } from '../../js/histoire/histoire-mondes.js';",
-        "import { dialogueBossActif, mettreAJourLabelBossAttaque } from '../../js/boss-dialogues.js';",
+        "import { dialogueBossActif, mettreAJourLabelBossAttaque } from '../../js/histoire/boss-dialogues.js';",
         '',
         ...src.slice(360, 396),
         '',
@@ -105,9 +105,9 @@ import {
     obtenirSecondesRestantesAttenteTrame,
     obtenirProgressionAttenteTrameMs,
     conditionsRuntime,
-} from '../../js/conditions-secrets.js';
+} from '../../js/histoire/conditions-secrets.js';
 import { obtenirEtatHistoire } from '../../js/histoire/histoire-mondes.js';
-import { dialogueBossActif, mettreAJourLabelBossAttaque } from '../../js/boss-dialogues.js';
+import { dialogueBossActif, mettreAJourLabelBossAttaque } from '../../js/histoire/boss-dialogues.js';
 
 /** @param {boolean} visible */
 export function afficherSectionBoss(visible) {
@@ -217,13 +217,13 @@ import { store } from '../../js/etat/store-core.js';
 import { etat } from '../../js/etat/store-jeu.js';
 import { AudioMoteur } from '../../js/audio/audio.js';
 import { modeHistoireEnCours } from '../../js/etat/mode-histoire.js';
-import { creerParticulesExplosion } from '../../js/particules-jeu.js';
-import { enregistrerVictoireBossTimer } from '../../js/achievements-histoire.js';
+import { creerParticulesExplosion } from '../../js/rendu/particules-jeu.js';
+import { enregistrerVictoireBossTimer } from '../../js/achievements/achievements-histoire.js';
 import {
     notifierPhaseBoss,
     notifierPhaseBossParPv,
     victoireObjectifDeclenchee,
-} from '../../js/gestionnaire-difficulte.js';
+} from '../../js/logique/gestionnaire-difficulte.js';
 import {
     reagirRoboBossAttaque,
     reagirRoboBossDegats,
@@ -236,9 +236,9 @@ import {
     notifierSeuilsPvBoss,
     notifierQuasiVaincuBoss,
     dialogueBossActif,
-} from '../../js/boss-dialogues.js';
-import { DUREE_VICTOIRE_BOSS_MS } from '../../js/boss-jeu-constantes.js';
-import { afficherTexteBoss, mettreAJourHPBarBoss } from '../../js/boss-ui-hud.js';
+} from '../../js/histoire/boss-dialogues.js';
+import { DUREE_VICTOIRE_BOSS_MS } from '../../js/logique/boss-jeu-constantes.js';
+import { afficherTexteBoss, mettreAJourHPBarBoss } from '../../js/rendu/boss-ui-hud.js';
 
 /** @returns {import('../../js/logique/boss-attaques.js').ContexteAttaqueBoss} */
 function ctxAttaque() {
@@ -298,7 +298,7 @@ export function declencherVictoireBoss() {
 
     setTimeout(() => {
         if (victoireObjectifDeclenchee()) return;
-        import('../../js/actions-jeu.js').then(({ obtenirActions }) => {
+        import('../../js/logique/actions-jeu.js').then(({ obtenirActions }) => {
             obtenirActions().terminerPartie?.(true);
         });
     }, DUREE_VICTOIRE_BOSS_MS);
@@ -418,16 +418,16 @@ import { modeHistoireEnCours } from '../../js/etat/mode-histoire.js';
 import {
     tickConditionTrame,
     reinitialiserConditionsRuntime,
-} from '../../js/conditions-secrets.js';
-import { demarrerPresentationBoss, mettreAJourDialoguesBoss, reinitialiserDialoguesBoss } from '../../js/boss-dialogues.js';
+} from '../../js/histoire/conditions-secrets.js';
+import { demarrerPresentationBoss, mettreAJourDialoguesBoss, reinitialiserDialoguesBoss } from '../../js/histoire/boss-dialogues.js';
 import { COULEUR_BRAISE, COULEUR_GLACE_B } from '../../js/logique/boss-attaques.js';
-import { DUREE_VICTOIRE_BOSS_MS } from '../../js/boss-jeu-constantes.js';
+import { DUREE_VICTOIRE_BOSS_MS } from '../../js/logique/boss-jeu-constantes.js';
 import {
     afficherSectionBoss,
     afficherTexteBoss,
     mettreAJourHPBarBoss,
     mettreAJourTimerUIBoss,
-} from '../../js/boss-ui-hud.js';
+} from '../../js/rendu/boss-ui-hud.js';
 import {
     degelColonnesBoss,
     endommagerBossCombat,
@@ -441,8 +441,8 @@ export {
     notifierTetrisBoss,
     obtenirRepliqueGameOverBoss,
     appliquerRepliqueGameOverBoss,
-} from '../../js/boss-dialogues.js';
-export { DUREE_VICTOIRE_BOSS_MS } from '../../js/boss-jeu-constantes.js';
+} from '../../js/histoire/boss-dialogues.js';
+export { DUREE_VICTOIRE_BOSS_MS } from '../../js/logique/boss-jeu-constantes.js';
 
 /** @param {string} bossId */
 export function demarrerBoss(bossId) {
@@ -528,7 +528,7 @@ export function mettreAJourBoss(dt) {
             m.bossControlesInverses = false;
             m.timerControlesInverses = 0;
             if (!store.histoire.boss.actif) return;
-            import('../../js/boss-dialogues.js').then(({ dialogueBossActif }) => {
+            import('../../js/histoire/boss-dialogues.js').then(({ dialogueBossActif }) => {
                 if (!dialogueBossActif()) afficherTexteBoss('');
             });
         }
@@ -538,7 +538,7 @@ export function mettreAJourBoss(dt) {
         if (m.timerFauxFantome <= 0) {
             m.bossFauxFantome = false;
             m.timerFauxFantome = 0;
-            import('../../js/boss-dialogues.js').then(({ dialogueBossActif }) => {
+            import('../../js/histoire/boss-dialogues.js').then(({ dialogueBossActif }) => {
                 if (!dialogueBossActif()) afficherTexteBoss('');
             });
         }
@@ -552,7 +552,7 @@ export function mettreAJourBoss(dt) {
         if (m.timerDistorsion <= 0) {
             m.decalageDistorsion = 0;
             m.timerDistorsion = 0;
-            import('../../js/boss-dialogues.js').then(({ dialogueBossActif }) => {
+            import('../../js/histoire/boss-dialogues.js').then(({ dialogueBossActif }) => {
                 if (!dialogueBossActif()) afficherTexteBoss('');
             });
         }

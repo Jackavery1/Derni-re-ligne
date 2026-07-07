@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { dessinerSilhouetteApercu } from '../js/archi-apercu-silhouette.js';
+import { dessinerSilhouetteApercu } from '../js/rendu/archi-apercu-silhouette.js';
 
 describe('archi-apercu-silhouette', () => {
     it('dessine les cellules cible sur le canvas', () => {

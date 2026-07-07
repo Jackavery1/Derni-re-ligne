@@ -1,6 +1,6 @@
 import { obtenirHistoireTextesSync } from '../io/charger-histoire-textes.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
-import { creerFile } from '../file-narrative.js';
+import { creerFile } from './file-narrative.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { extraireLignesCutscene } from './histoire-cutscene-moteur.js';
 import { logger } from '../logger.js';
@@ -141,7 +141,7 @@ export function declencherFin(finId) {
     file.ajouter({
         id: 'executerFin',
         executer: (suivant) => {
-            void import('../fins-histoire.js').then(({ executerFin }) => {
+            void import('./fins-histoire.js').then(({ executerFin }) => {
                 executerFin(finId);
                 suivant();
             });

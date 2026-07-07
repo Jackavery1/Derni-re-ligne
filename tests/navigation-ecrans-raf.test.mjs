@@ -17,7 +17,7 @@ const { arreterCarteHistoire } = vi.hoisted(() => ({
     arreterCarteHistoire: vi.fn(),
 }));
 
-vi.mock('../js/constellation.js', () => ({
+vi.mock('../js/logique/constellation.js', () => ({
     demarrerConstellation,
     arreterConstellation,
 }));
@@ -27,7 +27,7 @@ vi.mock('../js/menu-fond.js', () => ({
     arreterAnimationMenu,
 }));
 
-vi.mock('../js/fond-ecrans-meta.js', () => ({
+vi.mock('../js/rendu/fond-ecrans-meta.js', () => ({
     demarrerFondMeta: vi.fn(),
     arreterFondMeta,
 }));
@@ -49,7 +49,7 @@ vi.mock('../js/rendu/hud-jeu.js', () => ({
     mettreAJourAffichageRecord: vi.fn(),
 }));
 
-vi.mock('../js/deblocage-ui.js', () => ({
+vi.mock('../js/ui/deblocage-ui.js', () => ({
     mettreAJourVisibiliteModesDebloques: vi.fn(),
 }));
 

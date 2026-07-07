@@ -1,5 +1,5 @@
 import { CONFIG, BIOMES } from '../config/config.js';
-import { obtenirLigneEclipse, obtenirFondTrame } from '../mecaniques-histoire.js';
+import { obtenirLigneEclipse, obtenirFondTrame } from '../histoire/mecaniques-histoire.js';
 import { obtenirCanvasPlateau, obtenirCtx } from '../etat/store-jeu.js';
 
 export function dessinerLigneEclipse() {

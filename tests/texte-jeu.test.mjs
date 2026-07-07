@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { sansAccentsE, definirTexteUi } from '../js/texte-jeu.js';
+import { sansAccentsE, definirTexteUi } from '../js/logique/texte-jeu.js';
 
 describe('texte-jeu', () => {
     it('remplace e accentues par e', () => {

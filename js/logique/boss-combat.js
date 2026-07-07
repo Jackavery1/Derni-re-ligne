@@ -4,13 +4,13 @@ import { store } from '../etat/store-jeu.js';
 import { etat } from '../etat/store-jeu.js';
 import { AudioMoteur } from '../audio/audio.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
-import { creerParticulesExplosion } from '../particules-jeu.js';
-import { enregistrerVictoireBossTimer } from '../achievements-histoire.js';
+import { creerParticulesExplosion } from '../rendu/particules-jeu.js';
+import { enregistrerVictoireBossTimer } from '../achievements/achievements-histoire.js';
 import {
     notifierPhaseBoss,
     notifierPhaseBossParPv,
     victoireObjectifDeclenchee,
-} from '../gestionnaire-difficulte.js';
+} from './gestionnaire-difficulte.js';
 import {
     reagirRoboBossAttaque,
     reagirRoboBossDegats,
@@ -23,9 +23,9 @@ import {
     notifierSeuilsPvBoss,
     notifierQuasiVaincuBoss,
     dialogueBossActif,
-} from '../boss-dialogues.js';
-import { DUREE_VICTOIRE_BOSS_MS } from '../boss-jeu-constantes.js';
-import { afficherTexteBoss, mettreAJourHPBarBoss } from '../boss-ui-hud.js';
+} from '../histoire/boss-dialogues.js';
+import { DUREE_VICTOIRE_BOSS_MS } from './boss-jeu-constantes.js';
+import { afficherTexteBoss, mettreAJourHPBarBoss } from '../rendu/boss-ui-hud.js';
 import { proposerInfobulleAttaqueBoss } from '../ui/infobulles-contexte.js';
 
 /** @returns {import('./boss-attaques.js').ContexteAttaqueBoss} */
@@ -86,7 +86,7 @@ export function declencherVictoireBoss() {
 
     setTimeout(() => {
         if (victoireObjectifDeclenchee()) return;
-        import('../actions-jeu.js').then(({ obtenirActions }) => {
+        import('./actions-jeu.js').then(({ obtenirActions }) => {
             obtenirActions().terminerPartie?.(true);
         });
     }, DUREE_VICTOIRE_BOSS_MS);

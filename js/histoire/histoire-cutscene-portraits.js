@@ -1,5 +1,8 @@
 import { logger } from '../logger.js';
-import { definirHumeurRoboCutscene, dessinerPortraitCutscene } from '../portraits-cutscene.js';
+import {
+    definirHumeurRoboCutscene,
+    dessinerPortraitCutscene,
+} from '../rendu/portraits-cutscene.js';
 import { dessinerRobo } from '../rendu/rendu-robo.js';
 import { convertirHumeurVersCanvas } from '../ui/mascotte-robo.js';
 import {
@@ -15,7 +18,7 @@ import {
     obtenirHumeurRoboCutsceneDepuisLigne,
     reinitExpressionsCutscene,
     expressionsCutsceneActives,
-} from '../expressions-cutscene.js';
+} from '../rendu/expressions-cutscene.js';
 import { store } from '../etat/store-jeu.js';
 
 let _personnageGauche = null;

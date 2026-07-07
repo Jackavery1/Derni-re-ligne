@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import * as storeJeu from '../js/etat/store-jeu.js';
-import { ghostEstDesactive } from '../js/mecaniques-histoire.js';
+import { ghostEstDesactive } from '../js/histoire/mecaniques-histoire.js';
 import {
     dessinerPieceFantome,
     dessinerOverlayBraise,
     dessinerPieceActive,
 } from '../js/rendu/rendu-plateau-pieces.js';
 
-vi.mock('../js/mecaniques-histoire.js', async (importOriginal) => {
+vi.mock('../js/histoire/mecaniques-histoire.js', async (importOriginal) => {
     const original = await importOriginal();
     return {
         ...original,

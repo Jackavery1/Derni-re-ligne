@@ -5,7 +5,7 @@ import {
     definirHaptiqueActif,
     initialiserHaptique,
 } from '../js/audio/haptique.js';
-import { definirReduireEffetsAccessibilite } from '../js/accessibilite.js';
+import { definirReduireEffetsAccessibilite } from '../js/ui/accessibilite.js';
 import { emettre } from '../js/etat/bus-jeu.js';
 
 describe('haptique', () => {

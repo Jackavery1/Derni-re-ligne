@@ -5,16 +5,16 @@ import { store } from '../etat/store-jeu.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { obtenirEtatHistoire } from '../histoire/histoire-mondes.js';
 import { ecouter } from '../etat/bus-jeu.js';
-import { DIFFICULTE_MONDES } from '../difficulte-mondes-chargement.js';
+import { DIFFICULTE_MONDES } from '../io/difficulte-mondes-chargement.js';
 import { logger } from '../logger.js';
-import { sansAccentsE } from '../texte-jeu.js';
+import { sansAccentsE } from '../logique/texte-jeu.js';
 import { afficherNotificationNiveau } from './ui-notifications.js';
 import {
     demarrerSuiviMonde,
     obtenirEtoilesPersistees,
     libelleEtoile,
     libelleObjectifPrincipal,
-} from '../gestionnaire-difficulte.js';
+} from '../logique/gestionnaire-difficulte.js';
 import {
     elObjectif as _el,
     masquerObjectif as _masquer,

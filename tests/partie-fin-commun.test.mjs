@@ -8,7 +8,7 @@ vi.mock('../js/codex.js', () => ({
     planifierVerifierCodex: vi.fn(),
 }));
 
-vi.mock('../js/profil-jeu.js', () => ({
+vi.mock('../js/ui/profil-jeu.js', () => ({
     sauvegarderSnapshotProfil: vi.fn(),
 }));
 
@@ -16,15 +16,15 @@ vi.mock('../js/ui/ecrans-ui.js', () => ({
     obtenirTempsEcoule: vi.fn(() => 120000),
 }));
 
-vi.mock('../js/annonces.js', () => ({
+vi.mock('../js/ui/annonces.js', () => ({
     annoncer: vi.fn(),
 }));
 
 import { finaliserStatsPartie } from '../js/achievements.js';
 import { planifierVerifierCodex } from '../js/codex.js';
-import { sauvegarderSnapshotProfil } from '../js/profil-jeu.js';
-import { annoncer } from '../js/annonces.js';
-import { finaliserPartieCommune } from '../js/partie-fin-commun.js';
+import { sauvegarderSnapshotProfil } from '../js/ui/profil-jeu.js';
+import { annoncer } from '../js/ui/annonces.js';
+import { finaliserPartieCommune } from '../js/logique/partie-fin-commun.js';
 
 describe('partie-fin-commun', () => {
     beforeEach(() => {

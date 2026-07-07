@@ -4,14 +4,14 @@ import { ECRANS } from '../ui/ecrans-config.js';
 import { etat } from '../etat/store-jeu.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { logger } from '../logger.js';
-import { definirHumeurRoboCutscene } from '../portraits-cutscene.js';
+import { definirHumeurRoboCutscene } from '../rendu/portraits-cutscene.js';
 import { afficherEcranHistoire, cacherEcransHistoire } from './histoire-cutscene-nav.js';
 import {
     stopFondCutscene,
     definirSceneCutsceneFond,
     retirerSceneCutsceneFond,
 } from './histoire-cutscene-fonds.js';
-import { reinitialiserCacheScenes } from '../scenes-cutscene.js';
+import { reinitialiserCacheScenes } from '../rendu/scenes-cutscene.js';
 import {
     initialiserDomCutscene,
     viderTextesCutscene,
@@ -25,8 +25,8 @@ import {
     stopBouclePortraitsCutscene,
     reinitVisuelPortraitsCutscene,
 } from './histoire-cutscene-portraits.js';
-import { reinitExpressionsCutscene } from '../expressions-cutscene.js';
-import { assurerFeuilleStyle } from '../charger-feuille-style.js';
+import { reinitExpressionsCutscene } from '../rendu/expressions-cutscene.js';
+import { assurerFeuilleStyle } from '../ui/charger-feuille-style.js';
 import { AudioMoteur } from '../audio/audio.js';
 import { arreterMachineAEcrire } from './histoire-cutscene-typewriter.js';
 import {
@@ -311,7 +311,7 @@ export function avancerCutscene() {
 }
 
 export function afficherFinHistoire(finId) {
-    void import('../fins-histoire.js').then(({ executerFin }) => executerFin(finId));
+    void import('./fins-histoire.js').then(({ executerFin }) => executerFin(finId));
 }
 
 export function afficherBoutonCarteGameOver(afficher) {

@@ -16,7 +16,7 @@ const {
     obtenirTempsRestantNiveauMs,
     reinitialiserTimerNiveau,
     mettreAJourAffichageTimerNiveau,
-} = await import('../js/timer-niveau.js');
+} = await import('../js/logique/timer-niveau.js');
 
 describe('timer-niveau', () => {
     beforeEach(() => {

@@ -8,7 +8,7 @@ import {
     persisterReduireEffets,
     definirDaltonien,
     definirReduireEffetsAccessibilite,
-} from '../js/accessibilite.js';
+} from '../js/ui/accessibilite.js';
 import { estCleValide, existeStockage, lireStockage } from '../js/io/progression-stockage.js';
 
 describe('accessibilite', () => {

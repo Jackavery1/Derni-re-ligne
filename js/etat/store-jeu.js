@@ -90,4 +90,4 @@ export {
     obtenirDaltonien,
     obtenirReduireEffetsAccessibilite,
     obtenirEffetsAccessibiliteReduits,
-} from '../accessibilite.js';
+} from '../ui/accessibilite.js';

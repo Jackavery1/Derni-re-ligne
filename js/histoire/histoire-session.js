@@ -1,16 +1,19 @@
 import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
-import { enchainementCampagneActif } from '../preferences-campagne.js';
+import { enchainementCampagneActif } from './preferences-campagne.js';
 import { afficherNotificationTransitionCampagne } from '../ui/ui-notifications.js';
 import { store } from '../etat/store-jeu.js';
 import { definirBiomeActif } from '../etat/store-etat-partie.js';
 import { sauvegarderBiomeActif, sauvegarderEtatHistoire } from '../io/progression.js';
-import { obtenirActions } from '../actions-jeu.js';
+import { obtenirActions } from '../logique/actions-jeu.js';
 import { ECRANS } from '../ui/ecrans-config.js';
 import { logger } from '../logger.js';
-import { arreterBoss } from '../boss-jeu.js';
-import { paradoxeEstDebloque } from '../monde-paradoxe-etat.js';
-import { arreterFondFin } from '../fin-bg-rendu.js';
-import { afficherTutorielPrologueApresCutscene, afficherTutorielContextuel } from '../tutoriel.js';
+import { arreterBoss } from '../logique/boss-jeu.js';
+import { paradoxeEstDebloque } from './monde-paradoxe-etat.js';
+import { arreterFondFin } from '../rendu/fin-bg-rendu.js';
+import {
+    afficherTutorielPrologueApresCutscene,
+    afficherTutorielContextuel,
+} from '../ui/tutoriel.js';
 import { chargerHistoireTextes } from '../io/charger-histoire-textes.js';
 import {
     obtenirEtatHistoire,
@@ -18,9 +21,9 @@ import {
     masquerPanneauDetails,
     obtenirProchainMondeCampagne,
 } from './histoire-mondes.js';
-import { modeDevActif } from '../mode-dev-etat.js';
+import { modeDevActif } from '../logique/mode-dev-etat.js';
 import { obtenirActionsHistoire, configurerActionsHistoire } from './histoire-actions.js';
-import { arreterSuiviMonde, demarrerSuiviMonde } from '../gestionnaire-difficulte.js';
+import { arreterSuiviMonde, demarrerSuiviMonde } from '../logique/gestionnaire-difficulte.js';
 import { fermerOverlaysFluxPartie } from '../ui/ui-panneau-objectifs.js';
 import { activerModeHistoire, desactiverModeHistoire } from '../etat/mode-histoire.js';
 import { cacherEcransDiffere, afficherEcranDiffere } from '../ui/navigation-lazy.js';

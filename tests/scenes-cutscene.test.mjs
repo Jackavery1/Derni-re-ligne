@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
-import { SCENES_CUTSCENE } from '../js/scenes-cutscene.js';
+import { SCENES_CUTSCENE } from '../js/rendu/scenes-cutscene.js';
 import {
     CUTSCENES_ENTREE,
     CUTSCENES_POST_MONDE,

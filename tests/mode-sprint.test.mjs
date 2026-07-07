@@ -5,7 +5,7 @@ import {
     desactiverModeSprint,
     modeSprintActif,
     reinitialiserModeSprint,
-} from '../js/mode-sprint.js';
+} from '../js/logique/mode-sprint.js';
 
 describe('mode-sprint', () => {
     beforeEach(() => {

@@ -1,5 +1,5 @@
 import { logger } from '../logger.js';
-import { creerContexteAudio } from '../dom-utils.js';
+import { creerContexteAudio } from '../logique/dom-utils.js';
 import { GAMMES, TONIQUES_BIOMES, MUSIQUE_BIOMES } from './audio-donnees.js';
 import { creerMethodesMusique } from './audio-musique.js';
 import { creerMethodesEffets } from './audio-effets.js';

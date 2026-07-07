@@ -10,7 +10,7 @@ import {
     infererHumeurVeraDepuisTexte,
     reinitExpressionsCutscene,
     prechargerPresetsExpressions,
-} from '../js/expressions-cutscene.js';
+} from '../js/rendu/expressions-cutscene.js';
 import {
     obtenirImagePortraitVera,
     reinitialiserCachePortraitVeraAssets,

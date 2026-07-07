@@ -90,7 +90,7 @@ export async function synchroniserCloudAuDemarrage() {
         if (distant?.payload) {
             const resultat = importerProgressionB10(distant.payload);
             if (resultat.ok && (resultat.importes > 0 || resultat.fusionnes > 0)) {
-                const { chargerProfilDernier } = await import('../profil-jeu.js');
+                const { chargerProfilDernier } = await import('../ui/profil-jeu.js');
                 chargerProfilDernier();
             }
         }

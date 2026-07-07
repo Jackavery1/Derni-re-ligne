@@ -1,6 +1,6 @@
 /** Records solo/coop et déblocage des biomes en mode libre. */
 import { BIOMES, ORDRE_BIOMES_LIBRE } from '../config/config.js';
-import { modeDevActif } from '../mode-dev-etat.js';
+import { modeDevActif } from '../logique/mode-dev-etat.js';
 import { lireStockage, ecrireStockage } from './progression-stockage.js';
 import { chargerEtatHistoire } from './progression-histoire.js';
 

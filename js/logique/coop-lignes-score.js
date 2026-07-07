@@ -2,10 +2,10 @@ import { CONFIG } from '../config/config.js';
 import { appliquerScoreLignes } from './score-partie.js';
 import { statsGlobales } from '../achievements.js';
 import { afficherNotificationNiveau } from '../ui/ui-notifications.js';
-import { obtenirBouton } from '../dom-utils.js';
+import { obtenirBouton } from './dom-utils.js';
 import { emettre } from '../etat/bus-jeu.js';
 import { etat, flashLignes } from '../etat/store-jeu.js';
-import { coop, DEMI_LARGEUR, coop_rafraichirStats } from '../coop-etat.js';
+import { coop, DEMI_LARGEUR, coop_rafraichirStats } from './coop-etat.js';
 
 export function afficherNotifSynchro(nbLignes) {
     if (typeof document === 'undefined') return;

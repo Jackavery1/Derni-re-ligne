@@ -5,7 +5,7 @@ import { ecrireStockage } from '../js/io/progression-stockage.js';
 let fetchMock;
 
 async function chargerLeaderboard() {
-    return import('../js/leaderboard-cloud.js');
+    return import('../js/io/leaderboard-cloud.js');
 }
 
 describe('leaderboard-cloud', () => {

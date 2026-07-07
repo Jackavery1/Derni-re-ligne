@@ -33,8 +33,8 @@ import {
     mettreAJourIndicateurRelique,
     estPositionValide,
 } from './logique/piece-jeu.js';
-import { mettreAJourGamepad } from './input-gamepad.js';
-import { obtenirActions } from './actions-jeu.js';
+import { mettreAJourGamepad } from './logique/input-gamepad.js';
+import { obtenirActions } from './logique/actions-jeu.js';
 import { partieSpecialiseeActive } from './etat/registre-modes.js';
 import { modeHistoireEnCours } from './etat/mode-histoire.js';
 import {
@@ -53,16 +53,16 @@ import {
     obtenirDecalageSecousse,
     mettreAJourSecousse,
 } from './rendu/rendu-jeu.js';
-import { mettreAJourParticules } from './particules-jeu.js';
+import { mettreAJourParticules } from './rendu/particules-jeu.js';
 import { mettreAJourAffichageTemps } from './rendu/hud-jeu.js';
-import { tickTimerNiveau } from './timer-niveau.js';
+import { tickTimerNiveau } from './logique/timer-niveau.js';
 import { verrouillerPiece, vitesseChute } from './logique/logique-partie.js';
 import { menuAnimActif, mettreAJourMenuFond } from './menu-fond.js';
 import { mettreAJourHistoriquePositions, dessinerDecorations } from './rendu/decorations-jeu.js';
 import { mettreAJourVivant } from './logique/vivant.js';
 import { dessinerAvertissementsVivant } from './rendu/rendu-vivant.js';
-import { mettreAJourBoss, bossEstActif, bossEstVaincu } from './boss-jeu.js';
-import { mettreAJourMecaniquesHistoire } from './mecaniques-histoire.js';
+import { mettreAJourBoss, bossEstActif, bossEstVaincu } from './logique/boss-jeu.js';
+import { mettreAJourMecaniquesHistoire } from './histoire/mecaniques-histoire.js';
 import {
     mettreAJourGameFeel,
     areActive,
@@ -78,12 +78,12 @@ import { recupererZenApresTopOut } from './logique/logique-partie-verrouillage.j
 const SEUIL_ERREURS_BOUCLE = 5;
 let erreursConsecutivesBoucle = 0;
 
-/** @type {typeof import('./boss-rendu.js') | null} */
+/** @type {typeof import('./rendu/boss-rendu.js') | null} */
 let _bossRenduModule = null;
 
 async function _rendrePortraitBossLazy(timestamp) {
     if (!_bossRenduModule) {
-        _bossRenduModule = await import('./boss-rendu.js');
+        _bossRenduModule = await import('./rendu/boss-rendu.js');
     }
     _bossRenduModule.rendrePortraitBoss(timestamp);
 }

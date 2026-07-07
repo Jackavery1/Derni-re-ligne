@@ -12,18 +12,18 @@ import {
 import { store } from '../../js/etat/store-core.js';
 import { obtenirBiomeActif } from '../../js/etat/store-jeu.js';
 import { melodie } from '../../js/audio/melodie.js';
-import { creerFileNotifications } from '../../js/notifications-file.js';
-import { reinitialiserStatsAchievementsHistoire } from '../../js/achievements-histoire.js';
+import { creerFileNotifications } from '../../js/ui/notifications-file.js';
+import { reinitialiserStatsAchievementsHistoire } from '../../js/achievements/achievements-histoire.js';
 import { ACHIEVEMENTS } from '../../js/achievements-donnees.js';
-import { sansAccentsE } from '../../js/texte-jeu.js';
+import { sansAccentsE } from '../../js/logique/texte-jeu.js';
 import { modeHistoireEnCours } from '../../js/etat/mode-histoire.js';
 
 `;
 
 const uiHeader = `import { ACHIEVEMENTS } from '../../js/achievements-donnees.js';
-import { sansAccentsE } from '../../js/texte-jeu.js';
-import { statsGlobales } from '../../js/achievements-stats.js';
-import { rendreIconeSurCanvas, rendreIconeGlitchSurCanvas } from '../../js/icones-pixel.js';
+import { sansAccentsE } from '../../js/logique/texte-jeu.js';
+import { statsGlobales } from '../../js/achievements/achievements-stats.js';
+import { rendreIconeSurCanvas, rendreIconeGlitchSurCanvas } from '../../js/rendu/icones-pixel.js';
 import {
     obtenirIdIconeAchievement,
     obtenirAccentCategorie,
@@ -32,7 +32,7 @@ import {
     obtenirTexteVerrouille,
     obtenirTexteVerrouillePanneau,
 } from '../../js/achievements-icones-map.js';
-import { obtenirProgressionAchievement } from '../../js/achievements-progres.js';
+import { obtenirProgressionAchievement } from '../../js/achievements/achievements-progres.js';
 import {
     ouvrirPanneauDetail,
     fermerPanneauDetail,
@@ -62,8 +62,8 @@ export {
     majStatsReactionRobo,
     finaliserStatsPartie,
     verifierAchievements,
-} from '../../js/achievements-stats.js';
-export { genererGalerieAchievements, ouvrirExploitMemorial } from '../../js/achievements-ui.js';
+} from '../../js/achievements/achievements-stats.js';
+export { genererGalerieAchievements, ouvrirExploitMemorial } from '../../js/achievements/achievements-ui.js';
 `
 );
 

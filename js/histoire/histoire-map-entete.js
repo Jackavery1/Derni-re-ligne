@@ -1,6 +1,6 @@
 import { obtenirEtatHistoire, obtenirProgressionGlobale } from './histoire-mondes.js';
-import { sansAccentsE } from '../texte-jeu.js';
-import { obtenirResumeConditionsTrame } from '../conditions-secrets.js';
+import { sansAccentsE } from '../logique/texte-jeu.js';
+import { obtenirResumeConditionsTrame } from './conditions-secrets.js';
 
 export function mettreAJourEnteteHistoire() {
     const prog = obtenirProgressionGlobale();

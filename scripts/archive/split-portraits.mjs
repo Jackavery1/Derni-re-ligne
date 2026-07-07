@@ -22,7 +22,7 @@ const personnagesBody = lines
 writeFileSync(
     'js/portraits-cutscene-personnages.js',
     `/** Dessins canvas des personnages cutscene. */
-import { rectArrondiPortrait, interpolerCouleurPortrait } from '../../js/portraits-cutscene-utils.js';
+import { rectArrondiPortrait, interpolerCouleurPortrait } from '../../js/rendu/portraits-cutscene-utils.js';
 
 ${personnagesBody}
 `
@@ -32,7 +32,7 @@ writeFileSync(
     'js/portraits-cutscene.js',
     `${lines.slice(0, 9).join('\n')}
 import { logger } from '../../js/logger.js';
-import { dessinerPortraitCutsceneInterne } from '../../js/portraits-cutscene-personnages.js';
+import { dessinerPortraitCutsceneInterne } from '../../js/rendu/portraits-cutscene-personnages.js';
 
 export function dessinerPortraitCutscene(ctx, w, h, personnageId, t) {
     try {

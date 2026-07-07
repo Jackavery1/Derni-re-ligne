@@ -1,20 +1,14 @@
-import { reinitialiserDasCoop } from '../coop-das.js';
+import { reinitialiserDasCoop } from './coop-das.js';
 import { etat } from '../etat/store-jeu.js';
 import { creerPlateau } from './piece-jeu.js';
-import { modeCoopActif, basculerPreferenceCoop } from '../coop-preference.js';
+import { modeCoopActif, basculerPreferenceCoop } from './coop-preference.js';
 import {
     afficherNotifSynchro,
     afficherNotifTSpinCoop,
     coop_calculerScore,
     coop_verifierLignes,
 } from './coop-lignes-score.js';
-import {
-    coop,
-    DEMI_LARGEUR,
-    COLONNES_J1,
-    COLONNES_J2,
-    coop_rafraichirStats,
-} from '../coop-etat.js';
+import { coop, DEMI_LARGEUR, COLONNES_J1, COLONNES_J2, coop_rafraichirStats } from './coop-etat.js';
 import {
     coopAreActive,
     coopActiverPieceAuSol,
@@ -45,7 +39,7 @@ import {
 
 export { afficherNotifSynchro, afficherNotifTSpinCoop, coop_calculerScore, coop_verifierLignes };
 export { coop, DEMI_LARGEUR, COLONNES_J1, COLONNES_J2, coop_rafraichirStats };
-export { modeCoopActif } from '../coop-preference.js';
+export { modeCoopActif } from './coop-preference.js';
 export {
     coop_reinitialiserLockDelay,
     coop_nouvellePiece,
@@ -70,7 +64,7 @@ export function basculerModeCoop() {
         void import('../ui/infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) =>
             proposerInfobulleModeJeu('coop')
         );
-        import('../mode-sprint.js').then(({ desactiverModeSprint, mettreAJourToggleSprint }) => {
+        import('./mode-sprint.js').then(({ desactiverModeSprint, mettreAJourToggleSprint }) => {
             desactiverModeSprint();
             mettreAJourToggleSprint();
         });
@@ -166,7 +160,7 @@ export function reinitialiserEtatCoop() {
     coopDemarrerGraceSpawn('j2');
 }
 
-export { coopEstPrefere } from '../coop-preference.js';
+export { coopEstPrefere } from './coop-preference.js';
 
 export function coopPartieEnCours() {
     return coop.actif;

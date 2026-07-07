@@ -2,13 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { store } from '../js/etat/store-jeu.js';
 import { ECRANS } from '../js/ui/ecrans-config.js';
 import { SCENE_DEFAUT_POST_MONDE } from '../js/histoire/histoire-narratif.js';
-import { SCENES_CUTSCENE } from '../js/scenes-cutscene.js';
+import { SCENES_CUTSCENE } from '../js/rendu/scenes-cutscene.js';
 import { chargerHistoireTextes } from '../js/io/charger-histoire-textes.js';
 import {
     demarrerPrechargementCarte,
     annulerPrechargementMedias,
     listerUrlsScenesPrechargeMonde,
-} from '../js/prechargement-medias.js';
+} from '../js/io/prechargement-medias.js';
 
 describe('prechargement-medias', () => {
     beforeEach(async () => {

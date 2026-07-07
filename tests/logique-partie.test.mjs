@@ -22,7 +22,7 @@ vi.mock('../js/achievements.js', () => ({
     majStatsScorePartie: vi.fn(),
 }));
 
-vi.mock('../js/profil-jeu.js', () => ({
+vi.mock('../js/ui/profil-jeu.js', () => ({
     enregistrerDonneesVerrouillage: vi.fn(),
     signalerApparitionPiece: vi.fn(),
     compterRotation: vi.fn(),

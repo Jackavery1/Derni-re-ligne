@@ -1,4 +1,4 @@
-import { sansAccentsE } from '../texte-jeu.js';
+import { sansAccentsE } from '../logique/texte-jeu.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 
 /** @param {string} id */

@@ -1,6 +1,6 @@
 import { obtenirHistoireTextesSync } from '../io/charger-histoire-textes.js';
-import { prechargerScenes } from '../scenes-cutscene.js';
-import { prechargerPortraitsCutscene } from '../portraits-precache.js';
+import { prechargerScenes } from '../rendu/scenes-cutscene.js';
+import { prechargerPortraitsCutscene } from '../rendu/portraits-precache.js';
 import { COULEUR_PERSONNAGE, idPortraitMeta } from './histoire-cutscene-config.js';
 import {
     assurerZoneNarrationCutscene,
@@ -83,7 +83,7 @@ export async function prechargerScenesCutscene(entree) {
     if (ids.size === 0) {
         await Promise.all([
             prechargerPortraitsCutscene(),
-            import('../expressions-cutscene.js').then(({ prechargerPresetsExpressions }) =>
+            import('../rendu/expressions-cutscene.js').then(({ prechargerPresetsExpressions }) =>
                 prechargerPresetsExpressions()
             ),
         ]);
@@ -92,7 +92,7 @@ export async function prechargerScenesCutscene(entree) {
     await Promise.all([
         prechargerPortraitsCutscene(),
         prechargerScenes(ids),
-        import('../expressions-cutscene.js').then(({ prechargerPresetsExpressions }) =>
+        import('../rendu/expressions-cutscene.js').then(({ prechargerPresetsExpressions }) =>
             prechargerPresetsExpressions()
         ),
     ]);

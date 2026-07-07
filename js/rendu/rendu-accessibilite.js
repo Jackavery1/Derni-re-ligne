@@ -1,9 +1,9 @@
 import { CONFIG, BIOMES } from '../config/config.js';
 import { etat, obtenirBiomeActif } from '../etat/store-jeu.js';
-import { obtenirDaltonien } from '../accessibilite.js';
+import { obtenirDaltonien } from '../ui/accessibilite.js';
 import { obtenirForme, calculerDistanceChute } from '../logique/piece-jeu.js';
-import { obtenirFauxFantomeActif } from '../boss-jeu.js';
-import { ghostEstDesactive } from '../mecaniques-histoire.js';
+import { obtenirFauxFantomeActif } from '../logique/boss-jeu.js';
+import { ghostEstDesactive } from '../histoire/mecaniques-histoire.js';
 
 const TYPES_PIECE = ['I', 'O', 'T', 'S', 'Z', 'J', 'L'];
 const INDEX_COULEUR_PIECE = { I: 0, O: 1, T: 2, S: 3, Z: 4, J: 5, L: 6 };

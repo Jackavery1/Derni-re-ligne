@@ -10,7 +10,7 @@ import {
     reinitialiserDialoguesBoss,
     dialogueBossActif,
     DUREE_AFFICHAGE_DIALOGUE_MS,
-} from '../js/boss-dialogues.js';
+} from '../js/histoire/boss-dialogues.js';
 
 describe('boss-dialogues', () => {
     beforeEach(async () => {

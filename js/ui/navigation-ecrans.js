@@ -5,11 +5,11 @@ import { assurerFragmentsEcran } from './charger-ecrans.js';
 import { demarrerAnimationMenu, arreterAnimationMenu } from '../menu-fond.js';
 import { cacherBanniereVivant } from '../logique/vivant.js';
 import { mettreAJourAffichageRecord } from '../rendu/hud-jeu.js';
-import { annoncer } from '../annonces.js';
-import { mettreAJourVisibiliteModesDebloques } from '../deblocage-ui.js';
+import { annoncer } from './annonces.js';
+import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { modeArchiActif } from '../etat/registre-modes.js';
-import { demarrerFondMeta, arreterFondMeta } from '../fond-ecrans-meta.js';
+import { demarrerFondMeta, arreterFondMeta } from '../rendu/fond-ecrans-meta.js';
 import { adapterNotifsJeu } from '../rendu/layout-jeu.js';
 
 const FONDS_META = {
@@ -24,12 +24,12 @@ let _optionsUiInitialise = false;
 export { annoncer };
 
 async function _demarrerConstellation() {
-    const { demarrerConstellation } = await import('../constellation.js');
+    const { demarrerConstellation } = await import('../logique/constellation.js');
     demarrerConstellation();
 }
 
 async function _arreterConstellation() {
-    const { arreterConstellation } = await import('../constellation.js');
+    const { arreterConstellation } = await import('../logique/constellation.js');
     arreterConstellation();
 }
 
@@ -107,17 +107,17 @@ async function _afficherEcranAvecFragments(idEcran) {
     }
 
     if (idEcran === ECRANS.ACHIEVEMENTS) {
-        const { genererGalerieAchievements } = await import('../achievements-ui.js');
+        const { genererGalerieAchievements } = await import('../achievements/achievements-ui.js');
         genererGalerieAchievements();
         mettreAJourVisibiliteModesDebloques();
     }
 
     if (idEcran === ECRANS.PROFIL) {
-        import('../profil-jeu.js').then(({ chargerProfilDernier, afficherProfil }) => {
+        import('./profil-jeu.js').then(({ chargerProfilDernier, afficherProfil }) => {
             chargerProfilDernier();
             afficherProfil();
         });
-        import('../options-progression-ui.js').then(({ initialiserSauvegardeProgression }) =>
+        import('./options-progression-ui.js').then(({ initialiserSauvegardeProgression }) =>
             initialiserSauvegardeProgression()
         );
         mettreAJourVisibiliteModesDebloques();
@@ -132,7 +132,7 @@ async function _afficherEcranAvecFragments(idEcran) {
 
     if (idEcran === ECRANS.OPTIONS && !_optionsUiInitialise) {
         _optionsUiInitialise = true;
-        const { initialiserOptions } = await import('../options-ui.js');
+        const { initialiserOptions } = await import('./options-ui.js');
         initialiserOptions();
     }
 

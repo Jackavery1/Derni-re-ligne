@@ -14,9 +14,9 @@ import {
 } from '../etat/store-etat-partie.js';
 import { estPositionValide } from './piece-jeu.js';
 import { emettre } from '../etat/bus-jeu.js';
-import { obtenirActions } from '../actions-jeu.js';
+import { obtenirActions } from './actions-jeu.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
-import { estMondeZenActif } from '../gestionnaire-difficulte.js';
+import { estMondeZenActif } from './gestionnaire-difficulte.js';
 
 export function reinitialiserGameFeel() {
     store.areRestant = 0;

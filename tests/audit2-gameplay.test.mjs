@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-import { obtenirResumeConditionsTrame } from '../js/conditions-secrets.js';
+import { obtenirResumeConditionsTrame } from '../js/histoire/conditions-secrets.js';
 import {
     peutContinuerBossGratuit,
     utiliserContinueGratuitDistorsion,
@@ -11,7 +11,7 @@ import {
     sauvegarderTouches,
     reinitialiserTouches,
     formaterCodeTouche,
-} from '../js/touches-config.js';
+} from '../js/logique/touches-config.js';
 import { store } from '../js/etat/store-jeu.js';
 import { _reinitialiserInfobullesContexte } from '../js/ui/infobulles-contexte.js';
 import { readFileSync } from 'fs';
@@ -20,7 +20,7 @@ import { obtenirEtatDeblocage } from '../js/io/progression-histoire.js';
 import { biomeEstDebloqueParHistoire } from '../js/io/progression-records.js';
 import { ACHIEVEMENTS } from '../js/achievements-donnees.js';
 import { ORDRE_BIOMES_LIBRE } from '../js/config/config.js';
-import { NOMS_MONDES_REQUIS } from '../js/constellation-rendu.js';
+import { NOMS_MONDES_REQUIS } from '../js/rendu/constellation-rendu.js';
 import {
     obtenirTexteVerrouillePanneau,
     obtenirTexteVerrouille,
@@ -30,7 +30,7 @@ vi.mock('../js/etat/mode-histoire.js', () => ({
     modeHistoireEnCours: vi.fn(() => true),
 }));
 
-vi.mock('../js/mode-dev-etat.js', () => ({
+vi.mock('../js/logique/mode-dev-etat.js', () => ({
     modeDevActif: vi.fn(() => false),
 }));
 
@@ -42,7 +42,7 @@ vi.mock('../js/io/progression.js', async (importOriginal) => {
     };
 });
 
-vi.mock('../js/gestionnaire-difficulte.js', () => ({
+vi.mock('../js/logique/gestionnaire-difficulte.js', () => ({
     victoireObjectifDeclenchee: vi.fn(() => false),
     estMondeZenActif: vi.fn(() => false),
     calculerEtoiles: vi.fn(() => [false, false, false]),
@@ -50,7 +50,7 @@ vi.mock('../js/gestionnaire-difficulte.js', () => ({
     flushProuessesHistoire: vi.fn(),
 }));
 
-vi.mock('../js/achievements-histoire.js', async (importOriginal) => {
+vi.mock('../js/achievements/achievements-histoire.js', async (importOriginal) => {
     const actual = await importOriginal();
     return {
         ...actual,
@@ -244,7 +244,7 @@ describe('audit 2 — gameplay UX', () => {
         });
 
         it('sansAccentsE retire les accents des libelles UI', async () => {
-            const { sansAccentsE } = await import('../js/texte-jeu.js');
+            const { sansAccentsE } = await import('../js/logique/texte-jeu.js');
             expect(sansAccentsE('RÉSERVE')).toBe('RESERVE');
             expect(sansAccentsE('Prêt')).toBe('Pret');
         });
@@ -261,7 +261,7 @@ describe('audit 2 — gameplay UX', () => {
         it('ajoute des niveaux architecte proceduraux', async () => {
             const { NIVEAUX_ARCHI } = await import('../js/archi-donnees.js');
             const { obtenirNiveauxArchiProceduraux, obtenirTousNiveauxArchi } =
-                await import('../js/archi-generateur.js');
+                await import('../js/logique/archi-generateur.js');
             expect(obtenirNiveauxArchiProceduraux().length).toBeGreaterThanOrEqual(10);
             const niveaux = await obtenirTousNiveauxArchi();
             expect(niveaux.length).toBe(

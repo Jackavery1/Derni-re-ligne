@@ -1,6 +1,6 @@
 import { copierRapportErreurs } from './logger.js';
 import { configurerMeteo } from './logique/meteo.js';
-import { configurerReliques } from './reliques.js';
+import { configurerReliques } from './logique/reliques.js';
 import { AudioMoteur, configurerAudioMoteur } from './audio/audio.js';
 import {
     ecrireStockage,
@@ -19,14 +19,14 @@ import {
     obtenirNiveauGlobal,
 } from './etat/store-jeu.js';
 import { obtenirForme, lierCouleursTetrominos } from './logique/piece-jeu.js';
-import { creerParticulesExplosion } from './particules-jeu.js';
+import { creerParticulesExplosion } from './rendu/particules-jeu.js';
 import { initialiserCanvas, demarrerJeu } from './partie.js';
-import { initialiserEffetsPartie } from './effets-partie.js';
-import { mettreAJourBoutonsMute } from './options-mute-ui.js';
-import { coopEstPrefere } from './coop-preference.js';
+import { initialiserEffetsPartie } from './logique/effets-partie.js';
+import { mettreAJourBoutonsMute } from './ui/options-mute-ui.js';
+import { coopEstPrefere } from './logique/coop-preference.js';
 import { appliquerThemeBiome } from './ui/ecrans-ui.js';
 import { initialiserHaptique } from './audio/haptique.js';
-import { appliquerControlesTactilesDepuisStockage } from './controles-tactiles.js';
+import { appliquerControlesTactilesDepuisStockage } from './logique/controles-tactiles.js';
 import { enregistrerPlanificateurPushCloud } from './io/progression-stockage.js';
 
 function initialiserSyncCloudDiffere() {
@@ -92,7 +92,7 @@ export function initialiserSystemesMoteur() {
 
     lierCouleursTetrominos();
 
-    void import('./constellation.js').then(({ configurerConstellation }) =>
+    void import('./logique/constellation.js').then(({ configurerConstellation }) =>
         configurerConstellation({
             obtenirNiveauGlobal,
             obtenirBiomeActif,
@@ -106,7 +106,9 @@ export function initialiserSystemesMoteur() {
             appliquerThemeBiome,
             demarrerJeu,
             demarrerCooperatif: () => {
-                void import('./coop-jeu.js').then(({ demarrerCooperatif }) => demarrerCooperatif());
+                void import('./logique/coop-jeu.js').then(({ demarrerCooperatif }) =>
+                    demarrerCooperatif()
+                );
             },
             modeCoopEstActif: coopEstPrefere,
             sonMenu: (type) => AudioMoteur.son(type),

@@ -2,7 +2,7 @@ import {
     nouvellePartieNecessiteConfirmation,
     demanderConfirmationNouvellePartie,
     mettreAJourMenuCampagneTitre,
-} from '../menu-titre-campagne.js';
+} from '../histoire/menu-titre-campagne.js';
 import { lierBouton } from './ui-lier-bouton.js';
 import { vibrerUi } from '../audio/haptique.js';
 
@@ -15,7 +15,8 @@ async function demarrerNouvelleCampagne() {
     if (nouvellePartieNecessiteConfirmation()) {
         const confirme = await demanderConfirmationNouvellePartie();
         if (!confirme) return;
-        const { reinitialiserCampagneComplete } = await import('../reinitialiser-campagne.js');
+        const { reinitialiserCampagneComplete } =
+            await import('../histoire/reinitialiser-campagne.js');
         reinitialiserCampagneComplete();
     }
     const { ouvrirModeHistoireDepuisMenu } = await import('../histoire/histoire-intro.js');

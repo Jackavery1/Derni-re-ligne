@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { lireInsetsSafeArea } from '../js/safe-area.js';
+import { lireInsetsSafeArea } from '../js/logique/safe-area.js';
 
 describe('safe-area.js', () => {
     afterEach(() => {

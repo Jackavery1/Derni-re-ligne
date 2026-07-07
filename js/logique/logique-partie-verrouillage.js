@@ -1,6 +1,6 @@
 import { meteo } from './meteo.js';
-import { appliquerEffetRelique } from '../reliques.js';
-import { obtenirActions } from '../actions-jeu.js';
+import { appliquerEffetRelique } from './reliques.js';
+import { obtenirActions } from './actions-jeu.js';
 import { emettre } from '../etat/bus-jeu.js';
 import {
     etat,
@@ -34,27 +34,27 @@ import {
 } from './logique-pure.js';
 import { enregistrerNotesLignesCompletes } from '../audio/melodie.js';
 import { majStatsLignesEffacees } from '../achievements.js';
-import { enregistrerDonneesVerrouillage, signalerApparitionPiece } from '../profil-jeu.js';
+import { enregistrerDonneesVerrouillage, signalerApparitionPiece } from '../ui/profil-jeu.js';
 import { sauvegarderPlacementOracle, declencherCalculOracle } from './oracle-jeu.js';
-import { annoncerPieceCourante } from '../annonces.js';
+import { annoncerPieceCourante } from '../ui/annonces.js';
 import {
     vivant_enregistrerDepot,
     vivant_recompenserActivite,
     vivant_synchroniserApresLignes,
 } from './vivant.js';
 import { poserPieceSurPlateau } from './actions-piece-communes.js';
-import { obtenirDecalageDistorsionBoss } from '../boss-jeu.js';
+import { obtenirDecalageDistorsionBoss } from './boss-jeu.js';
 import {
     enregistrerTimestampCellules,
     biomeActuelMecanique,
     celluleEstRouillee,
     reinitialiserMatricesRouille,
-} from '../mecaniques-histoire.js';
+} from '../histoire/mecaniques-histoire.js';
 import {
     enregistrerPosePiece,
     estMondeZenActif,
     enregistrerTopOut,
-} from '../gestionnaire-difficulte.js';
+} from './gestionnaire-difficulte.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { demarrerAre, demarrerGraceSpawn, verifierCollisionSpawn } from './game-feel-jeu.js';
 import { consommerPoseApresRotation } from './logique-partie-pose.js';

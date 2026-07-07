@@ -15,8 +15,8 @@ export {
 import { CONFIG } from '../config/config.js';
 import { meteo } from './meteo.js';
 import { etat } from '../etat/store-jeu.js';
-import { vitesseHistoireMs } from '../gestionnaire-difficulte.js';
-import { obtenirVitesseChuteModifiee } from '../mecaniques-histoire.js';
+import { vitesseHistoireMs } from './gestionnaire-difficulte.js';
+import { obtenirVitesseChuteModifiee } from '../histoire/mecaniques-histoire.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 
 export function vitesseChute() {

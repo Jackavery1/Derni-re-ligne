@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { obtenirProgressionAchievement } from '../js/achievements-progres.js';
+import { obtenirProgressionAchievement } from '../js/achievements/achievements-progres.js';
 
 vi.mock('../js/io/progression.js', () => ({
     chargerEtatHistoire: vi.fn(() => ({

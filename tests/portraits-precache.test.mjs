@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { URLS_PORTRAITS_PRECACHE } from '../js/portraits-precache.js';
+import { URLS_PORTRAITS_PRECACHE } from '../js/rendu/portraits-precache.js';
 
 const racine = join(import.meta.dirname, '..');
 

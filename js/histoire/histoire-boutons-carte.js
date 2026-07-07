@@ -30,7 +30,7 @@ export function lierBoutonsCarteHistoire() {
         } catch {
             /* ignore */
         }
-        const { afficherTutorielContextuel } = await import('../tutoriel.js');
+        const { afficherTutorielContextuel } = await import('../ui/tutoriel.js');
         afficherTutorielContextuel('distorsion');
     });
 }

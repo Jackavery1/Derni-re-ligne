@@ -8,7 +8,7 @@ export {
 } from './histoire-map-interactions.js';
 export { mettreAJourEnteteHistoire } from './histoire-map-entete.js';
 
-import { annulerPrechargementMedias } from '../prechargement-medias.js';
+import { annulerPrechargementMedias } from '../io/prechargement-medias.js';
 import { fermerModalTrameCarte } from './histoire-map-modal-trame.js';
 import { obtenirActionsHistoire } from './histoire-actions.js';
 

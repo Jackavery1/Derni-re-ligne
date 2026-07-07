@@ -2,7 +2,7 @@ import { BIOMES, RELIQUES } from '../config/config.js';
 import { INFOBULLES_MODES_JEU } from '../config/contenu-jeu.js';
 import { obtenirInfobulleAttaqueBoss } from '../histoire/histoire-map-briefings-boss.js';
 import { lireStockage, ecrireStockage } from '../io/progression.js';
-import { sansAccentsE } from '../texte-jeu.js';
+import { sansAccentsE } from '../logique/texte-jeu.js';
 
 const CLE_STOCKAGE = 'derniereLigne_infobullesBiome';
 

@@ -38,7 +38,7 @@ vi.mock('../js/logique/oracle-jeu.js', () => ({
     evaluerDecisionOracle: vi.fn(),
 }));
 
-vi.mock('../js/boss-jeu.js', () => ({
+vi.mock('../js/logique/boss-jeu.js', () => ({
     endommagerBoss: vi.fn(),
     bossEstActif: vi.fn(() => false),
     bossEstVaincu: vi.fn(() => false),
@@ -49,25 +49,25 @@ vi.mock('../js/logique/piece-jeu.js', () => ({
     mettreAJourIndicateurRelique: vi.fn(),
 }));
 
-vi.mock('../js/gestionnaire-difficulte.js', () => ({
+vi.mock('../js/logique/gestionnaire-difficulte.js', () => ({
     enregistrerProgression: vi.fn(),
     suiviDifficulteActif: vi.fn(() => false),
 }));
 
-vi.mock('../js/timer-niveau.js', () => ({
+vi.mock('../js/logique/timer-niveau.js', () => ({
     reinitialiserTimerNiveau: vi.fn(),
 }));
 
-vi.mock('../js/particules-jeu.js', () => ({
+vi.mock('../js/rendu/particules-jeu.js', () => ({
     creerParticulesLigne: vi.fn(),
 }));
 
-vi.mock('../js/achievements-histoire.js', () => ({
+vi.mock('../js/achievements/achievements-histoire.js', () => ({
     ajouterLignesEclipseBasse: vi.fn(),
     ajouterLignesVide: vi.fn(),
 }));
 
-vi.mock('../js/mecaniques-histoire.js', () => ({
+vi.mock('../js/histoire/mecaniques-histoire.js', () => ({
     biomeActuelMecanique: vi.fn(() => null),
     obtenirLigneEclipse: vi.fn(() => 10),
 }));
@@ -76,7 +76,7 @@ vi.mock('../js/etat/mode-histoire.js', () => ({
     modeHistoireEnCours: vi.fn(() => false),
 }));
 
-vi.mock('../js/actions-jeu.js', () => ({
+vi.mock('../js/logique/actions-jeu.js', () => ({
     obtenirActions: vi.fn(() => ({ terminerPartie: vi.fn() })),
 }));
 
@@ -89,7 +89,7 @@ describe('effets-partie', () => {
     });
 
     async function chargerEffets() {
-        const mod = await import('../js/effets-partie.js');
+        const mod = await import('../js/logique/effets-partie.js');
         return mod;
     }
 
@@ -122,7 +122,7 @@ describe('effets-partie', () => {
     it('termine sprint a 40 lignes', async () => {
         const { initialiserEffetsPartie } = await chargerEffets();
         const { etat } = await import('../js/etat/store-jeu.js');
-        const { obtenirActions } = await import('../js/actions-jeu.js');
+        const { obtenirActions } = await import('../js/logique/actions-jeu.js');
         const terminer = vi.fn();
         obtenirActions.mockReturnValue({ terminerPartie: terminer });
         etat.modeJeu = 'sprint';

@@ -13,10 +13,10 @@ import {
     definirDerniereSecondeTemps,
 } from '../etat/store-jeu.js';
 import { CONFIG } from '../config/config.js';
-import { annoncer } from '../annonces.js';
+import { annoncer } from '../ui/annonces.js';
 import { afficherNotificationNiveau } from '../ui/ui-notifications.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
-import { obtenirSuiviDifficulte } from '../gestionnaire-difficulte.js';
+import { obtenirSuiviDifficulte } from '../logique/gestionnaire-difficulte.js';
 import { obtenirScoreAffiche } from '../logique/oracle-jeu.js';
 
 export function chargerProgression() {

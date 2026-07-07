@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ecrireStockage } from '../js/io/progression-stockage.js';
 
-vi.mock('../js/profil-jeu.js', () => ({
+vi.mock('../js/ui/profil-jeu.js', () => ({
     chargerProfilDernier: vi.fn(),
 }));
 

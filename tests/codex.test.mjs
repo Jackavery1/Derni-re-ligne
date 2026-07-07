@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, beforeAll } from 'vitest';
 import { chargerDonneesCodex } from '../js/codex.js';
-import { ILLUSTRATIONS_CODEX } from '../js/codex-illustrations.js';
+import { ILLUSTRATIONS_CODEX } from '../js/codex/codex-illustrations.js';
 import { statsGlobales } from '../js/achievements.js';
 import {
     codexDebloque,

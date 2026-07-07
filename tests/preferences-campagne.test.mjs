@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import {
     enchainementCampagneActif,
     definirEnchainementCampagneActif,
-} from '../js/preferences-campagne.js';
+} from '../js/histoire/preferences-campagne.js';
 
 describe('preferences-campagne', () => {
     beforeEach(() => {

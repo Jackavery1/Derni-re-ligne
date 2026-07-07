@@ -6,7 +6,7 @@ import {
     afficherTutorielLibreAvantPartie,
     NOMBRE_SLIDES_PROLOGUE,
     NOMBRE_SLIDES_LIBRE,
-} from '../js/tutoriel.js';
+} from '../js/ui/tutoriel.js';
 
 function creerElement(initialClasses = ['element-masque']) {
     const classes = new Set(initialClasses);

@@ -3,11 +3,19 @@ import { BIOMES } from '../js/config/config.js';
 import { store } from '../js/etat/store-jeu.js';
 import { etat, definirBiomeActif } from '../js/etat/store-jeu.js';
 import { creerPlateau } from '../js/logique/piece-jeu.js';
-import { demarrerSuiviMonde } from '../js/gestionnaire-difficulte.js';
-import { demarrerBoss, arreterBoss, mettreAJourBoss, bossEstActif } from '../js/boss-jeu.js';
+import { demarrerSuiviMonde } from '../js/logique/gestionnaire-difficulte.js';
+import {
+    demarrerBoss,
+    arreterBoss,
+    mettreAJourBoss,
+    bossEstActif,
+} from '../js/logique/boss-jeu.js';
 import { annulerTimersVivant } from '../js/logique/vivant.js';
 import { dessinerSignesVie } from '../js/rendu/rendu-vivant.js';
-import { tickConditionTrame, reinitialiserConditionsRuntime } from '../js/conditions-secrets.js';
+import {
+    tickConditionTrame,
+    reinitialiserConditionsRuntime,
+} from '../js/histoire/conditions-secrets.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 
 describe('entrée partie distorsion (monde_finale)', () => {

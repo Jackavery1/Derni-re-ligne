@@ -1,14 +1,14 @@
 import { LAYOUT } from '../config/config.js';
 import { calculerEchelleInterface } from './layout-calcul.js';
-import { lireInsetsSafeArea } from '../safe-area.js';
-import { estViewportPortrait, obtenirDimensionsViewport } from '../viewport-dimensions.js';
+import { lireInsetsSafeArea } from '../logique/safe-area.js';
+import { estViewportPortrait, obtenirDimensionsViewport } from '../logique/viewport-dimensions.js';
 
-export { obtenirDimensionsViewport, estViewportPortrait } from '../viewport-dimensions.js';
+export { obtenirDimensionsViewport, estViewportPortrait } from '../logique/viewport-dimensions.js';
 
 export { calculerEchelleInterface } from './layout-calcul.js';
 import { obtenirCanvasMenuFond, menuAnimActif } from '../menu-fond.js';
 import { modeArchiEnCours, modeCoopEnCours } from '../etat/registre-modes.js';
-import { obtenirIdBiomeFond } from '../biome-fond.js';
+import { obtenirIdBiomeFond } from './biome-fond.js';
 import { demarrerFondBiome, invaliderCacheFond } from './rendu-fond-biome.js';
 import { etat } from '../etat/store-jeu.js';
 
@@ -300,7 +300,7 @@ export function initialiserLayout() {
         adapterInterface();
         if (modeArchiEnCours()) adapterInterfaceArchi();
         if (modeCoopEnCours()) adapterInterfaceCoop();
-        void import('../constellation.js').then(({ redimensionnerConstellation }) =>
+        void import('../logique/constellation.js').then(({ redimensionnerConstellation }) =>
             redimensionnerConstellation()
         );
         void import('../histoire/histoire-map.js').then((m) => m.redimensionnerCarteHistoire());

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, vi } from 'vitest';
 import { readFileSync } from 'fs';
-import { chargerIconesPixel, dessinerIconePixel } from '../js/icones-pixel.js';
+import { chargerIconesPixel, dessinerIconePixel } from '../js/rendu/icones-pixel.js';
 import { ICONE_PAR_ENTREE, ACCENT_PAR_ENTREE } from '../js/codex-icones-map.js';
 import { CONDITIONS_CODEX } from '../js/codex-conditions.js';
 import ICONES_PIXEL from '../data/icones-pixel.json';

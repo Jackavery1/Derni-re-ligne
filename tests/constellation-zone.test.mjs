@@ -3,7 +3,7 @@ import {
     obtenirDecalageCentreConstellation,
     LARGEUR_PANNEAU_SEL_DESKTOP,
     SEUIL_PANNEAU_SEL_MOBILE,
-} from '../js/constellation-zone.js';
+} from '../js/logique/constellation-zone.js';
 
 describe('constellation-zone', () => {
     it('decale le centre quand le panneau est ouvert sur desktop', () => {

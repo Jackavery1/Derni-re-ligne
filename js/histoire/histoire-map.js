@@ -1,4 +1,4 @@
-import { obtenirCanvas } from '../dom-utils.js';
+import { obtenirCanvas } from '../logique/dom-utils.js';
 import { dessinerCarteHistoire, invaliderDonneesEtoilesHistoire } from './histoire-map-rendu.js';
 import {
     attacherEvenementsCarteHistoire,
@@ -11,7 +11,10 @@ import {
 } from './histoire-map-ui.js';
 import { configurerActionsHistoire } from './histoire-actions.js';
 import { rafraichirEtatHistoire } from './histoire-mondes.js';
-import { annulerPrechargementMedias, demarrerPrechargementCarte } from '../prechargement-medias.js';
+import {
+    annulerPrechargementMedias,
+    demarrerPrechargementCarte,
+} from '../io/prechargement-medias.js';
 import { calculerPositionsNoeuds } from './histoire-map-layout.js';
 import { mettreAJourVisibiliteCarte } from './histoire-map-visibilite.js';
 import { attacherScrollCarte } from './histoire-map-scroll.js';
@@ -94,14 +97,14 @@ export async function demarrerCarteHistoire() {
         moduleTextes.obtenirHistoireTextesSync();
     } catch {
         const { afficherEcranChargement, definirMessageChargement } =
-            await import('../ecran-chargement.js');
+            await import('../ui/ecran-chargement.js');
         definirMessageChargement('Chargement de la campagne…');
         afficherEcranChargement();
         overlayChargement = true;
     }
     await moduleTextes.chargerHistoireTextes();
     if (overlayChargement) {
-        const { masquerEcranChargement } = await import('../ecran-chargement.js');
+        const { masquerEcranChargement } = await import('../ui/ecran-chargement.js');
         masquerEcranChargement();
     }
     if (!initialiserCarteMonde()) return;

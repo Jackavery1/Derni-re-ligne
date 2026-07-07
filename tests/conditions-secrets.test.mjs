@@ -15,7 +15,7 @@ import {
     reinitialiserConditionsRuntime,
     obtenirProgressionAttenteTrameMs,
     DUREE_ATTENTE_TRAME_MS,
-} from '../js/conditions-secrets.js';
+} from '../js/histoire/conditions-secrets.js';
 
 function etatHistoireTest(surcharge = {}) {
     return {

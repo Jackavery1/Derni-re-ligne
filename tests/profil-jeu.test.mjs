@@ -8,7 +8,7 @@ import {
     obtenirNoteVera,
     calculerHauteurPlateau,
     enregistrerReaction,
-} from '../js/profil-jeu.js';
+} from '../js/ui/profil-jeu.js';
 import { etat } from '../js/etat/store-jeu.js';
 
 describe('profil-jeu', () => {

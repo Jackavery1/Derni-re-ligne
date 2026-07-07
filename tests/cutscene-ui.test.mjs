@@ -21,7 +21,7 @@ vi.mock('../js/ui/navigation-lazy.js', () => ({
     cacherEcransDiffere: vi.fn(),
 }));
 
-vi.mock('../js/scenes-cutscene.js', async (importOriginal) => {
+vi.mock('../js/rendu/scenes-cutscene.js', async (importOriginal) => {
     const mod = await importOriginal();
     return { ...mod, prechargerScenes: vi.fn(async () => {}) };
 });

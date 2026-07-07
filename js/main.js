@@ -1,7 +1,7 @@
 import { chargerEcrans } from './ui/charger-ecrans.js';
 import { chargerBiomesJeu } from './config/biomes.js';
 import { chargerContenuJeu } from './config/contenu-jeu.js';
-import { chargerDifficulteMondes } from './difficulte-mondes-chargement.js';
+import { chargerDifficulteMondes } from './io/difficulte-mondes-chargement.js';
 import { chargerAchievementsDonnees } from './achievements-donnees.js';
 import { chargerHistoireDonneesMetier } from './histoire-donnees.js';
 import { initialiserApplication } from './moteur.js';
@@ -14,8 +14,8 @@ import {
     definirProgressionChargement,
     definirMessageChargement,
     masquerEcranChargement,
-} from './ecran-chargement.js';
-import { prechargerPortraitsCutscene } from './portraits-precache.js';
+} from './ui/ecran-chargement.js';
+import { prechargerPortraitsCutscene } from './rendu/portraits-precache.js';
 
 if (window.top !== window.self) {
     window.top.location.replace(window.self.location.href);

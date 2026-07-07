@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { obtenirActions } from '../js/actions-jeu.js';
-import { configurerActionsMoteur } from '../js/moteur-config-actions.js';
+import { obtenirActions } from '../js/logique/actions-jeu.js';
+import { configurerActionsMoteur } from '../js/logique/moteur-config-actions.js';
 
 describe('moteur-config-actions', () => {
     it('injecte les actions solo dans le registre partagé', () => {

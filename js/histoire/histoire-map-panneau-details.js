@@ -1,10 +1,10 @@
 import { JOURNAUX_VERA } from '../histoire-donnees.js';
 import { BIOMES } from '../config/config.js';
 import { obtenirEtatMonde, SEUILS_COMPLETION } from './histoire-mondes.js';
-import { modeDevActif } from '../mode-dev-etat.js';
-import { obtenirEtoilesPersistees } from '../gestionnaire-difficulte.js';
-import { definirTexteUi, sansAccentsE } from '../texte-jeu.js';
-import { obtenirGuideMondeSecret } from '../conditions-secrets.js';
+import { modeDevActif } from '../logique/mode-dev-etat.js';
+import { obtenirEtoilesPersistees } from '../logique/gestionnaire-difficulte.js';
+import { definirTexteUi, sansAccentsE } from '../logique/texte-jeu.js';
+import { obtenirGuideMondeSecret } from './conditions-secrets.js';
 import { obtenirBriefingMecaniqueBoss } from './histoire-map-briefings-boss.js';
 
 function _mettreAJourGuideEtAvertissement(monde, etatMonde, estBoss) {

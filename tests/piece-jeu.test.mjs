@@ -32,7 +32,7 @@ import {
     mettreAJourIndicateurRelique,
 } from '../js/logique/piece-jeu.js';
 import { TOUCHES_DEFAUT } from '../js/config/config.js';
-import { configurerActionsJeu } from '../js/actions-jeu.js';
+import { configurerActionsJeu } from '../js/logique/actions-jeu.js';
 
 describe('piece-jeu', () => {
     beforeEach(() => {

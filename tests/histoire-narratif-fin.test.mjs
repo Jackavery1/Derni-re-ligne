@@ -12,7 +12,7 @@ vi.mock('../js/histoire/histoire-manager-ui.js', () => ({
     afficherCutsceneHistoire,
 }));
 
-vi.mock('../js/fins-histoire.js', () => ({
+vi.mock('../js/histoire/fins-histoire.js', () => ({
     executerFin,
 }));
 

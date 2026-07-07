@@ -1,6 +1,6 @@
 /** Retour haptique (Vibration API) — respecte effets réduits et préférence joueur. */
 import { ecouter } from '../etat/bus-jeu.js';
-import { obtenirReduireEffetsAccessibilite } from '../accessibilite.js';
+import { obtenirReduireEffetsAccessibilite } from '../ui/accessibilite.js';
 import { lireStockage, ecrireStockage } from '../io/progression-stockage.js';
 
 const CLE_HAPTIQUE = 'derniereLigne_haptique';

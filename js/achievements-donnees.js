@@ -1,5 +1,8 @@
-import { ACHIEVEMENTS_HISTOIRE, chargerAchievementsHistoire } from './achievements-histoire.js';
-import { ACHIEVEMENTS_CONDITIONS } from './achievements-conditions-core.js';
+import {
+    ACHIEVEMENTS_HISTOIRE,
+    chargerAchievementsHistoire,
+} from './achievements/achievements-histoire.js';
+import { ACHIEVEMENTS_CONDITIONS } from './achievements/achievements-conditions-core.js';
 
 export const ACHIEVEMENTS = {};
 

@@ -26,7 +26,7 @@ vi.mock('../js/ui/ecrans-ui.js', async (importOriginal) => {
     };
 });
 
-import { basculerPauseCoop } from '../js/coop-jeu.js';
+import { basculerPauseCoop } from '../js/logique/coop-jeu.js';
 import { coop } from '../js/logique/coop-logique.js';
 
 describe('coop pause audio', () => {

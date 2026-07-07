@@ -2,14 +2,14 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { store, etat } from '../js/etat/store-jeu.js';
 import { creerPlateau } from '../js/logique/piece-jeu.js';
 import { activerModeHistoire, desactiverModeHistoire } from '../js/etat/mode-histoire.js';
-import { demarrerBoss, arreterBoss, DUREE_VICTOIRE_BOSS_MS } from '../js/boss-jeu.js';
+import { demarrerBoss, arreterBoss, DUREE_VICTOIRE_BOSS_MS } from '../js/logique/boss-jeu.js';
 
 vi.mock('../js/audio/audio.js', () => ({
     AudioMoteur: { muet: true, son: vi.fn() },
 }));
 
 const terminerPartie = vi.fn();
-vi.mock('../js/actions-jeu.js', () => ({
+vi.mock('../js/logique/actions-jeu.js', () => ({
     obtenirActions: () => ({ terminerPartie }),
 }));
 

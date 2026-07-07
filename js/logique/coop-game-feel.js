@@ -1,5 +1,5 @@
 import { CONFIG } from '../config/config.js';
-import { coop } from '../coop-etat.js';
+import { coop } from './coop-etat.js';
 import {
     ajouterBufferInput,
     creerBufferInputVide,

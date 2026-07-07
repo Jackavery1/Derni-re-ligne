@@ -13,6 +13,8 @@ const DOMAINES_PHYSIQUES = [
     { dossier: 'etat', prefixe: 'store-' },
     { dossier: 'io', prefixe: 'progression' },
     { dossier: 'audio', prefixe: 'audio' },
+    { dossier: 'achievements', prefixe: 'achievements-' },
+    { dossier: 'codex', prefixe: 'codex-' },
 ];
 
 function compterDansDossier(dossier, filtre) {

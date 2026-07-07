@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { obtenirDefiDuJour, lireScoreDefiJour, enregistrerScoreDefiJour } from '../js/defi-jour.js';
-import { obtenirGuideMondeSecret } from '../js/conditions-secrets.js';
+import {
+    obtenirDefiDuJour,
+    lireScoreDefiJour,
+    enregistrerScoreDefiJour,
+} from '../js/logique/defi-jour.js';
+import { obtenirGuideMondeSecret } from '../js/histoire/conditions-secrets.js';
 
 describe('defi-jour', () => {
     it('produit un defi stable pour une date donnee', () => {

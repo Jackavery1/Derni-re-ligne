@@ -1,6 +1,6 @@
 /** État narratif persisté (localStorage) et règles de déblocage des modes. */
 import { ETAT_HISTOIRE_VIDE, JOURNAUX_VERA } from '../histoire-donnees.js';
-import { modeDevActif } from '../mode-dev-etat.js';
+import { modeDevActif } from '../logique/mode-dev-etat.js';
 import { lireStockageJson, ecrireStockageJson } from './progression-stockage.js';
 
 const TOUS_BOSS_HISTOIRE = ['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion'];

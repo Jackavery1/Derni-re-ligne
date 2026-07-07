@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { creerFile } from '../js/file-narrative.js';
+import { creerFile } from '../js/histoire/file-narrative.js';
 
 describe('file-narrative', () => {
     beforeEach(() => {

@@ -1,5 +1,5 @@
-import { rendreIconeSurCanvas, rendreIconeGlitchSurCanvas } from '../icones-pixel.js';
-import { sansAccentsE } from '../texte-jeu.js';
+import { rendreIconeSurCanvas, rendreIconeGlitchSurCanvas } from '../rendu/icones-pixel.js';
+import { sansAccentsE } from '../logique/texte-jeu.js';
 
 /**
  * @typedef {import('./ui-panneau-detail.js').ConfigPanneauDetail} ConfigPanneauDetail

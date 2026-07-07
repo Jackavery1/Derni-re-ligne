@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { etat } from '../js/etat/store-jeu.js';
-import { annoncer, annoncerPieceActive, annoncerPieceCourante } from '../js/annonces.js';
+import { annoncer, annoncerPieceActive, annoncerPieceCourante } from '../js/ui/annonces.js';
 
 describe('annonces', () => {
     /** @type {{ textContent: string } | null} */

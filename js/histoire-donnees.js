@@ -6,7 +6,7 @@ export {
     FINS,
     chargerHistoireDonneesMetier,
     histoireDonneesMetierChargees,
-} from './histoire-donnees-chargement.js';
+} from './histoire/histoire-donnees-chargement.js';
 
 /**
  * @typedef {import('./histoire-donnees/fins-etat.js').EtatHistoire} EtatHistoire

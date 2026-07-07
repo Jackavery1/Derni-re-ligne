@@ -1,6 +1,6 @@
 import { obtenirEtatHistoire } from './histoire-mondes.js';
 import { mondeVersEcran } from './histoire-map-camera.js';
-import { sansAccentsE } from '../texte-jeu.js';
+import { sansAccentsE } from '../logique/texte-jeu.js';
 
 /** @param {string[]} ids @param {object} etatCarte */
 function chapitreEstRevele(ids, etatCarte) {

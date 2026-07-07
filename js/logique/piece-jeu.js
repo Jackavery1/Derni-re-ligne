@@ -1,7 +1,7 @@
 import { CONFIG, TETROMINOS, BIOMES, RELIQUES } from '../config/config.js';
 import { remplirSac as genererSac } from './logique-pure.js';
 import { extraireForme, estPositionValideSurPlateau } from './moteur-piece.js';
-import { obtenirActions } from '../actions-jeu.js';
+import { obtenirActions } from './actions-jeu.js';
 import {
     etat,
     dasEtat,
@@ -18,9 +18,9 @@ import {
     definirLockDelayRestant,
     definirNbLockResets,
 } from '../etat/store-jeu.js';
-import { obtenirTouches } from '../touches-config.js';
+import { obtenirTouches } from './touches-config.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
-import { sansAccentsE } from '../texte-jeu.js';
+import { sansAccentsE } from './texte-jeu.js';
 
 const INDEX_COULEUR_PIECE = { I: 0, O: 1, T: 2, S: 3, Z: 4, J: 5, L: 6 };
 

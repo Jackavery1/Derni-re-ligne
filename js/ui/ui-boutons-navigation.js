@@ -3,10 +3,10 @@ import { afficherEcranDiffere as afficherEcran } from './navigation-lazy.js';
 import { jouerMelodie } from '../audio/melodie.js';
 import { AudioMoteur } from '../audio/audio.js';
 import { basculerOracle } from '../logique/oracle-jeu.js';
-import { basculerModeSprint, mettreAJourToggleSprint } from '../mode-sprint.js';
-import { basculerDefiJour, mettreAJourToggleDefiJour } from '../mode-defi-jour.js';
-import { afficherTutorielContextuel } from '../tutoriel.js';
-import { mettreAJourVisibiliteModesDebloques } from '../deblocage-ui.js';
+import { basculerModeSprint, mettreAJourToggleSprint } from '../logique/mode-sprint.js';
+import { basculerDefiJour, mettreAJourToggleDefiJour } from '../logique/mode-defi-jour.js';
+import { afficherTutorielContextuel } from './tutoriel.js';
+import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 import { initialiserBoutonsCampagne } from './ui-boutons-campagne.js';
 import { assurerInputArchi, assurerInputCoop } from '../modes-input-lazy.js';
 import { lierBouton, lierBoutonsSelecteur } from './ui-lier-bouton.js';
@@ -20,7 +20,7 @@ function navVers(handler) {
 }
 
 async function ouvrirOptions(onglet) {
-    const { afficherOngletOptions } = await import('../options-ui.js');
+    const { afficherOngletOptions } = await import('./options-ui.js');
     afficherOngletOptions(onglet);
     afficherEcran(ECRANS.OPTIONS);
 }
@@ -44,7 +44,7 @@ function _lierBoutonsMenuPrincipal() {
         void (async () => {
             afficherTutorielContextuel('architecte');
             await assurerInputArchi();
-            const { archi_afficherSelection } = await import('../archi-jeu.js');
+            const { archi_afficherSelection } = await import('../logique/archi-jeu.js');
             await archi_afficherSelection();
         })();
     });
@@ -114,7 +114,7 @@ function _lierSelectionEtModes() {
         vibrerUi();
         void (async () => {
             await assurerInputCoop();
-            const { basculerModeCoop } = await import('../coop-jeu.js');
+            const { basculerModeCoop } = await import('../logique/coop-jeu.js');
             basculerModeCoop();
             mettreAJourToggleSprint();
             if (document.getElementById('toggle-coop')?.classList.contains('actif')) {

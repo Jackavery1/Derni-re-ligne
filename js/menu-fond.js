@@ -1,8 +1,8 @@
 import { TETROMINOS } from './config/config.js';
 import { obtenirEffetsReduits } from './etat/store-jeu.js';
 import { obtenirCouleurPieceParType } from './logique/piece-jeu.js';
-import { obtenirActions } from './actions-jeu.js';
-import { obtenirCanvas } from './dom-utils.js';
+import { obtenirActions } from './logique/actions-jeu.js';
+import { obtenirCanvas } from './logique/dom-utils.js';
 
 let canvasMenuFond = null;
 let ctxMenuFond = null;

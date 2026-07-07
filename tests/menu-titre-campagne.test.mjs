@@ -4,8 +4,8 @@ import {
     campagnePeutEtreContinuee,
     nouvellePartieNecessiteConfirmation,
     obtenirResumeCampagne,
-} from '../js/menu-titre-campagne.js';
-import { reinitialiserCampagneComplete } from '../js/reinitialiser-campagne.js';
+} from '../js/histoire/menu-titre-campagne.js';
+import { reinitialiserCampagneComplete } from '../js/histoire/reinitialiser-campagne.js';
 import {
     ecrireStockage,
     ecrireStockageJson,

@@ -22,7 +22,7 @@ import {
 import {
     obtenirParamsExpressionPortrait,
     reinitExpressionsCutscene,
-} from '../js/expressions-cutscene.js';
+} from '../js/rendu/expressions-cutscene.js';
 import { store } from '../js/etat/store-jeu.js';
 
 function creerCtxMock() {

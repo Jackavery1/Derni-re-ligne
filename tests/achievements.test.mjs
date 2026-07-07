@@ -12,7 +12,7 @@ import {
     initStatsPartie,
     finaliserStatsPartie,
 } from '../js/achievements.js';
-import { genererGalerieAchievements } from '../js/achievements-ui.js';
+import { genererGalerieAchievements } from '../js/achievements/achievements-ui.js';
 
 describe('achievements', () => {
     beforeEach(() => {

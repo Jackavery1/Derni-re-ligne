@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CONFIG } from '../js/config/config.js';
-import { coop } from '../js/coop-etat.js';
+import { coop } from '../js/logique/coop-etat.js';
 import {
     coopReinitialiserGameFeelJoueur,
     coopDemarrerAre,

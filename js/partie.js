@@ -58,16 +58,19 @@ import {
     donneesPartie,
     reinitialiserDonneesPartie,
     signalerApparitionPiece,
-} from './profil-jeu.js';
-import { annoncerPieceCourante } from './annonces.js';
+} from './ui/profil-jeu.js';
+import { annoncerPieceCourante } from './ui/annonces.js';
 import { store } from './etat/store-jeu.js';
 import { modeHistoireEnCours } from './etat/mode-histoire.js';
-import { obtenirIdBiomeFond } from './biome-fond.js';
+import { obtenirIdBiomeFond } from './rendu/biome-fond.js';
 import { initialiserAudioBiome } from './audio/audio-partie.js';
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
-import { demarrerBoss, arreterBoss } from './boss-jeu.js';
-import { initialiserMecaniquesHistoire, arreterMecaniquesHistoire } from './mecaniques-histoire.js';
-import { reinitialiserConditionsRuntime } from './conditions-secrets.js';
+import { demarrerBoss, arreterBoss } from './logique/boss-jeu.js';
+import {
+    initialiserMecaniquesHistoire,
+    arreterMecaniquesHistoire,
+} from './histoire/mecaniques-histoire.js';
+import { reinitialiserConditionsRuntime } from './histoire/conditions-secrets.js';
 import {
     oracle,
     reinitialiserOraclePartie,
@@ -76,11 +79,11 @@ import {
     mettreAJourStatsOracleUI,
 } from './logique/oracle-jeu.js';
 import { demarrerFondBiome, arreterFondBiome } from './rendu/rendu-fond-biome.js';
-import { reinitialiserTimerNiveau } from './timer-niveau.js';
+import { reinitialiserTimerNiveau } from './logique/timer-niveau.js';
 import { reinitialiserGameFeel, demarrerGraceSpawn } from './logique/game-feel-jeu.js';
 import { rafraichirHudObjectifsHistoire } from './ui/ui-panneau-objectifs.js';
-export { initialiserCanvas } from './partie-canvas.js';
-export { terminerPartie } from './partie-fin.js';
+export { initialiserCanvas } from './logique/partie-canvas.js';
+export { terminerPartie } from './logique/partie-fin.js';
 
 export function confirmerRecommencer() {
     if (window.confirm('Recommencer la partie ?')) demarrerJeu();
@@ -128,7 +131,9 @@ function initialiserFeaturesPartie() {
     donneesPartie.biomeId = obtenirBiomeActif();
     initStatsPartie();
     void import('./codex.js').then((m) => m.planifierVerifierCodex());
-    void import('./constellation.js').then(({ arreterConstellation }) => arreterConstellation());
+    void import('./logique/constellation.js').then(({ arreterConstellation }) =>
+        arreterConstellation()
+    );
 }
 
 function initialiserEtatPartie() {

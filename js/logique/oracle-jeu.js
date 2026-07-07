@@ -1,8 +1,8 @@
 import { CONFIG, TETROMINOS } from '../config/config.js';
 import { etat, obtenirCtx } from '../etat/store-jeu.js';
 import { estPositionValide } from './piece-jeu.js';
-import { afficherTutorielContextuel } from '../tutoriel.js';
-import { desactiverPreferenceCoop, modeCoopActif } from '../coop-preference.js';
+import { afficherTutorielContextuel } from '../ui/tutoriel.js';
+import { desactiverPreferenceCoop, modeCoopActif } from './coop-preference.js';
 import { calculerMeilleurPlacement } from './oracle-placement.js';
 
 export { evaluerPlateau, calculerMeilleurPlacement } from './oracle-placement.js';

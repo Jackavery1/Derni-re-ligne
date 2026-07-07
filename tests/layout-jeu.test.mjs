@@ -4,7 +4,7 @@ vi.mock('../js/histoire/histoire-map.js', () => ({
     redimensionnerCarteHistoire: vi.fn(),
 }));
 
-vi.mock('../js/constellation.js', () => ({
+vi.mock('../js/logique/constellation.js', () => ({
     redimensionnerConstellation: vi.fn(),
 }));
 
@@ -26,7 +26,7 @@ vi.mock('../js/etat/registre-modes.js', () => ({
     modeArchiEnCours: vi.fn(() => false),
 }));
 
-vi.mock('../js/biome-fond.js', () => ({
+vi.mock('../js/rendu/biome-fond.js', () => ({
     obtenirIdBiomeFond: vi.fn(() => 'classique'),
 }));
 

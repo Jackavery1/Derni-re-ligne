@@ -50,7 +50,7 @@ import {
     definirMessageChargement,
     definirProgressionChargement,
     masquerEcranChargement,
-} from '../js/ecran-chargement.js';
+} from '../js/ui/ecran-chargement.js';
 
 describe('ecran-chargement', () => {
     beforeEach(() => {

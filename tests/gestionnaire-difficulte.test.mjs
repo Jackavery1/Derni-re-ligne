@@ -20,9 +20,9 @@ import {
     obtenirEtoilesPersistees,
     obtenirSuiviDifficulte,
     suiviDifficulteActif,
-} from '../js/gestionnaire-difficulte.js';
+} from '../js/logique/gestionnaire-difficulte.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-import { PALIERS_VITESSE_MS, DIFFICULTE_MONDES } from '../js/difficulte-mondes-chargement.js';
+import { PALIERS_VITESSE_MS, DIFFICULTE_MONDES } from '../js/io/difficulte-mondes-chargement.js';
 
 describe('gestionnaire-difficulte', () => {
     beforeEach(() => {

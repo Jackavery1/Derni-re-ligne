@@ -48,10 +48,10 @@ export function estFondCutsceneActif() {
 writeFileSync(
     'js/histoire-journal-ui.js',
     `/** Journal narratif histoire. */
-import { definirExpressionVera } from '../../js/portraits-vera.js';
+import { definirExpressionVera } from '../../js/rendu/portraits-vera.js';
 import { ECRANS } from '../../js/ui/ecrans-config.js';
 import { logger } from '../../js/logger.js';
-import { obtenirCanvas } from '../../js/dom-utils.js';
+import { obtenirCanvas } from '../../js/logique/dom-utils.js';
 import { afficherEcranHistoire, cacherEcransHistoire } from '../../js/histoire/histoire-cutscene-nav.js';
 
 let journalCallbackFermer = null;
@@ -98,7 +98,7 @@ import { logger } from '../../js/logger.js';
 import {
     definirHumeurRoboCutscene,
     dessinerPortraitCutscene,
-} from '../../js/portraits-cutscene.js';
+} from '../../js/rendu/portraits-cutscene.js';
 import { dessinerRobo } from '../../js/rendu/rendu-robo.js';
 import { afficherEcranHistoire, cacherEcransHistoire } from '../../js/histoire/histoire-cutscene-nav.js';
 import {

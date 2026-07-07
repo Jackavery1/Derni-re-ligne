@@ -1,9 +1,9 @@
 import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
 import { BIOMES } from '../config/config.js';
 import { obtenirEtatHistoire, mondePeutEtreJoue, obtenirEtatMonde } from './histoire-mondes.js';
-import { sansAccentsE } from '../texte-jeu.js';
+import { sansAccentsE } from '../logique/texte-jeu.js';
 import { dessinerRoboMiniature } from '../rendu/rendu-robo-mini.js';
-import { dessinerIconePixel, iconesPixelChargees } from '../icones-pixel.js';
+import { dessinerIconePixel, iconesPixelChargees } from '../rendu/icones-pixel.js';
 import { obtenirIdIconeMondeHistoire } from '../biome-icones-map.js';
 
 function _positionLabel(pos, rayon, w) {

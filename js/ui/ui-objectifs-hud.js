@@ -1,11 +1,11 @@
 import { store } from '../etat/store-jeu.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { obtenirBiomeActif } from '../etat/store-jeu.js';
-import { obtenirLibelleModificateurBiomeHud } from '../mecaniques-histoire.js';
+import { obtenirLibelleModificateurBiomeHud } from '../histoire/mecaniques-histoire.js';
 import { obtenirEtatHistoire } from '../histoire/histoire-mondes.js';
-import { obtenirResumeConditionsTrame } from '../conditions-secrets.js';
-import { sansAccentsE } from '../texte-jeu.js';
-import { obtenirSuiviDifficulte, calculerEtoiles } from '../gestionnaire-difficulte.js';
+import { obtenirResumeConditionsTrame } from '../histoire/conditions-secrets.js';
+import { sansAccentsE } from '../logique/texte-jeu.js';
+import { obtenirSuiviDifficulte, calculerEtoiles } from '../logique/gestionnaire-difficulte.js';
 import {
     elObjectif,
     masquerObjectif,

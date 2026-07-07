@@ -12,4 +12,4 @@ export {
     majStatsReactionRobo,
     finaliserStatsPartie,
     verifierAchievements,
-} from './achievements-stats.js';
+} from './achievements/achievements-stats.js';

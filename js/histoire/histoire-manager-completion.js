@@ -8,8 +8,11 @@ import {
     onMiroirComplete,
     verifierDeblocageTrame,
     verifierDeblocageMiroirDiffere,
-} from '../conditions-secrets.js';
-import { enregistrerPrecisionMiroir, flushProuessesHistoire } from '../achievements-histoire.js';
+} from './conditions-secrets.js';
+import {
+    enregistrerPrecisionMiroir,
+    flushProuessesHistoire,
+} from '../achievements/achievements-histoire.js';
 import { reagirRoboContinueBoss } from '../ui/mascotte-robo.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import {
@@ -17,7 +20,7 @@ import {
     calculerEtoiles,
     fusionnerEtoilesPersistees,
     estMondeZenActif,
-} from '../gestionnaire-difficulte.js';
+} from '../logique/gestionnaire-difficulte.js';
 import { declencherNarratifPostMonde } from './histoire-manager-post-monde.js';
 
 export { SEUILS_COMPLETION } from './histoire-mondes.js';

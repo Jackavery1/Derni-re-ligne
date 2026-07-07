@@ -1,5 +1,5 @@
 import { ECRANS_CHARGEMENT_IMMEDIAT, FRAGMENTS_ARCHI, FRAGMENTS_COOP } from './ecrans-config.js';
-import { chargerIconesPixel } from '../icones-pixel.js';
+import { chargerIconesPixel } from '../rendu/icones-pixel.js';
 import { logger } from '../logger.js';
 
 /** URL absolue d'un fragment HTML, robuste au base href et aux sous-chemins PWA. */

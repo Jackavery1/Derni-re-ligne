@@ -3,7 +3,7 @@ import {
     controlesTactilesActifs,
     definirControlesTactilesActifs,
     appliquerControlesTactilesDepuisStockage,
-} from '../js/controles-tactiles.js';
+} from '../js/logique/controles-tactiles.js';
 
 describe('controles-tactiles', () => {
     beforeEach(() => {

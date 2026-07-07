@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { parametresSpiraleConstellation } from '../js/constellation-spirale.js';
+import { parametresSpiraleConstellation } from '../js/logique/constellation-spirale.js';
 
 describe('constellation — spirale responsive', () => {
     it('resserre la spirale sur viewport compact', () => {

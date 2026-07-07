@@ -36,7 +36,7 @@ write(
 
 writeFileSync(
     'js/codex-illustrations.js',
-    `import { ILLUSTRATIONS_CODEX_HISTOIRE } from '../../js/codex-illustrations-histoire.js';
+    `import { ILLUSTRATIONS_CODEX_HISTOIRE } from '../../js/codex/codex-illustrations-histoire.js';
 import * as biomes from '../../js/codex-illustrations/biomes.js';
 import * as reliques from '../../js/codex-illustrations/reliques.js';
 import * as chroniques from '../../js/codex-illustrations/chroniques.js';

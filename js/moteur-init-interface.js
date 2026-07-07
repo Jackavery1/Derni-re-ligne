@@ -1,9 +1,9 @@
-import { chargerStats } from './achievements-stats.js';
+import { chargerStats } from './achievements/achievements-stats.js';
 import { planifierBoucle } from './boucle-jeu.js';
 import { mettreAJourAffichageRecord, chargerProgression } from './rendu/hud-jeu.js';
-import { appliquerThemeBiome } from './themes-biome.js';
+import { appliquerThemeBiome } from './rendu/themes-biome.js';
 import { afficherEcranDiffere } from './ui/navigation-lazy.js';
-import { initialiserInput } from './input-jeu.js';
+import { initialiserInput } from './logique/input-jeu.js';
 import { adapterInterface, initialiserLayout } from './rendu/layout-jeu.js';
 import { initPiecesFond } from './menu-fond.js';
 import { ECRANS, obtenirBiomeActif } from './etat/store-jeu.js';
@@ -16,10 +16,10 @@ function initialiserModulesDifferees() {
     void import('./ui/ui-panneau-objectifs.js').then(({ initialiserUiObjectifs }) =>
         initialiserUiObjectifs()
     );
-    void import('./mode-developpeur.js').then(({ initialiserModeDeveloppeur }) =>
+    void import('./logique/mode-developpeur.js').then(({ initialiserModeDeveloppeur }) =>
         initialiserModeDeveloppeur()
     );
-    void import('./tutoriel.js').then(({ initialiserTutoriel }) => initialiserTutoriel());
+    void import('./ui/tutoriel.js').then(({ initialiserTutoriel }) => initialiserTutoriel());
 }
 
 export function initialiserInterfaceMoteur() {

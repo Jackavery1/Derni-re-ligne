@@ -18,7 +18,7 @@ import {
     coop_verrouillerPiece,
     configurerCoopLogique,
 } from '../js/logique/coop-logique.js';
-import { initialiserChronometreCoop } from '../js/coop-jeu.js';
+import { initialiserChronometreCoop } from '../js/logique/coop-jeu.js';
 
 describe('coop-logique', () => {
     beforeEach(() => {

@@ -13,11 +13,11 @@ import {
 import { store } from '../etat/store-jeu.js';
 import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
 import { sauvegarderEtatHistoire } from '../io/progression.js';
-import { definirExpressionVera } from '../portraits-vera.js';
+import { definirExpressionVera } from '../rendu/portraits-vera.js';
 import { logger } from '../logger.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { afficherRecapAvantNarratif } from '../ui/ui-panneau-objectifs.js';
-import { creerFile } from '../file-narrative.js';
+import { creerFile } from './file-narrative.js';
 import { extraireLignesCutscene } from './histoire-cutscene-moteur.js';
 import { JOURNAUX_VERA } from '../histoire-donnees.js';
 

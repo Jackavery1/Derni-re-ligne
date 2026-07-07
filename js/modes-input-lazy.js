@@ -7,7 +7,7 @@ let archiInputPret = false;
 export async function assurerInputCoop() {
     await assurerFragmentsCoop();
     if (coopInputPret) return;
-    const { initialiserInputCoop } = await import('./coop-input.js');
+    const { initialiserInputCoop } = await import('./logique/coop-input.js');
     initialiserInputCoop();
     coopInputPret = true;
 }
@@ -15,7 +15,7 @@ export async function assurerInputCoop() {
 export async function assurerInputArchi() {
     await assurerFragmentsArchi();
     if (archiInputPret) return;
-    const { initialiserInputArchi } = await import('./archi-input.js');
+    const { initialiserInputArchi } = await import('./logique/archi-input.js');
     initialiserInputArchi();
     archiInputPret = true;
 }
