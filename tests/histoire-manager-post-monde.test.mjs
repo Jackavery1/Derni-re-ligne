@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { store } from '../js/store-jeu.js';
+import { store } from '../js/etat/store-jeu.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 
-vi.mock('../js/histoire-narratif.js', () => ({
+vi.mock('../js/histoire/histoire-narratif.js', () => ({
     afficherVictoireBoss: vi.fn((_id, _type, cb) => cb?.()),
     afficherTransitionChapitre: vi.fn((_cle, cb) => cb?.()),
     afficherJournalVera: vi.fn((_j, cb) => cb?.()),
@@ -14,24 +14,24 @@ vi.mock('../js/histoire-narratif.js', () => ({
     obtenirCutscenePostMonde: vi.fn(() => null),
 }));
 
-vi.mock('../js/ui-panneau-objectifs.js', () => ({
+vi.mock('../js/ui/ui-panneau-objectifs.js', () => ({
     afficherRecapAvantNarratif: vi.fn((_m, _e, cb) => cb?.()),
 }));
 
-vi.mock('../js/histoire-manager-ui.js', () => ({
+vi.mock('../js/histoire/histoire-manager-ui.js', () => ({
     afficherCutsceneHistoire: vi.fn((_t, _p, cb) => cb?.()),
     afficherBoutonCarteGameOver: vi.fn(),
 }));
 
-vi.mock('../js/mode-histoire.js', () => ({
+vi.mock('../js/etat/mode-histoire.js', () => ({
     modeHistoireEnCours: vi.fn(() => true),
 }));
 
-vi.mock('../js/navigation-ecrans.js', () => ({
+vi.mock('../js/ui/navigation-ecrans.js', () => ({
     afficherEcran: vi.fn(),
 }));
 
-vi.mock('../js/histoire-session.js', () => ({
+vi.mock('../js/histoire/histoire-session.js', () => ({
     enchainerCampagneApresMonde: vi.fn(() => Promise.resolve(true)),
 }));
 
@@ -43,11 +43,11 @@ describe('histoire-manager-post-monde', () => {
     });
 
     it('enchaine la campagne apres le narratif post-monde', async () => {
-        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        const { chargerHistoireTextes } = await import('../js/io/charger-histoire-textes.js');
         await chargerHistoireTextes();
         const { declencherNarratifPostMonde } =
-            await import('../js/histoire-manager-post-monde.js');
-        const { enchainerCampagneApresMonde } = await import('../js/histoire-session.js');
+            await import('../js/histoire/histoire-manager-post-monde.js');
+        const { enchainerCampagneApresMonde } = await import('../js/histoire/histoire-session.js');
 
         const monde = { id: 'monde_prologue', biomeId: 'classique', estBoss: false };
         const etat = structuredClone(ETAT_HISTOIRE_VIDE);
@@ -64,11 +64,11 @@ describe('histoire-manager-post-monde', () => {
     }, 15000);
 
     it('enregistre le fragment VERA apres premiere completion prologue', async () => {
-        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        const { chargerHistoireTextes } = await import('../js/io/charger-histoire-textes.js');
         await chargerHistoireTextes();
         const { declencherNarratifPostMonde } =
-            await import('../js/histoire-manager-post-monde.js');
-        const { afficherCutsceneHistoire } = await import('../js/histoire-manager-ui.js');
+            await import('../js/histoire/histoire-manager-post-monde.js');
+        const { afficherCutsceneHistoire } = await import('../js/histoire/histoire-manager-ui.js');
 
         const monde = { id: 'monde_prologue', biomeId: 'classique', estBoss: false };
         const etat = structuredClone(ETAT_HISTOIRE_VIDE);
@@ -82,10 +82,10 @@ describe('histoire-manager-post-monde', () => {
     });
 
     it('enregistre le fragment VERA apres premiere completion vide', async () => {
-        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        const { chargerHistoireTextes } = await import('../js/io/charger-histoire-textes.js');
         await chargerHistoireTextes();
         const { declencherNarratifPostMonde } =
-            await import('../js/histoire-manager-post-monde.js');
+            await import('../js/histoire/histoire-manager-post-monde.js');
 
         const monde = { id: 'monde_vide', biomeId: 'vide', estBoss: false };
         const etat = structuredClone(ETAT_HISTOIRE_VIDE);
@@ -98,11 +98,11 @@ describe('histoire-manager-post-monde', () => {
     });
 
     it('joue interlude_gardiens apres premiere completion rouille', async () => {
-        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        const { chargerHistoireTextes } = await import('../js/io/charger-histoire-textes.js');
         await chargerHistoireTextes();
         const { declencherNarratifPostMonde } =
-            await import('../js/histoire-manager-post-monde.js');
-        const { afficherCutsceneHistoire } = await import('../js/histoire-manager-ui.js');
+            await import('../js/histoire/histoire-manager-post-monde.js');
+        const { afficherCutsceneHistoire } = await import('../js/histoire/histoire-manager-ui.js');
 
         const monde = { id: 'monde_rouille', biomeId: 'rouille', estBoss: false };
         const etat = structuredClone(ETAT_HISTOIRE_VIDE);
@@ -119,9 +119,10 @@ describe('histoire-manager-post-monde', () => {
     });
 
     it('chaque monde post-monde a un fragment VERA defini', async () => {
-        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        const { chargerHistoireTextes } = await import('../js/io/charger-histoire-textes.js');
         await chargerHistoireTextes();
-        const { CLE_FRAGMENT_PAR_MONDE } = await import('../js/histoire-manager-post-monde.js');
+        const { CLE_FRAGMENT_PAR_MONDE } =
+            await import('../js/histoire/histoire-manager-post-monde.js');
         const { FRAGMENTS_VERA_SIGNAL } = await import('../js/histoire-textes/journaux.js');
 
         for (const cle of Object.values(CLE_FRAGMENT_PAR_MONDE)) {

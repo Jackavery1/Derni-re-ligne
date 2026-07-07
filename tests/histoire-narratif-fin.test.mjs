@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest';
 import * as textesHistoire from '../js/histoire-textes.js';
-import { activerModeHistoire, desactiverModeHistoire } from '../js/mode-histoire.js';
+import { activerModeHistoire, desactiverModeHistoire } from '../js/etat/mode-histoire.js';
 import { attendreMock } from './helpers-narratif-async.mjs';
 
 const { afficherCutsceneHistoire, executerFin } = vi.hoisted(() => ({
@@ -8,7 +8,7 @@ const { afficherCutsceneHistoire, executerFin } = vi.hoisted(() => ({
     executerFin: vi.fn(),
 }));
 
-vi.mock('../js/histoire-manager-ui.js', () => ({
+vi.mock('../js/histoire/histoire-manager-ui.js', () => ({
     afficherCutsceneHistoire,
 }));
 
@@ -16,7 +16,7 @@ vi.mock('../js/fins-histoire.js', () => ({
     executerFin,
 }));
 
-vi.mock('../js/histoire-etat.js', () => ({
+vi.mock('../js/histoire/histoire-etat.js', () => ({
     obtenirEtatHistoirePersiste: () => ({
         outroVue: false,
         interludesVusIds: [],
@@ -31,7 +31,7 @@ vi.mock('../js/histoire-etat.js', () => ({
 }));
 
 describe('declencherFin — épilogue puis outro', () => {
-    /** @type {typeof import('../js/histoire-narratif.js').declencherFin} */
+    /** @type {typeof import('../js/histoire/histoire-narratif.js').declencherFin} */
     let declencherFin;
 
     beforeAll(async () => {
@@ -41,9 +41,9 @@ describe('declencherFin — épilogue puis outro', () => {
             }
             return { ok: false, status: 404, json: async () => ({}) };
         };
-        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        const { chargerHistoireTextes } = await import('../js/io/charger-histoire-textes.js');
         await chargerHistoireTextes();
-        ({ declencherFin } = await import('../js/histoire-narratif.js'));
+        ({ declencherFin } = await import('../js/histoire/histoire-narratif.js'));
     }, 30000);
 
     beforeEach(() => {
@@ -65,7 +65,7 @@ describe('declencherFin — épilogue puis outro', () => {
     });
 
     it('expose OUTRO_FINS pour les trois IDs de fin', async () => {
-        const { obtenirHistoireTextesSync } = await import('../js/charger-histoire-textes.js');
+        const { obtenirHistoireTextesSync } = await import('../js/io/charger-histoire-textes.js');
         const { OUTRO_FINS } = obtenirHistoireTextesSync();
         for (const cle of ['fin_normale', 'fin_vraie', 'fin_secrete']) {
             expect(OUTRO_FINS[cle]?.length).toBeGreaterThan(0);

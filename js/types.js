@@ -158,7 +158,7 @@
  * @property {{ lignes: number[], timer: number, duree: number }} flashLignes
  * @property {{ timer: number, duree: number }} flashTopout
  * @property {Record<string, boolean>} touchesActives
- * @property {ReturnType<import('./store-histoire.js').creerEtatHistoireRuntime>} histoire
+ * @property {ReturnType<import('./etat/store-histoire.js').creerEtatHistoireRuntime>} histoire
  */
 
 /**

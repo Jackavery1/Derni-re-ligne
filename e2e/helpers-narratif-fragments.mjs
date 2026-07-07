@@ -3,7 +3,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 import { ETAT_HISTOIRE_BOSS_BRASIER } from './etats-histoire-base.mjs';
-import { CLE_FRAGMENT_PAR_MONDE } from '../js/histoire-manager-post-monde.js';
+import { CLE_FRAGMENT_PAR_MONDE } from '../js/histoire/histoire-manager-post-monde.js';
 import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
 
 const { SEQUENCE_HISTOIRE } = JSON.parse(

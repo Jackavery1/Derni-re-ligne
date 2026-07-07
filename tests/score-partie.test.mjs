@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { appliquerScoreLignes } from '../js/score-partie.js';
+import { appliquerScoreLignes } from '../js/logique/score-partie.js';
 
 function etatPartie() {
     return { score: 0, lignes: 0, niveau: 1, combo: 0, dernierEtaitTetris: false };

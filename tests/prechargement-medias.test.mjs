@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { store } from '../js/store-jeu.js';
-import { ECRANS } from '../js/ecrans-config.js';
-import { SCENE_DEFAUT_POST_MONDE } from '../js/histoire-narratif.js';
+import { store } from '../js/etat/store-jeu.js';
+import { ECRANS } from '../js/ui/ecrans-config.js';
+import { SCENE_DEFAUT_POST_MONDE } from '../js/histoire/histoire-narratif.js';
 import { SCENES_CUTSCENE } from '../js/scenes-cutscene.js';
-import { chargerHistoireTextes } from '../js/charger-histoire-textes.js';
+import { chargerHistoireTextes } from '../js/io/charger-histoire-textes.js';
 import {
     demarrerPrechargementCarte,
     annulerPrechargementMedias,

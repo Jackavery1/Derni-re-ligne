@@ -32,20 +32,20 @@ vi.mock('../js/fond-ecrans-meta.js', () => ({
     arreterFondMeta,
 }));
 
-vi.mock('../js/histoire-map.js', () => ({
+vi.mock('../js/histoire/histoire-map.js', () => ({
     demarrerCarteHistoire: vi.fn(),
     arreterCarteHistoire,
 }));
 
-vi.mock('../js/audio.js', () => ({
+vi.mock('../js/audio/audio.js', () => ({
     AudioMoteur: { arreterMusique: vi.fn() },
 }));
 
-vi.mock('../js/vivant.js', () => ({
+vi.mock('../js/logique/vivant.js', () => ({
     cacherBanniereVivant: vi.fn(),
 }));
 
-vi.mock('../js/hud-jeu.js', () => ({
+vi.mock('../js/rendu/hud-jeu.js', () => ({
     mettreAJourAffichageRecord: vi.fn(),
 }));
 
@@ -53,11 +53,11 @@ vi.mock('../js/deblocage-ui.js', () => ({
     mettreAJourVisibiliteModesDebloques: vi.fn(),
 }));
 
-vi.mock('../js/mode-histoire.js', () => ({
+vi.mock('../js/etat/mode-histoire.js', () => ({
     modeHistoireEnCours: vi.fn(() => false),
 }));
 
-vi.mock('../js/registre-modes.js', () => ({
+vi.mock('../js/etat/registre-modes.js', () => ({
     modeArchiActif: vi.fn(() => false),
 }));
 
@@ -69,7 +69,7 @@ vi.mock('../js/achievements.js', () => ({
     genererGalerieAchievements: vi.fn(),
 }));
 
-vi.mock('../js/store-jeu.js', () => ({
+vi.mock('../js/etat/store-jeu.js', () => ({
     ECRANS: {
         TITRE: 'ecran-titre',
         SELECTION: 'ecran-selection',
@@ -80,7 +80,7 @@ vi.mock('../js/store-jeu.js', () => ({
     definirEcranActuel: vi.fn(),
 }));
 
-import { cacherEcrans } from '../js/navigation-ecrans.js';
+import { cacherEcrans } from '../js/ui/navigation-ecrans.js';
 
 describe('navigation-ecrans — boucles RAF menu', () => {
     beforeEach(() => {

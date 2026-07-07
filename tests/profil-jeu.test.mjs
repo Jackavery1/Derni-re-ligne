@@ -9,7 +9,7 @@ import {
     calculerHauteurPlateau,
     enregistrerReaction,
 } from '../js/profil-jeu.js';
-import { etat } from '../js/store-jeu.js';
+import { etat } from '../js/etat/store-jeu.js';
 
 describe('profil-jeu', () => {
     beforeEach(() => {

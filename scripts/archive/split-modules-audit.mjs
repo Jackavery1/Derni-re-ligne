@@ -43,7 +43,7 @@ for (const g of groups) {
     const exports = g.imports.map((n) => `dessinerJournal${n}`).join(', ');
     writeFileSync(
         `js/${g.file}`,
-        `import { fondJournal } from './histoire-illustrations-utils.js';\n\n${body}\n`
+        `import { fondJournal } from '../../js/histoire/histoire-illustrations-utils.js';\n\n${body}\n`
     );
     importLines.push(`import { ${exports} } from './${g.file}';`);
     for (const n of g.imports) {
@@ -90,8 +90,8 @@ writeFileSync(
 
 writeFileSync(
     'js/histoire-cutscene-fonds.js',
-    `${header}import { dessinerFondCanvas } from './histoire-cutscene-fonds-animes.js';
-import { dessinerImageScene } from './histoire-cutscene-fonds-scenes.js';
+    `${header}import { dessinerFondCanvas } from '../../js/histoire/histoire-cutscene-fonds-animes.js';
+import { dessinerImageScene } from '../../js/histoire/histoire-cutscene-fonds-scenes.js';
 
 ${orchestration
     .replaceAll(

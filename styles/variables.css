@@ -77,6 +77,10 @@ body {
     color: var(--texte);
     font-family: var(--police);
     overflow: hidden;
+    touch-action: manipulation;
+}
+
+body.partie-active {
     touch-action: none;
 }
 

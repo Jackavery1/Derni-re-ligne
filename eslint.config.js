@@ -32,7 +32,7 @@ export default [
         },
     },
     {
-        files: ['sw.js'],
+        files: ['sw.js', 'sw-precache.js'],
         languageOptions: {
             globals: {
                 ...globals.serviceworker,
@@ -45,8 +45,9 @@ export default [
         },
     },
     {
-        files: ['sw-precache.js'],
+        files: ['sw-precache-list.js'],
         rules: {
+            'max-lines': 'off',
             'no-unused-vars': ['warn', { varsIgnorePattern: '^FICHIERS_A_CACHER$' }],
         },
     },

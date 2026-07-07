@@ -1,10 +1,10 @@
-import { store } from './store-jeu.js';
+import { store } from './etat/store-jeu.js';
 import {
     obtenirSecondesRestantesAttenteTrame,
     obtenirProgressionAttenteTrameMs,
     conditionsRuntime,
 } from './conditions-secrets.js';
-import { obtenirEtatHistoire } from './histoire-mondes.js';
+import { obtenirEtatHistoire } from './histoire/histoire-mondes.js';
 import { dialogueBossActif, mettreAJourLabelBossAttaque } from './boss-dialogues.js';
 
 /** @param {boolean} visible */

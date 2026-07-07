@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { urlSupabaseValide, syncCloudConfigure, configurerSupabase } from '../js/config-sync.js';
+import {
+    urlSupabaseValide,
+    syncCloudConfigure,
+    configurerSupabase,
+} from '../js/config/config-sync.js';
 
 describe('config-sync (audit P4)', () => {
     it('valide les URLs Supabase HTTPS', () => {

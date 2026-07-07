@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-vi.mock('../js/mode-histoire.js', () => ({
+vi.mock('../js/etat/mode-histoire.js', () => ({
     modeHistoireEnCours: vi.fn(() => true),
 }));
 
@@ -8,8 +8,8 @@ vi.mock('../js/accessibilite.js', () => ({
     obtenirEffetsAccessibiliteReduits: vi.fn(() => true),
 }));
 
-import { modeHistoireEnCours } from '../js/mode-histoire.js';
-import { store } from '../js/store-jeu.js';
+import { modeHistoireEnCours } from '../js/etat/mode-histoire.js';
+import { store } from '../js/etat/store-jeu.js';
 import {
     obtenirExpressionBossCombat,
     notifierPresentationBossPortrait,

@@ -1,7 +1,7 @@
 import { copierRapportErreurs } from './logger.js';
-import { configurerMeteo } from './meteo.js';
+import { configurerMeteo } from './logique/meteo.js';
 import { configurerReliques } from './reliques.js';
-import { AudioMoteur, configurerAudioMoteur } from './audio.js';
+import { AudioMoteur, configurerAudioMoteur } from './audio/audio.js';
 import {
     ecrireStockage,
     sauvegarderBiomeActif,
@@ -11,21 +11,26 @@ import {
     formaterEtoiles,
     biomeEstDebloque,
     migrerClesLocalStorage,
-} from './progression.js';
-import { etat, definirBiomeActif, obtenirBiomeActif, obtenirNiveauGlobal } from './store-jeu.js';
-import { obtenirForme, lierCouleursTetrominos } from './piece-jeu.js';
+} from './io/progression.js';
+import {
+    etat,
+    definirBiomeActif,
+    obtenirBiomeActif,
+    obtenirNiveauGlobal,
+} from './etat/store-jeu.js';
+import { obtenirForme, lierCouleursTetrominos } from './logique/piece-jeu.js';
 import { creerParticulesExplosion } from './particules-jeu.js';
 import { initialiserCanvas, demarrerJeu } from './partie.js';
 import { initialiserEffetsPartie } from './effets-partie.js';
 import { mettreAJourBoutonsMute } from './options-mute-ui.js';
 import { coopEstPrefere } from './coop-preference.js';
-import { appliquerThemeBiome } from './ecrans-ui.js';
-import { initialiserHaptique } from './haptique.js';
+import { appliquerThemeBiome } from './ui/ecrans-ui.js';
+import { initialiserHaptique } from './audio/haptique.js';
 import { appliquerControlesTactilesDepuisStockage } from './controles-tactiles.js';
-import { enregistrerPlanificateurPushCloud } from './progression-stockage.js';
+import { enregistrerPlanificateurPushCloud } from './io/progression-stockage.js';
 
 function initialiserSyncCloudDiffere() {
-    void import('./progression-sync-cloud.js').then(
+    void import('./io/progression-sync-cloud.js').then(
         ({ initialiserSyncCloud, synchroniserCloudAuDemarrage, planifierPushCloud }) => {
             enregistrerPlanificateurPushCloud(planifierPushCloud);
             initialiserSyncCloud();
@@ -106,12 +111,14 @@ export function initialiserSystemesMoteur() {
             modeCoopEstActif: coopEstPrefere,
             sonMenu: (type) => AudioMoteur.son(type),
             ouvrirHistoireVersMonde: (mondeId) => {
-                void import('./histoire-navigation.js').then(({ definirMondeCibleCarte }) => {
-                    definirMondeCibleCarte(mondeId);
-                    void import('./histoire-intro.js').then(({ ouvrirModeHistoireDepuisMenu }) =>
-                        ouvrirModeHistoireDepuisMenu()
-                    );
-                });
+                void import('./histoire/histoire-navigation.js').then(
+                    ({ definirMondeCibleCarte }) => {
+                        definirMondeCibleCarte(mondeId);
+                        void import('./histoire/histoire-intro.js').then(
+                            ({ ouvrirModeHistoireDepuisMenu }) => ouvrirModeHistoireDepuisMenu()
+                        );
+                    }
+                );
             },
         })
     );

@@ -1,0 +1,213 @@
+.panneau-detail {
+    position: fixed;
+    inset: 0;
+    z-index: 8600;
+    pointer-events: none;
+}
+.panneau-detail:not(.element-masque) {
+    pointer-events: none;
+}
+.panneau-detail-backdrop {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 12, 0.55);
+    pointer-events: auto;
+}
+.panneau-detail-corps {
+    --accent-carte: #6644cc;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(380px, 92vw);
+    max-width: 100%;
+    padding: 16px 14px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    border-radius: 6px 0 0 6px;
+    border-color: color-mix(in srgb, var(--accent-carte) 60%, transparent);
+    box-shadow:
+        -8px 0 32px rgba(0, 0, 0, 0.45),
+        0 0 24px color-mix(in srgb, var(--accent-carte) 28%, transparent);
+    transform: translateX(105%);
+    transition: transform 0.25s ease-out;
+    pointer-events: auto;
+}
+.panneau-detail-corps--ouvert {
+    transform: translateX(0);
+}
+.panneau-detail-corps--instant {
+    transition: none;
+}
+body.effets-reduits .panneau-detail-corps {
+    transition: none;
+}
+.panneau-detail-fermer {
+    align-self: flex-end;
+    background: transparent;
+    border: 1px solid var(--bordure);
+    color: var(--texte-dim);
+    font-family: var(--police);
+    font-size: 0.55rem;
+    cursor: pointer;
+    padding: 10px 14px;
+    min-width: 48px;
+    min-height: 48px;
+    letter-spacing: 1px;
+}
+.panneau-detail-fermer:hover {
+    color: var(--texte);
+    border-color: var(--accent-carte);
+}
+.panneau-detail-icone-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 0 28px color-mix(in srgb, var(--accent-carte) 45%, transparent);
+}
+.panneau-detail-icone-wrap canvas {
+    display: block;
+    image-rendering: pixelated;
+}
+.panneau-detail-titre {
+    font-family: var(--font-titre);
+    font-size: calc(var(--typo-nom-carte) * 1.3);
+    color: var(--accent-carte);
+    letter-spacing: 2px;
+    text-align: center;
+    text-shadow: 0 0 12px color-mix(in srgb, var(--accent-carte) 50%, transparent);
+    line-height: 1.35;
+    width: 100%;
+}
+.panneau-detail-sous-titre {
+    font-family: 'Rajdhani', var(--font-ui);
+    font-size: var(--typo-corps);
+    color: var(--texte-dim);
+    text-align: center;
+    letter-spacing: 0.5px;
+    width: 100%;
+}
+.panneau-detail-description {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+    max-height: min(42dvh, 320px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+.panneau-detail-description--narratif {
+    font-family: var(--font-narratif);
+    font-size: var(--taille-narratif);
+    line-height: 1.7;
+}
+.panneau-detail-description--ui {
+    font-family: 'Rajdhani', var(--font-ui);
+    font-size: var(--typo-corps);
+    line-height: 1.45;
+}
+.panneau-detail-para {
+    margin: 0;
+    padding: 4px 0 4px 10px;
+    border-left: 2px solid color-mix(in srgb, var(--accent-carte) 35%, transparent);
+    color: var(--texte);
+}
+.panneau-detail-meta {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-family: 'Orbitron', var(--font-stats);
+    font-size: clamp(0.5rem, 1vw, 0.65rem);
+    color: var(--accent-carte);
+    letter-spacing: 1px;
+}
+.panneau-detail-meta li {
+    padding: 4px 0;
+}
+.panneau-detail-progression {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.panneau-detail-progression-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid color-mix(in srgb, var(--accent-carte) 25%, transparent);
+    overflow: hidden;
+}
+.panneau-detail-progression-fill {
+    height: 100%;
+    width: var(--panneau-progression-pct, 0%);
+    background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--accent-carte) 70%, transparent),
+        var(--accent-carte)
+    );
+    box-shadow: 0 0 8px color-mix(in srgb, var(--accent-carte) 45%, transparent);
+    transition: width 0.25s ease;
+}
+body.effets-reduits .panneau-detail-progression-fill {
+    transition: none;
+}
+.panneau-detail-progression-texte {
+    font-family: 'Orbitron', var(--font-stats);
+    font-size: clamp(0.55rem, 1vw, 0.7rem);
+    color: var(--accent-carte);
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+.panneau-detail-jouer {
+    width: 100%;
+    margin-top: 8px;
+    min-height: 48px;
+    border-color: var(--accent-carte);
+    color: var(--accent-carte);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--accent-carte) 55%, transparent);
+    box-shadow:
+        0 0 10px color-mix(in srgb, var(--accent-carte) 30%, transparent),
+        inset 0 0 10px color-mix(in srgb, var(--accent-carte) 10%, transparent);
+}
+
+.panneau-detail-condition {
+    width: 100%;
+    font-family: 'Rajdhani', var(--font-ui);
+    font-size: var(--typo-corps);
+    color: var(--texte-dim);
+    font-style: italic;
+    text-align: center;
+    line-height: 1.4;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .panneau-detail-backdrop {
+        display: block;
+    }
+    .panneau-detail-corps {
+        top: auto;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        max-height: 55dvh;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        border-radius: 12px 12px 0 0;
+        transform: translateY(105%);
+    }
+    .panneau-detail-corps--ouvert {
+        transform: translateY(0);
+    }
+}

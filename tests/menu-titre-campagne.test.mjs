@@ -13,9 +13,9 @@ import {
     lireStockageJson,
     estCleProgression,
     estClePreference,
-} from '../js/progression.js';
+} from '../js/io/progression.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-import { introHistoireDejaVue } from '../js/histoire-intro.js';
+import { introHistoireDejaVue } from '../js/histoire/histoire-intro.js';
 
 describe('menu-titre-campagne', () => {
     beforeEach(() => {

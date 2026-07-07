@@ -3,8 +3,8 @@ import {
     introHistoireDejaVue,
     marquerIntroHistoireVue,
     obtenirSequenceIntro,
-} from '../js/histoire-intro.js';
-import { chargerHistoireTextes } from '../js/charger-histoire-textes.js';
+} from '../js/histoire/histoire-intro.js';
+import { chargerHistoireTextes } from '../js/io/charger-histoire-textes.js';
 import { INTRO_HISTOIRE } from '../js/histoire-textes.js';
 
 describe('histoire-intro', () => {
@@ -35,7 +35,7 @@ describe('histoire-intro', () => {
 
     it('obtenirHistoireTextesSync exige un chargement prealable', async () => {
         vi.resetModules();
-        const mod = await import('../js/charger-histoire-textes.js');
+        const mod = await import('../js/io/charger-histoire-textes.js');
         expect(() => mod.obtenirHistoireTextesSync()).toThrow(/chargerHistoireTextes/);
         await mod.chargerHistoireTextes();
         const textes = mod.obtenirHistoireTextesSync();

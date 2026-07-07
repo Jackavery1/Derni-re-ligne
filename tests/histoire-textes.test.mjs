@@ -16,9 +16,12 @@ import { SCENES_CUTSCENE } from '../js/scenes-cutscene.js';
 import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
 import { SEQUENCE_HISTOIRE } from '../js/histoire-donnees.js';
 import { HUMEURS_PERSONNAGES } from '../js/expressions-cutscene.js';
-import { idPortraitRendu } from '../js/histoire-cutscene-config.js';
-import { CLE_FRAGMENT_PAR_MONDE } from '../js/histoire-manager-post-monde.js';
-import { SCENE_DEFAUT_POST_MONDE, SCENE_DEFAUT_VICTOIRE_BOSS } from '../js/histoire-narratif.js';
+import { idPortraitRendu } from '../js/histoire/histoire-cutscene-config.js';
+import { CLE_FRAGMENT_PAR_MONDE } from '../js/histoire/histoire-manager-post-monde.js';
+import {
+    SCENE_DEFAUT_POST_MONDE,
+    SCENE_DEFAUT_VICTOIRE_BOSS,
+} from '../js/histoire/histoire-narratif.js';
 
 const BOSS_CONNUS = new Set(['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion']);
 

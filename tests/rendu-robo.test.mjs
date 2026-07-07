@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { dessinerRobo, definirHumeurRobo, PALETTE_ROBO } from '../js/rendu-robo.js';
-import { convertirHumeurVersCanvas } from '../js/mascotte-robo.js';
+import { dessinerRobo, definirHumeurRobo, PALETTE_ROBO } from '../js/rendu/rendu-robo.js';
+import { convertirHumeurVersCanvas } from '../js/ui/mascotte-robo.js';
 
 function creerCtxMock() {
     const gradient = { addColorStop: vi.fn() };

@@ -1,16 +1,16 @@
 import { demarrerJeu } from './partie.js';
-import { definirBiomeActif, etat } from './store-jeu.js';
-import { sauvegarderBiomeActif } from './progression.js';
+import { definirBiomeActif, etat } from './etat/store-jeu.js';
+import { sauvegarderBiomeActif } from './io/progression.js';
 import { obtenirActions } from './actions-jeu.js';
-import { activerModeHistoire } from './mode-histoire.js';
-import { chargerHistoireTextes } from './charger-histoire-textes.js';
-import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
-import { store } from './store-jeu.js';
+import { activerModeHistoire } from './etat/mode-histoire.js';
+import { chargerHistoireTextes } from './io/charger-histoire-textes.js';
+import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire/histoire-etat.js';
+import { store } from './etat/store-jeu.js';
 import { boucleSecondaireActive } from './planificateur-raf.js';
-import { emettre } from './bus-jeu.js';
+import { emettre } from './etat/bus-jeu.js';
 import { menuAnimActif } from './menu-fond.js';
-import { CONFIG } from './config.js';
-import { AudioMoteur } from './audio.js';
+import { CONFIG } from './config/config.js';
+import { AudioMoteur } from './audio/audio.js';
 
 export function initialiserNeoTestApi() {
     /** @type {(() => string | null) | null} */
@@ -24,7 +24,7 @@ export function initialiserNeoTestApi() {
     /** @type {(() => boolean) | null} */
     let typewriterEstActifSync = null;
     const depsTestApi = Promise.all([
-        import('./histoire-cutscene-fonds.js').then((mod) => {
+        import('./histoire/histoire-cutscene-fonds.js').then((mod) => {
             obtenirSceneCutsceneActiveSync = mod.obtenirSceneCutsceneActive;
         }),
         import('./portraits-cutscene-etat.js').then((mod) => {
@@ -34,7 +34,7 @@ export function initialiserNeoTestApi() {
         import('./expressions-cutscene.js').then((mod) => {
             obtenirDerniereHumeurParleeSync = mod.obtenirDerniereHumeurParleePortrait;
         }),
-        import('./histoire-cutscene-typewriter.js').then((mod) => {
+        import('./histoire/histoire-cutscene-typewriter.js').then((mod) => {
             typewriterEstActifSync = mod.typewriterEstActif;
         }),
     ]);
@@ -62,16 +62,16 @@ export function initialiserNeoTestApi() {
             declencherFinHistoire: async (finId) => {
                 activerModeHistoire();
                 await chargerHistoireTextes();
-                const { declencherFin } = await import('./histoire-narratif.js');
+                const { declencherFin } = await import('./histoire/histoire-narratif.js');
                 declencherFin(finId);
             },
             declencherPostMondeNarratif: async (mondeId) => {
                 activerModeHistoire();
                 await chargerHistoireTextes();
                 const { declencherNarratifPostMonde } =
-                    await import('./histoire-manager-post-monde.js');
+                    await import('./histoire/histoire-manager-post-monde.js');
                 const { SEQUENCE_HISTOIRE } = await import('./histoire-donnees.js');
-                const { rafraichirEtatHistoire } = await import('./histoire-mondes.js');
+                const { rafraichirEtatHistoire } = await import('./histoire/histoire-mondes.js');
                 const monde = SEQUENCE_HISTOIRE.find((m) => m.id === mondeId);
                 if (!monde) return;
                 const etatHist = rafraichirEtatHistoire();
@@ -84,7 +84,7 @@ export function initialiserNeoTestApi() {
                 const monde = SEQUENCE_HISTOIRE.find((m) => m.id === mondeId);
                 if (!monde) return;
                 store.histoire.mondeActuel = mondeId;
-                const { chargerEtatHistoire } = await import('./progression.js');
+                const { chargerEtatHistoire } = await import('./io/progression.js');
                 store.histoire.etat = chargerEtatHistoire();
                 document.body.classList.add('histoire-active');
                 if (monde.estBoss) {
@@ -97,7 +97,8 @@ export function initialiserNeoTestApi() {
                         store.histoire.mecaniques.cyberTetrisConsecutifs ?? 0
                     );
                 }
-                const { surFinDeMondeHistoire } = await import('./histoire-manager-completion.js');
+                const { surFinDeMondeHistoire } =
+                    await import('./histoire/histoire-manager-completion.js');
                 surFinDeMondeHistoire(lignes, 0, { sansNarratif });
             },
             simulerVictoireObjectifHistoire: async (mondeId, options = {}) => {
@@ -108,7 +109,7 @@ export function initialiserNeoTestApi() {
                 const monde = SEQUENCE_HISTOIRE.find((m) => m.id === mondeId);
                 if (!monde || monde.estBoss) return;
                 store.histoire.mondeActuel = mondeId;
-                const { chargerEtatHistoire } = await import('./progression.js');
+                const { chargerEtatHistoire } = await import('./io/progression.js');
                 store.histoire.etat = chargerEtatHistoire();
                 document.body.classList.add('histoire-active');
                 etat.estEnCours = true;
@@ -124,8 +125,8 @@ export function initialiserNeoTestApi() {
             },
             obtenirTypeFinHistoire: async () => {
                 activerModeHistoire();
-                const { chargerEtatHistoire } = await import('./progression.js');
-                const { obtenirTypeFin } = await import('./histoire-narratif.js');
+                const { chargerEtatHistoire } = await import('./io/progression.js');
+                const { obtenirTypeFin } = await import('./histoire/histoire-narratif.js');
                 store.histoire.etat = chargerEtatHistoire();
                 return obtenirTypeFin();
             },

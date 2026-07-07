@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { CONFIG } from '../js/config.js';
+import { CONFIG } from '../js/config/config.js';
 import {
     oracle,
     evaluerPlateau,
@@ -10,9 +10,9 @@ import {
     obtenirScoreFinalOracle,
     basculerOracle,
     afficherFeedbackOracle,
-} from '../js/oracle-jeu.js';
-import { etat } from '../js/store-jeu.js';
-import { creerPlateau } from '../js/piece-jeu.js';
+} from '../js/logique/oracle-jeu.js';
+import { etat } from '../js/etat/store-jeu.js';
+import { creerPlateau } from '../js/logique/piece-jeu.js';
 
 describe('oracle-jeu', () => {
     beforeEach(() => {

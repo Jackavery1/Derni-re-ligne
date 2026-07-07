@@ -3,7 +3,7 @@ import {
     dessinerVignetteCarte,
     dessinerIndicateurScroll,
     synchroniserPanneauMondeSelectionne,
-} from '../js/histoire-map-rendu-overlays.js';
+} from '../js/histoire/histoire-map-rendu-overlays.js';
 
 function creerCtx() {
     const gradient = { addColorStop: vi.fn() };

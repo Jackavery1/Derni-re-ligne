@@ -1,4 +1,8 @@
-import { coop_deplacerGauche, coop_deplacerDroite, coop_deplacerBas } from './coop-logique.js';
+import {
+    coop_deplacerGauche,
+    coop_deplacerDroite,
+    coop_deplacerBas,
+} from './logique/coop-logique.js';
 
 export function obtenirCarteDasCoop() {
     return {

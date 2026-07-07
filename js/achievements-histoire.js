@@ -1,6 +1,6 @@
-import { store } from './store-jeu.js';
-import { chargerEtatHistoire, sauvegarderEtatHistoire } from './progression.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+import { store } from './etat/store-jeu.js';
+import { chargerEtatHistoire, sauvegarderEtatHistoire } from './io/progression.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
 import { ETAT_HISTOIRE_VIDE } from './histoire-donnees.js';
 import { ACHIEVEMENTS_HISTOIRE_CONDITIONS } from './achievements-conditions-histoire.js';
 

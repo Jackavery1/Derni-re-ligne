@@ -1,12 +1,12 @@
 import { describe, it, expect, vi } from 'vitest';
 
-vi.mock('../js/store-jeu.js', () => ({
+vi.mock('../js/etat/store-jeu.js', () => ({
     etat: { filePieces: [] },
     obtenirCtxPreview: () => ({ clearRect: vi.fn(), fillRect: vi.fn() }),
     obtenirCanvasPreview: () => ({ width: 104, height: 210 }),
 }));
 
-vi.mock('../js/piece-jeu.js', () => ({
+vi.mock('../js/logique/piece-jeu.js', () => ({
     obtenirForme: () => [
         [1, 1, 1, 1],
         [0, 0, 0, 0],
@@ -16,16 +16,16 @@ vi.mock('../js/piece-jeu.js', () => ({
     obtenirCouleurPiece: () => '#00f5ff',
 }));
 
-vi.mock('../js/rendu-cellule.js', () => ({
+vi.mock('../js/rendu/rendu-cellule.js', () => ({
     dessinerCellule: vi.fn(),
 }));
 
-vi.mock('../js/rendu-accessibilite.js', () => ({
+vi.mock('../js/rendu/rendu-accessibilite.js', () => ({
     dessinerMotifsPreview: vi.fn(),
 }));
 
-const { dessinerPreview } = await import('../js/rendu-previews.js');
-const { dessinerCellule } = await import('../js/rendu-cellule.js');
+const { dessinerPreview } = await import('../js/rendu/rendu-previews.js');
+const { dessinerCellule } = await import('../js/rendu/rendu-cellule.js');
 
 describe('rendu-previews', () => {
     it('adapte la taille des cellules pour tenir dans le canvas hold', () => {

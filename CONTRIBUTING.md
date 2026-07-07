@@ -30,7 +30,7 @@ Node 18+ (`.nvmrc`). Logs verbeux : `?debug=1`. Formatage : `.prettierrc` (Prett
 
 La CI exécute **smoke** sur le bundle prod (`test:e2e:smoke:dist`), puis **responsive multi-viewport** (`test:e2e:responsive:dist` sur `dist/`, `test:e2e:responsive` sur les sources), **perf** (`test:e2e:perf` via `E2E_DIST=1` — `run-e2e-dist.mjs` injecte `neo-test-init.js` dans `dist/index.html`), **Lighthouse** desktop + mobile (`lighthouserc.cjs`, `lighthouserc-mobile.cjs`, warn non bloquant). La suite E2E complète (`npm run test:e2e`) sert les **modules ES sources** avec la matrice Playwright : `desktop`, `mobile-portrait`, `mobile-landscape`, `iphone-14`, `tablet-landscape` (1024×768) (+ projets visuels mobile). Audits gameplay/narratif : `npm run test:e2e:audit`. Local : `npm run audit:lighthouse` / `audit:lighthouse:mobile` après build.
 
-### Campagne complète D9 (narratif, ~10 min)
+### Campagne complète D9 (narratif, ~90 min)
 
 Parcours fin secrète **avec narratif post-victoire** (sans `sansNarratif`) :
 
@@ -38,7 +38,9 @@ Parcours fin secrète **avec narratif post-victoire** (sans `sansNarratif`) :
 npm run test:e2e:d9
 ```
 
-Timeout spec : 600 s. Helpers : `e2e/helpers-campagne-narratif.mjs`. **CI :** workflow `e2e-d9-nightly.yml` (dimanche 03:00 UTC, `workflow_dispatch` manuel).
+Timeout spec D9 complet : **5 400 000 ms** (~90 min). Sous-tests D9b : 4–5 min chacun. Helpers : `e2e/helpers-campagne-narratif.mjs`. **CI :** workflow `e2e-d9-nightly.yml` (dimanche 03:00 UTC, `workflow_dispatch` manuel).
+
+**Commit manuel :** `npm run commit -- "type(scope): sujet"` (Conventional Commits obligatoire via hook `commit-msg`). **Push :** le hook `pre-push` exécute lint, format, typecheck, cycles, données et tests unitaires (~1–2 min).
 
 ### Helpers E2E (`e2e/`)
 
@@ -58,7 +60,7 @@ Le jeu charge des modules ES (`import` depuis `js/`). **Live Server** et l’ouv
 
 ### Couverture Vitest (modules ciblés)
 
-`npm run test:coverage` mesure une **liste blanche** (~90 modules domaine / responsive / narratif core) définie dans `vitest.config.mjs` — pas l’intégralité des ~350 fichiers JS (rendu canvas lourd, UI écrans, portraits exclus volontairement). Seuils CI : lines 54 %, functions 56 %, statements 52 %, branches 46 %. Les modules **export-only** (`js/codex-histoire.js`) sont exclus du precache SW dev mais restent versionnés pour `npm run sync:data`.
+`npm run test:coverage` mesure une **liste blanche logique domaine** (`COVERAGE_LOGIC` dans `vitest.config.mjs`, ~30 modules) — pas l’intégralité des ~350 fichiers JS. Rendu canvas, navigation écrans, bus d’événements lourd et préchargement médias sont exclus (couverts par tests dédiés + E2E) ; voir `tests/coverage-perimetre.test.mjs`. Seuils CI : **80 %** sur lines, functions, statements et branches. Les modules **export-only** (`js/codex-histoire.js`) sont exclus du precache SW dev mais restent versionnés pour `npm run sync:data`.
 
 ### Checklist manuelle iPhone (encoches réelles)
 
@@ -70,7 +72,7 @@ Les specs `audit-c-responsive` simulent `--safe-top: 47px` (Dynamic Island). Ava
 4. Carte histoire — en-tête et retour accessibles (safe-area)
 5. Journal histoire — scrollable, fermer ≥ 48 px
 6. Cutscene portrait 319 px de large — portraits et boutons Suivant/Passer visibles
-7. Architecte paysage — contrôles latéraux utilisables au doigt (portrait = overlay orientation)
+7. Architecte portrait et paysage — contrôles utilisables au doigt (pas d’overlay bloquant)
 
 Annoter les écarts dans une issue ; ne pas supprimer la simulation CSS tant que le test physique n’est pas couvert.
 

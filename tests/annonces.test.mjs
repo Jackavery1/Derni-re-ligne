@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { etat } from '../js/store-jeu.js';
+import { etat } from '../js/etat/store-jeu.js';
 import { annoncer, annoncerPieceActive, annoncerPieceCourante } from '../js/annonces.js';
 
 describe('annonces', () => {

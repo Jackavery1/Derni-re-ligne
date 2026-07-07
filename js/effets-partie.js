@@ -1,9 +1,9 @@
-import { AudioMoteur } from './audio.js';
-import { CONFIG } from './config.js';
+import { AudioMoteur } from './audio/audio.js';
+import { CONFIG } from './config/config.js';
 import { obtenirActions } from './actions-jeu.js';
-import { ecouter } from './bus-jeu.js';
+import { ecouter } from './etat/bus-jeu.js';
 import { creerParticulesLigne } from './particules-jeu.js';
-import { obtenirCtxReserve, obtenirCanvasReserve, etat } from './store-jeu.js';
+import { obtenirCtxReserve, obtenirCanvasReserve, etat } from './etat/store-jeu.js';
 import { ajouterLignesEclipseBasse, ajouterLignesVide } from './achievements-histoire.js';
 import { obtenirLigneEclipse, biomeActuelMecanique } from './mecaniques-histoire.js';
 import {
@@ -13,7 +13,7 @@ import {
     obtenirYHautTas,
     declencherSecousse,
     declencherFlashTopout,
-} from './rendu-jeu.js';
+} from './rendu/rendu-jeu.js';
 import {
     reagirRoboAuxLignes,
     flashGrimaceRobo,
@@ -22,14 +22,14 @@ import {
     annoncer,
     rafraichirStats,
     afficherNotifNiveau,
-} from './ecrans-ui.js';
-import { evaluerDecisionOracle } from './oracle-jeu.js';
+} from './ui/ecrans-ui.js';
+import { evaluerDecisionOracle } from './logique/oracle-jeu.js';
 import { endommagerBoss, bossEstActif, bossEstVaincu, notifierTetrisBoss } from './boss-jeu.js';
-import { mettreAJourIndicateurRelique } from './piece-jeu.js';
+import { mettreAJourIndicateurRelique } from './logique/piece-jeu.js';
 import { enregistrerProgression, suiviDifficulteActif } from './gestionnaire-difficulte.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
-import { brancherBusReactionsMascotte } from './mascotte-robo.js';
-import { notifierTetrisRobo } from './rendu-robo.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
+import { brancherBusReactionsMascotte } from './ui/mascotte-robo.js';
+import { notifierTetrisRobo } from './rendu/rendu-robo.js';
 import { reinitialiserTimerNiveau } from './timer-niveau.js';
 
 let effetsInitialises = false;

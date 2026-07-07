@@ -1,13 +1,16 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { store } from '../js/store-jeu.js';
+import { store } from '../js/etat/store-jeu.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from '../js/histoire-etat.js';
+import {
+    obtenirEtatHistoirePersiste,
+    persisterEtatHistoire,
+} from '../js/histoire/histoire-etat.js';
 import {
     obtenirEtatHistoire,
     obtenirEtatMonde,
     mondePeutEtreJoue,
     rafraichirEtatHistoire,
-} from '../js/histoire-manager.js';
+} from '../js/histoire/histoire-manager.js';
 
 describe('histoire-etat', () => {
     beforeEach(() => {

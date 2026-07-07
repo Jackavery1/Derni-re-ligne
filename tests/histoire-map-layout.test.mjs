@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { calculerPositionsNoeuds } from '../js/histoire-map-layout.js';
-import { mettreAJourVisibiliteCarte } from '../js/histoire-map-visibilite.js';
+import { calculerPositionsNoeuds } from '../js/histoire/histoire-map-layout.js';
+import { mettreAJourVisibiliteCarte } from '../js/histoire/histoire-map-visibilite.js';
 
 describe('histoire-map-layout', () => {
     it('place les mondes principaux et les mondes caches debloques', () => {

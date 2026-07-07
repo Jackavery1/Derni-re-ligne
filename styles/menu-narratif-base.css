@@ -1,0 +1,227 @@
+/* ============================================
+   MENU TITRE — HIÉRARCHIE NARRATIVE
+   ============================================ */
+
+.btn-menu {
+    --btn-accent: var(--cyan);
+    --btn-texte: #aaf8ff;
+    --btn-fond-1: #001525;
+    --btn-fond-2: #002a4a;
+    --btn-glow: rgba(0, 245, 255, 0.35);
+    --btn-glow-fort: rgba(0, 245, 255, 0.55);
+    font-family: var(--font-titre);
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    padding: 10px 14px 10px 16px;
+    border: 2px solid var(--btn-accent);
+    border-left-width: 4px;
+    border-radius: 0;
+    clip-path: polygon(
+        10px 0,
+        100% 0,
+        100% calc(100% - 10px),
+        calc(100% - 10px) 100%,
+        0 100%,
+        0 10px
+    );
+    color: var(--btn-texte);
+    background-color: var(--btn-fond-1);
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.12) 2px,
+            rgba(0, 0, 0, 0.12) 4px
+        ),
+        linear-gradient(135deg, var(--btn-fond-1) 0%, var(--btn-fond-2) 52%, var(--btn-fond-1) 100%);
+    box-shadow:
+        0 0 10px var(--btn-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+    text-shadow: 0 0 10px color-mix(in srgb, var(--btn-accent) 55%, transparent);
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+        box-shadow 0.25s ease,
+        transform 0.15s ease,
+        opacity 0.2s ease,
+        filter 0.15s ease,
+        border-color 0.2s ease;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-menu:hover:not(.btn-verrouille) {
+    filter: brightness(1.12);
+    box-shadow:
+        0 0 16px var(--btn-glow-fort),
+        0 0 32px var(--btn-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+}
+
+.btn-menu:active:not(.btn-verrouille) {
+    transform: translateY(1px) scale(0.98);
+}
+
+.menu-bloc-principal {
+    margin-bottom: 12px;
+}
+
+.menu-bloc-campagne {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: min(100%, 320px);
+}
+
+.btn-continuer,
+.btn-nouvelle-partie {
+    width: 100%;
+    min-height: 48px;
+    min-width: 48px;
+    padding: 12px 18px;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    overflow: hidden;
+    font-size: clamp(0.72rem, 3.4vw, 0.9rem);
+}
+
+.btn-continuer .btn-texte,
+.btn-nouvelle-partie .btn-texte {
+    font-size: 1em;
+    letter-spacing: 3px;
+}
+
+.btn-continuer .btn-icone,
+.btn-nouvelle-partie .btn-icone {
+    margin-right: 0;
+    font-size: 1.1em;
+}
+
+.btn-continuer .btn-sous-titre,
+.btn-nouvelle-partie .btn-sous-titre {
+    font-size: 0.48em;
+    letter-spacing: 2px;
+}
+
+.btn-continuer {
+    --btn-accent: #00e5ff;
+    --btn-texte: #aaf8ff;
+    --btn-fond-1: #001a28;
+    --btn-fond-2: #003850;
+    --btn-glow: rgba(0, 229, 255, 0.4);
+    --btn-glow-fort: rgba(0, 229, 255, 0.65);
+    animation: continuer-pulse 2.2s ease-in-out infinite;
+}
+
+.btn-nouvelle-partie {
+    --btn-accent: #dd00ff;
+    --btn-texte: #ff88ff;
+    --btn-fond-1: #1a0030;
+    --btn-fond-2: #3d0060;
+    --btn-glow: rgba(221, 0, 255, 0.45);
+    --btn-glow-fort: rgba(221, 0, 255, 0.7);
+    box-shadow:
+        0 0 12px var(--btn-glow),
+        0 0 28px rgba(221, 0, 255, 0.18),
+        inset 0 0 16px rgba(221, 0, 255, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.btn-nouvelle-partie--seul {
+    animation: histoire-pulse 2s ease-in-out infinite;
+}
+
+.btn-nouvelle-partie--seul::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 80%;
+    height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255, 136, 255, 0.08), transparent);
+    animation: histoire-shimmer 3s linear infinite;
+    pointer-events: none;
+}
+
+.btn-options-titre {
+    --btn-accent: rgba(180, 180, 220, 0.55);
+    --btn-texte: #c8c8ee;
+    --btn-fond-1: rgba(8, 8, 26, 0.85);
+    --btn-fond-2: rgba(18, 18, 42, 0.9);
+    --btn-glow: rgba(0, 245, 255, 0.12);
+    --btn-glow-fort: rgba(0, 245, 255, 0.28);
+    width: auto;
+    min-width: 160px;
+    padding: 10px 20px;
+    font-size: 0.48rem;
+    gap: 8px;
+    text-shadow: none;
+}
+
+.btn-options-titre:hover:not(.btn-verrouille) {
+    --btn-accent: rgba(0, 245, 255, 0.65);
+    --btn-texte: var(--cyan);
+    filter: none;
+}
+
+.dialog-nouvelle-partie {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(4px);
+}
+
+.dialog-nouvelle-partie.element-masque {
+    display: none !important;
+}
+
+.dialog-nouvelle-partie-corps {
+    width: min(100%, 420px);
+    padding: 20px 22px;
+    border: 2px solid var(--rose);
+    background: linear-gradient(180deg, #120018 0%, #080010 100%);
+    box-shadow: 0 0 30px rgba(255, 45, 120, 0.25);
+}
+
+.dialog-nouvelle-partie-titre {
+    font-family: var(--font-titre);
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: var(--rose);
+    margin-bottom: 12px;
+}
+
+.dialog-nouvelle-partie-texte {
+    font-size: 0.42rem;
+    line-height: 1.7;
+    color: var(--texte-dim);
+    margin-bottom: 18px;
+}
+
+.dialog-nouvelle-partie-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.bouton-danger {
+    border-color: var(--rose) !important;
+    color: #ff9ec8 !important;
+    box-shadow: 0 0 12px rgba(255, 45, 120, 0.25);
+}

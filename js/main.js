@@ -1,15 +1,15 @@
-import { chargerEcrans } from './charger-ecrans.js';
-import { chargerBiomesJeu } from './biomes.js';
-import { chargerContenuJeu } from './contenu-jeu.js';
+import { chargerEcrans } from './ui/charger-ecrans.js';
+import { chargerBiomesJeu } from './config/biomes.js';
+import { chargerContenuJeu } from './config/contenu-jeu.js';
 import { chargerDifficulteMondes } from './difficulte-mondes-chargement.js';
 import { chargerAchievementsDonnees } from './achievements-donnees.js';
 import { chargerHistoireDonneesMetier } from './histoire-donnees.js';
 import { initialiserApplication } from './moteur.js';
-import { attendreBoutonsPretes } from './ui-init.js';
+import { attendreBoutonsPretes } from './ui/ui-init.js';
 import { logger, afficherErreurUtilisateur } from './logger.js';
-import { lireStockage } from './progression-stockage.js';
+import { lireStockage } from './io/progression-stockage.js';
 import { swAutorise, libererSwEnDevLocal } from './sw-dev.js';
-import { precchargerNavigation } from './navigation-lazy.js';
+import { precchargerNavigation } from './ui/navigation-lazy.js';
 import {
     definirProgressionChargement,
     definirMessageChargement,

@@ -16,7 +16,14 @@ const EXCLUS_PRECACHE = new Set([
 const modeProd = process.argv.includes('--prod');
 const enforceBudget = process.argv.includes('--enforce-budget') || modeProd;
 const racine = modeProd ? 'dist' : '.';
-const precachePath = modeProd ? 'dist/sw-precache.js' : 'sw-precache.js';
+const precacheListPath = modeProd ? 'dist/sw-precache-list.js' : 'sw-precache-list.js';
+
+const MODELE_LISTE_PRECACHE = `// Genere par npm run sync:sw — ne pas editer a la main.
+const FICHIERS_A_CACHER = [
+    ${MARQUEUR_DEBUT}
+    ${MARQUEUR_FIN}
+];
+`;
 
 /** @param {string} dossier @param {string} prefixe @param {string} ext */
 function listerPlat(dossier, prefixe, ext) {
@@ -27,6 +34,28 @@ function listerPlat(dossier, prefixe, ext) {
         .map((f) => `${prefixe}${f}`);
 }
 
+/** @param {string} dossier @param {string} prefixe */
+function listerJsRecursif(dossier, prefixe) {
+    const base = join(racine, dossier);
+    if (!existsSync(base)) return [];
+    /** @type {string[]} */
+    const resultat = [];
+    function parcourir(courant, pref) {
+        for (const entree of readdirSync(courant, { withFileTypes: true }).sort((a, b) =>
+            a.name.localeCompare(b.name)
+        )) {
+            const chemin = join(courant, entree.name);
+            if (entree.isDirectory()) {
+                parcourir(chemin, `${pref}${entree.name}/`);
+            } else if (entree.name.endsWith('.js') && !entree.name.endsWith('.map')) {
+                resultat.push(`${prefixe}${pref}${entree.name}`);
+            }
+        }
+    }
+    parcourir(base, '');
+    return resultat;
+}
+
 /** @returns {string[]} */
 function construireListePrecache() {
     /** @type {string[]} */
@@ -35,6 +64,7 @@ function construireListePrecache() {
         './index.html',
         './manifest.json',
         './sw-precache.js',
+        './sw-precache-list.js',
         ...listerPlat('styles', './styles/', '.css'),
         ...listerPlat('html', './html/', '.html'),
         ...listerPlat('data', './data/', '.json'),
@@ -52,7 +82,7 @@ function construireListePrecache() {
             );
         }
     } else {
-        fichiers.push(...listerPlat('js', './js/', '.js'));
+        fichiers.push(...listerJsRecursif('js', './js/'));
     }
 
     const imgDir = join(racine, 'img');
@@ -77,33 +107,38 @@ function mesurerPoids(fichiers) {
     return total;
 }
 
-if (modeProd && !existsSync(precachePath)) {
-    console.error(`Mode prod : ${precachePath} introuvable (lancez npm run build d abord).`);
-    process.exit(1);
+if (!existsSync(precacheListPath)) {
+    if (modeProd) {
+        console.error(
+            `Mode prod : ${precacheListPath} introuvable (copiez sw-precache-list.js dans dist).`
+        );
+        process.exit(1);
+    }
+    writeFileSync(precacheListPath, MODELE_LISTE_PRECACHE);
 }
 
 const fichiers = construireListePrecache();
 const lignes = fichiers.map((f) => `    '${f}',`).join('\n');
 const blocPrecache = `${MARQUEUR_DEBUT}\n${lignes}\n    ${MARQUEUR_FIN}`;
 
-let precache = readFileSync(precachePath, 'utf8');
+let precache = readFileSync(precacheListPath, 'utf8');
 const regexPrecache = new RegExp(
     `${MARQUEUR_DEBUT.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\S]*?${MARQUEUR_FIN.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`
 );
 
 if (!regexPrecache.test(precache)) {
-    console.error(`Marqueurs PRECACHE introuvables dans ${precachePath}`);
+    console.error(`Marqueurs PRECACHE introuvables dans ${precacheListPath}`);
     process.exit(1);
 }
 
 precache = precache.replace(regexPrecache, blocPrecache);
-writeFileSync(precachePath, precache);
+writeFileSync(precacheListPath, precache);
 
 const octets = mesurerPoids(fichiers);
 const ko = Math.round((octets / 1024) * 10) / 10;
 const label = modeProd ? 'prod' : 'dev';
 
-console.log(`Precache ${label} : ${fichiers.length} fichiers, ${ko} Ko (${precachePath})`);
+console.log(`Precache ${label} : ${fichiers.length} fichiers, ${ko} Ko (${precacheListPath})`);
 
 if (octets > BUDGET_APP_SHELL_KO * 1024) {
     const msg = `App shell trop lourd : ${ko} Ko (max ${BUDGET_APP_SHELL_KO} Ko)`;

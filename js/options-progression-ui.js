@@ -1,5 +1,5 @@
-import { exporterProgressionB10, importerProgressionB10 } from './progression.js';
-import { lierBouton } from './ui-lier-bouton.js';
+import { exporterProgressionB10, importerProgressionB10 } from './io/progression.js';
+import { lierBouton } from './ui/ui-lier-bouton.js';
 
 function pulseExportImport() {
     try {

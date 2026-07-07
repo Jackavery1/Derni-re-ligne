@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { BIOMES } from '../js/config.js';
-import { store } from '../js/store-jeu.js';
-import { etat, definirBiomeActif } from '../js/store-jeu.js';
-import { creerPlateau } from '../js/piece-jeu.js';
+import { BIOMES } from '../js/config/config.js';
+import { store } from '../js/etat/store-jeu.js';
+import { etat, definirBiomeActif } from '../js/etat/store-jeu.js';
+import { creerPlateau } from '../js/logique/piece-jeu.js';
 import { demarrerSuiviMonde } from '../js/gestionnaire-difficulte.js';
 import { demarrerBoss, arreterBoss, mettreAJourBoss, bossEstActif } from '../js/boss-jeu.js';
-import { annulerTimersVivant } from '../js/vivant.js';
-import { dessinerSignesVie } from '../js/rendu-vivant.js';
+import { annulerTimersVivant } from '../js/logique/vivant.js';
+import { dessinerSignesVie } from '../js/rendu/rendu-vivant.js';
 import { tickConditionTrame, reinitialiserConditionsRuntime } from '../js/conditions-secrets.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 

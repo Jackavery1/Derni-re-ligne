@@ -1,0 +1,15 @@
+@media (max-width: 768px) {
+    .codex-contenu {
+        padding: 24px 16px 32px;
+    }
+
+    .codex-liste {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        max-width: 100%;
+    }
+
+    .codex-item {
+        padding: 4px 4px 6px;
+    }
+}

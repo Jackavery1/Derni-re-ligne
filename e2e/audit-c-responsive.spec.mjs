@@ -272,34 +272,31 @@ test('audit C12 — pause coop portrait au touch', { tag: '@touch-only' }, async
 });
 
 test(
-    'audit C13 — overlay orientation portrait en partie solo',
+    'audit C13 — partie solo jouable en portrait sans overlay bloquant',
     { tag: '@viewport-mobile-portrait' },
     async ({ page }) => {
         await page.setViewportSize({ width: 390, height: 844 });
         await demarrerPartie(page);
-        await expect(page.locator('#overlay-orientation')).toHaveClass(/visible/);
-
-        await page.setViewportSize({ width: 844, height: 390 });
-        await expect(page.locator('#overlay-orientation')).not.toHaveClass(/visible/);
+        await expect(page.locator('#overlay-orientation')).toHaveCount(0);
+        await expect(page.locator('#interface-jeu')).toBeVisible();
+        await expect(page.locator('#canvas-plateau')).toBeVisible();
     }
 );
 
 test(
-    'audit C13 — overlay orientation portrait en coop',
+    'audit C13 — coop jouable en portrait sans overlay bloquant',
     { tag: '@viewport-mobile-portrait' },
     async ({ page }) => {
         const { demarrerPartieCoop } = await import('./helpers.mjs');
         await page.setViewportSize({ width: 390, height: 844 });
         await demarrerPartieCoop(page);
-        await expect(page.locator('#overlay-orientation')).toHaveClass(/visible/);
-
-        await page.setViewportSize({ width: 844, height: 390 });
-        await expect(page.locator('#overlay-orientation')).not.toHaveClass(/visible/);
+        await expect(page.locator('#overlay-orientation')).toHaveCount(0);
+        await expect(page.locator('#interface-jeu-coop')).toBeVisible();
     }
 );
 
 test(
-    'audit C13 — overlay orientation portrait en architecte',
+    'audit C13 — architecte jouable en portrait sans overlay bloquant',
     { tag: '@viewport-mobile-portrait' },
     async ({ page }) => {
         await page.setViewportSize({ width: 390, height: 844 });
@@ -309,17 +306,14 @@ test(
         await page.locator('#btn-architecte').click();
         await ouvrirPremierNiveauArchitecte(page);
         await expect(page.locator('#interface-jeu-archi')).toBeVisible({ timeout: 5000 });
-        await expect(page.locator('#overlay-orientation')).toHaveClass(/visible/);
-
-        await page.setViewportSize({ width: 844, height: 390 });
-        await expect(page.locator('#overlay-orientation')).not.toHaveClass(/visible/);
+        await expect(page.locator('#overlay-orientation')).toHaveCount(0);
     }
 );
 
-test('audit C13 — pas d overlay orientation pendant cutscene histoire', async ({ page }) => {
+test('audit C13 — cutscene histoire sans overlay orientation', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await ouvrirCarteHistoire(page, ETAT_HISTOIRE_VIDE);
     await lancerMondeDepuisCarte(page, 'monde_prologue');
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 10000 });
-    await expect(page.locator('#overlay-orientation')).not.toHaveClass(/visible/);
+    await expect(page.locator('#overlay-orientation')).toHaveCount(0);
 });

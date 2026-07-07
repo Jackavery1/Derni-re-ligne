@@ -1,8 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { initParticulesAmbiance, mettreAJourParticulesAmbiance } from '../js/rendu-ambiance.js';
-import { particulesAmbiance } from '../js/store-jeu.js';
-import { definirBiomeActif } from '../js/store-etat-partie.js';
-import { definirRefsCanvas } from '../js/store-refs-canvas.js';
+import {
+    initParticulesAmbiance,
+    mettreAJourParticulesAmbiance,
+} from '../js/rendu/rendu-ambiance.js';
+import { particulesAmbiance } from '../js/etat/store-jeu.js';
+import { definirBiomeActif } from '../js/etat/store-etat-partie.js';
+import { definirRefsCanvas } from '../js/etat/store-refs-canvas.js';
 
 function creerCtxMock() {
     return {

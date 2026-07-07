@@ -1,7 +1,7 @@
 import { logger } from './logger.js';
-import { idPortraitRendu } from './histoire-cutscene-config.js';
+import { idPortraitRendu } from './histoire/histoire-cutscene-config.js';
 import { obtenirEffetsAccessibiliteReduits } from './accessibilite.js';
-import { store } from './store-jeu.js';
+import { store } from './etat/store-jeu.js';
 
 /** @typedef {Record<string, number | boolean | number[]>} ParamsExpression */
 

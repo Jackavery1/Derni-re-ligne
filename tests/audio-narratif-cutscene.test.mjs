@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { MUSIQUE_BIOMES, TONIQUES_BIOMES } from '../js/audio-donnees.js';
-import { obtenirConfigMusiqueBiome } from '../js/audio-fallback-biomes.js';
+import { MUSIQUE_BIOMES, TONIQUES_BIOMES } from '../js/audio/audio-donnees.js';
+import { obtenirConfigMusiqueBiome } from '../js/audio/audio-fallback-biomes.js';
 
 describe('audio narratif cutscene (audit P3)', () => {
     it('expose une piste dediee narratif_cutscene', () => {

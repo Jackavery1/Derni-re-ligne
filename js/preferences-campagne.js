@@ -1,4 +1,4 @@
-import { lireStockage, ecrireStockage } from './progression-stockage.js';
+import { lireStockage, ecrireStockage } from './io/progression-stockage.js';
 
 const CLE_ENCHAINEMENT_CAMPAGNE = 'derniereLigne_enchainementCampagne';
 

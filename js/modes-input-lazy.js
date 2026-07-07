@@ -1,4 +1,4 @@
-import { assurerFragmentsArchi, assurerFragmentsCoop } from './charger-ecrans.js';
+import { assurerFragmentsArchi, assurerFragmentsCoop } from './ui/charger-ecrans.js';
 
 /** Initialisation différée des inputs coop / architecte (évite le chargement eager au boot). */
 let coopInputPret = false;

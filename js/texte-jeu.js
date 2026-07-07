@@ -1,5 +1,5 @@
 /** Normalise e accentues pour l'affichage UI (hors bulles dialogue / narration). */
-import { lireStockage, ecrireStockage } from './progression-stockage.js';
+import { lireStockage, ecrireStockage } from './io/progression-stockage.js';
 
 const CLE_ACCENTS_UI = 'derniereLigne_accentsUi';
 

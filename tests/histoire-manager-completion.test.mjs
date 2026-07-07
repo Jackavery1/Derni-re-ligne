@@ -1,22 +1,22 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { store } from '../js/store-jeu.js';
+import { store } from '../js/etat/store-jeu.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-import { persisterEtatHistoire } from '../js/histoire-etat.js';
+import { persisterEtatHistoire } from '../js/histoire/histoire-etat.js';
 import {
     SEUILS_COMPLETION,
     surFinDeMondeHistoire,
     devCompleterMondeHistoire,
-} from '../js/histoire-manager-completion.js';
+} from '../js/histoire/histoire-manager-completion.js';
 
-vi.mock('../js/histoire-manager-ui.js', () => ({
+vi.mock('../js/histoire/histoire-manager-ui.js', () => ({
     afficherBoutonCarteGameOver: vi.fn(),
 }));
 
-vi.mock('../js/ui-panneau-objectifs.js', () => ({
+vi.mock('../js/ui/ui-panneau-objectifs.js', () => ({
     afficherRecapAvantNarratif: vi.fn((_monde, _etoiles, cb) => cb?.()),
 }));
 
-vi.mock('../js/histoire-narratif.js', () => ({
+vi.mock('../js/histoire/histoire-narratif.js', () => ({
     afficherVictoireBoss: vi.fn((_id, _cle, cb) => cb?.()),
     afficherTransitionChapitre: vi.fn((_cle, cb) => cb?.()),
     afficherJournalVera: vi.fn((_journal, cb) => cb?.()),
@@ -31,7 +31,7 @@ vi.mock('../js/histoire-narratif.js', () => ({
 describe('histoire-manager-completion', () => {
     beforeEach(async () => {
         localStorage.clear();
-        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        const { chargerHistoireTextes } = await import('../js/io/charger-histoire-textes.js');
         await chargerHistoireTextes();
         store.histoire.actif = true;
         store.histoire.mondeActuel = 'monde_prologue';
@@ -39,7 +39,7 @@ describe('histoire-manager-completion', () => {
         store.histoire.dernierJournal = null;
         store.histoire.etat = structuredClone(ETAT_HISTOIRE_VIDE);
         persisterEtatHistoire(store.histoire.etat);
-        const ui = await import('../js/histoire-manager-ui.js');
+        const ui = await import('../js/histoire/histoire-manager-ui.js');
         vi.mocked(ui.afficherBoutonCarteGameOver).mockClear();
     });
 
@@ -59,7 +59,7 @@ describe('histoire-manager-completion', () => {
         expect(store.histoire.etat.mondesCompletes).not.toContain('monde_prologue');
         expect(store.histoire.etat.nbContinuesUtilises).toBe(0);
         expect(store.histoire.etat.continuesParBoss?.monde_prologue ?? 0).toBe(0);
-        const ui = await import('../js/histoire-manager-ui.js');
+        const ui = await import('../js/histoire/histoire-manager-ui.js');
         expect(ui.afficherBoutonCarteGameOver).toHaveBeenCalledWith(true);
     });
 

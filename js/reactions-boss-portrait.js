@@ -1,6 +1,6 @@
 import { logger } from './logger.js';
-import { store } from './store-jeu.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+import { store } from './etat/store-jeu.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
 import { obtenirEffetsAccessibiliteReduits } from './accessibilite.js';
 import { PRESETS_BOSS } from './expressions-cutscene-presets.js';
 

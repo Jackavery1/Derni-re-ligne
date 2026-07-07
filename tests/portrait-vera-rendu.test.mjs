@@ -4,7 +4,7 @@ import {
     PALETTE_VERA_DESAT,
     dessinerPortraitVeraCanon,
     viderCachePortraitVera,
-} from '../js/portrait-vera-rendu.js';
+} from '../js/rendu/portrait-vera-rendu.js';
 import {
     obtenirParamsExpressionPortrait,
     infererHumeurVeraDepuisTexte,
@@ -14,10 +14,10 @@ import {
 import {
     obtenirImagePortraitVera,
     reinitialiserCachePortraitVeraAssets,
-} from '../js/portrait-vera-assets.js';
-import { store } from '../js/store-jeu.js';
+} from '../js/rendu/portrait-vera-assets.js';
+import { store } from '../js/etat/store-jeu.js';
 
-vi.mock('../js/portrait-vera-assets.js', async (importOriginal) => {
+vi.mock('../js/rendu/portrait-vera-assets.js', async (importOriginal) => {
     const original = await importOriginal();
     return {
         ...original,

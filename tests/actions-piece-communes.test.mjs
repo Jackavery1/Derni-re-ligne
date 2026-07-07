@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { creerPlateau } from '../js/piece-jeu.js';
+import { creerPlateau } from '../js/logique/piece-jeu.js';
 import {
     poserPieceSurPlateau,
     vitesseChuteDepuisNiveau,
@@ -8,10 +8,10 @@ import {
     tenterRotationSrs,
     calculerSpawnXCoop,
     executerChuteRapide,
-} from '../js/actions-piece-communes.js';
-import { estPositionValideSurPlateau } from '../js/moteur-piece.js';
-import { extraireForme } from '../js/moteur-piece.js';
-import { CONFIG } from '../js/config.js';
+} from '../js/logique/actions-piece-communes.js';
+import { estPositionValideSurPlateau } from '../js/logique/moteur-piece.js';
+import { extraireForme } from '../js/logique/moteur-piece.js';
+import { CONFIG } from '../js/config/config.js';
 
 describe('actions-piece-communes', () => {
     it('poserPieceSurPlateau place les cellules', () => {

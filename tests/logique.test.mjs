@@ -12,8 +12,8 @@ import {
     detecterTSpin,
     calculerPointsTSpin,
     supprimerLignesDuPlateauExcluantRouille,
-} from '../js/logique-pure.js';
-import { CONFIG } from '../js/config.js';
+} from '../js/logique/logique-pure.js';
+import { CONFIG } from '../js/config/config.js';
 
 describe('logique-pure', () => {
     it('Sac 7-bag contient 7 pièces uniques', () => {

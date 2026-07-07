@@ -1,7 +1,7 @@
 import { obtenirTouches } from './touches-config.js';
-import { touchesActives } from './store-jeu.js';
-import { reinitialiserDas } from './piece-jeu.js';
-import { vibrer } from './haptique.js';
+import { touchesActives } from './etat/store-jeu.js';
+import { reinitialiserDas } from './logique/piece-jeu.js';
+import { vibrer } from './audio/haptique.js';
 
 /** @type {Record<string, keyof ReturnType<typeof obtenirTouches>>} */
 const ACTION_PAR_BOUTON = {

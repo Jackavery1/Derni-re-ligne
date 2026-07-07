@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import * as textesHistoire from '../js/histoire-textes.js';
-import { store } from '../js/store-jeu.js';
+import { store } from '../js/etat/store-jeu.js';
 
-vi.mock('../js/navigation-ecrans.js', () => ({
+vi.mock('../js/ui/navigation-ecrans.js', () => ({
     afficherEcran: vi.fn(),
     afficherEcranAsync: vi.fn(async (id) => {
         const el = globalThis.document.getElementById(id);
@@ -12,7 +12,7 @@ vi.mock('../js/navigation-ecrans.js', () => ({
     annoncer: vi.fn(),
 }));
 
-vi.mock('../js/navigation-lazy.js', () => ({
+vi.mock('../js/ui/navigation-lazy.js', () => ({
     afficherEcranDiffere: vi.fn(),
     afficherEcranDiffereAsync: vi.fn(async (id) => {
         const el = globalThis.document.getElementById(id);
@@ -26,7 +26,7 @@ vi.mock('../js/scenes-cutscene.js', async (importOriginal) => {
     return { ...mod, prechargerScenes: vi.fn(async () => {}) };
 });
 
-vi.mock('../js/portrait-vera-rendu.js', () => ({
+vi.mock('../js/rendu/portrait-vera-rendu.js', () => ({
     prechargerPortraitVera: vi.fn(async () => {}),
 }));
 
@@ -97,7 +97,7 @@ describe('cutscene UI', () => {
     let texteEl;
     let narrationEl;
     let ecranCutscene;
-    /** @type {typeof import('../js/histoire-manager-ui.js')} */
+    /** @type {typeof import('../js/histoire/histoire-manager-ui.js')} */
     let managerUi;
 
     beforeEach(async () => {
@@ -146,9 +146,9 @@ describe('cutscene UI', () => {
 
         store.histoire.cutscene.enCours = false;
         vi.resetModules();
-        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        const { chargerHistoireTextes } = await import('../js/io/charger-histoire-textes.js');
         await chargerHistoireTextes();
-        managerUi = await import('../js/histoire-manager-ui.js');
+        managerUi = await import('../js/histoire/histoire-manager-ui.js');
     }, 30_000);
 
     it('remplace le texte à chaque ligne au lieu de l accumuler', async () => {

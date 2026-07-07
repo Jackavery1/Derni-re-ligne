@@ -52,7 +52,7 @@ describe('maintainabilite', () => {
             const nom = chemin.split(/[/\\]/).pop();
             if (ALLOWLIST_STORE_CORE.has(nom)) continue;
             const contenu = readFileSync(chemin, 'utf8');
-            if (/from ['"]\.\/store-core\.js['"]/.test(contenu)) {
+            if (/from ['"][^'"]*store-core\.js['"]/.test(contenu)) {
                 violations.push(
                     chemin.replace(racineJs + '\\', 'js\\').replace(racineJs + '/', 'js/')
                 );
@@ -77,8 +77,53 @@ describe('maintainabilite', () => {
         expect(lignes).toBeLessThanOrEqual(SEUIL_HOTSPOT_LIGNES);
     });
 
-    it('tous les modules js racine sont listes dans le precache SW dev', () => {
-        const swPrecache = readFileSync(join(racineProjet, 'sw-precache.js'), 'utf8');
+    it('feuilles decoupees depuis ecran-selection ne depassent pas 320 lignes', () => {
+        const stylesDir = join(racineProjet, 'styles');
+        const fichiers = [
+            'selection-constellation.css',
+            'ecran-options.css',
+            'notifs-globales.css',
+            'ecran-codex.css',
+            'panneau-detail.css',
+            'overlays-tutoriel.css',
+            'selection-oracle.css',
+            'interface-coop.css',
+            'ecran-codex-mobile.css',
+            'ecran-selection.css',
+        ];
+        const depassements = [];
+        for (const nom of fichiers) {
+            const lignes = compterLignes(join(stylesDir, nom));
+            if (lignes > 320) depassements.push({ fichier: nom, lignes });
+        }
+        expect(depassements, JSON.stringify(depassements, null, 2)).toEqual([]);
+    });
+
+    it('aucune feuille CSS (hors agregateurs) ne depasse 320 lignes', () => {
+        const stylesDir = join(racineProjet, 'styles');
+        const agregateurs = new Set([
+            'main.css',
+            'ecran-selection.css',
+            'animations.css',
+            'mode-histoire.css',
+            'overlays-meta.css',
+            'objectifs-histoire.css',
+            'boss.css',
+            'menu-narratif.css',
+            'interface-jeu.css',
+            'mode-architecte.css',
+        ]);
+        const depassements = [];
+        for (const nom of readdirSync(stylesDir).filter((f) => f.endsWith('.css'))) {
+            if (agregateurs.has(nom)) continue;
+            const lignes = compterLignes(join(stylesDir, nom));
+            if (lignes > 320) depassements.push({ fichier: nom, lignes });
+        }
+        expect(depassements, JSON.stringify(depassements, null, 2)).toEqual([]);
+    });
+
+    it('tous les modules js sont listes dans le precache SW dev', () => {
+        const swPrecache = readFileSync(join(racineProjet, 'sw-precache-list.js'), 'utf8');
         const debut = swPrecache.indexOf(MARQUEUR_DEBUT);
         const fin = swPrecache.indexOf(MARQUEUR_FIN);
         expect(debut).toBeGreaterThanOrEqual(0);
@@ -87,14 +132,21 @@ describe('maintainabilite', () => {
 
         const exclusPrecache = new Set(['./js/codex-histoire.js']);
 
-        const manquants = readdirSync(racineJs)
-            .filter((f) => f.endsWith('.js'))
-            .map((f) => `./js/${f}`)
+        const manquants = listerFichiersJs(racineJs)
+            .map(
+                (chemin) =>
+                    `./js/${chemin
+                        .replace(racineJs + '\\', '')
+                        .replace(racineJs + '/', '')
+                        .split(/[/\\]/)
+                        .join('/')}`
+            )
             .filter((entree) => !exclusPrecache.has(entree))
             .filter((entree) => !blocPrecache.includes(`'${entree}'`));
 
-        expect(manquants, `Relancez npm run sync:sw — manquants: ${manquants.join(', ')}`).toEqual(
-            []
-        );
+        expect(
+            manquants,
+            `Relancez npm run sync:sw — manquants: ${manquants.slice(0, 10).join(', ')}`
+        ).toEqual([]);
     });
 });

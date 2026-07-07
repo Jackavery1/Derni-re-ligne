@@ -1,13 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { CONFIG } from '../js/config.js';
-import { creerPlateau } from '../js/piece-jeu.js';
+import { CONFIG } from '../js/config/config.js';
+import { creerPlateau } from '../js/logique/piece-jeu.js';
 import {
     attaqueRangeeBraise,
     attaqueColonneGelee,
     degelColonnes,
     hauteurEmpilement,
     COULEUR_GLACE_B,
-} from '../js/boss-attaques.js';
+} from '../js/logique/boss-attaques.js';
 
 describe('boss-attaques', () => {
     it('hauteurEmpilement compte les lignes occupees', () => {

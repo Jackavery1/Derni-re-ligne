@@ -1,8 +1,8 @@
-import { dessinerPortraitDistorsion } from './portrait-distorsion-rendu.js';
-import { dessinerPortraitBrasierCanon } from './portrait-brasier-rendu.js';
-import { dessinerPortraitSentinelleCanon } from './portrait-sentinelle-rendu.js';
-import { dessinerPortraitArchivisteCanon } from './portrait-archiviste-rendu.js';
-import { dessinerPortraitAvantgardeCanon } from './portrait-avantgarde-rendu.js';
+import { dessinerPortraitDistorsion } from './rendu/portrait-distorsion-rendu.js';
+import { dessinerPortraitBrasierCanon } from './rendu/portrait-brasier-rendu.js';
+import { dessinerPortraitSentinelleCanon } from './rendu/portrait-sentinelle-rendu.js';
+import { dessinerPortraitArchivisteCanon } from './rendu/portrait-archiviste-rendu.js';
+import { dessinerPortraitAvantgardeCanon } from './rendu/portrait-avantgarde-rendu.js';
 
 function _portraitNarrateur(ctx, w, h, t) {
     const cx = w / 2;

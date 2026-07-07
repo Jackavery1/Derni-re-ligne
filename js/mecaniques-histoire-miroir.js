@@ -1,4 +1,4 @@
-import { modeHistoireEnCours } from './mode-histoire.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
 import { biomeActuelEstMiroir } from './mecaniques-histoire-queries.js';
 
 export function appliquerCSSMiroir(actif) {

@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import { beforeEach } from 'vitest';
-import { reinitialiserBusJeu } from '../js/bus-jeu.js';
+import { reinitialiserBusJeu } from '../js/etat/bus-jeu.js';
 import * as textesHistoire from '../js/histoire-textes.js';
 
 const stockage = new Map();
@@ -15,8 +15,8 @@ const achievementsHistoireJson = JSON.parse(
     readFileSync('data/achievements-histoire.json', 'utf8')
 );
 
-import { chargerBiomesJeu } from '../js/biomes.js';
-import { chargerContenuJeu } from '../js/contenu-jeu.js';
+import { chargerBiomesJeu } from '../js/config/biomes.js';
+import { chargerContenuJeu } from '../js/config/contenu-jeu.js';
 import { chargerDifficulteMondes } from '../js/difficulte-mondes-chargement.js';
 import { chargerAchievementsDonnees } from '../js/achievements-donnees.js';
 import { chargerHistoireDonneesMetier } from '../js/histoire-donnees.js';

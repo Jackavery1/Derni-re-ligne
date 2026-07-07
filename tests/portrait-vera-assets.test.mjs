@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { PORTRAIT_VERA_SRC, calculerCadrePortraitVera } from '../js/portrait-vera-assets.js';
+import { PORTRAIT_VERA_SRC, calculerCadrePortraitVera } from '../js/rendu/portrait-vera-assets.js';
 
 describe('portrait-vera-assets', () => {
     it('pointe vers img/vera.png', () => {

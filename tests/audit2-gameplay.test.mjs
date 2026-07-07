@@ -5,28 +5,28 @@ import {
     peutContinuerBossGratuit,
     utiliserContinueGratuitDistorsion,
     surFinDeMondeHistoire,
-} from '../js/histoire-manager-completion.js';
+} from '../js/histoire/histoire-manager-completion.js';
 import {
     obtenirTouches,
     sauvegarderTouches,
     reinitialiserTouches,
     formaterCodeTouche,
 } from '../js/touches-config.js';
-import { store } from '../js/store-jeu.js';
-import { _reinitialiserInfobullesContexte } from '../js/infobulles-contexte.js';
+import { store } from '../js/etat/store-jeu.js';
+import { _reinitialiserInfobullesContexte } from '../js/ui/infobulles-contexte.js';
 import { readFileSync } from 'fs';
 import { CONDITIONS_CODEX } from '../js/codex-conditions.js';
-import { obtenirEtatDeblocage } from '../js/progression-histoire.js';
-import { biomeEstDebloqueParHistoire } from '../js/progression-records.js';
+import { obtenirEtatDeblocage } from '../js/io/progression-histoire.js';
+import { biomeEstDebloqueParHistoire } from '../js/io/progression-records.js';
 import { ACHIEVEMENTS } from '../js/achievements-donnees.js';
-import { ORDRE_BIOMES_LIBRE } from '../js/config.js';
+import { ORDRE_BIOMES_LIBRE } from '../js/config/config.js';
 import { NOMS_MONDES_REQUIS } from '../js/constellation-rendu.js';
 import {
     obtenirTexteVerrouillePanneau,
     obtenirTexteVerrouille,
 } from '../js/achievements-icones-map.js';
 
-vi.mock('../js/mode-histoire.js', () => ({
+vi.mock('../js/etat/mode-histoire.js', () => ({
     modeHistoireEnCours: vi.fn(() => true),
 }));
 
@@ -34,7 +34,7 @@ vi.mock('../js/mode-dev-etat.js', () => ({
     modeDevActif: vi.fn(() => false),
 }));
 
-vi.mock('../js/progression.js', async (importOriginal) => {
+vi.mock('../js/io/progression.js', async (importOriginal) => {
     const actual = await importOriginal();
     return {
         ...actual,
@@ -59,7 +59,7 @@ vi.mock('../js/achievements-histoire.js', async (importOriginal) => {
     };
 });
 
-vi.mock('../js/mascotte-robo.js', () => ({
+vi.mock('../js/ui/mascotte-robo.js', () => ({
     reagirRoboContinueBoss: vi.fn(),
 }));
 
@@ -69,14 +69,14 @@ vi.mock('../js/achievements.js', () => ({
     verifierAchievements: vi.fn(),
 }));
 
-vi.mock('../js/histoire-etat.js', () => ({
+vi.mock('../js/histoire/histoire-etat.js', () => ({
     obtenirEtatHistoirePersiste: vi.fn(),
     persisterEtatHistoire: vi.fn(),
 }));
 
-import { modeHistoireEnCours } from '../js/mode-histoire.js';
-import { obtenirEtatHistoirePersiste } from '../js/histoire-etat.js';
-import { ecrireStockageJson } from '../js/progression-stockage.js';
+import { modeHistoireEnCours } from '../js/etat/mode-histoire.js';
+import { obtenirEtatHistoirePersiste } from '../js/histoire/histoire-etat.js';
+import { ecrireStockageJson } from '../js/io/progression-stockage.js';
 
 describe('audit 2 — gameplay UX', () => {
     beforeEach(() => {
@@ -212,7 +212,7 @@ describe('audit 2 — gameplay UX', () => {
     describe('polish et contenu (audit 2 dims 9-10)', () => {
         it('charge les infobulles modes depuis contenu-jeu.json', async () => {
             const { chargerContenuJeu, INFOBULLES_MODES_JEU } =
-                await import('../js/contenu-jeu.js');
+                await import('../js/config/contenu-jeu.js');
             await chargerContenuJeu();
             expect(INFOBULLES_MODES_JEU.sansFin?.titre).toBe('SANS FIN');
             expect(INFOBULLES_MODES_JEU.sprint?.desc).toContain('chrono');
@@ -222,12 +222,12 @@ describe('audit 2 — gameplay UX', () => {
         });
 
         it('ne consomme pas une infobulle mode si overlay absent', async () => {
-            await import('../js/contenu-jeu.js').then(({ chargerContenuJeu }) =>
+            await import('../js/config/contenu-jeu.js').then(({ chargerContenuJeu }) =>
                 chargerContenuJeu()
             );
             const overlay = document.getElementById('overlay-infobulle-contexte');
             overlay?.remove();
-            const { proposerInfobulleModeJeu } = await import('../js/infobulles-contexte.js');
+            const { proposerInfobulleModeJeu } = await import('../js/ui/infobulles-contexte.js');
             proposerInfobulleModeJeu('sprint');
             const raw = localStorage.getItem('derniereLigne_infobullesModesJeu') ?? '{}';
             expect(JSON.parse(raw).sprint).toBeUndefined();
@@ -236,7 +236,8 @@ describe('audit 2 — gameplay UX', () => {
         it('ne consomme pas une infobulle attaque boss si overlay absent', async () => {
             const overlay = document.getElementById('overlay-infobulle-contexte');
             overlay?.remove();
-            const { proposerInfobulleAttaqueBoss } = await import('../js/infobulles-contexte.js');
+            const { proposerInfobulleAttaqueBoss } =
+                await import('../js/ui/infobulles-contexte.js');
             proposerInfobulleAttaqueBoss('faux_fantome');
             const raw = localStorage.getItem('derniereLigne_infobullesBoss') ?? '{}';
             expect(JSON.parse(raw).faux_fantome).toBeUndefined();
@@ -250,7 +251,7 @@ describe('audit 2 — gameplay UX', () => {
 
         it('persiste les records sprint par biome', async () => {
             const { sauvegarderRecordSprintBiome, obtenirRecordSprintBiome } =
-                await import('../js/progression-records.js');
+                await import('../js/io/progression-records.js');
             expect(sauvegarderRecordSprintBiome('classique', 95000)).toBe(true);
             expect(obtenirRecordSprintBiome('classique')).toBe(95000);
             expect(sauvegarderRecordSprintBiome('classique', 90000)).toBe(true);
@@ -269,7 +270,7 @@ describe('audit 2 — gameplay UX', () => {
         }, 15000);
 
         it('resume les records locaux debloques', async () => {
-            const { obtenirResumeRecordsLocaux } = await import('../js/progression-records.js');
+            const { obtenirResumeRecordsLocaux } = await import('../js/io/progression-records.js');
             const resume = obtenirResumeRecordsLocaux();
             expect(resume.length).toBeGreaterThan(0);
             expect(resume[0]).toHaveProperty('record');

@@ -1,4 +1,4 @@
-import { chargerEtatHistoire } from './progression.js';
+import { chargerEtatHistoire } from './io/progression.js';
 import { estCategorieIndiceMasque } from './achievements-icones-map.js';
 
 const BOSS_PRINCIPAUX = ['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion'];

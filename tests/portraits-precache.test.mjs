@@ -11,7 +11,7 @@ describe('portraits-precache', () => {
     });
 
     it('chaque URL portrait est dans le precache SW shell', () => {
-        const swPrecache = readFileSync(join(racine, 'sw-precache.js'), 'utf8');
+        const swPrecache = readFileSync(join(racine, 'sw-precache-list.js'), 'utf8');
         for (const url of URLS_PORTRAITS_PRECACHE) {
             expect(swPrecache).toContain(`'${url}'`);
         }

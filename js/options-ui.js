@@ -1,5 +1,5 @@
-import { lireStockage, ecrireStockage, chargerBiomeActif } from './progression.js';
-import { haptiqueActif, definirHaptiqueActif } from './haptique.js';
+import { lireStockage, ecrireStockage, chargerBiomeActif } from './io/progression.js';
+import { haptiqueActif, definirHaptiqueActif } from './audio/haptique.js';
 import {
     enchainementCampagneActif,
     definirEnchainementCampagneActif,
@@ -9,11 +9,15 @@ import {
     definirControlesTactilesActifs,
     appliquerControlesTactilesDepuisStockage,
 } from './controles-tactiles.js';
-import { obtenirSupabaseUrl, obtenirSupabaseAnonKey, obtenirOuCreerSyncId } from './config-sync.js';
-import { obtenirMixBiome, persisterMixBiome } from './audio-mix-biome.js';
+import {
+    obtenirSupabaseUrl,
+    obtenirSupabaseAnonKey,
+    obtenirOuCreerSyncId,
+} from './config/config-sync.js';
+import { obtenirMixBiome, persisterMixBiome } from './audio/audio-mix-biome.js';
 import { initialiserSyncCloudOptions, mettreAJourUiSyncCloud } from './options-sync-cloud-ui.js';
 import { initialiserSauvegardeProgression } from './options-progression-ui.js';
-import { AudioMoteur } from './audio.js';
+import { AudioMoteur } from './audio/audio.js';
 import { mettreAJourBoutonsMute } from './options-mute-ui.js';
 import { obtenirInput, obtenirBouton } from './dom-utils.js';
 import {

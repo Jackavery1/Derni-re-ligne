@@ -1,0 +1,148 @@
+.codex-contenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-5) var(--space-4) var(--space-6);
+    max-height: 100dvh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: min(1100px, 92vw);
+    margin-inline: auto;
+    box-sizing: border-box;
+}
+.codex-header {
+    text-align: center;
+}
+.codex-titre {
+    font-family: var(--font-titre);
+    font-size: var(--typo-titre-ecran);
+    color: #ff2d78;
+    letter-spacing: 6px;
+    text-shadow: 0 0 12px #ff2d78;
+}
+
+.codex-titre.jaune {
+    color: var(--jaune);
+    text-shadow: 0 0 12px var(--jaune);
+}
+.codex-progression {
+    font-family: 'Orbitron', var(--font-stats);
+    font-size: var(--typo-stat);
+    color: var(--texte-dim);
+    letter-spacing: 2px;
+    margin-top: var(--space-1);
+}
+.codex-onglets {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.codex-onglet {
+    background: transparent;
+    border: 1px solid var(--bordure);
+    border-bottom: 2px solid transparent;
+    color: var(--texte-dim);
+    font-family: var(--police);
+    font-size: clamp(0.45rem, 1.2vw, 0.6rem);
+    padding: var(--space-3) var(--space-4);
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.15s;
+}
+.codex-onglet.actif {
+    border-color: var(--bordure);
+    border-bottom-color: #ff2d78;
+    color: #ff2d78;
+    text-shadow: 0 0 6px #ff2d78;
+    box-shadow: 0 4px 12px rgba(255, 45, 120, 0.15);
+}
+.codex-onglet:hover:not(.actif) {
+    border-color: var(--texte-dim);
+}
+
+.codex-liste {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(168px, 220px));
+    justify-content: center;
+    gap: var(--space-3);
+    width: 100%;
+    max-width: min(1100px, 92vw);
+    margin-inline: auto;
+    box-sizing: border-box;
+}
+.codex-item {
+    --accent-carte: #6644cc;
+    border-color: color-mix(in srgb, var(--accent-carte) 55%, transparent);
+    box-shadow:
+        0 0 10px color-mix(in srgb, var(--accent-carte) 22%, transparent),
+        inset 0 0 24px rgba(0, 0, 0, 0.45);
+    padding: 6px 6px 8px;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+    cursor: pointer;
+    transition:
+        border-color 0.15s,
+        box-shadow 0.15s,
+        transform 0.15s;
+}
+.codex-item.selectionnee {
+    border-color: var(--accent-carte);
+    box-shadow:
+        0 0 22px color-mix(in srgb, var(--accent-carte) 55%, transparent),
+        inset 0 0 20px rgba(0, 0, 0, 0.5);
+    transform: translateY(-1px);
+}
+.codex-item.debloque:hover {
+    border-color: color-mix(in srgb, var(--accent-carte) 75%, transparent);
+    box-shadow:
+        0 0 18px color-mix(in srgb, var(--accent-carte) 38%, transparent),
+        inset 0 0 24px rgba(0, 0, 0, 0.45);
+    transform: translateY(-2px);
+}
+.codex-item.verrouille {
+    cursor: pointer;
+    border-style: dashed;
+}
+.codex-item.nouveau {
+    border-color: color-mix(in srgb, var(--accent-carte) 80%, transparent);
+    animation: pulseBordureCodex 1.5s ease-in-out infinite;
+}
+.icone-carte-codex {
+    display: block;
+    width: 64px;
+    height: 64px;
+    image-rendering: pixelated;
+}
+.codex-item-titre {
+    font-family: var(--font-titre);
+    font-size: var(--typo-nom-carte);
+    color: var(--texte);
+    letter-spacing: 1px;
+    line-height: 1.3;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.codex-item-cond {
+    font-family: 'Rajdhani', var(--font-ui);
+    font-size: var(--typo-corps);
+    color: var(--texte-dim);
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    min-height: 3.9em;
+}

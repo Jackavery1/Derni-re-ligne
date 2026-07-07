@@ -1,0 +1,245 @@
+.archi-legende-difficulte {
+    font-size: 0.48rem;
+    color: var(--gris-clair, #bbb);
+    margin: 0.5rem 0;
+    text-align: center;
+}
+
+.profil-records-sous-titre {
+    font-size: 0.42rem;
+    color: rgba(255, 255, 255, 0.45);
+    margin: 0 0 0.5rem;
+}
+
+.profil-records-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 0.75rem;
+}
+
+.profil-records-actions .bouton {
+    min-height: 48px;
+}
+
+@media (max-width: 480px) {
+    .histoire-prog-item {
+        font-size: 0.48rem;
+    }
+
+    .menu-titre-dl .dl-mot-2,
+    .histoire-titre-principale .dl-mot-2 {
+        font-size: clamp(0.55rem, 2.8vw, 0.7rem);
+    }
+
+    .sel-biome-nom,
+    .histoire-detail-nom {
+        font-size: clamp(0.5rem, 3vw, 0.65rem);
+    }
+}
+
+.bouton-continue-boss {
+    border-color: var(--vert);
+    color: var(--vert);
+}
+
+.go-avertissement-trame {
+    font-size: 0.55rem;
+    color: var(--orange, #ffaa44);
+    text-align: center;
+    line-height: 1.45;
+    max-width: 22rem;
+    margin: 0.5rem auto 0;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid rgba(255, 170, 68, 0.35);
+    background: rgba(255, 170, 68, 0.08);
+}
+
+.go-continues-campagne {
+    font-size: 0.5rem;
+    color: var(--gris-clair, #aaa);
+    text-align: center;
+    line-height: 1.4;
+    max-width: 22rem;
+    margin: 0.35rem auto 0;
+}
+
+.objectif-hud-paradoxe {
+    font-size: 0.45rem;
+    color: var(--orange, #ffaa44);
+    line-height: 1.35;
+    margin-top: 0.25rem;
+    opacity: 0.9;
+}
+
+.tutoriel-indicateur {
+    font-size: 0.5rem;
+    color: var(--texte-dim, #888);
+    text-align: center;
+    margin: 0.25rem 0 0.5rem;
+}
+
+.profil-records-table {
+    display: grid;
+    gap: 0.2rem;
+    font-size: 0.48rem;
+    max-height: 10rem;
+    overflow-y: auto;
+}
+
+.profil-records-ligne {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 0.8fr;
+    gap: 0.35rem;
+    padding: 0.2rem 0.35rem;
+    border-bottom: 1px solid rgba(0, 221, 200, 0.12);
+}
+
+.profil-records-entete {
+    color: var(--cyan, #00ddc8);
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    background: rgba(8, 12, 20, 0.92);
+}
+
+.profil-records-nom {
+    color: var(--texte-principal, #eee);
+}
+
+.boss-trame-attente-barre {
+    height: 6px;
+    background: rgba(0, 245, 255, 0.15);
+    border: 1px solid rgba(0, 245, 255, 0.35);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.boss-trame-attente-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--cyan), var(--vert));
+    transition: width 0.15s linear;
+}
+
+.overlay-boss-presentation {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.overlay-boss-presentation.boss-presentation-visible {
+    opacity: 1;
+}
+
+.overlay-boss-presentation.boss-presentation-sortie {
+    opacity: 0;
+}
+
+.boss-presentation-contenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    max-width: 90%;
+    text-align: center;
+    padding: 24px;
+}
+
+.boss-presentation-nom {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    line-height: 1.6;
+    text-shadow: 0 0 12px currentColor;
+}
+
+.boss-presentation-epithete {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-style: italic;
+    font-size: clamp(0.72rem, 2.4vw, 0.9rem);
+    color: var(--texte-dim);
+    max-width: min(28em, 92vw);
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+}
+
+@media (max-width: 768px), (max-height: 600px) {
+    .overlay-boss-presentation {
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: max(10dvh, calc(var(--safe-top) + 40px));
+        padding-bottom: calc(132px + var(--safe-bottom));
+        box-sizing: border-box;
+    }
+
+    .boss-presentation-contenu {
+        max-width: min(92vw, 360px);
+        padding: 16px 12px;
+        gap: 10px;
+    }
+
+    .boss-presentation-nom {
+        font-size: clamp(0.38rem, 3.2vw, 0.55rem);
+        line-height: 1.5;
+        max-width: 100%;
+        word-break: break-word;
+    }
+
+    body.histoire-active.partie-active #section-boss:not(.element-masque) .boss-attaque-label {
+        position: fixed;
+        left: 50%;
+        bottom: calc(128px + var(--safe-bottom));
+        transform: translateX(-50%);
+        width: min(92vw, 300px);
+        z-index: 55;
+        margin: 0;
+        padding: 6px 8px;
+        box-sizing: border-box;
+        background: rgba(8, 8, 26, 0.94);
+        border: 1px solid rgba(255, 0, 110, 0.35);
+        border-radius: 4px;
+        max-height: calc(var(--boss-dialogue-lh, 1.25em) * 2 + 12px);
+    }
+
+    body.histoire-active.partie-active
+        #section-boss:not(.element-masque)
+        .boss-attaque-label.boss-attaque-defile {
+        animation:
+            clignoteBoss 0.8s ease-in-out infinite,
+            bossDialogueDefile 7s ease-in-out infinite alternate;
+    }
+}
+
+.go-boss-replique {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-style: italic;
+    font-size: 0.75rem;
+    color: var(--texte-dim);
+    text-align: center;
+    max-width: 28em;
+    margin: 8px auto 0;
+    line-height: 1.5;
+    letter-spacing: 0.5px;
+}
+
+#indicateur-boss-attaque {
+    padding: 5px 3px;
+    text-align: center;
+    border: 1px solid rgba(255, 0, 110, 0.3);
+    font-size: var(--typo-hud-micro);
+    letter-spacing: 1px;
+    color: var(--rose);
+    background: rgba(255, 0, 110, 0.04);
+}

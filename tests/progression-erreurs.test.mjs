@@ -5,7 +5,7 @@ import {
     lireStockageJson,
     ecrireStockageJson,
     parserIdsStockage,
-} from '../js/progression.js';
+} from '../js/io/progression.js';
 
 describe('progression — gestion erreurs', () => {
     beforeEach(() => {

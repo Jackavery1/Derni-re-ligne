@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ecrireStockage } from '../js/progression-stockage.js';
+import { ecrireStockage } from '../js/io/progression-stockage.js';
 
 vi.mock('../js/profil-jeu.js', () => ({
     chargerProfilDernier: vi.fn(),
@@ -9,7 +9,7 @@ vi.mock('../js/profil-jeu.js', () => ({
 let fetchMock;
 
 async function chargerSyncCloud() {
-    return import('../js/progression-sync-cloud.js');
+    return import('../js/io/progression-sync-cloud.js');
 }
 
 describe('progression-sync-cloud', () => {
@@ -26,7 +26,7 @@ describe('progression-sync-cloud', () => {
         vi.stubGlobal('navigator', { onLine: true, vibrate: vi.fn() });
 
         const { activerSyncCloud, configurerSupabase, CLE_SYNC_ID } =
-            await import('../js/config-sync.js');
+            await import('../js/config/config-sync.js');
         activerSyncCloud(true);
         configurerSupabase('https://test.supabase.co', 'anon-test-key');
         ecrireStockage(CLE_SYNC_ID, '11111111-1111-4111-8111-111111111111');

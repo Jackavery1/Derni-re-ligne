@@ -1,6 +1,6 @@
-import { store } from './store-jeu.js';
+import { store } from './etat/store-jeu.js';
 import { obtenirCanvas } from './dom-utils.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
 import {
     obtenirParamsPortraitBossCombat,
     obtenirExpressionBossCombat,

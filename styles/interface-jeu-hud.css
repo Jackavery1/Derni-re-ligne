@@ -1,0 +1,195 @@
+.stat-valeur.cyan {
+    color: var(--cyan);
+    text-shadow: 0 0 8px var(--cyan);
+}
+
+@media (max-width: 768px) {
+    #btn-pause,
+    #btn-mute {
+        min-height: 48px;
+        min-width: 48px;
+    }
+}
+
+#section-progression {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+    padding-top: 8px;
+    border-top: 1px solid var(--bordure);
+}
+
+#affichage-restant {
+    font-size: 0.32rem;
+    color: var(--vert);
+    letter-spacing: 1px;
+    text-align: center;
+    text-shadow: 0 0 6px var(--vert);
+}
+
+#barre-progression-wrapper {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.25);
+}
+
+#barre-progression-fill {
+    height: 100%;
+    width: var(--barre-progression-pct, 0%);
+    background: var(--vert);
+    box-shadow: 0 0 8px var(--vert);
+    transition: width 0.2s;
+}
+
+#zone-jeu {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.btn-pause-mobile {
+    display: none;
+    position: fixed;
+    top: max(4px, var(--safe-top));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9600;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 8px 14px;
+    background: rgba(0, 0, 0, 0.72);
+    border: 1px solid var(--bordure);
+    color: var(--texte);
+    font-family: var(--police);
+    font-size: 0.42rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body.partie-active.controles-tactiles-actifs:not(.coop-active) .btn-pause-mobile {
+    display: flex;
+}
+
+@media (pointer: coarse) {
+    body.partie-active:not(.coop-active) .btn-pause-mobile {
+        display: flex;
+    }
+}
+
+@media (max-width: 768px) {
+    body.partie-active:not(.coop-active) .btn-pause-mobile {
+        display: flex;
+    }
+}
+
+#canvas-plateau {
+    position: relative;
+    z-index: 1;
+    display: block;
+    touch-action: none;
+    border: 2px solid var(--theme-canvas, var(--cyan));
+    box-shadow:
+        0 0 15px var(--theme-canvas, var(--cyan)),
+        0 0 40px color-mix(in srgb, var(--theme-canvas, var(--cyan)) 27%, transparent),
+        inset 0 0 20px color-mix(in srgb, var(--theme-canvas, var(--cyan)) 4%, transparent);
+}
+
+#canvas-fond-biome {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    display: block;
+}
+
+/* Mascotte canvas ROBO — palette et panneau fixes, indépendants du biome */
+#section-mascotte {
+    --mascotte-lueur: #00ddc8;
+    flex-shrink: 0;
+    background: #08081a !important;
+    border-color: rgba(0, 221, 200, 0.22) !important;
+}
+
+#section-mascotte .section-titre {
+    color: #00ddc8;
+    text-shadow: 0 0 8px rgba(0, 221, 200, 0.35);
+}
+
+/* ═══ ISOLATION COULEUR CANVAS ROBO ═══ */
+/* Le canvas dessine sa propre palette hardcodée.
+   Aucun filtre biome ne doit modifier ses couleurs. */
+#canvas-mascotte {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 130px;
+    image-rendering: pixelated;
+    background: #08081a;
+    filter: none !important;
+    -webkit-filter: none !important;
+}
+
+#section-mascotte,
+#section-mascotte canvas {
+    color-scheme: normal;
+}
+
+#canvas-boss-portrait.etat-calme {
+    filter: none;
+}
+#canvas-boss-portrait.etat-irrite {
+    filter: saturate(1.4) brightness(1.1);
+}
+#canvas-boss-portrait.etat-enrage {
+    animation: boss-portrait-tremble 0.12s linear infinite;
+}
+#canvas-boss-portrait.etat-attaque {
+    animation: boss-portrait-flash 0.25s ease-out;
+}
+#canvas-boss-portrait.etat-vaincu {
+    opacity: 0.85;
+}
+
+#btn-pause {
+    background: transparent;
+    border: 1px solid var(--theme-bordure, var(--bordure));
+    color: var(--theme-primaire, var(--texte-dim));
+    font-family: var(--police);
+    font-size: 0.42rem;
+    padding: 8px 10px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+}
+#btn-pause:hover {
+    border-color: var(--theme-accent, var(--cyan));
+    color: var(--theme-accent, var(--cyan));
+}
+
+#btn-mute {
+    background: transparent;
+    border: 1px solid var(--bordure);
+    color: var(--texte-dim);
+    font-family: var(--police);
+    font-size: 0.55rem;
+    padding: 8px 10px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+    margin-top: 6px;
+}
+#btn-mute:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+}

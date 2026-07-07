@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { urlFragmentEcran } from '../js/charger-ecrans.js';
+import { urlFragmentEcran } from '../js/ui/charger-ecrans.js';
 
 describe('charger-ecrans', () => {
     const origine = globalThis.document;

@@ -1,14 +1,19 @@
 import { logger, afficherErreurUtilisateur } from './logger.js';
 import { obtenirCanvas } from './dom-utils.js';
-import { etat, obtenirTouchDepart, definirRefsCanvas, definirTouchDepart } from './store-jeu.js';
+import {
+    etat,
+    obtenirTouchDepart,
+    definirRefsCanvas,
+    definirTouchDepart,
+} from './etat/store-jeu.js';
 import {
     deplacerGauche,
     deplacerDroite,
     deplacerBas,
     chuteRapide,
     tourner,
-} from './logique-partie.js';
-import { vibrerRotation, vibrerChuteRapide } from './haptique.js';
+} from './logique/logique-partie.js';
+import { vibrerRotation, vibrerChuteRapide } from './audio/haptique.js';
 
 export function initialiserCanvas() {
     const cp = obtenirCanvas('canvas-plateau');

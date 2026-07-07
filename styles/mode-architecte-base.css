@@ -1,0 +1,168 @@
+/* ================================================
+           MODE ARCHITECTE
+        ================================================ */
+#conteneur-principal-archi {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 100dvw;
+    height: 100dvh;
+    overflow: visible;
+    box-sizing: border-box;
+    padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+}
+
+#conteneur-principal-archi.element-masque {
+    display: none;
+}
+
+body.archi-active #conteneur-principal {
+    display: none !important;
+}
+
+body.archi-active #conteneur-principal-archi {
+    display: flex;
+}
+
+body.partie-active.archi-active #controles-mobile,
+body.partie-active.archi-active #controles-paysage,
+body.archi-active #controles-mobile,
+body.archi-active #controles-paysage {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+#interface-echelle-archi {
+    flex-shrink: 0;
+    overflow: visible;
+}
+
+#interface-jeu-archi {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.panneau-archi {
+    width: 120px;
+}
+
+.archi-inventaire {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.archi-inv-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 6px;
+    border: 1px solid var(--bordure);
+    background: rgba(255, 255, 255, 0.03);
+    font-size: 0.32rem;
+    letter-spacing: 1px;
+}
+
+.archi-inv-item.selectionne {
+    border-color: var(--jaune);
+    background: rgba(255, 230, 0, 0.08);
+    color: var(--jaune);
+    box-shadow: 0 0 8px rgba(255, 230, 0, 0.2);
+}
+
+.archi-inv-item.epuise {
+    opacity: 0.3;
+}
+
+.archi-inv-qte {
+    font-size: 0.45rem;
+    color: var(--cyan);
+    text-shadow: 0 0 6px var(--cyan);
+}
+
+.archi-guide {
+    font-size: var(--typo-hud-micro);
+    color: var(--texte-dim);
+    line-height: 2.2;
+    letter-spacing: 0.5px;
+    width: 100%;
+}
+
+.archi-selection-grille {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(168px, 220px));
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    max-width: min(1100px, 92vw);
+    margin: 16px auto;
+    box-sizing: border-box;
+}
+
+#archi-niveau-nom {
+    font-size: 0.35rem;
+    color: var(--texte);
+    letter-spacing: 1px;
+    text-align: center;
+    margin-top: 4px;
+}
+
+#archi-difficulte-etoiles {
+    font-size: 0.6rem;
+    text-align: center;
+    margin-top: 4px;
+    color: var(--jaune);
+}
+
+#btn-reinit-archi {
+    margin-top: 6px;
+    font-size: 0.3rem;
+    background: transparent;
+    border: 1px solid var(--texte-dim);
+    color: var(--texte-dim);
+    font-family: var(--police);
+    padding: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+#archi-res-etoiles {
+    font-size: 1.8rem;
+    letter-spacing: 4px;
+}
+
+#archi-res-nom.go-titre {
+    font-size: 1rem;
+}
+
+.carte-niveau-archi {
+    --accent-carte: #ffbb44;
+    border-color: color-mix(in srgb, var(--accent-carte) 55%, transparent);
+    box-shadow:
+        0 0 10px color-mix(in srgb, var(--accent-carte) 20%, transparent),
+        inset 0 0 24px rgba(0, 0, 0, 0.45);
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        transform 0.2s;
+    text-align: center;
+    position: relative;
+    min-height: 188px;
+}
+
+.carte-niveau-archi.a-faire {
+    border-style: dashed;
+    border-color: color-mix(in srgb, var(--accent-carte) 35%, transparent);
+}

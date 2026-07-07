@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { COMPORTEMENTS_VIVANT } from '../js/vivant-comportements.js';
+import { COMPORTEMENTS_VIVANT } from '../js/logique/vivant-comportements.js';
 
 describe('vivant-comportements', () => {
     it('expose un comportement par biome vivant', () => {

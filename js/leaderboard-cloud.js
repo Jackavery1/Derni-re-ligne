@@ -8,7 +8,7 @@ import {
     obtenirOuCreerSyncId,
     TABLE_LEADERBOARD,
     obtenirPseudoLeaderboard,
-} from './config-sync.js';
+} from './config/config-sync.js';
 
 function enTetesSupabase() {
     const key = obtenirSupabaseAnonKey();

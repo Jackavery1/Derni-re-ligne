@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { intervalleProchainMeteoMs, nombreCellulesBarrageMeteo } from '../js/meteo.js';
+import { intervalleProchainMeteoMs, nombreCellulesBarrageMeteo } from '../js/logique/meteo.js';
 
 describe('météo — courbe marathon casual', () => {
     it('intervalle plus long aux niveaux bas', () => {

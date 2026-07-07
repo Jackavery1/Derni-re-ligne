@@ -1,0 +1,227 @@
+.btn-histoire {
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #1a0030 0%, #3d0060 50%, #1a0030 100%);
+    border: 2px solid #dd00ff;
+    color: #ff88ff;
+    box-shadow:
+        0 0 12px rgba(221, 0, 255, 0.5),
+        0 0 28px rgba(221, 0, 255, 0.2),
+        inset 0 0 16px rgba(221, 0, 255, 0.08);
+    animation: histoire-pulse 2s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.btn-histoire::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 80%;
+    height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255, 136, 255, 0.08), transparent);
+    animation: histoire-shimmer 3s linear infinite;
+    pointer-events: none;
+}
+
+.btn-sous-titre {
+    display: block;
+    font-size: 0.45em;
+    color: #cc88ff;
+    letter-spacing: 3px;
+    font-style: italic;
+    opacity: 0.85;
+}
+
+.btn-icone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.65em;
+    height: 1.65em;
+    margin-right: 8px;
+    font-size: 0.95em;
+    line-height: 1;
+    border: 1px solid color-mix(in srgb, var(--btn-accent) 70%, transparent);
+    background: rgba(0, 0, 0, 0.35);
+    box-shadow:
+        inset 0 0 8px rgba(0, 0, 0, 0.45),
+        0 0 8px color-mix(in srgb, var(--btn-accent) 25%, transparent);
+    clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+}
+
+.menu-separateur {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(0, 245, 255, 0.42);
+    font-size: 0.42em;
+    letter-spacing: 4px;
+    margin: 10px 0 6px;
+    width: min(100%, 320px);
+}
+
+.menu-separateur span {
+    padding: 0 4px;
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.25);
+}
+
+.menu-separateur::before,
+.menu-separateur::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.28), transparent);
+}
+
+.menu-bloc-libre {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.menu-bloc-collection {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+}
+
+/* Modes progressifs : masqués par défaut, visibles uniquement avec .mode-debloque */
+#ecran-titre #btn-jouer:not(.mode-debloque),
+#ecran-titre #btn-architecte:not(.mode-debloque),
+#ecran-titre #btn-codex:not(.mode-debloque),
+#ecran-titre #btn-profil:not(.mode-debloque),
+#ecran-titre #btn-achievements:not(.mode-debloque),
+#ecran-titre #menu-separateur-libre:not(.mode-debloque),
+#ecran-titre #menu-separateur-collection:not(.mode-debloque),
+#ecran-titre #menu-bloc-libre:not(.mode-debloque),
+#ecran-titre #menu-bloc-collection:not(.mode-debloque),
+#toggle-oracle-wrap:not(.mode-debloque),
+#toggle-coop-wrap:not(.mode-debloque),
+#btn-profil-codex:not(.mode-debloque),
+#btn-profil-achievements:not(.mode-debloque),
+#btn-achievements-codex:not(.mode-debloque),
+#btn-profil-gameover:not(.mode-debloque) {
+    display: none !important;
+}
+
+.btn-menu.element-masque,
+.menu-separateur.element-masque,
+.menu-bloc-libre.element-masque,
+.menu-bloc-collection.element-masque,
+.toggle-oracle-wrap.element-masque,
+.bouton.discret.element-masque {
+    display: none !important;
+}
+
+.btn-jouer {
+    --btn-accent: #00ccff;
+    --btn-texte: #88eeff;
+    --btn-fond-1: #001525;
+    --btn-fond-2: #002a4a;
+    --btn-glow: rgba(0, 204, 255, 0.32);
+    --btn-glow-fort: rgba(0, 204, 255, 0.58);
+}
+
+.btn-jouer:hover:not(.btn-verrouille) {
+    transform: translateY(-2px);
+}
+
+.btn-architecte {
+    --btn-accent: #8899cc;
+    --btn-texte: #aabbdd;
+    --btn-fond-1: #0a1020;
+    --btn-fond-2: #1a2840;
+    --btn-glow: rgba(136, 153, 204, 0.28);
+    --btn-glow-fort: rgba(136, 153, 204, 0.52);
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            rgba(136, 153, 204, 0.05) 0px,
+            rgba(136, 153, 204, 0.05) 1px,
+            transparent 1px,
+            transparent 16px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(136, 153, 204, 0.05) 0px,
+            rgba(136, 153, 204, 0.05) 1px,
+            transparent 1px,
+            transparent 16px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.1) 2px,
+            rgba(0, 0, 0, 0.1) 4px
+        ),
+        linear-gradient(135deg, var(--btn-fond-1), var(--btn-fond-2), var(--btn-fond-1));
+}
+
+.btn-architecte:hover:not(.btn-verrouille) {
+    transform: translateY(-2px);
+}
+
+.btn-codex {
+    --btn-accent: #cc9900;
+    --btn-texte: #ffcc44;
+    --btn-fond-1: #1a1000;
+    --btn-fond-2: #2e1f00;
+    --btn-glow: rgba(204, 153, 0, 0.32);
+    --btn-glow-fort: rgba(204, 153, 0, 0.55);
+}
+
+.btn-codex::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 14px;
+    height: 14px;
+    background: linear-gradient(135deg, rgba(255, 204, 68, 0.55), rgba(204, 153, 0, 0.15));
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+    pointer-events: none;
+}
+
+.btn-codex:hover:not(.btn-verrouille) {
+    transform: translateY(-1px);
+}
+
+.btn-profil {
+    --btn-accent: #0066ff;
+    --btn-texte: #88aaff;
+    --btn-fond-1: #000f22;
+    --btn-fond-2: #001844;
+    --btn-glow: rgba(0, 102, 255, 0.32);
+    --btn-glow-fort: rgba(0, 102, 255, 0.58);
+}
+
+.btn-profil:hover:not(.btn-verrouille) {
+    transform: translateY(-2px);
+}
+
+.btn-achievements {
+    --btn-accent: #ff9900;
+    --btn-texte: #ffbb44;
+    --btn-fond-1: #1a0e00;
+    --btn-fond-2: #2e1800;
+    --btn-glow: rgba(255, 153, 0, 0.32);
+    --btn-glow-fort: rgba(255, 153, 0, 0.58);
+}
+
+.btn-achievements:hover:not(.btn-verrouille) {
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .btn-menu:not(.btn-verrouille) {
+        min-height: 48px;
+        min-width: 48px;
+    }
+}

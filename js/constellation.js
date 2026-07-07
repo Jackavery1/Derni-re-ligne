@@ -1,6 +1,6 @@
-import { BIOMES } from './config.js';
+import { BIOMES } from './config/config.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
-import { biomeEstDebloqueParHistoire } from './progression.js';
+import { biomeEstDebloqueParHistoire } from './io/progression.js';
 export { NOMS_MONDES_REQUIS } from './constellation-rendu.js';
 export { obtenirDecalageCentreConstellation } from './constellation-zone.js';
 import { abonnerBoucleMenuUnifiee, desabonnerBoucleMenuUnifiee } from './planificateur-raf.js';
@@ -10,7 +10,7 @@ import {
     panneauBiomeConstellationOuvert,
     masquerBarreModesBiome,
 } from './constellation-panneau.js';
-import { initialiserPanneauDetail, abonnerFermeturePanneauDetail } from './ui-panneau-detail.js';
+import { initialiserPanneauDetail, abonnerFermeturePanneauDetail } from './ui/ui-panneau-detail.js';
 import { afficherTutorielLibreAvantPartie } from './tutoriel.js';
 import { initialiserConfigurationEvenementsConstellation } from './constellation-etat.js';
 import {
@@ -121,7 +121,7 @@ export function demarrerConstellation() {
     }
     initConstellation(traiterSelectionNoeud);
     mettreAJourVisibiliteModesDebloques();
-    void import('./infobulles-contexte.js').then(({ proposerInfobulleOracleCoopExclusif }) =>
+    void import('./ui/infobulles-contexte.js').then(({ proposerInfobulleOracleCoopExclusif }) =>
         proposerInfobulleOracleCoopExclusif()
     );
     void import('./mode-sprint.js').then(({ mettreAJourToggleSprint }) =>

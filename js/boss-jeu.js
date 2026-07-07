@@ -1,9 +1,9 @@
-import { store } from './store-jeu.js';
-import { etat } from './store-jeu.js';
+import { store } from './etat/store-jeu.js';
+import { etat } from './etat/store-jeu.js';
 import { BOSS } from './histoire-donnees.js';
-import { AudioMoteur } from './audio.js';
+import { AudioMoteur } from './audio/audio.js';
 import { logger } from './logger.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
 import { tickConditionTrame, reinitialiserConditionsRuntime } from './conditions-secrets.js';
 import {
     demarrerPresentationBoss,
@@ -11,7 +11,7 @@ import {
     reinitialiserDialoguesBoss,
     dialogueBossActif,
 } from './boss-dialogues.js';
-import { COULEUR_BRAISE, COULEUR_GLACE_B } from './boss-attaques.js';
+import { COULEUR_BRAISE, COULEUR_GLACE_B } from './logique/boss-attaques.js';
 import {
     afficherSectionBoss,
     afficherTexteBoss,
@@ -24,7 +24,7 @@ import {
     executerAttaqueBossCombat,
     obtenirIntervalleAttaqueBoss,
     verifierPhaseBoss,
-} from './boss-combat.js';
+} from './logique/boss-combat.js';
 
 export { COULEUR_BRAISE, COULEUR_GLACE_B };
 export {

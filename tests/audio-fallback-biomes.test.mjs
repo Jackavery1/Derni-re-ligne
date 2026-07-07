@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { MUSIQUE_BIOMES } from '../js/audio-donnees.js';
+import { MUSIQUE_BIOMES } from '../js/audio/audio-donnees.js';
 import {
     obtenirConfigMusiqueBiome,
     _reinitialiserCacheMusiqueFallback,
-} from '../js/audio-fallback-biomes.js';
+} from '../js/audio/audio-fallback-biomes.js';
 
 describe('audio-fallback-biomes', () => {
     beforeEach(() => {

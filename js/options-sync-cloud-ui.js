@@ -6,16 +6,16 @@ import {
     syncCloudConfigure,
     obtenirPseudoLeaderboard,
     persisterPseudoLeaderboard,
-} from './config-sync.js';
+} from './config/config-sync.js';
 import {
     obtenirStatutSyncCloud,
     synchroniserCloudAuDemarrage,
     pousserCloudMaintenant,
-} from './progression-sync-cloud.js';
-import { chargerBiomeActif } from './progression.js';
+} from './io/progression-sync-cloud.js';
+import { chargerBiomeActif } from './io/progression.js';
 import { chargerClassementLeaderboard } from './leaderboard-cloud.js';
-import { formaterTemps } from './hud-jeu.js';
-import { BIOMES, ORDRE_BIOMES_LIBRE } from './config.js';
+import { formaterTemps } from './rendu/hud-jeu.js';
+import { BIOMES, ORDRE_BIOMES_LIBRE } from './config/config.js';
 
 const MODES_LEADERBOARD = [
     { id: 'marathon', libelle: 'SANS FIN' },

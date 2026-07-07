@@ -8,8 +8,8 @@ import {
     definirBoucleActive,
     definirIdFrame,
     obtenirBoucleActive,
-} from '../js/store-jeu.js';
-import { store } from '../js/store-jeu.js';
+} from '../js/etat/store-jeu.js';
+import { store } from '../js/etat/store-jeu.js';
 
 describe('boucle-jeu', () => {
     beforeEach(() => {

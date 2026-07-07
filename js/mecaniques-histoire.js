@@ -1,10 +1,10 @@
-import { CONFIG } from './config.js';
-import { store } from './store-jeu.js';
-import { etat, obtenirBiomeActif } from './store-jeu.js';
-import { ecouter } from './bus-jeu.js';
+import { CONFIG } from './config/config.js';
+import { store } from './etat/store-jeu.js';
+import { etat, obtenirBiomeActif } from './etat/store-jeu.js';
+import { ecouter } from './etat/bus-jeu.js';
 import { logger } from './logger.js';
-import { obtenirEtatHistoire, sauvegarderEtatHistoireStore } from './histoire-mondes.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+import { obtenirEtatHistoire, sauvegarderEtatHistoireStore } from './histoire/histoire-mondes.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
 import { verifierConditionMiroir, verifierConditionC3 } from './conditions-secrets.js';
 import { biomeActuelMecanique } from './mecaniques-histoire-queries.js';
 import {

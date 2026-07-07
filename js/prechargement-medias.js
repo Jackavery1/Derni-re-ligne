@@ -1,11 +1,11 @@
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
-import { obtenirEtatHistoire, mondePeutEtreJoue } from './histoire-mondes.js';
-import { obtenirHistoireTextesSync } from './charger-histoire-textes.js';
+import { obtenirEtatHistoire, mondePeutEtreJoue } from './histoire/histoire-mondes.js';
+import { obtenirHistoireTextesSync } from './io/charger-histoire-textes.js';
 import { SCENES_CUTSCENE } from './scenes-cutscene.js';
-import { SCENE_DEFAUT_POST_MONDE } from './histoire-narratif-scenes.js';
+import { SCENE_DEFAUT_POST_MONDE } from './histoire/histoire-narratif-scenes.js';
 import { URLS_PORTRAITS_PRECACHE } from './portraits-precache.js';
-import { ECRANS } from './ecrans-config.js';
-import { store } from './store-jeu.js';
+import { ECRANS } from './ui/ecrans-config.js';
+import { store } from './etat/store-jeu.js';
 import { logger } from './logger.js';
 
 /** @type {AbortController | null} */

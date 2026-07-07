@@ -6,7 +6,7 @@ const lines = readFileSync(SRC, 'utf8').split(/\r?\n/);
 writeFileSync(
     'js/histoire-cutscene-fonds.js',
     `/** Fonds animes canvas cutscene. */
-import { CONFIG_FOND_CUTSCENE } from './histoire-cutscene-config.js';
+import { CONFIG_FOND_CUTSCENE } from '../../js/histoire/histoire-cutscene-config.js';
 
 let _canvasBgCutscene = null;
 let _ctxBg = null;
@@ -48,11 +48,11 @@ export function estFondCutsceneActif() {
 writeFileSync(
     'js/histoire-journal-ui.js',
     `/** Journal narratif histoire. */
-import { definirExpressionVera } from './portraits-vera.js';
-import { ECRANS } from './ecrans-config.js';
-import { logger } from './logger.js';
-import { obtenirCanvas } from './dom-utils.js';
-import { afficherEcranHistoire, cacherEcransHistoire } from './histoire-cutscene-nav.js';
+import { definirExpressionVera } from '../../js/portraits-vera.js';
+import { ECRANS } from '../../js/ui/ecrans-config.js';
+import { logger } from '../../js/logger.js';
+import { obtenirCanvas } from '../../js/dom-utils.js';
+import { afficherEcranHistoire, cacherEcransHistoire } from '../../js/histoire/histoire-cutscene-nav.js';
 
 let journalCallbackFermer = null;
 
@@ -91,28 +91,28 @@ const cutsceneBody = [
 writeFileSync(
     'js/histoire-cutscene.js',
     `/** Cutscene histoire (orchestration). */
-import { obtenirHistoireTextesSync } from './charger-histoire-textes.js';
-import { store } from './store-core.js';
-import { ECRANS } from './ecrans-config.js';
-import { logger } from './logger.js';
+import { obtenirHistoireTextesSync } from '../../js/io/charger-histoire-textes.js';
+import { store } from '../../js/etat/store-core.js';
+import { ECRANS } from '../../js/ui/ecrans-config.js';
+import { logger } from '../../js/logger.js';
 import {
     definirHumeurRoboCutscene,
     dessinerPortraitCutscene,
-} from './portraits-cutscene.js';
-import { dessinerRobo } from './rendu-robo.js';
-import { afficherEcranHistoire, cacherEcransHistoire } from './histoire-cutscene-nav.js';
+} from '../../js/portraits-cutscene.js';
+import { dessinerRobo } from '../../js/rendu/rendu-robo.js';
+import { afficherEcranHistoire, cacherEcransHistoire } from '../../js/histoire/histoire-cutscene-nav.js';
 import {
     POSITION_PERSONNAGE,
     COULEUR_PERSONNAGE,
     idPortraitMeta,
     idPortraitRendu,
-} from './histoire-cutscene-config.js';
+} from '../../js/histoire/histoire-cutscene-config.js';
 import {
     lierCanvasFondCutscene,
     demarrerFondCutscene,
     stopFondCutscene,
     estFondCutsceneActif,
-} from './histoire-cutscene-fonds.js';
+} from '../../js/histoire/histoire-cutscene-fonds.js';
 
 ${cutsceneBody}
 `
@@ -127,9 +127,9 @@ export {
     avancerCutscene,
     afficherFinHistoire,
     afficherBoutonCarteGameOver,
-} from './histoire-cutscene.js';
+} from '../../js/histoire/histoire-cutscene.js';
 
-export { afficherJournalHistoire, fermerJournalHistoire } from './histoire-journal-ui.js';
+export { afficherJournalHistoire, fermerJournalHistoire } from '../../js/histoire/histoire-journal-ui.js';
 `
 );
 

@@ -1,0 +1,139 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+const son = vi.fn();
+const relancerIntervalleMusique = vi.fn();
+
+vi.mock('../js/audio/audio.js', () => ({
+    AudioMoteur: { son, relancerIntervalleMusique },
+}));
+
+vi.mock('../js/rendu/rendu-jeu.js', () => ({
+    dessinerFileNext: vi.fn(),
+    dessinerPreview: vi.fn(),
+    afficherTexteFlottant: vi.fn(),
+    obtenirYHautTas: vi.fn(() => 100),
+    declencherSecousse: vi.fn(),
+    declencherFlashTopout: vi.fn(),
+}));
+
+vi.mock('../js/ui/ecrans-ui.js', () => ({
+    reagirRoboAuxLignes: vi.fn(),
+    flashGrimaceRobo: vi.fn(),
+    reagirRoboLevelUp: vi.fn(),
+    verifierPlateauCritiqueRobo: vi.fn(),
+    annoncer: vi.fn(),
+    rafraichirStats: vi.fn(),
+    afficherNotifNiveau: vi.fn(),
+}));
+
+vi.mock('../js/ui/mascotte-robo.js', () => ({
+    brancherBusReactionsMascotte: vi.fn(),
+}));
+
+vi.mock('../js/rendu/rendu-robo.js', () => ({
+    notifierTetrisRobo: vi.fn(),
+}));
+
+vi.mock('../js/logique/oracle-jeu.js', () => ({
+    evaluerDecisionOracle: vi.fn(),
+}));
+
+vi.mock('../js/boss-jeu.js', () => ({
+    endommagerBoss: vi.fn(),
+    bossEstActif: vi.fn(() => false),
+    bossEstVaincu: vi.fn(() => false),
+    notifierTetrisBoss: vi.fn(),
+}));
+
+vi.mock('../js/logique/piece-jeu.js', () => ({
+    mettreAJourIndicateurRelique: vi.fn(),
+}));
+
+vi.mock('../js/gestionnaire-difficulte.js', () => ({
+    enregistrerProgression: vi.fn(),
+    suiviDifficulteActif: vi.fn(() => false),
+}));
+
+vi.mock('../js/timer-niveau.js', () => ({
+    reinitialiserTimerNiveau: vi.fn(),
+}));
+
+vi.mock('../js/particules-jeu.js', () => ({
+    creerParticulesLigne: vi.fn(),
+}));
+
+vi.mock('../js/achievements-histoire.js', () => ({
+    ajouterLignesEclipseBasse: vi.fn(),
+    ajouterLignesVide: vi.fn(),
+}));
+
+vi.mock('../js/mecaniques-histoire.js', () => ({
+    biomeActuelMecanique: vi.fn(() => null),
+    obtenirLigneEclipse: vi.fn(() => 10),
+}));
+
+vi.mock('../js/etat/mode-histoire.js', () => ({
+    modeHistoireEnCours: vi.fn(() => false),
+}));
+
+vi.mock('../js/actions-jeu.js', () => ({
+    obtenirActions: vi.fn(() => ({ terminerPartie: vi.fn() })),
+}));
+
+describe('effets-partie', () => {
+    beforeEach(async () => {
+        vi.clearAllMocks();
+        vi.resetModules();
+        const { reinitialiserBusJeu } = await import('../js/etat/bus-jeu.js');
+        reinitialiserBusJeu();
+    });
+
+    async function chargerEffets() {
+        const mod = await import('../js/effets-partie.js');
+        return mod;
+    }
+
+    it('initialise les ecouteurs bus une seule fois', async () => {
+        const { initialiserEffetsPartie } = await chargerEffets();
+        const { emettre } = await import('../js/etat/bus-jeu.js');
+        initialiserEffetsPartie();
+        initialiserEffetsPartie();
+        emettre('piece:son', { type: 'ligne_1' });
+        expect(son).toHaveBeenCalledTimes(1);
+    });
+
+    it('joue le son tetris pour 4 lignes', async () => {
+        const { initialiserEffetsPartie } = await chargerEffets();
+        const { emettre } = await import('../js/etat/bus-jeu.js');
+        initialiserEffetsPartie();
+        emettre('lignes:effacees', { nbSupprimees: 4, lignesEffacees: [17, 18, 19, 20] });
+        expect(son).toHaveBeenCalledWith('tetris');
+    });
+
+    it('declenche flash topout', async () => {
+        const { initialiserEffetsPartie } = await chargerEffets();
+        const { declencherFlashTopout } = await import('../js/rendu/rendu-jeu.js');
+        const { emettre } = await import('../js/etat/bus-jeu.js');
+        initialiserEffetsPartie();
+        emettre('partie:topout');
+        expect(declencherFlashTopout).toHaveBeenCalled();
+    });
+
+    it('termine sprint a 40 lignes', async () => {
+        const { initialiserEffetsPartie } = await chargerEffets();
+        const { etat } = await import('../js/etat/store-jeu.js');
+        const { obtenirActions } = await import('../js/actions-jeu.js');
+        const terminer = vi.fn();
+        obtenirActions.mockReturnValue({ terminerPartie: terminer });
+        etat.modeJeu = 'sprint';
+        etat.lignes = 40;
+        const { emettre } = await import('../js/etat/bus-jeu.js');
+        initialiserEffetsPartie();
+        emettre('score:maj', {
+            nbLignes: 1,
+            result: { points: 100, combo: 1, tetris: false, levelUp: false },
+        });
+        await new Promise((r) => setTimeout(r, 450));
+        expect(terminer).toHaveBeenCalledWith(true);
+    });
+});

@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-vi.mock('../js/audio.js', () => ({
+vi.mock('../js/audio/audio.js', () => ({
     AudioMoteur: { son: vi.fn() },
 }));
 
-vi.mock('../js/meteo.js', () => ({
+vi.mock('../js/logique/meteo.js', () => ({
     meteo: { decalageForce: 0, controleInverse: false, etat: 'inactif', evenementActuel: null },
     ETATS_METEO: { ACTIF: 'actif' },
 }));
@@ -13,7 +13,7 @@ vi.mock('../js/reliques.js', () => ({
     appliquerEffetRelique: vi.fn(),
 }));
 
-vi.mock('../js/melodie.js', () => ({
+vi.mock('../js/audio/melodie.js', () => ({
     enregistrerNotesLignesCompletes: vi.fn(),
 }));
 
@@ -32,7 +32,7 @@ vi.mock('../js/profil-jeu.js', () => ({
     enregistrerLignesParNiveau: vi.fn(),
 }));
 
-vi.mock('../js/oracle-jeu.js', () => ({
+vi.mock('../js/logique/oracle-jeu.js', () => ({
     sauvegarderPlacementOracle: vi.fn(),
     declencherCalculOracle: vi.fn(),
 }));
@@ -46,14 +46,14 @@ import {
     deplacerGauche,
     deplacerBas,
     verrouillerPiece,
-} from '../js/logique-partie.js';
-import { reinitialiserBusJeu, ecouter } from '../js/bus-jeu.js';
-import { initialiserVivant } from '../js/vivant.js';
-import { etat, definirRefsCanvas } from '../js/store-jeu.js';
-import { CONFIG } from '../js/config.js';
-import { supprimerLignesDuPlateau } from '../js/logique-pure.js';
-import { creerPlateau, remplirSac } from '../js/piece-jeu.js';
-import { reinitialiserGameFeel } from '../js/game-feel-jeu.js';
+} from '../js/logique/logique-partie.js';
+import { reinitialiserBusJeu, ecouter } from '../js/etat/bus-jeu.js';
+import { initialiserVivant } from '../js/logique/vivant.js';
+import { etat, definirRefsCanvas } from '../js/etat/store-jeu.js';
+import { CONFIG } from '../js/config/config.js';
+import { supprimerLignesDuPlateau } from '../js/logique/logique-pure.js';
+import { creerPlateau, remplirSac } from '../js/logique/piece-jeu.js';
+import { reinitialiserGameFeel } from '../js/logique/game-feel-jeu.js';
 
 function creerCtxMock() {
     const gradient = { addColorStop: vi.fn() };
@@ -208,6 +208,15 @@ describe('logique-partie', () => {
         const v5 = vitesseChute();
         expect(v5).toBeLessThan(v1);
         expect(v5).toBeGreaterThanOrEqual(CONFIG.vitesseMin);
+    });
+
+    it('vitesseChute sprint demarre plus doucement que marathon', () => {
+        etat.modeJeu = 'marathon';
+        etat.niveau = 1;
+        const marathon = vitesseChute();
+        etat.modeJeu = 'sprint';
+        const sprint = vitesseChute();
+        expect(sprint).toBeGreaterThan(marathon);
     });
 
     it('appliquerScoreLignes ajoute les points Tetris', () => {

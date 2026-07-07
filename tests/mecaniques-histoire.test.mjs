@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { BIOMES } from '../js/config.js';
-import { store } from '../js/store-jeu.js';
-import { etat, definirBiomeActif } from '../js/store-jeu.js';
-import { creerPlateau } from '../js/piece-jeu.js';
+import { BIOMES } from '../js/config/config.js';
+import { store } from '../js/etat/store-jeu.js';
+import { etat, definirBiomeActif } from '../js/etat/store-jeu.js';
+import { creerPlateau } from '../js/logique/piece-jeu.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-import { supprimerLignesDuPlateauExcluantRouille } from '../js/logique-pure.js';
+import { supprimerLignesDuPlateauExcluantRouille } from '../js/logique/logique-pure.js';
 import {
     biomeActuelMecanique,
     biomeActuelEstMiroir,

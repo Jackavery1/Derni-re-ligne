@@ -4,7 +4,7 @@ import {
     INFOBULLES_ATTAQUES_BOSS,
     obtenirBriefingMecaniqueBoss,
     obtenirInfobulleAttaqueBoss,
-} from '../js/histoire-map-briefings-boss.js';
+} from '../js/histoire/histoire-map-briefings-boss.js';
 
 describe('histoire-map-briefings-boss', () => {
     it('couvre les cinq boss de campagne', () => {

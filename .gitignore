@@ -8,6 +8,7 @@ Thumbs.db
 .env
 .env.*
 coverage/
+coverage-out.txt
 dist/
 dist-test/
 rapport-poids.json

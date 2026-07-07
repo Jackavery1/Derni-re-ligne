@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-import { obtenirProchainMondeCampagne } from '../js/histoire-mondes.js';
+import { obtenirProchainMondeCampagne } from '../js/histoire/histoire-mondes.js';
 
 describe('obtenirProchainMondeCampagne', () => {
     it('retourne le monde suivant non complete dans la sequence', () => {

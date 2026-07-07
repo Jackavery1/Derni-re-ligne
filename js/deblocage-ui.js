@@ -1,4 +1,4 @@
-import { obtenirEtatDeblocage } from './progression.js';
+import { obtenirEtatDeblocage } from './io/progression.js';
 import { mettreAJourMenuCampagneTitre } from './menu-titre-campagne.js';
 
 function definirVisibiliteMode(id, visible) {

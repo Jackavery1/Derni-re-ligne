@@ -124,7 +124,7 @@ describe('ui-panneau-detail', () => {
     beforeEach(async () => {
         installerDomPanneau();
         vi.resetModules();
-        const mod = await import('../js/ui-panneau-detail.js');
+        const mod = await import('../js/ui/ui-panneau-detail.js');
         mod.initialiserPanneauDetail();
         globalThis.__panneauDetail = mod;
     });

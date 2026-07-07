@@ -1,6 +1,6 @@
 import { CUTSCENES_POST_MONDE } from '../js/histoire-textes/cutscenes-post-monde.js';
 import { CUTSCENES_ENTREE } from '../js/histoire-textes/cutscenes-entree.js';
-import { SCENE_DEFAUT_POST_MONDE } from '../js/histoire-narratif.js';
+import { SCENE_DEFAUT_POST_MONDE } from '../js/histoire/histoire-narratif.js';
 import { MONDES_CAMPAGNE_PRINCIPALE } from './etats-histoire-base.mjs';
 
 /** @param {unknown} cutscene */

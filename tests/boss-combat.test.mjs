@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { store, etat } from '../js/store-jeu.js';
-import { creerPlateau } from '../js/piece-jeu.js';
-import { activerModeHistoire, desactiverModeHistoire } from '../js/mode-histoire.js';
+import { store, etat } from '../js/etat/store-jeu.js';
+import { creerPlateau } from '../js/logique/piece-jeu.js';
+import { activerModeHistoire, desactiverModeHistoire } from '../js/etat/mode-histoire.js';
 import { demarrerBoss, arreterBoss, DUREE_VICTOIRE_BOSS_MS } from '../js/boss-jeu.js';
 
-vi.mock('../js/audio.js', () => ({
+vi.mock('../js/audio/audio.js', () => ({
     AudioMoteur: { muet: true, son: vi.fn() },
 }));
 
@@ -18,7 +18,7 @@ import {
     endommagerBossCombat,
     declencherVictoireBoss,
     verifierPhaseBoss,
-} from '../js/boss-combat.js';
+} from '../js/logique/boss-combat.js';
 
 function reinitialiserEtatBoss() {
     store.histoire.boss = {

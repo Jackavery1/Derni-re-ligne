@@ -1,4 +1,4 @@
-import { eclaircir, assombrir } from './rendu-blocs-utils.js';
+import { eclaircir, assombrir } from './rendu/rendu-blocs-utils.js';
 import { rendreIconeSurCanvas } from './icones-pixel.js';
 import { obtenirIdIconeBiome } from './biome-icones-map.js';
 

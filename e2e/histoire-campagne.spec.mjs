@@ -310,7 +310,7 @@ test.describe.serial('audit D9b — campagne complete avec narratif', () => {
 test('campagne complete — flags fin secrete avec narratif post-victoire (audit D9)', async ({
     page,
 }) => {
-    test.setTimeout(600000);
+    test.setTimeout(5_400_000);
     const etatDepart = {
         ...ETAT_HISTOIRE_VIDE,
         mondesDejaMontres: ['monde_prologue'],

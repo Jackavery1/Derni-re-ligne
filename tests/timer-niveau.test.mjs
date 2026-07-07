@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { etat } from '../js/store-jeu.js';
+import { etat } from '../js/etat/store-jeu.js';
 
-vi.mock('../js/mode-histoire.js', () => ({
+vi.mock('../js/etat/mode-histoire.js', () => ({
     modeHistoireEnCours: () => false,
 }));
 
-vi.mock('../js/registre-modes.js', () => ({
+vi.mock('../js/etat/registre-modes.js', () => ({
     modeArchiEnCours: () => false,
     modeCoopEnCours: () => false,
 }));

@@ -28,9 +28,9 @@ writeFileSync(
     TABLE_KICK_I,
     TETROMINOS,
     TOUCHES_DEFAUT,
-} from './config-jeu.js';
+} from '../../js/config/config-jeu.js';
 export { BIOMES, ORDRE_BIOMES } from './biomes.js';
-export { RELIQUES, METEO_BIOMES } from './contenu-jeu.js';
+export { RELIQUES, METEO_BIOMES } from '../../js/config/contenu-jeu.js';
 `
 );
 

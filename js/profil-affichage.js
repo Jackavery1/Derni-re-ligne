@@ -1,11 +1,11 @@
-import { BIOMES } from './config.js';
-import { etat } from './store-jeu.js';
+import { BIOMES } from './config/config.js';
+import { etat } from './etat/store-jeu.js';
 import { obtenirCanvas } from './dom-utils.js';
-import { obtenirResumeRecordsLocaux } from './progression.js';
-import { formaterTemps } from './hud-jeu.js';
+import { obtenirResumeRecordsLocaux } from './io/progression.js';
+import { formaterTemps } from './rendu/hud-jeu.js';
 import { sansAccentsE } from './texte-jeu.js';
 import { statsGlobales } from './achievements.js';
-import { oracle } from './oracle-jeu.js';
+import { oracle } from './logique/oracle-jeu.js';
 import { dessinerHeatmap, dessinerGrapheRythme, dessinerRadar } from './profil-rendu.js';
 import {
     donneesPartie,

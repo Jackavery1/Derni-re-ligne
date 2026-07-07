@@ -1,5 +1,5 @@
-import { BIOMES } from './config.js';
-import { AudioMoteur } from './audio.js';
+import { BIOMES } from './config/config.js';
+import { AudioMoteur } from './audio/audio.js';
 import {
     etat,
     particules,
@@ -9,26 +9,26 @@ import {
     flashVerrou,
     flashLignes,
     flashTopout,
-} from './store-jeu.js';
-import { hexVersRgb, lierCouleursTetrominos } from './piece-jeu.js';
+} from './etat/store-jeu.js';
+import { hexVersRgb, lierCouleursTetrominos } from './logique/piece-jeu.js';
 import {
     changerHumeur,
     cacherEcrans,
     afficherEcran,
     retournerAuMenuTitre,
     mettreAJourAffichageRecord,
-} from './ecrans-ui.js';
-import { obtenirRecordCoopBiome, sauvegarderRecordCoopBiome } from './progression.js';
+} from './ui/ecrans-ui.js';
+import { obtenirRecordCoopBiome, sauvegarderRecordCoopBiome } from './io/progression.js';
 import { planifierSoumissionLeaderboard } from './leaderboard-cloud.js';
 import { finaliserPartieCommune } from './partie-fin-commun.js';
 import { planifierBoucle, suspendreBoucleSolo } from './boucle-jeu.js';
 import { obtenirBouton } from './dom-utils.js';
 import { mettreAJourParticules } from './particules-jeu.js';
-import { mettreAJourSecousse } from './rendu-jeu.js';
-import { initialiserAudioBiome } from './audio-partie.js';
-import { basculerOracle, oracle } from './oracle-jeu.js';
+import { mettreAJourSecousse } from './rendu/rendu-jeu.js';
+import { initialiserAudioBiome } from './audio/audio-partie.js';
+import { basculerOracle, oracle } from './logique/oracle-jeu.js';
 import { afficherTutorielContextuel } from './tutoriel.js';
-import { adapterNotifsJeu } from './layout-jeu.js';
+import { adapterNotifsJeu, adapterInterfaceCoop } from './rendu/layout-jeu.js';
 import {
     coop,
     reinitialiserEtatCoop,
@@ -36,12 +36,17 @@ import {
     coop_rafraichirStats,
     configurerCoopLogique,
     definirCoopPartieEnCours,
-} from './coop-logique.js';
+} from './logique/coop-logique.js';
 import { coop_dessinerPreview, coop_rendreFrame } from './coop-rendu.js';
 import { mettreAJourDasCoop } from './coop-das.js';
 import { obtenirCarteDasCoop } from './coop-carte-das.js';
 
-export { coop, modeCoopActif, basculerModeCoop, utiliserPasserelle } from './coop-logique.js';
+export {
+    coop,
+    modeCoopActif,
+    basculerModeCoop,
+    utiliserPasserelle,
+} from './logique/coop-logique.js';
 export {
     coop_deplacerGauche,
     coop_deplacerDroite,
@@ -51,7 +56,7 @@ export {
     coop_utiliserReserve,
     coop_estPositionValide,
     DEMI_LARGEUR,
-} from './coop-logique.js';
+} from './logique/coop-logique.js';
 
 let idFrameCoop = null;
 let dernierTimestampCoop = 0;
@@ -134,6 +139,7 @@ function demarrerCooperatifInterne() {
     cacherEcrans();
     deplacerZoneJeuVersCoop();
     afficherInterfaceCoop(true);
+    adapterInterfaceCoop();
     requestAnimationFrame(() => adapterNotifsJeu());
 
     coop_dessinerPreview('j1');
@@ -156,7 +162,7 @@ async function executerDemarrageCooperatif() {
     if (demarrageCoopEnCours) return;
     demarrageCoopEnCours = true;
     try {
-        const { assurerFragmentsCoop } = await import('./charger-ecrans.js');
+        const { assurerFragmentsCoop } = await import('./ui/charger-ecrans.js');
         await assurerFragmentsCoop();
         demarrerCooperatifInterne();
     } finally {

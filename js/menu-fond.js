@@ -1,6 +1,6 @@
-import { TETROMINOS } from './config.js';
-import { obtenirEffetsReduits } from './store-jeu.js';
-import { obtenirCouleurPieceParType } from './piece-jeu.js';
+import { TETROMINOS } from './config/config.js';
+import { obtenirEffetsReduits } from './etat/store-jeu.js';
+import { obtenirCouleurPieceParType } from './logique/piece-jeu.js';
 import { obtenirActions } from './actions-jeu.js';
 import { obtenirCanvas } from './dom-utils.js';
 

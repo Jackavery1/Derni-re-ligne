@@ -28,7 +28,7 @@ data/
 **Fichier:** `js/mecaniques-histoire-{nom}.js`
 
 ```javascript
-import { etat } from './store-jeu.js';
+import { etat } from './etat/store-jeu.js';
 import { logger } from './logger.js';
 
 /**

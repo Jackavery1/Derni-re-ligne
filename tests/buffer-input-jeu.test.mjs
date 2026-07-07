@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { CONFIG } from '../js/config.js';
+import { CONFIG } from '../js/config/config.js';
 import {
     ajouterBufferInput,
     bufferInputEstVide,
     creerBufferInputVide,
     premierBufferInput,
     retirerPremierBufferInput,
-} from '../js/buffer-input-jeu.js';
+} from '../js/logique/buffer-input-jeu.js';
 
 describe('buffer-input-jeu', () => {
     it('conserve deux actions avant decrasement du plus ancien', () => {

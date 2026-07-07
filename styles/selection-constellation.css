@@ -1,0 +1,318 @@
+/* ================================================
+           ÉCRAN SÉLECTION — CARTE CONSTELLATIONS
+        ================================================ */
+#ecran-selection {
+    overflow: hidden;
+}
+#canvas-constellation {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+#selection-overlay {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(24px + var(--safe-top)) calc(20px + var(--safe-right))
+        calc(24px + var(--safe-bottom)) calc(20px + var(--safe-left));
+    pointer-events: none;
+}
+#selection-overlay > * {
+    pointer-events: auto;
+}
+#selection-header {
+    text-align: center;
+    width: min(320px, 100%);
+}
+.sel-titre-jeu {
+    display: block;
+    font-size: clamp(0.5rem, 2vw, 0.75rem);
+    letter-spacing: 5px;
+    color: var(--texte-dim);
+    text-transform: uppercase;
+}
+.sel-sous-titre {
+    display: block;
+    font-size: clamp(0.3rem, 1.2vw, 0.42rem);
+    color: var(--texte-dim);
+    letter-spacing: 3px;
+    margin-top: 6px;
+}
+.sel-panneau-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    pointer-events: auto;
+    background: rgba(0, 0, 12, 0.45);
+}
+.sel-panneau-backdrop:not(.element-masque) {
+    display: block;
+}
+#sel-info-biome {
+    --accent-carte: var(--cyan);
+    position: fixed;
+    z-index: 4;
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+    padding: 20px 18px 24px;
+    text-align: left;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    transition: transform 250ms ease;
+}
+#sel-info-biome.element-masque {
+    display: none !important;
+}
+.sel-panneau-fermer {
+    align-self: flex-end;
+    background: transparent;
+    border: 1px solid var(--bordure);
+    color: var(--texte-dim);
+    font-family: var(--police);
+    font-size: 0.55rem;
+    padding: 4px 10px;
+    cursor: pointer;
+    line-height: 1;
+}
+.sel-panneau-fermer:hover {
+    color: var(--texte);
+    border-color: var(--accent-carte);
+}
+.sel-biome-entete {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+.sel-biome-icone {
+    display: block;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    image-rendering: pixelated;
+}
+.sel-biome-nom,
+#sel-biome-nom {
+    font-family: var(--font-titre);
+    font-size: var(--typo-nom-carte);
+    color: var(--accent-carte);
+    letter-spacing: 2px;
+    line-height: 1.35;
+    text-align: left;
+}
+.sel-biome-record,
+#sel-biome-record {
+    font-family: 'Orbitron', var(--font-stats);
+    font-size: var(--typo-stat);
+    color: var(--texte-dim);
+    letter-spacing: 1px;
+    width: 100%;
+}
+.sel-biome-statut,
+#sel-biome-statut {
+    font-family: 'Rajdhani', var(--font-ui);
+    font-size: var(--typo-corps);
+    color: var(--texte-dim);
+    letter-spacing: 0.5px;
+    width: 100%;
+}
+.sel-btn-histoire {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.sel-btn-jouer {
+    width: 100%;
+    margin-top: 4px;
+}
+.sel-retour {
+    align-self: flex-start;
+}
+
+#ecran-selection .bouton,
+#ecran-selection .toggle-oracle {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+#sel-barre-modes {
+    position: fixed;
+    z-index: 8750;
+    right: 0;
+    bottom: 0;
+    width: min(380px, 100%);
+    max-height: 50dvh;
+    overflow-y: auto;
+    padding: 12px 16px calc(20px + var(--safe-bottom));
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: rgba(8, 8, 26, 0.92);
+    border-top: 1px solid var(--bordure);
+    border-left: 1px solid var(--bordure);
+}
+
+.sel-barre-modes-titre {
+    margin: 0 0 4px;
+    font-size: 0.42rem;
+    letter-spacing: 3px;
+    color: var(--texte-dim);
+    text-transform: uppercase;
+}
+
+.sel-biome-picker {
+    display: none;
+    margin-top: 12px;
+    width: 100%;
+}
+
+.sel-biome-label {
+    display: block;
+    font-size: 0.38rem;
+    letter-spacing: 2px;
+    color: var(--texte-dim);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    text-align: center;
+}
+
+.sel-biome-select {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 0.45rem;
+    letter-spacing: 1px;
+    color: var(--texte);
+    background: rgba(8, 8, 26, 0.88);
+    border: 1px solid var(--bordure);
+    border-radius: 4px;
+    touch-action: manipulation;
+}
+
+body:has(#sel-barre-modes:not(.element-masque)) .panneau-detail-corps {
+    padding-bottom: min(42dvh, 280px);
+}
+
+#sel-barre-modes.element-masque {
+    display: none !important;
+}
+
+.panneau-detail-secondaire {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+@media (min-width: 769px) {
+    #sel-info-biome {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(380px, 92vw);
+        max-height: none;
+        transform: translateX(100%);
+        border-radius: 0;
+    }
+    #sel-info-biome.sel-panneau--visible {
+        transform: translateX(0);
+    }
+    .sel-panneau-backdrop {
+        display: none !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .sel-biome-picker {
+        display: block;
+    }
+
+    #sel-barre-modes {
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: min(42dvh, 320px);
+        border-left: none;
+        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.45);
+    }
+
+    body:has(#sel-barre-modes:not(.element-masque)) .panneau-detail-corps {
+        max-height: min(38dvh, 300px);
+        padding-bottom: 8px;
+    }
+
+    #selection-overlay {
+        padding-bottom: 12px;
+    }
+
+    .panneau-detail-backdrop {
+        display: block;
+    }
+    .panneau-detail-corps {
+        top: auto;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        max-height: 55dvh;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        border-radius: 12px 12px 0 0;
+        transform: translateY(105%);
+    }
+    .panneau-detail-corps--ouvert {
+        transform: translateY(0);
+    }
+}
+
+body.effets-reduits #sel-info-biome {
+    transition: none;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.sr-only-focusable:focus {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 10000;
+    width: auto;
+    height: auto;
+    padding: 0.5rem 1rem;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    background: var(--jaune, #ffe600);
+    color: #08081a;
+    font-family: inherit;
+    font-size: 0.75rem;
+    text-decoration: none;
+}
+
+.bouton:focus-visible,
+.btn-tactile:focus-visible,
+#btn-pause:focus-visible {
+    outline: 2px solid var(--jaune);
+    outline-offset: 3px;
+}

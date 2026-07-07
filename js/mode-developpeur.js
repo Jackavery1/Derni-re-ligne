@@ -1,10 +1,10 @@
 import { SEQUENCE_HISTOIRE, JOURNAUX_VERA } from './histoire-donnees.js';
-import { chargerEtatHistoire, sauvegarderEtatHistoire, ecrireStockage } from './progression.js';
+import { chargerEtatHistoire, sauvegarderEtatHistoire, ecrireStockage } from './io/progression.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 import { reinitialiserCampagneComplete } from './reinitialiser-campagne.js';
-import { afficherEcran } from './ecrans-ui.js';
-import { ECRANS } from './store-jeu.js';
-import { store } from './store-jeu.js';
+import { afficherEcran } from './ui/ecrans-ui.js';
+import { ECRANS } from './etat/store-jeu.js';
+import { store } from './etat/store-jeu.js';
 import { modeDevActif, activerSessionDev, desactiverSessionDev } from './mode-dev-etat.js';
 
 export { modeDevActif } from './mode-dev-etat.js';
@@ -153,7 +153,7 @@ function _monterInterfaceDev() {
             fn: () => {
                 const id = selectMonde.value;
                 if (!id) return;
-                void import('./histoire-session.js').then(({ demarrerMondeHistoire }) =>
+                void import('./histoire/histoire-session.js').then(({ demarrerMondeHistoire }) =>
                     demarrerMondeHistoire(id)
                 );
             },
@@ -169,7 +169,7 @@ function _monterInterfaceDev() {
             fn: () => {
                 const id = selectMonde.value;
                 if (!id) return;
-                void import('./histoire-manager-completion.js').then(
+                void import('./histoire/histoire-manager-completion.js').then(
                     ({ devCompleterMondeHistoire }) => {
                         const { suivant } = devCompleterMondeHistoire(id);
                         rafraichirApresActionDev();

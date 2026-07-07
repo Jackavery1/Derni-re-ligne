@@ -1,19 +1,19 @@
-import { AudioMoteur } from './audio.js';
-import { creerPlateau, lierCouleursTetrominos } from './piece-jeu.js';
-import { particules, definirBiomeActif, ECRANS } from './store-jeu.js';
-import { lireStockage, ecrireStockage } from './progression.js';
+import { AudioMoteur } from './audio/audio.js';
+import { creerPlateau, lierCouleursTetrominos } from './logique/piece-jeu.js';
+import { particules, definirBiomeActif, ECRANS } from './etat/store-jeu.js';
+import { lireStockage, ecrireStockage } from './io/progression.js';
 import { planifierBoucle, suspendreBoucleSolo } from './boucle-jeu.js';
 import { mettreAJourParticules } from './particules-jeu.js';
-import { dessinerPreview } from './rendu-jeu.js';
+import { dessinerPreview } from './rendu/rendu-jeu.js';
 import { obtenirCanvas } from './dom-utils.js';
 import {
     cacherEcrans,
     afficherEcran,
     retournerAuMenuTitre,
     appliquerThemeBiome,
-} from './ecrans-ui.js';
+} from './ui/ecrans-ui.js';
 import { arreterAnimationMenu } from './menu-fond.js';
-import { basculerOracle, oracle } from './oracle-jeu.js';
+import { basculerOracle, oracle } from './logique/oracle-jeu.js';
 import { statsGlobales, sauvegarderStats, verifierAchievements } from './achievements.js';
 import { obtenirTousNiveauxArchi } from './archi-generateur.js';
 import {
@@ -24,9 +24,9 @@ import {
     archi_calculerScoreTempsReel,
     archi_calculerEtoiles,
     archi_reinitialiserEtatNiveau,
-} from './archi-logique.js';
+} from './logique/archi-logique.js';
 import { archi_rendreFrame } from './archi-rendu.js';
-import { adapterInterfaceArchi } from './layout-jeu.js';
+import { adapterInterfaceArchi } from './rendu/layout-jeu.js';
 
 let idFrameArchi = null;
 

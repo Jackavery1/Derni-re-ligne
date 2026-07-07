@@ -1,0 +1,125 @@
+#ecran-histoire-journal {
+    background: rgba(5, 5, 20, 0.97);
+}
+#histoire-journal-contenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 22px 20px;
+    max-width: min(90vw, 400px);
+    border: 2px solid var(--rose);
+    background: rgba(8, 8, 26, 0.99);
+    box-shadow: 0 0 40px rgba(255, 0, 110, 0.12);
+    animation: apparitionJournal 0.3s ease-out;
+    max-height: calc(90dvh - var(--safe-top) - var(--safe-bottom));
+    overflow: hidden;
+    scrollbar-width: thin;
+}
+.histoire-journal-numero {
+    font-size: 0.27rem;
+    color: rgba(255, 0, 110, 0.6);
+    letter-spacing: 4px;
+}
+#canvas-journal-illust {
+    width: 100%;
+    border: 1px solid rgba(255, 0, 110, 0.2);
+    image-rendering: pixelated;
+}
+.histoire-journal-titre {
+    font-size: clamp(0.48rem, 1.8vw, 0.65rem);
+    color: var(--rose);
+    letter-spacing: 3px;
+    text-shadow: 0 0 8px var(--rose);
+    text-align: center;
+}
+.histoire-journal-ss-titre {
+    font-size: var(--typo-hud-micro);
+    color: var(--texte-dim);
+    letter-spacing: 2px;
+    text-align: center;
+}
+.histoire-journal-texte-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+.histoire-journal-para {
+    font-family: var(--font-narratif, 'Crimson Pro', Georgia, serif);
+    font-size: clamp(0.75rem, 1.1vw, 0.92rem);
+    color: var(--texte);
+    line-height: 2;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-left: 2px solid rgba(255, 0, 110, 0.3);
+    text-align: left;
+}
+
+#btn-journal-fermer {
+    min-width: 48px;
+    min-height: 48px;
+    height: 48px;
+    padding: 14px 20px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
+@media (max-width: 768px), (max-height: 600px) {
+    #histoire-journal-contenu {
+        max-height: calc(90dvh - var(--safe-top) - var(--safe-bottom));
+        max-width: min(96vw, 400px);
+        padding: 18px 16px;
+    }
+
+    .histoire-journal-numero {
+        font-family: var(--font-ui);
+        font-size: clamp(0.65rem, 2.2vw, 0.75rem);
+        letter-spacing: 3px;
+    }
+
+    .histoire-journal-ss-titre {
+        font-family: var(--font-ui);
+        font-size: clamp(0.75rem, 2.5vw, 0.88rem);
+    }
+
+    .histoire-journal-para {
+        font-family: var(--font-narratif);
+        font-size: clamp(0.92rem, 3.6vw, 1.08rem);
+        line-height: 1.55;
+        letter-spacing: 0.02em;
+    }
+
+    .histoire-detail-type,
+    .histoire-detail-statut {
+        font-family: var(--font-ui);
+        font-size: clamp(0.68rem, 2.4vw, 0.82rem);
+        letter-spacing: 1px;
+    }
+
+    .histoire-detail-journal {
+        font-family: var(--font-ui);
+        font-size: clamp(0.62rem, 2.2vw, 0.72rem);
+    }
+
+    #btn-journal-fermer {
+        min-width: 48px;
+        min-height: 48px;
+        height: 48px;
+    }
+
+    #histoire-fin-contenu {
+        max-height: calc(90dvh - var(--safe-top) - var(--safe-bottom));
+        padding: max(32px, calc(16px + var(--safe-top))) 24px
+            max(32px, calc(16px + var(--safe-bottom)));
+    }
+}

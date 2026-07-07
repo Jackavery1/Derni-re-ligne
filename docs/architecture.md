@@ -6,21 +6,22 @@ Vanilla ES modules en dev, bundle esbuild en prod.
 
 ## Couches
 
-| Couche      | Fichiers                                                                                |
-| ----------- | --------------------------------------------------------------------------------------- |
-| Données     | `config-jeu.js`, `biomes.js`, `contenu-jeu.js`, `histoire-textes/`                      |
-| Logique     | `logique-pure.js`, `moteur-piece.js`, `score-partie.js`                                 |
-| État        | `store-core.js`, `store-jeu.js`, `store-histoire.js`                                    |
-| Solo        | `partie.js`, `logique-partie.js`, `boucle-jeu.js`, `piece-jeu.js`                       |
-| Coop        | `coop-jeu.js`, `coop-logique.js`                                                        |
-| Histoire    | `histoire-manager.js`, `histoire-cutscene*.js`, `boss-jeu.js`, `mecaniques-histoire.js` |
-| Rendu / UI  | `rendu-jeu.js`, `navigation-ecrans.js`, `hud-jeu.js`                                    |
-| Persistance | `progression.js`                                                                        |
+| Couche      | Dossiers / exemples                                                               |
+| ----------- | --------------------------------------------------------------------------------- |
+| Données     | `config/`, `histoire-textes/`, `contenu-jeu.js`                                   |
+| Logique     | `logique/logique-pure.js`, `logique/moteur-piece.js`, `logique/score-partie.js`   |
+| État        | `etat/store-core.js`, `etat/store-jeu.js`, `etat/mode-histoire.js`                |
+| Solo        | `partie.js`, `logique/logique-partie.js`, `boucle-jeu.js`, `logique/piece-jeu.js` |
+| Coop        | `coop-jeu.js`, `logique/coop-logique.js`                                          |
+| Histoire    | `histoire/histoire-manager.js`, `histoire-cutscene*.js`, `boss-jeu.js`            |
+| Rendu / UI  | `rendu/rendu-jeu.js`, `ui/navigation-ecrans.js`, `rendu/hud-jeu.js`               |
+| Persistance | `io/progression.js`                                                               |
 
 ## Organisation des fichiers
 
+- **Domaines par convention** — voir `docs/domaines.md` (préfixes `logique-`, `histoire-`, `rendu-`, etc.).
 - **Sous-dossiers ciblés** — autorisés pour le **contenu** volumineux (`js/histoire-textes/`). Barrel parent (`histoire-textes.js`) + export JSON inchangés.
-- **Pas de migration globale** — ne pas déplacer tout `js/histoire/` ou `js/rendu/` d'un coup (diff large, risque de cycles). Découper module par module à la demande.
+- **Migration par domaines** — dossiers `js/config/`, `js/logique/`, `js/etat/`, etc. (`scripts/archive/migrer-js-domaines.mjs`). Ne pas déplacer les gros sous-arbres de données (`histoire-textes/`, `*-donnees/`) sans plan dédié.
 - **Cutscenes** — responsabilités séparées :
     - `histoire-cutscene.js` — orchestration (séquence, callbacks)
     - `histoire-cutscene-ui.js` — DOM, zones texte, progress
@@ -31,7 +32,7 @@ Vanilla ES modules en dev, bundle esbuild en prod.
 ## Règles utiles
 
 1. **Scoring partagé** — `score-partie.js` (`appliquerScoreLignes`) pour solo, coop et archi.
-2. **Store** — lectures via `store-jeu.js` ; `store.histoire` via `mode-histoire.js` (`modeHistoireEnCours()` / `activerModeHistoire()` / `desactiverModeHistoire()`) ; `store-core.js` réservé à la couche état (garde-fou `maintainabilite.test.mjs`).
+2. **Store** — lectures via `etat/store-jeu.js` ; `store.histoire` via `etat/mode-histoire.js` (`modeHistoireEnCours()` / `activerModeHistoire()` / `desactiverModeHistoire()`) ; `etat/store-core.js` réservé à la couche état (garde-fou `maintainabilite.test.mjs`).
 3. **Événements** — `bus-jeu.js` pour découpler logique et effets (`effets-partie.js`).
 4. **HTML** — fragments `html/*.html` chargés par `charger-ecrans.js` (pas d'`innerHTML`).
 5. **PWA** — cache listé dans `sw-precache.js` (généré), logique dans `sw.js` ; régénéré par `npm run sync:sw`.
@@ -116,7 +117,7 @@ flowchart TB
     end
 
     subgraph ui [UI / secondaire]
-        nav[navigation-ecrans.js]
+        nav[ui/navigation-ecrans.js]
         raf[planificateur-raf.js]
         constellation[constellation.js]
     end

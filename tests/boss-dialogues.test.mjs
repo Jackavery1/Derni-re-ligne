@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { store } from '../js/store-jeu.js';
+import { store } from '../js/etat/store-jeu.js';
 import {
     enqueueDialogueBoss,
     notifierTetrisBoss,
@@ -14,7 +14,7 @@ import {
 
 describe('boss-dialogues', () => {
     beforeEach(async () => {
-        const { chargerHistoireTextes } = await import('../js/charger-histoire-textes.js');
+        const { chargerHistoireTextes } = await import('../js/io/charger-histoire-textes.js');
         await chargerHistoireTextes();
         store.histoire.actif = true;
         store.histoire.boss = {

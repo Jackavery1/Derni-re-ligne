@@ -1,15 +1,26 @@
 import { expect } from '@playwright/test';
 import { MARQUEURS_NARRATIFS_CAMPAGNE } from './helpers-narratif-donnees.mjs';
+import { boutonEstVisible } from './helpers-page.mjs';
 import {
     attendreOverlayPostVictoire,
     avancerCutsceneUneLigne,
     assertAudioNarratifCutscene,
 } from './helpers-narratif-core.mjs';
 
+/** @param {import('@playwright/test').Page} page */
+async function fermerTutorielSiVisible(page) {
+    if (await boutonEstVisible(page, '#btn-tutoriel-fermer')) {
+        await page.locator('#btn-tutoriel-fermer').click({ force: true });
+        return true;
+    }
+    return false;
+}
+
 /** @param {import('@playwright/test').Page} page @param {string[]} corpus @param {number} typewriterTimeout @param {boolean} [strictTypewriter] */
 async function parcourirCutscenePostVictoire(page, corpus, typewriterTimeout, strictTypewriter) {
     for (let j = 0; j < 80; j++) {
         if (page.isClosed()) break;
+        if (await fermerTutorielSiVisible(page)) continue;
         const actif = await page.evaluate(
             () =>
                 document.getElementById('ecran-histoire-cutscene')?.classList.contains('actif') ??
@@ -22,7 +33,14 @@ async function parcourirCutscenePostVictoire(page, corpus, typewriterTimeout, st
             strictTypewriter
         );
         if (t.trim()) corpus.push(t);
-        if (!avance) break;
+        if (!avance) {
+            const passer = page.locator('#btn-cutscene-passer');
+            if (await passer.isVisible().catch(() => false)) {
+                await passer.click({ force: true });
+                continue;
+            }
+            break;
+        }
     }
 }
 
@@ -72,6 +90,7 @@ export async function parcourirFluxPostVictoireAvecAssertions(
 
     for (let i = 0; i < max; i++) {
         if (page.isClosed()) break;
+        if (await fermerTutorielSiVisible(page)) continue;
         const etat = await page.evaluate(() => ({
             recap: document
                 .getElementById('overlay-recap-monde')
@@ -80,7 +99,15 @@ export async function parcourirFluxPostVictoireAvecAssertions(
                 .getElementById('ecran-histoire-cutscene')
                 ?.classList.contains('actif'),
             journal: document.getElementById('ecran-histoire-journal')?.classList.contains('actif'),
+            tutoriel: !document
+                .getElementById('overlay-tutoriel')
+                ?.classList.contains('element-masque'),
         }));
+
+        if (etat.tutoriel) {
+            await fermerTutorielSiVisible(page);
+            continue;
+        }
 
         if (!etat.recap && !etat.cutscene && !etat.journal) {
             pausesConsecutives++;

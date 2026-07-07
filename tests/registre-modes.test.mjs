@@ -1,14 +1,14 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { store } from '../js/store-jeu.js';
-import { archi } from '../js/archi-logique.js';
-import { coop, reinitialiserEtatCoop } from '../js/coop-logique.js';
+import { store } from '../js/etat/store-jeu.js';
+import { archi } from '../js/logique/archi-logique.js';
+import { coop, reinitialiserEtatCoop } from '../js/logique/coop-logique.js';
 import {
     MODES_JEU,
     obtenirModeActif,
     modeSoloEnCours,
     partieSpecialiseeActive,
     boucleSoloActive,
-} from '../js/registre-modes.js';
+} from '../js/etat/registre-modes.js';
 
 describe('registre-modes', () => {
     beforeEach(() => {

@@ -1,15 +1,15 @@
-import { BIOMES, ORDRE_BIOMES_LIBRE } from './config.js';
-import { biomeEstDebloqueParHistoire, obtenirMondeHistoirePourBiome } from './progression.js';
+import { BIOMES, ORDRE_BIOMES_LIBRE } from './config/config.js';
+import { biomeEstDebloqueParHistoire, obtenirMondeHistoirePourBiome } from './io/progression.js';
 import { modeSprintActif } from './mode-sprint.js';
-import { obtenirRecordSprintBiome } from './progression.js';
-import { formaterTemps } from './hud-jeu.js';
+import { obtenirRecordSprintBiome } from './io/progression.js';
+import { formaterTemps } from './rendu/hud-jeu.js';
 import { NOMS_MONDES_REQUIS } from './constellation-rendu.js';
 import { obtenirIdIconeBiome } from './biome-icones-map.js';
 import {
     ouvrirPanneauDetail,
     fermerPanneauDetail,
     obtenirPanneauDetailId,
-} from './ui-panneau-detail.js';
+} from './ui/ui-panneau-detail.js';
 
 /**
  * @param {string} idBiome
@@ -64,7 +64,7 @@ export function ouvrirPanneauBiomeConstellation(idBiome, deps) {
     const meta = [recordTexte];
     if (biome.description) meta.push(biome.description);
 
-    /** @type {import('./ui-panneau-detail.js').ConfigPanneauDetail} */
+    /** @type {import('./ui/ui-panneau-detail.js').ConfigPanneauDetail} */
     const config = {
         id: `biome-${idBiome}`,
         accent,
@@ -108,7 +108,7 @@ export function afficherBarreModesBiome(idBiome) {
     void import('./mode-defi-jour.js').then(({ mettreAJourToggleDefiJour }) =>
         mettreAJourToggleDefiJour()
     );
-    void import('./infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) => {
+    void import('./ui/infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) => {
         if (typeof window !== 'undefined' && window.__NEO_SUPPRESS_MODE_INFOBULLE_AUTO__) return;
         proposerInfobulleModeJeu(modeSprintActif ? 'sprint' : 'sansFin');
     });

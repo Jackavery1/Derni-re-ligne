@@ -1,11 +1,11 @@
-import { CONFIG, TETROMINOS } from './config.js';
+import { CONFIG, TETROMINOS } from './config/config.js';
 import {
     obtenirCanvasPlateau,
     obtenirCtx,
     obtenirEffetsAccessibiliteReduits,
-} from './store-jeu.js';
-import { etat } from './store-jeu.js';
-import { obtenirCouleurPieceParType } from './piece-jeu.js';
+} from './etat/store-jeu.js';
+import { etat } from './etat/store-jeu.js';
+import { obtenirCouleurPieceParType } from './logique/piece-jeu.js';
 import {
     dessinerCellule,
     dessinerPreview,
@@ -14,10 +14,13 @@ import {
     dessinerFlashVerrou,
     dessinerFlashTopout,
     obtenirDecalageSecousse,
-} from './rendu-jeu.js';
-import { coop, DEMI_LARGEUR, coop_estPositionValide } from './coop-logique.js';
+} from './rendu/rendu-jeu.js';
+import { coop, DEMI_LARGEUR, coop_estPositionValide } from './logique/coop-logique.js';
 import { obtenirCanvas } from './dom-utils.js';
-import { dessinerMotifsAccessibilite, dessinerMotifsCoopPieces } from './rendu-accessibilite.js';
+import {
+    dessinerMotifsAccessibilite,
+    dessinerMotifsCoopPieces,
+} from './rendu/rendu-accessibilite.js';
 
 function obtenirFormeCoop(piece) {
     const rotations = TETROMINOS[piece.type].rotations;

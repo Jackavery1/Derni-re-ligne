@@ -1,8 +1,8 @@
-import { CONFIG, RELIQUES } from './config.js';
+import { CONFIG, RELIQUES } from './config/config.js';
 import { majStatsRelique } from './achievements.js';
-import { AudioMoteur } from './audio.js';
-import { reagirRoboRelique } from './mascotte-robo.js';
-import { proposerInfobulleRelique } from './infobulles-contexte.js';
+import { AudioMoteur } from './audio/audio.js';
+import { reagirRoboRelique } from './ui/mascotte-robo.js';
+import { proposerInfobulleRelique } from './ui/infobulles-contexte.js';
 
 let deps = {};
 

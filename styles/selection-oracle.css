@@ -1,0 +1,97 @@
+.toggle-oracle-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    width: 100%;
+}
+#sel-info-biome .toggle-oracle-wrap {
+    align-items: stretch;
+}
+.toggle-oracle {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--texte-dim);
+    font-family: var(--police);
+    font-size: clamp(0.42rem, 1.4vw, 0.55rem);
+    padding: 10px 14px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.toggle-oracle.actif {
+    border-color: #aa44ff;
+    color: #cc66ff;
+    box-shadow: 0 0 14px rgba(170, 68, 255, 0.35);
+    text-shadow: 0 0 8px #aa44ff;
+}
+.oracle-toggle-desc {
+    font-family: 'Rajdhani', var(--font-ui);
+    font-size: var(--typo-corps);
+    color: var(--texte-dim);
+    letter-spacing: 0.3px;
+    text-align: left;
+    line-height: 1.45;
+    max-width: none;
+    width: 100%;
+}
+
+#notif-oracle {
+    position: fixed;
+    bottom: -80px;
+    right: max(16px, var(--safe-right));
+    left: auto;
+    top: auto;
+    transform: none;
+    font-family: var(--police);
+    font-size: clamp(0.45rem, 1.8vw, 0.6rem);
+    padding: 8px 16px;
+    z-index: 250;
+    pointer-events: none;
+    letter-spacing: 2px;
+    text-align: right;
+    border: 1px solid;
+    background: rgba(8, 8, 26, 0.92);
+    max-width: min(42vw, 220px);
+    transition: none;
+}
+#notif-oracle.visible {
+    animation: feedbackOracleCoin 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+#notif-oracle.oracle-feedback-succes {
+    color: #ffe600;
+    border-color: #ffe600;
+    box-shadow: 0 0 20px rgba(255, 230, 0, 0.5);
+}
+#notif-oracle.oracle-feedback-reset {
+    color: #ff006e;
+    border-color: #ff006e;
+    box-shadow: 0 0 20px rgba(255, 0, 110, 0.4);
+}
+
+.oracle-mult-vert {
+    color: var(--vert);
+}
+.oracle-mult-jaune {
+    color: var(--jaune);
+}
+.oracle-mult-rose {
+    color: var(--rose);
+}
+.oracle-dev-val {
+    color: var(--jaune);
+    font-size: 0.6rem;
+}
+
+.go-stat-oracle {
+    grid-column: 1 / -1;
+}
+.oracle-bonus-val {
+    color: #cc66ff;
+    text-shadow: 0 0 8px #aa44ff;
+}

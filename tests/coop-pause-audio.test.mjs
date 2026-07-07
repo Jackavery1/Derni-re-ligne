@@ -6,7 +6,7 @@ const { definirVolumePauseMusique, afficherEcran, cacherEcrans } = vi.hoisted(()
     cacherEcrans: vi.fn(),
 }));
 
-vi.mock('../js/audio.js', async (importOriginal) => {
+vi.mock('../js/audio/audio.js', async (importOriginal) => {
     const actual = await importOriginal();
     return {
         ...actual,
@@ -17,7 +17,7 @@ vi.mock('../js/audio.js', async (importOriginal) => {
     };
 });
 
-vi.mock('../js/ecrans-ui.js', async (importOriginal) => {
+vi.mock('../js/ui/ecrans-ui.js', async (importOriginal) => {
     const actual = await importOriginal();
     return {
         ...actual,
@@ -27,7 +27,7 @@ vi.mock('../js/ecrans-ui.js', async (importOriginal) => {
 });
 
 import { basculerPauseCoop } from '../js/coop-jeu.js';
-import { coop } from '../js/coop-logique.js';
+import { coop } from '../js/logique/coop-logique.js';
 
 describe('coop pause audio', () => {
     beforeEach(() => {

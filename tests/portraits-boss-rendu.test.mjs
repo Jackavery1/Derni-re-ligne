@@ -3,27 +3,27 @@ import {
     PALETTE_BRASIER,
     dessinerPortraitBrasierCanon,
     viderCachePortraitBrasier,
-} from '../js/portrait-brasier-rendu.js';
+} from '../js/rendu/portrait-brasier-rendu.js';
 import {
     PALETTE_SENTINELLE,
     dessinerPortraitSentinelleCanon,
     viderCachePortraitSentinelle,
-} from '../js/portrait-sentinelle-rendu.js';
+} from '../js/rendu/portrait-sentinelle-rendu.js';
 import {
     PALETTE_ARCHIVISTE,
     dessinerPortraitArchivisteCanon,
     viderCachePortraitArchiviste,
-} from '../js/portrait-archiviste-rendu.js';
+} from '../js/rendu/portrait-archiviste-rendu.js';
 import {
     PALETTE_AVANTGARDE,
     dessinerPortraitAvantgardeCanon,
     viderCachePortraitAvantgarde,
-} from '../js/portrait-avantgarde-rendu.js';
+} from '../js/rendu/portrait-avantgarde-rendu.js';
 import {
     obtenirParamsExpressionPortrait,
     reinitExpressionsCutscene,
 } from '../js/expressions-cutscene.js';
-import { store } from '../js/store-jeu.js';
+import { store } from '../js/etat/store-jeu.js';
 
 function creerCtxMock() {
     const gradient = { addColorStop: vi.fn() };

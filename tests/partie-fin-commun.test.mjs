@@ -12,7 +12,7 @@ vi.mock('../js/profil-jeu.js', () => ({
     sauvegarderSnapshotProfil: vi.fn(),
 }));
 
-vi.mock('../js/ecrans-ui.js', () => ({
+vi.mock('../js/ui/ecrans-ui.js', () => ({
     obtenirTempsEcoule: vi.fn(() => 120000),
 }));
 

@@ -1,13 +1,18 @@
-import { BIOMES, CONFIG } from './config.js';
-import { annulerMeteo } from './meteo.js';
-import { AudioMoteur } from './audio.js';
+import { BIOMES, CONFIG } from './config/config.js';
+import { annulerMeteo } from './logique/meteo.js';
+import { AudioMoteur } from './audio/audio.js';
 import {
     calculerPointsProgression,
     obtenirRecordBiome,
     sauvegarderNiveauGlobal,
     sauvegarderRecordSprintBiome,
-} from './progression.js';
-import { etat, obtenirBiomeActif, obtenirNiveauGlobal, ajouterNiveauGlobal } from './store-jeu.js';
+} from './io/progression.js';
+import {
+    etat,
+    obtenirBiomeActif,
+    obtenirNiveauGlobal,
+    ajouterNiveauGlobal,
+} from './etat/store-jeu.js';
 import {
     appliquerHumeurMascotte,
     reagirRoboGameOver,
@@ -17,14 +22,14 @@ import {
     mettreAJourAffichageRecord,
     formaterTemps,
     obtenirTempsEcoule,
-} from './ecrans-ui.js';
-import { ECRANS } from './store-jeu.js';
+} from './ui/ecrans-ui.js';
+import { ECRANS } from './etat/store-jeu.js';
 import { planifierBoucle } from './boucle-jeu.js';
-import { afficherMelodieGameOver } from './melodie.js';
+import { afficherMelodieGameOver } from './audio/melodie.js';
 import { finaliserPartieCommune } from './partie-fin-commun.js';
-import { modeCoopEnCours } from './registre-modes.js';
-import { store } from './store-jeu.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+import { modeCoopEnCours } from './etat/registre-modes.js';
+import { store } from './etat/store-jeu.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
 import { defiJourActif } from './mode-defi-jour.js';
 import { obtenirDefiDuJour, enregistrerScoreDefiJour } from './defi-jour.js';
 import { enregistrerTopOut, arreterSuiviMonde } from './gestionnaire-difficulte.js';
@@ -32,7 +37,7 @@ import {
     surFinDeMondeHistoire,
     peutContinuerBossGratuit,
     obtenirEtatHistoire,
-} from './histoire-manager.js';
+} from './histoire/histoire-manager.js';
 import { sansAccentsE } from './texte-jeu.js';
 import {
     bossEstActif,
@@ -41,10 +46,10 @@ import {
     appliquerRepliqueGameOverBoss,
 } from './boss-jeu.js';
 import { onGameOverHistoire } from './mecaniques-histoire.js';
-import { oracle, obtenirScoreFinalOracle } from './oracle-jeu.js';
+import { oracle, obtenirScoreFinalOracle } from './logique/oracle-jeu.js';
 import { statsGlobales } from './achievements.js';
-import { vibrerFinPartie } from './haptique.js';
-import { arreterFondBiome } from './rendu-fond-biome.js';
+import { vibrerFinPartie } from './audio/haptique.js';
+import { arreterFondBiome } from './rendu/rendu-fond-biome.js';
 import { planifierSoumissionLeaderboard } from './leaderboard-cloud.js';
 
 function _soumettreLeaderboardSiRecord(nouveauRecordMarathon, nouveauRecordSprint, scoreFinal) {

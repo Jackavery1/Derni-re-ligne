@@ -3,7 +3,7 @@ import {
     appliquerTransformCamera,
     ecranVersMonde,
     mondeVersEcran,
-} from '../js/histoire-map-camera.js';
+} from '../js/histoire/histoire-map-camera.js';
 
 describe('histoire-map-camera', () => {
     const cam = { y: 120, zoom: 1.6 };

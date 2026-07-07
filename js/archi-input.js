@@ -6,8 +6,8 @@ import {
     archi_descendreEnBas,
     archi_changerPiece,
     archi_annuler,
-} from './archi-logique.js';
-import { emettre } from './bus-jeu.js';
+} from './logique/archi-logique.js';
+import { emettre } from './etat/bus-jeu.js';
 import {
     archi_basculerPause,
     archi_terminerNiveau,

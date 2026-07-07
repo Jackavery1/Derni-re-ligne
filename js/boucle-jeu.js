@@ -1,5 +1,5 @@
-import { CONFIG } from './config.js';
-import { mettreAJourMeteo } from './meteo.js';
+import { CONFIG } from './config/config.js';
+import { mettreAJourMeteo } from './logique/meteo.js';
 import { logger, afficherErreurUtilisateur } from './logger.js';
 import {
     etat,
@@ -27,12 +27,16 @@ import {
     definirDernierTimestamp,
     definirLockDelayRestant,
     definirAccumulateur,
-} from './store-jeu.js';
-import { mettreAJourDas, mettreAJourIndicateurRelique, estPositionValide } from './piece-jeu.js';
+} from './etat/store-jeu.js';
+import {
+    mettreAJourDas,
+    mettreAJourIndicateurRelique,
+    estPositionValide,
+} from './logique/piece-jeu.js';
 import { mettreAJourGamepad } from './input-gamepad.js';
 import { obtenirActions } from './actions-jeu.js';
-import { partieSpecialiseeActive } from './registre-modes.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+import { partieSpecialiseeActive } from './etat/registre-modes.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
 import {
     dessinerPlateau,
     dessinerPieceFantome,
@@ -48,15 +52,15 @@ import {
     mettreAJourTextesFlottants,
     obtenirDecalageSecousse,
     mettreAJourSecousse,
-} from './rendu-jeu.js';
+} from './rendu/rendu-jeu.js';
 import { mettreAJourParticules } from './particules-jeu.js';
-import { mettreAJourAffichageTemps } from './hud-jeu.js';
+import { mettreAJourAffichageTemps } from './rendu/hud-jeu.js';
 import { tickTimerNiveau } from './timer-niveau.js';
-import { verrouillerPiece, vitesseChute } from './logique-partie.js';
+import { verrouillerPiece, vitesseChute } from './logique/logique-partie.js';
 import { menuAnimActif, mettreAJourMenuFond } from './menu-fond.js';
-import { mettreAJourHistoriquePositions, dessinerDecorations } from './decorations-jeu.js';
-import { mettreAJourVivant } from './vivant.js';
-import { dessinerAvertissementsVivant } from './rendu-vivant.js';
+import { mettreAJourHistoriquePositions, dessinerDecorations } from './rendu/decorations-jeu.js';
+import { mettreAJourVivant } from './logique/vivant.js';
+import { dessinerAvertissementsVivant } from './rendu/rendu-vivant.js';
 import { mettreAJourBoss, bossEstActif, bossEstVaincu } from './boss-jeu.js';
 import { mettreAJourMecaniquesHistoire } from './mecaniques-histoire.js';
 import {
@@ -64,9 +68,12 @@ import {
     areActive,
     activerPieceAuSol,
     quitterSolPiece,
-} from './game-feel-jeu.js';
-import { dessinerMotifsAccessibilite, dessinerMotifsPieceCourante } from './rendu-accessibilite.js';
-import { recupererZenApresTopOut } from './logique-partie-verrouillage.js';
+} from './logique/game-feel-jeu.js';
+import {
+    dessinerMotifsAccessibilite,
+    dessinerMotifsPieceCourante,
+} from './rendu/rendu-accessibilite.js';
+import { recupererZenApresTopOut } from './logique/logique-partie-verrouillage.js';
 
 const SEUIL_ERREURS_BOUCLE = 5;
 let erreursConsecutivesBoucle = 0;
@@ -81,12 +88,12 @@ async function _rendrePortraitBossLazy(timestamp) {
     _bossRenduModule.rendrePortraitBoss(timestamp);
 }
 
-/** @type {typeof import('./oracle-jeu.js') | null} */
+/** @type {typeof import('./logique/oracle-jeu.js') | null} */
 let _oracleModule = null;
 
 async function _dessinerSuggestionOracleLazy() {
     if (!_oracleModule) {
-        _oracleModule = await import('./oracle-jeu.js');
+        _oracleModule = await import('./logique/oracle-jeu.js');
     }
     if (_oracleModule.oracle.actif) {
         _oracleModule.dessinerSuggestionOracle();

@@ -1,20 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock('../js/charger-histoire-textes.js', () => ({
+vi.mock('../js/io/charger-histoire-textes.js', () => ({
     obtenirHistoireTextesSync: vi.fn(),
 }));
 
-vi.mock('../js/histoire-manager-ui.js', () => ({
+vi.mock('../js/histoire/histoire-manager-ui.js', () => ({
     afficherCutsceneHistoire: vi.fn(),
 }));
 
-import { obtenirHistoireTextesSync } from '../js/charger-histoire-textes.js';
-import { afficherCutsceneHistoire } from '../js/histoire-manager-ui.js';
+import { obtenirHistoireTextesSync } from '../js/io/charger-histoire-textes.js';
+import { afficherCutsceneHistoire } from '../js/histoire/histoire-manager-ui.js';
 import {
     obtenirCutsceneEntree,
     obtenirCutscenePostMonde,
     afficherVictoireBoss,
-} from '../js/histoire-narratif.js';
+} from '../js/histoire/histoire-narratif.js';
 
 describe('histoire-narratif — metadata cutscene', () => {
     beforeEach(() => {

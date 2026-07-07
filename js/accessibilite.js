@@ -1,10 +1,10 @@
-import { store } from './store-core.js';
+import { store } from './etat/store-core.js';
 import {
     obtenirPrefererMoinsAnimations,
     obtenirFpsMoyen,
     definirEffetsReduits,
-} from './store-etat-partie.js';
-import { existeStockage, lireStockage, ecrireStockage } from './progression-stockage.js';
+} from './etat/store-etat-partie.js';
+import { existeStockage, lireStockage, ecrireStockage } from './io/progression-stockage.js';
 
 export function obtenirDaltonien() {
     return store.accessibilite.daltonien;

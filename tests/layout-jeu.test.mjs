@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-vi.mock('../js/histoire-map.js', () => ({
+vi.mock('../js/histoire/histoire-map.js', () => ({
     redimensionnerCarteHistoire: vi.fn(),
 }));
 
@@ -13,16 +13,16 @@ vi.mock('../js/menu-fond.js', () => ({
     menuAnimActif: false,
 }));
 
-vi.mock('../js/rendu-fond-biome.js', () => ({
+vi.mock('../js/rendu/rendu-fond-biome.js', () => ({
     demarrerFondBiome: vi.fn(),
     invaliderCacheFond: vi.fn(),
 }));
 
-vi.mock('../js/store-jeu.js', () => ({
+vi.mock('../js/etat/store-jeu.js', () => ({
     etat: { estEnCours: false },
 }));
 
-vi.mock('../js/registre-modes.js', () => ({
+vi.mock('../js/etat/registre-modes.js', () => ({
     modeArchiEnCours: vi.fn(() => false),
 }));
 
@@ -30,12 +30,14 @@ vi.mock('../js/biome-fond.js', () => ({
     obtenirIdBiomeFond: vi.fn(() => 'classique'),
 }));
 
-import { calculerEchelleInterface } from '../js/layout-calcul.js';
+import { calculerEchelleInterface } from '../js/rendu/layout-calcul.js';
 import {
     obtenirHauteurInterface,
+    obtenirHauteurInterfacePortrait,
     adapterInterface,
     adapterInterfaceArchi,
-} from '../js/layout-jeu.js';
+    adapterInterfaceCoop,
+} from '../js/rendu/layout-jeu.js';
 
 function creerElementStyle() {
     return {
@@ -60,6 +62,8 @@ describe('layout-jeu', () => {
             ['interface-jeu', { style: creerElementStyle() }],
             ['interface-echelle-archi', { style: creerElementStyle() }],
             ['interface-jeu-archi', { style: creerElementStyle() }],
+            ['interface-echelle-coop', { style: creerElementStyle() }],
+            ['interface-jeu-coop', { style: creerElementStyle() }],
         ]);
 
         vi.stubGlobal('document', {
@@ -94,6 +98,36 @@ describe('layout-jeu', () => {
         window.innerHeight = 900;
         window.innerWidth = 480;
         expect(obtenirHauteurInterface()).toBeGreaterThan(0);
+    });
+
+    it('obtenirHauteurInterfacePortrait empile les trois bandes du layout colonne', () => {
+        expect(obtenirHauteurInterfacePortrait()).toBeGreaterThan(obtenirHauteurInterface());
+    });
+
+    it('adapterInterface reduit l echelle en portrait mobile pour eviter un zoom excessif', () => {
+        window.innerWidth = 390;
+        window.innerHeight = 844;
+        window.visualViewport = null;
+        adapterInterface();
+        const scalePortrait = Number(
+            document
+                .getElementById('interface-jeu')
+                .style.setProperty.mock.calls.findLast((c) => c[0] === '--iface-scale')?.[1]
+        );
+        expect(scalePortrait).toBeLessThan(0.9);
+    });
+
+    it('adapterInterfaceCoop reduit l echelle en portrait mobile', () => {
+        window.innerWidth = 390;
+        window.innerHeight = 844;
+        window.visualViewport = null;
+        adapterInterfaceCoop();
+        const scaleCoop = Number(
+            document
+                .getElementById('interface-jeu-coop')
+                .style.setProperty.mock.calls.findLast((c) => c[0] === '--iface-scale')?.[1]
+        );
+        expect(scaleCoop).toBeLessThan(1);
     });
 
     it('adapterInterface applique les variables CSS d echelle', () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { store } from '../js/store-jeu.js';
+import { store } from '../js/etat/store-jeu.js';
 import {
     HUMEURS_PERSONNAGES,
     resoudreHumeurPortrait,

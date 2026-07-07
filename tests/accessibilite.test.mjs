@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { store } from '../js/store-jeu.js';
+import { store } from '../js/etat/store-jeu.js';
 import {
     chargerAccessibiliteDepuisStockage,
     obtenirDaltonien,
@@ -9,7 +9,7 @@ import {
     definirDaltonien,
     definirReduireEffetsAccessibilite,
 } from '../js/accessibilite.js';
-import { estCleValide, existeStockage, lireStockage } from '../js/progression-stockage.js';
+import { estCleValide, existeStockage, lireStockage } from '../js/io/progression-stockage.js';
 
 describe('accessibilite', () => {
     beforeEach(() => {
@@ -24,6 +24,8 @@ describe('accessibilite', () => {
     it('accepte les cles localStorage dediees', () => {
         expect(estCleValide('derniereLigne_daltonien')).toBe(true);
         expect(estCleValide('derniereLigne_reduireEffets')).toBe(true);
+        expect(estCleValide('derniereLigne_infobullesModesJeu')).toBe(true);
+        expect(estCleValide('derniereLigne_infobullesBoss')).toBe(true);
     });
 
     it('persiste le mode daltonien', () => {

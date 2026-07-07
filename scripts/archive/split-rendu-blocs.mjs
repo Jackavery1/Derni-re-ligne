@@ -4,13 +4,13 @@ const src = readFileSync('js/rendu-blocs.js', 'utf8');
 const lines = src.split('\n');
 
 const styles = [
-    "import { assombrir, eclaircir, coordsBloc, debutBloc, finBloc, pseudoAleatoire, tracerRectArrondi } from './rendu-blocs-utils.js';",
+    "import { assombrir, eclaircir, coordsBloc, debutBloc, finBloc, pseudoAleatoire, tracerRectArrondi } from '../../js/rendu/rendu-blocs-utils.js';",
     '',
     ...lines.slice(77, 598),
 ].join('\n');
 
-const barrel = `import { BIOMES } from './config.js';
-import { assombrir, eclaircir } from './rendu-blocs-utils.js';
+const barrel = `import { BIOMES } from '../../js/config/config.js';
+import { assombrir, eclaircir } from '../../js/rendu/rendu-blocs-utils.js';
 import {
     dessinerBlocBiseaute,
     dessinerBlocFondu,
@@ -21,7 +21,7 @@ import {
     dessinerBlocCircuit,
     dessinerBlocDiamant,
     dessinerBlocNebuleuse,
-} from './rendu-blocs-styles.js';
+} from '../../js/rendu/rendu-blocs-styles.js';
 
 ${lines.slice(578, 621).join('\n')}
 `;

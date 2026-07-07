@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ecrireStockage } from '../js/progression-stockage.js';
+import { ecrireStockage } from '../js/io/progression-stockage.js';
 
 /** @type {ReturnType<typeof vi.fn>} */
 let fetchMock;
@@ -17,7 +17,7 @@ describe('leaderboard-cloud', () => {
         vi.stubGlobal('navigator', { onLine: true });
 
         const { activerSyncCloud, configurerSupabase, CLE_SYNC_ID } =
-            await import('../js/config-sync.js');
+            await import('../js/config/config-sync.js');
         activerSyncCloud(true);
         configurerSupabase('https://test.supabase.co', 'anon-test-key');
         ecrireStockage(CLE_SYNC_ID, '11111111-1111-4111-8111-111111111111');
@@ -68,7 +68,7 @@ describe('leaderboard-cloud', () => {
     });
 
     it('ignore la soumission si sync cloud inactif', async () => {
-        const { activerSyncCloud } = await import('../js/config-sync.js');
+        const { activerSyncCloud } = await import('../js/config/config-sync.js');
         activerSyncCloud(false);
         const { soumettreScoreLeaderboard } = await chargerLeaderboard();
         const resultat = await soumettreScoreLeaderboard({

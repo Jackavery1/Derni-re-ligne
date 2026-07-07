@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { reinitialiserBusJeu, emettre } from '../js/bus-jeu.js';
-import { store } from '../js/store-jeu.js';
-import { activerModeHistoire, desactiverModeHistoire } from '../js/mode-histoire.js';
+import { reinitialiserBusJeu, emettre } from '../js/etat/bus-jeu.js';
+import { store } from '../js/etat/store-jeu.js';
+import { activerModeHistoire, desactiverModeHistoire } from '../js/etat/mode-histoire.js';
 import {
     demarrerSuiviMonde,
     arreterSuiviMonde,

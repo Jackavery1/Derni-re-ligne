@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CONFIG, TETROMINOS } from '../js/config.js';
+import { CONFIG, TETROMINOS } from '../js/config/config.js';
 import {
     definirPieceAuSol,
     definirNbLockResets,
@@ -13,7 +13,7 @@ import {
     definirBiomeActif,
     definirCompteurPieces,
     definirSeuilProchRelique,
-} from '../js/store-jeu.js';
+} from '../js/etat/store-jeu.js';
 import {
     creerPlateau,
     reinitialiserLockDelay,
@@ -30,8 +30,8 @@ import {
     mettreAJourDas,
     lierCouleursTetrominos,
     mettreAJourIndicateurRelique,
-} from '../js/piece-jeu.js';
-import { TOUCHES_DEFAUT } from '../js/config.js';
+} from '../js/logique/piece-jeu.js';
+import { TOUCHES_DEFAUT } from '../js/config/config.js';
 import { configurerActionsJeu } from '../js/actions-jeu.js';
 
 describe('piece-jeu', () => {

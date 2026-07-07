@@ -99,7 +99,11 @@ export async function avancerCutsceneUneLigne(
             suivant.click();
             return true;
         }
-        document.getElementById('btn-cutscene-passer')?.click();
+        const passer = document.getElementById('btn-cutscene-passer');
+        if (passer) {
+            passer.click();
+            return true;
+        }
         return false;
     });
     return { texte: t, avance };

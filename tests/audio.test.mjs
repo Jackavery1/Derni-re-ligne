@@ -4,7 +4,7 @@ import {
     calculerTempoActuel,
     MUSIQUE_BIOMES,
     configurerAudioMoteur,
-} from '../js/audio.js';
+} from '../js/audio/audio.js';
 
 describe('audio', () => {
     it('La4 proche de 220 Hz (biome classique)', () => {

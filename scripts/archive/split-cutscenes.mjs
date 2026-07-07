@@ -12,8 +12,8 @@ writeFileSync(
 );
 writeFileSync(
     'js/histoire-textes/cutscenes-boss.js',
-    "export { CUTSCENES_VICTOIRE_BOSS } from './cutscenes-boss-victoire.js';\n" +
-        "export { CUTSCENES_POST_MONDE } from './cutscenes-post-monde.js';\n"
+    "export { CUTSCENES_VICTOIRE_BOSS } from '../../js/histoire-textes/cutscenes-boss-victoire.js';\n" +
+        "export { CUTSCENES_POST_MONDE } from '../../js/histoire-textes/cutscenes-post-monde.js';\n"
 );
 
 const entreeSrc = readFileSync('js/histoire-textes/cutscenes-entree.js', 'utf8');

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CONFIG } from '../js/config.js';
-import { etat } from '../js/store-jeu.js';
-import { creerPlateau } from '../js/piece-jeu.js';
+import { CONFIG } from '../js/config/config.js';
+import { etat } from '../js/etat/store-jeu.js';
+import { creerPlateau } from '../js/logique/piece-jeu.js';
 import {
     coop,
     DEMI_LARGEUR,
@@ -17,7 +17,7 @@ import {
     coop_mettreAJourGravite,
     coop_verrouillerPiece,
     configurerCoopLogique,
-} from '../js/coop-logique.js';
+} from '../js/logique/coop-logique.js';
 import { initialiserChronometreCoop } from '../js/coop-jeu.js';
 
 describe('coop-logique', () => {

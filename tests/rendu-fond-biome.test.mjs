@@ -1,9 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { resoudreConfigFondBiome, obtenirConfigFondBiome } from '../js/rendu-fond-biome-donnees.js';
+import {
+    resoudreConfigFondBiome,
+    obtenirConfigFondBiome,
+} from '../js/rendu/rendu-fond-biome-donnees.js';
 import {
     creerParticulesFondBiome,
     dessinerParticulesFondBiome,
-} from '../js/rendu-fond-biome-particules.js';
+} from '../js/rendu/rendu-fond-biome-particules.js';
 
 describe('rendu-fond-biome-donnees', () => {
     it('resout les alias biome courts', () => {

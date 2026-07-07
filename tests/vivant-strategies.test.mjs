@@ -1,8 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { CONFIG } from '../js/config.js';
-import { etat } from '../js/store-jeu.js';
-import { creerPlateau } from '../js/piece-jeu.js';
-import { REGISTRE_CALCUL_VIVANT, configurerStrategiesVivant } from '../js/vivant-strategies.js';
+import { CONFIG } from '../js/config/config.js';
+import { etat } from '../js/etat/store-jeu.js';
+import { creerPlateau } from '../js/logique/piece-jeu.js';
+import {
+    REGISTRE_CALCUL_VIVANT,
+    configurerStrategiesVivant,
+} from '../js/logique/vivant-strategies.js';
 
 describe('vivant-strategies', () => {
     const plateauTemps = Array.from({ length: CONFIG.lignes }, () =>

@@ -1,4 +1,4 @@
-import { etat } from './store-jeu.js';
+import { etat } from './etat/store-jeu.js';
 import { sansAccentsE } from './texte-jeu.js';
 
 const NOMS_PIECES = {

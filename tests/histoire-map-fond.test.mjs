@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import {
     invaliderDonneesEtoilesHistoire,
     obtenirCouchesFondHistoire,
-} from '../js/histoire-map-fond-donnees.js';
-import { FORMES_CONSTELLATION_HISTOIRE } from '../js/histoire-map-fond-formes.js';
+} from '../js/histoire/histoire-map-fond-donnees.js';
+import { FORMES_CONSTELLATION_HISTOIRE } from '../js/histoire/histoire-map-fond-formes.js';
 
 describe('histoire-map-fond', () => {
     it('expose six formes de constellation', () => {

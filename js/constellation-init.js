@@ -1,6 +1,7 @@
-import { BIOMES, ORDRE_BIOMES_LIBRE } from './config.js';
+import { BIOMES, ORDRE_BIOMES_LIBRE } from './config/config.js';
+import { obtenirDimensionsViewport } from './viewport-dimensions.js';
 import { obtenirCanvas } from './dom-utils.js';
-import { biomeEstDebloqueParHistoire } from './progression.js';
+import { biomeEstDebloqueParHistoire } from './io/progression.js';
 import { panneauBiomeConstellationOuvert } from './constellation-panneau.js';
 import {
     attacherEvenementEscapeSelection,
@@ -116,8 +117,7 @@ export function initConstellation(traiterSelectionNoeud) {
     const ctxConst = canvasConst.getContext('2d');
     definirCanvasConstellation(canvasConst, ctxConst);
 
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    const { largeur: w, hauteur: h } = obtenirDimensionsViewport();
     canvasConst.width = w;
     canvasConst.height = h;
 

@@ -1,4 +1,4 @@
-import { BIOMES } from './config.js';
+import { BIOMES } from './config/config.js';
 export {
     changerHumeur,
     reagirRoboAuxLignes,
@@ -19,7 +19,7 @@ export {
     reagirRoboContinueBoss,
     brancherBusReactionsMascotte,
     verifierPlateauCritiqueRobo,
-} from './mascotte-robo.js';
+} from './ui/mascotte-robo.js';
 
 export function appliquerThemeBiome(biomeId) {
     const biome = BIOMES[biomeId] ?? BIOMES.classique;

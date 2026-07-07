@@ -35,14 +35,20 @@ test.describe('audit E — UI/UX', () => {
         expect(hasFocus).toBe(true);
     });
 
-    test('E4 — interactive elements have adequate size (48px)', async ({ page }) => {
+    test('E4 — interactive elements have adequate size (48px) on selection screen', async ({
+        page,
+    }) => {
         await preparerPageSansSw(page);
         await page.goto('/');
-        const buttons = await page.locator('button').all();
+        await attendreApplicationPrete(page);
+        await page.locator('#btn-jouer').click();
+        await page.locator('#ecran-selection').waitFor({ state: 'visible' });
+        const buttons = await page.locator('#ecran-selection button:visible').all();
+        expect(buttons.length).toBeGreaterThan(0);
         for (const btn of buttons) {
             const box = await btn.boundingBox();
             if (box) {
-                expect(Math.min(box.width, box.height)).toBeGreaterThanOrEqual(32);
+                expect(Math.min(box.width, box.height)).toBeGreaterThanOrEqual(48);
             }
         }
     });

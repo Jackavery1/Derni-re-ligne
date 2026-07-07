@@ -1,7 +1,7 @@
 /** Pipeline partagé de fin de partie (solo et coop). */
 import { finaliserStatsPartie } from './achievements.js';
 import { sauvegarderSnapshotProfil } from './profil-jeu.js';
-import { obtenirTempsEcoule } from './ecrans-ui.js';
+import { obtenirTempsEcoule } from './ui/ecrans-ui.js';
 import { annoncer } from './annonces.js';
 
 /**

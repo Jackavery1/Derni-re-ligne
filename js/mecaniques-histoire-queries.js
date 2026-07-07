@@ -1,6 +1,6 @@
-import { BIOMES } from './config.js';
-import { obtenirBiomeActif } from './store-jeu.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+import { BIOMES } from './config/config.js';
+import { obtenirBiomeActif } from './etat/store-jeu.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
 
 export function biomeActuelMecanique() {
     if (!modeHistoireEnCours()) return null;

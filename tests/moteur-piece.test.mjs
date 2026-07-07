@@ -5,8 +5,8 @@ import {
     estPositionValideSurPlateau,
     estPositionValidePiece,
     calculerDistanceChuteSurPlateau,
-} from '../js/moteur-piece.js';
-import { creerPlateau } from '../js/piece-jeu.js';
+} from '../js/logique/moteur-piece.js';
+import { creerPlateau } from '../js/logique/piece-jeu.js';
 
 describe('moteur-piece', () => {
     it('extraireForme retourne la rotation courante', () => {

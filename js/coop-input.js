@@ -1,5 +1,5 @@
-import { coop } from './coop-logique.js';
-import { modeArchiEnCours, modeCoopEnCours } from './registre-modes.js';
+import { coop } from './logique/coop-logique.js';
+import { modeArchiEnCours, modeCoopEnCours } from './etat/registre-modes.js';
 import { attacherRepetitionBouton } from './input-repetition.js';
 import { coopActiverTouche, coopDesactiverTouche } from './coop-das.js';
 import {

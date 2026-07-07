@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CONFIG } from '../js/config.js';
+import { CONFIG } from '../js/config/config.js';
 
-vi.mock('../js/bus-jeu.js', () => ({
+vi.mock('../js/etat/bus-jeu.js', () => ({
     emettre: vi.fn(),
 }));
 
-import { emettre } from '../js/bus-jeu.js';
+import { emettre } from '../js/etat/bus-jeu.js';
 import {
     archi,
     archi_parserSilhouette,
@@ -16,9 +16,9 @@ import {
     archi_verrouillerPiece,
     archi_annuler,
     archi_reinitialiserEtatNiveau,
-} from '../js/archi-logique.js';
+} from '../js/logique/archi-logique.js';
 import { NIVEAUX_ARCHI } from '../js/archi-donnees.js';
-import { creerPlateau } from '../js/piece-jeu.js';
+import { creerPlateau } from '../js/logique/piece-jeu.js';
 
 describe('archi_parserSilhouette', () => {
     it('centre la silhouette sur le plateau', () => {

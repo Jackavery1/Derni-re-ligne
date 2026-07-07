@@ -60,7 +60,7 @@ describe('css viewport mobile', () => {
     });
 
     it('cibles tactiles secondaires utilisent 48px minimum (pas 44px)', () => {
-        const fichiers = ['ecran-selection.css', 'boss.css'];
+        const fichiers = ['selection-constellation.css', 'boss-combat.css', 'boss-portrait.css'];
         const violations = [];
         for (const nom of fichiers) {
             const contenu = readFileSync(join(STYLES_DIR, nom), 'utf8');
@@ -72,7 +72,9 @@ describe('css viewport mobile', () => {
     });
 
     it('journal et fin histoire utilisent dvh avec safe-area en max-height de base', () => {
-        const css = readFileSync(join(STYLES_DIR, 'mode-histoire.css'), 'utf8');
+        const css = ['mode-histoire-journal.css', 'mode-histoire-fin.css']
+            .map((f) => readFileSync(join(STYLES_DIR, f), 'utf8'))
+            .join('\n');
         expect(css).toMatch(
             /#histoire-journal-contenu[\s\S]*?max-height:\s*calc\(90dvh - var\(--safe-top\) - var\(--safe-bottom\)\)/
         );
@@ -82,16 +84,44 @@ describe('css viewport mobile', () => {
     });
 
     it('conteneur jeu utilise 100dvw (pas 100vw)', () => {
-        const css = readFileSync(join(STYLES_DIR, 'interface-jeu.css'), 'utf8');
+        const css = readFileSync(join(STYLES_DIR, 'interface-jeu-layout.css'), 'utf8');
         expect(css).toMatch(/#conteneur-principal[\s\S]*?width:\s*100dvw/);
         expect(css).not.toMatch(/#conteneur-principal[\s\S]*?width:\s*100vw[^d]/);
     });
 
     it('conteneur coop utilise 100dvw et safe-area comme solo', () => {
-        const css = readFileSync(join(STYLES_DIR, 'ecran-selection.css'), 'utf8');
+        const css = readFileSync(join(STYLES_DIR, 'interface-coop.css'), 'utf8');
         expect(css).toMatch(/#conteneur-principal-coop[\s\S]*?width:\s*100dvw/);
         expect(css).toMatch(
             /body\.coop-active #conteneur-principal-coop[\s\S]*?padding:\s*var\(--safe-top\)/
         );
+    });
+
+    it('menus autorisent pinch-zoom, partie active le bloque', () => {
+        const variables = readFileSync(join(STYLES_DIR, 'variables.css'), 'utf8');
+        expect(variables).toMatch(/html,\s*\nbody[\s\S]*?touch-action:\s*manipulation/);
+        expect(variables).toMatch(/body\.partie-active[\s\S]*?touch-action:\s*none/);
+    });
+
+    it('plateau solo expose aria-describedby vers annonce-jeu', () => {
+        const html = readFileSync(
+            join(import.meta.dirname, '..', 'html', 'interface-jeu.html'),
+            'utf8'
+        );
+        expect(html).toMatch(/id="canvas-plateau"[\s\S]*?aria-describedby="annonce-jeu"/);
+    });
+
+    it('plateau coop reutilise zone-jeu avec canvas-plateau accessible', () => {
+        const solo = readFileSync(
+            join(import.meta.dirname, '..', 'html', 'interface-jeu.html'),
+            'utf8'
+        );
+        const coop = readFileSync(
+            join(import.meta.dirname, '..', 'html', 'interface-jeu-coop.html'),
+            'utf8'
+        );
+        expect(solo).toMatch(/id="zone-jeu"/);
+        expect(coop).toMatch(/id="zone-jeu-coop"/);
+        expect(solo).toMatch(/aria-describedby="annonce-jeu"/);
     });
 });

@@ -1,5 +1,5 @@
 import { statsGlobales } from './achievements.js';
-import { lireStockageJson, ecrireStockageJson, estTableauIds } from './progression.js';
+import { lireStockageJson, ecrireStockageJson, estTableauIds } from './io/progression.js';
 import { creerFileNotifications } from './notifications-file.js';
 import { logger } from './logger.js';
 import { sansAccentsE } from './texte-jeu.js';
@@ -11,7 +11,7 @@ import {
     obtenirPanneauDetailId,
     abonnerFermeturePanneauDetail,
     initialiserPanneauDetail,
-} from './ui-panneau-detail.js';
+} from './ui/ui-panneau-detail.js';
 
 const CLE_CODEX = 'derniereLigne_codex';
 const CLE_CODEX_VUS = 'derniereLigne_codexVus';

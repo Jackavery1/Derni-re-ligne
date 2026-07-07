@@ -1,8 +1,8 @@
 import { obtenirTouches } from './touches-config.js';
-import { etat, touchesActives } from './store-jeu.js';
-import { reinitialiserDas } from './piece-jeu.js';
+import { etat, touchesActives } from './etat/store-jeu.js';
+import { reinitialiserDas } from './logique/piece-jeu.js';
 import { obtenirActions } from './actions-jeu.js';
-import { partieSpecialiseeActive } from './registre-modes.js';
+import { partieSpecialiseeActive } from './etat/registre-modes.js';
 import { attacherRepetitionBouton } from './input-repetition.js';
 
 function attacher(idBouton, action, avecRepetition = false) {

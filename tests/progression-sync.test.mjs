@@ -5,7 +5,7 @@ import {
     importerProgressionB10,
     VERSION_EXPORT_PROGRESSION,
     ecrireStockage,
-} from '../js/progression-stockage.js';
+} from '../js/io/progression-stockage.js';
 
 describe('progression-sync (B10)', () => {
     beforeEach(() => {

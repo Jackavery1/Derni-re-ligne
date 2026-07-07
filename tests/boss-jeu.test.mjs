@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { CONFIG } from '../js/config.js';
-import { store } from '../js/store-jeu.js';
-import { etat } from '../js/store-jeu.js';
-import { creerPlateau } from '../js/piece-jeu.js';
+import { CONFIG } from '../js/config/config.js';
+import { store } from '../js/etat/store-jeu.js';
+import { etat } from '../js/etat/store-jeu.js';
+import { creerPlateau } from '../js/logique/piece-jeu.js';
 import {
     demarrerBoss,
     arreterBoss,

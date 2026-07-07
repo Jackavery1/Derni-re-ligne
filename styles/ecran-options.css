@@ -1,0 +1,200 @@
+#ecran-options.ecran {
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    justify-content: flex-start;
+    padding-block: 12px;
+}
+
+.options-contenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    padding: 24px 28px;
+    border: 2px solid var(--bordure);
+    background: rgba(8, 8, 26, 0.95);
+    max-width: min(90vw, 420px);
+    width: 100%;
+    flex-shrink: 0;
+    margin-block: auto;
+}
+
+.options-onglets {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    justify-content: center;
+}
+
+.options-onglet {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--bordure);
+    color: var(--texte-dim);
+    font-family: var(--police);
+    font-size: 0.36rem;
+    padding: 10px 8px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.15s;
+}
+
+.options-onglet.actif {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    text-shadow: 0 0 8px var(--cyan);
+    box-shadow: 0 0 10px rgba(0, 245, 255, 0.25);
+}
+
+.options-panneau {
+    display: none;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+}
+
+.options-panneau.actif {
+    display: flex;
+}
+
+.options-controles-intro {
+    font-size: 0.38rem;
+    color: var(--texte-dim);
+    letter-spacing: 2px;
+    text-align: center;
+    width: 100%;
+}
+
+.options-confidentialite {
+    font-size: 0.34rem;
+    color: var(--texte-dim);
+    letter-spacing: 1px;
+    line-height: 1.6;
+    text-align: center;
+    margin-top: 0.75rem;
+    max-width: 28rem;
+}
+
+.options-boutons-sauvegarde,
+.options-sync-config {
+    margin-top: 0.75rem;
+}
+.options-sync-config {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    max-width: 28rem;
+}
+.options-sync-config .option-texte {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 0.34rem;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--bordure);
+    color: var(--texte);
+}
+.options-sync-aide {
+    font-family: var(--font-ui);
+    font-size: var(--typo-corps);
+    color: var(--texte-dim);
+    line-height: 1.35;
+}
+.options-sync-id-ligne {
+    margin-top: 0.25rem;
+}
+.options-sync-id-champ {
+    display: flex;
+    gap: 0.35rem;
+    align-items: stretch;
+}
+.options-sync-id-champ .option-texte {
+    flex: 1;
+    min-width: 0;
+    font-size: var(--typo-hud-micro);
+}
+.options-leaderboard-filtres {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem 0.5rem;
+    margin-top: 0.35rem;
+}
+.options-leaderboard-filtres .option-label {
+    grid-column: span 2;
+    margin-bottom: 0;
+}
+.options-leaderboard-filtres .option-label:nth-of-type(3) {
+    grid-column: span 2;
+}
+.options-leaderboard-ligne {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+.options-leaderboard-entete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+}
+.liste-leaderboard-options {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--texte-secondaire, #9ab);
+}
+
+.options-controles-mobile {
+    font-size: 0.32rem;
+    color: var(--texte-dim);
+    letter-spacing: 1px;
+    line-height: 1.7;
+    text-align: center;
+    padding-top: 8px;
+    border-top: 1px solid var(--bordure);
+}
+
+.options-titre {
+    font-size: clamp(0.7rem, 2.5vw, 0.95rem);
+    color: var(--cyan);
+    letter-spacing: 4px;
+}
+
+.option-ligne {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.option-label {
+    font-size: 0.38rem;
+    color: var(--texte-dim);
+    letter-spacing: 2px;
+}
+
+.option-slider {
+    width: 100%;
+    accent-color: var(--cyan);
+}
+
+.option-boutons {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.option-boutons .bouton.actif,
+.option-boutons .bouton[aria-pressed='true'] {
+    border-color: var(--jaune);
+    color: var(--jaune);
+    text-shadow: 0 0 8px var(--jaune);
+    box-shadow:
+        0 0 12px rgba(255, 230, 0, 0.35),
+        inset 0 0 8px rgba(255, 230, 0, 0.08);
+}

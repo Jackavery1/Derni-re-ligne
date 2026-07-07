@@ -1,2 +1,2 @@
 export { paradoxeEstDebloque } from './monde-paradoxe-etat.js';
-export { demarrerParadoxe } from './histoire-session.js';
+export { demarrerParadoxe } from './histoire/histoire-session.js';

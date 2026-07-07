@@ -2,28 +2,28 @@ import { readFileSync, writeFileSync } from 'fs';
 
 const lines = readFileSync('js/achievements.js', 'utf8').split('\n');
 
-const statsHeader = `import { logger } from './logger.js';
+const statsHeader = `import { logger } from '../../js/logger.js';
 import {
     lireStockageJson,
     ecrireStockageJson,
     chargerEtatHistoire,
     sauvegarderEtatHistoire,
-} from './progression.js';
-import { store } from './store-core.js';
-import { obtenirBiomeActif } from './store-jeu.js';
-import { melodie } from './melodie.js';
-import { creerFileNotifications } from './notifications-file.js';
-import { reinitialiserStatsAchievementsHistoire } from './achievements-histoire.js';
-import { ACHIEVEMENTS } from './achievements-donnees.js';
-import { sansAccentsE } from './texte-jeu.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+} from '../../js/io/progression.js';
+import { store } from '../../js/etat/store-core.js';
+import { obtenirBiomeActif } from '../../js/etat/store-jeu.js';
+import { melodie } from '../../js/audio/melodie.js';
+import { creerFileNotifications } from '../../js/notifications-file.js';
+import { reinitialiserStatsAchievementsHistoire } from '../../js/achievements-histoire.js';
+import { ACHIEVEMENTS } from '../../js/achievements-donnees.js';
+import { sansAccentsE } from '../../js/texte-jeu.js';
+import { modeHistoireEnCours } from '../../js/etat/mode-histoire.js';
 
 `;
 
-const uiHeader = `import { ACHIEVEMENTS } from './achievements-donnees.js';
-import { sansAccentsE } from './texte-jeu.js';
-import { statsGlobales } from './achievements-stats.js';
-import { rendreIconeSurCanvas, rendreIconeGlitchSurCanvas } from './icones-pixel.js';
+const uiHeader = `import { ACHIEVEMENTS } from '../../js/achievements-donnees.js';
+import { sansAccentsE } from '../../js/texte-jeu.js';
+import { statsGlobales } from '../../js/achievements-stats.js';
+import { rendreIconeSurCanvas, rendreIconeGlitchSurCanvas } from '../../js/icones-pixel.js';
 import {
     obtenirIdIconeAchievement,
     obtenirAccentCategorie,
@@ -31,15 +31,15 @@ import {
     obtenirLibelleCategorieFiltre,
     obtenirTexteVerrouille,
     obtenirTexteVerrouillePanneau,
-} from './achievements-icones-map.js';
-import { obtenirProgressionAchievement } from './achievements-progres.js';
+} from '../../js/achievements-icones-map.js';
+import { obtenirProgressionAchievement } from '../../js/achievements-progres.js';
 import {
     ouvrirPanneauDetail,
     fermerPanneauDetail,
     obtenirPanneauDetailId,
     abonnerFermeturePanneauDetail,
     initialiserPanneauDetail,
-} from './ui-panneau-detail.js';
+} from '../../js/ui/ui-panneau-detail.js';
 
 `;
 
@@ -48,7 +48,7 @@ writeFileSync('js/achievements-ui.js', uiHeader + lines.slice(345).join('\n') + 
 
 writeFileSync(
     'js/achievements.js',
-    `export { ACHIEVEMENTS } from './achievements-donnees.js';
+    `export { ACHIEVEMENTS } from '../../js/achievements-donnees.js';
 export {
     statsGlobales,
     chargerStats,
@@ -62,8 +62,8 @@ export {
     majStatsReactionRobo,
     finaliserStatsPartie,
     verifierAchievements,
-} from './achievements-stats.js';
-export { genererGalerieAchievements, ouvrirExploitMemorial } from './achievements-ui.js';
+} from '../../js/achievements-stats.js';
+export { genererGalerieAchievements, ouvrirExploitMemorial } from '../../js/achievements-ui.js';
 `
 );
 

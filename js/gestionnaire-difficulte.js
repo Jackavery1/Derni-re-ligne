@@ -4,11 +4,11 @@ import {
     VITESSE_PLANCHER_MS,
 } from './difficulte-mondes-chargement.js';
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
-import { SEUILS_COMPLETION } from './histoire-mondes.js';
-import { store } from './store-jeu.js';
+import { SEUILS_COMPLETION } from './histoire/histoire-mondes.js';
+import { store } from './etat/store-jeu.js';
 import { logger } from './logger.js';
-import { emettre, ecouter } from './bus-jeu.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+import { emettre, ecouter } from './etat/bus-jeu.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
 
 const DUREE_VICTOIRE_OBJECTIF_MS = 2200;
 

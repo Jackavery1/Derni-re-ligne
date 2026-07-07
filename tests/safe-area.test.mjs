@@ -3,6 +3,14 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const RACINE = join(import.meta.dirname, '..');
+const STYLES = join(RACINE, 'styles');
+
+function lireFeuillesDecoupees(prefix) {
+    return readdirSync(STYLES)
+        .filter((f) => f.startsWith(prefix) && f.endsWith('.css'))
+        .map((f) => readFileSync(join(STYLES, f), 'utf8'))
+        .join('\n');
+}
 
 function lireFichiersCssRecursif(dir, acc = []) {
     for (const entree of readdirSync(dir, { withFileTypes: true })) {
@@ -33,9 +41,9 @@ describe('safe-area audit C', () => {
     });
 
     it('interface jeu et controles respectent les insets', () => {
-        const iface = readFileSync(join(RACINE, 'styles', 'interface-jeu.css'), 'utf8');
-        const tactiles = readFileSync(join(RACINE, 'styles', 'controles-tactiles.css'), 'utf8');
-        const responsive = readFileSync(join(RACINE, 'styles', 'responsive.css'), 'utf8');
+        const iface = lireFeuillesDecoupees('interface-jeu-');
+        const tactiles = readFileSync(join(STYLES, 'controles-tactiles.css'), 'utf8');
+        const responsive = readFileSync(join(STYLES, 'responsive.css'), 'utf8');
         const cutscenes = readFileSync(
             join(RACINE, 'assets', 'cutscenes', 'cutscenes.css'),
             'utf8'
@@ -47,10 +55,10 @@ describe('safe-area audit C', () => {
     });
 
     it('objectifs et carte histoire couvrent les viewports compacts', () => {
-        const objectifs = readFileSync(join(RACINE, 'styles', 'objectifs-histoire.css'), 'utf8');
-        const histoire = readFileSync(join(RACINE, 'styles', 'mode-histoire.css'), 'utf8');
-        const archi = readFileSync(join(RACINE, 'styles', 'mode-architecte.css'), 'utf8');
-        const pause = readFileSync(join(RACINE, 'styles', 'ecran-pause.css'), 'utf8');
+        const objectifs = lireFeuillesDecoupees('objectifs-histoire-');
+        const histoire = lireFeuillesDecoupees('mode-histoire-');
+        const archi = lireFeuillesDecoupees('mode-architecte-');
+        const pause = readFileSync(join(STYLES, 'ecran-pause.css'), 'utf8');
         expect(objectifs).toMatch(/max-width:\s*768px\),\s*\(max-height:\s*600px\)/);
         expect(histoire).toMatch(/max-width:\s*768px\),\s*\(max-height:\s*600px\)/);
         expect(objectifs).toMatch(/orientation:\s*landscape/);

@@ -24,10 +24,10 @@ closeObject('chroniques.js');
 
 writeFileSync(
     'js/codex-donnees.js',
-    `import { CODEX_HISTOIRE } from './codex-histoire.js';
-import { CODEX_MONDES } from './codex-donnees/mondes.js';
-import { CODEX_RELIQUES } from './codex-donnees/reliques.js';
-import { CODEX_CHRONIQUES } from './codex-donnees/chroniques.js';
+    `import { CODEX_HISTOIRE } from '../../js/codex-histoire.js';
+import { CODEX_MONDES } from '../../js/codex-donnees/mondes.js';
+import { CODEX_RELIQUES } from '../../js/codex-donnees/reliques.js';
+import { CODEX_CHRONIQUES } from '../../js/codex-donnees/chroniques.js';
 
 export const CODEX = {
     ...CODEX_MONDES,

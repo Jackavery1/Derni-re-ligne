@@ -16,13 +16,13 @@ function splitRenduBlocsStyles() {
     dessinerBlocCristal,
     dessinerBlocOrganique,
     dessinerBlocGlace,
-} from './rendu-blocs-styles-nature.js';
+} from '../../js/rendu/rendu-blocs-styles-nature.js';
 export {
     dessinerBlocGrain,
     dessinerBlocCircuit,
     dessinerBlocDiamant,
     dessinerBlocNebuleuse,
-} from './rendu-blocs-styles-tech.js';
+} from '../../js/rendu/rendu-blocs-styles-tech.js';
 `
     );
     console.log('rendu-blocs-styles découpé');
@@ -31,14 +31,14 @@ export {
 function splitCoopLogique() {
     const src = readFileSync('js/coop-logique.js', 'utf8').split('\n');
     const lignesModule = [
-        "import { CONFIG } from './config.js';",
-        "import { appliquerScoreLignes } from './score-partie.js';",
-        "import { statsGlobales } from './achievements.js';",
-        "import { afficherNotificationNiveau } from './ui-notifications.js';",
-        "import { obtenirBouton } from './dom-utils.js';",
-        "import { creerParticulesLigne } from './particules-jeu.js';",
-        "import { etat } from './store-jeu.js';",
-        "import { coop, DEMI_LARGEUR, coop_rafraichirStats } from './coop-logique.js';",
+        "import { CONFIG } from '../../js/config/config.js';",
+        "import { appliquerScoreLignes } from '../../js/logique/score-partie.js';",
+        "import { statsGlobales } from '../../js/achievements.js';",
+        "import { afficherNotificationNiveau } from '../../js/ui/ui-notifications.js';",
+        "import { obtenirBouton } from '../../js/dom-utils.js';",
+        "import { creerParticulesLigne } from '../../js/particules-jeu.js';",
+        "import { etat } from '../../js/etat/store-jeu.js';",
+        "import { coop, DEMI_LARGEUR, coop_rafraichirStats } from '../../js/logique/coop-logique.js';",
         '',
         ...src.slice(172, 267),
     ].join('\n');
@@ -51,7 +51,7 @@ function splitCoopLogique() {
         '    afficherNotifNiveauCoop,',
         '    coop_calculerScore,',
         '    coop_verifierLignes,',
-        "} from './coop-lignes-score.js';",
+        "} from '../../js/logique/coop-lignes-score.js';",
         '',
         ...src.slice(268),
     ].join('\n');
@@ -63,15 +63,15 @@ function splitBossJeu() {
     const src = readFileSync('js/boss-jeu.js', 'utf8').split('\n');
 
     const uiHud = [
-        "import { store } from './store-core.js';",
-        "import { modeHistoireEnCours } from './mode-histoire.js';",
+        "import { store } from '../../js/etat/store-core.js';",
+        "import { modeHistoireEnCours } from '../../js/etat/mode-histoire.js';",
         'import {',
         '    obtenirSecondesRestantesAttenteTrame,',
         '    obtenirProgressionAttenteTrameMs,',
         '    conditionsRuntime,',
-        "} from './conditions-secrets.js';",
-        "import { obtenirEtatHistoire } from './histoire-mondes.js';",
-        "import { dialogueBossActif, mettreAJourLabelBossAttaque } from './boss-dialogues.js';",
+        "} from '../../js/conditions-secrets.js';",
+        "import { obtenirEtatHistoire } from '../../js/histoire/histoire-mondes.js';",
+        "import { dialogueBossActif, mettreAJourLabelBossAttaque } from '../../js/boss-dialogues.js';",
         '',
         ...src.slice(360, 396),
         '',
@@ -99,15 +99,15 @@ function splitBossJeu() {
     // Rebuild ui file cleanly from source sections
     writeFileSync(
         'js/boss-ui-hud.js',
-        `import { store } from './store-core.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+        `import { store } from '../../js/etat/store-core.js';
+import { modeHistoireEnCours } from '../../js/etat/mode-histoire.js';
 import {
     obtenirSecondesRestantesAttenteTrame,
     obtenirProgressionAttenteTrameMs,
     conditionsRuntime,
-} from './conditions-secrets.js';
-import { obtenirEtatHistoire } from './histoire-mondes.js';
-import { dialogueBossActif, mettreAJourLabelBossAttaque } from './boss-dialogues.js';
+} from '../../js/conditions-secrets.js';
+import { obtenirEtatHistoire } from '../../js/histoire/histoire-mondes.js';
+import { dialogueBossActif, mettreAJourLabelBossAttaque } from '../../js/boss-dialogues.js';
 
 /** @param {boolean} visible */
 export function afficherSectionBoss(visible) {
@@ -212,35 +212,35 @@ export function mettreAJourTimerUIBoss() {
 
     writeFileSync(
         'js/boss-combat.js',
-        `import { CONFIG } from './config.js';
-import { store } from './store-core.js';
-import { etat } from './store-jeu.js';
-import { AudioMoteur } from './audio.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
-import { creerParticulesExplosion } from './particules-jeu.js';
-import { enregistrerVictoireBossTimer } from './achievements-histoire.js';
+        `import { CONFIG } from '../../js/config/config.js';
+import { store } from '../../js/etat/store-core.js';
+import { etat } from '../../js/etat/store-jeu.js';
+import { AudioMoteur } from '../../js/audio/audio.js';
+import { modeHistoireEnCours } from '../../js/etat/mode-histoire.js';
+import { creerParticulesExplosion } from '../../js/particules-jeu.js';
+import { enregistrerVictoireBossTimer } from '../../js/achievements-histoire.js';
 import {
     notifierPhaseBoss,
     notifierPhaseBossParPv,
     victoireObjectifDeclenchee,
-} from './gestionnaire-difficulte.js';
+} from '../../js/gestionnaire-difficulte.js';
 import {
     reagirRoboBossAttaque,
     reagirRoboBossDegats,
     reagirRoboBossVaincu,
-} from './mascotte-robo.js';
-import { degelColonnes, executerAttaqueBoss } from './boss-attaques.js';
+} from '../../js/ui/mascotte-robo.js';
+import { degelColonnes, executerAttaqueBoss } from '../../js/logique/boss-attaques.js';
 import {
     enqueueDialogueBoss,
     notifierTransitionPhaseBoss,
     notifierSeuilsPvBoss,
     notifierQuasiVaincuBoss,
     dialogueBossActif,
-} from './boss-dialogues.js';
-import { DUREE_VICTOIRE_BOSS_MS } from './boss-jeu-constantes.js';
-import { afficherTexteBoss, mettreAJourHPBarBoss } from './boss-ui-hud.js';
+} from '../../js/boss-dialogues.js';
+import { DUREE_VICTOIRE_BOSS_MS } from '../../js/boss-jeu-constantes.js';
+import { afficherTexteBoss, mettreAJourHPBarBoss } from '../../js/boss-ui-hud.js';
 
-/** @returns {import('./boss-attaques.js').ContexteAttaqueBoss} */
+/** @returns {import('../../js/logique/boss-attaques.js').ContexteAttaqueBoss} */
 function ctxAttaque() {
     return {
         plateau: etat.plateau,
@@ -298,7 +298,7 @@ export function declencherVictoireBoss() {
 
     setTimeout(() => {
         if (victoireObjectifDeclenchee()) return;
-        import('./actions-jeu.js').then(({ obtenirActions }) => {
+        import('../../js/actions-jeu.js').then(({ obtenirActions }) => {
             obtenirActions().terminerPartie?.(true);
         });
     }, DUREE_VICTOIRE_BOSS_MS);
@@ -409,40 +409,40 @@ export function verifierPhaseBoss() {
 
     writeFileSync('js/boss-jeu-constantes.js', `export const DUREE_VICTOIRE_BOSS_MS = 2200;\n`);
 
-    const bossMain = `import { store } from './store-core.js';
-import { etat } from './store-jeu.js';
-import { BOSS } from './histoire-donnees.js';
-import { AudioMoteur } from './audio.js';
-import { logger } from './logger.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+    const bossMain = `import { store } from '../../js/etat/store-core.js';
+import { etat } from '../../js/etat/store-jeu.js';
+import { BOSS } from '../../js/histoire-donnees.js';
+import { AudioMoteur } from '../../js/audio/audio.js';
+import { logger } from '../../js/logger.js';
+import { modeHistoireEnCours } from '../../js/etat/mode-histoire.js';
 import {
     tickConditionTrame,
     reinitialiserConditionsRuntime,
-} from './conditions-secrets.js';
-import { demarrerPresentationBoss, mettreAJourDialoguesBoss, reinitialiserDialoguesBoss } from './boss-dialogues.js';
-import { COULEUR_BRAISE, COULEUR_GLACE_B } from './boss-attaques.js';
-import { DUREE_VICTOIRE_BOSS_MS } from './boss-jeu-constantes.js';
+} from '../../js/conditions-secrets.js';
+import { demarrerPresentationBoss, mettreAJourDialoguesBoss, reinitialiserDialoguesBoss } from '../../js/boss-dialogues.js';
+import { COULEUR_BRAISE, COULEUR_GLACE_B } from '../../js/logique/boss-attaques.js';
+import { DUREE_VICTOIRE_BOSS_MS } from '../../js/boss-jeu-constantes.js';
 import {
     afficherSectionBoss,
     afficherTexteBoss,
     mettreAJourHPBarBoss,
     mettreAJourTimerUIBoss,
-} from './boss-ui-hud.js';
+} from '../../js/boss-ui-hud.js';
 import {
     degelColonnesBoss,
     endommagerBossCombat,
     executerAttaqueBossCombat,
     obtenirIntervalleAttaqueBoss,
     verifierPhaseBoss,
-} from './boss-combat.js';
+} from '../../js/logique/boss-combat.js';
 
 export { COULEUR_BRAISE, COULEUR_GLACE_B };
 export {
     notifierTetrisBoss,
     obtenirRepliqueGameOverBoss,
     appliquerRepliqueGameOverBoss,
-} from './boss-dialogues.js';
-export { DUREE_VICTOIRE_BOSS_MS } from './boss-jeu-constantes.js';
+} from '../../js/boss-dialogues.js';
+export { DUREE_VICTOIRE_BOSS_MS } from '../../js/boss-jeu-constantes.js';
 
 /** @param {string} bossId */
 export function demarrerBoss(bossId) {
@@ -528,7 +528,7 @@ export function mettreAJourBoss(dt) {
             m.bossControlesInverses = false;
             m.timerControlesInverses = 0;
             if (!store.histoire.boss.actif) return;
-            import('./boss-dialogues.js').then(({ dialogueBossActif }) => {
+            import('../../js/boss-dialogues.js').then(({ dialogueBossActif }) => {
                 if (!dialogueBossActif()) afficherTexteBoss('');
             });
         }
@@ -538,7 +538,7 @@ export function mettreAJourBoss(dt) {
         if (m.timerFauxFantome <= 0) {
             m.bossFauxFantome = false;
             m.timerFauxFantome = 0;
-            import('./boss-dialogues.js').then(({ dialogueBossActif }) => {
+            import('../../js/boss-dialogues.js').then(({ dialogueBossActif }) => {
                 if (!dialogueBossActif()) afficherTexteBoss('');
             });
         }
@@ -552,7 +552,7 @@ export function mettreAJourBoss(dt) {
         if (m.timerDistorsion <= 0) {
             m.decalageDistorsion = 0;
             m.timerDistorsion = 0;
-            import('./boss-dialogues.js').then(({ dialogueBossActif }) => {
+            import('../../js/boss-dialogues.js').then(({ dialogueBossActif }) => {
                 if (!dialogueBossActif()) afficherTexteBoss('');
             });
         }
@@ -638,7 +638,7 @@ ${src.slice(8, 210).join('\n')}
     dessinerIllustVide,
     dessinerIllustMiroir,
     dessinerIllustTrame,
-} from './codex-illustrations-histoire/mondes.js';
+} from '../../js/codex-illustrations-histoire/mondes.js';
 export {
     dessinerIllustVera,
     dessinerIllustDistorsion,
@@ -647,10 +647,10 @@ export {
     dessinerIllustArchiviste,
     dessinerIllustAvantgarde,
     dessinerIllustTroisFins,
-} from './codex-illustrations-histoire/boss-fins.js';
+} from '../../js/codex-illustrations-histoire/boss-fins.js';
 
-import * as mondes from './codex-illustrations-histoire/mondes.js';
-import * as bossFins from './codex-illustrations-histoire/boss-fins.js';
+import * as mondes from '../../js/codex-illustrations-histoire/mondes.js';
+import * as bossFins from '../../js/codex-illustrations-histoire/boss-fins.js';
 
 export const ILLUSTRATIONS_CODEX_HISTOIRE = {
     ...mondes,
@@ -670,7 +670,7 @@ function splitRenduAmbianceParticules() {
     CARACTERES_HEX,
     obtenirBiomeActif,
     obtenirCanvasPlateau,
-} from './store-jeu.js';
+} from '../../js/etat/store-jeu.js';
 
 const MAX_PARTICULES_AMBIANCE = 40;
 let idxParticulesAmbiance = 0;
@@ -725,8 +725,8 @@ ${src.slice(70, 228).join('\n')}
     obtenirEffetsReduits,
     obtenirCanvasPlateau,
     obtenirCtx,
-} from './store-jeu.js';
-import { creerParticulAmbiance, initParticulesAmbiance } from './rendu-ambiance-particules-init.js';
+} from '../../js/etat/store-jeu.js';
+import { creerParticulAmbiance, initParticulesAmbiance } from '../../js/rendu/rendu-ambiance-particules-init.js';
 
 export { initParticulesAmbiance };
 

@@ -1,7 +1,7 @@
-import { CONFIG, BIOMES } from './config.js';
-import { store } from './store-jeu.js';
-import { etat } from './store-jeu.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+import { CONFIG, BIOMES } from './config/config.js';
+import { store } from './etat/store-jeu.js';
+import { etat } from './etat/store-jeu.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
 import { ajouterBlocksRouillesEffaces } from './achievements-histoire.js';
 import { biomeActuelMecanique } from './mecaniques-histoire-queries.js';
 

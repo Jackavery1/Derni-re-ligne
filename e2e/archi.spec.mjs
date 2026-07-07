@@ -110,7 +110,7 @@ test('architecte tactile paysage — valider via bouton', async ({ page }) => {
     expect(metriques.w).toBeGreaterThanOrEqual(48);
 });
 
-test('architecte portrait — overlay orientation bloque le jeu', async ({ page }) => {
+test('architecte portrait — jeu accessible sans overlay bloquant', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
@@ -118,7 +118,7 @@ test('architecte portrait — overlay orientation bloque le jeu', async ({ page 
     await page.locator('#btn-architecte').click();
     await ouvrirPremierNiveauArchitecte(page);
     await expect(page.locator('#interface-jeu-archi')).toBeVisible({ timeout: 5000 });
-    await expect(page.locator('#overlay-orientation')).toHaveClass(/visible/);
+    await expect(page.locator('#overlay-orientation')).toHaveCount(0);
 });
 
 test('sélection architecte mobile — grille et filtres utilisables', async ({ page }) => {

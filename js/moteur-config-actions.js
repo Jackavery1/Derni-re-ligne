@@ -14,7 +14,7 @@ import {
     chuteRapide,
     tourner,
     utiliserReserve,
-} from './logique-partie.js';
+} from './logique/logique-partie.js';
 
 export function configurerActionsMoteur() {
     configurerActionsJeu({

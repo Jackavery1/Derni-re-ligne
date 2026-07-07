@@ -1,10 +1,10 @@
-import { store } from './store-jeu.js';
-import { etat } from './store-jeu.js';
-import { CONFIG } from './config.js';
+import { store } from './etat/store-jeu.js';
+import { etat } from './etat/store-jeu.js';
+import { CONFIG } from './config/config.js';
 import { ETAT_HISTOIRE_VIDE } from './histoire-donnees.js';
 import { sansAccentsE } from './texte-jeu.js';
-import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire/histoire-etat.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
 import { logger } from './logger.js';
 
 const SEUIL_PLATEAU_TRAME = 0.5;

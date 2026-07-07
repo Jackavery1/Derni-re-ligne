@@ -1,5 +1,5 @@
-import { store } from './store-jeu.js';
-import { chargerEtatHistoire } from './progression.js';
+import { store } from './etat/store-jeu.js';
+import { chargerEtatHistoire } from './io/progression.js';
 
 function etatH() {
     if (!store.histoire.etat) {

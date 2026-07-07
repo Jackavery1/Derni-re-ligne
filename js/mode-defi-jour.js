@@ -1,8 +1,8 @@
-import { etat } from './store-jeu.js';
+import { etat } from './etat/store-jeu.js';
 import { obtenirDefiDuJour, lireScoreDefiJour } from './defi-jour.js';
-import { BIOMES } from './config.js';
+import { BIOMES } from './config/config.js';
 import { sansAccentsE } from './texte-jeu.js';
-import { obtenirEtatDeblocage } from './progression.js';
+import { obtenirEtatDeblocage } from './io/progression.js';
 
 export let defiJourActif = false;
 
@@ -16,7 +16,7 @@ export function basculerDefiJour() {
     if (defiJourActif) {
         etat.modeJeu = 'marathon';
         import('./mode-sprint.js').then(({ desactiverModeSprint }) => desactiverModeSprint());
-        import('./infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) =>
+        import('./ui/infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) =>
             proposerInfobulleModeJeu('defiJour')
         );
     }

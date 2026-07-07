@@ -1,12 +1,12 @@
-import { store } from './store-jeu.js';
+import { store } from './etat/store-jeu.js';
 import { logger } from './logger.js';
 import { FINS, ETAT_HISTOIRE_VIDE } from './histoire-donnees.js';
-import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
-import { ECRANS } from './ecrans-config.js';
-import { assurerFragmentsEcran } from './charger-ecrans.js';
-import { afficherEcranDiffere } from './navigation-lazy.js';
+import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire/histoire-etat.js';
+import { ECRANS } from './ui/ecrans-config.js';
+import { assurerFragmentsEcran } from './ui/charger-ecrans.js';
+import { afficherEcranDiffere } from './ui/navigation-lazy.js';
 import { demarrerFondFin, arreterFondFin } from './fin-bg-rendu.js';
-import { activerModeHistoire, desactiverModeHistoire } from './mode-histoire.js';
+import { activerModeHistoire, desactiverModeHistoire } from './etat/mode-histoire.js';
 import { verifierAchievements, statsGlobales, sauvegarderStats } from './achievements.js';
 
 const MARQUEUR_FIN = 'data-neo-fin-lie';
@@ -130,7 +130,7 @@ async function _afficherEcranFin(finId, etatHist) {
 }
 
 async function _afficherEcranFinAsync() {
-    const { afficherEcranDiffereAsync } = await import('./navigation-lazy.js');
+    const { afficherEcranDiffereAsync } = await import('./ui/navigation-lazy.js');
     await afficherEcranDiffereAsync(ECRANS.HISTOIRE_FIN);
 }
 

@@ -1,7 +1,7 @@
-import { BIOMES } from './config.js';
-import { initialiserMeteo, annulerMeteo } from './meteo.js';
-import { initialiserVivant, annulerTimersVivant } from './vivant.js';
-import { AudioMoteur } from './audio.js';
+import { BIOMES } from './config/config.js';
+import { initialiserMeteo, annulerMeteo } from './logique/meteo.js';
+import { initialiserVivant, annulerTimersVivant } from './logique/vivant.js';
+import { AudioMoteur } from './audio/audio.js';
 import {
     etat,
     particules,
@@ -26,7 +26,7 @@ import {
     definirNbLockResets,
     definirAccumulateur,
     definirDernierTimestamp,
-} from './store-jeu.js';
+} from './etat/store-jeu.js';
 import {
     creerPlateau,
     genererProchainePiece,
@@ -35,35 +35,35 @@ import {
     reinitialiserDas,
     hexVersRgb,
     mettreAJourIndicateurRelique,
-} from './piece-jeu.js';
+} from './logique/piece-jeu.js';
 import {
     initParticulesAmbiance,
     dessinerFileNext,
     rendreFrameJeu,
     demarrerTransition,
-} from './rendu-jeu.js';
+} from './rendu/rendu-jeu.js';
 import {
     reinitialiserMascottePartie,
     rafraichirStats,
     afficherEcran,
     cacherEcrans,
     retournerAuMenuTitre,
-} from './ecrans-ui.js';
-import { ECRANS } from './store-jeu.js';
+} from './ui/ecrans-ui.js';
+import { ECRANS } from './etat/store-jeu.js';
 import { planifierBoucle } from './boucle-jeu.js';
-import { reinitialiserMelodie, arreterLectureMelodie } from './melodie.js';
+import { reinitialiserMelodie, arreterLectureMelodie } from './audio/melodie.js';
 import { initStatsPartie } from './achievements.js';
-import { reinitialiserHistoriquePositions } from './decorations-jeu.js';
+import { reinitialiserHistoriquePositions } from './rendu/decorations-jeu.js';
 import {
     donneesPartie,
     reinitialiserDonneesPartie,
     signalerApparitionPiece,
 } from './profil-jeu.js';
 import { annoncerPieceCourante } from './annonces.js';
-import { store } from './store-jeu.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
+import { store } from './etat/store-jeu.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
 import { obtenirIdBiomeFond } from './biome-fond.js';
-import { initialiserAudioBiome } from './audio-partie.js';
+import { initialiserAudioBiome } from './audio/audio-partie.js';
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { demarrerBoss, arreterBoss } from './boss-jeu.js';
 import { initialiserMecaniquesHistoire, arreterMecaniquesHistoire } from './mecaniques-histoire.js';
@@ -74,11 +74,11 @@ import {
     declencherCalculOracle,
     afficherSectionOracle,
     mettreAJourStatsOracleUI,
-} from './oracle-jeu.js';
-import { demarrerFondBiome, arreterFondBiome } from './rendu-fond-biome.js';
+} from './logique/oracle-jeu.js';
+import { demarrerFondBiome, arreterFondBiome } from './rendu/rendu-fond-biome.js';
 import { reinitialiserTimerNiveau } from './timer-niveau.js';
-import { reinitialiserGameFeel, demarrerGraceSpawn } from './game-feel-jeu.js';
-import { rafraichirHudObjectifsHistoire } from './ui-panneau-objectifs.js';
+import { reinitialiserGameFeel, demarrerGraceSpawn } from './logique/game-feel-jeu.js';
+import { rafraichirHudObjectifsHistoire } from './ui/ui-panneau-objectifs.js';
 export { initialiserCanvas } from './partie-canvas.js';
 export { terminerPartie } from './partie-fin.js';
 
@@ -110,7 +110,7 @@ export function quitterVersMenu() {
 export function quitterVersCarteHistoire() {
     if (!modeHistoireEnCours()) return;
     _arreterPartieEnCours();
-    void import('./histoire-manager.js').then(({ retournerACarte }) => retournerACarte());
+    void import('./histoire/histoire-manager.js').then(({ retournerACarte }) => retournerACarte());
 }
 
 function initialiserFeaturesPartie() {
@@ -192,7 +192,7 @@ function initialiserAudioPartie() {
 }
 
 function initialiserUIPartie() {
-    void import('./layout-jeu.js').then(({ adapterInterface }) => adapterInterface());
+    void import('./rendu/layout-jeu.js').then(({ adapterInterface }) => adapterInterface());
     const ctxReserve = obtenirCtxReserve();
     const canvasReserve = obtenirCanvasReserve();
     if (!ctxReserve || !canvasReserve) {

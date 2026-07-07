@@ -6,21 +6,21 @@ const { afficherEcran, planifierBoucle, modeHistoireEnCours } = vi.hoisted(() =>
     modeHistoireEnCours: vi.fn(() => false),
 }));
 
-vi.mock('../js/meteo.js', () => ({
+vi.mock('../js/logique/meteo.js', () => ({
     annulerMeteo: vi.fn(),
 }));
 
-vi.mock('../js/audio.js', () => ({
+vi.mock('../js/audio/audio.js', () => ({
     AudioMoteur: { arreterMusique: vi.fn(), son: vi.fn() },
 }));
 
-vi.mock('../js/progression.js', () => ({
+vi.mock('../js/io/progression.js', () => ({
     calculerPointsProgression: vi.fn(() => 2),
     obtenirRecordBiome: vi.fn(() => 1000),
     sauvegarderNiveauGlobal: vi.fn(),
 }));
 
-vi.mock('../js/store-jeu.js', () => ({
+vi.mock('../js/etat/store-jeu.js', () => ({
     etat: { estEnCours: true, lignes: 12, niveau: 3, score: 4500 },
     store: { histoire: { actif: false } },
     obtenirBiomeActif: vi.fn(() => 'classique'),
@@ -29,7 +29,7 @@ vi.mock('../js/store-jeu.js', () => ({
     ECRANS: { GAME_OVER: 'ecran-game-over' },
 }));
 
-vi.mock('../js/ecrans-ui.js', () => ({
+vi.mock('../js/ui/ecrans-ui.js', () => ({
     appliquerHumeurMascotte: vi.fn(),
     reagirRoboGameOver: vi.fn(),
     reagirRoboNouveauRecord: vi.fn(),
@@ -45,7 +45,7 @@ vi.mock('../js/boucle-jeu.js', () => ({
     planifierBoucle,
 }));
 
-vi.mock('../js/melodie.js', () => ({
+vi.mock('../js/audio/melodie.js', () => ({
     afficherMelodieGameOver: vi.fn(),
 }));
 
@@ -67,17 +67,17 @@ vi.mock('../js/gestionnaire-difficulte.js', () => ({
     arreterSuiviMonde: vi.fn(),
 }));
 
-vi.mock('../js/histoire-manager.js', () => ({
+vi.mock('../js/histoire/histoire-manager.js', () => ({
     surFinDeMondeHistoire: vi.fn(),
     peutContinuerBossGratuit: vi.fn(() => false),
     obtenirEtatHistoire: vi.fn(() => ({ conditionsTrame: {}, nbContinuesUtilises: 0 })),
 }));
 
-vi.mock('../js/mode-histoire.js', () => ({
+vi.mock('../js/etat/mode-histoire.js', () => ({
     modeHistoireEnCours,
 }));
 
-vi.mock('../js/registre-modes.js', () => ({
+vi.mock('../js/etat/registre-modes.js', () => ({
     modeCoopEnCours: vi.fn(() => false),
 }));
 
@@ -85,7 +85,7 @@ vi.mock('../js/mode-defi-jour.js', () => ({
     defiJourActif: false,
 }));
 
-vi.mock('../js/haptique.js', () => ({
+vi.mock('../js/audio/haptique.js', () => ({
     vibrerFinPartie: vi.fn(),
 }));
 
@@ -108,23 +108,23 @@ vi.mock('../js/mecaniques-histoire.js', () => ({
     onGameOverHistoire: vi.fn(),
 }));
 
-vi.mock('../js/oracle-jeu.js', () => ({
+vi.mock('../js/logique/oracle-jeu.js', () => ({
     oracle: { actif: false },
     obtenirScoreFinalOracle: vi.fn(() => 4500),
 }));
 
-vi.mock('../js/rendu-fond-biome.js', () => ({
+vi.mock('../js/rendu/rendu-fond-biome.js', () => ({
     arreterFondBiome: vi.fn(),
 }));
 
-vi.mock('../js/coop-logique.js', () => ({
+vi.mock('../js/logique/coop-logique.js', () => ({
     coop: { actif: false },
 }));
 
 import { terminerPartie } from '../js/partie-fin.js';
-import { surFinDeMondeHistoire } from '../js/histoire-manager.js';
-import { etat } from '../js/store-jeu.js';
-import { sauvegarderRecord } from '../js/ecrans-ui.js';
+import { surFinDeMondeHistoire } from '../js/histoire/histoire-manager.js';
+import { etat } from '../js/etat/store-jeu.js';
+import { sauvegarderRecord } from '../js/ui/ecrans-ui.js';
 
 describe('partie-fin', () => {
     beforeEach(() => {

@@ -6,7 +6,7 @@ import {
     genererTitreMelodie,
     reinitialiserMelodie,
     audioMelodieDisponible,
-} from '../js/melodie.js';
+} from '../js/audio/melodie.js';
 
 describe('melodie', () => {
     beforeEach(() => {

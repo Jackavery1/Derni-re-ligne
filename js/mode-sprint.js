@@ -1,6 +1,6 @@
-import { etat } from './store-jeu.js';
+import { etat } from './etat/store-jeu.js';
 import { obtenirBouton, obtenirElement } from './dom-utils.js';
-import { INFOBULLES_MODES_JEU } from './contenu-jeu.js';
+import { INFOBULLES_MODES_JEU } from './config/contenu-jeu.js';
 
 export let modeSprintActif = false;
 
@@ -13,7 +13,7 @@ export function basculerModeSprint() {
     modeSprintActif = !modeSprintActif;
     etat.modeJeu = modeSprintActif ? 'sprint' : 'marathon';
     mettreAJourToggleSprint();
-    void import('./infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) =>
+    void import('./ui/infobulles-contexte.js').then(({ proposerInfobulleModeJeu }) =>
         proposerInfobulleModeJeu(modeSprintActif ? 'sprint' : 'sansFin')
     );
 }

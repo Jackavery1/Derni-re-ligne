@@ -36,14 +36,14 @@ write(
 
 writeFileSync(
     'js/codex-illustrations.js',
-    `import { ILLUSTRATIONS_CODEX_HISTOIRE } from './codex-illustrations-histoire.js';
-import * as biomes from './codex-illustrations/biomes.js';
-import * as reliques from './codex-illustrations/reliques.js';
-import * as chroniques from './codex-illustrations/chroniques.js';
+    `import { ILLUSTRATIONS_CODEX_HISTOIRE } from '../../js/codex-illustrations-histoire.js';
+import * as biomes from '../../js/codex-illustrations/biomes.js';
+import * as reliques from '../../js/codex-illustrations/reliques.js';
+import * as chroniques from '../../js/codex-illustrations/chroniques.js';
 
-export * from './codex-illustrations/biomes.js';
-export * from './codex-illustrations/reliques.js';
-export * from './codex-illustrations/chroniques.js';
+export * from '../../js/codex-illustrations/biomes.js';
+export * from '../../js/codex-illustrations/reliques.js';
+export * from '../../js/codex-illustrations/chroniques.js';
 
 export const ILLUSTRATIONS_CODEX = {
     ...biomes,

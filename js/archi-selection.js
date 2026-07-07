@@ -1,10 +1,10 @@
-import { BIOMES } from './config.js';
-import { lireStockage } from './progression.js';
-import { afficherEcran } from './ecrans-ui.js';
-import { ECRANS } from './store-jeu.js';
+import { BIOMES } from './config/config.js';
+import { lireStockage } from './io/progression.js';
+import { afficherEcran } from './ui/ecrans-ui.js';
+import { ECRANS } from './etat/store-jeu.js';
 import { statsGlobales } from './achievements.js';
 import { obtenirTousNiveauxArchi } from './archi-generateur.js';
-import { archi_calculerEtoiles } from './archi-logique.js';
+import { archi_calculerEtoiles } from './logique/archi-logique.js';
 import { modeDevActif } from './mode-dev-etat.js';
 import { sansAccentsE } from './texte-jeu.js';
 import { rendreIconeSurCanvas } from './icones-pixel.js';
@@ -16,7 +16,7 @@ import {
     obtenirPanneauDetailId,
     abonnerFermeturePanneauDetail,
     initialiserPanneauDetail,
-} from './ui-panneau-detail.js';
+} from './ui/ui-panneau-detail.js';
 import {
     appliquerFiltreDifficulteArchi,
     initialiserFiltreDifficulteArchi,

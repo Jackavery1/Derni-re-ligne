@@ -1,0 +1,114 @@
+#banniere-meteo {
+    position: fixed;
+    top: max(10px, var(--safe-top));
+    right: max(12px, var(--safe-right));
+    left: auto;
+    transform: none;
+    display: none;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    background: rgba(8, 8, 26, 0.92);
+    border: 1px solid var(--meteo-couleur, #ffe600);
+    padding: 8px 14px;
+    z-index: 150;
+    pointer-events: none;
+    box-shadow: 0 0 16px color-mix(in srgb, var(--meteo-couleur, #ffe600) 35%, transparent);
+    text-align: right;
+    max-width: min(42vw, 220px);
+    font-size: 0.55rem;
+}
+#banniere-meteo.visible {
+    display: flex;
+}
+
+#banniere-vivant {
+    position: fixed;
+    top: max(10px, var(--safe-top));
+    left: max(12px, var(--safe-left));
+    transform: none;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: rgba(8, 8, 26, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 8px 12px;
+    z-index: 140;
+    pointer-events: none;
+    max-width: min(42vw, 240px);
+    font-size: 0.5rem;
+    animation: apparitionVivantCoin 0.35s ease-out;
+}
+#banniere-vivant.visible {
+    display: flex;
+}
+#vivant-icone {
+    font-size: 1.5rem;
+}
+.vivant-textes {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+#vivant-nom {
+    font-size: 0.38rem;
+    letter-spacing: 2px;
+}
+#vivant-desc {
+    font-size: var(--typo-hud-micro);
+    color: var(--texte-dim);
+    letter-spacing: 1px;
+}
+#vivant-compte-rebours {
+    font-size: 0.55rem;
+    color: var(--texte-dim);
+    min-width: 24px;
+    text-align: right;
+}
+
+#meteo-icone {
+    font-size: 2rem;
+}
+#meteo-texte {
+    font-size: clamp(0.4rem, 1.5vw, 0.55rem);
+    letter-spacing: 3px;
+    color: var(--meteo-couleur, #ffe600);
+    text-shadow: 0 0 10px var(--meteo-couleur, #ffe600);
+}
+#meteo-barre-alerte {
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+#meteo-barre-alerte::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--meteo-couleur, #ffe600);
+    animation: videBarreAlerte 5s linear forwards;
+}
+
+#indicateur-meteo {
+    padding: 6px 4px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.3rem;
+    letter-spacing: 1px;
+    color: var(--meteo-actif-couleur, var(--jaune));
+}
+#meteo-barre-duree {
+    margin-top: 4px;
+    height: 2px;
+    background: var(--meteo-actif-couleur, var(--jaune));
+    transition: width 0.5s linear;
+}
+#indicateur-meteo.meteo-telegraphie {
+    animation: meteo-pulse 0.8s ease-in-out infinite alternate;
+    border-color: var(--meteo-actif-couleur, var(--jaune));
+}
+#indicateur-meteo.meteo-proche {
+    opacity: 0.8;
+    border-color: rgba(255, 230, 0, 0.35);
+}

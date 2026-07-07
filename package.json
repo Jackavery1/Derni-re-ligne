@@ -25,6 +25,7 @@
         "test": "vitest run",
         "test:watch": "vitest",
         "test:coverage": "vitest run --coverage",
+        "test:coverage:etendu": "vitest run --coverage --config vitest.config.etendu.mjs",
         "test:e2e": "playwright test",
         "test:e2e:smoke": "playwright test e2e/smoke.spec.mjs",
         "test:e2e:smoke:dist": "node scripts/run-e2e-dist.mjs e2e/smoke.spec.mjs",

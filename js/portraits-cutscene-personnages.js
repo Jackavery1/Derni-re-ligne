@@ -1,13 +1,13 @@
 /** Dessins canvas des personnages cutscene. */
-import { dessinerRobo } from './rendu-robo.js';
+import { dessinerRobo } from './rendu/rendu-robo.js';
 import { rectArrondiPortrait } from './portraits-cutscene-utils.js';
 import { obtenirHumeurRoboCutscene } from './portraits-cutscene-etat.js';
-import { dessinerPortraitVeraCanon } from './portrait-vera-rendu.js';
-import { dessinerPortraitDistorsion } from './portrait-distorsion-rendu.js';
-import { dessinerPortraitBrasierCanon } from './portrait-brasier-rendu.js';
-import { dessinerPortraitSentinelleCanon } from './portrait-sentinelle-rendu.js';
-import { dessinerPortraitArchivisteCanon } from './portrait-archiviste-rendu.js';
-import { dessinerPortraitAvantgardeCanon } from './portrait-avantgarde-rendu.js';
+import { dessinerPortraitVeraCanon } from './rendu/portrait-vera-rendu.js';
+import { dessinerPortraitDistorsion } from './rendu/portrait-distorsion-rendu.js';
+import { dessinerPortraitBrasierCanon } from './rendu/portrait-brasier-rendu.js';
+import { dessinerPortraitSentinelleCanon } from './rendu/portrait-sentinelle-rendu.js';
+import { dessinerPortraitArchivisteCanon } from './rendu/portrait-archiviste-rendu.js';
+import { dessinerPortraitAvantgardeCanon } from './rendu/portrait-avantgarde-rendu.js';
 
 /** @param {Record<string, number | boolean | number[]> | null | undefined} params */
 function _portraitVera(ctx, w, h, t, params) {

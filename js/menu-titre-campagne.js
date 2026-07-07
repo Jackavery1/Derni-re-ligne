@@ -1,5 +1,5 @@
-import { chargerEtatHistoire } from './progression-histoire.js';
-import { lireStockage } from './progression-stockage.js';
+import { chargerEtatHistoire } from './io/progression-histoire.js';
+import { lireStockage } from './io/progression-stockage.js';
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
 import { sansAccentsE } from './texte-jeu.js';
 

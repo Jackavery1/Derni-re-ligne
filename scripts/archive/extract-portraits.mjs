@@ -3,8 +3,8 @@ import { readFileSync, writeFileSync } from 'fs';
 const src = readFileSync('js/histoire-manager-ui.js', 'utf8');
 const lines = src.split('\n');
 const body = lines.slice(277, 939).join('\n');
-const header = `import { dessinerRobo } from './rendu-robo.js';
-import { logger } from './logger.js';
+const header = `import { dessinerRobo } from '../../js/rendu/rendu-robo.js';
+import { logger } from '../../js/logger.js';
 
 /** @type {'neutre'|'content'|'excite'|'triste'|'alerte'} */
 let _humeurRoboCutscene = 'content';

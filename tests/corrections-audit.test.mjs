@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { store } from '../js/store-jeu.js';
+import { store } from '../js/etat/store-jeu.js';
 import {
     chargerEtatHistoire,
     sauvegarderEtatHistoire,
@@ -7,9 +7,9 @@ import {
     sauvegarderRecordBiome,
     obtenirRecordCoopBiome,
     sauvegarderRecordCoopBiome,
-} from '../js/progression.js';
+} from '../js/io/progression.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-import { obtenirTypeFin, SCENE_DEFAUT_POST_MONDE } from '../js/histoire-narratif.js';
+import { obtenirTypeFin, SCENE_DEFAUT_POST_MONDE } from '../js/histoire/histoire-narratif.js';
 import { CUTSCENES_POST_MONDE } from '../js/histoire-textes/cutscenes-post-monde.js';
 import { CUTSCENES_VICTOIRE_BOSS } from '../js/histoire-textes/cutscenes-boss-victoire.js';
 import { DIALOGUES_COMBAT_BOSS } from '../js/histoire-textes/dialogues-boss.js';
@@ -23,10 +23,10 @@ import {
 } from '../e2e/helpers-narratif.mjs';
 import { chargerDonneesCodex, codexDebloque, verifierCodex } from '../js/codex.js';
 import { statsGlobales } from '../js/achievements.js';
-import { meteo } from '../js/meteo.js';
-import { CONFIG, METEO_BIOMES, chargerContenuJeu } from '../js/config.js';
-import { vitesseChute } from '../js/logique-partie.js';
-import { etat } from '../js/store-jeu.js';
+import { meteo } from '../js/logique/meteo.js';
+import { CONFIG, METEO_BIOMES, chargerContenuJeu } from '../js/config/config.js';
+import { vitesseChute } from '../js/logique/logique-partie.js';
+import { etat } from '../js/etat/store-jeu.js';
 
 function etatHistoireComplet() {
     const e = structuredClone(ETAT_HISTOIRE_VIDE);

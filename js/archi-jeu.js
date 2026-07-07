@@ -1,4 +1,4 @@
-export { archi, modeArchiActif } from './archi-logique.js';
+export { archi, modeArchiActif } from './logique/archi-logique.js';
 export {
     demarrerArchi,
     archi_mettreAJourInventaireUI,

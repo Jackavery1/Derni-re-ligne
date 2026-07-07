@@ -1,14 +1,17 @@
-import { CONFIG, BIOMES } from './config.js';
-import { obtenirForme, obtenirCouleurPieceParType } from './piece-jeu.js';
+import { CONFIG, BIOMES } from './config/config.js';
+import { obtenirForme, obtenirCouleurPieceParType } from './logique/piece-jeu.js';
 import {
     obtenirCtx,
     obtenirCanvasPlateau,
     obtenirEffetsAccessibiliteReduits,
-} from './store-jeu.js';
-import { dessinerCellule } from './rendu-cellule.js';
-import { dessinerParticules } from './rendu-jeu.js';
-import { archi, archi_estPositionValide } from './archi-logique.js';
-import { dessinerMotifsAccessibilite, dessinerMotifsCoopPieces } from './rendu-accessibilite.js';
+} from './etat/store-jeu.js';
+import { dessinerCellule } from './rendu/rendu-cellule.js';
+import { dessinerParticules } from './rendu/rendu-jeu.js';
+import { archi, archi_estPositionValide } from './logique/archi-logique.js';
+import {
+    dessinerMotifsAccessibilite,
+    dessinerMotifsCoopPieces,
+} from './rendu/rendu-accessibilite.js';
 
 function archi_dessinerGrille(ctx2d, biomeId) {
     const biome = BIOMES[biomeId] ?? BIOMES.classique;

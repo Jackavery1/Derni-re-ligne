@@ -1,6 +1,6 @@
-import { ORDRE_BIOMES_LIBRE } from './config.js';
-import { biomeEstDebloqueParHistoire } from './progression-records.js';
-import { lireStockage, ecrireStockage } from './progression.js';
+import { ORDRE_BIOMES_LIBRE } from './config/config.js';
+import { biomeEstDebloqueParHistoire } from './io/progression-records.js';
+import { lireStockage, ecrireStockage } from './io/progression.js';
 
 const CLE_DEFI_JOUR = 'derniereLigne_defiJour';
 

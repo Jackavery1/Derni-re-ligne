@@ -17,7 +17,7 @@ import {
     obtenirPanneauDetailId,
     abonnerFermeturePanneauDetail,
     initialiserPanneauDetail,
-} from './ui-panneau-detail.js';
+} from './ui/ui-panneau-detail.js';
 
 let memorialListenersInitialises = false;
 

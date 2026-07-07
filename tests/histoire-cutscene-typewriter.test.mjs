@@ -4,7 +4,7 @@ import {
     arreterMachineAEcrire,
     demarrerTypewriter,
     afficherTexteComplet,
-} from '../js/histoire-cutscene-typewriter.js';
+} from '../js/histoire/histoire-cutscene-typewriter.js';
 
 describe('histoire-cutscene-typewriter', () => {
     /** @type {HTMLSpanElement} */

@@ -1,4 +1,4 @@
-import { lireStockage, ecrireStockage } from './progression.js';
+import { lireStockage, ecrireStockage } from './io/progression.js';
 import { sansAccentsE } from './texte-jeu.js';
 import {
     CLES,

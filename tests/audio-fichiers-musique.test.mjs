@@ -3,7 +3,7 @@ import {
     urlsMusiqueFichier,
     chargerBufferMusique,
     viderCacheBuffersMusique,
-} from '../js/audio-fichiers-musique.js';
+} from '../js/audio/audio-fichiers-musique.js';
 
 describe('audio fichiers musique (hybride Suno)', () => {
     beforeEach(() => {

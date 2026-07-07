@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { CONFIG } from '../js/config.js';
-import { etat, definirBiomeActif } from '../js/store-jeu.js';
-import { creerPlateau } from '../js/piece-jeu.js';
+import { CONFIG } from '../js/config/config.js';
+import { etat, definirBiomeActif } from '../js/etat/store-jeu.js';
+import { creerPlateau } from '../js/logique/piece-jeu.js';
 import {
     COMPORTEMENTS_VIVANT,
     vivant,
@@ -18,7 +18,7 @@ import {
     declencherComportementVivant,
     intervalleVivantEffectif,
     delaiMinimumVivantEffectif,
-} from '../js/vivant.js';
+} from '../js/logique/vivant.js';
 
 describe('vivant', () => {
     beforeEach(() => {

@@ -1,0 +1,255 @@
+/* ================================================
+   MODE HISTOIRE — Carte et Écrans
+================================================ */
+
+#ecran-histoire-map {
+    background: transparent;
+    backdrop-filter: none;
+    overflow: hidden;
+}
+#ecran-histoire-map.ecran {
+    background: transparent;
+}
+
+#canvas-histoire-map {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    cursor: default;
+}
+
+#histoire-map-overlay {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+}
+#histoire-map-overlay > * {
+    pointer-events: auto;
+}
+
+#histoire-map-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 22px;
+    background: rgba(8, 8, 26, 0.72);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(255, 0, 110, 0.2);
+}
+.histoire-titre-principale {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: clamp(0.62rem, 2.5vw, 0.88rem);
+    letter-spacing: 0;
+    opacity: 1 !important;
+}
+.histoire-titre-principale .dl-mot-1 {
+    display: inline-flex;
+    letter-spacing: 0;
+}
+.histoire-titre-principale .lettre-titre {
+    display: inline;
+    animation: none;
+    letter-spacing: 0;
+    text-shadow:
+        0 0 6px var(--couleur-lettre),
+        0 0 14px color-mix(in srgb, var(--couleur-lettre) 40%, transparent);
+}
+.histoire-titre-principale .dl-mot-2 {
+    font-size: 1em;
+    letter-spacing: 0;
+    color: var(--cyan);
+    text-shadow:
+        0 0 8px var(--cyan),
+        0 0 18px rgba(0, 245, 255, 0.35);
+    animation: none;
+}
+.histoire-sous-titre {
+    font-size: clamp(0.36rem, 1.3vw, 0.44rem);
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.15em;
+    margin-top: 9px;
+}
+.histoire-progression {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    font-size: clamp(0.36rem, 1.3vw, 0.44rem);
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 0 6px rgba(0, 221, 200, 0.5);
+    letter-spacing: 2px;
+    opacity: 1 !important;
+}
+.histoire-prog-item {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.histoire-prog-trame-btn {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+    background: rgba(255, 45, 120, 0.08);
+    border: 1px solid rgba(255, 45, 120, 0.35);
+    border-radius: 4px;
+    padding: 10px 12px;
+    min-height: 48px;
+    min-width: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.histoire-prog-trame-btn:hover,
+.histoire-prog-trame-btn:focus-visible {
+    background: rgba(255, 45, 120, 0.16);
+    border-color: rgba(255, 45, 120, 0.6);
+    outline: none;
+}
+
+.histoire-detail-briefing {
+    width: 100%;
+    margin-bottom: 8px;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    border-color: rgba(153, 68, 255, 0.55);
+    color: #e8d4ff;
+}
+
+.histoire-trame-panneau {
+    text-align: left;
+    max-width: 440px;
+}
+
+.histoire-trame-intro {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 0 0 16px;
+    line-height: 1.45;
+}
+
+.histoire-trame-detail-liste {
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.histoire-trame-detail-liste li {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.72rem;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.82);
+    padding: 8px 10px;
+    border-left: 3px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.histoire-trame-detail-liste .histoire-trame-condition-ok {
+    color: var(--cyan, #00ddc8);
+    border-left-color: var(--cyan, #00ddc8);
+    background: rgba(0, 221, 200, 0.06);
+}
+
+#overlay-trame-conditions .objectif-btn-commencer {
+    width: 100%;
+}
+
+/* La carte reste cliquable (REJOUER, noeuds) pendant que la modale TRAME est ouverte */
+#overlay-trame-conditions.objectif-overlay-visible {
+    pointer-events: none;
+    background: transparent;
+}
+
+#overlay-trame-conditions.objectif-overlay-visible .histoire-trame-panneau {
+    pointer-events: auto;
+    box-shadow:
+        0 0 40px rgba(0, 0, 0, 0.85),
+        0 0 24px rgba(0, 245, 255, 0.15),
+        inset 0 0 40px rgba(0, 245, 255, 0.04);
+}
+
+#histoire-monde-details {
+    display: flex;
+    position: absolute;
+    bottom: 64px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(6, 6, 22, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 14px 22px;
+    min-width: 220px;
+    max-width: min(90vw, 340px);
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    text-align: center;
+    animation: apparitionDetail 0.2s ease-out;
+    pointer-events: auto;
+}
+.histoire-detail-nom {
+    font-size: clamp(0.45rem, 1.8vw, 0.62rem);
+    letter-spacing: 3px;
+    color: var(--detail-couleur, var(--cyan));
+    text-shadow: 0 0 8px var(--detail-couleur, var(--cyan));
+}
+.histoire-detail-type {
+    font-size: 0.3rem;
+    letter-spacing: 2px;
+    color: var(--detail-couleur, var(--texte-dim));
+}
+.histoire-detail-statut {
+    font-size: 0.3rem;
+    color: var(--texte-dim);
+    letter-spacing: 2px;
+}
+
+.histoire-detail-statut-complete {
+    color: var(--vert);
+}
+
+.histoire-detail-statut-dim {
+    color: var(--texte-dim);
+}
+.histoire-detail-journal {
+    font-size: var(--typo-hud-micro);
+    color: var(--violet);
+    letter-spacing: 1px;
+    min-height: 1em;
+}
+.bouton-jouer-monde {
+    font-size: 0.48rem !important;
+    padding: 10px 28px !important;
+    margin-top: 4px;
+}
+
+#histoire-map-footer {
+    position: absolute;
+    bottom: 16px;
+    left: 18px;
+}
+
+.bouton-histoire-carte {
+    border-color: var(--rose) !important;
+    color: var(--rose) !important;
+    text-shadow: 0 0 8px var(--rose) !important;
+}

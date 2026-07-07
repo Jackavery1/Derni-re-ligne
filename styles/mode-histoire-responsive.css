@@ -1,0 +1,66 @@
+@media (max-width: 768px), (max-height: 600px) {
+    #histoire-map-header {
+        padding-top: max(14px, var(--safe-top));
+        padding-left: max(22px, var(--safe-left));
+        padding-right: max(22px, var(--safe-right));
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .histoire-progression {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px 12px;
+    }
+
+    #histoire-map-footer {
+        bottom: calc(16px + var(--safe-bottom));
+        left: max(18px, var(--safe-left));
+    }
+
+    #btn-histoire-retour {
+        min-height: 48px;
+        min-width: 48px;
+        padding: 12px 16px;
+    }
+
+    .bouton-jouer-monde {
+        min-height: 48px;
+    }
+
+    .bouton-histoire-carte {
+        min-height: 48px;
+        min-width: 48px;
+        padding: 12px 16px;
+    }
+}
+
+@media (max-height: 768px) and (orientation: landscape) {
+    #histoire-map-header {
+        padding-top: max(10px, var(--safe-top));
+        padding-bottom: 8px;
+    }
+
+    .histoire-progression {
+        font-size: clamp(0.34rem, 1.2vw, 0.42rem);
+    }
+
+    #histoire-monde-details {
+        bottom: calc(8px + var(--safe-bottom));
+        max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 72px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #histoire-journal-contenu {
+        max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 24px);
+        max-width: min(94vw, 520px);
+    }
+
+    .histoire-journal-para {
+        font-family: var(--font-narratif);
+        font-size: clamp(0.88rem, 2.8vw, 1rem);
+        line-height: 1.5;
+    }
+}

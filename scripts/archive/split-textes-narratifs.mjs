@@ -107,9 +107,9 @@ writeFileSync(
 );
 writeFileSync(
     'js/histoire-textes/intro-interludes.js',
-    `export { INTRO_HISTOIRE } from './intro-histoire.js';\n` +
-        `export { INTERLUDES } from './interludes.js';\n` +
-        `export { OUTRO_FINS } from './outro-fins.js';\n`
+    `export { INTRO_HISTOIRE } from '../../js/histoire-textes/intro-histoire.js';\n` +
+        `export { INTERLUDES } from '../../js/histoire-textes/interludes.js';\n` +
+        `export { OUTRO_FINS } from '../../js/histoire-textes/outro-fins.js';\n`
 );
 
 console.log('Split textes narratifs OK');

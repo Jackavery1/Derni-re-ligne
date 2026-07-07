@@ -1,4 +1,4 @@
-import { AudioMoteur } from './audio.js';
+import { AudioMoteur } from './audio/audio.js';
 
 export function mettreAJourBoutonsMute() {
     const symbole = AudioMoteur.muet ? '🔇' : '🔊';

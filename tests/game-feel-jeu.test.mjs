@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CONFIG } from '../js/config.js';
-import { store, etat } from '../js/store-jeu.js';
+import { CONFIG } from '../js/config/config.js';
+import { store, etat } from '../js/etat/store-jeu.js';
 import {
     reinitialiserGameFeel,
     demarrerAre,
@@ -14,15 +14,15 @@ import {
     activerPieceAuSol,
     quitterSolPiece,
     verifierCollisionSpawn,
-} from '../js/game-feel-jeu.js';
+} from '../js/logique/game-feel-jeu.js';
 import {
     definirPieceAuSol,
     definirLockDelayRestant,
     definirNbLockResets,
     obtenirLockDelayRestant,
     obtenirNbLockResets,
-} from '../js/store-etat-partie.js';
-import { creerPlateau } from '../js/piece-jeu.js';
+} from '../js/etat/store-etat-partie.js';
+import { creerPlateau } from '../js/logique/piece-jeu.js';
 import { configurerActionsJeu, obtenirActions } from '../js/actions-jeu.js';
 
 describe('game-feel-jeu', () => {
@@ -86,6 +86,16 @@ describe('game-feel-jeu', () => {
         store.spawnGraceRestant = 0;
         verifierCollisionSpawn();
         expect(obtenirActions().terminerPartie).toHaveBeenCalled();
+    });
+
+    it('grace spawn sprint plus longue que marathon', () => {
+        etat.modeJeu = 'sprint';
+        demarrerGraceSpawn();
+        const sprint = store.spawnGraceRestant;
+        etat.modeJeu = 'marathon';
+        demarrerGraceSpawn();
+        expect(sprint).toBeGreaterThan(store.spawnGraceRestant);
+        expect(sprint).toBe(CONFIG.sprintSpawnGraceMs);
     });
 
     it('coyote preserve le lock delay au retour au sol', () => {

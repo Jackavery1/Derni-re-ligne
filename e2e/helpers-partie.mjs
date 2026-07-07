@@ -10,7 +10,6 @@ import { attendreTypewriterInactif } from './helpers-narratif.mjs';
 
 /** @param {import('@playwright/test').Page} page */
 export async function fermerPanneauDetailSiOuvert(page) {
-    if (await page.locator('#overlay-orientation.visible').count()) return;
     const panneau = page.locator('#panneau-detail');
     if ((await panneau.count()) === 0) return;
     if ((await panneau.getAttribute('aria-hidden')) !== 'false') return;

@@ -6,7 +6,7 @@ vi.mock('../js/leaderboard-cloud.js', () => ({
     chargerClassementLeaderboard,
 }));
 
-vi.mock('../js/config-sync.js', async (importOriginal) => {
+vi.mock('../js/config/config-sync.js', async (importOriginal) => {
     const actual = await importOriginal();
     return {
         ...actual,
@@ -21,7 +21,7 @@ describe('options-sync-cloud-ui — leaderboard', () => {
 
     beforeEach(async () => {
         vi.resetModules();
-        const { chargerBiomesJeu } = await import('../js/biomes.js');
+        const { chargerBiomesJeu } = await import('../js/config/biomes.js');
         await chargerBiomesJeu();
         noeuds = new Map();
 
@@ -54,7 +54,7 @@ describe('options-sync-cloud-ui — leaderboard', () => {
     });
 
     it('peuple les biomes et charge selon les filtres', async () => {
-        const { BIOMES, ORDRE_BIOMES_LIBRE } = await import('../js/config.js');
+        const { BIOMES, ORDRE_BIOMES_LIBRE } = await import('../js/config/config.js');
         const { peuplerSelectsLeaderboardOptions, rafraichirLeaderboardOptions } =
             await import('../js/options-sync-cloud-ui.js');
 

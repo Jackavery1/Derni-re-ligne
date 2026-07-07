@@ -1,8 +1,8 @@
-import { CONFIG } from './config.js';
-import { etat } from './store-jeu.js';
-import { modeHistoireEnCours } from './mode-histoire.js';
-import { modeArchiEnCours, modeCoopEnCours } from './registre-modes.js';
-import { emettre } from './bus-jeu.js';
+import { CONFIG } from './config/config.js';
+import { etat } from './etat/store-jeu.js';
+import { modeHistoireEnCours } from './etat/mode-histoire.js';
+import { modeArchiEnCours, modeCoopEnCours } from './etat/registre-modes.js';
+import { emettre } from './etat/bus-jeu.js';
 
 let _derniereSecondeRestante = -1;
 let _levelUpTempsEnCours = false;

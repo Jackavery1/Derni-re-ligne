@@ -1,0 +1,63 @@
+@media (max-width: 768px), (max-height: 768px), (pointer: coarse) {
+    body.archi-active #controles-archi {
+        display: flex;
+    }
+}
+
+@media (max-height: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    body.archi-active #controles-archi,
+    body.archi-active.controles-tactiles-actifs #controles-archi {
+        display: none !important;
+    }
+
+    body.archi-active #controles-archi-paysage,
+    body.archi-active.controles-tactiles-actifs #controles-archi-paysage {
+        display: block;
+    }
+
+    body.archi-active #interface-jeu-archi .panneau-archi {
+        width: 112px;
+        max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 16px);
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body.archi-active #interface-jeu-archi .section {
+        padding: 6px 4px;
+        gap: 4px;
+    }
+
+    body.archi-active #interface-jeu-archi .stat-label {
+        font-size: 0.3rem;
+    }
+
+    body.archi-active #interface-jeu-archi .stat-valeur {
+        font-size: 0.52rem;
+        line-height: 1.15;
+    }
+
+    body.archi-active #interface-jeu-archi .archi-guide {
+        display: none;
+    }
+}
+
+#controles-archi-paysage .btn-tactile {
+    width: 52px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    font-size: 0.9rem;
+}
+
+#btn-reinit-archi {
+    min-height: 48px;
+}
+
+@media (max-width: 768px) {
+    .archi-filtre-btn {
+        min-height: 48px;
+        min-width: 48px;
+    }
+}

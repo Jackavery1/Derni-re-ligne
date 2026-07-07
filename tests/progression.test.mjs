@@ -19,7 +19,7 @@ import {
     parserIdsStockage,
     supprimerStockageProgression,
     estClePreference,
-} from '../js/progression.js';
+} from '../js/io/progression.js';
 
 describe('progression', () => {
     beforeEach(() => {
