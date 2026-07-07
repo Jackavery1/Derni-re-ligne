@@ -78,10 +78,10 @@ describe('rendu-robo', () => {
         expect(PALETTE_ROBO.GLYPHE).toBe('#00f5ff');
     });
 
-    it('neutre dessine des glyphes ronds (pas de bouche par defaut)', () => {
+    it('neutre dessine des glyphes ovales avec halo (ellipse)', () => {
         const ctx = creerCtxMock();
         dessinerRobo(ctx, 120, 150, 'neutre', 0);
-        expect(ctx.arc.mock.calls.length).toBeGreaterThan(0);
+        expect(ctx.ellipse.mock.calls.length).toBeGreaterThan(0);
     });
 
     it('content dessine des arcs yeux et une bouche optionnelle', () => {

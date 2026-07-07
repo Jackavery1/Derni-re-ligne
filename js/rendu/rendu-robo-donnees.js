@@ -7,7 +7,30 @@ export const PALETTE_ROBO = {
     GRILLE_CELLULE: 'rgba(0, 245, 255, 0.6)',
     GRILLE_ETEINTE: '#1a2340',
     LISERE: '#b8c4dd',
-    REFLET_ECRAN: 'rgba(230, 236, 247, 0.12)',
+    REFLET_ECRAN: 'rgba(255, 255, 255, 0.06)',
+};
+
+/** Ratios canoniques relatifs à la capsule (W × H). */
+export const RATIOS_ROBO = {
+    ECRAN_W: 0.72,
+    ECRAN_H: 0.46,
+    ECRAN_TOP: 0.12,
+    ECRAN_RADIUS: 0.28,
+    OEIL_W: 0.16,
+    OEIL_H: 1.4,
+    OEIL_ECART: 0.38,
+    OEIL_HALO: 0.6,
+    LISERE_ALPHA: 0.4,
+    FENETRE_W: 0.26,
+    FENETRE_TOP: 0.74,
+    MAIN_Y: 0.55,
+    MAIN_ECART: 0.1,
+    MAIN_D: 0.18,
+    PIED_W: 0.24,
+    PIED_GAP: 0.08,
+    PIED_H: 0.12,
+    PIED_TOP: 0.92,
+    ANTENNE_H: 0.18,
 };
 
 /** Proportions capsule (espace ref 120×150). */
@@ -15,27 +38,13 @@ export const PROPORTIONS_ROBO = {
     CAPSULE_H: 96,
     CAPSULE_W: 69,
     CAPSULE_Y: 22,
-    ECRAN_RATIO: 0.67,
-    ECRAN_INSET: 0.08,
-    FENETRE_W_RATIO: 0.22,
-    FENETRE_H: 14,
-    MAIN_R: 9,
-    MAIN_ECART_X: 46,
-    MAIN_Y: 58,
-    PIED_W: 20,
-    PIED_H: 10,
-    PIED_ECART: 14,
-    PIED_Y: 118,
-    ANTENNE_H: 16,
 };
 
 export const VISAGE_ROBO = {
-    GLYPHE_R_NEUTRE: 5.5,
     GLYPHE_R_EXCITE: 7,
     GLYPHE_R_TRISTE: 4.5,
-    ECART_YEUX: 18,
-    TRAIT_ALERTE_W: 2.2,
-    TRAIT_ALERTE_H: 9,
+    TRAIT_ALERTE_W: 0.12,
+    TRAIT_ALERTE_H: 0.55,
     ARC_CONTENT_HALF: 8,
     ARC_CONTENT_COURBE: 5,
 };

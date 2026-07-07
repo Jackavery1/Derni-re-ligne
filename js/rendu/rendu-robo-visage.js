@@ -1,4 +1,4 @@
-import { PALETTE_ROBO, VISAGE_ROBO as VISAGE } from './rendu-robo-donnees.js';
+import { PALETTE_ROBO, RATIOS_ROBO as R, VISAGE_ROBO as VISAGE } from './rendu-robo-donnees.js';
 import { rectArrondiRobo } from './rendu-robo-geometrie.js';
 
 const C = PALETTE_ROBO;
@@ -7,11 +7,13 @@ const C = PALETTE_ROBO;
  * @param {CanvasRenderingContext2D} ctx
  * @param {number} cx
  * @param {number} cy
- * @param {number} E
+ * @param {number} eyeW
+ * @param {number} eyeH
  * @param {'neutre'|'content'|'excite'|'triste'|'alerte'|'tetris'} humeur
  * @param {'g'|'d'} cote
+ * @param {number} E
  */
-function dessinerGlyphOeil(ctx, cx, cy, E, humeur, cote) {
+function dessinerGlyphOeil(ctx, cx, cy, eyeW, eyeH, humeur, cote, E) {
     const dir = cote === 'g' ? -1 : 1;
     ctx.fillStyle = C.GLYPHE;
     ctx.strokeStyle = C.GLYPHE;
@@ -19,14 +21,14 @@ function dessinerGlyphOeil(ctx, cx, cy, E, humeur, cote) {
     ctx.lineJoin = 'round';
 
     if (humeur === 'alerte') {
-        const w = VISAGE.TRAIT_ALERTE_W * E;
-        const h = VISAGE.TRAIT_ALERTE_H * E;
+        const w = eyeW * VISAGE.TRAIT_ALERTE_W;
+        const h = eyeH * VISAGE.TRAIT_ALERTE_H;
         ctx.fillRect(cx - w / 2, cy - h / 2, w, h);
         return;
     }
 
     if (humeur === 'tetris') {
-        const size = 2.5 * E;
+        const size = eyeW * 0.85;
         ctx.fillRect(cx - size / 2, cy - size / 2, size, size);
         return;
     }
@@ -40,15 +42,13 @@ function dessinerGlyphOeil(ctx, cx, cy, E, humeur, cote) {
         return;
     }
 
-    const r =
-        humeur === 'excite'
-            ? VISAGE.GLYPHE_R_EXCITE * E
-            : humeur === 'triste'
-              ? VISAGE.GLYPHE_R_TRISTE * E
-              : VISAGE.GLYPHE_R_NEUTRE * E;
+    const scale =
+        humeur === 'excite' ? 1.3 : humeur === 'triste' ? 0.8 : humeur === 'neutre' ? 1 : 1;
+    const rw = (eyeW / 2) * scale;
+    const rh = (eyeH / 2) * scale;
 
     ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.ellipse(cx, cy, rw, rh, 0, 0, Math.PI * 2);
     ctx.fill();
 
     if (humeur === 'excite') {
@@ -65,10 +65,10 @@ function dessinerGlyphOeil(ctx, cx, cy, E, humeur, cote) {
 function dessinerRefletEcran(ctx, x, y, w, h) {
     ctx.save();
     ctx.strokeStyle = C.REFLET_ECRAN;
-    ctx.lineWidth = Math.max(1, w * 0.04);
+    ctx.lineWidth = Math.max(1, w * 0.035);
     ctx.beginPath();
-    ctx.moveTo(x + w * 0.12, y + h * 0.18);
-    ctx.quadraticCurveTo(x + w * 0.35, y + h * 0.08, x + w * 0.55, y + h * 0.22);
+    ctx.moveTo(x + w * 0.1, y + h * 0.22);
+    ctx.quadraticCurveTo(x + w * 0.28, y + h * 0.06, x + w * 0.48, y + h * 0.18);
     ctx.stroke();
     ctx.restore();
 }
@@ -88,9 +88,18 @@ function dessinerArcContent(ctx, cx, cy, E) {
     ctx.stroke();
 }
 
+function avecHaloGlyph(ctx, blur, fn) {
+    ctx.save();
+    ctx.shadowColor = C.GLYPHE;
+    ctx.shadowBlur = blur;
+    fn();
+    ctx.restore();
+}
+
 /**
  * @param {CanvasRenderingContext2D} ctx
  * @param {boolean} clignementInactif
+ * @param {{ reflet?: boolean }} [opts]
  */
 export function dessinerVisageRobo(
     ctx,
@@ -102,11 +111,15 @@ export function dessinerVisageRobo(
     t,
     inclinaisonTete,
     clignementInactif,
-    ecranBounds
+    ecranBounds,
+    opts = {}
 ) {
-    const { x, y, w, eh } = ecranBounds;
-    const ecart = VISAGE.ECART_YEUX * E;
-    const yOeilBase = y + eh * 0.42 + (humeur === 'triste' ? 5 * E : 0);
+    const { x, y, w, h: eh } = ecranBounds;
+    const eyeW = w * R.OEIL_W;
+    const eyeH = eyeW * R.OEIL_H;
+    const ecart = w * R.OEIL_ECART;
+    const yOeilBase = y + eh / 2 + (humeur === 'triste' ? 4 * E : 0);
+    const haloBlur = eyeW * R.OEIL_HALO;
 
     ctx.save();
     if (inclinaisonTete) {
@@ -117,12 +130,19 @@ export function dessinerVisageRobo(
     }
 
     ctx.fillStyle = C.ECRAN;
-    rectArrondiRobo(ctx, x, y, w, eh, w * 0.22);
+    const rayonEcran = eh * R.ECRAN_RADIUS;
+    rectArrondiRobo(ctx, x, y, w, eh, rayonEcran);
     ctx.fill();
+    ctx.save();
+    ctx.globalAlpha = R.LISERE_ALPHA;
     ctx.strokeStyle = C.LISERE;
     ctx.lineWidth = Math.max(1, E);
     ctx.stroke();
-    dessinerRefletEcran(ctx, x, y, w, eh);
+    ctx.restore();
+
+    if (opts.reflet !== false) {
+        dessinerRefletEcran(ctx, x, y, w, eh);
+    }
 
     const cligner =
         clignementInactif &&
@@ -137,13 +157,18 @@ export function dessinerVisageRobo(
         ctx.lineCap = 'round';
         for (const ox of [-ecart / 2, ecart / 2]) {
             ctx.beginPath();
-            ctx.moveTo(cx + ox - 5 * E, yOeilBase);
-            ctx.lineTo(cx + ox + 5 * E, yOeilBase);
+            ctx.moveTo(cx + ox - eyeW * 0.45, yOeilBase);
+            ctx.lineTo(cx + ox + eyeW * 0.45, yOeilBase);
             ctx.stroke();
         }
     } else {
-        dessinerGlyphOeil(ctx, cx - ecart / 2, yOeilBase, E, humeur, 'g');
-        dessinerGlyphOeil(ctx, cx + ecart / 2, yOeilBase, E, humeur, 'd');
+        const dessinerOeil = (ox, cote) => {
+            avecHaloGlyph(ctx, haloBlur, () => {
+                dessinerGlyphOeil(ctx, cx + ox, yOeilBase, eyeW, eyeH, humeur, cote, E);
+            });
+        };
+        dessinerOeil(-ecart / 2, 'g');
+        dessinerOeil(ecart / 2, 'd');
         if (humeur === 'content' || humeur === 'excite') {
             dessinerArcContent(ctx, cx, yOeilBase + 14 * E, E);
         }

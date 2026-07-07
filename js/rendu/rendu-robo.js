@@ -2,6 +2,7 @@ import { logger } from '../logger.js';
 import { abonnerBoucleMenuUnifiee, desabonnerBoucleMenuUnifiee } from '../planificateur-raf.js';
 import {
     calculerAnimRobo,
+    calculerBoundsCapsule,
     calculerBoundsEcran,
     dessinerCorpsRobo,
     dessinerAntenneRobo,
@@ -25,6 +26,10 @@ let _observateurVisibilite = null;
 /** @type {number|null} */
 let _timeoutTetris = null;
 
+const FOND_MASCOTTE = '#08081a';
+const REF_W = 120;
+const REF_H = 150;
+
 /**
  * Dessine ROBO v3 (capsule écran-visage) sur le canvas.
  * @param {CanvasRenderingContext2D} ctx
@@ -32,22 +37,38 @@ let _timeoutTetris = null;
  * @param {number} h
  * @param {'neutre'|'content'|'excite'|'triste'|'alerte'} humeur
  * @param {number} t
- * @param {{ arcEnCiel?: boolean, couronne?: boolean, fondTransparent?: boolean }} [options]
+ * @param {{
+ *   arcEnCiel?: boolean,
+ *   couronne?: boolean,
+ *   fondTransparent?: boolean,
+ *   niveauDetail?: 'complet'|'mini',
+ *   refletEcran?: boolean,
+ * }} [options]
  */
-const FOND_MASCOTTE = '#08081a';
-
 export function dessinerRobo(ctx, w, h, humeur, t, options = {}) {
+    const niveauDetail = options.niveauDetail ?? 'complet';
+
     ctx.clearRect(0, 0, w, h);
     if (!options.fondTransparent) {
         ctx.fillStyle = FOND_MASCOTTE;
         ctx.fillRect(0, 0, w, h);
     }
 
-    const E = Math.min(w / 120, h / 150);
+    const E = Math.min(w / REF_W, h / REF_H);
     const cx = w / 2;
     const anim = calculerAnimRobo(humeur, t, E);
-    const offsetY = anim.offsetY;
-    const ecranBounds = calculerBoundsEcran(cx, E, offsetY, h);
+    let offsetY = 0;
+    if (niveauDetail === 'mini') {
+        anim.offsetY = 0;
+        anim.antenneAngle = 0;
+        anim.antenneTipAlpha = 1;
+        anim.mainOffsetY = 0;
+    } else {
+        offsetY = anim.offsetY;
+    }
+
+    const bounds = calculerBoundsCapsule(cx, E, offsetY, h);
+    const ecranBounds = calculerBoundsEcran(bounds);
 
     ctx.save();
     ctx.imageSmoothingEnabled = true;
@@ -56,7 +77,7 @@ export function dessinerRobo(ctx, w, h, humeur, t, options = {}) {
         ctx.filter = `hue-rotate(${(t * 80) % 360}deg)`;
     }
 
-    dessinerCorpsRobo(ctx, cx, E, offsetY, h, humeur, t, anim);
+    dessinerCorpsRobo(ctx, bounds, E, humeur, t, anim, niveauDetail);
     dessinerVisageRobo(
         ctx,
         cx,
@@ -65,13 +86,14 @@ export function dessinerRobo(ctx, w, h, humeur, t, options = {}) {
         h,
         humeur,
         t,
-        anim.inclinaisonTete,
+        niveauDetail === 'mini' ? 0 : anim.inclinaisonTete,
         _clignementInactif,
-        ecranBounds
+        ecranBounds,
+        { reflet: options.refletEcran !== false && niveauDetail !== 'mini' }
     );
-    dessinerAntenneRobo(ctx, cx, E, offsetY, h, anim);
+    dessinerAntenneRobo(ctx, bounds, E, anim);
 
-    if (options.couronne) {
+    if (options.couronne && niveauDetail === 'complet') {
         dessinerCouronneRobo(ctx, cx, E, offsetY, h, t);
     }
 
