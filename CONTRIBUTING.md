@@ -96,10 +96,25 @@ Le pre-push local est **rapide** (~1–2 min) : build, budget bundle, smoke E2E 
 
 ### Git sous Windows / Cursor
 
-- **Commit refusé** : le message doit respecter Conventional Commits (`feat:`, `fix:`, `feat(release): vX.Y.Z …`). L’UI Source Control de Cursor échoue silencieusement si le format est incorrect.
-- **Push lent** : pre-push rapide ~1–2 min. Build/smoke en CI ; local : `$env:PRE_PUSH_BUILD='1'; git push`. E2E complets : `$env:PRE_PUSH_FULL='1'; git push`.
-- **Release complète** : `npm run release:publish` (bump, commit, tag, push). Push sans re-vérifier : `npm run release:push`.
-- **Contournement d'urgence** : `$env:SKIP_PREPUSH='1'; git push origin main --tags` (PowerShell) — la CI GitHub validera quand même.
+| Problème                       | Cause                                                  | Solution                                                                                                                              |
+| ------------------------------ | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **Commit refusé / silencieux** | Message hors Conventional Commits (`feat:`, `fix:`, …) | `npm run commit -- "feat(scope): sujet"` ou `git commit -m "feat(scope): sujet" -m "Corps"` — **pas de HEREDOC bash** sous PowerShell |
+| **Push refusé (format)**       | `format:check` parcourt **tout** le dépôt              | `npm run format` puis commit des fichiers reformatés                                                                                  |
+| **Push refusé (typecheck)**    | Erreur JSDoc / `tsc` sur un fichier du repo            | `npm run typecheck` et corriger les unions `@param`                                                                                   |
+| **Push lent**                  | Hook pre-push ~1–2 min                                 | Normal ; build/smoke en CI                                                                                                            |
+| **Diagnostic rapide**          | —                                                      | `npm run doctor:git`                                                                                                                  |
+| **Rejouer le hook sans push**  | —                                                      | `npm run verify:pre-push`                                                                                                             |
+| **Release complète**           | —                                                      | `npm run release:publish`                                                                                                             |
+| **Contournement d'urgence**    | —                                                      | `$env:SKIP_PREPUSH='1'; git push` (PowerShell) — la CI valide quand même                                                              |
+
+Exemples PowerShell :
+
+```powershell
+git add -A
+npm run commit -- "refactor(vivant): extraire comportements" "Decoupe sans changement de comportement."
+npm run verify:pre-push
+git push
+```
 
 ### Analyse et maintenance
 

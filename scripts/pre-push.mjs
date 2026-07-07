@@ -32,6 +32,29 @@ const etapesE2eCompletes = [
     'npm run test:e2e',
 ];
 
+/** @type {Record<string, string[]>} */
+const remediations = {
+    'npm run format:check': [
+        'Le pre-push vérifie tout le dépôt (pas seulement vos fichiers).',
+        '→ npm run format',
+        '→ git add -A && npm run commit -- "chore(format): prettier" si des fichiers ont changé',
+    ],
+    'npm run typecheck': [
+        '→ npm run typecheck',
+        '→ Corriger les unions JSDoc (@param) signalées par tsc',
+    ],
+    'npm run lint': ['→ npm run lint', '→ Corriger les erreurs ESLint listées ci-dessus'],
+    'npm run verify:data': [
+        '→ npm run sync:data',
+        '→ npm run verify:data',
+        '→ Inclure les JSON générés dans le commit si modifiés',
+    ],
+    'npm test': [
+        '→ npm test',
+        '→ Si timeout Vitest : relancer (charge machine) ou npx vitest run <fichier>',
+    ],
+};
+
 let etapes = [...etapesRapides];
 if (process.env.PRE_PUSH_BUILD === '1') etapes = [...etapes, ...etapesBuild];
 if (process.env.PRE_PUSH_FULL === '1')
@@ -49,5 +72,19 @@ if (process.env.PRE_PUSH_FULL === '1') {
 
 for (const cmd of etapes) {
     console.log(`\n▶ ${cmd}`);
-    execSync(cmd, { stdio: 'inherit' });
+    try {
+        execSync(cmd, { stdio: 'inherit' });
+    } catch {
+        console.error(`\n✗ Étape échouée : ${cmd}`);
+        const conseils = remediations[cmd];
+        if (conseils) {
+            console.error('\nQue faire :');
+            for (const ligne of conseils) console.error(ligne);
+        }
+        console.error(
+            '\nRejouer sans push : npm run verify:pre-push',
+            "\nUrgence : $env:SKIP_PREPUSH='1'; git push"
+        );
+        process.exit(1);
+    }
 }
