@@ -3,3 +3,5 @@ coverage/
 node_modules/
 rapport-poids.json
 assets/cutscenes/*.meta.json
+_audit-glyphes-output/
+scripts/_*-temp.mjs
