@@ -11,6 +11,6 @@ export function mettreAJourBoutonsMute() {
     if (btnOpts) {
         btnOpts.textContent = AudioMoteur.muet ? '🔇 SON OFF' : '🔊 SON ON';
         btnOpts.setAttribute('aria-pressed', AudioMoteur.muet ? 'true' : 'false');
-        btnOpts.classList.toggle('actif', AudioMoteur.muet);
+        btnOpts.classList.toggle('opt-toggle--on', AudioMoteur.muet);
     }
 }

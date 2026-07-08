@@ -182,19 +182,59 @@
     accent-color: var(--cyan);
 }
 
-.option-boutons {
-    display: flex;
+.option-boutons,
+.options-boutons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-3);
-    flex-wrap: wrap;
-    justify-content: center;
+    width: 100%;
 }
 
-.option-boutons .bouton.actif,
-.option-boutons .bouton[aria-pressed='true'] {
-    border-color: var(--jaune);
-    color: var(--jaune);
-    text-shadow: 0 0 8px var(--jaune);
-    box-shadow:
-        0 0 12px rgba(255, 230, 0, 0.35),
-        inset 0 0 8px rgba(255, 230, 0, 0.08);
+.options-boutons > .bouton:only-child {
+    grid-column: 1 / -1;
+}
+
+.options-boutons .bouton,
+.option-boutons .bouton {
+    width: 100%;
+    min-width: 0;
+}
+
+#ecran-options .opt-toggle {
+    border-color: #4a5578;
+    color: rgba(184, 184, 224, 0.6);
+    text-shadow: none;
+    box-shadow: none;
+}
+
+#ecran-options .opt-toggle:hover {
+    background: rgba(74, 85, 120, 0.22);
+    color: rgba(184, 184, 224, 0.85);
+    box-shadow: none;
+}
+
+#ecran-options .opt-toggle--on,
+#ecran-options .opt-toggle[aria-pressed='true'] {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    text-shadow: 0 0 8px rgba(0, 245, 255, 0.45);
+    box-shadow: 0 0 12px rgba(0, 245, 255, 0.25);
+}
+
+#ecran-options .opt-toggle--on:hover,
+#ecran-options .opt-toggle[aria-pressed='true']:hover {
+    background: rgba(0, 245, 255, 0.12);
+    color: var(--cyan);
+}
+
+#ecran-options .opt-action {
+    border-color: #9a9ac8;
+    color: #b8b8e0;
+    text-shadow: none;
+    box-shadow: none;
+}
+
+#ecran-options .opt-action:hover {
+    background: #b8b8e0;
+    color: var(--fond);
 }

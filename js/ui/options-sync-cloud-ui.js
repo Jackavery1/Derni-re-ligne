@@ -117,7 +117,7 @@ export function mettreAJourUiSyncCloud() {
         document.getElementById('input-leaderboard-pseudo')
     );
     btn?.setAttribute('aria-pressed', actif ? 'true' : 'false');
-    btn?.classList.toggle('actif', actif);
+    btn?.classList.toggle('opt-toggle--on', actif);
     panneau?.classList.toggle('element-masque', !actif);
     panneauLeaderboard?.classList.toggle('element-masque', !actif || !syncCloudConfigure());
     if (inputSyncId && actif) {

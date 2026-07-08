@@ -84,11 +84,16 @@
                 />
             </div>
             <div class="option-boutons">
-                <button class="bouton" type="button" id="btn-toggle-mute" aria-pressed="false">
+                <button
+                    class="bouton discret opt-toggle"
+                    type="button"
+                    id="btn-toggle-mute"
+                    aria-pressed="false"
+                >
                     🔊 SON ON
                 </button>
                 <button
-                    class="bouton discret"
+                    class="bouton discret opt-toggle"
                     type="button"
                     id="btn-toggle-contraste"
                     aria-pressed="false"
@@ -96,7 +101,7 @@
                     ◐ CONTRASTE
                 </button>
                 <button
-                    class="bouton discret"
+                    class="bouton discret opt-toggle"
                     type="button"
                     id="btn-toggle-daltonien"
                     aria-pressed="false"
@@ -104,7 +109,7 @@
                     ◎ DALTONIEN
                 </button>
                 <button
-                    class="bouton discret"
+                    class="bouton discret opt-toggle"
                     type="button"
                     id="btn-toggle-reduire-effets"
                     aria-pressed="false"
@@ -112,7 +117,7 @@
                     ◇ RÉDUIRE EFFETS
                 </button>
                 <button
-                    class="bouton discret"
+                    class="bouton discret opt-toggle"
                     type="button"
                     id="btn-toggle-constellation-clic"
                     aria-pressed="false"
@@ -120,7 +125,7 @@
                     ◎ CONSTELLATION AU CLIC
                 </button>
                 <button
-                    class="bouton discret"
+                    class="bouton discret opt-toggle"
                     type="button"
                     id="btn-toggle-controles-tactiles"
                     aria-pressed="false"
@@ -128,7 +133,7 @@
                     👆 TOUCHES TACTILES
                 </button>
                 <button
-                    class="bouton discret"
+                    class="bouton discret opt-toggle"
                     type="button"
                     id="btn-toggle-haptique"
                     aria-pressed="true"
@@ -136,7 +141,7 @@
                     📳 RETOUR HAPTIQUE
                 </button>
                 <button
-                    class="bouton discret"
+                    class="bouton discret opt-toggle"
                     type="button"
                     id="btn-toggle-enchainement-campagne"
                     aria-pressed="true"
@@ -149,14 +154,14 @@
             </button>
             <div class="options-boutons options-boutons-sauvegarde">
                 <button
-                    class="bouton discret"
+                    class="bouton discret opt-toggle"
                     type="button"
                     id="btn-toggle-sync-cloud"
                     aria-pressed="false"
                 >
                     ☁ SYNC CLOUD AUTO
                 </button>
-                <button class="bouton discret" type="button" id="btn-sync-maintenant">
+                <button class="bouton discret opt-action" type="button" id="btn-sync-maintenant">
                     ↻ SYNC MAINTENANT
                 </button>
             </div>
@@ -237,7 +242,7 @@
                             >TOP SANS FIN</span
                         >
                         <button
-                            class="bouton discret"
+                            class="bouton discret opt-action"
                             type="button"
                             id="btn-rafraichir-leaderboard"
                         >
@@ -253,10 +258,10 @@
                 aria-live="polite"
             ></p>
             <div class="options-boutons options-boutons-sauvegarde">
-                <button class="bouton discret" type="button" id="btn-export-progression">
+                <button class="bouton discret opt-action" type="button" id="btn-export-progression">
                     ↓ EXPORTER RECORDS
                 </button>
-                <button class="bouton discret" type="button" id="btn-import-progression">
+                <button class="bouton discret opt-action" type="button" id="btn-import-progression">
                     ↑ IMPORTER RECORDS
                 </button>
                 <input
@@ -285,9 +290,11 @@
                 Reassignez chaque action — cliquez sur une touche puis appuyez sur la nouvelle.
             </p>
             <div id="liste-controles-rebind" class="liste-controles-rebind"></div>
-            <button class="bouton discret" type="button" id="btn-controles-defaut">
-                ↺ TOUCHES PAR DÉFAUT
-            </button>
+            <div class="options-boutons">
+                <button class="bouton discret opt-action" type="button" id="btn-controles-defaut">
+                    ↺ TOUCHES PAR DÉFAUT
+                </button>
+            </div>
             <p class="options-controles-gamepad">
                 Manette : croix directionnelle ou stick gauche, A = chute, B = réserve, X/Y =
                 rotation, Start = pause.
@@ -314,7 +321,11 @@
             </p>
         </div>
 
-        <button class="bouton discret" type="button" id="btn-options-retour">← RETOUR</button>
+        <div class="options-boutons">
+            <button class="bouton discret opt-action" type="button" id="btn-options-retour">
+                ← RETOUR
+            </button>
+        </div>
     </div>
 </div>
 
