@@ -111,7 +111,7 @@ function _dessinerPortrait(canvas, ctx, personnageId, parle, ts, ligneCourante) 
 
     if (idRendu === 'robo') {
         const humeurRobo = expressionsActives
-            ? obtenirHumeurRoboCutsceneDepuisLigne(personnageId, ligneCourante?.humeur, parle)
+            ? obtenirHumeurRoboCutsceneDepuisLigne(personnageId, ligneCourante, parle)
             : parle
               ? 'content'
               : 'neutre';
@@ -191,6 +191,10 @@ export function mettreAJourPortraitsCutscene(
     const visuel = _etatVisuelPortraits(personnageActuel, personnages, indexLigne, sequenceLignes);
     canvasGauche.className = visuel.clsG;
     canvasDroite.className = visuel.clsD;
+    if (visuel.gauche) canvasGauche.dataset.personnage = visuel.gauche;
+    else delete canvasGauche.dataset.personnage;
+    if (visuel.droite) canvasDroite.dataset.personnage = visuel.droite;
+    else delete canvasDroite.dataset.personnage;
 
     if (visuel.gauche) {
         _dessinerPortrait(

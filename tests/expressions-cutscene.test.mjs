@@ -5,6 +5,7 @@ import {
     resoudreHumeurPortrait,
     notifierChangementLigneCutscene,
     obtenirHumeurEffectivePortrait,
+    obtenirHumeurRoboCutsceneDepuisLigne,
     obtenirParamsExpressionPortrait,
     reinitExpressionsCutscene,
     prechargerPresetsExpressions,
@@ -75,6 +76,21 @@ describe('expressions cutscene', () => {
             1000
         );
         expect(obtenirHumeurEffectivePortrait('vera', null, false)).toBe('douce');
+    });
+
+    it('ROBO écoute conserve la dernière humeur parlée', () => {
+        notifierChangementLigneCutscene(
+            0,
+            { personnage: 'robo', texte: '...Je suis... là ?', humeur: 'excite' },
+            1000
+        );
+        expect(obtenirHumeurRoboCutsceneDepuisLigne('robo', null, false)).toBe('excite');
+        notifierChangementLigneCutscene(
+            1,
+            { personnage: 'vera', texte: 'VERA', humeur: 'douce' },
+            2000
+        );
+        expect(obtenirHumeurRoboCutsceneDepuisLigne('robo', null, false)).toBe('excite');
     });
 
     it('expose la dernière humeur parlée pour l’API test', async () => {

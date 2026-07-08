@@ -2,6 +2,7 @@ import { logger } from '../logger.js';
 import { idPortraitRendu } from '../histoire/histoire-cutscene-config.js';
 import { obtenirEffetsAccessibiliteReduits } from '../ui/accessibilite.js';
 import { store } from '../etat/store-jeu.js';
+import { reinitialiserTransitionHumeurRobo } from './rendu-robo-transition.js';
 
 /** @typedef {Record<string, number | boolean | number[]>} ParamsExpression */
 
@@ -300,10 +301,10 @@ export function obtenirParamsExpressionPortrait(personnageId, humeur, timestamp)
     return { ...interpole, effetsReduits: false, decalagesGlitch: _decalagesGlitchVera };
 }
 
-/** @param {string} personnageId @param {string} humeur */
-export function obtenirHumeurRoboCutsceneDepuisLigne(personnageId, humeur, parle) {
+/** @param {string} personnageId @param {{ humeur?: string, texte?: string } | null | undefined} ligne @param {boolean} parle */
+export function obtenirHumeurRoboCutsceneDepuisLigne(personnageId, ligne, parle) {
     if (idPortraitRendu(personnageId) !== 'robo') return 'neutre';
-    return resoudreHumeurPortrait(personnageId, humeur, { parle });
+    return obtenirHumeurEffectivePortrait(personnageId, ligne ?? null, parle);
 }
 
 /** @param {string} personnageId */
@@ -320,6 +321,7 @@ export function reinitExpressionsCutscene() {
     _paramsCible = null;
     _personnageInterpole = null;
     _decalagesGlitchVera = [0, 0, 0];
+    reinitialiserTransitionHumeurRobo();
 }
 
 export function expressionsCutsceneActives() {
