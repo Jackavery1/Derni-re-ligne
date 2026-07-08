@@ -15,7 +15,6 @@ import {
 } from './rendu-robo-transition.js';
 
 export { PALETTE_ROBO } from './rendu-robo-donnees.js';
-export { dessinerRoboMiniature } from './rendu-robo-mini.js';
 export { reinitialiserTransitionHumeurRobo } from './rendu-robo-transition.js';
 
 /** @type {'neutre'|'content'|'excite'|'triste'|'alerte'|'tetris'} */
