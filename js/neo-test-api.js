@@ -46,6 +46,8 @@ export function estNeoTestAutorise() {
  *   areActiveTest?: () => boolean,
  *   coyoteActifTest?: () => boolean,
  *   graceSpawnActiveTest?: () => boolean,
+ *   activerPieceAuSolTest?: () => void,
+ *   quitterSolPieceTest?: () => void,
  * }} api
  */
 export function exposerNeoTestApi(api) {

@@ -5,7 +5,6 @@ import {
     attendreNotificationsInitiales,
     fermerRecapPostMonde,
     appliquerEncocheSimulee,
-    appliquerSafeAreaIphone,
     passerCutsceneEntiere,
     attendreJournalHistoire,
     lancerMondeDepuisCarte,
