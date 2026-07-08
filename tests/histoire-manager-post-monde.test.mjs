@@ -63,6 +63,98 @@ describe('histoire-manager-post-monde', () => {
         );
     }, 15000);
 
+    it('joue post-monde prologue avant transition chapitre I', async () => {
+        const { chargerHistoireTextes } = await import('../js/io/charger-histoire-textes.js');
+        await chargerHistoireTextes();
+        const narratifReel = await vi.importActual('../js/histoire/histoire-narratif.js');
+        const {
+            obtenirTransitionApresVictoire,
+            obtenirCutscenePostMonde,
+            afficherTransitionChapitre,
+        } = await import('../js/histoire/histoire-narratif.js');
+        vi.mocked(obtenirTransitionApresVictoire).mockImplementation(
+            narratifReel.obtenirTransitionApresVictoire
+        );
+        vi.mocked(obtenirCutscenePostMonde).mockImplementation(
+            narratifReel.obtenirCutscenePostMonde
+        );
+
+        const { declencherNarratifPostMonde } =
+            await import('../js/histoire/histoire-manager-post-monde.js');
+        const { afficherCutsceneHistoire } = await import('../js/histoire/histoire-manager-ui.js');
+
+        const monde = { id: 'monde_prologue', biomeId: 'classique', estBoss: false };
+        const etat = structuredClone(ETAT_HISTOIRE_VIDE);
+        etat.fragmentsVusIds = ['apres_prologue'];
+        store.histoire.etat = etat;
+
+        declencherNarratifPostMonde(monde, etat, true, [true, false, false]);
+        await vi.waitFor(() => {
+            expect(afficherTransitionChapitre).toHaveBeenCalledWith(
+                'vers_chapitre_1',
+                expect.any(Function)
+            );
+        });
+
+        const idxPostMonde = afficherCutsceneHistoire.mock.calls.findIndex(([entree]) => {
+            const lignes = Array.isArray(entree) ? entree : (entree?.lignes ?? []);
+            return lignes.some((l) =>
+                String(l.texte ?? l).includes('ressemble à de la satisfaction')
+            );
+        });
+        const idxTransition = afficherTransitionChapitre.mock.invocationCallOrder[0];
+        const idxPostMondeCall = afficherCutsceneHistoire.mock.invocationCallOrder[idxPostMonde];
+
+        expect(idxPostMonde).toBeGreaterThanOrEqual(0);
+        expect(idxPostMondeCall).toBeLessThan(idxTransition);
+    });
+
+    it('boss 1 ne joue pas de post-monde avant transition chapitre II', async () => {
+        const { chargerHistoireTextes } = await import('../js/io/charger-histoire-textes.js');
+        await chargerHistoireTextes();
+        const narratifReel = await vi.importActual('../js/histoire/histoire-narratif.js');
+        const {
+            obtenirTransitionApresVictoire,
+            obtenirCutscenePostMonde,
+            afficherTransitionChapitre,
+        } = await import('../js/histoire/histoire-narratif.js');
+        vi.mocked(obtenirTransitionApresVictoire).mockImplementation(
+            narratifReel.obtenirTransitionApresVictoire
+        );
+        vi.mocked(obtenirCutscenePostMonde).mockImplementation(
+            narratifReel.obtenirCutscenePostMonde
+        );
+
+        const { declencherNarratifPostMonde } =
+            await import('../js/histoire/histoire-manager-post-monde.js');
+        const { afficherCutsceneHistoire } = await import('../js/histoire/histoire-manager-ui.js');
+
+        const monde = {
+            id: 'monde_boss_1',
+            biomeId: 'lave',
+            estBoss: true,
+            bossId: 'brasier',
+        };
+        const etat = structuredClone(ETAT_HISTOIRE_VIDE);
+        store.histoire.etat = etat;
+
+        declencherNarratifPostMonde(monde, etat, true, [true, true, true]);
+        await vi.waitFor(() => {
+            expect(afficherTransitionChapitre).toHaveBeenCalledWith(
+                'vers_chapitre_2',
+                expect.any(Function)
+            );
+        });
+
+        const postMondePrologue = afficherCutsceneHistoire.mock.calls.some(([entree]) => {
+            const lignes = Array.isArray(entree) ? entree : (entree?.lignes ?? []);
+            return lignes.some((l) =>
+                String(l.texte ?? l).includes('ressemble à de la satisfaction')
+            );
+        });
+        expect(postMondePrologue).toBe(false);
+    });
+
     it('enregistre le fragment VERA apres premiere completion prologue', async () => {
         const { chargerHistoireTextes } = await import('../js/io/charger-histoire-textes.js');
         await chargerHistoireTextes();
@@ -115,6 +207,7 @@ describe('histoire-manager-post-monde', () => {
         const textes = afficherCutsceneHistoire.mock.calls.at(-1)?.[0];
         const lignes = Array.isArray(textes) ? textes : (textes?.lignes ?? []);
         expect(lignes.some((l) => String(l.texte ?? l).includes('GARDIEN'))).toBe(true);
+        expect(textes?.scene ?? lignes[0]?.scene).toBe('interlude_gardiens');
         expect(store.histoire.etat.interludesVusIds).toContain('interlude_gardiens');
     });
 

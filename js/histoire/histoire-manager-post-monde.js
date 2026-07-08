@@ -19,6 +19,7 @@ import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { afficherRecapAvantNarratif } from '../ui/ui-panneau-objectifs.js';
 import { creerFile } from './file-narrative.js';
 import { extraireLignesCutscene } from './histoire-cutscene-moteur.js';
+import { SCENE_DEFAUT_INTERLUDE } from './histoire-narratif-scenes.js';
 import { JOURNAUX_VERA } from '../histoire-donnees.js';
 
 const INTERLUDES_PAR_MONDE = {
@@ -129,19 +130,42 @@ function _conditionInterlude(mondeId, premiereCompletion) {
     }
 }
 
+function _normaliserEntreeInterlude(cleInterlude) {
+    const interlude = obtenirHistoireTextesSync().INTERLUDES?.[cleInterlude];
+    const scene = SCENE_DEFAUT_INTERLUDE[cleInterlude];
+    if (!interlude || !scene) return null;
+    if (Array.isArray(interlude)) {
+        return { scene, lignes: interlude };
+    }
+    if (interlude.scene) return interlude;
+    return { scene, lignes: interlude.lignes ?? [] };
+}
+
+/** Post-monde joué avant la transition sur le prologue uniquement (motif « satisfaction »). */
+function _conditionCutscenePostMonde(mondeId, premiereCompletion) {
+    if (!obtenirCutscenePostMonde(mondeId, premiereCompletion)) return false;
+    if (mondeId === 'monde_prologue') return true;
+    return !obtenirTransitionApresVictoire(mondeId);
+}
+
 function _executerInterlude(mondeId, suivant) {
     const cleInterlude = INTERLUDES_PAR_MONDE[mondeId];
-    const interlude = obtenirHistoireTextesSync().INTERLUDES?.[cleInterlude];
+    const entree = _normaliserEntreeInterlude(cleInterlude);
     const etatHist = obtenirEtatHistoire();
     if (!etatHist.interludesVusIds) etatHist.interludesVusIds = [];
     etatHist.interludesVusIds.push(cleInterlude);
     sauvegarderEtatHistoire(etatHist);
     store.histoire.etat = etatHist;
 
+    if (!entree) {
+        suivant();
+        return;
+    }
+
     try {
         void import('./histoire-manager-ui.js')
             .then(({ afficherCutsceneHistoire }) => {
-                afficherCutsceneHistoire(interlude, null, suivant);
+                afficherCutsceneHistoire(entree, null, suivant);
             })
             .catch((err) => {
                 logger.warn('[histoire] interlude indisponible :', err);
@@ -210,21 +234,8 @@ export function declencherNarratifPostMonde(monde, etatHist, premiereCompletion,
     });
 
     file.ajouter({
-        id: 'transition_chapitre',
-        condition: () => Boolean(obtenirTransitionApresVictoire(monde.id)),
-        executer: (suivant) => {
-            const cleTrans = obtenirTransitionApresVictoire(monde.id);
-            definirExpressionVera('chapitre_complete');
-            afficherTransitionChapitre(cleTrans, suivant);
-        },
-    });
-
-    file.ajouter({
         id: 'cutscene_post_monde',
-        condition: () => {
-            if (obtenirTransitionApresVictoire(monde.id)) return false;
-            return Boolean(obtenirCutscenePostMonde(monde.id, premiereCompletion));
-        },
+        condition: () => _conditionCutscenePostMonde(monde.id, premiereCompletion),
         executer: (suivant) => {
             const postMonde = obtenirCutscenePostMonde(monde.id, premiereCompletion);
             void import('./histoire-manager-ui.js')
@@ -235,6 +246,16 @@ export function declencherNarratifPostMonde(monde, etatHist, premiereCompletion,
                     logger.warn('[histoire] cutscene post-monde indisponible :', err);
                     suivant();
                 });
+        },
+    });
+
+    file.ajouter({
+        id: 'transition_chapitre',
+        condition: () => Boolean(obtenirTransitionApresVictoire(monde.id)),
+        executer: (suivant) => {
+            const cleTrans = obtenirTransitionApresVictoire(monde.id);
+            definirExpressionVera('chapitre_complete');
+            afficherTransitionChapitre(cleTrans, suivant);
         },
     });
 
