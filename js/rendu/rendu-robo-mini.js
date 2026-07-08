@@ -26,6 +26,7 @@ export function dessinerRoboMiniature(ctx, x, y, timestamp) {
     ctx.translate(x - w / 2, piedY - h + 6);
     dessinerRobo(ctx, w, h, 'neutre', 0, {
         fondTransparent: true,
+        skipClear: true,
         niveauDetail: 'mini',
         refletEcran: false,
     });

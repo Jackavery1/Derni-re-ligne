@@ -5,6 +5,7 @@ import {
     notifierTetrisRobo,
     PALETTE_ROBO,
 } from '../js/rendu/rendu-robo.js';
+import { dessinerRoboMiniature } from '../js/rendu/rendu-robo-mini.js';
 import { convertirHumeurVersCanvas } from '../js/ui/mascotte-robo.js';
 import {
     synchroniserTransitionHumeurRobo,
@@ -174,5 +175,11 @@ describe('rendu-robo', () => {
         const b0 = calculerAnimRobo('neutre', 0, 1);
         const b1 = calculerAnimRobo('neutre', 1, 1);
         expect(b0.antenneAngle).not.toBe(b1.antenneAngle);
+    });
+
+    it('miniature carte ne clear pas le fond etoile sous-jacent', () => {
+        const ctx = creerCtxMock();
+        dessinerRoboMiniature(ctx, 40, 50, 0);
+        expect(ctx.clearRect).not.toHaveBeenCalled();
     });
 });
