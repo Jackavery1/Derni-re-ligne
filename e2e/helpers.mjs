@@ -66,9 +66,14 @@ export {
 } from './helpers-histoire.mjs';
 
 export {
+    PROFILS_IPHONE_SAFE_AREA,
+    appliquerSafeAreaIphone,
+    appliquerEncocheSimulee,
+} from './helpers-iphone-safe-area.mjs';
+
+export {
     MARQUEURS_NARRATIFS_CAMPAGNE,
     SCENES_VICTOIRE_BOSS,
-    appliquerEncocheSimulee,
     lireTexteCutsceneActive,
     cliquerCutsceneSuivant,
     attendreCutsceneVictoireBoss,

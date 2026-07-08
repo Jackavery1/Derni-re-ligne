@@ -4,6 +4,7 @@ export {
     MARQUEURS_NARRATIFS_POST_MONDE,
     MARQUEURS_NARRATIFS_CAMPAGNE,
     SCENES_VICTOIRE_BOSS,
+    HUMEURS_POST_MONDE_PIVOT,
 } from './helpers-narratif-donnees.mjs';
 export {
     attendreTypewriterInactif,
@@ -26,16 +27,11 @@ import {
 } from './helpers-narratif-core.mjs';
 import { SCENES_VICTOIRE_BOSS } from './helpers-narratif-donnees.mjs';
 
-/** Simule l'encoche iPhone (audit C11 — validation physique non automatisable). */
-/** @param {import('@playwright/test').Page} page */
-export async function appliquerEncocheSimulee(page) {
-    await page.evaluate(() => {
-        document.documentElement.style.setProperty('--safe-top', '47px');
-        document.documentElement.style.setProperty('--safe-bottom', '34px');
-        document.documentElement.style.setProperty('--safe-left', '0px');
-        document.documentElement.style.setProperty('--safe-right', '0px');
-    });
-}
+export {
+    PROFILS_IPHONE_SAFE_AREA,
+    appliquerSafeAreaIphone,
+    appliquerEncocheSimulee,
+} from './helpers-iphone-safe-area.mjs';
 
 /** @param {import('@playwright/test').Page} page */
 export async function cliquerCutsceneSuivant(page) {

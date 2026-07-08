@@ -95,7 +95,7 @@ body.histoire-active #indicateur-vide-actif {
     flex-shrink: 0;
 }
 .histoire-cs-nom {
-    font-size: 0.3rem;
+    font-size: var(--typo-hud-micro);
     letter-spacing: 3px;
     color: var(--rose);
     text-shadow: 0 0 8px var(--rose);

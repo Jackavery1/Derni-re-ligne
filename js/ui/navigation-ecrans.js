@@ -11,6 +11,9 @@ import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { modeArchiActif } from '../etat/registre-modes.js';
 import { demarrerFondMeta, arreterFondMeta } from '../rendu/fond-ecrans-meta.js';
 import { adapterNotifsJeu } from '../rendu/layout-jeu.js';
+import { chargerIconesPixel } from '../rendu/icones-pixel.js';
+import { prefetchRessourcesPartie } from '../io/prefetch-ressources-partie.js';
+import { chargerAchievementsDonnees } from '../achievements-donnees.js';
 
 const FONDS_META = {
     [ECRANS.CODEX]: { canvasId: 'fond-meta-codex', teinte: '#ff2d78' },
@@ -31,6 +34,20 @@ async function _demarrerConstellation() {
 async function _arreterConstellation() {
     const { arreterConstellation } = await import('../logique/constellation.js');
     arreterConstellation();
+}
+
+const ECRANS_AVEC_ICONES_PIXEL = new Set([
+    ECRANS.SELECTION,
+    ECRANS.ACHIEVEMENTS,
+    ECRANS.PROFIL,
+    ECRANS.CODEX,
+    ECRANS.ARCHI_SELECTION,
+    ECRANS.HISTOIRE_MAP,
+]);
+
+async function _assurerIconesPixelSiBesoin(idEcran) {
+    if (!ECRANS_AVEC_ICONES_PIXEL.has(idEcran)) return;
+    await chargerIconesPixel();
 }
 
 export function mettreAJourVisibilitePartie(idEcran) {
@@ -91,6 +108,8 @@ async function _afficherEcranAvecFragments(idEcran) {
 
     mettreAJourVisibilitePartie(idEcran);
 
+    await _assurerIconesPixelSiBesoin(idEcran);
+
     if (idEcran === ECRANS.TITRE) {
         AudioMoteur.arreterMusique(500);
         mettreAJourAffichageRecord();
@@ -101,12 +120,14 @@ async function _afficherEcranAvecFragments(idEcran) {
     }
 
     if (idEcran === ECRANS.SELECTION) {
+        void prefetchRessourcesPartie().catch(() => undefined);
         void _demarrerConstellation();
     } else {
         void _arreterConstellation();
     }
 
     if (idEcran === ECRANS.ACHIEVEMENTS) {
+        await chargerAchievementsDonnees();
         const { genererGalerieAchievements } = await import('../achievements/achievements-ui.js');
         genererGalerieAchievements();
         mettreAJourVisibiliteModesDebloques();

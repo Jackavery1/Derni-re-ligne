@@ -178,7 +178,7 @@
 }
 
 .melodie-titre-label {
-    font-size: 0.3rem;
+    font-size: var(--typo-hud-micro);
     color: var(--texte-dim);
     letter-spacing: 3px;
     text-align: center;

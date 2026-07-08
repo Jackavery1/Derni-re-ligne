@@ -12,6 +12,8 @@ export default [
             'dist-test/**',
             'dist-test-bundle/**',
             'scripts/archive/**',
+            'scripts/_*-temp.mjs',
+            '_audit-glyphes-output/**',
         ],
     },
     {

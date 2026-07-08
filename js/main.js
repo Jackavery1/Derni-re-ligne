@@ -1,9 +1,8 @@
 import { chargerEcrans } from './ui/charger-ecrans.js';
 import { chargerBiomesJeu } from './config/biomes.js';
 import { chargerContenuJeu } from './config/contenu-jeu.js';
-import { chargerDifficulteMondes } from './io/difficulte-mondes-chargement.js';
-import { chargerAchievementsDonnees } from './achievements-donnees.js';
 import { chargerHistoireDonneesMetier } from './histoire-donnees.js';
+import { demarrerPrecacheMediasSwArrierePlan } from './io/precache-sw-medias.js';
 import { initialiserApplication } from './moteur.js';
 import { attendreBoutonsPretes } from './ui/ui-init.js';
 import { logger, afficherErreurUtilisateur } from './logger.js';
@@ -15,7 +14,8 @@ import {
     definirMessageChargement,
     masquerEcranChargement,
 } from './ui/ecran-chargement.js';
-import { prechargerPortraitsCutscene } from './rendu/portraits-precache.js';
+import { prefetchIconesPixel } from './rendu/icones-pixel.js';
+import { mettreAJourVisibiliteModesDebloques } from './ui/deblocage-ui.js';
 
 if (window.top !== window.self) {
     window.top.location.replace(window.self.location.href);
@@ -44,6 +44,7 @@ async function demarrer() {
     try {
         definirMessageChargement('Chargement des écrans…');
         definirProgressionChargement(0.25);
+        prefetchIconesPixel();
         await chargerEcrans();
     } catch (err) {
         logger.error('Échec chargement écrans :', err);
@@ -61,26 +62,20 @@ async function demarrer() {
         await Promise.all([
             chargerBiomesJeu(),
             chargerContenuJeu(),
-            chargerDifficulteMondes(),
-            chargerAchievementsDonnees(),
             chargerHistoireDonneesMetier(),
-        ]);
-
-        definirMessageChargement('Initialisation…');
-        definirProgressionChargement(0.72);
-        await Promise.all([
             document.fonts?.ready ?? Promise.resolve(),
-            prechargerPortraitsCutscene(),
         ]);
         definirProgressionChargement(0.9);
         initialiserApplication();
         await attendreBoutonsPretes();
+        mettreAJourVisibiliteModesDebloques();
         void prefetchNavigation;
         if (typeof document !== 'undefined') {
             document.body.dataset.neoTestReady = '1';
         }
         definirProgressionChargement(1);
         masquerEcranChargement();
+        demarrerPrecacheMediasSwArrierePlan();
     } catch (err) {
         logger.error('Échec initialisation moteur:', err);
         masquerEcranChargement();

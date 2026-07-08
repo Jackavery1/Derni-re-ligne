@@ -213,12 +213,12 @@
     text-shadow: 0 0 8px var(--detail-couleur, var(--cyan));
 }
 .histoire-detail-type {
-    font-size: 0.3rem;
+    font-size: var(--typo-hud-micro);
     letter-spacing: 2px;
     color: var(--detail-couleur, var(--texte-dim));
 }
 .histoire-detail-statut {
-    font-size: 0.3rem;
+    font-size: var(--typo-hud-micro);
     color: var(--texte-dim);
     letter-spacing: 2px;
 }

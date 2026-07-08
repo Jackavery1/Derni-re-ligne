@@ -4,6 +4,7 @@ import {
     MARQUEURS_NARRATIFS_POST_MONDE,
     MARQUEURS_NARRATIFS_CAMPAGNE,
     obtenirScenePostMonde,
+    HUMEURS_POST_MONDE_PIVOT,
     parcourirFluxPostVictoireAvecAssertions,
     viderOverlaysHistoireRapide,
     assertHumeurPortraitCutscene,
@@ -104,6 +105,12 @@ test('post-monde — prologue humeur ROBO content (audit D)', async ({ page }) =
     test.setTimeout(120000);
     await ouvrirCarteHistoire(page, etatPourPostMonde('monde_prologue'));
     await declencherPostMonde(page, 'monde_prologue');
+    await expect
+        .poll(
+            () => page.evaluate(() => window.__NEO_TEST__?.obtenirSceneCutsceneActive?.() ?? null),
+            { timeout: 10000 }
+        )
+        .toBe('labo');
     await avancerCutsceneJusquaPivot(page, /Sa phrase s'est coupée/i);
     await assertHumeurPortraitCutscene(page, 'robo', 'content');
     await viderOverlaysHistoireRapide(page, 16);
@@ -117,6 +124,23 @@ test('post-monde — paradoxe humeur VERA douce (audit D)', async ({ page }) => 
     await assertHumeurPortraitCutscene(page, 'vera', 'douce');
     await viderOverlaysHistoireRapide(page, 16);
 });
+
+const MONDES_HUMEUR_DEDIEE = new Set(['monde_prologue', 'monde_paradoxe']);
+
+for (const [mondeId, cfg] of Object.entries(HUMEURS_POST_MONDE_PIVOT)) {
+    if (MONDES_HUMEUR_DEDIEE.has(mondeId)) continue;
+
+    test(`post-monde — ${mondeId} humeur ${cfg.personnage} ${cfg.humeur} (audit D)`, async ({
+        page,
+    }) => {
+        test.setTimeout(120000);
+        await ouvrirCarteHistoire(page, etatPourPostMonde(mondeId));
+        await declencherPostMonde(page, mondeId);
+        await avancerCutsceneJusquaPivot(page, cfg.pivot);
+        await assertHumeurPortraitCutscene(page, cfg.personnage, cfg.humeur);
+        await viderOverlaysHistoireRapide(page, 16);
+    });
+}
 
 test('post-monde — couvre les 15 mondes narratifs', () => {
     expect(MONDES_POST_MONDE).toHaveLength(15);

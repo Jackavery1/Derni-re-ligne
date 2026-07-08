@@ -88,7 +88,9 @@ export function initialiserSystemesMoteur() {
         onMuteChange: mettreAJourBoutonsMute,
     });
 
-    if (!initialiserCanvas()) return false;
+    if (document.getElementById('canvas-plateau')) {
+        if (!initialiserCanvas()) return false;
+    }
 
     lierCouleursTetrominos();
 

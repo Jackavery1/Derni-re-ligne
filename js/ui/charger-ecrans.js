@@ -1,5 +1,9 @@
-import { ECRANS_CHARGEMENT_IMMEDIAT, FRAGMENTS_ARCHI, FRAGMENTS_COOP } from './ecrans-config.js';
-import { chargerIconesPixel } from '../rendu/icones-pixel.js';
+import {
+    ECRANS_CHARGEMENT_IMMEDIAT,
+    FRAGMENTS_ARCHI,
+    FRAGMENTS_COOP,
+    FRAGMENTS_PARTIE,
+} from './ecrans-config.js';
 import { logger } from '../logger.js';
 
 /** URL absolue d'un fragment HTML, robuste au base href et aux sous-chemins PWA. */
@@ -91,6 +95,11 @@ export async function assurerFragmentsArchi() {
     document.dispatchEvent(new CustomEvent('neo:fragments-injectes'));
 }
 
+export async function assurerFragmentsPartie() {
+    await assurerFragmentsEcran(FRAGMENTS_PARTIE);
+    document.dispatchEvent(new CustomEvent('neo:fragments-injectes'));
+}
+
 export async function chargerEcrans() {
     const conteneur = document.getElementById('conteneur-ecrans');
     if (!conteneur) throw new Error('conteneur-ecrans introuvable');
@@ -99,5 +108,4 @@ export async function chargerEcrans() {
     fragmentsCharges.clear();
 
     await Promise.all(ECRANS_CHARGEMENT_IMMEDIAT.map((nom) => chargerUnFragment(nom)));
-    await chargerIconesPixel();
 }

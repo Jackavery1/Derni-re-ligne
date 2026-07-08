@@ -1,14 +1,19 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v71';
-const VERSION_MEDIAS = 'dl-medias-v6';
+const VERSION_SHELL = 'dl-shell-v72';
+const VERSION_MEDIAS = 'dl-medias-v7';
 
-const SCENES_CUTSCENE_PRECACHE = [
+/** Precache install : splash, CSS cutscenes, scènes prologue (parcours early). */
+const SCENES_CUTSCENE_INSTALL = [
     './assets/splash-chargement.png',
     './assets/cutscenes/cutscenes.css',
     './assets/cutscenes/scene_observatoire.png',
     './assets/cutscenes/scene_labo.png',
     './assets/cutscenes/scene_trame.png',
     './assets/cutscenes/scene_fragmentation.png',
+];
+
+/** Precache différé post-boot (idle) — scènes eager hors prologue. */
+const SCENES_CUTSCENE_ARRIERE_PLAN = [
     './assets/cutscenes/scene_seuil_brasier.png',
     './assets/cutscenes/scene_seuil_sentinelle.png',
     './assets/cutscenes/scene_seuil_archiviste.png',
@@ -167,13 +172,28 @@ function reponseErreurReseau() {
     });
 }
 
+/** @param {string[]} urls */
+async function precacherUrlsMedias(urls) {
+    const cache = await caches.open(VERSION_MEDIAS);
+    await Promise.all(
+        urls.map(async (url) => {
+            try {
+                const reponse = await fetch(url);
+                if (reponse.ok) await cache.put(url, reponse);
+            } catch {
+                /* ignore — fallback runtime */
+            }
+        })
+    );
+}
+
 self.addEventListener('install', (evenement) => {
     evenement.waitUntil(
         Promise.all([
             caches
                 .open(VERSION_SHELL)
                 .then((cache) => cache.addAll([...FICHIERS_A_CACHER, ...PORTRAITS_SHELL_PRECACHE])),
-            caches.open(VERSION_MEDIAS).then((cache) => cache.addAll(SCENES_CUTSCENE_PRECACHE)),
+            caches.open(VERSION_MEDIAS).then((cache) => cache.addAll(SCENES_CUTSCENE_INSTALL)),
         ]).then(() => self.skipWaiting())
     );
 });
@@ -194,6 +214,9 @@ self.addEventListener('activate', (evenement) => {
 
 self.addEventListener('message', (evenement) => {
     if (evenement.data?.type === 'SKIP_WAITING') self.skipWaiting();
+    if (evenement.data?.type === 'PRECACHE_SCENES_ARRIERE_PLAN') {
+        evenement.waitUntil(precacherUrlsMedias(SCENES_CUTSCENE_ARRIERE_PLAN));
+    }
 });
 
 self.addEventListener('fetch', (evenement) => {

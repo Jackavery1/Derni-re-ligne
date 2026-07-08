@@ -84,6 +84,21 @@ test('audit B — haptique sur rafraichir leaderboard', async ({ page }) => {
     expect(ok).toBe(true);
 });
 
+test('audit B — coyote time preserve lock delay apres quitte sol', async ({ page }) => {
+    await demarrerPartie(page);
+    const coyoteOk = await page.evaluate(() => {
+        const api = window.__NEO_TEST__;
+        if (!api?.forcerAreTest || !api.tickGameFeel) return false;
+        api.forcerAreTest();
+        while (api.areActiveTest?.()) api.tickGameFeel(200);
+        if (!api.pieceControlesActifsTest?.()) return false;
+        api.activerPieceAuSolTest?.();
+        api.quitterSolPieceTest?.();
+        return api.coyoteActifTest?.() === true;
+    });
+    expect(coyoteOk).toBe(true);
+});
+
 test('audit B — animation menu arretee en partie', async ({ page }) => {
     await preparerPageSansSw(page);
     await page.goto('/');

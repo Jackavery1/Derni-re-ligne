@@ -21,6 +21,7 @@ import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
 import {
     MARQUEURS_NARRATIFS_POST_MONDE,
     MARQUEURS_NARRATIFS_CAMPAGNE,
+    HUMEURS_POST_MONDE_PIVOT,
 } from '../e2e/helpers-narratif.mjs';
 import { chargerDonneesCodex, codexDebloque, verifierCodex } from '../js/codex.js';
 import { statsGlobales } from '../js/achievements.js';
@@ -96,6 +97,17 @@ describe('corrections audit', () => {
             for (const id of mondes) {
                 expect(SCENE_DEFAUT_POST_MONDE[id], id).toBeTruthy();
             }
+        });
+
+        it('pivots humeur portrait E2E — couverture ROBO/VERA par monde', () => {
+            const mondesAvecHumeur = Object.keys(CUTSCENES_POST_MONDE)
+                .filter((id) =>
+                    CUTSCENES_POST_MONDE[id].lignes?.some(
+                        (l) => l.humeur && (l.personnage === 'robo' || l.personnage === 'vera')
+                    )
+                )
+                .sort();
+            expect(Object.keys(HUMEURS_POST_MONDE_PIVOT).sort()).toEqual(mondesAvecHumeur);
         });
     });
 

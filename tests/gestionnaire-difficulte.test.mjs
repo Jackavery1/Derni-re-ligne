@@ -208,4 +208,14 @@ describe('gestionnaire-difficulte', () => {
         expect(libelleEtoile({ type: 'pieces_max', valeur: 40 })).toContain('40');
         expect(libelleEtoile({ type: 'tops_volontaires', valeur: 3 })).toContain('3');
     });
+
+    it('monde_lave — profil vitesse sans deceleration a 65%', () => {
+        const profil = DIFFICULTE_MONDES.monde_lave.profilVitesse;
+        const a35 = profil.find((v) => v.a === 0.35);
+        const a65 = profil.find((v) => v.a === 0.65);
+        expect(a35).toBeTruthy();
+        expect(a65).toBeTruthy();
+        expect(a65.palier).toBeGreaterThanOrEqual(a35.palier);
+        expect(PALIERS_VITESSE_MS[a65.palier]).toBeLessThanOrEqual(PALIERS_VITESSE_MS[a35.palier]);
+    });
 });

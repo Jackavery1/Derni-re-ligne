@@ -1,0 +1,195 @@
+/* ════════════════════════════════════════════════════════════
+   MODE HISTOIRE — CUTSCENES CINÉMATIQUES
+   ════════════════════════════════════════════════════════════ */
+
+#ecran-histoire-cutscene {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+}
+
+.cutscene-bg-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* S'assurer que le contenu existant (portrait + texte) passe au-dessus */
+.cutscene-contenu,
+.cutscene-nom,
+#canvas-cutscene-portrait,
+.histoire-cutscene-lignes,
+.cutscene-controles,
+.cutscene-portrait-zone,
+.cutscene-texte-zone,
+.cutscene-lignes,
+.cutscene-progress {
+    position: relative;
+    z-index: 2;
+}
+
+.cutscene-fond-overlay {
+    z-index: 1;
+}
+
+#ecran-histoire-cutscene:has(.cutscene-bg-canvas),
+#ecran-histoire-cutscene.cutscene-scene-image {
+    background: transparent !important;
+    animation: none;
+}
+
+#ecran-histoire-cutscene:has(.cutscene-bg-canvas) .cutscene-fond-overlay,
+#ecran-histoire-cutscene.cutscene-scene-image .cutscene-fond-overlay {
+    background: transparent !important;
+}
+
+#ecran-histoire-cutscene.ecran.actif {
+    display: grid;
+    grid-template-rows:
+        clamp(96px, 18vh, 180px)
+        minmax(0, 1fr)
+        clamp(120px, 22vh, 200px)
+        auto;
+    grid-template-areas:
+        'narrateur'
+        'portraits'
+        'dialogue'
+        'barre';
+    align-content: stretch;
+    overflow: hidden;
+    padding: 0 0 clamp(8px, 1.5vh, 16px);
+    padding-left: max(0px, var(--safe-left));
+    padding-right: max(0px, var(--safe-right));
+    padding-top: max(0px, var(--safe-top));
+    gap: 0;
+}
+
+#zone-narration-cutscene {
+    grid-area: narrateur;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 0;
+    text-align: center;
+    z-index: 3;
+    padding: 0 clamp(16px, 4vw, 24px);
+    pointer-events: none;
+}
+
+#ecran-histoire-cutscene.cutscene-mode-dialogue #zone-narration-cutscene {
+    visibility: hidden;
+}
+
+#ecran-histoire-cutscene.cutscene-mode-narration #zone-narration-cutscene {
+    visibility: visible;
+}
+
+#rangee-portraits-cutscene {
+    grid-area: portraits;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    align-self: stretch;
+    min-height: 0;
+    padding: clamp(12px, 2vh, 24px) 4% clamp(8px, 1vh, 16px);
+    position: relative;
+    z-index: 2;
+}
+
+#zone-dialogue-cutscene {
+    grid-area: dialogue;
+    display: grid;
+    grid-template-columns: minmax(0, 180px) minmax(0, 1fr) minmax(0, 180px);
+    gap: 0 16px;
+    align-items: start;
+    align-self: stretch;
+    min-height: 0;
+    padding: 0 4%;
+    position: relative;
+    z-index: 2;
+}
+
+#boite-dialogue-cutscene {
+    grid-column: 2;
+    background: rgba(4, 4, 18, 0.9);
+    border: 1px solid rgba(0, 221, 200, 0.45);
+    border-radius: 3px;
+    padding: 14px 20px 12px;
+    position: relative;
+    min-height: 110px;
+    max-width: min(640px, 52vw);
+    width: 100%;
+    justify-self: center;
+    box-shadow:
+        0 0 24px rgba(0, 0, 0, 0.8),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+#ecran-histoire-cutscene[data-personnage='robo'] #boite-dialogue-cutscene {
+    grid-column: 1 / 3;
+    justify-self: stretch;
+    max-width: min(640px, calc(52vw + 180px));
+}
+
+#ecran-histoire-cutscene[data-personnage='vera'] #boite-dialogue-cutscene,
+#ecran-histoire-cutscene[data-personnage='distorsion'] #boite-dialogue-cutscene,
+#ecran-histoire-cutscene[data-personnage='systeme'] #boite-dialogue-cutscene,
+#ecran-histoire-cutscene[data-personnage='brasier'] #boite-dialogue-cutscene,
+#ecran-histoire-cutscene[data-personnage='sentinelle'] #boite-dialogue-cutscene,
+#ecran-histoire-cutscene[data-personnage='archiviste'] #boite-dialogue-cutscene,
+#ecran-histoire-cutscene[data-personnage='avantgarde'] #boite-dialogue-cutscene {
+    grid-column: 2 / 4;
+    justify-self: stretch;
+    max-width: min(640px, calc(52vw + 180px));
+}
+
+#canvas-cutscene-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+}
+
+#canvas-portrait-gauche,
+#canvas-portrait-droite {
+    width: 180px;
+    height: 260px;
+    flex-shrink: 0;
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+#canvas-portrait-gauche.parle,
+#canvas-portrait-droite.parle {
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+#canvas-portrait-gauche.ecoute,
+#canvas-portrait-droite.ecoute {
+    opacity: 0.4;
+    transform: translateY(14px);
+}
+
+#canvas-portrait-gauche[data-personnage='distorsion'].ecoute,
+#canvas-portrait-droite[data-personnage='distorsion'].ecoute {
+    opacity: 0.72;
+}
+
+#canvas-portrait-gauche.absent,
+#canvas-portrait-droite.absent {
+    opacity: 0;
+    pointer-events: none;
+}

@@ -7,6 +7,8 @@ let cacheVignetteCle = '';
 /** @type {HTMLCanvasElement | OffscreenCanvas | null} */
 let cacheAmbBas = null;
 let cacheAmbBasCle = '';
+/** @type {Map<string, HTMLCanvasElement | OffscreenCanvas>} */
+const cacheAmbHaut = new Map();
 /** @type {HTMLCanvasElement | OffscreenCanvas | null} */
 let cacheMasqueMeteo = null;
 let cacheMasqueMeteoCle = '';
@@ -75,25 +77,44 @@ export function _invaliderCacheGradientsPlateau() {
     cacheVignetteCle = '';
     cacheAmbBas = null;
     cacheAmbBasCle = '';
+    cacheAmbHaut.clear();
     cacheMasqueMeteo = null;
     cacheMasqueMeteoCle = '';
+}
+
+function obtenirCacheAmbHaut(w, h, r, g, b, colIndex) {
+    const pieceX = colIndex * CONFIG.taille;
+    const cle = `${w}x${h}x${r},${g},${b}x${colIndex}`;
+    const existant = cacheAmbHaut.get(cle);
+    if (existant) return existant;
+
+    const surface = creerSurfaceCache(w, h);
+    const ctx = /** @type {CanvasRenderingContext2D} */ (surface.getContext('2d'));
+    const amb = `rgba(${r},${g},${b}`;
+    const gradHaut = ctx.createRadialGradient(pieceX, 0, 0, pieceX, 0, w * 0.7);
+    gradHaut.addColorStop(0, `${amb},0.07)`);
+    gradHaut.addColorStop(1, `${amb},0)`);
+    ctx.fillStyle = gradHaut;
+    ctx.fillRect(0, 0, w, h);
+    cacheAmbHaut.set(cle, surface);
+    return surface;
 }
 
 export function dessinerAmbiancePlateauCache(ctx, w, h, couleurAmbRgb, pieceX) {
     const r = Math.round(couleurAmbRgb[0]);
     const g = Math.round(couleurAmbRgb[1]);
     const b = Math.round(couleurAmbRgb[2]);
-    const amb = `rgba(${r},${g},${b}`;
 
     const cacheBas = obtenirCacheAmbBas(w, h, r, g, b);
     if (cacheBas) ctx.drawImage(cacheBas, 0, 0);
 
     if (pieceX !== null) {
-        const gradHaut = ctx.createRadialGradient(pieceX, 0, 0, pieceX, 0, w * 0.7);
-        gradHaut.addColorStop(0, `${amb},0.07)`);
-        gradHaut.addColorStop(1, `${amb},0)`);
-        ctx.fillStyle = gradHaut;
-        ctx.fillRect(0, 0, w, h);
+        const colIndex = Math.min(
+            CONFIG.colonnes - 1,
+            Math.max(0, Math.round(pieceX / CONFIG.taille))
+        );
+        const cacheHaut = obtenirCacheAmbHaut(w, h, r, g, b, colIndex);
+        if (cacheHaut) ctx.drawImage(cacheHaut, 0, 0);
     }
 }
 

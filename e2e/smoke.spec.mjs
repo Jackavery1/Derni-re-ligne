@@ -13,6 +13,7 @@ import {
     selectionnerBiomeClavier,
     passerCutsceneHistoire,
     preparerPremierLancement,
+    appliquerSafeAreaIphone,
 } from './helpers.mjs';
 
 test('aucune bannière erreur au démarrage', async ({ page }) => {
@@ -454,7 +455,7 @@ test('iphone — contenu menu titre respecte encoche simulee (audit C11)', async
     test.info().annotations.push({
         type: 'note',
         description:
-            'Validation physique sur iPhone reelle non automatisable ; simulation --safe-top: 47px (Dynamic Island).',
+            'Matrice iPhone simulee (helpers-iphone-safe-area) ; validation PWA physique : checklist CONTRIBUTING.',
     });
 
     const context = await browser.newContext({ ...devices['iPhone 14'] });
@@ -463,10 +464,7 @@ test('iphone — contenu menu titre respecte encoche simulee (audit C11)', async
     await page.goto('/');
     await attendreApplicationPrete(page);
 
-    await page.evaluate(() => {
-        document.documentElement.style.setProperty('--safe-top', '47px');
-        document.documentElement.style.setProperty('--safe-bottom', '34px');
-    });
+    await appliquerSafeAreaIphone(page, 'iPhone 14');
 
     const metriques = await page.evaluate(() => {
         const btn = document.getElementById('btn-jouer');

@@ -22,7 +22,7 @@
 }
 
 #affichage-restant {
-    font-size: 0.32rem;
+    font-size: var(--typo-hud-micro);
     color: var(--vert);
     letter-spacing: 1px;
     text-align: center;

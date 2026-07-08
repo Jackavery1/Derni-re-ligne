@@ -94,7 +94,7 @@
     padding: 6px 4px;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 0.3rem;
+    font-size: var(--typo-hud-micro);
     letter-spacing: 1px;
     color: var(--meteo-actif-couleur, var(--jaune));
 }

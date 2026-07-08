@@ -20,10 +20,6 @@ export function initialiserCanvas() {
     const cprev = obtenirCanvas('canvas-preview');
     const cres = obtenirCanvas('canvas-reserve');
     if (!cp || !cprev || !cres) {
-        logger.error('Canvas introuvable dans le DOM');
-        afficherErreurUtilisateur(
-            'Impossible de charger le jeu — canvas manquant. Rechargez la page.'
-        );
         return false;
     }
     definirRefsCanvas({
@@ -97,5 +93,21 @@ export function initialiserCanvas() {
             }
         });
     }
+    return true;
+}
+
+let _canvasPartiePret = false;
+
+/** Initialise les canvas solo une fois les fragments partie injectés. */
+export function assurerCanvasPartie() {
+    if (_canvasPartiePret) return true;
+    if (!initialiserCanvas()) {
+        logger.error('Canvas introuvable dans le DOM');
+        afficherErreurUtilisateur(
+            'Impossible de charger le jeu — canvas manquant. Rechargez la page.'
+        );
+        return false;
+    }
+    _canvasPartiePret = true;
     return true;
 }

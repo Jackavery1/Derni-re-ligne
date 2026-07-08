@@ -48,6 +48,29 @@ export function dessinerFondBiome(ctx, w, h, biomeId) {
 }
 
 /** @type {Map<string, HTMLCanvasElement>} */
+const cacheFondsConstellation = new Map();
+
+function creerSurfaceFond(w, h) {
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    return canvas;
+}
+
+/** Fond radial constellation mis en cache (invalide au resize ou changement de biome). */
+export function dessinerFondBiomeConstellationCache(ctx, w, h, biomeId) {
+    const cle = `${w}x${h}x${biomeId}`;
+    let surface = cacheFondsConstellation.get(cle);
+    if (!surface) {
+        surface = creerSurfaceFond(w, h);
+        const ctxCache = surface.getContext('2d');
+        if (ctxCache) dessinerFondBiome(ctxCache, w, h, biomeId);
+        cacheFondsConstellation.set(cle, surface);
+    }
+    ctx.drawImage(surface, 0, 0);
+}
+
+/** @type {Map<string, HTMLCanvasElement>} */
 const cacheIconesNoeud = new Map();
 
 /**

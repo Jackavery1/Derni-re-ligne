@@ -8,6 +8,11 @@ let ICONES_PIXEL = {};
 /** @type {Promise<Record<string, IconePixel>> | null} */
 let chargePromise = null;
 
+/** Lance le chargement des icônes pixel sans bloquer le boot. */
+export function prefetchIconesPixel() {
+    void chargerIconesPixel();
+}
+
 /**
  * @returns {Promise<Record<string, IconePixel>>}
  */

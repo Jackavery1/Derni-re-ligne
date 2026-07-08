@@ -33,7 +33,7 @@
         "test:e2e:smoke:dist": "node scripts/run-e2e-dist.mjs e2e/smoke.spec.mjs",
         "test:e2e:responsive": "playwright test e2e/audit-c-responsive.spec.mjs e2e/histoire-responsive.spec.mjs e2e/visual.spec.mjs",
         "test:e2e:responsive:dist": "node scripts/run-e2e-dist.mjs e2e/audit-c-responsive.spec.mjs",
-        "test:e2e:audit": "playwright test e2e/audit-b-gameplay.spec.mjs e2e/audit-c-responsive.spec.mjs e2e/audit-d-narratif.spec.mjs e2e/histoire-post-monde.spec.mjs e2e/histoire-campagne.spec.mjs e2e/histoire-responsive.spec.mjs e2e/histoire-narratif.spec.mjs --grep \"audit|narratif —|post-monde —|victoire objectif|fin secrete avec narratif|audit D9\"",
+        "test:e2e:audit": "playwright test e2e/audit-a-architecture.spec.mjs e2e/audit-b-gameplay.spec.mjs e2e/audit-c-responsive.spec.mjs e2e/audit-d-narratif.spec.mjs e2e/audit-e-ui-ux.spec.mjs e2e/histoire-post-monde.spec.mjs e2e/histoire-entrees.spec.mjs e2e/histoire-fragments-vera.spec.mjs e2e/histoire-campagne.spec.mjs e2e/histoire-responsive.spec.mjs e2e/histoire-narratif.spec.mjs --grep \"audit|narratif —|post-monde —|entree |fragment VERA|victoire objectif|audit D9b\" --grep-invert \"post-victoire \\(audit D9\\)\"",
         "test:e2e:d9": "playwright test e2e/histoire-campagne.spec.mjs --grep \"audit D9\"",
         "test:e2e:perf": "node scripts/run-e2e-dist.mjs e2e/perf.spec.mjs",
         "lint": "eslint .",

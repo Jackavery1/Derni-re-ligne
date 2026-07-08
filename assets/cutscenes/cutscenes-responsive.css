@@ -1,0 +1,148 @@
+/* Mobile / hauteur compacte : grille à zones fixes, portraits compacts */
+@media (max-width: 768px), (max-height: 600px) {
+    #ecran-histoire-cutscene.ecran.actif {
+        grid-template-rows:
+            clamp(72px, 14vh, 140px)
+            minmax(0, 1fr)
+            clamp(96px, 18vh, 160px)
+            auto;
+    }
+
+    #rangee-portraits-cutscene {
+        justify-content: center;
+        gap: clamp(8px, 3vw, 16px);
+        padding: clamp(8px, 1.5vh, 16px) 12px clamp(6px, 1vh, 12px);
+    }
+
+    #canvas-portrait-gauche,
+    #canvas-portrait-droite {
+        width: min(42vw, 148px);
+        height: min(58vw, 204px);
+    }
+
+    #canvas-portrait-gauche.ecoute,
+    #canvas-portrait-droite.ecoute {
+        transform: translateY(6px);
+    }
+
+    #canvas-portrait-gauche.absent,
+    #canvas-portrait-droite.absent {
+        visibility: hidden;
+    }
+
+    #zone-dialogue-cutscene {
+        grid-template-columns: minmax(0, min(42vw, 148px)) minmax(0, 1fr) minmax(
+                0,
+                min(42vw, 148px)
+            );
+        gap: 0 8px;
+        padding: 0 12px;
+    }
+
+    #boite-dialogue-cutscene {
+        min-height: 96px;
+        max-width: none;
+    }
+
+    #ecran-histoire-cutscene[data-personnage='robo'] #boite-dialogue-cutscene,
+    #ecran-histoire-cutscene[data-personnage='vera'] #boite-dialogue-cutscene,
+    #ecran-histoire-cutscene[data-personnage='distorsion'] #boite-dialogue-cutscene,
+    #ecran-histoire-cutscene[data-personnage='systeme'] #boite-dialogue-cutscene,
+    #ecran-histoire-cutscene[data-personnage='brasier'] #boite-dialogue-cutscene,
+    #ecran-histoire-cutscene[data-personnage='sentinelle'] #boite-dialogue-cutscene,
+    #ecran-histoire-cutscene[data-personnage='archiviste'] #boite-dialogue-cutscene,
+    #ecran-histoire-cutscene[data-personnage='avantgarde'] #boite-dialogue-cutscene {
+        grid-column: 1 / -1;
+        max-width: none;
+    }
+
+    #texte-narration-cutscene {
+        font-size: clamp(18px, 4.8vw, 24px);
+    }
+}
+
+@media (max-height: 768px) and (orientation: landscape) {
+    #ecran-histoire-cutscene.ecran.actif {
+        grid-template-rows:
+            clamp(56px, 12vh, 100px)
+            minmax(0, 1fr)
+            clamp(80px, 16vh, 130px)
+            auto;
+    }
+
+    #rangee-portraits-cutscene {
+        padding-left: max(12px, var(--safe-left));
+        padding-right: max(12px, var(--safe-right));
+    }
+
+    #zone-dialogue-cutscene {
+        padding-left: max(12px, var(--safe-left));
+        padding-right: max(12px, var(--safe-right));
+    }
+
+    #boite-dialogue-cutscene {
+        min-height: 72px;
+        padding: 10px 14px 8px;
+    }
+
+    #texte-narration-cutscene {
+        font-size: clamp(16px, 3.6vw, 20px);
+    }
+}
+
+@media (max-width: 360px) {
+    #zone-dialogue-cutscene,
+    #rangee-portraits-cutscene {
+        padding-left: max(12px, var(--safe-left));
+        padding-right: max(12px, var(--safe-right));
+    }
+
+    #zone-narration-cutscene {
+        padding-left: max(16px, var(--safe-left));
+        padding-right: max(16px, var(--safe-right));
+    }
+}
+
+@media (max-width: 319px) {
+    #canvas-portrait-gauche,
+    #canvas-portrait-droite {
+        width: min(38vw, 112px);
+        height: min(52vw, 156px);
+    }
+
+    #texte-narration-cutscene {
+        font-size: max(14px, min(4.2vw, 18px));
+    }
+
+    #texte-dialogue-cutscene {
+        font-size: max(13px, 3.6vw);
+    }
+
+    .cutscene-barre-bas {
+        grid-template-columns: 1fr;
+        justify-items: stretch;
+        gap: 6px;
+        padding-left: max(8px, var(--safe-left));
+        padding-right: max(8px, var(--safe-right));
+    }
+
+    #ecran-histoire-cutscene .cutscene-progress {
+        justify-self: center;
+        width: 100%;
+        text-align: center;
+    }
+
+    #ecran-histoire-cutscene .cutscene-controles {
+        grid-column: 1;
+        justify-self: stretch;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-bottom: max(6px, var(--safe-bottom));
+    }
+
+    .btn-cutscene-passer {
+        padding: 8px 6px;
+        font-size: 10px;
+        letter-spacing: 1px;
+    }
+}

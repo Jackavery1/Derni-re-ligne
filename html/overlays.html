@@ -36,6 +36,44 @@
     </div>
 </div>
 
+<div
+    id="dialog-recommencer-partie"
+    class="dialog-nouvelle-partie element-masque"
+    role="alertdialog"
+    aria-modal="true"
+    aria-labelledby="dialog-recommencer-partie-titre"
+    aria-describedby="dialog-recommencer-partie-texte"
+    aria-hidden="true"
+>
+    <div class="dialog-nouvelle-partie-corps">
+        <p id="dialog-recommencer-partie-titre" class="dialog-nouvelle-partie-titre">
+            RECOMMENCER ?
+        </p>
+        <p id="dialog-recommencer-partie-texte" class="dialog-nouvelle-partie-texte">
+            La partie en cours sera perdue. Score et progression de la manche actuelle seront
+            effaces.
+        </p>
+        <div class="dialog-nouvelle-partie-actions">
+            <button
+                type="button"
+                id="btn-annuler-recommencer-partie"
+                class="bouton discret"
+                aria-label="Annuler le recommencement"
+            >
+                ANNULER
+            </button>
+            <button
+                type="button"
+                id="btn-confirm-recommencer-partie"
+                class="bouton bouton-danger"
+                aria-label="Confirmer le recommencement"
+            >
+                OUI, RECOMMENCER
+            </button>
+        </div>
+    </div>
+</div>
+
 <div id="zone-notifs-jeu" class="zone-notifs-jeu" aria-live="polite">
     <div id="notif-niveau" role="status" aria-live="polite" aria-atomic="true">NIVEAU 2 !</div>
 

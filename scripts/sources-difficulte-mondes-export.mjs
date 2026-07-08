@@ -38,7 +38,7 @@ export const DIFFICULTE_MONDES = {
         profilVitesse: [
             { a: 0, palier: 3 },
             { a: 0.35, palier: 5 },
-            { a: 0.65, palier: 3 },
+            { a: 0.65, palier: 5 },
             { a: 0.85, palier: 6 },
         ],
         etoile2: { type: 'combo', valeur: 3 },

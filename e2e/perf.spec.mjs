@@ -26,6 +26,28 @@ test('budget chargement ecran titre (dist)', async ({ page }) => {
     if (nav?.domContentLoaded) {
         expect(nav.domContentLoaded).toBeLessThan(5000);
     }
+
+    const ressourcesIcones = await page.evaluate(() =>
+        performance
+            .getEntriesByType('resource')
+            .filter((e) => e.name.includes('icones-pixel.json'))
+            .map((e) => ({ duration: e.duration, startTime: e.startTime }))
+    );
+    if (ressourcesIcones.length > 0) {
+        expect(ressourcesIcones[0].startTime).toBeGreaterThan(0);
+    }
+});
+
+test('budget navigation selection avec icones pixel (dist)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await expect(page.locator('#btn-jouer')).toBeVisible({ timeout: 5000 });
+    const debut = Date.now();
+    await page.locator('#btn-jouer').click();
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    await expect(page.locator('#canvas-constellation')).toBeVisible();
+    expect(Date.now() - debut).toBeLessThan(2500);
 });
 
 test('sprint 40L — victoire simulee en moins de 3 s', async ({ page }) => {
@@ -33,6 +55,7 @@ test('sprint 40L — victoire simulee en moins de 3 s', async ({ page }) => {
     await page.goto('/');
     await attendreApplicationPrete(page);
     await attendreNotificationsInitiales(page);
+    await expect(page.locator('#btn-jouer')).toBeVisible({ timeout: 5000 });
     await page.locator('#btn-jouer').click();
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await selectionnerBiomeClavier(page);

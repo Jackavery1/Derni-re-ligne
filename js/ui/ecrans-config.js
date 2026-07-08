@@ -19,20 +19,20 @@ export const ECRANS = {
     HISTOIRE_FIN: 'ecran-histoire-fin',
 };
 
-/** Fragments chargés au boot (parcours titre → sélection → partie). */
+/** Fragments chargés au boot (écran titre et navigation menu). */
 export const ECRANS_CHARGEMENT_IMMEDIAT = [
     ECRANS.TITRE,
     ECRANS.SELECTION,
     ECRANS.OPTIONS,
-    ECRANS.PAUSE,
-    ECRANS.GAME_OVER,
     'overlays',
-    'interface-jeu',
-    'controles',
 ];
+
+/** Fragments requis avant le premier lancement de partie solo. */
+export const FRAGMENTS_PARTIE = ['interface-jeu', ECRANS.PAUSE, ECRANS.GAME_OVER, 'controles'];
 
 /** Fragments chargés à la première ouverture du mode ou écran associé. */
 export const ECRANS_CHARGEMENT_DIFFERE = [
+    ...FRAGMENTS_PARTIE,
     ECRANS.ACHIEVEMENTS,
     ECRANS.PROFIL,
     ECRANS.CODEX,

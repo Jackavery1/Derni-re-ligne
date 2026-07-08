@@ -44,10 +44,7 @@ describe('safe-area audit C', () => {
         const iface = lireFeuillesDecoupees('interface-jeu-');
         const tactiles = readFileSync(join(STYLES, 'controles-tactiles.css'), 'utf8');
         const responsive = readFileSync(join(STYLES, 'responsive.css'), 'utf8');
-        const cutscenes = readFileSync(
-            join(RACINE, 'assets', 'cutscenes', 'cutscenes.css'),
-            'utf8'
-        );
+        const cutscenes = cutscenesFrom(RACINE);
         expect(iface).toMatch(/var\(--safe-top\)/);
         expect(tactiles).toMatch(/var\(--safe-bottom\)/);
         expect(responsive).toMatch(/var\(--safe-left\)/);
@@ -89,5 +86,8 @@ describe('safe-area audit C', () => {
 });
 
 function cutscenesFrom(racine) {
-    return readFileSync(join(racine, 'assets', 'cutscenes', 'cutscenes.css'), 'utf8');
+    const cutscenesDir = join(racine, 'assets', 'cutscenes');
+    return lireFichiersCssRecursif(cutscenesDir)
+        .map((f) => readFileSync(f, 'utf8'))
+        .join('\n');
 }

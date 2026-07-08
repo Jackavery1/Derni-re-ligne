@@ -2,6 +2,7 @@ import { chargerEtatHistoire } from '../io/progression-histoire.js';
 import { lireStockage } from '../io/progression-stockage.js';
 import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
 import { sansAccentsE } from '../logique/texte-jeu.js';
+import { demanderConfirmationDialog } from '../ui/dialog-confirmation.js';
 
 function introHistoireDejaVue() {
     return lireStockage('derniereLigne_introHistoireVue', '0') === '1';
@@ -89,40 +90,10 @@ export function mettreAJourMenuCampagneTitre() {
  * @returns {Promise<boolean>}
  */
 export function demanderConfirmationNouvellePartie() {
-    return new Promise((resolve) => {
-        const dialog = document.getElementById('dialog-nouvelle-partie');
-        const btnOui = document.getElementById('btn-confirm-nouvelle-partie');
-        const btnNon = document.getElementById('btn-annuler-nouvelle-partie');
-        if (!dialog || !btnOui || !btnNon) {
-            resolve(
-                window.confirm(
-                    'Recommencer toute la campagne ? La progression actuelle sera effacee.'
-                )
-            );
-            return;
-        }
-
-        const fermer = (valeur) => {
-            dialog.classList.add('element-masque');
-            dialog.setAttribute('aria-hidden', 'true');
-            btnOui.removeEventListener('click', surOui);
-            btnNon.removeEventListener('click', surNon);
-            document.removeEventListener('keydown', surEchap);
-            resolve(valeur);
-        };
-
-        const surOui = () => fermer(true);
-        const surNon = () => fermer(false);
-        const surEchap = (e) => {
-            if (e.key === 'Escape') fermer(false);
-        };
-
-        btnOui.addEventListener('click', surOui);
-        btnNon.addEventListener('click', surNon);
-        document.addEventListener('keydown', surEchap);
-
-        dialog.classList.remove('element-masque');
-        dialog.setAttribute('aria-hidden', 'false');
-        btnOui.focus({ preventScroll: true });
+    return demanderConfirmationDialog({
+        dialogId: 'dialog-nouvelle-partie',
+        btnOuiId: 'btn-confirm-nouvelle-partie',
+        btnNonId: 'btn-annuler-nouvelle-partie',
+        fallbackMessage: 'Recommencer toute la campagne ? La progression actuelle sera effacee.',
     });
 }

@@ -68,7 +68,7 @@ body.contraste-eleve .bouton {
         margin-bottom: 2px;
     }
     .stat-valeur {
-        font-size: 0.5rem;
+        font-size: var(--taille-stats-md);
     }
     #canvas-mascotte {
         max-width: 56px;
@@ -98,7 +98,7 @@ body.contraste-eleve .bouton {
     }
 
     .panneau .section:nth-child(2) .stat-valeur {
-        font-size: 0.42rem;
+        font-size: var(--taille-stats-md);
         line-height: 1.1;
     }
 
@@ -127,7 +127,7 @@ body.contraste-eleve .bouton {
     }
 
     #section-timer-niveau .stat-valeur {
-        font-size: 0.4rem;
+        font-size: var(--taille-stats-md);
         line-height: 1.1;
     }
 

@@ -26,6 +26,7 @@ jobs:
             - run: npm run typecheck
             - run: npm run format:check
             - run: npm run verify:histoire-json
+            - run: npm run verify:versions
             - run: node scripts/exporter-donnees-json.mjs
             - run: npm run test:coverage
             - run: npm audit --audit-level=moderate

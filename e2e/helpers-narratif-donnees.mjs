@@ -88,3 +88,26 @@ export const SCENES_VICTOIRE_BOSS = {
     avantgarde: { debut: 'seuil_avantgarde', fin: 'seuil_avantgarde', pivot: /Elle dit bonjour/i },
     distorsion: { debut: 'fragmentation', fin: 'fragmentation', pivot: /Alors que veux-tu/i },
 };
+
+/** Pivot humeur portrait — première réplique ROBO/VERA avec humeur explicite (audit D). */
+export const HUMEURS_POST_MONDE_PIVOT = Object.fromEntries(
+    Object.entries(CUTSCENES_POST_MONDE)
+        .map(([mondeId, entree]) => {
+            const ligne = entree.lignes?.find(
+                (l) => l.humeur && (l.personnage === 'robo' || l.personnage === 'vera')
+            );
+            if (!ligne) return null;
+            const extrait = ligne.texte
+                .slice(0, Math.min(28, ligne.texte.length))
+                .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            return [
+                mondeId,
+                {
+                    personnage: ligne.personnage,
+                    humeur: ligne.humeur,
+                    pivot: new RegExp(extrait, 'i'),
+                },
+            ];
+        })
+        .filter((entree) => entree !== null)
+);

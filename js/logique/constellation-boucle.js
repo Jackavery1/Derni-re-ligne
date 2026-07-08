@@ -1,5 +1,5 @@
 import {
-    dessinerFondBiome,
+    dessinerFondBiomeConstellationCache,
     dessinerLignesConstellation as dessinerLignesRendu,
     dessinerNoeudBiome as dessinerNoeudRendu,
 } from '../rendu/constellation-rendu.js';
@@ -21,13 +21,16 @@ export function boucleConstellation(timestamp) {
     const canvasConst = obtenirCanvasConstellation();
     if (!ctxConst || !canvasConst) return;
 
+    const ecranSelection = document.getElementById('ecran-selection');
+    if (!ecranSelection?.classList.contains('actif') || document.hidden) return;
+
     const w = canvasConst.width;
     const h = canvasConst.height;
     const parallax = window.innerWidth <= 768 ? 36 : 18;
     const offsetCamX = (obtenirSourisCX() / w - 0.5) * parallax + obtenirPanConstellationX();
     const offsetCamY = (obtenirSourisCY() / h - 0.5) * parallax + obtenirPanConstellationY();
 
-    dessinerFondBiome(ctxConst, w, h, obtenirBiomeChoisi() ?? 'classique');
+    dessinerFondBiomeConstellationCache(ctxConst, w, h, obtenirBiomeChoisi() ?? 'classique');
 
     ctxConst.save();
     ctxConst.translate(offsetCamX, offsetCamY);

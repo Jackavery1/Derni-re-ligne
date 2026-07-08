@@ -62,6 +62,22 @@ const iphone14Chromium = {
     hasTouch: true,
 };
 
+const iphone15ProChromium = {
+    viewport: devices['iPhone 15 Pro'].viewport,
+    userAgent: devices['iPhone 15 Pro'].userAgent,
+    deviceScaleFactor: devices['iPhone 15 Pro'].deviceScaleFactor,
+    isMobile: true,
+    hasTouch: true,
+};
+
+const iphoneSeChromium = {
+    viewport: devices['iPhone SE'].viewport,
+    userAgent: devices['iPhone SE'].userAgent,
+    deviceScaleFactor: devices['iPhone SE'].deviceScaleFactor,
+    isMobile: true,
+    hasTouch: true,
+};
+
 const webServer = {
     command: serveDist
         ? 'npx --yes serve dist -p 3000'
@@ -117,6 +133,16 @@ export default defineConfig({
             name: 'iphone-14',
             testMatch: specsMatriceResponsive,
             use: { ...channelUse, ...iphone14Chromium },
+        },
+        {
+            name: 'iphone-15-pro',
+            testMatch: specsMatriceResponsive,
+            use: { ...channelUse, ...iphone15ProChromium },
+        },
+        {
+            name: 'iphone-se',
+            testMatch: specsMatriceResponsive,
+            use: { ...channelUse, ...iphoneSeChromium },
         },
         {
             name: 'tablet-landscape',

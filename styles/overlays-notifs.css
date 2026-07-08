@@ -87,7 +87,7 @@
     margin-bottom: 2px;
 }
 #ach-description {
-    font-size: 0.3rem;
+    font-size: var(--typo-hud-micro);
     color: var(--texte-dim);
     letter-spacing: 1px;
 }

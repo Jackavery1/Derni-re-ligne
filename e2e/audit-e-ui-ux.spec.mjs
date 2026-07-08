@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 import { preparerPageSansSw, attendreApplicationPrete } from './helpers.mjs';
 
 test.describe('audit E — UI/UX', () => {
@@ -6,33 +7,96 @@ test.describe('audit E — UI/UX', () => {
         await preparerPageSansSw(page);
         await page.goto('/');
         await attendreApplicationPrete(page);
+
         const hasAltText = await page.evaluate(() => {
             const images = Array.from(document.querySelectorAll('img'));
             return images.every((img) => img.alt || img.getAttribute('role') === 'presentation');
         });
         expect(hasAltText).toBe(true);
+
+        const results = await new AxeBuilder({ page }).disableRules(['color-contrast']).analyze();
+        const graves = results.violations.filter(
+            (v) => v.impact === 'critical' || v.impact === 'serious'
+        );
+        expect(graves).toEqual([]);
     });
 
     test('E2 — color contrast meets WCAG standard', async ({ page }) => {
         await preparerPageSansSw(page);
         await page.goto('/');
-        const hasContrast = await page.evaluate(() => {
-            const root = document.documentElement;
-            const style = getComputedStyle(root);
-            const textColor = style.getPropertyValue('--texte');
-            return textColor.length > 0;
+        await attendreApplicationPrete(page);
+
+        const ratio = await page.evaluate(() => {
+            function parseRgb(color) {
+                const m = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+                if (!m) return null;
+                return [Number(m[1]), Number(m[2]), Number(m[3])];
+            }
+            function luminance([r, g, b]) {
+                const [rs, gs, bs] = [r, g, b].map((c) => {
+                    const s = c / 255;
+                    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+                });
+                return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+            }
+            const fg = parseRgb(getComputedStyle(document.body).color);
+            const bg = parseRgb(getComputedStyle(document.body).backgroundColor);
+            if (!fg || !bg) return 0;
+            const l1 = luminance(fg);
+            const l2 = luminance(bg);
+            const lighter = Math.max(l1, l2);
+            const darker = Math.min(l1, l2);
+            return (lighter + 0.05) / (darker + 0.05);
         });
-        expect(hasContrast).toBe(true);
+        expect(ratio).toBeGreaterThanOrEqual(4.5);
     });
 
     test('E3 — buttons have visible focus states', async ({ page }) => {
         await preparerPageSansSw(page);
         await page.goto('/');
         await attendreApplicationPrete(page);
-        const hasFocus = await page.evaluate(() => {
-            return document.querySelectorAll('button').length > 0;
+
+        const btn = page.locator('#btn-jouer');
+        await btn.focus();
+        const hasFocusRing = await btn.evaluate((el) => {
+            const style = getComputedStyle(el);
+            const outlineVisible =
+                style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0;
+            const shadowVisible = style.boxShadow !== 'none';
+            return outlineVisible || shadowVisible;
         });
-        expect(hasFocus).toBe(true);
+        expect(hasFocusRing).toBe(true);
+    });
+
+    test('E3a — prefers-reduced-motion desactive les animations longues', async ({ page }) => {
+        await preparerPageSansSw(page);
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+        const dureeReduite = await page.evaluate(() => {
+            const probe = document.createElement('div');
+            probe.style.animation = 'clignoter-suite 1s infinite';
+            document.body.appendChild(probe);
+            const ms = parseFloat(getComputedStyle(probe).animationDuration);
+            probe.remove();
+            return ms;
+        });
+        expect(dureeReduite).toBeLessThanOrEqual(0.02);
+    });
+
+    test('E3b — toggle contraste eleve disponible', async ({ page }) => {
+        await preparerPageSansSw(page);
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+        await page.locator('#btn-options').click();
+        await expect(page.locator('#ecran-options')).toHaveClass(/actif/);
+        const btn = page.locator('#btn-toggle-contraste');
+        await expect(btn).toBeVisible();
+        await btn.click();
+        const actif = await page.evaluate(() =>
+            document.body.classList.contains('contraste-eleve')
+        );
+        expect(actif).toBe(true);
     });
 
     test('E4 — interactive elements have adequate size (48px) on selection screen', async ({

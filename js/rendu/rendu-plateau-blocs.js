@@ -1,11 +1,36 @@
 /** Blocs verrouillés et overlays mécaniques sur le plateau. */
 import { CONFIG } from '../config/config.js';
-import { etat, obtenirCtx } from '../etat/store-jeu.js';
+import { etat, obtenirCtx, obtenirCanvasPlateau } from '../etat/store-jeu.js';
 import { dessinerCellule } from './rendu-cellule.js';
 import { celluleEstRouillee } from '../histoire/mecaniques-histoire.js';
 
-function dessinerOverlayRouille(c, l) {
-    const ctx = obtenirCtx();
+/** @type {HTMLCanvasElement | OffscreenCanvas | null} */
+let cacheBlocs = null;
+let cacheBlocsCle = '';
+
+function creerSurfaceCache(w, h) {
+    if (typeof OffscreenCanvas !== 'undefined') {
+        return new OffscreenCanvas(w, h);
+    }
+    const surface = document.createElement('canvas');
+    surface.width = w;
+    surface.height = h;
+    return surface;
+}
+
+function calculerClePlateauVerrouille() {
+    let cle = '';
+    for (let l = 0; l < CONFIG.lignes; l++) {
+        for (let c = 0; c < CONFIG.colonnes; c++) {
+            const v = etat.plateau[l][c];
+            if (!v) continue;
+            cle += `${c},${l},${v},${celluleEstRouillee(c, l) ? 1 : 0};`;
+        }
+    }
+    return cle;
+}
+
+function dessinerOverlayRouille(ctx, c, l) {
     ctx.save();
     ctx.globalAlpha = 0.38;
     ctx.fillStyle = '#5c2a00';
@@ -26,14 +51,38 @@ function dessinerOverlayRouille(c, l) {
     ctx.restore();
 }
 
-export function dessinerBlocsVerrouilles() {
+function reconstruireCacheBlocs(w, h) {
+    const surface = creerSurfaceCache(w, h);
+    const ctxCache = /** @type {CanvasRenderingContext2D} */ (surface.getContext('2d'));
     for (let l = 0; l < CONFIG.lignes; l++) {
         for (let c = 0; c < CONFIG.colonnes; c++) {
             if (!etat.plateau[l][c]) continue;
-            dessinerCellule(obtenirCtx(), c, l, etat.plateau[l][c]);
+            dessinerCellule(ctxCache, c, l, etat.plateau[l][c]);
             if (celluleEstRouillee(c, l)) {
-                dessinerOverlayRouille(c, l);
+                dessinerOverlayRouille(ctxCache, c, l);
             }
         }
     }
+    cacheBlocs = surface;
+    cacheBlocsCle = calculerClePlateauVerrouille();
+}
+
+/** Visible en tests uniquement. */
+export function _invaliderCacheBlocsVerrouilles() {
+    cacheBlocs = null;
+    cacheBlocsCle = '';
+}
+
+export function dessinerBlocsVerrouilles() {
+    const ctx = obtenirCtx();
+    const canvas = obtenirCanvasPlateau();
+    if (!ctx || !canvas) return;
+
+    const w = canvas.width;
+    const h = canvas.height;
+    const cle = calculerClePlateauVerrouille();
+    if (!cacheBlocs || cacheBlocsCle !== cle || cacheBlocs.width !== w || cacheBlocs.height !== h) {
+        reconstruireCacheBlocs(w, h);
+    }
+    if (cacheBlocs) ctx.drawImage(cacheBlocs, 0, 0);
 }

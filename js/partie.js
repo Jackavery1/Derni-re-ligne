@@ -64,7 +64,9 @@ import { store } from './etat/store-jeu.js';
 import { modeHistoireEnCours } from './etat/mode-histoire.js';
 import { obtenirIdBiomeFond } from './rendu/biome-fond.js';
 import { initialiserAudioBiome } from './audio/audio-partie.js';
+import { logger } from './logger.js';
 import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
+import { assurerRessourcesPartie } from './io/prefetch-ressources-partie.js';
 import { demarrerBoss, arreterBoss } from './logique/boss-jeu.js';
 import {
     initialiserMecaniquesHistoire,
@@ -82,11 +84,18 @@ import { demarrerFondBiome, arreterFondBiome } from './rendu/rendu-fond-biome.js
 import { reinitialiserTimerNiveau } from './logique/timer-niveau.js';
 import { reinitialiserGameFeel, demarrerGraceSpawn } from './logique/game-feel-jeu.js';
 import { rafraichirHudObjectifsHistoire } from './ui/ui-panneau-objectifs.js';
-export { initialiserCanvas } from './logique/partie-canvas.js';
+import { demanderConfirmationDialog } from './ui/dialog-confirmation.js';
+export { initialiserCanvas, assurerCanvasPartie } from './logique/partie-canvas.js';
 export { terminerPartie } from './logique/partie-fin.js';
 
-export function confirmerRecommencer() {
-    if (window.confirm('Recommencer la partie ?')) demarrerJeu();
+export async function confirmerRecommencer() {
+    const confirme = await demanderConfirmationDialog({
+        dialogId: 'dialog-recommencer-partie',
+        btnOuiId: 'btn-confirm-recommencer-partie',
+        btnNonId: 'btn-annuler-recommencer-partie',
+        fallbackMessage: 'Recommencer la partie ?',
+    });
+    if (confirme) demarrerJeu();
 }
 
 function _arreterPartieEnCours() {
@@ -230,6 +239,18 @@ function initialiserUIPartie() {
 }
 
 export function demarrerJeu() {
+    void _demarrerJeuApresPrep();
+}
+
+async function _demarrerJeuApresPrep() {
+    try {
+        await assurerRessourcesPartie();
+    } catch (err) {
+        logger.error('Échec préparation partie :', err);
+        return;
+    }
+    const { assurerCanvasPartie } = await import('./logique/partie-canvas.js');
+    if (!assurerCanvasPartie()) return;
     demarrerTransition();
     initialiserFeaturesPartie();
     initialiserAudioPartie();

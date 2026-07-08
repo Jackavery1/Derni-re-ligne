@@ -2,7 +2,11 @@ import { chargerEtatHistoire, sauvegarderEtatHistoire } from '../io/progression.
 import { store, obtenirBiomeActif } from '../etat/store-jeu.js';
 import { melodie } from '../audio/melodie.js';
 import { reinitialiserStatsAchievementsHistoire } from './achievements-histoire.js';
-import { ACHIEVEMENTS } from '../achievements-donnees.js';
+import {
+    ACHIEVEMENTS,
+    chargerAchievementsDonnees,
+    achievementsDonneesChargees,
+} from '../achievements-donnees.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { fileAchievements, statsGlobales } from './achievements-stats-etat.js';
 import { sauvegarderStats } from './achievements-stats-persistance.js';
@@ -81,6 +85,10 @@ export function finaliserStatsPartie(score, tempsSecondes) {
 }
 
 export function verifierAchievements() {
+    if (!achievementsDonneesChargees()) {
+        void chargerAchievementsDonnees().then(() => verifierAchievements());
+        return;
+    }
     let nouveaux = 0;
     for (const [, ach] of Object.entries(ACHIEVEMENTS)) {
         if (statsGlobales.debloqués[ach.id]) continue;

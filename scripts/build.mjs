@@ -24,6 +24,7 @@ mkdirSync(`${dist}/js`, { recursive: true });
 mkdirSync(`${dist}/data`, { recursive: true });
 
 cpSync('data', `${dist}/data`, { recursive: true });
+execSync('node scripts/minifier-json-dist.mjs', { stdio: 'inherit' });
 
 const buildResult = await esbuild.build({
     ...optionsCommunesProd,
@@ -49,6 +50,7 @@ cpSync('styles', `${dist}/styles`, { recursive: true });
 execSync('node scripts/compresser-css.mjs', { stdio: 'inherit' });
 cpSync('html', `${dist}/html`, { recursive: true });
 if (existsSync('assets')) cpSync('assets', `${dist}/assets`, { recursive: true });
+execSync('node scripts/bundler-cutscenes-css.mjs dist/assets/cutscenes', { stdio: 'inherit' });
 cpSync('manifest.json', `${dist}/manifest.json`);
 cpSync('img', `${dist}/img`, { recursive: true });
 

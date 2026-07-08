@@ -86,7 +86,7 @@ function dessinerHaloExcite(ctx, cx, cy, E, t) {
 
 /** @param {BoundsCapsule} bounds @param {number} E */
 function dessinerPieds(ctx, bounds, E) {
-    const { capX, capY, capW, capH, cx } = bounds;
+    const { capY, capW, capH, cx } = bounds;
     const piedW = capW * R.PIED_W;
     const piedH = capH * R.PIED_H;
     const gap = capW * R.PIED_GAP;
@@ -110,7 +110,7 @@ function dessinerPieds(ctx, bounds, E) {
 
 /** @param {BoundsCapsule} bounds @param {number} E @param {number} mainOffsetY */
 function dessinerMains(ctx, bounds, E, mainOffsetY) {
-    const { capX, capW, capH, cx } = bounds;
+    const { capW, capH, cx } = bounds;
     const y = bounds.capY + capH * R.MAIN_Y + mainOffsetY;
     const ecart = capW / 2 + capW * R.MAIN_ECART;
     const r = (capW * R.MAIN_D) / 2;
@@ -128,7 +128,7 @@ function dessinerMains(ctx, bounds, E, mainOffsetY) {
 
 /** @param {BoundsCapsule} bounds @param {number} E */
 function dessinerFenetreGrille(ctx, bounds, E) {
-    const { capX, capY, capW, capH, cx } = bounds;
+    const { capY, capW, capH, cx } = bounds;
     const fw = capW * R.FENETRE_W;
     const fh = capH * (1 - R.FENETRE_TOP) * 0.85;
     const fx = cx - fw / 2;

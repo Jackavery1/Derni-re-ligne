@@ -65,7 +65,7 @@ body.archi-active #controles-paysage {
     padding: 4px 6px;
     border: 1px solid var(--bordure);
     background: rgba(255, 255, 255, 0.03);
-    font-size: 0.32rem;
+    font-size: var(--typo-hud-micro);
     letter-spacing: 1px;
 }
 
@@ -122,7 +122,7 @@ body.archi-active #controles-paysage {
 
 #btn-reinit-archi {
     margin-top: 6px;
-    font-size: 0.3rem;
+    font-size: var(--typo-hud-micro);
     background: transparent;
     border: 1px solid var(--texte-dim);
     color: var(--texte-dim);

@@ -84,12 +84,21 @@ test.describe('audit A — architecture', () => {
         await preparerPageSansSw(page);
         await page.goto('/');
         await attendreApplicationPrete(page);
-        const lazyImages = await page.evaluate(() => {
+        const result = await page.evaluate(() => {
             const imgs = Array.from(document.querySelectorAll('img'));
-            return imgs.filter((img) => img.loading === 'lazy' || img.className.includes('lazy'))
-                .length;
+            const critiques = imgs.filter(
+                (img) =>
+                    img.classList.contains('ecran-chargement-image') ||
+                    img.getAttribute('fetchpriority') === 'high' ||
+                    img.fetchPriority === 'high'
+            );
+            const deferrables = imgs.filter((img) => !critiques.includes(img));
+            const lazyOk = deferrables.every(
+                (img) => img.loading === 'lazy' || img.getAttribute('role') === 'presentation'
+            );
+            return { total: imgs.length, deferrables: deferrables.length, lazyOk };
         });
-        expect(lazyImages).toBeGreaterThanOrEqual(0);
+        expect(result.deferrables === 0 || result.lazyOk).toBe(true);
     });
 
     test('A9 — fonts preloaded for performance', async ({ page }) => {

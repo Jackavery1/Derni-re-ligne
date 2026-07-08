@@ -5,6 +5,7 @@ import {
     attendreNotificationsInitiales,
     fermerRecapPostMonde,
     appliquerEncocheSimulee,
+    appliquerSafeAreaIphone,
     passerCutsceneEntiere,
     attendreJournalHistoire,
     lancerMondeDepuisCarte,
@@ -403,7 +404,7 @@ test('iphone — cutscene respecte encoche simulee (audit C11)', async ({ browse
     test.info().annotations.push({
         type: 'note',
         description:
-            'Validation physique sur iPhone reelle non automatisable ; simulation --safe-top: 47px.',
+            'Matrice iPhone simulee (helpers-iphone-safe-area) ; validation PWA physique : checklist CONTRIBUTING.',
     });
 
     const context = await browser.newContext({ ...devices['iPhone 14'] });

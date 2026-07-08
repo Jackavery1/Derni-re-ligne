@@ -88,7 +88,7 @@ body.partie-active #conteneur-principal {
 }
 
 #indicateur-relique {
-    font-size: 0.32rem;
+    font-size: var(--typo-hud-micro);
     letter-spacing: 1px;
     text-align: center;
     margin-top: 4px;

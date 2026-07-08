@@ -1,0 +1,150 @@
+.cutscene-texte-zone {
+    max-width: min(700px, 88vw);
+    width: 100%;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.cutscene-lignes {
+    width: 100%;
+    text-align: center;
+}
+
+.histoire-cutscene-ligne {
+    animation: cutscene-ligne-in 0.3s ease forwards;
+    line-height: 1.8;
+}
+@keyframes cutscene-ligne-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cutscene-police-pixel {
+    font-family: var(--font-titre);
+    font-size: clamp(9px, 1.3vw, 14px);
+    letter-spacing: 1px;
+    color: #e0f8ff;
+}
+.cutscene-police-narratif {
+    font-family: var(--font-narratif);
+    font-size: clamp(17px, 2vw, 22px);
+    font-style: italic;
+    color: rgba(255, 200, 220, 0.92);
+    line-height: 1.9;
+}
+.cutscene-police-stats {
+    font-family: var(--font-stats);
+    font-size: clamp(12px, 1.4vw, 16px);
+    letter-spacing: 2px;
+    color: rgba(200, 180, 255, 0.9);
+}
+.cutscene-police-terminal {
+    font-family: 'Courier New', monospace;
+    font-size: clamp(11px, 1.3vw, 14px);
+    letter-spacing: 1px;
+    color: #aaffaa;
+}
+.cutscene-police-ui {
+    font-family: var(--font-ui);
+    font-size: clamp(16px, 1.8vw, 20px);
+    color: rgba(255, 255, 255, 0.65);
+    font-weight: 400;
+}
+
+.cutscene-police-stats[data-glitch] {
+    animation: glitch-texte 6s infinite;
+}
+@keyframes glitch-texte {
+    0%,
+    85%,
+    100% {
+        filter: none;
+    }
+    86% {
+        filter: hue-rotate(90deg);
+        transform: translateX(2px);
+    }
+    87% {
+        filter: none;
+        transform: translateX(-1px);
+    }
+    88% {
+        transform: translateX(0);
+    }
+}
+
+.cutscene-progress {
+    font-family: var(--font-stats);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.cutscene-controles {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: max(8px, var(--safe-bottom));
+}
+
+.btn-cutscene {
+    font-family: var(--font-stats);
+    font-size: clamp(9px, 1vw, 11px);
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 8px 20px;
+    min-height: 48px;
+    min-width: 48px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition:
+        background 0.2s,
+        border-color 0.2s;
+}
+.btn-cutscene:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.35);
+}
+.btn-cutscene:focus-visible,
+.btn-cutscene-passer:focus-visible {
+    outline: 2px solid var(--cyan, #00f5ff);
+    outline-offset: 2px;
+}
+.btn-cutscene-hint {
+    font-size: 0.75em;
+    opacity: 0.5;
+    margin-left: 6px;
+}
+
+.btn-cutscene-passer {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.45);
+    background: none;
+    border: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: color 0.2s;
+    padding: 8px 12px;
+    min-height: 48px;
+    min-width: 48px;
+}
+.btn-cutscene-passer:hover {
+    color: rgba(255, 255, 255, 0.75);
+}

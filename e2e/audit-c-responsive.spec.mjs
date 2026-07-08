@@ -8,6 +8,8 @@ import {
     terminerPartieCourante,
     terminerPartieCoopCourante,
     appliquerEncocheSimulee,
+    appliquerSafeAreaIphone,
+    PROFILS_IPHONE_SAFE_AREA,
     ouvrirCarteHistoire,
     lancerMondeDepuisCarte,
     activerPausePartieTactile,
@@ -19,7 +21,7 @@ import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 const ANNOTATION_C11 = {
     type: 'note',
     description:
-        'Validation physique sur iPhone reelle non automatisable ; simulation --safe-top: 47px (Dynamic Island).',
+        'Matrice iPhone simulee (14, 15 Pro, SE, paysage) via helpers-iphone-safe-area.mjs ; validation PWA physique reste checklist CONTRIBUTING.',
 };
 
 async function ouvrirPremierNiveauArchitecte(page) {
@@ -316,4 +318,89 @@ test('audit C13 — cutscene histoire sans overlay orientation', async ({ page }
     await lancerMondeDepuisCarte(page, 'monde_prologue');
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 10000 });
     await expect(page.locator('#overlay-orientation')).toHaveCount(0);
+});
+
+for (const [id, profil] of Object.entries(PROFILS_IPHONE_SAFE_AREA)) {
+    if (id.includes('landscape')) {
+        test(`audit C14 — pause paysage encoches laterales (${id})`, async ({ page }) => {
+            test.info().annotations.push({ type: 'note', description: profil.label });
+            await demarrerPartie(page);
+            await page.setViewportSize({ width: 667, height: 375 });
+            await appliquerSafeAreaIphone(page, id);
+            await page.keyboard.press('Escape');
+            await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
+
+            const metriques = await page.evaluate(() => {
+                const conteneur = document.getElementById('conteneur-principal');
+                const style = conteneur ? getComputedStyle(conteneur) : null;
+                const reprendre = document.getElementById('btn-reprendre');
+                const rect = reprendre?.getBoundingClientRect();
+                return {
+                    paddingLeft: style?.paddingLeft ?? '',
+                    leftBouton: rect?.left ?? -1,
+                    boutonH: rect?.height ?? 0,
+                    safeLeft: getComputedStyle(document.documentElement)
+                        .getPropertyValue('--safe-left')
+                        .trim(),
+                };
+            });
+
+            expect(metriques.safeLeft).toBe(`${profil.safeLeft}px`);
+            expect(parseFloat(metriques.paddingLeft)).toBeGreaterThanOrEqual(profil.safeLeft - 1);
+            expect(metriques.leftBouton).toBeGreaterThanOrEqual(profil.safeLeft - 1);
+            expect(metriques.boutonH).toBeGreaterThanOrEqual(48);
+        });
+        continue;
+    }
+
+    test(`audit C14 — carte histoire portrait encoche (${id})`, async ({ browser }) => {
+        test.info().annotations.push({ type: 'note', description: profil.label });
+        const context = await browser.newContext({ ...devices['iPhone 14'] });
+        const page = await context.newPage();
+        await ouvrirCarteHistoire(page, ETAT_DEBLOCAGE_META_RAPIDE);
+        await appliquerSafeAreaIphone(page, id);
+
+        const metriques = await page.evaluate(() => {
+            const header = document.getElementById('histoire-map-header');
+            const retour = document.getElementById('btn-histoire-retour');
+            const style = header ? getComputedStyle(header) : null;
+            const rect = retour?.getBoundingClientRect();
+            return {
+                paddingTop: style?.paddingTop ?? '',
+                topRetour: rect?.top ?? -1,
+                retourH: rect?.height ?? 0,
+                safeTop: getComputedStyle(document.documentElement)
+                    .getPropertyValue('--safe-top')
+                    .trim(),
+            };
+        });
+
+        expect(metriques.safeTop).toBe(`${profil.safeTop}px`);
+        expect(parseFloat(metriques.paddingTop)).toBeGreaterThanOrEqual(profil.safeTop - 1);
+        expect(metriques.topRetour).toBeGreaterThanOrEqual(profil.safeTop - 1);
+        expect(metriques.retourH).toBeGreaterThanOrEqual(48);
+        await context.close();
+    });
+}
+
+test('audit C14 — HUD solo portrait lisible (typo micro + scale plancher)', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await demarrerPartie(page);
+
+    const metriques = await page.evaluate(() => {
+        const label = document.querySelector('.stat-label');
+        const styleLabel = label ? getComputedStyle(label) : null;
+        const scale = Number(
+            getComputedStyle(
+                document.getElementById('interface-jeu') ?? document.body
+            ).getPropertyValue('--iface-scale') || '1'
+        );
+        return {
+            fontPx: styleLabel ? parseFloat(styleLabel.fontSize) : 0,
+            scale,
+        };
+    });
+
+    expect(metriques.fontPx).toBeGreaterThanOrEqual(11);
+    expect(metriques.scale).toBeGreaterThanOrEqual(0.52);
 });

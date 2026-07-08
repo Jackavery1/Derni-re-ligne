@@ -14,7 +14,7 @@
 }
 
 .boss-nom {
-    font-size: 0.3rem;
+    font-size: var(--typo-hud-micro);
     letter-spacing: 1px;
     text-align: center;
 }

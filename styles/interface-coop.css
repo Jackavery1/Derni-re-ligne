@@ -44,7 +44,7 @@ body.coop-active #conteneur-principal {
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid var(--vert);
     font-family: var(--police);
-    font-size: 0.32rem;
+    font-size: var(--typo-hud-micro);
     letter-spacing: 1px;
     color: var(--vert);
     text-shadow: 0 0 6px var(--vert);
@@ -79,7 +79,7 @@ body.coop-active #conteneur-principal {
     border: 1px solid var(--vert);
     color: var(--vert);
     font-family: var(--police);
-    font-size: 0.32rem;
+    font-size: var(--typo-hud-micro);
     padding: 6px 8px;
     cursor: pointer;
     width: 100%;
@@ -147,7 +147,7 @@ body.coop-active #conteneur-principal {
     background: rgba(255, 255, 255, 0.2);
 }
 .btn-coop-petit {
-    font-size: 0.3rem;
+    font-size: var(--typo-hud-micro);
 }
 
 #notif-niveau.notif-synchro,

@@ -19,6 +19,8 @@ import {
     coyoteActif,
     graceSpawnActive,
     demarrerAre,
+    activerPieceAuSol,
+    quitterSolPiece,
 } from './logique/game-feel-jeu.js';
 
 export function initialiserNeoTestApi() {
@@ -203,6 +205,8 @@ export function initialiserNeoTestApi() {
             areActiveTest: () => areActive(),
             coyoteActifTest: () => coyoteActif(),
             graceSpawnActiveTest: () => graceSpawnActive(),
+            activerPieceAuSolTest: () => activerPieceAuSol(),
+            quitterSolPieceTest: () => quitterSolPiece(),
         });
     });
 }

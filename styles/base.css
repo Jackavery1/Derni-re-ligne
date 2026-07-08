@@ -57,7 +57,7 @@ body.effets-reduits .boss-portrait-cadre.flash {
 }
 
 .vivant-sous-titre {
-    font-size: 0.3rem;
+    font-size: var(--typo-hud-micro);
     color: var(--texte-dim);
     letter-spacing: 1px;
     text-align: center;

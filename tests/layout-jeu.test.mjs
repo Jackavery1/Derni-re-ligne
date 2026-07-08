@@ -81,6 +81,14 @@ describe('layout-jeu', () => {
         expect(scale).toBeGreaterThan(0);
     });
 
+    it('calculerEchelleInterface respecte le plancher scaleMin', () => {
+        const scale = calculerEchelleInterface(320, 568, 776, 600, {
+            hauteurControles: 120,
+            scaleMin: 0.52,
+        });
+        expect(scale).toBeGreaterThanOrEqual(0.52);
+    });
+
     it('calculerEchelleInterface reduit l echelle sur petit ecran', () => {
         const grand = calculerEchelleInterface(1200, 900, 500, 800);
         const petit = calculerEchelleInterface(360, 640, 500, 800, { hauteurControles: 120 });
@@ -110,7 +118,7 @@ describe('layout-jeu', () => {
                 .getElementById('interface-jeu')
                 .style.setProperty.mock.calls.findLast((c) => c[0] === '--iface-scale')?.[1]
         );
-        expect(scalePortrait).toBeGreaterThan(0);
+        expect(scalePortrait).toBeGreaterThanOrEqual(0.52);
         expect(scalePortrait).toBeLessThanOrEqual(2.2);
     });
 

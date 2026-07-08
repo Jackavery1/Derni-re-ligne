@@ -1,0 +1,130 @@
+#ecran-histoire-cutscene[data-personnage='robo'] {
+    background: radial-gradient(ellipse at 25% 60%, #001a2e 0%, #010a14 60%, #000 100%);
+}
+#ecran-histoire-cutscene[data-personnage='robo'] .cutscene-fond-overlay {
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(0, 245, 255, 0.015) 3px,
+        rgba(0, 245, 255, 0.015) 4px
+    );
+}
+
+#ecran-histoire-cutscene[data-personnage='vera'] {
+    background: radial-gradient(ellipse at 75% 30%, #1a0010 0%, #0a0005 55%, #000 100%);
+}
+#ecran-histoire-cutscene[data-personnage='vera'] .cutscene-fond-overlay {
+    background: radial-gradient(ellipse at 80% 20%, rgba(255, 0, 110, 0.08) 0%, transparent 60%);
+}
+
+#ecran-histoire-cutscene[data-personnage='distorsion'] {
+    background: #000000;
+}
+#ecran-histoire-cutscene[data-personnage='distorsion'] .cutscene-fond-overlay {
+    background: radial-gradient(
+        ellipse at 50% 50%,
+        rgba(180, 0, 255, 0.1) 0%,
+        rgba(255, 0, 110, 0.05) 50%,
+        transparent 80%
+    );
+    animation: distorsion-fond-cycle 5s linear infinite;
+}
+
+@keyframes distorsion-fond-cycle {
+    0%,
+    88%,
+    100% {
+        filter: none;
+    }
+    89% {
+        filter: hue-rotate(120deg) brightness(1.2);
+    }
+    90% {
+        filter: hue-rotate(0deg);
+    }
+    91% {
+        filter: hue-rotate(240deg);
+    }
+    92% {
+        filter: none;
+    }
+}
+
+#ecran-histoire-cutscene[data-personnage='systeme'] {
+    background: #000d00;
+}
+#ecran-histoire-cutscene[data-personnage='systeme'] .cutscene-fond-overlay {
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(0, 255, 68, 0.02) 2px,
+        rgba(0, 255, 68, 0.02) 3px
+    );
+}
+
+#ecran-histoire-cutscene[data-personnage='narrateur'],
+#ecran-histoire-cutscene[data-personnage='sentinelle'],
+#ecran-histoire-cutscene[data-personnage='archiviste'],
+#ecran-histoire-cutscene[data-personnage='avantgarde'] {
+    background: #020210;
+}
+
+.cutscene-portrait-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-height: 120px;
+}
+
+.cutscene-canvas-portrait {
+    width: 96px;
+    height: 96px;
+    border: 1px solid var(--portrait-couleur, rgba(255, 255, 255, 0.2));
+    border-radius: 4px;
+    box-shadow: 0 0 12px var(--portrait-couleur, rgba(255, 255, 255, 0.1));
+    transition:
+        border-color 0.4s ease,
+        box-shadow 0.4s ease;
+}
+
+.cutscene-nom {
+    font-family: var(--font-stats);
+    font-size: clamp(8px, 1vw, 11px);
+    letter-spacing: 3px;
+    color: var(--portrait-couleur, rgba(255, 255, 255, 0.6));
+    text-shadow: 0 0 8px var(--portrait-couleur, transparent);
+    text-transform: uppercase;
+    min-height: 16px;
+    transition: color 0.4s ease;
+}
+
+.cutscene-nom-italic {
+    font-style: italic;
+}
+
+.cutscene-nom-glitch {
+    animation: glitch-nom 4s infinite;
+}
+@keyframes glitch-nom {
+    0%,
+    90%,
+    100% {
+        text-shadow: 0 0 8px #b400ff;
+        transform: translateX(0);
+    }
+    91% {
+        transform: translateX(3px);
+        text-shadow:
+            2px 0 #00ffff,
+            -2px 0 #ff006e;
+    }
+    92% {
+        transform: translateX(-2px);
+    }
+    93% {
+        transform: translateX(0);
+    }
+}

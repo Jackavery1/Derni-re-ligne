@@ -123,6 +123,18 @@ describe('maintainabilite', () => {
         expect(depassements, JSON.stringify(depassements, null, 2)).toEqual([]);
     });
 
+    it('feuilles cutscenes decoupees ne depassent pas 320 lignes', () => {
+        const cutscenesDir = join(racineProjet, 'assets', 'cutscenes');
+        const agregateurs = new Set(['cutscenes.css']);
+        const depassements = [];
+        for (const nom of readdirSync(cutscenesDir).filter((f) => f.endsWith('.css'))) {
+            if (agregateurs.has(nom)) continue;
+            const lignes = compterLignes(join(cutscenesDir, nom));
+            if (lignes > 320) depassements.push({ fichier: nom, lignes });
+        }
+        expect(depassements, JSON.stringify(depassements, null, 2)).toEqual([]);
+    });
+
     it('tous les modules js sont listes dans le precache SW dev', () => {
         const swPrecache = readFileSync(join(racineProjet, 'sw-precache-list.js'), 'utf8');
         const debut = swPrecache.indexOf(MARQUEUR_DEBUT);

@@ -186,7 +186,7 @@ body.archi-active.controles-tactiles-actifs #controles-archi {
     }
 
     body.archi-active #interface-jeu-archi .stat-label {
-        font-size: 0.3rem;
+        font-size: var(--typo-hud-micro);
     }
 
     body.archi-active #interface-jeu-archi .stat-valeur {

@@ -38,7 +38,7 @@ Parcours fin secrète **avec narratif post-victoire** (sans `sansNarratif`) :
 npm run test:e2e:d9
 ```
 
-Timeout spec D9 complet : **5 400 000 ms** (~90 min). Sous-tests D9b : 4–5 min chacun. Helpers : `e2e/helpers-campagne-narratif.mjs`. **CI :** workflow `e2e-d9-nightly.yml` (dimanche 03:00 UTC, `workflow_dispatch` manuel).
+Timeout spec D9 complet : **5 400 000 ms** (~90 min). Sous-tests D9b : 4–5 min chacun, inclus dans `test:e2e:audit` (CI rapide). Helpers : `e2e/helpers-campagne-narratif.mjs`. **CI nightly :** workflow `e2e-d9-nightly.yml` pour D9 complet (dimanche 03:00 UTC, `workflow_dispatch` manuel).
 
 **Commit manuel :** `npm run commit -- "type(scope): sujet"` (Conventional Commits obligatoire via hook `commit-msg`). **Push :** le hook `pre-push` exécute lint, format, typecheck, cycles, données et tests unitaires (~1–2 min).
 
@@ -64,7 +64,7 @@ Le jeu charge des modules ES (`import` depuis `js/`). **Live Server** et l’ouv
 
 ### Checklist manuelle iPhone (encoches réelles)
 
-Les specs `audit-c-responsive` simulent `--safe-top: 47px` (Dynamic Island). Avant une release mobile, valider sur **iPhone physique** en PWA standalone :
+Les specs `audit-c-responsive` simulent les encoches iPhone via `e2e/helpers-iphone-safe-area.mjs` (profils 14, 15 Pro, SE, paysage — audit C14). Avant une release mobile, valider sur **iPhone physique** en PWA standalone :
 
 1. Pause solo paysage — bouton Reprendre sous l’encoche, zone tactile ≥ 48 px
 2. Pause coop paysage — bouton Reprendre sous l’encoche, pause HUD mobile ≥ 48 px
