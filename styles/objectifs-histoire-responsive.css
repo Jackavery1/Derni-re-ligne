@@ -148,9 +148,9 @@
 
 @media (max-height: 768px) and (orientation: landscape) {
     .objectif-overlay {
-        padding: max(8px, var(--safe-top)) max(12px, var(--safe-left)) max(8px, var(--safe-bottom))
-            max(12px, var(--safe-right));
-        align-items: flex-start;
+        padding: max(8px, var(--safe-top)) max(12px, var(--safe-right)) max(8px, var(--safe-bottom))
+            max(12px, var(--safe-left));
+        overflow-x: hidden;
         overflow-y: auto;
     }
 
@@ -158,9 +158,10 @@
         width: min(92vw, 480px);
         max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 24px);
         overflow-y: auto;
+        overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
         padding: 14px 12px;
-        margin: auto 0;
+        margin: auto;
     }
 
     .objectif-principal-texte {
