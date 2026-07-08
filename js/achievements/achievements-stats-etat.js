@@ -50,7 +50,7 @@ export function creerStatsVides() {
 export const statsGlobales = creerStatsVides();
 
 export const fileAchievements = creerFileNotifications({
-    /** @param {{ icone: string, nom: string, description: string }} ach @param {() => void} terminer */
+    /** @param {{ icone: string, nom: string, description: string, id: string, categorie: string }} ach @param {() => void} terminer */
     afficher(ach, terminer) {
         const notif = document.getElementById('notif-achievement');
         if (!notif) return false;

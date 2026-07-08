@@ -196,7 +196,7 @@ export function calculerBoundsEcran(bounds) {
     };
 }
 
-/** @param {BoundsCapsule} bounds @param {number} E @param {number} offsetY @param {number} h */
+/** @param {BoundsCapsule} bounds @param {number} E */
 function dessinerCapsule(ctx, bounds, E) {
     const { capX, capY, capW, capH } = bounds;
 

@@ -11,7 +11,6 @@ import {
 import { dessinerVisageRobo } from './rendu-robo-visage.js';
 import {
     obtenirTransitionHumeurRobo,
-    reinitialiserTransitionHumeurRobo,
     synchroniserTransitionHumeurRobo,
 } from './rendu-robo-transition.js';
 
@@ -123,6 +122,7 @@ function _dessinerRoboCore(ctx, w, h, humeur, t, options) {
  *   fondTransparent?: boolean,
  *   niveauDetail?: 'complet'|'mini',
  *   refletEcran?: boolean,
+ *   skipClear?: boolean,
  * }} [options]
  */
 export function dessinerRobo(ctx, w, h, humeur, t, options = {}) {

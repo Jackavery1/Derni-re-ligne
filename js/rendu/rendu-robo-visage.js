@@ -1,6 +1,5 @@
 import { PALETTE_ROBO, RATIOS_ROBO as R, VISAGE_ROBO as VISAGE } from './rendu-robo-donnees.js';
 import { rectArrondiRobo } from './rendu-robo-geometrie.js';
-import { obtenirEffetsAccessibiliteReduits } from '../ui/accessibilite.js';
 
 const C = PALETTE_ROBO;
 const PERIODE_CLIGNEMENT_S = 4;
