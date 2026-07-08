@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync, rmSync } from 'fs';
 import { execSync } from 'child_process';
+import { ecrireHistoireTextesJson } from './generer-histoire-json.mjs';
 
-const textes = await import('../js/histoire-textes.js');
 const biomesSource = await import('../scripts/sources-biomes-export.mjs');
 const biomesHistoire = await import('../scripts/sources-biomes-histoire-export.mjs');
 const contenuSource = await import('../scripts/sources-contenu-jeu-export.mjs');
@@ -9,13 +9,8 @@ const difficulteSource = await import('../scripts/sources-difficulte-mondes-expo
 
 mkdirSync('data', { recursive: true });
 
-const exportsTextes = {};
-for (const [cle, valeur] of Object.entries(textes)) {
-    if (cle !== 'default') exportsTextes[cle] = valeur;
-}
-
 const fichiersExportes = ['data/histoire-textes.json'];
-writeFileSync('data/histoire-textes.json', `${JSON.stringify(exportsTextes, null, 4)}\n`);
+await ecrireHistoireTextesJson();
 
 writeFileSync(
     'data/biomes.json',

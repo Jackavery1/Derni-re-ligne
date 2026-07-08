@@ -45,9 +45,9 @@ const remediations = {
     ],
     'npm run lint': ['→ npm run lint', '→ Corriger les erreurs ESLint listées ci-dessus'],
     'npm run verify:data': [
-        '→ npm run sync:data',
+        '→ npm run histoire:json',
         '→ npm run verify:data',
-        '→ Inclure les JSON générés dans le commit si modifiés',
+        '→ Inclure data/histoire-textes.json dans le commit si modifié',
     ],
     'npm test': [
         '→ npm test',

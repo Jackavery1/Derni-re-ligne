@@ -18,6 +18,8 @@
         "pretest": "node scripts/exporter-donnees-json.mjs",
         "start": "serve . -c serve.json -l tcp://127.0.0.1:3000",
         "sync:data": "node scripts/exporter-donnees-json.mjs",
+        "histoire:json": "node scripts/generer-histoire-json.mjs",
+        "verify:histoire-json": "node scripts/verifier-histoire-json-a-jour.mjs",
         "verify:versions": "node scripts/verifier-versions.mjs",
         "verify:data": "node scripts/verifier-sync-textes.mjs",
         "check:circular": "madge --circular --extensions js js/main.js",
