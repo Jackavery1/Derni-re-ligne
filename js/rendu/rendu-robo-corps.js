@@ -1,18 +1,23 @@
 import { PALETTE_ROBO, PROPORTIONS_ROBO as P, RATIOS_ROBO as R } from './rendu-robo-donnees.js';
 import { pyRobo, rectArrondiRobo } from './rendu-robo-geometrie.js';
+import { obtenirEffetsAccessibiliteReduits } from '../ui/accessibilite.js';
 
 const C = PALETTE_ROBO;
+const ANTENNE_CONTENT_INCLINAISON = 0.21;
+const ANTENNE_TRISTE_INCLINAISON = 0.61;
+const ANTENNE_OSCILLATION_AMPL = Math.PI / 60;
 
 /**
  * @typedef {{ capX: number, capY: number, capW: number, capH: number, cx: number }} BoundsCapsule
  */
 
 /**
- * @param {'neutre'|'content'|'excite'|'triste'|'alerte'} humeur
+ * @param {'neutre'|'content'|'excite'|'triste'|'alerte'|'tetris'} humeur
  * @param {number} t
  * @param {number} E
  */
 export function calculerAnimRobo(humeur, t, E) {
+    const effetsReduits = obtenirEffetsAccessibiliteReduits();
     const anim = {
         offsetY: 0,
         inclinaisonTete: 0,
@@ -26,36 +31,43 @@ export function calculerAnimRobo(humeur, t, E) {
     switch (humeur) {
         case 'content':
             anim.offsetY = Math.sin(t * 2.5) * 3 * E;
-            anim.antenneAngle = Math.sin(t * 2) * 0.12;
+            anim.antenneAngle = ANTENNE_CONTENT_INCLINAISON;
             anim.antenneTipAlpha = 0.9;
             anim.mainOffsetY = Math.sin(t * 2.5) * 2 * E;
             break;
         case 'excite':
             anim.offsetY = -Math.abs(Math.sin(t * 5)) * 5 * E;
             anim.antenneAngle = 0;
-            anim.antenneTipAlpha = 0.55 + Math.sin(t * 6) * 0.45;
+            anim.antenneTipAlpha = 1;
             anim.antenneTipR = 6.5 * E;
             anim.mainOffsetY = Math.sin(t * 5) * 3 * E;
-            anim.dessinerHaloExcite = true;
+            anim.dessinerHaloExcite = !effetsReduits;
             break;
         case 'triste':
             anim.offsetY = Math.sin(t * 1) * 1.5 * E;
             anim.inclinaisonTete = -0.05;
-            anim.antenneAngle = 0.35;
+            anim.antenneAngle = ANTENNE_TRISTE_INCLINAISON;
             anim.antenneTipAlpha = 0.4;
             anim.mainOffsetY = 2 * E;
             break;
         case 'alerte':
             anim.offsetY = Math.sin(t * 1.8) * 2 * E;
             anim.antenneAngle = 0;
-            anim.antenneTipAlpha = 0.45 + Math.sin(t * 5) * 0.55;
+            anim.antenneTipAlpha = 1;
             anim.antenneTipR = 5 * E;
+            break;
+        case 'tetris':
+            anim.antenneAngle = 0;
+            anim.antenneTipAlpha = 0.85;
             break;
         default:
             anim.offsetY = Math.sin(t * 1.5) * 2 * E;
-            anim.antenneAngle = Math.sin(t * 1.2) * 0.08;
             anim.antenneTipAlpha = 0.7 + Math.sin(t * 2.2) * 0.2;
             break;
+    }
+
+    if (!effetsReduits && (humeur === 'neutre' || humeur === 'content')) {
+        anim.antenneAngle += Math.sin(t * 1.2) * ANTENNE_OSCILLATION_AMPL;
     }
 
     return anim;

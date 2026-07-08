@@ -9,12 +9,20 @@ import {
     dessinerCouronneRobo,
 } from './rendu-robo-corps.js';
 import { dessinerVisageRobo } from './rendu-robo-visage.js';
+import {
+    obtenirTransitionHumeurRobo,
+    reinitialiserTransitionHumeurRobo,
+    synchroniserTransitionHumeurRobo,
+} from './rendu-robo-transition.js';
 
 export { PALETTE_ROBO } from './rendu-robo-donnees.js';
 export { dessinerRoboMiniature } from './rendu-robo-mini.js';
+export { reinitialiserTransitionHumeurRobo } from './rendu-robo-transition.js';
 
 /** @type {'neutre'|'content'|'excite'|'triste'|'alerte'|'tetris'} */
 let _humeurActuelle = 'neutre';
+/** @type {'neutre'|'content'|'excite'|'triste'|'alerte'|'tetris'} */
+let _humeurSauveeTetris = 'neutre';
 /** @type {HTMLCanvasElement|null} */
 let _canvas = null;
 let _arcEnCielActif = false;
@@ -31,11 +39,10 @@ const REF_W = 120;
 const REF_H = 150;
 
 /**
- * Dessine ROBO v3 (capsule écran-visage) sur le canvas.
  * @param {CanvasRenderingContext2D} ctx
  * @param {number} w
  * @param {number} h
- * @param {'neutre'|'content'|'excite'|'triste'|'alerte'} humeur
+ * @param {'neutre'|'content'|'excite'|'triste'|'alerte'|'tetris'} humeur
  * @param {number} t
  * @param {{
  *   arcEnCiel?: boolean,
@@ -43,15 +50,18 @@ const REF_H = 150;
  *   fondTransparent?: boolean,
  *   niveauDetail?: 'complet'|'mini',
  *   refletEcran?: boolean,
- * }} [options]
+ *   skipClear?: boolean,
+ * }} options
  */
-export function dessinerRobo(ctx, w, h, humeur, t, options = {}) {
+function _dessinerRoboCore(ctx, w, h, humeur, t, options) {
     const niveauDetail = options.niveauDetail ?? 'complet';
 
-    ctx.clearRect(0, 0, w, h);
-    if (!options.fondTransparent) {
-        ctx.fillStyle = FOND_MASCOTTE;
-        ctx.fillRect(0, 0, w, h);
+    if (!options.skipClear) {
+        ctx.clearRect(0, 0, w, h);
+        if (!options.fondTransparent) {
+            ctx.fillStyle = FOND_MASCOTTE;
+            ctx.fillRect(0, 0, w, h);
+        }
     }
 
     const E = Math.min(w / REF_W, h / REF_H);
@@ -100,7 +110,49 @@ export function dessinerRobo(ctx, w, h, humeur, t, options = {}) {
     ctx.restore();
 }
 
-/** @param {'neutre'|'content'|'excite'|'triste'|'alerte'} humeur */
+/**
+ * Dessine ROBO v3 (capsule écran-visage) sur le canvas.
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {number} w
+ * @param {number} h
+ * @param {'neutre'|'content'|'excite'|'triste'|'alerte'|'tetris'} humeur
+ * @param {number} t
+ * @param {{
+ *   arcEnCiel?: boolean,
+ *   couronne?: boolean,
+ *   fondTransparent?: boolean,
+ *   niveauDetail?: 'complet'|'mini',
+ *   refletEcran?: boolean,
+ * }} [options]
+ */
+export function dessinerRobo(ctx, w, h, humeur, t, options = {}) {
+    const niveauDetail = options.niveauDetail ?? 'complet';
+    if (niveauDetail === 'mini') {
+        _dessinerRoboCore(ctx, w, h, humeur, t, options);
+        return;
+    }
+
+    const tMs = t * 1000;
+    synchroniserTransitionHumeurRobo(humeur, tMs);
+    const { humeurFrom, humeurTo, blend } = obtenirTransitionHumeurRobo(tMs);
+
+    if (blend >= 1 || humeurFrom === humeurTo) {
+        _dessinerRoboCore(ctx, w, h, humeurTo, t, options);
+        return;
+    }
+
+    _dessinerRoboCore(ctx, w, h, humeurFrom, t, options);
+    ctx.save();
+    ctx.globalAlpha = blend;
+    _dessinerRoboCore(ctx, w, h, humeurTo, t, {
+        ...options,
+        fondTransparent: true,
+        skipClear: true,
+    });
+    ctx.restore();
+}
+
+/** @param {'neutre'|'content'|'excite'|'triste'|'alerte'|'tetris'} humeur */
 export function definirHumeurRobo(humeur) {
     _humeurActuelle = humeur;
 }
@@ -121,9 +173,12 @@ export function notifierTetrisRobo() {
     if (_timeoutTetris !== null) {
         clearTimeout(_timeoutTetris);
     }
+    if (_humeurActuelle !== 'tetris') {
+        _humeurSauveeTetris = _humeurActuelle;
+    }
     _humeurActuelle = 'tetris';
     _timeoutTetris = setTimeout(() => {
-        _humeurActuelle = 'neutre';
+        _humeurActuelle = _humeurSauveeTetris;
         _timeoutTetris = null;
     }, 600);
 }
