@@ -118,24 +118,6 @@ body.effets-reduits .boss-portrait-cadre.flash {
     z-index: 0;
 }
 
-.bouton-architecte-titre {
-    font-size: 0.5rem;
-    padding: 10px 24px;
-    border-color: var(--jaune);
-    color: var(--jaune);
-    text-shadow: 0 0 8px var(--jaune);
-    box-shadow: 0 0 10px rgba(255, 230, 0, 0.2);
-}
-
-.bouton-histoire-titre {
-    font-size: 0.5rem;
-    padding: 10px 24px;
-    border-color: var(--rose);
-    color: var(--rose);
-    text-shadow: 0 0 8px var(--rose);
-    box-shadow: 0 0 10px rgba(255, 0, 110, 0.2);
-}
-
 @font-face {
     font-family: 'Press Start 2P';
     src: url('../assets/fonts-dist/press-start-2p-latin-400-normal.woff2') format('woff2');

@@ -119,106 +119,115 @@ export const TRANSITIONS_CHAPITRE = {
 // TEXTES DE FINS (complement des donnees dans histoire-donnees.js)
 // ============================================================
 export const EPILOGUES = {
-    fin_normale: [
-        { personnage: 'narrateur', texte: 'La Trame tient.' },
-        { personnage: 'narrateur', texte: 'VERA est libre. La Distorsion est vaincue.' },
-        {
-            personnage: 'vera',
-            texte: "C'est fini. Écoute... même le silence a changé.",
-            humeur: 'douce',
-        },
-        {
-            personnage: 'vera',
-            texte: "Dans mille ans, peut-être, quelqu'un d'autre devra refaire le chemin.",
-            humeur: 'douce',
-        },
-        {
-            personnage: 'robo',
-            texte: 'Est-ce que ça valait la peine quand même ?',
-            humeur: 'neutre',
-        },
-        {
-            personnage: 'vera',
-            texte: 'Toi, tu es là. Tu penses. Tu poses des questions. Oui. Ça valait la peine.',
-            humeur: 'douce',
-        },
-        {
-            personnage: 'robo',
-            texte: 'Je pose la dernière pièce. Le plateau est vide.',
-            humeur: 'triste',
-        },
-        {
-            personnage: 'robo',
-            texte: "Pour la première fois, je comprends que c'était ça, le but.",
-        },
-    ],
+    fin_normale: {
+        scene: 'fin_crepuscule',
+        lignes: [
+            { personnage: 'narrateur', texte: 'La Trame tient.' },
+            { personnage: 'narrateur', texte: 'VERA est libre. La Distorsion est vaincue.' },
+            {
+                personnage: 'vera',
+                texte: "C'est fini. Écoute... même le silence a changé.",
+                humeur: 'douce',
+            },
+            {
+                personnage: 'vera',
+                texte: "Dans mille ans, peut-être, quelqu'un d'autre devra refaire le chemin.",
+                humeur: 'douce',
+            },
+            {
+                personnage: 'robo',
+                texte: 'Est-ce que ça valait la peine quand même ?',
+                humeur: 'neutre',
+            },
+            {
+                personnage: 'vera',
+                texte: 'Toi, tu es là. Tu penses. Tu poses des questions. Oui. Ça valait la peine.',
+                humeur: 'douce',
+            },
+            {
+                personnage: 'robo',
+                texte: 'Je pose la dernière pièce. Le plateau est vide.',
+                humeur: 'triste',
+            },
+            {
+                personnage: 'robo',
+                texte: "Pour la première fois, je comprends que c'était ça, le but.",
+            },
+        ],
+    },
 
-    fin_vraie: [
-        { personnage: 'narrateur', texte: 'Quelque chose de nouveau existe maintenant.' },
-        {
-            personnage: 'narrateur',
-            texte: 'Ni complétion pure ni incomplétude pure — quelque chose entre les deux.',
-        },
-        {
-            personnage: 'distorsion',
-            texte: "C'est étrange. Je ne souffre plus.",
-            humeur: 'apaisee',
-        },
-        {
-            personnage: 'robo',
-            texte: "Qu'est-ce que tu ressens, à la place ?",
-            humeur: 'neutre',
-        },
-        {
-            personnage: 'distorsion',
-            texte: 'Du vide. Mais le bon. Celui qui attend quelque chose.',
-            humeur: 'apaisee',
-        },
-        {
-            personnage: 'vera',
-            texte: "Je ne t'avais pas programmé pour ça. C'est mieux que tout ce que j'avais prévu.",
-            humeur: 'douce',
-        },
-        {
-            personnage: 'narrateur',
-            texte: "La nouvelle Trame est plus fragile que l'ancienne.",
-        },
-        { personnage: 'narrateur', texte: 'Et plus honnête.' },
-    ],
+    fin_vraie: {
+        scene: 'fin_lumineuse',
+        lignes: [
+            { personnage: 'narrateur', texte: 'Quelque chose de nouveau existe maintenant.' },
+            {
+                personnage: 'narrateur',
+                texte: 'Ni complétion pure ni incomplétude pure — quelque chose entre les deux.',
+            },
+            {
+                personnage: 'distorsion',
+                texte: "C'est étrange. Je ne souffre plus.",
+                humeur: 'apaisee',
+            },
+            {
+                personnage: 'robo',
+                texte: "Qu'est-ce que tu ressens, à la place ?",
+                humeur: 'neutre',
+            },
+            {
+                personnage: 'distorsion',
+                texte: 'Du vide. Mais le bon. Celui qui attend quelque chose.',
+                humeur: 'apaisee',
+            },
+            {
+                personnage: 'vera',
+                texte: "Je ne t'avais pas programmé pour ça. C'est mieux que tout ce que j'avais prévu.",
+                humeur: 'douce',
+            },
+            {
+                personnage: 'narrateur',
+                texte: "La nouvelle Trame est plus fragile que l'ancienne.",
+            },
+            { personnage: 'narrateur', texte: 'Et plus honnête.' },
+        ],
+    },
 
-    fin_secrete: [
-        {
-            personnage: 'narrateur',
-            texte: "La ligne du centre n'existe plus. À sa place : de l'espace libre.",
-        },
-        {
-            personnage: 'distorsion',
-            texte: "C'est calme. Dans ma tête. Pour la première fois, les millions se taisent en même temps.",
-            humeur: 'apaisee',
-        },
-        { personnage: 'vera', texte: 'Ils sont partis ?', humeur: 'determinee' },
-        {
-            personnage: 'distorsion',
-            texte: "Non. Ils écoutent. Eux aussi, c'est la première fois qu'on les complète au lieu de les effacer.",
-            humeur: 'apaisee',
-        },
-        {
-            personnage: 'robo',
-            texte: "Qu'est-ce qu'on fait, maintenant ?",
-            humeur: 'neutre',
-        },
-        {
-            personnage: 'vera',
-            texte: 'Maintenant ? On reconstruit. Tous les quatre.',
-            humeur: 'determinee',
-        },
-        { personnage: 'robo', texte: 'Quatre ?', humeur: 'neutre' },
-        {
-            personnage: 'vera',
-            texte: 'Toi, moi, elle. Et la Trame. Elle a toujours compté.',
-            humeur: 'douce',
-        },
-    ],
+    fin_secrete: {
+        scene: 'fin_recommencement',
+        lignes: [
+            {
+                personnage: 'narrateur',
+                texte: "La ligne du centre n'existe plus. À sa place : de l'espace libre.",
+            },
+            {
+                personnage: 'distorsion',
+                texte: "C'est calme. Dans ma tête. Pour la première fois, les millions se taisent en même temps.",
+                humeur: 'apaisee',
+            },
+            { personnage: 'vera', texte: 'Ils sont partis ?', humeur: 'determinee' },
+            {
+                personnage: 'distorsion',
+                texte: "Non. Ils écoutent. Eux aussi, c'est la première fois qu'on les complète au lieu de les effacer.",
+                humeur: 'apaisee',
+            },
+            {
+                personnage: 'robo',
+                texte: "Qu'est-ce qu'on fait, maintenant ?",
+                humeur: 'neutre',
+            },
+            {
+                personnage: 'vera',
+                texte: 'Maintenant ? On reconstruit. Tous les quatre.',
+                humeur: 'determinee',
+            },
+            { personnage: 'robo', texte: 'Quatre ?', humeur: 'neutre' },
+            {
+                personnage: 'vera',
+                texte: 'Toi, moi, elle. Et la Trame. Elle a toujours compté.',
+                humeur: 'douce',
+            },
+        ],
+    },
 
     monde_paradoxe: [
         { personnage: 'narrateur', texte: '...' },

@@ -43,6 +43,8 @@ describe('histoire-intro', () => {
         const gardiens = textes.INTERLUDES?.interlude_gardiens;
         const lignesGardiens = Array.isArray(gardiens) ? gardiens : (gardiens?.lignes ?? []);
         expect(lignesGardiens.length).toBeGreaterThan(3);
-        expect(textes.OUTRO_FINS?.fin_normale?.length).toBeGreaterThan(0);
+        expect(
+            textes.OUTRO_FINS?.fin_normale?.lignes?.length ?? textes.OUTRO_FINS?.fin_normale?.length
+        ).toBeGreaterThan(0);
     });
 });

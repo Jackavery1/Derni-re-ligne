@@ -1,6 +1,6 @@
 export const INTERLUDES = {
     interlude_gardiens: {
-        scene: 'seuil_brasier',
+        scene: 'interlude_gardiens',
         lignes: [
             {
                 personnage: 'systeme',
@@ -32,52 +32,48 @@ export const INTERLUDES = {
         ],
     },
 
-    interlude_veille: [
-        {
-            personnage: 'narrateur',
-            scene: 'seuil_avantgarde',
-            texte: 'Au seuil de la Finale. Deux silhouettes.',
-        },
-        {
-            personnage: 'avantgarde',
-            scene: 'seuil_avantgarde',
-            texte: "Il arrive. Tu veux que je l'arrête ?",
-            humeur: 'calme',
-        },
-        {
-            personnage: 'distorsion',
-            scene: 'seuil_avantgarde',
-            texte: 'Non. Je veux que tu vérifies.',
-            humeur: 'souffrante',
-        },
-        {
-            personnage: 'avantgarde',
-            scene: 'seuil_avantgarde',
-            texte: 'Vérifier quoi ?',
-            humeur: 'calme',
-        },
-        {
-            personnage: 'distorsion',
-            scene: 'seuil_avantgarde',
-            texte: "Qu'il survivra à ce que je suis. Le dernier être qui m'a vue en entier, c'était VERA. Elle n'est jamais ressortie.",
-            humeur: 'souffrante',
-        },
-        {
-            personnage: 'avantgarde',
-            scene: 'seuil_avantgarde',
-            texte: "Et s'il n'est pas prêt ?",
-            humeur: 'calme',
-        },
-        {
-            personnage: 'distorsion',
-            scene: 'seuil_avantgarde',
-            texte: 'Alors renvoie-le. Doucement. ... Je ne veux pas en casser un autre.',
-            humeur: 'souffrante',
-        },
-    ],
+    interlude_veille: {
+        scene: 'interlude_veille',
+        lignes: [
+            {
+                personnage: 'narrateur',
+                texte: 'Au seuil de la Finale. Deux silhouettes.',
+            },
+            {
+                personnage: 'avantgarde',
+                texte: "Il arrive. Tu veux que je l'arrête ?",
+                humeur: 'calme',
+            },
+            {
+                personnage: 'distorsion',
+                texte: 'Non. Je veux que tu vérifies.',
+                humeur: 'souffrante',
+            },
+            {
+                personnage: 'avantgarde',
+                texte: 'Vérifier quoi ?',
+                humeur: 'calme',
+            },
+            {
+                personnage: 'distorsion',
+                texte: "Qu'il survivra à ce que je suis. Le dernier être qui m'a vue en entier, c'était VERA. Elle n'est jamais ressortie.",
+                humeur: 'souffrante',
+            },
+            {
+                personnage: 'avantgarde',
+                texte: "Et s'il n'est pas prêt ?",
+                humeur: 'calme',
+            },
+            {
+                personnage: 'distorsion',
+                texte: 'Alors renvoie-le. Doucement. ... Je ne veux pas en casser un autre.',
+                humeur: 'souffrante',
+            },
+        ],
+    },
 
     interlude_elle: {
-        scene: 'trame',
+        scene: 'interlude_elle',
         lignes: [
             { personnage: 'narrateur', texte: 'Ailleurs. Au centre de la Trame.' },
             {

@@ -33,7 +33,6 @@ vi.mock('../js/rendu/biome-fond.js', () => ({
 import { calculerEchelleInterface } from '../js/rendu/layout-calcul.js';
 import {
     obtenirHauteurInterface,
-    obtenirHauteurInterfacePortrait,
     adapterInterface,
     adapterInterfaceArchi,
     adapterInterfaceCoop,
@@ -100,21 +99,19 @@ describe('layout-jeu', () => {
         expect(obtenirHauteurInterface()).toBeGreaterThan(0);
     });
 
-    it('obtenirHauteurInterfacePortrait empile les trois bandes du layout colonne', () => {
-        expect(obtenirHauteurInterfacePortrait()).toBeGreaterThan(obtenirHauteurInterface());
-    });
-
-    it('adapterInterface reduit l echelle en portrait mobile pour eviter un zoom excessif', () => {
+    it('adapterInterface garde le layout row en portrait mobile', () => {
         window.innerWidth = 390;
         window.innerHeight = 844;
         window.visualViewport = null;
         adapterInterface();
+        expect(document.getElementById('interface-jeu').style.flexDirection).toBe('row');
         const scalePortrait = Number(
             document
                 .getElementById('interface-jeu')
                 .style.setProperty.mock.calls.findLast((c) => c[0] === '--iface-scale')?.[1]
         );
-        expect(scalePortrait).toBeLessThan(0.9);
+        expect(scalePortrait).toBeGreaterThan(0);
+        expect(scalePortrait).toBeLessThanOrEqual(2.2);
     });
 
     it('adapterInterfaceCoop reduit l echelle en portrait mobile', () => {

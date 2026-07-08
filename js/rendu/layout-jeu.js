@@ -40,7 +40,7 @@ function hauteurControlesTactiles() {
     const { largeur, hauteur } = obtenirDimensionsViewport();
     if (estPaysageCompact()) return 0;
     if (largeur <= SEUIL_PAYSAGE_COMPACT || hauteur <= 600) {
-        return LAYOUT.hauteurControles;
+        return LAYOUT.hauteurControles + lireInsetsSafeArea().bottom;
     }
     return 0;
 }
@@ -74,20 +74,6 @@ export function obtenirHauteurInterface() {
     const hMascotte = estPaysageMobile ? 72 : LAYOUT.mascotteHauteur;
     const hDroite = 210 + 20 + hMascotte + 20 + LAYOUT.pauseHauteur + 20;
     return Math.max(hGauche, hDroite, LAYOUT.plateauHauteur) + LAYOUT.paddingVertical;
-}
-
-/** Hauteur logique en colonne (panneau + plateau + panneau), panneaux en rangée en portrait. */
-export function obtenirHauteurInterfacePortrait() {
-    const timerBonus = bonusHauteurTimerMarathon();
-    const hPanneauGauche = Math.max(LAYOUT.holdHauteur + 40, LAYOUT.statsHauteur + 50 + timerBonus);
-    const hPanneauDroit = Math.max(240, LAYOUT.mascotteHauteur + 50 + LAYOUT.pauseHauteur);
-    return (
-        hPanneauGauche +
-        LAYOUT.plateauHauteur +
-        hPanneauDroit +
-        LAYOUT.gap * 2 +
-        LAYOUT.paddingVertical
-    );
 }
 
 const VARS_NOTIF = [
@@ -167,26 +153,13 @@ export function adapterInterface() {
     if (!echelle || !iface) return;
 
     const { largeur, hauteur } = obtenirDimensionsViewport();
-    const estPortrait = estViewportPortrait();
-
     const mobileControles = hauteurControlesTactiles();
 
-    let largeurTotale;
-    let hauteurTotale;
-
-    if (estPortrait) {
-        iface.style.flexDirection = 'column';
-        iface.style.alignItems = 'center';
-        iface.style.justifyContent = 'center';
-        largeurTotale = LAYOUT.plateauLargeur + LAYOUT.margeScale;
-        hauteurTotale = obtenirHauteurInterfacePortrait() + LAYOUT.margeScale;
-    } else {
-        iface.style.flexDirection = 'row';
-        iface.style.alignItems = 'flex-start';
-        iface.style.justifyContent = 'center';
-        largeurTotale = LAYOUT.panneauLargeur * 2 + LAYOUT.gap * 2 + LAYOUT.plateauLargeur;
-        hauteurTotale = obtenirHauteurInterface();
-    }
+    iface.style.flexDirection = 'row';
+    iface.style.alignItems = 'flex-start';
+    iface.style.justifyContent = 'center';
+    const largeurTotale = LAYOUT.panneauLargeur * 2 + LAYOUT.gap * 2 + LAYOUT.plateauLargeur;
+    const hauteurTotale = obtenirHauteurInterface();
 
     const scale = calculerEchelleInterface(largeur, hauteur, largeurTotale, hauteurTotale, {
         margeScale: LAYOUT.margeScale,
@@ -210,32 +183,17 @@ export function adapterInterfaceArchi() {
     if (!echelle || !iface) return;
 
     const estPaysageMobile = estPaysageCompact();
-    const estPortrait = estViewportPortrait();
     const mobileControles = hauteurControlesTactiles();
     const { largeur, hauteur } = obtenirDimensionsViewport();
 
-    let largeurTotale;
-    let hauteurTotale;
-
-    if (estPortrait) {
-        iface.style.flexDirection = 'column';
-        iface.style.alignItems = 'center';
-        iface.style.justifyContent = 'center';
-        largeurTotale = LAYOUT_ARCHI.plateauLargeur + LAYOUT_ARCHI.margeScale;
-        hauteurTotale =
-            LAYOUT_ARCHI.plateauHauteur +
-            LAYOUT_ARCHI.panneauLargeur * 2 +
-            LAYOUT_ARCHI.paddingVertical;
-    } else {
-        iface.style.flexDirection = 'row';
-        iface.style.alignItems = 'flex-start';
-        iface.style.justifyContent = 'center';
-        largeurTotale =
-            LAYOUT_ARCHI.panneauLargeur * 2 + LAYOUT_ARCHI.gap * 2 + LAYOUT_ARCHI.plateauLargeur;
-        hauteurTotale = estPaysageMobile
-            ? Math.max(LAYOUT_ARCHI.plateauHauteur, 280) + LAYOUT_ARCHI.paddingVertical
-            : LAYOUT_ARCHI.plateauHauteur + LAYOUT_ARCHI.paddingVertical;
-    }
+    iface.style.flexDirection = 'row';
+    iface.style.alignItems = 'flex-start';
+    iface.style.justifyContent = 'center';
+    const largeurTotale =
+        LAYOUT_ARCHI.panneauLargeur * 2 + LAYOUT_ARCHI.gap * 2 + LAYOUT_ARCHI.plateauLargeur;
+    const hauteurTotale = estPaysageMobile
+        ? Math.max(LAYOUT_ARCHI.plateauHauteur, 280) + LAYOUT_ARCHI.paddingVertical
+        : LAYOUT_ARCHI.plateauHauteur + LAYOUT_ARCHI.paddingVertical;
 
     const scale = calculerEchelleInterface(largeur, hauteur, largeurTotale, hauteurTotale, {
         margeScale: LAYOUT_ARCHI.margeScale,
@@ -254,7 +212,6 @@ export function adapterInterfaceCoop() {
 
     const { largeur, hauteur } = obtenirDimensionsViewport();
     const mobileCoop = largeur <= SEUIL_PAYSAGE_COMPACT;
-    const estPortrait = estViewportPortrait();
 
     let largeurTotale;
     let hauteurTotale;
@@ -269,20 +226,13 @@ export function adapterInterfaceCoop() {
         hauteurTotale = LAYOUT.plateauHauteur + LAYOUT.paddingVertical;
         margeScale = MARGE_COOP_COTES + LAYOUT.margeScale;
         hauteurControles = 48;
-    } else if (estPortrait) {
-        iface.style.flexDirection = 'column';
-        iface.style.alignItems = 'center';
-        iface.style.justifyContent = 'center';
-        largeurTotale = LAYOUT.plateauLargeur + LAYOUT.margeScale;
-        hauteurTotale =
-            LAYOUT.plateauHauteur + LAYOUT.panneauLargeur * 2 + LAYOUT.paddingVertical + LAYOUT.gap;
-        hauteurControles = hauteurControlesTactiles();
     } else {
         iface.style.flexDirection = 'row';
         iface.style.alignItems = 'flex-start';
         iface.style.justifyContent = 'center';
         largeurTotale = LAYOUT.panneauLargeur * 2 + LAYOUT.gap * 2 + LAYOUT.plateauLargeur;
         hauteurTotale = Math.max(LAYOUT.plateauHauteur, 360) + LAYOUT.paddingVertical;
+        hauteurControles = hauteurControlesTactiles();
     }
 
     const scale = calculerEchelleInterface(largeur, hauteur, largeurTotale, hauteurTotale, {

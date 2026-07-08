@@ -56,6 +56,60 @@ export const SCENES_CUTSCENE = {
         kenBurns: 'zoom_lent',
         lazy: true,
     },
+    antre_distorsion: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_antre_distorsion.png',
+        voile: 0.5,
+        kenBurns: 'zoom_lent',
+    },
+    miroir: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_miroir.png',
+        voile: 0.45,
+        kenBurns: 'pan_gauche',
+    },
+    trame_primordiale: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_trame_primordiale.png',
+        voile: 0.45,
+        kenBurns: 'zoom_lent',
+    },
+    interlude_gardiens: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_interlude_gardiens.png',
+        voile: 0.45,
+        kenBurns: 'fixe',
+    },
+    interlude_veille: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_interlude_veille.png',
+        voile: 0.5,
+        kenBurns: 'fixe',
+    },
+    interlude_elle: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_interlude_elle.png',
+        voile: 0.5,
+        kenBurns: 'zoom_lent',
+    },
+    fin_crepuscule: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_fin_crepuscule.png',
+        voile: 0.4,
+        kenBurns: 'zoom_lent',
+    },
+    fin_lumineuse: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_fin_lumineuse.png',
+        voile: 0.35,
+        kenBurns: 'fixe',
+    },
+    fin_recommencement: {
+        type: 'image',
+        src: 'assets/cutscenes/scene_fin_recommencement.png',
+        voile: 0.4,
+        kenBurns: 'pan_droite',
+    },
 };
 
 /** @type {Map<string, { img: HTMLImageElement, charge: boolean, echec: boolean }>} */

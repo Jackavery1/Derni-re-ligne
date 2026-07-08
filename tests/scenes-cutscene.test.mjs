@@ -12,6 +12,11 @@ import {
 import { INTRO_HISTOIRE, OUTRO_FINS } from '../js/histoire-textes/intro-interludes.js';
 import { TRANSITIONS_CHAPITRE } from '../js/histoire-textes/chapitres.js';
 import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
+import {
+    SCENE_DEFAUT_TRANSITION_CHAPITRE,
+    SCENE_DEFAUT_POST_MONDE,
+    SCENE_DEFAUT_INTERLUDE,
+} from '../js/histoire/histoire-narratif-scenes.js';
 
 const racine = join(import.meta.dirname, '..');
 const swSource = readFileSync(join(racine, 'sw.js'), 'utf8');
@@ -56,6 +61,34 @@ describe('scenes-cutscene — assets et registre', () => {
         expect(lignes.some((l) => l.scene === 'vide_errance')).toBe(true);
     });
 
+    it('chaque transition de chapitre a une scene par defaut', () => {
+        const ids = new Set(Object.keys(SCENES_CUTSCENE));
+        for (const cle of Object.keys(TRANSITIONS_CHAPITRE)) {
+            const scene = SCENE_DEFAUT_TRANSITION_CHAPITRE[cle];
+            expect(scene, cle).toBeTruthy();
+            expect(ids.has(scene), `${cle} → ${scene}`).toBe(true);
+        }
+    });
+
+    it('les scenes interlude sont reservees aux interludes narratifs', () => {
+        const scenesInterlude = new Set(Object.values(SCENE_DEFAUT_INTERLUDE));
+        for (const scene of Object.values(SCENE_DEFAUT_TRANSITION_CHAPITRE)) {
+            expect(scenesInterlude.has(scene)).toBe(false);
+        }
+        for (const scene of Object.values(SCENE_DEFAUT_POST_MONDE)) {
+            expect(scenesInterlude.has(scene)).toBe(false);
+        }
+        for (const [cle, interlude] of Object.entries(INTERLUDES)) {
+            const sceneAttendue = SCENE_DEFAUT_INTERLUDE[cle];
+            expect(sceneAttendue, cle).toBeTruthy();
+            if (Array.isArray(interlude)) {
+                expect(interlude.every((l) => l.scene === sceneAttendue || !l.scene)).toBe(true);
+            } else {
+                expect(interlude.scene).toBe(sceneAttendue);
+            }
+        }
+    });
+
     it('toutes les scenes narrativement referencees existent dans le registre', () => {
         const ids = new Set(Object.keys(SCENES_CUTSCENE));
         const toutes = new Set([
@@ -67,6 +100,7 @@ describe('scenes-cutscene — assets et registre', () => {
             ...collecterScenes(EPILOGUES),
             ...collecterScenes(OUTRO_FINS),
             ...collecterScenes(FRAGMENTS_VERA_SIGNAL),
+            ...Object.values(SCENE_DEFAUT_TRANSITION_CHAPITRE),
         ]);
         if (INTRO_HISTOIRE.scene) toutes.add(INTRO_HISTOIRE.scene);
         for (const ligne of INTRO_HISTOIRE.lignes ?? []) {

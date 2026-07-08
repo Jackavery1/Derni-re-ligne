@@ -83,10 +83,6 @@ export function initialiserBoutonsPartie() {
         if (modeArchiActif()) void avecArchi().then((m) => m.archi_basculerPause());
         else obtenirActions().basculerPause?.();
     });
-    lierBouton('btn-pause-mobile', () => {
-        if (modeArchiActif()) void avecArchi().then((m) => m.archi_basculerPause());
-        else obtenirActions().basculerPause?.();
-    });
     lierBouton('btn-reprendre', () => {
         if (modeArchiActif()) void avecArchi().then((m) => m.archi_basculerPause());
         else obtenirActions().basculerPause?.();

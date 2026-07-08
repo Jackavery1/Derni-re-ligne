@@ -4,9 +4,15 @@ import { creerFile } from './file-narrative.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { extraireLignesCutscene } from './histoire-cutscene-moteur.js';
 import { logger } from '../logger.js';
-import { SCENE_DEFAUT_POST_MONDE } from './histoire-narratif-scenes.js';
+import {
+    SCENE_DEFAUT_POST_MONDE,
+    SCENE_DEFAUT_TRANSITION_CHAPITRE,
+} from './histoire-narratif-scenes.js';
 
-export { SCENE_DEFAUT_POST_MONDE } from './histoire-narratif-scenes.js';
+export {
+    SCENE_DEFAUT_POST_MONDE,
+    SCENE_DEFAUT_TRANSITION_CHAPITRE,
+} from './histoire-narratif-scenes.js';
 
 function _obtenirEtatHistoireLocal() {
     return obtenirEtatHistoirePersiste();
@@ -44,7 +50,7 @@ export const SCENE_DEFAUT_VICTOIRE_BOSS = {
     sentinelle: 'seuil_sentinelle',
     archiviste: 'labo',
     avantgarde: 'seuil_avantgarde',
-    distorsion: 'fragmentation',
+    distorsion: 'antre_distorsion',
 };
 
 export function afficherVictoireBoss(bossId, typeFin = 'normal', onFin) {
@@ -76,8 +82,10 @@ export function afficherTransitionChapitre(cleChapitre, onFin) {
         onFin?.();
         return;
     }
+    const sceneDefaut = SCENE_DEFAUT_TRANSITION_CHAPITRE[cleChapitre] ?? null;
+    const entree = sceneDefaut ? { scene: sceneDefaut, lignes: lignesRaw } : lignesRaw;
     void _importerUi().then(({ afficherCutsceneHistoire }) => {
-        afficherCutsceneHistoire(lignesRaw, null, onFin);
+        afficherCutsceneHistoire(entree, null, onFin);
     });
 }
 
@@ -106,7 +114,7 @@ export function declencherFin(finId) {
 
     file.ajouter({
         id: 'epilogue',
-        condition: () => (_textes().EPILOGUES[finId] ?? []).length > 0,
+        condition: () => extraireLignesCutscene(_textes().EPILOGUES[finId]).length > 0,
         executer: (suivant) => {
             const epilogue = _textes().EPILOGUES[finId];
             void _importerUi()
@@ -122,7 +130,7 @@ export function declencherFin(finId) {
 
     file.ajouter({
         id: 'outro',
-        condition: () => (_textes().OUTRO_FINS?.[finId] ?? []).length > 0,
+        condition: () => extraireLignesCutscene(_textes().OUTRO_FINS?.[finId]).length > 0,
         executer: (suivant) => {
             const outro = _textes().OUTRO_FINS[finId];
             void _importerUi()

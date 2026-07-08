@@ -422,6 +422,7 @@ const FICHIERS_A_CACHER = [
     './js/rendu/rendu-robo-donnees.js',
     './js/rendu/rendu-robo-geometrie.js',
     './js/rendu/rendu-robo-mini.js',
+    './js/rendu/rendu-robo-transition.js',
     './js/rendu/rendu-robo-visage.js',
     './js/rendu/rendu-robo.js',
     './js/rendu/rendu-vivant.js',

@@ -1,6 +1,6 @@
 export const CUTSCENES_POST_MONDE_FINALE = {
     monde_miroir: {
-        scene: 'fragmentation',
+        scene: 'miroir',
         lignes: [
             {
                 personnage: 'robo',
@@ -26,7 +26,7 @@ export const CUTSCENES_POST_MONDE_FINALE = {
     },
 
     monde_trame: {
-        scene: 'trame',
+        scene: 'trame_primordiale',
         lignes: [
             {
                 personnage: 'narrateur',
@@ -68,7 +68,7 @@ export const CUTSCENES_POST_MONDE_FINALE = {
     },
 
     monde_paradoxe: {
-        scene: 'trame',
+        scene: 'trame_primordiale',
         lignes: [
             { personnage: 'narrateur', texte: '...' },
             {

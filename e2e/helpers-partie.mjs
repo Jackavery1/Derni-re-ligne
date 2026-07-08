@@ -20,11 +20,6 @@ export async function fermerPanneauDetailSiOuvert(page) {
 /** @param {import('@playwright/test').Page} page */
 export async function activerPausePartie(page) {
     await fermerPanneauDetailSiOuvert(page);
-    const pauseMobile = page.locator('#btn-pause-mobile');
-    if (await pauseMobile.isVisible()) {
-        await pauseMobile.click();
-        return;
-    }
     await page.locator('#btn-pause').click();
 }
 
@@ -32,11 +27,6 @@ export async function activerPausePartie(page) {
 export async function activerPausePartieTactile(page) {
     await fermerPanneauDetailSiOuvert(page);
     const pauseViaDom = await page.evaluate(() => {
-        const mobile = document.getElementById('btn-pause-mobile');
-        if (mobile && getComputedStyle(mobile).display !== 'none') {
-            mobile.click();
-            return true;
-        }
         document.getElementById('btn-pause')?.click();
         return true;
     });

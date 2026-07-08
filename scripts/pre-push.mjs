@@ -11,7 +11,7 @@ const etapesRapides = [
     'npm run format:check',
     'npm run typecheck',
     'npm run check:circular',
-    'npm run verify:data',
+    'node scripts/pre-push-verify-data.mjs',
     'npm test',
 ];
 
@@ -45,6 +45,11 @@ const remediations = {
     ],
     'npm run lint': ['→ npm run lint', '→ Corriger les erreurs ESLint listées ci-dessus'],
     'npm run verify:data': [
+        '→ npm run histoire:json',
+        '→ npm run verify:data',
+        '→ Inclure data/histoire-textes.json dans le commit si modifié',
+    ],
+    'node scripts/pre-push-verify-data.mjs': [
         '→ npm run histoire:json',
         '→ npm run verify:data',
         '→ Inclure data/histoire-textes.json dans le commit si modifié',

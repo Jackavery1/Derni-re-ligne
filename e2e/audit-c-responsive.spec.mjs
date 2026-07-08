@@ -227,9 +227,9 @@ test('audit C12 — pause portrait au touch', { tag: '@touch-only' }, async ({ p
 
     const metriques = await page.evaluate(() => {
         const reprendre = document.getElementById('btn-reprendre');
-        const pauseMobile = document.getElementById('btn-pause-mobile');
+        const pause = document.getElementById('btn-pause');
         const rect = reprendre?.getBoundingClientRect();
-        const pauseRect = pauseMobile?.getBoundingClientRect();
+        const pauseRect = pause?.getBoundingClientRect();
         return {
             debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
             boutonH: rect?.height ?? 0,

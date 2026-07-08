@@ -34,6 +34,12 @@ export function dessinerPortraitDistorsion(ctx, w, h, t, params) {
 
     if (fondTransparent) {
         ctx.clearRect(0, 0, w, h);
+        const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(w, h) * 0.48);
+        halo.addColorStop(0, 'rgba(180, 0, 255, 0.28)');
+        halo.addColorStop(0.55, 'rgba(255, 0, 110, 0.14)');
+        halo.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = halo;
+        ctx.fillRect(0, 0, w, h);
     } else {
         ctx.fillStyle = '#000';
         ctx.fillRect(0, 0, w, h);

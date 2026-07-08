@@ -210,7 +210,7 @@ describe('histoire-textes — cohérence portraits', () => {
         const lignesIntro = INTRO_HISTOIRE.lignes ?? [];
         expect(lignesIntro.some((l) => l.scene === 'fragmentation' && ids.has(l.scene))).toBe(true);
         const entreeTrame = extraireLignesCutscene(CUTSCENES_ENTREE.monde_trame);
-        expect(entreeTrame.some((l) => l.scene === 'trame')).toBe(true);
+        expect(entreeTrame.some((l) => l.scene === 'trame_primordiale')).toBe(true);
     });
 
     it('CLE_FRAGMENT_PAR_MONDE couvre chaque fragment narratif', () => {

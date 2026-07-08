@@ -15,6 +15,7 @@ import { CUTSCENES_VICTOIRE_BOSS } from '../js/histoire-textes/cutscenes-boss-vi
 import { DIALOGUES_COMBAT_BOSS } from '../js/histoire-textes/dialogues-boss.js';
 import { EPILOGUES, TRANSITIONS_CHAPITRE } from '../js/histoire-textes/chapitres.js';
 import { OUTRO_FINS } from '../js/histoire-textes/intro-interludes.js';
+import { extraireLignesCutscene } from '../js/histoire/histoire-cutscene-moteur.js';
 import { CUTSCENES_ENTREE } from '../js/histoire-textes/cutscenes-entree.js';
 import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
 import {
@@ -266,12 +267,14 @@ describe('corrections audit', () => {
         });
 
         it('fin_normale avec battement avant mille ans', () => {
-            const vera = EPILOGUES.fin_normale.filter((l) => l.personnage === 'vera');
+            const vera = extraireLignesCutscene(EPILOGUES.fin_normale).filter(
+                (l) => l.personnage === 'vera'
+            );
             expect(vera[0].texte).toContain('silence a changé');
         });
 
         it('fin_vraie accents complétion / incomplétude', () => {
-            const narrateur = EPILOGUES.fin_vraie.find(
+            const narrateur = extraireLignesCutscene(EPILOGUES.fin_vraie).find(
                 (l) => l.personnage === 'narrateur' && l.texte.includes('complétion')
             );
             expect(narrateur.texte).toContain('incomplétude');
@@ -290,7 +293,7 @@ describe('corrections audit', () => {
         });
 
         it('fin_vraie outro boucle le motif joie', () => {
-            const robo = OUTRO_FINS.fin_vraie.find(
+            const robo = extraireLignesCutscene(OUTRO_FINS.fin_vraie).find(
                 (l) => l.personnage === 'robo' && l.texte.includes('ressemble')
             );
             expect(robo.texte).toContain('Je le garde');

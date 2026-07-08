@@ -49,46 +49,6 @@
     flex-shrink: 0;
 }
 
-.btn-pause-mobile {
-    display: none;
-    position: fixed;
-    top: max(4px, var(--safe-top));
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 9600;
-    min-width: 48px;
-    min-height: 48px;
-    padding: 8px 14px;
-    background: rgba(0, 0, 0, 0.72);
-    border: 1px solid var(--bordure);
-    color: var(--texte);
-    font-family: var(--police);
-    font-size: 0.42rem;
-    letter-spacing: 1px;
-    cursor: pointer;
-    border-radius: 4px;
-    align-items: center;
-    justify-content: center;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-}
-
-body.partie-active.controles-tactiles-actifs:not(.coop-active) .btn-pause-mobile {
-    display: flex;
-}
-
-@media (pointer: coarse) {
-    body.partie-active:not(.coop-active) .btn-pause-mobile {
-        display: flex;
-    }
-}
-
-@media (max-width: 768px) {
-    body.partie-active:not(.coop-active) .btn-pause-mobile {
-        display: flex;
-    }
-}
-
 #canvas-plateau {
     position: relative;
     z-index: 1;

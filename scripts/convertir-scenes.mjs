@@ -33,6 +33,15 @@ const GRAVITE_RECADRAGE = {
     scene_seuil_brasier: 'centre',
     scene_seuil_sentinelle: 'centre',
     scene_seuil_archiviste: 'centre',
+    scene_antre_distorsion: 'centre',
+    scene_miroir: 0.55,
+    scene_trame_primordiale: 'centre',
+    scene_interlude_gardiens: 'centre',
+    scene_interlude_veille: 'bas',
+    scene_interlude_elle: 'centre',
+    scene_fin_crepuscule: 'centre',
+    scene_fin_lumineuse: 'centre',
+    scene_fin_recommencement: 'centre',
 };
 
 /**

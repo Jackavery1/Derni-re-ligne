@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest';
 import * as textesHistoire from '../js/histoire-textes.js';
 import { activerModeHistoire, desactiverModeHistoire } from '../js/etat/mode-histoire.js';
 import { attendreMock } from './helpers-narratif-async.mjs';
+import { extraireLignesCutscene } from '../js/histoire/histoire-cutscene-moteur.js';
 
 const { afficherCutsceneHistoire, executerFin } = vi.hoisted(() => ({
     afficherCutsceneHistoire: vi.fn((_textes, _persos, onFin) => onFin?.()),
@@ -59,8 +60,12 @@ describe('declencherFin — épilogue puis outro', () => {
         const [textesEpilogue] = afficherCutsceneHistoire.mock.calls[0];
         const [textesOutro] = afficherCutsceneHistoire.mock.calls[1];
 
-        expect(textesEpilogue.length).toBeGreaterThan(0);
-        expect(textesOutro.some((l) => String(l.texte ?? l).includes('LE CYCLE'))).toBe(true);
+        expect(extraireLignesCutscene(textesEpilogue).length).toBeGreaterThan(0);
+        expect(
+            extraireLignesCutscene(textesOutro).some((l) =>
+                String(l.texte ?? l).includes('LE CYCLE')
+            )
+        ).toBe(true);
         expect(executerFin).toHaveBeenCalledWith('fin_normale');
     });
 
@@ -68,12 +73,16 @@ describe('declencherFin — épilogue puis outro', () => {
         const { obtenirHistoireTextesSync } = await import('../js/io/charger-histoire-textes.js');
         const { OUTRO_FINS } = obtenirHistoireTextesSync();
         for (const cle of ['fin_normale', 'fin_vraie', 'fin_secrete']) {
-            expect(OUTRO_FINS[cle]?.length).toBeGreaterThan(0);
+            expect(extraireLignesCutscene(OUTRO_FINS[cle]).length).toBeGreaterThan(0);
         }
-        expect(OUTRO_FINS.fin_vraie.some((l) => l.texte.includes("L'HARMONIE"))).toBe(true);
-        expect(OUTRO_FINS.fin_secrete.some((l) => l.texte.includes('LA LIGNE PARFAITE'))).toBe(
-            true
-        );
+        expect(
+            extraireLignesCutscene(OUTRO_FINS.fin_vraie).some((l) => l.texte.includes("L'HARMONIE"))
+        ).toBe(true);
+        expect(
+            extraireLignesCutscene(OUTRO_FINS.fin_secrete).some((l) =>
+                l.texte.includes('LA LIGNE PARFAITE')
+            )
+        ).toBe(true);
     });
 
     it('enchaîne épilogue, outro et executerFin pour fin_secrete', async () => {
@@ -81,9 +90,11 @@ describe('declencherFin — épilogue puis outro', () => {
         await attendreMock(afficherCutsceneHistoire, 2);
 
         const [textesOutro] = afficherCutsceneHistoire.mock.calls[1];
-        expect(textesOutro.some((l) => String(l.texte ?? l).includes('LA LIGNE PARFAITE'))).toBe(
-            true
-        );
+        expect(
+            extraireLignesCutscene(textesOutro).some((l) =>
+                String(l.texte ?? l).includes('LA LIGNE PARFAITE')
+            )
+        ).toBe(true);
         expect(executerFin).toHaveBeenCalledWith('fin_secrete');
     });
 
@@ -92,7 +103,11 @@ describe('declencherFin — épilogue puis outro', () => {
         await attendreMock(afficherCutsceneHistoire, 2);
 
         const [textesOutro] = afficherCutsceneHistoire.mock.calls[1];
-        expect(textesOutro.some((l) => String(l.texte ?? l).includes("L'HARMONIE"))).toBe(true);
+        expect(
+            extraireLignesCutscene(textesOutro).some((l) =>
+                String(l.texte ?? l).includes("L'HARMONIE")
+            )
+        ).toBe(true);
         expect(executerFin).toHaveBeenCalledWith('fin_vraie');
     });
 });

@@ -203,37 +203,3 @@ body.coop-active #controles-paysage {
         gap: 8px;
     }
 }
-
-@media (max-width: 480px) and (orientation: portrait) {
-    .panneau {
-        width: auto !important;
-    }
-
-    .section {
-        padding: 6px 6px !important;
-        gap: 6px !important;
-    }
-
-    .section-titre {
-        font-size: 0.35rem !important;
-    }
-
-    .stat-label {
-        font-size: 0.28rem !important;
-        margin-bottom: 2px !important;
-    }
-
-    .stat-valeur {
-        font-size: 0.7rem !important;
-    }
-
-    #canvas-reserve,
-    #canvas-preview {
-        max-width: 80px !important;
-        height: auto !important;
-    }
-
-    #interface-jeu {
-        gap: 4px !important;
-    }
-}

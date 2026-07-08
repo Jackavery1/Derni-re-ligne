@@ -30,13 +30,6 @@ vi.mock('../js/rendu/portrait-vera-rendu.js', () => ({
     prechargerPortraitVera: vi.fn(async () => {}),
 }));
 
-async function attendreDemarrageCutscene() {
-    await Promise.resolve();
-    await Promise.resolve();
-    await Promise.resolve();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-}
-
 function creerCanvas(id) {
     const canvas = {
         id,
@@ -48,6 +41,7 @@ function creerCanvas(id) {
             remove: vi.fn(),
             toggle: vi.fn(),
         },
+        dataset: {},
         getContext: () => ({
             clearRect: vi.fn(),
             fillRect: vi.fn(),
@@ -99,6 +93,17 @@ describe('cutscene UI', () => {
     let ecranCutscene;
     /** @type {typeof import('../js/histoire/histoire-manager-ui.js')} */
     let managerUi;
+
+    async function attendreDemarrageCutscene() {
+        const { typewriterEstActif } =
+            await import('../js/histoire/histoire-cutscene-typewriter.js');
+        const deadline = Date.now() + 5000;
+        while (Date.now() < deadline) {
+            if (texteEl.textContent || narrationEl.textContent || typewriterEstActif()) return;
+            await new Promise((resolve) => setTimeout(resolve, 5));
+        }
+        throw new Error('Cutscene : première ligne non affichée');
+    }
 
     beforeEach(async () => {
         elements = new Map();
@@ -250,7 +255,7 @@ describe('cutscene UI', () => {
         });
 
         expect(demarre).toBe(true);
-        await attendreDemarrageCutscene();
+        await new Promise((resolve) => setTimeout(resolve, 50));
         expect(onFin).toHaveBeenCalledTimes(1);
     });
 });

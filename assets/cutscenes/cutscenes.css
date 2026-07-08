@@ -183,6 +183,11 @@
     transform: translateY(14px);
 }
 
+#canvas-portrait-gauche[data-personnage='distorsion'].ecoute,
+#canvas-portrait-droite[data-personnage='distorsion'].ecoute {
+    opacity: 0.72;
+}
+
 #canvas-portrait-gauche.absent,
 #canvas-portrait-droite.absent {
     opacity: 0;

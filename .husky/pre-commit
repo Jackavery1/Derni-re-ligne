@@ -1,2 +1,2 @@
 npx lint-staged
-node scripts/verifier-histoire-json-a-jour.mjs
+node scripts/pre-commit-histoire-json.mjs
