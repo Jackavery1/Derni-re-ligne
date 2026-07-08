@@ -1,5 +1,7 @@
 import { creerFileNotifications } from '../ui/notifications-file.js';
 import { sansAccentsE } from '../logique/texte-jeu.js';
+import { rendreIconeSurCanvas } from '../rendu/icones-pixel.js';
+import { obtenirIdIconeAchievement } from '../achievements-icones-map.js';
 
 export function creerStatsVides() {
     return {
@@ -52,10 +54,12 @@ export const fileAchievements = creerFileNotifications({
     afficher(ach, terminer) {
         const notif = document.getElementById('notif-achievement');
         if (!notif) return false;
-        const icone = document.getElementById('ach-icone');
+        const icone = document.getElementById('ach-notif-icone');
         const nom = document.getElementById('ach-nom');
         const desc = document.getElementById('ach-description');
-        if (icone) icone.textContent = ach.icone;
+        if (icone instanceof HTMLCanvasElement) {
+            rendreIconeSurCanvas(icone, obtenirIdIconeAchievement(ach.id, ach.categorie));
+        }
         if (nom) nom.textContent = sansAccentsE(ach.nom);
         if (desc) desc.textContent = sansAccentsE(ach.description);
         notif.classList.add('visible');

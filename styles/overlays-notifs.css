@@ -62,10 +62,16 @@
     bottom: 24px;
 }
 .ach-badge {
-    font-size: 2rem;
+    flex-shrink: 0;
     line-height: 1;
     filter: drop-shadow(0 0 8px var(--jaune));
     animation: tourneBadge 3s linear infinite;
+}
+.ach-badge canvas {
+    display: block;
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;
 }
 .ach-entete {
     font-size: var(--typo-hud-micro);
