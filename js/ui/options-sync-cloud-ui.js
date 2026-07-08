@@ -131,8 +131,8 @@ export function mettreAJourUiSyncCloud() {
         const labels = {
             idle: 'Sync cloud : inactif',
             sync: 'Sync cloud : en cours…',
-            ok: 'Sync cloud : a jour',
-            erreur: 'Sync cloud : erreur reseau',
+            ok: 'Sync cloud : à jour',
+            erreur: 'Sync cloud : erreur réseau',
             'hors-ligne': 'Sync cloud : hors ligne',
             config: 'Sync cloud : URL Supabase invalide',
         };

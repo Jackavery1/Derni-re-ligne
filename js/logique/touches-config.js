@@ -25,7 +25,7 @@ export const LIBELLES_ACTIONS = {
     tournerH: 'Tourner (horaire)',
     tournerAH: 'Tourner (anti-horaire)',
     chute: 'Chute rapide',
-    hold: 'Reserve',
+    hold: 'Réserve',
     pause: 'Pause',
 };
 

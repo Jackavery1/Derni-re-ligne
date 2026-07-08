@@ -87,7 +87,7 @@ export function mettreAJourBoutonControlesTactiles(btn) {
 
 export function mettreAJourBoutonEnchainementCampagne(btn) {
     const actif = enchainementCampagneActif();
-    btn.textContent = actif ? '▶ ENCHAINEMENT CAMPAGNE ON' : '▶ RETOUR CARTE APRES VICTOIRE';
+    btn.textContent = actif ? '▶ ENCHAÎNEMENT CAMPAGNE ON' : '▶ RETOUR CARTE APRÈS VICTOIRE';
     btn.setAttribute('aria-pressed', actif ? 'true' : 'false');
     btn.classList.toggle('actif', actif);
 }
