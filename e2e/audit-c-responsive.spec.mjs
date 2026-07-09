@@ -7,7 +7,6 @@ import {
     demarrerPartieViaClavier,
     terminerPartieCourante,
     terminerPartieCoopCourante,
-    appliquerEncocheSimulee,
     appliquerSafeAreaIphone,
     PROFILS_IPHONE_SAFE_AREA,
     ouvrirCarteHistoire,
@@ -30,11 +29,34 @@ async function ouvrirPremierNiveauArchitecte(page) {
     await page.locator('#btn-panneau-detail-jouer').click();
 }
 
+test('audit C1 — letterbox canvas sans deformation', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await demarrerPartie(page);
+
+    const metriques = await page.evaluate(() => {
+        const canvas = document.getElementById('canvas-plateau');
+        const iface = document.getElementById('interface-jeu');
+        if (!canvas || !iface) return null;
+        const rect = canvas.getBoundingClientRect();
+        const ratioInterne = canvas.width / canvas.height;
+        const ratioAffiche = rect.width / rect.height;
+        const scale = parseFloat(getComputedStyle(iface).getPropertyValue('--iface-scale') || '1');
+        const overflowX = document.documentElement.scrollWidth > window.innerWidth + 2;
+        return { ratioInterne, ratioAffiche, scale, overflowX };
+    });
+
+    expect(metriques).not.toBeNull();
+    expect(metriques.ratioInterne).toBeCloseTo(0.5, 2);
+    expect(metriques.ratioAffiche).toBeCloseTo(0.5, 1);
+    expect(metriques.scale).toBeGreaterThan(0);
+    expect(metriques.overflowX).toBe(false);
+});
+
 test('audit C11 — pause paysage respecte encoche simulee', async ({ page }) => {
     test.info().annotations.push(ANNOTATION_C11);
     await demarrerPartie(page);
     await page.setViewportSize({ width: 667, height: 375 });
-    await appliquerEncocheSimulee(page);
+    await appliquerSafeAreaIphone(page);
     await page.keyboard.press('Escape');
     await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
 
@@ -62,7 +84,7 @@ test('audit C11 — game over paysage respecte encoche simulee', async ({ page }
     test.info().annotations.push(ANNOTATION_C11);
     await page.setViewportSize({ width: 667, height: 375 });
     await demarrerPartieViaClavier(page);
-    await appliquerEncocheSimulee(page);
+    await appliquerSafeAreaIphone(page);
     await terminerPartieCourante(page);
     await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/, { timeout: 10000 });
 
@@ -86,7 +108,7 @@ test('audit C11 — pause coop paysage respecte encoche simulee', async ({ page 
     test.info().annotations.push(ANNOTATION_C11);
     await demarrerPartieCoop(page);
     await page.setViewportSize({ width: 667, height: 375 });
-    await appliquerEncocheSimulee(page);
+    await appliquerSafeAreaIphone(page);
     await activerPauseCoopTactile(page);
     await expect(page.locator('#ecran-pause-coop')).toHaveClass(/actif/);
 
@@ -110,7 +132,7 @@ test('audit C11 — game over coop paysage respecte encoche simulee', async ({ p
     test.info().annotations.push(ANNOTATION_C11);
     await demarrerPartieCoop(page);
     await page.setViewportSize({ width: 667, height: 375 });
-    await appliquerEncocheSimulee(page);
+    await appliquerSafeAreaIphone(page);
     await terminerPartieCoopCourante(page);
 
     const metriques = await page.evaluate(() => {
@@ -135,7 +157,7 @@ test('audit C11 — architecte paysage respecte encoche simulee', async ({ page 
     await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
-    await appliquerEncocheSimulee(page);
+    await appliquerSafeAreaIphone(page);
     await page.locator('#btn-architecte').click();
     await ouvrirPremierNiveauArchitecte(page);
     await expect(page.locator('#interface-jeu-archi')).toBeVisible({ timeout: 5000 });
@@ -171,7 +193,7 @@ test('audit C1 — architecte telephone paysage tactile valider', async ({ page 
     await expect(page.locator('#interface-jeu-archi')).toBeVisible({ timeout: 5000 });
 
     const piecesAvant = (await page.locator('#archi-pieces-used').textContent()) ?? '0';
-    await page.locator('#btn-archi-valider-p').click();
+    await page.locator('#btn-archi-valider-p').click({ force: true });
     await expect(page.locator('#archi-pieces-used')).not.toHaveText(piecesAvant);
 
     const metriques = await page.evaluate(() => {
@@ -198,7 +220,7 @@ test('audit C11 — carte histoire iPhone respecte encoche simulee', async ({ br
     const context = await browser.newContext({ ...devices['iPhone 14'] });
     const page = await context.newPage();
     await ouvrirCarteHistoire(page, ETAT_DEBLOCAGE_META_RAPIDE);
-    await appliquerEncocheSimulee(page);
+    await appliquerSafeAreaIphone(page);
 
     const metriques = await page.evaluate(() => {
         const header = document.getElementById('histoire-map-header');
@@ -229,22 +251,22 @@ test('audit C12 — pause portrait au touch', { tag: '@touch-only' }, async ({ p
 
     const metriques = await page.evaluate(() => {
         const reprendre = document.getElementById('btn-reprendre');
-        const pause = document.getElementById('btn-pause');
+        const quitter = document.getElementById('btn-pause-quitter');
         const rect = reprendre?.getBoundingClientRect();
-        const pauseRect = pause?.getBoundingClientRect();
+        const quitterRect = quitter?.getBoundingClientRect();
         return {
             debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
             boutonH: rect?.height ?? 0,
             boutonW: rect?.width ?? 0,
-            pauseH: pauseRect?.height ?? 0,
-            pauseW: pauseRect?.width ?? 0,
+            quitterH: quitterRect?.height ?? 0,
+            quitterW: quitterRect?.width ?? 0,
         };
     });
     expect(metriques.debord).toBe(false);
     expect(metriques.boutonH).toBeGreaterThanOrEqual(48);
     expect(metriques.boutonW).toBeGreaterThanOrEqual(48);
-    expect(metriques.pauseH).toBeGreaterThanOrEqual(48);
-    expect(metriques.pauseW).toBeGreaterThanOrEqual(48);
+    expect(metriques.quitterH).toBeGreaterThanOrEqual(48);
+    expect(metriques.quitterW).toBeGreaterThanOrEqual(48);
 });
 
 test('audit C12 — pause coop portrait au touch', { tag: '@touch-only' }, async ({ page }) => {

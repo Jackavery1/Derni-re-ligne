@@ -20,9 +20,9 @@
 .codex-titre {
     font-family: var(--font-titre);
     font-size: var(--typo-titre-ecran);
-    color: #ff2d78;
+    color: var(--rose-ui);
     letter-spacing: 6px;
-    text-shadow: 0 0 12px #ff2d78;
+    text-shadow: 0 0 12px var(--rose-ui);
 }
 
 .codex-titre.jaune {
@@ -56,9 +56,9 @@
 }
 .codex-onglet.actif {
     border-color: var(--bordure);
-    border-bottom-color: #ff2d78;
-    color: #ff2d78;
-    text-shadow: 0 0 6px #ff2d78;
+    border-bottom-color: var(--rose-ui);
+    color: var(--rose-ui);
+    text-shadow: 0 0 6px var(--rose-ui);
     box-shadow: 0 4px 12px rgba(255, 45, 120, 0.15);
 }
 .codex-onglet:hover:not(.actif) {
@@ -76,7 +76,6 @@
     box-sizing: border-box;
 }
 .codex-item {
-    --accent-carte: #6644cc;
     border-color: color-mix(in srgb, var(--accent-carte) 55%, transparent);
     box-shadow:
         0 0 10px color-mix(in srgb, var(--accent-carte) 22%, transparent),

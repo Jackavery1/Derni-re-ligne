@@ -183,12 +183,18 @@ function _appliquerProgressionFinPartie(scoreFinal) {
 }
 
 function _remplirEcranGameOver(scoreFinal, nouveauRecord) {
-    document.getElementById('score-final').textContent = scoreFinal.toLocaleString('fr-FR');
-    document.getElementById('lignes-finales').textContent = String(etat.lignes);
-    document.getElementById('niveau-final').textContent = String(etat.niveau);
-    document.getElementById('record-final').textContent =
-        obtenirRecordBiome(obtenirBiomeActif()).toLocaleString('fr-FR');
-    document.getElementById('temps-final').textContent = formaterTemps(obtenirTempsEcoule());
+    const scoreEl = document.getElementById('score-final');
+    const lignesEl = document.getElementById('lignes-finales');
+    const niveauEl = document.getElementById('niveau-final');
+    const recordEl = document.getElementById('record-final');
+    const tempsEl = document.getElementById('temps-final');
+    if (!scoreEl || !lignesEl || !niveauEl || !recordEl || !tempsEl) return;
+
+    scoreEl.textContent = scoreFinal.toLocaleString('fr-FR');
+    lignesEl.textContent = String(etat.lignes);
+    niveauEl.textContent = String(etat.niveau);
+    recordEl.textContent = obtenirRecordBiome(obtenirBiomeActif()).toLocaleString('fr-FR');
+    tempsEl.textContent = formaterTemps(obtenirTempsEcoule());
 
     const badge = document.getElementById('badge-record');
     badge?.classList.toggle('element-masque', !nouveauRecord);

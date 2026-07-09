@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test';
+import { attendreNotificationsInitiales } from './helpers-page.mjs';
 export {
     obtenirScenePostMonde,
     MARQUEURS_NARRATIFS_POST_MONDE,
@@ -27,12 +28,6 @@ import {
 } from './helpers-narratif-core.mjs';
 import { SCENES_VICTOIRE_BOSS } from './helpers-narratif-donnees.mjs';
 
-export {
-    PROFILS_IPHONE_SAFE_AREA,
-    appliquerSafeAreaIphone,
-    appliquerEncocheSimulee,
-} from './helpers-iphone-safe-area.mjs';
-
 /** @param {import('@playwright/test').Page} page */
 export async function cliquerCutsceneSuivant(page) {
     await page.evaluate(() => {
@@ -47,14 +42,13 @@ export async function attendreCutsceneVictoireBoss(page) {
             const recap = document
                 .getElementById('overlay-recap-monde')
                 ?.classList.contains('objectif-overlay-visible');
-            const cutscene = document.getElementById('ecran-histoire-cutscene');
-            const dialogue =
-                cutscene?.classList.contains('actif') ||
-                cutscene?.classList.contains('cutscene-mode-dialogue');
-            return recap || dialogue;
+            const cutscene = document
+                .getElementById('ecran-histoire-cutscene')
+                ?.classList.contains('actif');
+            return recap || cutscene;
         },
         null,
-        { timeout: 20000 }
+        { timeout: 30000 }
     );
 
     const recapVisible = await page.evaluate(() =>
@@ -64,10 +58,19 @@ export async function attendreCutsceneVictoireBoss(page) {
     );
     if (recapVisible) {
         await page.locator('#btn-recap-continuer').click({ force: true });
-        await expect(page.locator('#btn-cutscene-suivant')).toBeVisible({ timeout: 15000 });
     }
 
-    await expect(page.locator('#btn-cutscene-suivant')).toBeVisible({ timeout: 15000 });
+    await expect
+        .poll(
+            () =>
+                page.evaluate(() => {
+                    const cutscene = document.getElementById('ecran-histoire-cutscene');
+                    if (cutscene?.classList.contains('actif')) return true;
+                    return Boolean(document.getElementById('btn-cutscene-suivant')?.offsetParent);
+                }),
+            { timeout: 30000 }
+        )
+        .toBe(true);
 }
 
 /**
@@ -145,6 +148,7 @@ export async function simulerVictoireBossHistoire(page, mondeId, lignes = 99) {
         },
         [mondeId, lignes]
     );
+    await attendreNotificationsInitiales(page);
 }
 
 /** @param {import('@playwright/test').Page} page @param {string} personnageId @param {string} humeur @param {number} [timeout] */

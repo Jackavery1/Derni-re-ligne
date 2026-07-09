@@ -22,6 +22,9 @@ export const optionsCommunesProd = {
     target: ['es2022'],
     legalComments: 'none',
     drop: ['console', 'debugger'],
+    define: {
+        __NEO_PROD__: 'true',
+    },
     metafile: true,
     plugins: [creerPluginStubHistoireFallback()],
 };

@@ -44,7 +44,7 @@
     font-family: var(--font-titre, 'Press Start 2P', monospace);
     font-size: clamp(0.55rem, 2.4vw, 0.75rem);
     letter-spacing: 4px;
-    color: #ff2d78;
+    color: var(--rose);
     text-shadow: 0 0 12px rgba(255, 45, 120, 0.55);
 }
 
@@ -70,7 +70,7 @@
 .ecran-chargement-barre-fill {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, #b400ff, #ff2d78, #00f5ff);
+    background: linear-gradient(90deg, var(--violet), var(--rose), var(--cyan));
     box-shadow: 0 0 10px rgba(255, 45, 120, 0.45);
     transition: width 0.25s ease-out;
 }

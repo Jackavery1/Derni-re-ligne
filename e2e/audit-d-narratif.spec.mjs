@@ -131,7 +131,7 @@ test('victoire Avant-Garde — humeur avantgarde calme (audit D)', async ({ page
     await assertHumeurPortraitCutscene(page, 'avantgarde', 'calme');
 });
 
-test('victoire Distorsion — cutscene finale fragmentation (audit D)', async ({ page }) => {
+test('victoire Distorsion — cutscene finale fin lumineuse (audit D)', async ({ page }) => {
     test.setTimeout(45000);
     await ouvrirCarteHistoire(page, ETAT_AVANT_FIN_VRAIE);
     await simulerVictoireBossHistoire(page, 'monde_finale');

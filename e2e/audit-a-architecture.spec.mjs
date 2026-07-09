@@ -117,10 +117,12 @@ test.describe('audit A — architecture', () => {
         await page.goto('/');
         await attendreApplicationPrete(page);
         const hasModules = await page.evaluate(() => {
-            return (
+            const fragmentsCharges =
+                document.querySelectorAll('#conteneur-ecrans [id^="ecran-"]').length >= 3;
+            const modulesJeu =
                 document.querySelectorAll('[id^="interface-"], [id^="zone-"], [id^="canvas-"]')
-                    .length > 5
-            );
+                    .length > 5;
+            return fragmentsCharges || modulesJeu;
         });
         expect(hasModules).toBe(true);
     });

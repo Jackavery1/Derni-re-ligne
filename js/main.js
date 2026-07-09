@@ -86,7 +86,7 @@ async function demarrer() {
 }
 
 if ('serviceWorker' in navigator && swAutorise()) {
-    window.addEventListener('load', () => {
+    const enregistrerSw = () => {
         navigator.serviceWorker
             .register('sw.js')
             .then((reg) => {
@@ -108,7 +108,13 @@ if ('serviceWorker' in navigator && swAutorise()) {
                 window.location.reload();
             });
         });
-    });
+    };
+
+    if (document.readyState === 'complete') {
+        enregistrerSw();
+    } else {
+        window.addEventListener('load', enregistrerSw);
+    }
 
     navigator.serviceWorker.addEventListener('controllerchange', () => {
         window.location.reload();

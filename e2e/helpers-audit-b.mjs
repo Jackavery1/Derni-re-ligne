@@ -1,5 +1,7 @@
 import { expect } from '@playwright/test';
 import { ETAT_DEBLOCAGE_META_RAPIDE } from './etats-histoire.mjs';
+import { preparerPageSansSw } from './helpers-page.mjs';
+import { fermerPanneauDetailSiOuvert } from './helpers-partie.mjs';
 
 /** @param {import('@playwright/test').Page} page */
 export async function installerJournalVibrations(page) {
@@ -22,44 +24,36 @@ export async function preparerSelectionPremiereVisiteModes(
     etat = ETAT_DEBLOCAGE_META_RAPIDE
 ) {
     await installerJournalVibrations(page);
-    await page.route('**/sw.js', (route) => route.abort());
-    await page.addInitScript((e) => {
-        window.__NEO_SILENT_NOTIFS__ = true;
+    await preparerPageSansSw(page, etat);
+    await page.addInitScript(() => {
         window.__NEO_SUPPRESS_MODE_INFOBULLE_AUTO__ = true;
-        localStorage.setItem('dl_migration_v1', '1');
-        localStorage.setItem('derniereLigne_tutorielVu', '1');
-        localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
-        localStorage.setItem('derniereLigne_tutorielLibreVu', '1');
-        localStorage.setItem('derniereLigne_tutorielCoopVu', '1');
-        localStorage.setItem('derniereLigne_tutorielArchitecteVu', '1');
-        localStorage.setItem('derniereLigne_tutorielOracleVu', '1');
-        localStorage.setItem('derniereLigne_tutorielDistorsionVu', '1');
-        localStorage.setItem('derniereLigne_introHistoireVue', '1');
         localStorage.removeItem('derniereLigne_infobullesModesJeu');
         localStorage.removeItem('derniereLigne_infobulleOracleCoop');
-        localStorage.setItem('derniereLigne_histoire', JSON.stringify(e));
-        if ('serviceWorker' in navigator) {
-            void navigator.serviceWorker.getRegistrations().then((regs) => {
-                for (const reg of regs) void reg.unregister();
-            });
-        }
-    }, etat);
+    });
+}
+
+/** @param {import('@playwright/test').Page} page @param {string} selectId @param {string} value */
+async function forcerValeurSelect(page, selectId, value) {
+    await page.evaluate(
+        ([id, val]) => {
+            const select = document.getElementById(id);
+            if (!select) return;
+            for (const opt of select.options) {
+                if (opt.value === val) {
+                    opt.disabled = false;
+                    select.value = val;
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                    break;
+                }
+            }
+        },
+        [selectId, value]
+    );
 }
 
 /** @param {import('@playwright/test').Page} page @param {string} biomeId */
 export async function selectionnerBiomeVerrouilleConstellation(page, biomeId) {
-    await page.evaluate((id) => {
-        const select = document.getElementById('sel-biome-clavier');
-        if (!select) return;
-        for (const opt of select.options) {
-            if (opt.value === id) {
-                opt.disabled = false;
-                select.value = id;
-                select.dispatchEvent(new Event('change', { bubbles: true }));
-                break;
-            }
-        }
-    }, biomeId);
+    await forcerValeurSelect(page, 'sel-biome-clavier', biomeId);
 }
 
 /** @param {import('@playwright/test').Page} page @param {string} mondeId */
@@ -67,18 +61,7 @@ export async function selectionnerMondeCarte(page, mondeId) {
     await expect(page.locator(`#histoire-monde-clavier option[value="${mondeId}"]`)).toBeAttached({
         timeout: 15000,
     });
-    await page.evaluate((id) => {
-        const select = document.getElementById('histoire-monde-clavier');
-        if (!select) return;
-        for (const opt of select.options) {
-            if (opt.value === id) {
-                opt.disabled = false;
-                select.value = id;
-                select.dispatchEvent(new Event('change', { bubbles: true }));
-                break;
-            }
-        }
-    }, mondeId);
+    await forcerValeurSelect(page, 'histoire-monde-clavier', mondeId);
 }
 
 /** @param {import('@playwright/test').Page} page */
@@ -98,7 +81,7 @@ export async function reinitialiserInfobulleMode(page, modeId) {
             delete vu[id];
             localStorage.setItem('derniereLigne_infobullesModesJeu', JSON.stringify(vu));
         } catch {
-            /* ignore */
+            /* JSON localStorage invalide */
         }
     }, modeId);
 }
@@ -117,40 +100,36 @@ export async function attendreInfobulleMode(page, titrePartiel) {
 }
 
 /** @param {import('@playwright/test').Page} page */
-export async function basculerDefiJourDepuisSelection(page) {
+async function assurerSelectionPrete(page) {
     await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
     await expect(page.locator('body')).not.toHaveClass(/partie-active/);
-    await page.evaluate(async () => {
-        const { basculerDefiJour } = await import('/js/mode-defi-jour.js');
-        basculerDefiJour();
-    });
+    await fermerPanneauDetailSiOuvert(page);
+}
+
+/** @param {import('@playwright/test').Page} page @param {string} toggleId */
+async function cliquerToggleSelection(page, toggleId) {
+    await assurerSelectionPrete(page);
+    await page.evaluate((id) => document.getElementById(id)?.click(), toggleId);
+}
+
+/** @param {import('@playwright/test').Page} page */
+export async function basculerDefiJourDepuisSelection(page) {
+    await cliquerToggleSelection(page, 'toggle-defi-jour');
 }
 
 /** @param {import('@playwright/test').Page} page */
 export async function basculerSprintDepuisSelection(page) {
-    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
-    await expect(page.locator('body')).not.toHaveClass(/partie-active/);
-    await page.evaluate(async () => {
-        const { basculerModeSprint } = await import('/js/mode-sprint.js');
-        basculerModeSprint();
-    });
+    await cliquerToggleSelection(page, 'toggle-sprint');
 }
 
 /** @param {import('@playwright/test').Page} page */
 export async function basculerOracleDepuisSelection(page) {
-    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
-    await expect(page.locator('body')).not.toHaveClass(/partie-active/);
-    await page.evaluate(async () => {
-        const { basculerOracle } = await import('/js/oracle-jeu.js');
-        basculerOracle();
-    });
+    await cliquerToggleSelection(page, 'toggle-oracle');
 }
 
 /** @param {import('@playwright/test').Page} page */
 export async function basculerCoopDepuisSelection(page) {
-    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
-    await expect(page.locator('body')).not.toHaveClass(/partie-active/);
-    await page.evaluate(() => document.getElementById('btn-panneau-detail-fermer')?.click());
+    await assurerSelectionPrete(page);
     await page.evaluate(() => document.getElementById('toggle-coop')?.click());
     await expect(page.locator('#toggle-coop')).toHaveClass(/actif/);
 }

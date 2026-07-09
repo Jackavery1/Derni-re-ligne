@@ -23,6 +23,7 @@ import {
     basculerSprintDepuisSelection,
     basculerOracleDepuisSelection,
     basculerCoopDepuisSelection,
+    terminerPartieCourante,
 } from './helpers.mjs';
 
 async function ouvrirSelectionModes(page, etat = ETAT_DEBLOCAGE_META_RAPIDE) {
@@ -222,11 +223,20 @@ test('audit B — game over histoire avertissement continue Trame', async ({ pag
     await page.goto('/?neoTest=1');
     await attendreApplicationPrete(page);
 
-    await page.evaluate(() => {
-        window.__NEO_TEST__?.simulerGameOverBossDistorsion?.();
+    await page.evaluate(async () => {
+        await window.__NEO_TEST__?.simulerGameOverBossDistorsion?.();
     });
 
     await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/, { timeout: 10000 });
     await expect(page.locator('#go-avertissement-trame')).toContainText(/Continue gratuit/i);
     await expect(page.locator('#btn-continue-boss')).toBeVisible();
+});
+
+test('audit B — sfx game over apres defaite', async ({ page }) => {
+    await demarrerPartie(page);
+    await page.evaluate(() => window.__NEO_TEST__?.viderJournalSfxTest?.());
+    await terminerPartieCourante(page);
+    await page.waitForTimeout(350);
+    const sfx = await page.evaluate(() => window.__NEO_TEST__?.obtenirJournalSfxTest?.() ?? []);
+    expect(sfx).toContain('game_over');
 });

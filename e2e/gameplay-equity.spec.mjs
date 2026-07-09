@@ -10,6 +10,28 @@ test.describe('gameplay equity', () => {
         expect(graceActive).toBe(true);
     });
 
+    test('grace spawn couvre au moins 24 frames a 60fps', async ({ page }) => {
+        await demarrerPartie(page);
+        const ok = await page.evaluate(async () => {
+            const grace = window.__NEO_TEST__?.obtenirGameFeel?.().spawnGraceRestant ?? 0;
+            const { CONFIG } = await import('/js/config/config-jeu.js');
+            const minMs = (24 * 1000) / 60;
+            return CONFIG.spawnGraceMs >= minMs && grace > 0;
+        });
+        expect(ok).toBe(true);
+    });
+
+    test('coyote time actif apres quitter le sol', async ({ page }) => {
+        await demarrerPartie(page);
+        const coyoteOk = await page.evaluate(() => {
+            const api = window.__NEO_TEST__;
+            api?.activerPieceAuSolTest?.();
+            api?.quitterSolPieceTest?.();
+            return api?.coyoteActifTest?.() ?? false;
+        });
+        expect(coyoteOk).toBe(true);
+    });
+
     test('ARE bloque les controles puis libere le buffer', async ({ page }) => {
         await demarrerPartie(page);
         const apresAre = await page.evaluate(() => {

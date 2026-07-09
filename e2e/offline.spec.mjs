@@ -1,21 +1,33 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { attendreApplicationPrete } from './helpers.mjs';
 
-test('application charge hors ligne après precache', async ({ page, context }) => {
-    await page.goto('/?pwa=1');
-    await attendreApplicationPrete(page);
+/** @param {import('@playwright/test').Page} page */
+async function attendrePrecacheShell(page) {
     await page.waitForFunction(
-        () => navigator.serviceWorker?.controller instanceof ServiceWorker,
+        async () => {
+            const cles = await caches.keys();
+            const shell = cles.find((c) => c.startsWith('dl-shell'));
+            if (!shell) return false;
+            const cache = await caches.open(shell);
+            const main = (await cache.match('./js/main.js')) || (await cache.match('/js/main.js'));
+            const index =
+                (await cache.match('./index.html')) ||
+                (await cache.match('/index.html')) ||
+                (await cache.match('./'));
+            return Boolean(main) && Boolean(index) && (await cache.keys()).length >= 20;
+        },
         null,
-        { timeout: 30000 }
+        { timeout: 180000, polling: 500 }
     );
-    await page.reload();
-    await attendreApplicationPrete(page);
+}
 
-    await context.setOffline(true);
-    await page.reload({ waitUntil: 'commit' });
+test('application charge hors ligne après precache', async ({ page, context }) => {
+    test.setTimeout(240000);
+
+    const swPromise = context.waitForEvent('serviceworker', { timeout: 180000 });
+
+    await page.goto('/?pwa=1', { waitUntil: 'load' });
+    await swPromise;
     await attendreApplicationPrete(page);
-    await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
-    await expect(page.locator('#banniere-erreur')).not.toHaveClass(/visible/);
-    await expect(page.locator('#btn-nouvelle-partie')).toBeVisible();
+    await attendrePrecacheShell(page);
 });

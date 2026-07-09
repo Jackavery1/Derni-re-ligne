@@ -112,7 +112,7 @@ export function rafraichirStats() {
     }
 
     if (modeHistoireEnCours()) {
-        void import('../ui/ui-panneau-objectifs.js').then(({ rafraichirHudObjectifsHistoire }) =>
+        void import('../ui/ui-objectifs-hud.js').then(({ rafraichirHudObjectifsHistoire }) =>
             rafraichirHudObjectifsHistoire()
         );
     }

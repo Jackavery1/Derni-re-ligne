@@ -21,6 +21,18 @@ test.describe('audit E — UI/UX', () => {
         expect(graves).toEqual([]);
     });
 
+    test('E1b — contraste bouton principal titre (Axe)', async ({ page }) => {
+        await preparerPageSansSw(page);
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+
+        const results = await new AxeBuilder({ page })
+            .include('#btn-jouer')
+            .withRules(['color-contrast'])
+            .analyze();
+        expect(results.violations).toEqual([]);
+    });
+
     test('E2 — color contrast meets WCAG standard', async ({ page }) => {
         await preparerPageSansSw(page);
         await page.goto('/');
@@ -144,22 +156,15 @@ test.describe('audit E — UI/UX', () => {
     test('E7 — spacing units consistent (clamp, rem, vw)', async ({ page }) => {
         await preparerPageSansSw(page);
         await page.goto('/');
-        const hasConsistentSpacing = await page.evaluate(() => {
-            const sheets = Array.from(document.styleSheets);
-            const cssText = sheets
-                .map((sheet) => {
-                    try {
-                        return Array.from(sheet.cssRules)
-                            .map((rule) => rule.cssText)
-                            .join(' ');
-                    } catch {
-                        return '';
-                    }
-                })
-                .join(' ');
-            return cssText.includes('clamp') || cssText.includes('rem') || cssText.includes('var(');
+        await attendreApplicationPrete(page);
+
+        const hasSpacingTokens = await page.evaluate(() => {
+            const style = getComputedStyle(document.documentElement);
+            return ['--space-1', '--space-4', '--space-6'].every(
+                (token) => style.getPropertyValue(token).trim().length > 0
+            );
         });
-        expect(hasConsistentSpacing).toBe(true);
+        expect(hasSpacingTokens).toBe(true);
     });
 
     test('E8 — images optimized (PNG, SVG, or WebP)', async ({ page }) => {
@@ -191,25 +196,12 @@ test.describe('audit E — UI/UX', () => {
     test('E10 — responsive layout (viewport units used)', async ({ page }) => {
         await preparerPageSansSw(page);
         await page.goto('/');
-        const responsive = await page.evaluate(() => {
-            const sheets = Array.from(document.styleSheets);
-            const cssText = sheets
-                .map((sheet) => {
-                    try {
-                        return Array.from(sheet.cssRules)
-                            .map((rule) => rule.cssText)
-                            .join(' ');
-                    } catch {
-                        return '';
-                    }
-                })
-                .join(' ');
-            return (
-                cssText.includes('vw') ||
-                cssText.includes('vh') ||
-                cssText.includes('dvh') ||
-                cssText.includes('clamp')
-            );
+        await attendreApplicationPrete(page);
+
+        const responsive = await page.evaluate(async () => {
+            const res = await fetch('styles/variables.css');
+            const css = await res.text();
+            return css.includes('clamp') && css.includes('vw') && css.includes('safe-area-inset');
         });
         expect(responsive).toBe(true);
     });

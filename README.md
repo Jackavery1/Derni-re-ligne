@@ -91,6 +91,7 @@ E2E bundle prod : voir [CONTRIBUTING.md](CONTRIBUTING.md) (`E2E_DIST=1`). Releas
 | Nouveau biome | [docs/ajouter-un-biome.md](docs/ajouter-un-biome.md)     |
 | Nouveau boss  | [docs/ajouter-un-boss.md](docs/ajouter-un-boss.md)       |
 | Nouvel écran  | [docs/ajouter-un-ecran.md](docs/ajouter-un-ecran.md)     |
+| Design tokens | [docs/design-tokens.md](docs/design-tokens.md)           |
 
 Entrée code : `index.html` → `js/main.js` → `js/moteur.js`.
 

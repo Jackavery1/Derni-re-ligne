@@ -83,7 +83,7 @@ import {
 import { demarrerFondBiome, arreterFondBiome } from './rendu/rendu-fond-biome.js';
 import { reinitialiserTimerNiveau } from './logique/timer-niveau.js';
 import { reinitialiserGameFeel, demarrerGraceSpawn } from './logique/game-feel-jeu.js';
-import { rafraichirHudObjectifsHistoire } from './ui/ui-panneau-objectifs.js';
+import { rafraichirHudObjectifsHistoire } from './ui/ui-objectifs-hud.js';
 import { demanderConfirmationDialog } from './ui/dialog-confirmation.js';
 export { initialiserCanvas, assurerCanvasPartie } from './logique/partie-canvas.js';
 export { terminerPartie } from './logique/partie-fin.js';

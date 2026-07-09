@@ -4,7 +4,7 @@ import {
     attendreApplicationPrete,
     attendreNotificationsInitiales,
     fermerRecapPostMonde,
-    appliquerEncocheSimulee,
+    appliquerSafeAreaIphone,
     passerCutsceneEntiere,
     attendreJournalHistoire,
     lancerMondeDepuisCarte,
@@ -149,7 +149,7 @@ test('journal mobile ultra-etroit 319px — contenu scrollable (audit D8)', asyn
     test.setTimeout(90000);
     await page.setViewportSize({ width: 319, height: 568 });
     await ouvrirCarteHistoire(page, ETAT_CYBER_LABO_PRET);
-    await appliquerEncocheSimulee(page);
+    await appliquerSafeAreaIphone(page);
     await page.evaluate(async () => {
         await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.('monde_cyber', 99);
     });
@@ -292,7 +292,7 @@ test('iphone — recap post-victoire respecte encoche simulee (audit D8/D11)', a
     const context = await browser.newContext({ ...devices['iPhone 14'] });
     const page = await context.newPage();
     await ouvrirCarteHistoire(page, ETAT_HISTOIRE_BOSS_BRASIER);
-    await appliquerEncocheSimulee(page);
+    await appliquerSafeAreaIphone(page);
     await page.evaluate(async () => {
         await window.__NEO_TEST__?.declencherPostMondeNarratif?.('monde_lave');
     });
@@ -417,7 +417,7 @@ test('iphone — cutscene respecte encoche simulee (audit C11)', async ({ browse
     }, ETAT_HISTOIRE_VIDE);
     await page.goto('/');
     await attendreApplicationPrete(page);
-    await appliquerEncocheSimulee(page);
+    await appliquerSafeAreaIphone(page);
     await attendreNotificationsInitiales(page);
     await page.locator('#btn-continuer').click();
     await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });

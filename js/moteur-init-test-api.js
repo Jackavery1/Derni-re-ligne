@@ -53,6 +53,15 @@ export function initialiserNeoTestApi() {
     void import('./neo-test-api.js').then(async ({ exposerNeoTestApi, estNeoTestAutorise }) => {
         if (!estNeoTestAutorise()) return;
         await depsTestApi;
+        const journalSfx = [];
+        const sonOrig = AudioMoteur.son.bind(AudioMoteur);
+        if (!AudioMoteur._journalSfxTest) {
+            AudioMoteur._journalSfxTest = journalSfx;
+            AudioMoteur.son = (type) => {
+                journalSfx.push(type);
+                return sonOrig(type);
+            };
+        }
         exposerNeoTestApi({
             terminerPartie: (victoire, options) =>
                 obtenirActions().terminerPartie?.(victoire, options),
@@ -83,8 +92,10 @@ export function initialiserNeoTestApi() {
                     await import('./histoire/histoire-manager-post-monde.js');
                 const { SEQUENCE_HISTOIRE } = await import('./histoire-donnees.js');
                 const { rafraichirEtatHistoire } = await import('./histoire/histoire-mondes.js');
+                const { assurerFragmentsPartie } = await import('./ui/charger-ecrans.js');
                 const monde = SEQUENCE_HISTOIRE.find((m) => m.id === mondeId);
                 if (!monde) return;
+                await assurerFragmentsPartie();
                 const etatHist = rafraichirEtatHistoire();
                 declencherNarratifPostMonde(monde, etatHist, true, [true, false, false]);
             },
@@ -98,8 +109,15 @@ export function initialiserNeoTestApi() {
                 const { chargerEtatHistoire } = await import('./io/progression.js');
                 store.histoire.etat = chargerEtatHistoire();
                 document.body.classList.add('histoire-active');
-                if (monde.estBoss) {
-                    store.histoire.boss.actif = true;
+                const { assurerFragmentsPartie } = await import('./ui/charger-ecrans.js');
+                await assurerFragmentsPartie();
+                if (monde.estBoss && monde.bossId) {
+                    const { BOSS } = await import('./histoire-donnees.js');
+                    const boss = BOSS[monde.bossId];
+                    if (boss) {
+                        store.histoire.boss.actif = boss;
+                        store.histoire.boss.pv = 0;
+                    }
                     store.histoire.boss.vaincu = true;
                 }
                 if (monde.biomeId === 'cyber') {
@@ -162,7 +180,7 @@ export function initialiserNeoTestApi() {
             },
             emettreEvenementBusJeu: (evenement, payload) => emettre(evenement, payload),
             menuAnimActif: () => menuAnimActif,
-            simulerGameOverBossDistorsion: () => {
+            simulerGameOverBossDistorsion: async () => {
                 activerModeHistoire();
                 store.histoire.mondeActuel = 'monde_finale';
                 store.histoire.boss.actif = {
@@ -180,6 +198,8 @@ export function initialiserNeoTestApi() {
                 etatHist.conditionsTrame.tousBossSansContinue = true;
                 persisterEtatHistoire(etatHist);
                 store.histoire.etat = etatHist;
+                const { assurerFragmentsPartie } = await import('./ui/charger-ecrans.js');
+                await assurerFragmentsPartie();
                 obtenirActions().terminerPartie?.(false, { immediat: true });
             },
             terminerPartieCoop: async () => {
@@ -207,6 +227,33 @@ export function initialiserNeoTestApi() {
             graceSpawnActiveTest: () => graceSpawnActive(),
             activerPieceAuSolTest: () => activerPieceAuSol(),
             quitterSolPieceTest: () => quitterSolPiece(),
+            obtenirJournalSfxTest: () => [...(AudioMoteur._journalSfxTest ?? [])],
+            viderJournalSfxTest: () => {
+                AudioMoteur._journalSfxTest?.splice(0);
+            },
+            evaluerPalierDifficultePrologue: async () => {
+                const { chargerDifficulteMondes, PALIERS_VITESSE_MS } =
+                    await import('./io/difficulte-mondes-chargement.js');
+                await chargerDifficulteMondes();
+                const {
+                    demarrerSuiviMonde,
+                    enregistrerProgression,
+                    enregistrerPosePiece,
+                    vitesseHistoireMs,
+                } = await import('./logique/gestionnaire-difficulte.js');
+                activerModeHistoire();
+                demarrerSuiviMonde('monde_prologue');
+                const debut = vitesseHistoireMs();
+                enregistrerProgression({ nbLignes: 6, estTetris: false, combo: 1 });
+                enregistrerPosePiece();
+                return {
+                    debut,
+                    apres: vitesseHistoireMs(),
+                    palier1: PALIERS_VITESSE_MS[1],
+                    palier2: PALIERS_VITESSE_MS[2],
+                    palierCourant: store.histoire.difficulte?.palierCourant ?? null,
+                };
+            },
         });
     });
 }

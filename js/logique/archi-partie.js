@@ -106,6 +106,11 @@ export async function demarrerArchi(niveauId) {
     appliquerThemeBiome(niveau.biome);
     AudioMoteur.init();
 
+    const { assurerFragmentsPartie } = await import('../ui/charger-ecrans.js');
+    const { assurerCanvasPartie } = await import('./partie-canvas.js');
+    await assurerFragmentsPartie();
+    if (!assurerCanvasPartie()) return;
+
     cacherEcrans();
     deplacerZoneJeuVersArchi();
     afficherInterfaceArchi(true);

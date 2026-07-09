@@ -1,3 +1,6 @@
+import { assurerFragmentEcran } from './charger-ecrans.js';
+import { logger } from '../logger.js';
+
 /**
  * @param {{
  *   dialogId: string,
@@ -7,13 +10,16 @@
  * }} config
  * @returns {Promise<boolean>}
  */
-export function demanderConfirmationDialog(config) {
+export async function demanderConfirmationDialog(config) {
+    await assurerFragmentEcran('overlays');
+
     return new Promise((resolve) => {
         const dialog = document.getElementById(config.dialogId);
         const btnOui = document.getElementById(config.btnOuiId);
         const btnNon = document.getElementById(config.btnNonId);
         if (!dialog || !btnOui || !btnNon) {
-            resolve(window.confirm(config.fallbackMessage));
+            logger.warn('Dialog confirmation introuvable', config.dialogId, config.fallbackMessage);
+            resolve(false);
             return;
         }
 

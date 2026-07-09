@@ -190,22 +190,24 @@ describe('cutscene UI', () => {
         expect(ecranCutscene.classList.toggle).toHaveBeenCalledWith('mode-narrateur', false);
     });
 
-    it('passe toute la cutscene en un seul appel', () => {
+    it('passe toute la cutscene en un seul appel', async () => {
         const { afficherCutsceneHistoire, passerCutscene } = managerUi;
         const onFin = vi.fn();
 
         afficherCutsceneHistoire(['A', 'B', 'C'], ['narrateur', 'robo', 'vera'], onFin);
+        await attendreDemarrageCutscene();
         passerCutscene();
 
         expect(onFin).toHaveBeenCalledTimes(1);
         expect(store.histoire.cutscene.enCours).toBe(false);
     });
 
-    it('ignore les avances supplementaires apres la fin', () => {
+    it('ignore les avances supplementaires apres la fin', async () => {
         const { afficherCutsceneHistoire, avancerCutscene } = managerUi;
         const onFin = vi.fn();
 
         afficherCutsceneHistoire(['Fin.'], ['robo'], onFin);
+        await attendreDemarrageCutscene();
         avancerCutscene();
         avancerCutscene();
         avancerCutscene();

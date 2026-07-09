@@ -309,7 +309,7 @@ export function arreterFondMeta() {
     etatActif = null;
 }
 
-export function invaliderCacheFondMeta() {
+function invaliderCacheFondMeta() {
     if (!etatActif) return;
     logger.debug('[fond-meta] cache invalidé', { canvasId: etatActif.canvasId });
     reconstruireEtat();

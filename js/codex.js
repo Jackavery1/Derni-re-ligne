@@ -260,5 +260,3 @@ export function initialiserCodexUI() {
         });
     });
 }
-
-export { chargerDonneesCodex as obtenirCodex };

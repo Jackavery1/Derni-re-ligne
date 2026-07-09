@@ -86,7 +86,7 @@ export const SCENES_VICTOIRE_BOSS = {
     },
     archiviste: { debut: 'labo', fin: 'labo', pivot: /paradoxe acceptable/i },
     avantgarde: { debut: 'seuil_avantgarde', fin: 'seuil_avantgarde', pivot: /Elle dit bonjour/i },
-    distorsion: { debut: 'fragmentation', fin: 'fragmentation', pivot: /Alors que veux-tu/i },
+    distorsion: { debut: 'antre_distorsion', fin: 'fin_lumineuse', pivot: /Alors que veux-tu/i },
 };
 
 /** Pivot humeur portrait — première réplique ROBO/VERA avec humeur explicite (audit D). */

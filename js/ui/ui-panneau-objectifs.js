@@ -26,8 +26,6 @@ import {
     flashVagueObjectifs as _flashVague,
 } from './ui-objectifs-hud.js';
 
-export { rafraichirHudObjectifsHistoire };
-
 const CHAPITRES_LABEL = {
     prologue: 'PROLOGUE',
     chapitre_1: 'CHAPITRE I',
@@ -131,7 +129,7 @@ function _commencerDepuisPanneau() {
  * @param {MondeHistoire} monde
  * @param {() => void} onCommencer
  */
-export function afficherPanneauObjectifs(monde, onCommencer) {
+function afficherPanneauObjectifs(monde, onCommencer) {
     initialiserUiObjectifs();
     _ancrerOverlaysAuBody();
     _callbackPanneauPre = onCommencer;
@@ -153,7 +151,7 @@ export function afficherPanneauObjectifs(monde, onCommencer) {
     document.addEventListener('keydown', _ecouteurEscape);
 }
 
-export function fermerOverlayObjectifsPre() {
+function fermerOverlayObjectifsPre() {
     _retirerEcouteurEscape();
     _el('overlay-objectifs-pre')?.classList.remove('objectif-overlay-visible');
     _masquer('overlay-objectifs-pre');
@@ -233,50 +231,70 @@ function _fermerRecap() {
  * @param {() => void} onFin
  */
 export function afficherRecapAvantNarratif(monde, etoiles, onFin) {
-    _callbackRecap = onFin;
-    _afficherRecap(etoiles, monde);
+    const montrer = () => {
+        initialiserUiObjectifs();
+        _callbackRecap = onFin;
+        _afficherRecap(etoiles, monde);
+    };
+    if (_el('overlay-recap-monde')) {
+        montrer();
+        return;
+    }
+    void import('./charger-ecrans.js').then(async ({ assurerFragmentsPartie }) => {
+        await assurerFragmentsPartie();
+        montrer();
+    });
 }
 
 export function initialiserUiObjectifs() {
-    if (_listenersAttaches) return;
     _ancrerOverlaysAuBody();
     const btn = _el('btn-objectifs-commencer');
-    if (!btn) return;
+    const recap = _el('overlay-recap-monde');
+    const btnRecap = _el('btn-recap-continuer');
+    if (!btn && !recap && !btnRecap) return;
 
-    _listenersAttaches = true;
+    if (!_listenersAttaches) {
+        _listenersAttaches = true;
 
-    btn.addEventListener('click', () => _commencerDepuisPanneau());
+        btn?.addEventListener('click', () => _commencerDepuisPanneau());
 
-    btn.addEventListener('keydown', (ev) => {
-        if (ev.key === 'Enter' || ev.key === ' ') {
-            ev.preventDefault();
-            _commencerDepuisPanneau();
-        }
-    });
+        btn?.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter' || ev.key === ' ') {
+                ev.preventDefault();
+                _commencerDepuisPanneau();
+            }
+        });
 
-    _el('overlay-recap-monde')?.addEventListener('click', () => _fermerRecap());
-    _el('btn-recap-continuer')?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        _fermerRecap();
-    });
+        ecouter('difficulte:vague', ({ montee, palierApres }) => {
+            _flashVague(montee);
+            if (montee && palierApres != null) {
+                afficherNotificationNiveau(`PALIER P${palierApres}`);
+            }
+            rafraichirHudObjectifsHistoire();
+        });
 
-    ecouter('difficulte:vague', ({ montee, palierApres }) => {
-        _flashVague(montee);
-        if (montee && palierApres != null) {
-            afficherNotificationNiveau(`PALIER P${palierApres}`);
-        }
-        rafraichirHudObjectifsHistoire();
-    });
+        ecouter('boss:phase', () => rafraichirHudObjectifsHistoire());
 
-    ecouter('boss:phase', () => rafraichirHudObjectifsHistoire());
+        ecouter('partie:stats', () => {
+            if (modeHistoireEnCours()) rafraichirHudObjectifsHistoire();
+        });
 
-    ecouter('partie:stats', () => {
-        if (modeHistoireEnCours()) rafraichirHudObjectifsHistoire();
-    });
+        ecouter('lignes:effacees', () => {
+            if (modeHistoireEnCours()) rafraichirHudObjectifsHistoire();
+        });
+    }
 
-    ecouter('lignes:effacees', () => {
-        if (modeHistoireEnCours()) rafraichirHudObjectifsHistoire();
-    });
+    if (recap && !recap.dataset.neoRecapListener) {
+        recap.dataset.neoRecapListener = '1';
+        recap.addEventListener('click', () => _fermerRecap());
+    }
+    if (btnRecap && !btnRecap.dataset.neoRecapListener) {
+        btnRecap.dataset.neoRecapListener = '1';
+        btnRecap.addEventListener('click', (e) => {
+            e.stopPropagation();
+            _fermerRecap();
+        });
+    }
 }
 
 /** @param {MondeHistoire} monde @param {() => void} onCommencer */

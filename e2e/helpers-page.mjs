@@ -66,12 +66,6 @@ export async function attendreApplicationPrete(page) {
 }
 
 /** @param {import('@playwright/test').Page} page */
-export async function attendreEcranTitre(page) {
-    await attendreApplicationPrete(page);
-    await expect(page.locator('#ecran-titre')).toHaveClass(/actif/, { timeout: 15000 });
-}
-
-/** @param {import('@playwright/test').Page} page */
 export async function attendreNotificationsInitiales(page) {
     for (const sel of ['#notif-achievement', '#notif-niveau', '#notif-codex']) {
         if (await boutonEstVisible(page, sel)) {

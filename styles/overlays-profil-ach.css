@@ -35,7 +35,6 @@
     width: 100%;
 }
 .ach-carte {
-    --accent-carte: #6644cc;
     cursor: pointer;
     border-color: color-mix(in srgb, var(--accent-carte) 55%, transparent);
     box-shadow:

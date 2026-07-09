@@ -222,7 +222,14 @@ export function afficherCutsceneHistoire(textes, personnages, onFin, options = {
         personnages = null;
     }
 
-    if (_demarrerCutsceneHistoire(textes, personnages, onFin, options)) {
+    const ecranCutsceneActif = document
+        .getElementById(ECRANS.HISTOIRE_CUTSCENE)
+        ?.classList.contains('actif');
+    if (
+        domCutscenePret() &&
+        ecranCutsceneActif &&
+        _demarrerCutsceneHistoire(textes, personnages, onFin, options)
+    ) {
         return true;
     }
 

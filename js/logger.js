@@ -25,7 +25,7 @@ function modeDebugActif() {
     return new URLSearchParams(window.location.search).has('debug');
 }
 
-const DEBUG = modeDebugActif();
+const DEBUG = typeof __NEO_PROD__ === 'undefined' ? modeDebugActif() : false;
 
 function obtenirContexteLog() {
     if (typeof document === 'undefined') return '';

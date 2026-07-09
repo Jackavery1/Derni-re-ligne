@@ -28,7 +28,7 @@ export function estNeoTestAutorise() {
  *   simulerTopVolontairePrologue?: () => Promise<void>,
  *   emettreEvenementBusJeu?: (evenement: string, payload?: unknown) => void,
  *   menuAnimActif?: () => boolean,
- *   simulerGameOverBossDistorsion?: () => void,
+ *   simulerGameOverBossDistorsion?: () => void | Promise<void>,
  *   terminerPartieCoop?: () => Promise<void>,
  *   basculerPauseCoop?: () => Promise<void>,
  *   obtenirGameFeel?: () => {
@@ -48,6 +48,15 @@ export function estNeoTestAutorise() {
  *   graceSpawnActiveTest?: () => boolean,
  *   activerPieceAuSolTest?: () => void,
  *   quitterSolPieceTest?: () => void,
+ *   obtenirJournalSfxTest?: () => string[],
+ *   viderJournalSfxTest?: () => void,
+ *   evaluerPalierDifficultePrologue?: () => Promise<{
+ *     debut: number,
+ *     apres: number,
+ *     palier1: number,
+ *     palier2: number,
+ *     palierCourant: number | null,
+ *   }>,
  * }} api
  */
 export function exposerNeoTestApi(api) {

@@ -51,8 +51,3 @@ export async function appliquerSafeAreaIphone(page, profil = 'iPhone 14') {
         root.style.setProperty('--safe-right', `${p.safeRight}px`);
     }, insets);
 }
-
-/** @deprecated Utiliser appliquerSafeAreaIphone — conservé pour les specs existantes. */
-export async function appliquerEncocheSimulee(page) {
-    await appliquerSafeAreaIphone(page, 'iPhone 14');
-}

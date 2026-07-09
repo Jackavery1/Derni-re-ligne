@@ -44,15 +44,17 @@ Timeout spec D9 complet : **5 400 000 ms** (~90 min). Sous-tests D9b : 4–5 min
 
 ### Helpers E2E (`e2e/`)
 
-| Fichier                         | Rôle                                                         |
-| ------------------------------- | ------------------------------------------------------------ |
-| `helpers.mjs`                   | Barrel — réexporte tout (importer depuis ici dans les specs) |
-| `helpers-page.mjs`              | Prep page, attente `data-neo-test-ready`                     |
-| `helpers-partie.mjs`            | Solo : pause, démarrage, fin de partie                       |
-| `helpers-coop.mjs`              | Coop 2 joueurs                                               |
-| `helpers-histoire.mjs`          | Carte histoire, cutscenes, recap                             |
-| `helpers-campagne-narratif.mjs` | Parcours campagne avec narratif (D9, D9b)                    |
-| `helpers-narratif*.mjs`         | Flux cutscene, fragments VERA, overlays                      |
+| Fichier                         | Rôle                                                          |
+| ------------------------------- | ------------------------------------------------------------- |
+| `helpers.mjs`                   | Barrel — réexporte tout (importer depuis ici dans les specs)  |
+| `helpers-page.mjs`              | Prep page, attente `data-neo-test-ready`                      |
+| `helpers-partie.mjs`            | Solo : pause, démarrage, fin de partie                        |
+| `helpers-coop.mjs`              | Coop 2 joueurs                                                |
+| `helpers-histoire.mjs`          | Carte histoire, cutscenes, recap                              |
+| `helpers-campagne-narratif.mjs` | Parcours campagne avec narratif (D9, D9b)                     |
+| `helpers-audit-b.mjs`           | Infobulles modes, sélection constellation, vibrations audit B |
+| `helpers-iphone-safe-area.mjs`  | Profils encoche iPhone simulés (audit C14)                    |
+| `helpers-narratif*.mjs`         | Flux cutscene, fragments VERA, overlays                       |
 
 ### Piège Live Server / file://
 
@@ -164,9 +166,4 @@ Politique branches : `main` (stable, déployée), branches `feat/*` / `fix/*` po
 
 **Zéro dépendance runtime** — ne pas ajouter de package npm en production sans justification écrite.
 
-- [docs/architecture.md](docs/architecture.md)
-- [docs/accessibilite-wcag.md](docs/accessibilite-wcag.md)
-- [docs/versioning.md](docs/versioning.md)
-- [docs/mode-histoire.md](docs/mode-histoire.md)
-- [docs/ajouter-un-biome.md](docs/ajouter-un-biome.md)
-- [docs/ajouter-un-boss.md](docs/ajouter-un-boss.md)
+Index documentation détaillée : voir [README.md](README.md#docs).
