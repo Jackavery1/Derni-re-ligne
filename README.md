@@ -96,9 +96,11 @@ Entrée code : `index.html` → `js/main.js` → `js/moteur.js`.
 
 ## Déploiement
 
-GitHub Pages via **GitHub Actions** (`deploy.yml` publie `dist/` avec `js/bundle.js` minifié).
+GitHub Pages depuis la **branche `main`** (racine du dépôt) : `index.html` → `js/main.js` (modules ES sources).
 
-Réglage dépôt obligatoire : **Settings → Pages → Source : GitHub Actions** (pas « Deploy from a branch » — sinon le site sert les modules dev `main.js` et le bundle prod est absent).
+Réglage dépôt : **Settings → Pages → Source : Deploy from branch → `main` / root**.
+
+Le workflow `deploy.yml` exécute la qualité CI puis vérifie le site en ligne (`main.js`, SW). Le build prod `dist/` sert aux **preview PR**, tests perf/Lighthouse et release locale — pas à la prod Pages.
 
 Release : `npm run release:publish`.
 

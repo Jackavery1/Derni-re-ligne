@@ -80,29 +80,28 @@ Annoter les écarts dans une issue ; ne pas supprimer la simulation CSS tant que
 
 | Environnement         | Déclencheur                | Usage                                    |
 | --------------------- | -------------------------- | ---------------------------------------- |
-| **Production**        | Push sur `main` / tag `v*` | GitHub Pages (`deploy.yml`)              |
+| **Production**        | Push sur `main` / tag `v*` | GitHub Pages (branche `main`, sources)   |
 | **Preview (staging)** | Pull request               | Artefact `dist/` 7 jours (`preview.yml`) |
 | **Release**           | Tag `v*`                   | GitHub Release + notes (`release.yml`)   |
 
 La preview PR sert de **staging** : même pipeline `quality.yml` que la prod, sans publier sur Pages.
 
-### GitHub Pages — source Actions (obligatoire)
+### GitHub Pages — branche main (production)
 
-Le workflow `deploy.yml` publie l’artefact **`dist/`** (bundle esbuild + SRI). Si **Settings → Pages → Build and deployment → Source** est réglé sur « Deploy from a branch » (racine `main`), GitHub sert les **sources dev** (`js/main.js`) et `js/bundle.js` renvoie **404** — les optimisations prod ne sont pas en ligne.
+La prod sert les **sources** du dépôt (`js/main.js`, pas `dist/js/bundle.js`). Chaque push sur `main` met à jour le site si **Settings → Pages → Source** = « Deploy from a branch » → **`main`** / racine.
 
-| Source Pages               | Fichier JS servi | Bundle prod |
-| -------------------------- | ---------------- | ----------- |
-| **GitHub Actions** (cible) | `js/bundle.js`   | Oui         |
-| Branch `main` / racine     | `js/main.js`     | Non (404)   |
+Le workflow `deploy.yml` lance `quality.yml` puis un smoke sur l’URL publique (version alignée, `main.js` 200, SW `dl-shell-v`).
 
-Vérification rapide après déploiement :
+Le bundle esbuild (`npm run build` → `dist/`) reste utilisé pour : preview PR (`preview.yml`), tests E2E dist, Lighthouse, budget taille — pas pour Pages prod.
+
+Vérification rapide :
 
 ```bash
-curl -sI https://jackavery1.github.io/Derni-re-ligne/js/bundle.js | head -1
 curl -s https://jackavery1.github.io/Derni-re-ligne/index.html | grep -o 'src="js/[^"]*\.js[^"]*"'
+curl -sI https://jackavery1.github.io/Derni-re-ligne/js/main.js | head -1
 ```
 
-Attendu : `200` sur `bundle.js`, `src="js/bundle.js"` dans le HTML (pas `main.js`).
+Attendu : `src="js/main.js?v=X.Y.Z"`, `HTTP/1.1 200` sur `main.js`.
 
 ### Hooks Git (Husky)
 

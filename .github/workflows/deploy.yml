@@ -8,50 +8,38 @@ on:
 
 permissions:
     contents: read
-    pages: write
-    id-token: write
 
 concurrency:
-    group: pages
+    group: pages-verify
     cancel-in-progress: true
 
 jobs:
     test:
         uses: ./.github/workflows/quality.yml
         with:
-            upload_dist: true
+            upload_dist: false
 
-    deploy:
+    verify-pages:
         needs: test
         runs-on: ubuntu-latest
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
         steps:
-            - uses: actions/download-artifact@v4
-              with:
-                  name: dist
-                  path: dist/
             - uses: actions/checkout@v4
-            - name: Préparer artefact statique (bundle prod)
+            - name: Smoke production (GitHub Pages — branche main)
               run: |
-                  mkdir -p _site
-                  cp -r dist/* _site/
-                  cp LICENSE README.md _site/ 2>/dev/null || true
-            - uses: actions/configure-pages@v5
-            - uses: actions/upload-pages-artifact@v3
-              with:
-                  path: _site
-            - id: deployment
-              uses: actions/deploy-pages@v4
-            - name: Smoke post-déploiement
-              if: steps.deployment.outputs.page_url != ''
-              run: |
-                  BASE="${{ steps.deployment.outputs.page_url }}"
-                  HTML=$(curl -fsSL "$BASE")
-                  echo "$HTML" | grep -q "Dernière Ligne"
-                  echo "$HTML" | grep -q 'src="js/bundle.js"'
-                  echo "$HTML" | grep -qv 'src="js/main.js'
-                  curl -fsSL "${BASE}js/bundle.js" -o /dev/null
-                  curl -fsSL "${BASE}sw.js" | grep -q "VERSION_SHELL = 'dl-shell-v"
-                  echo "$HTML" | grep -q "frame-ancestors"
+                  BASE="https://jackavery1.github.io/Derni-re-ligne/"
+                  VERSION=$(node -p "require('./package.json').version")
+                  for attempt in 1 2 3 4 5 6 7 8; do
+                    echo "Tentative ${attempt}/8…"
+                    if HTML=$(curl -fsSL "$BASE" 2>/dev/null) \
+                      && echo "$HTML" | grep -q "Dernière Ligne" \
+                      && echo "$HTML" | grep -q "js/main.js?v=${VERSION}" \
+                      && curl -fsSL "${BASE}js/main.js" -o /dev/null \
+                      && curl -fsSL "${BASE}sw.js" | grep -q "VERSION_SHELL = 'dl-shell-v" \
+                      && echo "$HTML" | grep -q "frame-ancestors"; then
+                      echo "Pages OK — sources main v${VERSION}"
+                      exit 0
+                    fi
+                    sleep 30
+                  done
+                  echo "Échec : le site ne reflète pas main v${VERSION} après ~4 min"
+                  exit 1
