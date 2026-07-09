@@ -38,7 +38,7 @@ jobs:
                   mkdir -p _site
                   cp -r dist/* _site/
                   cp LICENSE README.md _site/ 2>/dev/null || true
-            - uses: actions/configure-pages@v5
+            - uses: actions/configure-pages@v6
             - uses: actions/upload-pages-artifact@v3
               with:
                   path: _site
