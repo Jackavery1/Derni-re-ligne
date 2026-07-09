@@ -43,7 +43,7 @@ jobs:
               with:
                   path: _site
             - id: deployment
-              uses: actions/deploy-pages@v4
+              uses: actions/deploy-pages@v5
             - name: Smoke post-déploiement
               if: steps.deployment.outputs.page_url != ''
               run: |
