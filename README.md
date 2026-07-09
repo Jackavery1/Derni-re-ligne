@@ -96,7 +96,11 @@ Entrée code : `index.html` → `js/main.js` → `js/moteur.js`.
 
 ## Déploiement
 
-GitHub Pages (`deploy.yml`). Release : `npm run release`.
+GitHub Pages via **GitHub Actions** (`deploy.yml` publie `dist/` avec `js/bundle.js` minifié).
+
+Réglage dépôt obligatoire : **Settings → Pages → Source : GitHub Actions** (pas « Deploy from a branch » — sinon le site sert les modules dev `main.js` et le bundle prod est absent).
+
+Release : `npm run release:publish`.
 
 ## Licence
 

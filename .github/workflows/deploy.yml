@@ -4,6 +4,7 @@ on:
     push:
         branches: [main, master]
         tags: ['v*']
+    workflow_dispatch:
 
 permissions:
     contents: read
@@ -47,7 +48,10 @@ jobs:
               if: steps.deployment.outputs.page_url != ''
               run: |
                   BASE="${{ steps.deployment.outputs.page_url }}"
-                  curl -fsSL "$BASE" | grep -q "Dernière Ligne"
+                  HTML=$(curl -fsSL "$BASE")
+                  echo "$HTML" | grep -q "Dernière Ligne"
+                  echo "$HTML" | grep -q 'src="js/bundle.js"'
+                  echo "$HTML" | grep -qv 'src="js/main.js'
                   curl -fsSL "${BASE}js/bundle.js" -o /dev/null
-                  curl -fsSL "${BASE}sw.js" | grep -q "derniere-ligne-"
-                  curl -fsSL "$BASE" | grep -q "frame-ancestors"
+                  curl -fsSL "${BASE}sw.js" | grep -q "VERSION_SHELL = 'dl-shell-v"
+                  echo "$HTML" | grep -q "frame-ancestors"

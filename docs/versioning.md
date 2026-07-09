@@ -4,13 +4,13 @@
 
 Format **MAJEUR.MINEUR.PATCH** ([semver](https://semver.org/)). Historique : [CHANGELOG.md](../CHANGELOG.md).
 
-| Fichier        | Rôle                                        |
-| -------------- | ------------------------------------------- |
-| `package.json` | Source de vérité (`version`)                |
-| `index.html`   | Query cache dev `js/main.js?v=X.Y.Z`        |
-| `sw.js`        | `VERSION_CACHE = 'derniere-ligne-X.Y.Z-rN'` |
-| `README.md`    | Affichage version                           |
-| `CHANGELOG.md` | Notes de release                            |
+| Fichier        | Rôle                                                                |
+| -------------- | ------------------------------------------------------------------- |
+| `package.json` | Source de vérité (`version`)                                        |
+| `index.html`   | Query cache dev `js/main.js?v=X.Y.Z`                                |
+| `sw.js`        | `VERSION_SHELL` (`dl-shell-vN`) + `VERSION_MEDIAS` (`dl-medias-vN`) |
+| `README.md`    | Affichage version                                                   |
+| `CHANGELOG.md` | Notes de release                                                    |
 
 Vérification : `npm run verify:versions`
 
@@ -60,4 +60,7 @@ Politique merge : merge commit ou squash selon préférence équipe ; historique
 
 ## Cache service worker
 
-Suffixe **`rN`** (`generate-sw-cache.mjs`, constante `REVISION_CACHE`) : incrémenter si le semver ne change pas mais le contenu du cache doit être invalidé.
+- **`VERSION_SHELL`** : incrémenter à chaque livraison (`release.mjs` → `dl-shell-vN`)
+- **`VERSION_MEDIAS`** : incrémenter si le format ou le jeu de médias change (musique, cutscenes)
+
+Regénérer le precache : `npm run sync:sw` (dev) ou `npm run build` (prod).

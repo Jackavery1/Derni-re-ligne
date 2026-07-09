@@ -28,7 +28,7 @@ Délai de réponse visé : **7 jours ouvrés**.
 | **Intégrité JS prod**             | SRI `sha384` sur `bundle.js` (`npm run build` → `dist/index.html`)                                                  | Faible                                     |
 | **Injection localStorage**        | Whitelist stricte de clés dans `progression.js`, validation regex (sans wildcard préfixe)                           | Faible — impact local uniquement           |
 | **Clickjacking**                  | `frame-ancestors 'none'` via en-tête HTTP (GitHub Pages : commentaire + doc ; **inefficace en meta CSP**)           | Faible — iframe embedding                  |
-| **Cache poisoning SW**            | SW versionné (`derniere-ligne-{semver}`), notification MAJ, purge anciens caches                                    | Moyen — utilisateur peut retarder la MAJ   |
+| **Cache poisoning SW**            | SW versionné (`dl-shell-vN` / `dl-medias-vN`), notification MAJ, purge anciens caches                               | Moyen — utilisateur peut retarder la MAJ   |
 | **Intégrité bundle prod**         | SRI `sha384` sur `js/bundle.js` dans `dist/index.html` (build CI)                                                   | Faible — dev local sans SRI volontairement |
 | **Supply chain npm**              | 0 dépendance runtime, `npm audit` + Dependabot + CodeQL en CI                                                       | Faible                                     |
 | **API test E2E (`__NEO_TEST__`)** | Exposée uniquement sur `localhost` / `127.0.0.1` ou avec `?neoTest=1` (`js/neo-test-api.js`)                        | Faible sur GitHub Pages sans paramètre     |

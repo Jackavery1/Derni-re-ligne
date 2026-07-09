@@ -86,6 +86,24 @@ Annoter les écarts dans une issue ; ne pas supprimer la simulation CSS tant que
 
 La preview PR sert de **staging** : même pipeline `quality.yml` que la prod, sans publier sur Pages.
 
+### GitHub Pages — source Actions (obligatoire)
+
+Le workflow `deploy.yml` publie l’artefact **`dist/`** (bundle esbuild + SRI). Si **Settings → Pages → Build and deployment → Source** est réglé sur « Deploy from a branch » (racine `main`), GitHub sert les **sources dev** (`js/main.js`) et `js/bundle.js` renvoie **404** — les optimisations prod ne sont pas en ligne.
+
+| Source Pages               | Fichier JS servi | Bundle prod |
+| -------------------------- | ---------------- | ----------- |
+| **GitHub Actions** (cible) | `js/bundle.js`   | Oui         |
+| Branch `main` / racine     | `js/main.js`     | Non (404)   |
+
+Vérification rapide après déploiement :
+
+```bash
+curl -sI https://jackavery1.github.io/Derni-re-ligne/js/bundle.js | head -1
+curl -s https://jackavery1.github.io/Derni-re-ligne/index.html | grep -o 'src="js/[^"]*\.js[^"]*"'
+```
+
+Attendu : `200` sur `bundle.js`, `src="js/bundle.js"` dans le HTML (pas `main.js`).
+
 ### Hooks Git (Husky)
 
 | Hook           | Contenu                                                                  |
