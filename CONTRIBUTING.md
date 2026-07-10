@@ -80,30 +80,30 @@ Annoter les écarts dans une issue ; ne pas supprimer la simulation CSS tant que
 
 ### Environnements de déploiement
 
-| Environnement         | Déclencheur                | Usage                                    |
-| --------------------- | -------------------------- | ---------------------------------------- |
-| **Production**        | Push sur `main` / tag `v*` | GitHub Pages (branche `main`, sources)   |
-| **Preview (staging)** | Pull request               | Artefact `dist/` 7 jours (`preview.yml`) |
-| **Release**           | Tag `v*`                   | GitHub Release + notes (`release.yml`)   |
+| Environnement         | Déclencheur                | Usage                                       |
+| --------------------- | -------------------------- | ------------------------------------------- |
+| **Production**        | Push sur `main` / tag `v*` | GitHub Pages (artefact `dist/` via Actions) |
+| **Preview (staging)** | Pull request               | Artefact `dist/` 7 jours (`preview.yml`)    |
+| **Release**           | Tag `v*`                   | GitHub Release + notes (`release.yml`)      |
 
 La preview PR sert de **staging** : même pipeline `quality.yml` que la prod, sans publier sur Pages.
 
-### GitHub Pages — branche main (production)
+### GitHub Pages — bundle prod (production)
 
-La prod sert les **sources** du dépôt (`js/main.js`, pas `dist/js/bundle.js`). Chaque push sur `main` met à jour le site si **Settings → Pages → Source** = « Deploy from a branch » → **`main`** / racine.
+La prod sert le **bundle esbuild** (`dist/js/bundle.js` + SRI). Chaque push sur `main` déclenche `deploy.yml` : `quality.yml` puis publication de `dist/` sur Pages.
 
-Le workflow `deploy.yml` lance `quality.yml` puis un smoke sur l’URL publique (version alignée, `main.js` 200, SW `dl-shell-v`).
+**Réglage requis (une fois) :** **Settings → Pages → Build and deployment → Source** = **GitHub Actions** (pas « Deploy from a branch »).
 
-Le bundle esbuild (`npm run build` → `dist/`) reste utilisé pour : preview PR (`preview.yml`), tests E2E dist, Lighthouse, budget taille — pas pour Pages prod.
+Le workflow vérifie ensuite l’URL publique (`bundle.js` 200, SRI `sha384`, SW `dl-shell-v`).
 
 Vérification rapide :
 
 ```bash
 curl -s https://jackavery1.github.io/Derni-re-ligne/index.html | grep -o 'src="js/[^"]*\.js[^"]*"'
-curl -sI https://jackavery1.github.io/Derni-re-ligne/js/main.js | head -1
+curl -sI https://jackavery1.github.io/Derni-re-ligne/js/bundle.js | head -1
 ```
 
-Attendu : `src="js/main.js?v=X.Y.Z"`, `HTTP/1.1 200` sur `main.js`.
+Attendu : `src="js/bundle.js"`, `HTTP/1.1 200` sur `bundle.js`.
 
 ### Hooks Git (Husky)
 

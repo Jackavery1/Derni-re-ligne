@@ -179,6 +179,16 @@ describe('corrections audit', () => {
         it('monde_finale absent de CUTSCENES_POST_MONDE', () => {
             expect(CUTSCENES_POST_MONDE.monde_finale).toBeUndefined();
         });
+
+        it('monde_paradoxe ellipse volontaire et humeur VERA douce', () => {
+            const lignes = extraireLignesCutscene(CUTSCENES_POST_MONDE.monde_paradoxe);
+            const corpus = lignes.map((l) => l.texte ?? '').join('\n');
+            expect(corpus).toMatch(/ligne incomplète\. Volontairement/i);
+            for (const re of MARQUEURS_NARRATIFS_POST_MONDE.monde_paradoxe) {
+                expect(corpus).toMatch(re);
+            }
+            expect(lignes.some((l) => l.personnage === 'vera' && l.humeur === 'douce')).toBe(true);
+        });
     });
 
     describe('fin secrète', () => {

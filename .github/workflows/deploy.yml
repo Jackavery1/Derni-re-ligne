@@ -8,9 +8,11 @@ on:
 
 permissions:
     contents: read
+    pages: write
+    id-token: write
 
 concurrency:
-    group: pages-verify
+    group: pages
     cancel-in-progress: true
 
 jobs:
@@ -19,27 +21,47 @@ jobs:
         with:
             upload_dist: false
 
-    verify-pages:
+    deploy:
         needs: test
+        runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+            - run: npm ci
+            - run: node scripts/exporter-donnees-json.mjs
+            - run: npm run build
+            - run: node scripts/generer-precache.mjs --prod
+            - uses: actions/upload-pages-artifact@v3
+              with:
+                  path: dist
+            - id: deployment
+              uses: actions/deploy-pages@v4
+
+    verify-pages:
+        needs: deploy
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - name: Smoke production (GitHub Pages — branche main)
+            - name: Smoke production (GitHub Pages — bundle prod)
               run: |
                   BASE="https://jackavery1.github.io/Derni-re-ligne/"
-                  VERSION=$(node -p "require('./package.json').version")
                   for attempt in 1 2 3 4 5 6 7 8; do
                     echo "Tentative ${attempt}/8…"
                     if HTML=$(curl -fsSL "$BASE" 2>/dev/null) \
                       && echo "$HTML" | grep -q "Dernière Ligne" \
-                      && echo "$HTML" | grep -q "js/main.js?v=${VERSION}" \
-                      && curl -fsSL "${BASE}js/main.js" -o /dev/null \
-                      && curl -fsSL "${BASE}sw.js" | grep -q "VERSION_SHELL = 'dl-shell-v" \
-                      && echo "$HTML" | grep -q "frame-ancestors"; then
-                      echo "Pages OK — sources main v${VERSION}"
+                      && echo "$HTML" | grep -q 'js/bundle.js' \
+                      && echo "$HTML" | grep -q 'integrity="sha384-' \
+                      && curl -fsSL "${BASE}js/bundle.js" -o /dev/null \
+                      && curl -fsSL "${BASE}sw.js" | grep -q "VERSION_SHELL = 'dl-shell-v"; then
+                      echo "Pages OK — bundle prod + SRI"
                       exit 0
                     fi
                     sleep 30
                   done
-                  echo "Échec : le site ne reflète pas main v${VERSION} après ~4 min"
+                  echo "Échec : le site ne sert pas bundle.js + SRI après ~4 min"
                   exit 1

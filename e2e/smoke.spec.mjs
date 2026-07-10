@@ -1,4 +1,4 @@
-import { test, expect, devices } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {
     demarrerPartie,
@@ -14,6 +14,8 @@ import {
     passerCutsceneHistoire,
     preparerPremierLancement,
     appliquerSafeAreaIphone,
+    ANNOTATION_C11,
+    creerPageIphone14,
 } from './helpers.mjs';
 
 test('aucune bannière erreur au démarrage', async ({ page }) => {
@@ -452,14 +454,9 @@ test('ecran chargement — padding safe-area declare', async ({ page }) => {
 });
 
 test('iphone — contenu menu titre respecte encoche simulee (audit C11)', async ({ browser }) => {
-    test.info().annotations.push({
-        type: 'note',
-        description:
-            'Matrice iPhone simulee (helpers-iphone-safe-area) ; validation PWA physique : checklist CONTRIBUTING.',
-    });
+    test.info().annotations.push(ANNOTATION_C11);
 
-    const context = await browser.newContext({ ...devices['iPhone 14'] });
-    const page = await context.newPage();
+    const { context, page } = await creerPageIphone14(browser);
     await preparerPageSansSw(page);
     await page.goto('/');
     await attendreApplicationPrete(page);

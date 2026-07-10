@@ -6,7 +6,7 @@ const WARN_KO_TOTAL = 560;
 const dossier = 'dist/js';
 
 /** @type {Set<string>} */
-const exclusBudget = new Set(['neo-test-init.js']);
+const exclusBudget = new Set(['neo-test-init.js', 'dev-init.js']);
 const exclusPath = `${dossier}/budget-exclus.json`;
 if (existsSync(exclusPath)) {
     for (const nom of JSON.parse(readFileSync(exclusPath, 'utf8'))) {

@@ -1,6 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { BIOMES, ORDRE_BIOMES_LIBRE } from '../js/config/biomes.js';
+import {
+    peuplerSelectsLeaderboardOptions,
+    rafraichirLeaderboardOptions,
+} from '../js/ui/options-sync-cloud-ui.js';
 
-const chargerClassementLeaderboard = vi.fn();
+const { chargerClassementLeaderboard } = vi.hoisted(() => ({
+    chargerClassementLeaderboard: vi.fn(),
+}));
 
 vi.mock('../js/io/leaderboard-cloud.js', () => ({
     chargerClassementLeaderboard,
@@ -19,10 +26,8 @@ describe('options-sync-cloud-ui — leaderboard', () => {
     /** @type {Map<string, HTMLElement>} */
     let noeuds;
 
-    beforeEach(async () => {
-        vi.resetModules();
-        const { chargerBiomesJeu } = await import('../js/config/biomes.js');
-        await chargerBiomesJeu();
+    beforeEach(() => {
+        vi.clearAllMocks();
         noeuds = new Map();
 
         const titre = { textContent: '' };
@@ -54,10 +59,6 @@ describe('options-sync-cloud-ui — leaderboard', () => {
     });
 
     it('peuple les biomes et charge selon les filtres', async () => {
-        const { BIOMES, ORDRE_BIOMES_LIBRE } = await import('../js/config/biomes.js');
-        const { peuplerSelectsLeaderboardOptions, rafraichirLeaderboardOptions } =
-            await import('../js/ui/options-sync-cloud-ui.js');
-
         peuplerSelectsLeaderboardOptions();
         const selectBiome = /** @type {{ value: string, options: { value: string }[] }} */ (
             noeuds.get('select-leaderboard-biome')
@@ -76,5 +77,5 @@ describe('options-sync-cloud-ui — leaderboard', () => {
             limit: 8,
         });
         expect(noeuds.get('leaderboard-options-titre')?.textContent).toContain(BIOMES.lave.nom);
-    }, 15000);
+    });
 });

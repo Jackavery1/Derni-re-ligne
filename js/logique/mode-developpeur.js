@@ -244,44 +244,6 @@ function _monterInterfaceDev() {
     document.body.appendChild(panneau);
 }
 
-function _devDemandeDansUrl() {
-    const params = new URLSearchParams(window.location.search);
-    const dev = params.get('dev');
-    if (dev === '1' || dev === 'true') return true;
-    const brut = window.location.search.toLowerCase();
-    return brut.includes('dev=1') || brut.includes('dev1') || brut.includes('=dev1');
-}
-
-function _ecouterActivationDiscrete() {
-    if (_devDemandeDansUrl()) {
-        activerModeDev();
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'd') {
-            e.preventDefault();
-            basculerModeDev();
-        }
-    });
-
-    let clics = 0;
-    let timer = null;
-    (
-        document.getElementById('menu-titre-dl') ?? document.querySelector('.menu-titre-dl')
-    )?.addEventListener('click', () => {
-        clics++;
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            clics = 0;
-        }, 1800);
-        if (clics >= 5) {
-            clics = 0;
-            activerModeDev();
-        }
-    });
-}
-
 export function initialiserModeDeveloppeur() {
-    _ecouterActivationDiscrete();
     if (modeDevActif()) _monterInterfaceDev();
 }

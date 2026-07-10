@@ -6,22 +6,11 @@ export { ECRANS };
 
 export const MAX_PARTICULES = 280;
 export const DUREE_TRANSITION = 400;
-export const NB_PARTICULES_AMBIANCE = {
-    classique: 0,
-    lave: 30,
-    ocean: 32,
-    foret: 28,
-    glace: 32,
-    desert: 28,
-    cyber: 30,
-    fuochi: 30,
-    cosmos: 32,
-};
 export const CARACTERES_HEX = '0123456789ABCDEF';
 export const VERTS_FORET = ['#00cc44', '#55dd00', '#88ff00', '#66bb00', '#aaee44'];
 
 /** @returns {import('../types.js').EtatPartie} */
-export function creerEtatPartieInitial() {
+function creerEtatPartieInitial() {
     return {
         plateau: [],
         pieceActuelle: null,

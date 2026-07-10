@@ -84,6 +84,7 @@ const result = await esbuild.build({
     entryPoints: {
         bundle: 'js/main.js',
         'neo-test-init': 'js/neo-test-init.js',
+        'dev-init': 'js/dev-init.js',
     },
     outdir: dossierAnalyse,
     entryNames: '[name]',

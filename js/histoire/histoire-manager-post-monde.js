@@ -16,12 +16,10 @@ import { sauvegarderEtatHistoire } from '../io/progression.js';
 import { definirExpressionVera } from '../rendu/portraits-vera.js';
 import { logger } from '../logger.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
-import { afficherRecapAvantNarratif } from '../ui/ui-panneau-objectifs.js';
 import { creerFile } from './file-narrative.js';
 import { extraireLignesCutscene } from './histoire-cutscene-moteur.js';
 import { SCENE_DEFAUT_INTERLUDE } from './histoire-narratif-scenes.js';
 import { JOURNAUX_VERA } from '../histoire-donnees.js';
-
 const INTERLUDES_PAR_MONDE = {
     monde_rouille: 'interlude_gardiens',
     monde_eclipse: 'interlude_elle',
@@ -185,7 +183,9 @@ export function declencherNarratifPostMonde(monde, etatHist, premiereCompletion,
     file.ajouter({
         id: 'recap_etoiles',
         executer: (suivant) => {
-            afficherRecapAvantNarratif(monde, etoilesFin, suivant);
+            void import('../ui/ui-panneau-objectifs.js').then(({ afficherRecapAvantNarratif }) =>
+                afficherRecapAvantNarratif(monde, etoilesFin, suivant)
+            );
         },
     });
 

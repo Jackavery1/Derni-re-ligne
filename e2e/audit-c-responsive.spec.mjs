@@ -1,4 +1,4 @@
-import { test, expect, devices } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import {
     preparerPageSansSw,
     attendreApplicationPrete,
@@ -9,6 +9,8 @@ import {
     terminerPartieCoopCourante,
     appliquerSafeAreaIphone,
     PROFILS_IPHONE_SAFE_AREA,
+    ANNOTATION_C11,
+    creerPageIphone14,
     ouvrirCarteHistoire,
     lancerMondeDepuisCarte,
     activerPausePartieTactile,
@@ -16,12 +18,6 @@ import {
     ETAT_DEBLOCAGE_META_RAPIDE,
 } from './helpers.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-
-const ANNOTATION_C11 = {
-    type: 'note',
-    description:
-        'Matrice iPhone simulee (14, 15 Pro, SE, paysage) via helpers-iphone-safe-area.mjs ; validation PWA physique reste checklist CONTRIBUTING.',
-};
 
 async function ouvrirPremierNiveauArchitecte(page) {
     await page.locator('.carte-niveau-archi').first().click();
@@ -217,8 +213,7 @@ test('audit C1 — architecte telephone paysage tactile valider', async ({ page 
 
 test('audit C11 — carte histoire iPhone respecte encoche simulee', async ({ browser }) => {
     test.info().annotations.push(ANNOTATION_C11);
-    const context = await browser.newContext({ ...devices['iPhone 14'] });
-    const page = await context.newPage();
+    const { context, page } = await creerPageIphone14(browser);
     await ouvrirCarteHistoire(page, ETAT_DEBLOCAGE_META_RAPIDE);
     await appliquerSafeAreaIphone(page);
 
@@ -377,8 +372,7 @@ for (const [id, profil] of Object.entries(PROFILS_IPHONE_SAFE_AREA)) {
 
     test(`audit C14 — carte histoire portrait encoche (${id})`, async ({ browser }) => {
         test.info().annotations.push({ type: 'note', description: profil.label });
-        const context = await browser.newContext({ ...devices['iPhone 14'] });
-        const page = await context.newPage();
+        const { context, page } = await creerPageIphone14(browser);
         await ouvrirCarteHistoire(page, ETAT_DEBLOCAGE_META_RAPIDE);
         await appliquerSafeAreaIphone(page, id);
 

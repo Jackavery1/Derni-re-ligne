@@ -22,6 +22,14 @@
     --texte-dim: rgba(224, 224, 255, 0.75);
     --texte-discret: rgba(224, 224, 255, 0.52);
 
+    --fond-chargement-1: #2a1048;
+    --fond-chargement-2: #120818;
+    --fond-chargement-3: #06040c;
+    --glow-rose-chargement: rgba(255, 45, 120, 0.35);
+    --glow-rose-chargement-fort: rgba(255, 45, 120, 0.55);
+    --glow-rose-chargement-barre: rgba(255, 45, 120, 0.45);
+    --bordure-violet-chargement: rgba(180, 0, 255, 0.35);
+
     /* Boutons menu titre — variantes modes (menu-narratif-cutscene.css) */
     --menu-separateur: color-mix(in srgb, var(--cyan) 42%, transparent);
     --menu-separateur-ligne: color-mix(in srgb, var(--cyan) 28%, transparent);

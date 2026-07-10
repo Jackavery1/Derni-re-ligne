@@ -56,6 +56,7 @@ describe('histoire-manager-post-monde', () => {
         const { declencherNarratifPostMonde } =
             await import('../js/histoire/histoire-manager-post-monde.js');
         const { enchainerCampagneApresMonde } = await import('../js/histoire/histoire-session.js');
+        await import('../js/histoire/histoire-manager-ui.js');
 
         const monde = { id: 'monde_prologue', biomeId: 'classique', estBoss: false };
         const etat = structuredClone(ETAT_HISTOIRE_VIDE);
@@ -63,13 +64,10 @@ describe('histoire-manager-post-monde', () => {
         store.histoire.etat = etat;
 
         declencherNarratifPostMonde(monde, etat, true, [true, false, false]);
-        await vi.waitFor(
-            () => {
-                expect(enchainerCampagneApresMonde).toHaveBeenCalledWith('monde_prologue');
-            },
-            { timeout: 10000 }
-        );
-    }, 15000);
+        await vi.waitFor(() => {
+            expect(enchainerCampagneApresMonde).toHaveBeenCalledWith('monde_prologue');
+        });
+    });
 
     it('joue post-monde prologue avant transition chapitre I', async () => {
         const { chargerHistoireTextes } = await import('../js/io/charger-histoire-textes.js');

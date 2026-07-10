@@ -117,6 +117,30 @@ function rafraichirPanneauControles() {
     }
 }
 
+function initialiserNavigationOngletsOptions() {
+    const tablist = document.querySelector('.options-onglets[role="tablist"]');
+    if (!tablist) return;
+
+    tablist.addEventListener('keydown', (e) => {
+        if (!(e instanceof KeyboardEvent)) return;
+        const ids = ['tab-reglages', 'tab-controles'];
+        const actif = document.activeElement?.id;
+        const index = ids.indexOf(actif ?? '');
+        if (index < 0) return;
+
+        let suivant = index;
+        if (e.key === 'ArrowRight') suivant = (index + 1) % ids.length;
+        else if (e.key === 'ArrowLeft') suivant = (index - 1 + ids.length) % ids.length;
+        else if (e.key === 'Home') suivant = 0;
+        else if (e.key === 'End') suivant = ids.length - 1;
+        else return;
+
+        e.preventDefault();
+        document.getElementById(ids[suivant])?.focus();
+        afficherOngletOptions(suivant === 0 ? 'reglages' : 'controles');
+    });
+}
+
 function initialiserRebindingControles() {
     document.getElementById('btn-controles-defaut')?.addEventListener('click', () => {
         reinitialiserTouches();
@@ -297,6 +321,7 @@ export function initialiserOptions() {
 
     lierEcouteursMixBiome(sliderMixMusBiome, sliderMixEffBiome);
 
+    initialiserNavigationOngletsOptions();
     initialiserRebindingControles();
     rafraichirPanneauControles();
     initialiserSauvegardeProgression();

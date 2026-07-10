@@ -18,6 +18,7 @@ const EXCLUSIONS = new Set([
     'e2e',
     'tests',
     'dist',
+    'dist-test',
     'test-results',
     'playwright-report',
     'coverage',

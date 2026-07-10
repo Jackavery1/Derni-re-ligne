@@ -34,11 +34,8 @@ import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { defiJourActif } from './mode-defi-jour.js';
 import { obtenirDefiDuJour, enregistrerScoreDefiJour } from './defi-jour.js';
 import { enregistrerTopOut, arreterSuiviMonde } from './gestionnaire-difficulte.js';
-import {
-    surFinDeMondeHistoire,
-    peutContinuerBossGratuit,
-    obtenirEtatHistoire,
-} from '../histoire/histoire-manager.js';
+import { obtenirEtatHistoire } from '../histoire/histoire-mondes.js';
+import { peutContinuerBossGratuit } from '../histoire/histoire-boss-continue.js';
 import { sansAccentsE } from './texte-jeu.js';
 import {
     bossEstActif,
@@ -233,7 +230,11 @@ function _afficherActionsFinHistoire(victoire = false) {
         document.getElementById('go-continues-campagne')?.classList.add('element-masque');
         arreterSuiviMonde();
     } else {
-        const lancerFinMonde = () => surFinDeMondeHistoire(etat.lignes, etat.score);
+        const lancerFinMonde = () => {
+            void import('../histoire/histoire-manager-completion.js').then(
+                ({ surFinDeMondeHistoire }) => surFinDeMondeHistoire(etat.lignes, etat.score)
+            );
+        };
         if (victoire) {
             setTimeout(lancerFinMonde, CONFIG.delaiNarratifVictoireHistoireMs);
         } else {

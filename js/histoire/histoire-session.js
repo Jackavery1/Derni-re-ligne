@@ -24,10 +24,13 @@ import {
 import { modeDevActif } from '../logique/mode-dev-etat.js';
 import { obtenirActionsHistoire, configurerActionsHistoire } from './histoire-actions.js';
 import { arreterSuiviMonde, demarrerSuiviMonde } from '../logique/gestionnaire-difficulte.js';
-import { fermerOverlaysFluxPartie } from '../ui/ui-panneau-objectifs.js';
 import { activerModeHistoire, desactiverModeHistoire } from '../etat/mode-histoire.js';
 import { cacherEcransDiffere, afficherEcranDiffere } from '../ui/navigation-lazy.js';
 import { utiliserContinueGratuitDistorsion } from './histoire-boss-continue.js';
+
+function fermerOverlaysFluxPartie() {
+    void import('../ui/ui-panneau-objectifs.js').then((m) => m.fermerOverlaysFluxPartie());
+}
 
 /** @param {string} mondeId */
 export function demarrerMondeHistoire(mondeId) {

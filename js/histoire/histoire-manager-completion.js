@@ -21,7 +21,6 @@ import {
     fusionnerEtoilesPersistees,
     estMondeZenActif,
 } from '../logique/gestionnaire-difficulte.js';
-import { declencherNarratifPostMonde } from './histoire-manager-post-monde.js';
 
 export { SEUILS_COMPLETION } from './histoire-mondes.js';
 
@@ -224,7 +223,15 @@ export function surFinDeMondeHistoire(lignes, score, options = {}) {
     if (estComplete) {
         const etoilesFin = calculerEtoiles(mondeId, etatHist);
         if (!options.sansNarratif) {
-            declencherNarratifPostMonde(monde, etatHist, premiereCompletionCeMonde, etoilesFin);
+            void import('./histoire-manager-post-monde.js').then(
+                ({ declencherNarratifPostMonde }) =>
+                    declencherNarratifPostMonde(
+                        monde,
+                        etatHist,
+                        premiereCompletionCeMonde,
+                        etoilesFin
+                    )
+            );
         }
     } else {
         void import('./histoire-manager-ui.js').then(({ afficherBoutonCarteGameOver }) =>

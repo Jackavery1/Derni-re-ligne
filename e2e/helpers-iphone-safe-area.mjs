@@ -1,6 +1,14 @@
 /** Profils safe-area iPhone pour simulation CI (audit C14). */
 
+import { devices } from '@playwright/test';
+
 /** @typedef {{ safeTop: number, safeBottom: number, safeLeft: number, safeRight: number, label: string }} ProfilSafeAreaIphone */
+
+export const ANNOTATION_C11 = {
+    type: 'note',
+    description:
+        'Matrice iPhone simulee (14, 15 Pro, SE, paysage) via helpers-iphone-safe-area.mjs ; validation PWA physique reste checklist CONTRIBUTING.',
+};
 
 /** @type {Record<string, ProfilSafeAreaIphone>} */
 export const PROFILS_IPHONE_SAFE_AREA = {
@@ -33,6 +41,15 @@ export const PROFILS_IPHONE_SAFE_AREA = {
         safeRight: 47,
     },
 };
+
+/**
+ * @param {import('@playwright/test').Browser} browser
+ */
+export async function creerPageIphone14(browser) {
+    const context = await browser.newContext({ ...devices['iPhone 14'] });
+    const page = await context.newPage();
+    return { context, page };
+}
 
 /**
  * @param {import('@playwright/test').Page} page

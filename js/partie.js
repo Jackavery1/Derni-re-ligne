@@ -51,7 +51,6 @@ import {
 } from './ui/ecrans-ui.js';
 import { ECRANS } from './etat/store-jeu.js';
 import { planifierBoucle } from './boucle-jeu.js';
-import { reinitialiserMelodie, arreterLectureMelodie } from './audio/melodie.js';
 import { initStatsPartie } from './achievements.js';
 import { reinitialiserHistoriquePositions } from './rendu/decorations-jeu.js';
 import {
@@ -86,7 +85,6 @@ import { reinitialiserGameFeel, demarrerGraceSpawn } from './logique/game-feel-j
 import { rafraichirHudObjectifsHistoire } from './ui/ui-objectifs-hud.js';
 import { demanderConfirmationDialog } from './ui/dialog-confirmation.js';
 export { initialiserCanvas, assurerCanvasPartie } from './logique/partie-canvas.js';
-export { terminerPartie } from './logique/partie-fin.js';
 
 export async function confirmerRecommencer() {
     const confirme = await demanderConfirmationDialog({
@@ -100,7 +98,7 @@ export async function confirmerRecommencer() {
 
 function _arreterPartieEnCours() {
     arreterFondBiome();
-    arreterLectureMelodie();
+    void import('./audio/melodie.js').then(({ arreterLectureMelodie }) => arreterLectureMelodie());
     annulerTimersVivant();
     etat.estEnCours = false;
     etat.estEnPause = false;
@@ -122,7 +120,7 @@ export function quitterVersMenu() {
 export function quitterVersCarteHistoire() {
     if (!modeHistoireEnCours()) return;
     _arreterPartieEnCours();
-    void import('./histoire/histoire-manager.js').then(({ retournerACarte }) => retournerACarte());
+    void import('./histoire/histoire-session.js').then(({ retournerACarte }) => retournerACarte());
 }
 
 function initialiserFeaturesPartie() {
@@ -134,7 +132,7 @@ function initialiserFeaturesPartie() {
     mettreAJourStatsOracleUI();
     document.getElementById('oracle-bonus-go-wrap')?.classList.add('element-masque');
 
-    reinitialiserMelodie();
+    void import('./audio/melodie.js').then(({ reinitialiserMelodie }) => reinitialiserMelodie());
     reinitialiserHistoriquePositions();
     reinitialiserDonneesPartie();
     donneesPartie.biomeId = obtenirBiomeActif();

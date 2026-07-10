@@ -223,12 +223,12 @@ export function jouerMelodie() {
     );
 }
 
-export function surlignerNoteVisualisation(index) {
+function surlignerNoteVisualisation(index) {
     melodie.noteActive = index;
     dessinerPianoRoll();
 }
 
-export function dessinerPianoRoll() {
+function dessinerPianoRoll() {
     if (typeof document === 'undefined') return;
     const canvas = obtenirCanvas('canvas-melodie');
     if (!canvas || melodie.notes.length === 0) return;

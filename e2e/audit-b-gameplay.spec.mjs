@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 import {
     preparerPageSansSw,
+    preparerPageModeLibreTutorielActif,
     attendreApplicationPrete,
+    attendreNotificationsInitiales,
     demarrerPartie,
     selectionnerBiomeClavier,
     attendrePartieVisible,
@@ -239,4 +241,37 @@ test('audit B — sfx game over apres defaite', async ({ page }) => {
     await page.waitForTimeout(350);
     const sfx = await page.evaluate(() => window.__NEO_TEST__?.obtenirJournalSfxTest?.() ?? []);
     expect(sfx).toContain('game_over');
+});
+
+test('audit B — tutoriel libre avant premiere partie (G3)', async ({ page }) => {
+    await preparerPageModeLibreTutorielActif(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
+    await page.locator('#btn-jouer').click();
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    await selectionnerBiomeClavier(page);
+    await page.locator('#btn-panneau-detail-jouer').click({ force: true });
+
+    await expect(page.locator('#overlay-tutoriel')).not.toHaveClass(/element-masque/);
+    await expect(page.locator('#tutoriel-titre')).toContainText(/MODE LIBRE/i);
+    await expect(page.locator('#tutoriel-indicateur')).toContainText('1 / 3');
+
+    await page.locator('#btn-tutoriel-fermer').click();
+    await expect(page.locator('#tutoriel-indicateur')).toContainText('2 / 3');
+    await page.locator('#btn-tutoriel-fermer').click();
+    await expect(page.locator('#tutoriel-indicateur')).toContainText('3 / 3');
+    await page.locator('#btn-tutoriel-fermer').click();
+
+    await attendrePartieVisible(page);
+    await expect(page.locator('#overlay-tutoriel')).toHaveClass(/element-masque/);
+});
+
+test('audit B — game over rejouer sans dialog recommencer (G6)', async ({ page }) => {
+    await demarrerPartie(page);
+    await terminerPartieCourante(page);
+    await expect(page.locator('#dialog-recommencer-partie')).toHaveClass(/element-masque/);
+    await page.locator('#btn-rejouer').click();
+    await expect(page.locator('#ecran-game-over')).not.toHaveClass(/actif/, { timeout: 10000 });
+    await expect(page.locator('body')).toHaveClass(/partie-active/);
 });

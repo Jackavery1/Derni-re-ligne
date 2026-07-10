@@ -62,6 +62,18 @@ Les conditions Trame sont visibles dans le HUD pendant une run (`mecaniques-hist
 | Ch. IV           | Entraînement Avant-Garde avant la finale             |
 | Post-finale      | Mondes secrets débloqués par `conditions-secrets.js` |
 
+## Ellipse éditoriale — Monde Paradoxe
+
+Le **Monde Paradoxe** clôt la campagne avec une ellipse volontaire : le texte post-victoire contient « ligne incomplète. Volontairement. », et VERA adopte l'humeur portrait `douce`. Ce n'est pas un trou narratif accidentel — c'est la contrepartie éditoriale de la fin secrète et du déblocage post-campagne.
+
+| Élément             | Rôle narratif                                 |
+| ------------------- | --------------------------------------------- |
+| Marqueur post-monde | Invite à « lire entre les blocs »             |
+| Humeur VERA `douce` | Ton de clôture ouverte, non punitive          |
+| Mode zen en run     | Gameplay sans punition top-out (récupération) |
+
+Tests : `e2e/histoire-post-monde.spec.mjs`, `tests/corrections-audit.test.mjs`.
+
 ## Persistance
 
 `localStorage` via `progression.js` (clé `derniereLigne_histoire`). Runtime : `store.histoire`.

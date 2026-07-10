@@ -78,7 +78,7 @@ function enregistrerErreurJournal(niveau, args) {
     }
 }
 
-export function obtenirJournalErreurs() {
+function obtenirJournalErreurs() {
     if (typeof sessionStorage === 'undefined') return [];
     try {
         const brut = sessionStorage.getItem(JOURNAL_ERREURS_CLE);

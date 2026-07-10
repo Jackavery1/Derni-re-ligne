@@ -67,9 +67,15 @@ vi.mock('../js/logique/gestionnaire-difficulte.js', () => ({
     arreterSuiviMonde: vi.fn(),
 }));
 
-vi.mock('../js/histoire/histoire-manager.js', () => ({
+vi.mock('../js/histoire/histoire-manager-completion.js', () => ({
     surFinDeMondeHistoire: vi.fn(),
+}));
+
+vi.mock('../js/histoire/histoire-boss-continue.js', () => ({
     peutContinuerBossGratuit: vi.fn(() => false),
+}));
+
+vi.mock('../js/histoire/histoire-mondes.js', () => ({
     obtenirEtatHistoire: vi.fn(() => ({ conditionsTrame: {}, nbContinuesUtilises: 0 })),
 }));
 
@@ -122,7 +128,7 @@ vi.mock('../js/logique/coop-logique.js', () => ({
 }));
 
 import { terminerPartie } from '../js/logique/partie-fin.js';
-import { surFinDeMondeHistoire } from '../js/histoire/histoire-manager.js';
+import { surFinDeMondeHistoire } from '../js/histoire/histoire-manager-completion.js';
 import { etat } from '../js/etat/store-jeu.js';
 import { sauvegarderRecord } from '../js/ui/ecrans-ui.js';
 
@@ -189,7 +195,7 @@ describe('partie-fin', () => {
         expect(sauvegarderRecord).not.toHaveBeenCalled();
     });
 
-    it('victoire histoire affiche le game over puis retarde le narratif', () => {
+    it('victoire histoire affiche le game over puis retarde le narratif', async () => {
         modeHistoireEnCours.mockReturnValue(true);
         terminerPartie(true);
         expect(afficherEcran).not.toHaveBeenCalled();
@@ -197,6 +203,8 @@ describe('partie-fin', () => {
         vi.advanceTimersByTime(350);
         expect(afficherEcran).toHaveBeenCalledWith('ecran-game-over');
         vi.advanceTimersByTime(900);
-        expect(surFinDeMondeHistoire).toHaveBeenCalledWith(12, 4500);
+        await vi.waitFor(() => {
+            expect(surFinDeMondeHistoire).toHaveBeenCalledWith(12, 4500);
+        });
     });
 });

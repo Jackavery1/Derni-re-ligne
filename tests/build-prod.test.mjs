@@ -13,7 +13,8 @@ describe('build prod', () => {
         expect(readFileSync('dist/js/neo-test-init.js', 'utf8').length).toBeGreaterThan(100);
         const exclus = JSON.parse(readFileSync('dist/js/budget-exclus.json', 'utf8'));
         expect(exclus).toContain('neo-test-init.js');
-        expect(exclus.length).toBeGreaterThan(1);
+        expect(exclus).toContain('dev-init.js');
+        expect(exclus.length).toBeGreaterThan(2);
     }, 90_000);
 
     it('bundle cutscenes CSS et minifie les JSON data', () => {

@@ -8,7 +8,12 @@
     justify-content: center;
     padding: calc(16px + var(--safe-top)) calc(16px + var(--safe-right))
         calc(16px + var(--safe-bottom)) calc(16px + var(--safe-left));
-    background: radial-gradient(ellipse at 50% 35%, #2a1048 0%, #120818 45%, #06040c 100%);
+    background: radial-gradient(
+        ellipse at 50% 35%,
+        var(--fond-chargement-1) 0%,
+        var(--fond-chargement-2) 45%,
+        var(--fond-chargement-3) 100%
+    );
     opacity: 1;
     transition: opacity 0.45s ease;
 }
@@ -37,7 +42,7 @@
     object-fit: contain;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
-    filter: drop-shadow(0 0 28px rgba(255, 45, 120, 0.35));
+    filter: drop-shadow(0 0 28px var(--glow-rose-chargement));
 }
 
 .ecran-chargement-titre {
@@ -45,14 +50,14 @@
     font-size: clamp(0.55rem, 2.4vw, 0.75rem);
     letter-spacing: 4px;
     color: var(--rose);
-    text-shadow: 0 0 12px rgba(255, 45, 120, 0.55);
+    text-shadow: 0 0 12px var(--glow-rose-chargement-fort);
 }
 
 .ecran-chargement-message {
     font-family: var(--font-ui, 'Rajdhani', sans-serif);
     font-size: clamp(0.95rem, 2.8vw, 1.1rem);
     letter-spacing: 2px;
-    color: rgba(224, 224, 255, 0.82);
+    color: color-mix(in srgb, var(--texte) 82%, transparent);
     text-align: center;
     min-height: 1.4em;
 }
@@ -62,7 +67,7 @@
     height: 4px;
     margin-top: 4px;
     background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(180, 0, 255, 0.35);
+    border: 1px solid var(--bordure-violet-chargement);
     border-radius: 2px;
     overflow: hidden;
 }
@@ -71,6 +76,6 @@
     width: 0%;
     height: 100%;
     background: linear-gradient(90deg, var(--violet), var(--rose), var(--cyan));
-    box-shadow: 0 0 10px rgba(255, 45, 120, 0.45);
+    box-shadow: 0 0 10px var(--glow-rose-chargement-barre);
     transition: width 0.25s ease-out;
 }

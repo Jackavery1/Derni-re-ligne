@@ -57,6 +57,33 @@ export async function preparerPageSansSw(page, etatHistoire = ETAT_DEBLOCAGE_MON
     }, etatHistoire);
 }
 
+/** Mode libre débloqué, tutoriel libre non vu (première partie constellation). */
+export async function preparerPageModeLibreTutorielActif(
+    page,
+    etatHistoire = ETAT_DEBLOCAGE_MONDE_LIBRE
+) {
+    await page.route('**/sw.js', (route) => route.abort());
+    await page.addInitScript((etat) => {
+        window.__NEO_SILENT_NOTIFS__ = true;
+        localStorage.setItem('dl_migration_v1', '1');
+        localStorage.setItem('derniereLigne_tutorielVu', '1');
+        localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
+        localStorage.removeItem('derniereLigne_tutorielLibreVu');
+        localStorage.setItem('derniereLigne_tutorielCoopVu', '1');
+        localStorage.setItem('derniereLigne_tutorielArchitecteVu', '1');
+        localStorage.setItem('derniereLigne_tutorielOracleVu', '1');
+        localStorage.setItem('derniereLigne_tutorielDistorsionVu', '1');
+        localStorage.setItem('derniereLigne_introHistoireVue', '1');
+        localStorage.setItem('derniereLigne_infobulleOracleCoop', '1');
+        localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
+        if ('serviceWorker' in navigator) {
+            void navigator.serviceWorker.getRegistrations().then((regs) => {
+                for (const reg of regs) void reg.unregister();
+            });
+        }
+    }, etatHistoire);
+}
+
 /** @param {import('@playwright/test').Page} page */
 export async function attendreApplicationPrete(page) {
     await expect(page.locator('body')).toHaveAttribute('data-neo-test-ready', '1', {

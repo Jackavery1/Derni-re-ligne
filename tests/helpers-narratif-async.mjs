@@ -6,7 +6,8 @@ export async function attendreMock(mock, fois = 1, timeout = 3000) {
 }
 
 /** Vide la file des microtasks (import dynamique, then chaînés). */
-export async function viderMicrotasks() {
-    await Promise.resolve();
-    await Promise.resolve();
+export async function viderMicrotasks(tours = 12) {
+    for (let i = 0; i < tours; i++) {
+        await Promise.resolve();
+    }
 }

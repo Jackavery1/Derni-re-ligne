@@ -33,6 +33,7 @@ export {
     elementAClasse,
     preparerPremierLancement,
     preparerPageSansSw,
+    preparerPageModeLibreTutorielActif,
     attendreApplicationPrete,
     attendreNotificationsInitiales,
     fermerInfobulleContexteSiVisible,
@@ -65,7 +66,12 @@ export {
     passerCutsceneHistoire,
 } from './helpers-histoire.mjs';
 
-export { PROFILS_IPHONE_SAFE_AREA, appliquerSafeAreaIphone } from './helpers-iphone-safe-area.mjs';
+export {
+    PROFILS_IPHONE_SAFE_AREA,
+    ANNOTATION_C11,
+    appliquerSafeAreaIphone,
+    creerPageIphone14,
+} from './helpers-iphone-safe-area.mjs';
 
 export {
     MARQUEURS_NARRATIFS_CAMPAGNE,

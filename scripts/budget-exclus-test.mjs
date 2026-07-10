@@ -1,13 +1,12 @@
 /**
- * Chunks JS atteignables uniquement depuis l'entrée neo-test-init (hors budget prod).
+ * Chunks JS hors budget prod : entrées auxiliaires (test, dev) non importées par bundle.js.
  * @param {import('esbuild').Metafile} metafile
  * @returns {string[]} noms de fichiers (basename)
  */
 export function listerSortiesTestUniquement(metafile) {
     const sorties = Object.keys(metafile.outputs).filter((p) => p.endsWith('.js'));
     const entreeBundle = sorties.find((p) => p.endsWith('/bundle.js'));
-    const entreeTest = sorties.find((p) => p.endsWith('/neo-test-init.js'));
-    if (!entreeBundle || !entreeTest) return ['neo-test-init.js'];
+    if (!entreeBundle) return ['neo-test-init.js', 'dev-init.js'];
 
     /** @param {string} racine */
     function collecter(racine) {
@@ -27,13 +26,17 @@ export function listerSortiesTestUniquement(metafile) {
     }
 
     const depuisBundle = collecter(entreeBundle);
-    const depuisTest = collecter(entreeTest);
 
     /** @type {string[]} */
-    const exclus = ['neo-test-init.js'];
-    for (const sortie of depuisTest) {
-        if (!depuisBundle.has(sortie)) {
-            exclus.push(sortie.replace(/^.*[/\\]/, ''));
+    const exclus = [];
+    for (const entreeNom of ['neo-test-init.js', 'dev-init.js']) {
+        const entree = sorties.find((p) => p.endsWith(`/${entreeNom}`));
+        if (!entree) continue;
+        exclus.push(entreeNom);
+        for (const sortie of collecter(entree)) {
+            if (!depuisBundle.has(sortie)) {
+                exclus.push(sortie.replace(/^.*[/\\]/, ''));
+            }
         }
     }
     return [...new Set(exclus)];

@@ -1,10 +1,12 @@
-import { test, expect, devices } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import {
     ouvrirCarteHistoire,
     attendreApplicationPrete,
     attendreNotificationsInitiales,
     fermerRecapPostMonde,
     appliquerSafeAreaIphone,
+    ANNOTATION_C11,
+    creerPageIphone14,
     passerCutsceneEntiere,
     attendreJournalHistoire,
     lancerMondeDepuisCarte,
@@ -289,8 +291,7 @@ test('iphone — recap post-victoire respecte encoche simulee (audit D8/D11)', a
     browser,
 }) => {
     test.setTimeout(60000);
-    const context = await browser.newContext({ ...devices['iPhone 14'] });
-    const page = await context.newPage();
+    const { context, page } = await creerPageIphone14(browser);
     await ouvrirCarteHistoire(page, ETAT_HISTOIRE_BOSS_BRASIER);
     await appliquerSafeAreaIphone(page);
     await page.evaluate(async () => {
@@ -400,14 +401,9 @@ test('carte histoire paysage mobile — header et retour accessibles', async ({ 
 });
 
 test('iphone — cutscene respecte encoche simulee (audit C11)', async ({ browser }) => {
-    test.info().annotations.push({
-        type: 'note',
-        description:
-            'Matrice iPhone simulee (helpers-iphone-safe-area) ; validation PWA physique : checklist CONTRIBUTING.',
-    });
+    test.info().annotations.push(ANNOTATION_C11);
 
-    const context = await browser.newContext({ ...devices['iPhone 14'] });
-    const page = await context.newPage();
+    const { context, page } = await creerPageIphone14(browser);
     await page.addInitScript((etat) => {
         localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
         localStorage.setItem('dl_migration_v1', '1');

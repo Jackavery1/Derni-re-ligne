@@ -3,7 +3,6 @@ import { modeArchiActif } from '../etat/registre-modes.js';
 import { afficherEcranDiffere as afficherEcran } from './navigation-lazy.js';
 import { obtenirActions } from '../logique/actions-jeu.js';
 import { ECRANS } from '../etat/store-jeu.js';
-import { retournerAuMondeActuel } from '../histoire/histoire-manager.js';
 import { quitterVersCarteHistoire } from '../partie.js';
 import { assurerInputArchi, assurerInputCoop } from '../modes-input-lazy.js';
 import { lierBouton } from './ui-lier-bouton.js';
@@ -26,7 +25,9 @@ async function avecArchi() {
 export function initialiserBoutonsPartie() {
     lierBouton('btn-rejouer', () => {
         if (modeHistoireEnCours()) {
-            retournerAuMondeActuel();
+            void import('../histoire/histoire-session.js').then(({ retournerAuMondeActuel }) =>
+                retournerAuMondeActuel()
+            );
         } else {
             obtenirActions().demarrerJeu?.();
         }

@@ -10,14 +10,14 @@ import { ECRANS, obtenirBiomeActif } from './etat/store-jeu.js';
 import { initialiserBoutons } from './ui/ui-init.js';
 
 function initialiserModulesDifferees() {
-    void import('./histoire/histoire-manager.js').then(({ rafraichirEtatHistoire }) =>
+    void import('./histoire/histoire-mondes.js').then(({ rafraichirEtatHistoire }) =>
         rafraichirEtatHistoire()
     );
     void import('./ui/ui-panneau-objectifs.js').then(({ initialiserUiObjectifs }) =>
         initialiserUiObjectifs()
     );
-    void import('./logique/mode-developpeur.js').then(({ initialiserModeDeveloppeur }) =>
-        initialiserModeDeveloppeur()
+    void import('./logique/dev-ecouteur.js').then(({ initialiserEcouteurDev }) =>
+        initialiserEcouteurDev()
     );
     void import('./ui/tutoriel.js').then(({ initialiserTutoriel }) => initialiserTutoriel());
 }

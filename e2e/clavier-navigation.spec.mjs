@@ -43,6 +43,23 @@ test.describe('clavier navigation', () => {
         await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
     });
 
+    test('fleches clavier basculent les onglets options', async ({ page }) => {
+        await preparerPageSansSw(page);
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+        await page.locator('#btn-options').focus();
+        await page.keyboard.press('Enter');
+        await expect(page.locator('#ecran-options')).toHaveClass(/actif/, { timeout: 10000 });
+        await page.locator('#tab-reglages').focus();
+        await page.keyboard.press('ArrowRight');
+        await expect(page.locator('#tab-controles')).toBeFocused();
+        await expect(page.locator('#panneau-controles')).toHaveClass(/actif/);
+        await expect(page.locator('#panneau-reglages')).not.toHaveClass(/actif/);
+        await page.keyboard.press('ArrowLeft');
+        await expect(page.locator('#tab-reglages')).toBeFocused();
+        await expect(page.locator('#panneau-reglages')).toHaveClass(/actif/);
+    });
+
     test('Enter sur codex ouvre et retour ferme', async ({ page }) => {
         await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
         await page.goto('/');
