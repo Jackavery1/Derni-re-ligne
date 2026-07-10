@@ -1,4 +1,4 @@
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { etat } from '../etat/store-jeu.js';
 import { injectionVivant } from './vivant-strategies-injection.js';
 

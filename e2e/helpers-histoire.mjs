@@ -5,6 +5,7 @@ import {
     boutonEstVisible,
     elementAClasse,
     preparerPremierLancement,
+    preparerPageSansSw,
     attendreApplicationPrete,
     attendreNotificationsInitiales,
 } from './helpers-page.mjs';
@@ -53,20 +54,7 @@ export async function fermerRecapPostMonde(page) {
 
 /** @param {import('@playwright/test').Page} page @param {object} [etatHistoire] */
 export async function ouvrirCarteHistoire(page, etatHistoire = ETAT_HISTOIRE_BOSS_BRASIER) {
-    await page.addInitScript((etat) => {
-        window.__NEO_SILENT_NOTIFS__ = true;
-        localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
-        localStorage.setItem('dl_migration_v1', '1');
-        localStorage.setItem('derniereLigne_tutorielVu', '1');
-        localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
-        localStorage.setItem('derniereLigne_tutorielLibreVu', '1');
-        localStorage.setItem('derniereLigne_tutorielCoopVu', '1');
-        localStorage.setItem('derniereLigne_tutorielArchitecteVu', '1');
-        localStorage.setItem('derniereLigne_tutorielOracleVu', '1');
-        localStorage.setItem('derniereLigne_tutorielDistorsionVu', '1');
-        localStorage.setItem('derniereLigne_introHistoireVue', '1');
-        localStorage.setItem('derniereLigne_infobulleOracleCoop', '1');
-    }, etatHistoire);
+    await preparerPageSansSw(page, etatHistoire);
     await page.goto('/');
     await attendreApplicationPrete(page);
     await attendreNotificationsInitiales(page);

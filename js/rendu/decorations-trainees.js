@@ -1,4 +1,4 @@
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { etat, obtenirCtx } from '../etat/store-jeu.js';
 import { obtenirForme, obtenirCouleurPiece } from '../logique/piece-jeu.js';
 

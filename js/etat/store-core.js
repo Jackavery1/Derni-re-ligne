@@ -1,4 +1,4 @@
-import { TOUCHES_DEFAUT } from '../config/config.js';
+import { TOUCHES_DEFAUT } from '../config/config-jeu.js';
 import { ECRANS } from '../ui/ecrans-config.js';
 import { creerEtatHistoireRuntime } from './store-histoire.js';
 

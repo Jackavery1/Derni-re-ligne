@@ -1,4 +1,4 @@
-import { BIOMES } from '../config/config.js';
+import { BIOMES } from '../config/biomes.js';
 import { store } from '../etat/store-jeu.js';
 
 const TRAME_BIOMES_CYCLE = [

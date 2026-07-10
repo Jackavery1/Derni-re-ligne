@@ -1,4 +1,5 @@
-import { CONFIG, BIOMES } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
+import { BIOMES } from '../config/biomes.js';
 import { obtenirForme, obtenirCouleurPieceParType } from '../logique/piece-jeu.js';
 import {
     obtenirCtx,

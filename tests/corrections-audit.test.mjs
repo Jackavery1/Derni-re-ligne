@@ -26,7 +26,8 @@ import {
 import { chargerDonneesCodex, codexDebloque, verifierCodex } from '../js/codex.js';
 import { statsGlobales } from '../js/achievements.js';
 import { meteo } from '../js/logique/meteo.js';
-import { CONFIG, METEO_BIOMES, chargerContenuJeu } from '../js/config/config.js';
+import { CONFIG } from '../js/config/config-jeu.js';
+import { METEO_BIOMES, chargerContenuJeu } from '../js/config/contenu-jeu.js';
 import { vitesseChute } from '../js/logique/logique-partie.js';
 import { etat } from '../js/etat/store-jeu.js';
 
@@ -172,6 +173,12 @@ describe('corrections audit', () => {
                 }
             });
         }
+    });
+
+    describe('corpus post-monde', () => {
+        it('monde_finale absent de CUTSCENES_POST_MONDE', () => {
+            expect(CUTSCENES_POST_MONDE.monde_finale).toBeUndefined();
+        });
     });
 
     describe('fin secrète', () => {

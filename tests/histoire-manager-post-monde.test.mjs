@@ -2,6 +2,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { store } from '../js/etat/store-jeu.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 
+vi.mock('../js/io/charger-histoire-textes.js', async () => {
+    const textes = await import('../js/histoire-textes.fallback.js');
+    return {
+        chargerHistoireTextes: vi.fn(async () => textes),
+        obtenirHistoireTextesSync: vi.fn(() => textes),
+    };
+});
+
 vi.mock('../js/histoire/histoire-narratif.js', () => ({
     afficherVictoireBoss: vi.fn((_id, _type, cb) => cb?.()),
     afficherTransitionChapitre: vi.fn((_cle, cb) => cb?.()),

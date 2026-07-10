@@ -1,4 +1,5 @@
-import { CONFIG, RELIQUES } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
+import { RELIQUES } from '../config/contenu-jeu.js';
 import { emettre } from '../etat/bus-jeu.js';
 import {
     etat,

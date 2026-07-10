@@ -1,5 +1,5 @@
 /** Rendu des pièces actives, fantômes et overlays boss sur le plateau. */
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { meteo } from '../logique/meteo.js';
 import {
     etat,

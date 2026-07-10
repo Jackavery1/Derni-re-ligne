@@ -1,6 +1,6 @@
 import { store } from '../etat/store-jeu.js';
 import { etat } from '../etat/store-jeu.js';
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { ETAT_HISTOIRE_VIDE } from '../histoire-donnees.js';
 import { sansAccentsE } from '../logique/texte-jeu.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';

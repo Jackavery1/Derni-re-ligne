@@ -15,7 +15,7 @@ import {
 import { chargerBiomeActif } from '../io/progression.js';
 import { chargerClassementLeaderboard } from '../io/leaderboard-cloud.js';
 import { formaterTemps } from '../rendu/hud-jeu.js';
-import { BIOMES, ORDRE_BIOMES_LIBRE } from '../config/config.js';
+import { BIOMES, ORDRE_BIOMES_LIBRE } from '../config/biomes.js';
 
 const MODES_LEADERBOARD = [
     { id: 'marathon', libelle: 'SANS FIN' },

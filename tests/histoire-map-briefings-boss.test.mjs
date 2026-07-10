@@ -5,6 +5,15 @@ import {
     obtenirBriefingMecaniqueBoss,
     obtenirInfobulleAttaqueBoss,
 } from '../js/histoire/histoire-map-briefings-boss.js';
+import { DIALOGUES_COMBAT_BOSS } from '../js/histoire-textes/dialogues-boss.js';
+
+const MOTS_CLEFS_BRIEFING = {
+    brasier: /braise|brûle/i,
+    sentinelle: /gel|colonn/i,
+    archiviste: /fant[oô]me|invers/i,
+    avantgarde: /permut|gel/i,
+    distorsion: /fant[oô]me|gel|invers/i,
+};
 
 describe('histoire-map-briefings-boss', () => {
     it('couvre les cinq boss de campagne', () => {
@@ -41,4 +50,14 @@ describe('histoire-map-briefings-boss', () => {
             'permutation_colonnes',
         ]);
     });
+
+    for (const bossId of Object.keys(BRIEFINGS_MECANIQUES_BOSS)) {
+        it(`briefing ${bossId} aligne mécaniques et dialogues`, () => {
+            const briefing = obtenirBriefingMecaniqueBoss(bossId);
+            const dialogues = DIALOGUES_COMBAT_BOSS[bossId];
+            expect(briefing.length).toBeGreaterThan(0);
+            expect(dialogues?.phases?.length).toBeGreaterThan(0);
+            expect(briefing).toMatch(MOTS_CLEFS_BRIEFING[bossId]);
+        });
+    }
 });

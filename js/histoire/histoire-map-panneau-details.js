@@ -1,5 +1,5 @@
 import { JOURNAUX_VERA } from '../histoire-donnees.js';
-import { BIOMES } from '../config/config.js';
+import { BIOMES } from '../config/biomes.js';
 import { obtenirEtatMonde, SEUILS_COMPLETION } from './histoire-mondes.js';
 import { modeDevActif } from '../logique/mode-dev-etat.js';
 import { obtenirEtoilesPersistees } from '../logique/gestionnaire-difficulte.js';

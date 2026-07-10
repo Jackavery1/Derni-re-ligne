@@ -142,7 +142,7 @@ body.archi-active #controles-paysage {
 }
 
 .carte-niveau-archi {
-    --accent-carte: #ffbb44;
+    --accent-carte: var(--or-ui);
     border-color: color-mix(in srgb, var(--accent-carte) 55%, transparent);
     box-shadow:
         0 0 10px color-mix(in srgb, var(--accent-carte) 20%, transparent),

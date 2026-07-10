@@ -1,5 +1,5 @@
 /** Heuristique de placement Oracle — évaluation plateau et recherche SRS. */
-import { CONFIG, TETROMINOS } from '../config/config.js';
+import { CONFIG, TETROMINOS } from '../config/config-jeu.js';
 import { estPositionValidePlateau, obtenirEssaisKick } from './logique-pure.js';
 import { extraireForme } from './moteur-piece.js';
 

@@ -38,7 +38,7 @@ export const DIFFICULTE_MONDES = {
         profilVitesse: [
             { a: 0, palier: 3 },
             { a: 0.35, palier: 5 },
-            { a: 0.65, palier: 5 },
+            { a: 0.65, palier: 6 },
             { a: 0.85, palier: 6 },
         ],
         etoile2: { type: 'combo', valeur: 3 },
@@ -49,7 +49,7 @@ export const DIFFICULTE_MONDES = {
         profilVitesse: [
             { a: 0, palier: 3 },
             { a: 0.5, palier: 5 },
-            { a: 0.85, palier: 4 },
+            { a: 0.85, palier: 6 },
         ],
         etoile2: { type: 'pieces_max', valeur: 48 },
         etoile3: { type: 'combo', valeur: 4 },
@@ -65,7 +65,7 @@ export const DIFFICULTE_MONDES = {
         profilVitesse: [
             { a: 0, palier: 4 },
             { a: 0.4, palier: 6 },
-            { a: 0.7, palier: 4 },
+            { a: 0.7, palier: 6 },
             { a: 0.9, palier: 7 },
         ],
         etoile2: { type: 'tetris', valeur: 1 },
@@ -133,7 +133,7 @@ export const DIFFICULTE_MONDES = {
     },
     monde_boss_3: {
         boss: true,
-        phasePaliers: [8, 10, 9],
+        phasePaliers: [8, 10, 11],
         etoile2: { type: 'sans_topout' },
         etoile3: { type: 'sans_continue' },
     },

@@ -1,6 +1,6 @@
 import { etat } from '../etat/store-jeu.js';
 import { obtenirDefiDuJour, lireScoreDefiJour } from './defi-jour.js';
-import { BIOMES } from '../config/config.js';
+import { BIOMES } from '../config/biomes.js';
 import { sansAccentsE } from './texte-jeu.js';
 import { obtenirEtatDeblocage } from '../io/progression.js';
 

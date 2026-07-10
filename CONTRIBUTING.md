@@ -140,7 +140,9 @@ git push
 ### Analyse et maintenance
 
 - `npm run analyze` — top 15 taille bundle + régénère `docs/modules-index.md` (hotspots uniquement)
+- `npm run measure` (alias `audit:poids`) — budgets JS/CSS/polices + rapport `rapport-poids.json`
 - `npm run check:circular` — dépendances circulaires depuis `js/main.js`
+- **Budget bundle** : plafond **588 Ko** JS minifié precache (`scripts/verifier-bundle.mjs`, CI `quality.yml`). Cible confort **560 Ko**. Vérifier après chaque ajout JS : `npm run build && node scripts/verifier-bundle.mjs`. Les `import()` dynamiques **déplacent** du code en chunks async mais **n'allègent pas** le total precache sous esbuild — privilégier la suppression de code ou l'évitement de dépendances lourdes. Marge typique ~3 Ko : éviter les splits async sans gain net mesuré. Voir `docs/optimisation-poids.md`.
 
 ### Textes narratifs (`js/histoire-textes/`)
 

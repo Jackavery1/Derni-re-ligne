@@ -1,4 +1,4 @@
-import { ORDRE_BIOMES_LIBRE } from '../config/config.js';
+import { ORDRE_BIOMES_LIBRE } from '../config/biomes.js';
 import { biomeEstDebloqueParHistoire } from '../io/progression-records.js';
 import { lireStockage, ecrireStockage } from '../io/progression.js';
 

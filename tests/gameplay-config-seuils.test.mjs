@@ -29,4 +29,10 @@ describe('gameplay config — seuils audit B', () => {
     it('lockDelay offre une fenetre de placement confortable', () => {
         expect(CONFIG.lockDelay).toBeGreaterThanOrEqual(300);
     });
+
+    it('areMs dans la plage 8-12 frames a 60fps', () => {
+        const frames = CONFIG.areMs / msParFrame;
+        expect(frames).toBeGreaterThanOrEqual(8);
+        expect(frames).toBeLessThanOrEqual(12);
+    });
 });

@@ -210,11 +210,14 @@ export async function lancerMondeDepuisCarte(page, mondeId) {
     await expect
         .poll(async () => {
             return page.evaluate(() => {
-                const cutscene = document
-                    .getElementById('ecran-histoire-cutscene')
-                    ?.classList.contains('actif');
+                const cutscene = document.getElementById('ecran-histoire-cutscene');
+                const cutsceneVisible =
+                    cutscene &&
+                    (cutscene.classList.contains('actif') ||
+                        cutscene.classList.contains('cutscene-mode-dialogue') ||
+                        cutscene.classList.contains('cutscene-mode-narration'));
                 const partie = document.body.classList.contains('partie-active');
-                return cutscene || partie;
+                return cutsceneVisible || partie;
             });
         })
         .toBe(true);

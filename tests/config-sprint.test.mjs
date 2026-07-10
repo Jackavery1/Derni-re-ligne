@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { CONFIG } from '../js/config/config.js';
+import { CONFIG } from '../js/config/config-jeu.js';
 
 describe('config-jeu sprint', () => {
     it('courbe sprint plus douce que marathon au demarrage', () => {

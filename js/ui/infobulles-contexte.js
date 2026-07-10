@@ -1,4 +1,5 @@
-import { BIOMES, RELIQUES } from '../config/config.js';
+import { BIOMES } from '../config/biomes.js';
+import { RELIQUES } from '../config/contenu-jeu.js';
 import { INFOBULLES_MODES_JEU } from '../config/contenu-jeu.js';
 import { obtenirInfobulleAttaqueBoss } from '../histoire/histoire-map-briefings-boss.js';
 import { lireStockage, ecrireStockage } from '../io/progression.js';

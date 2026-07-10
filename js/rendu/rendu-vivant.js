@@ -1,4 +1,4 @@
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { etat, obtenirBiomeActif, obtenirCanvasPlateau, obtenirCtx } from '../etat/store-jeu.js';
 import { COMPORTEMENTS_VIVANT, vivant, vivantPlateauTempsPret } from '../logique/vivant.js';
 

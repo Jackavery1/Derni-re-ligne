@@ -64,24 +64,13 @@ test.describe('gameplay equity', () => {
         expect(buffer).toEqual(['gauche', 'tourner_cw']);
     });
 
-    test('HUD paysage — labels lisibles (>= 9px)', async ({ page }) => {
-        await page.setViewportSize({ width: 667, height: 375 });
+    test('input clavier ArrowLeft deplace la piece en partie', async ({ page }) => {
         await demarrerPartie(page);
-        const tailles = await page.evaluate(() => {
-            const selecteurs = [
-                '.panneau .section:nth-child(2) .stat-label',
-                '#affichage-restant',
-                '#section-timer-niveau .stat-label',
-            ];
-            return selecteurs.map((sel) => {
-                const el = document.querySelector(sel);
-                if (!el) return null;
-                const px = parseFloat(getComputedStyle(el).fontSize);
-                return Number.isFinite(px) ? px : 0;
-            });
-        });
-        for (const taille of tailles.filter((t) => t !== null)) {
-            expect(taille).toBeGreaterThanOrEqual(9);
-        }
+        const avant = await page.evaluate(() => window.__NEO_TEST__?.obtenirColonnePieceActive?.());
+        await page.keyboard.press('ArrowLeft');
+        const apres = await page.evaluate(() => window.__NEO_TEST__?.obtenirColonnePieceActive?.());
+        expect(typeof avant).toBe('number');
+        expect(typeof apres).toBe('number');
+        expect(apres).toBeLessThan(avant);
     });
 });

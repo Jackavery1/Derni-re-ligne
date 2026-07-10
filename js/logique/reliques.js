@@ -1,4 +1,5 @@
-import { CONFIG, RELIQUES } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
+import { RELIQUES } from '../config/contenu-jeu.js';
 import { majStatsRelique } from '../achievements.js';
 import { AudioMoteur } from '../audio/audio.js';
 import { reagirRoboRelique } from '../ui/mascotte-robo.js';

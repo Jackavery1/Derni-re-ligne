@@ -1,4 +1,4 @@
-import { TETROMINOS } from '../config/config.js';
+import { TETROMINOS } from '../config/config-jeu.js';
 import { emettre } from '../etat/bus-jeu.js';
 import { obtenirBouton } from './dom-utils.js';
 import { coop, DEMI_LARGEUR, coop_rafraichirStats } from './coop-etat.js';

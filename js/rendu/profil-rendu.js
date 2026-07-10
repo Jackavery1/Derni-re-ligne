@@ -1,4 +1,4 @@
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 
 const COULEUR_VIOLET = { r: 61, g: 34, b: 128 };
 const COULEUR_CYAN = { r: 0, g: 221, b: 200 };

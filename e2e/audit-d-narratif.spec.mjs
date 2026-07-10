@@ -201,6 +201,7 @@ test('entree vide — humeur distorsion menacante (audit D)', async ({ page }) =
     test.setTimeout(45000);
     await ouvrirCarteHistoire(page, ETAT_ENTREE_VIDE);
     await lancerMondeDepuisCarte(page, 'monde_vide');
+    await avancerCutsceneJusquaPivot(page, /Tu es encore là/i);
     await assertHumeurPortraitCutscene(page, 'distorsion', 'menacante');
 });
 

@@ -17,7 +17,7 @@
 .ach-galerie-titre {
     font-family: var(--font-titre);
     font-size: var(--typo-titre-ecran);
-    color: #ffbb44;
+    color: var(--or-ui);
     letter-spacing: 5px;
     text-align: center;
     text-shadow: 0 0 14px rgba(255, 187, 68, 0.55);
@@ -120,7 +120,7 @@
     width: 100%;
 }
 .ach-filtre-btn {
-    --accent-filtre: #ffbb44;
+    --accent-filtre: var(--or-ui);
     background: transparent;
     border: 1px solid var(--bordure);
     color: var(--texte-dim);

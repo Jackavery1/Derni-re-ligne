@@ -1,4 +1,4 @@
-import { BIOMES } from '../config/config.js';
+import { BIOMES } from '../config/biomes.js';
 import { store } from '../etat/store-jeu.js';
 import { obtenirBiomeActif } from '../etat/store-jeu.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CONFIG } from '../js/config/config.js';
+import { CONFIG } from '../js/config/config-jeu.js';
 
 vi.mock('../js/etat/bus-jeu.js', () => ({
     emettre: vi.fn(),

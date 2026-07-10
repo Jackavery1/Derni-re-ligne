@@ -1,4 +1,5 @@
-import { CONFIG, BIOMES } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
+import { BIOMES } from '../config/biomes.js';
 import { obtenirLigneEclipse, obtenirFondTrame } from '../histoire/mecaniques-histoire.js';
 import { obtenirCanvasPlateau, obtenirCtx } from '../etat/store-jeu.js';
 

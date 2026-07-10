@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { ouvrirCarteHistoire, ETAT_FIN_SECRETE_PRET, ETAT_PARADOXE_DEBLOQUE } from './helpers.mjs';
+import { ouvrirCarteHistoire } from './helpers.mjs';
 import {
     MARQUEURS_NARRATIFS_POST_MONDE,
     MARQUEURS_NARRATIFS_CAMPAGNE,
@@ -11,6 +11,7 @@ import {
     avancerCutsceneJusquaPivot,
     assertAudioNarratifCutscene,
 } from './helpers-narratif.mjs';
+import { preparerEtatPremiereCompletionFragment } from './helpers-narratif-fragments.mjs';
 import { CUTSCENES_POST_MONDE } from '../js/histoire-textes/cutscenes-post-monde.js';
 
 const MONDES_POST_MONDE = Object.keys(CUTSCENES_POST_MONDE);
@@ -33,7 +34,7 @@ function marqueursPourPostMonde(mondeId) {
 
 /** @param {string} mondeId */
 function etatPourPostMonde(mondeId) {
-    return mondeId === 'monde_paradoxe' ? ETAT_PARADOXE_DEBLOQUE : ETAT_FIN_SECRETE_PRET;
+    return preparerEtatPremiereCompletionFragment(mondeId);
 }
 
 /** @param {import('@playwright/test').Page} page @param {string} mondeId */
@@ -118,7 +119,7 @@ test('post-monde — prologue humeur ROBO content (audit D)', async ({ page }) =
 
 test('post-monde — paradoxe humeur VERA douce (audit D)', async ({ page }) => {
     test.setTimeout(120000);
-    await ouvrirCarteHistoire(page, ETAT_PARADOXE_DEBLOQUE);
+    await ouvrirCarteHistoire(page, etatPourPostMonde('monde_paradoxe'));
     await declencherPostMonde(page, 'monde_paradoxe');
     await avancerCutsceneJusquaPivot(page, /lire entre les blocs/i);
     await assertHumeurPortraitCutscene(page, 'vera', 'douce');
@@ -141,6 +142,35 @@ for (const [mondeId, cfg] of Object.entries(HUMEURS_POST_MONDE_PIVOT)) {
         await viderOverlaysHistoireRapide(page, 16);
     });
 }
+
+test('post-monde — re-completion prologue sans cutscene post-monde (audit D)', async ({ page }) => {
+    test.setTimeout(60000);
+    const etat = preparerEtatPremiereCompletionFragment('monde_lave');
+    etat.mondesCompletes = [...etat.mondesCompletes, 'monde_prologue'];
+    etat.fragmentsVusIds = [...(etat.fragmentsVusIds ?? []), 'apres_prologue'];
+    await ouvrirCarteHistoire(page, etat);
+
+    await page.evaluate(async () => {
+        await window.__NEO_TEST__?.declencherPostMondeNarratif?.('monde_prologue');
+    });
+
+    await page.waitForFunction(
+        () =>
+            document
+                .getElementById('overlay-recap-monde')
+                ?.classList.contains('objectif-overlay-visible'),
+        null,
+        { timeout: 10000 }
+    );
+    await page.locator('#btn-recap-continuer').click({ force: true });
+
+    await page.waitForTimeout(800);
+    const texteCutscene = await page.evaluate(
+        () => document.getElementById('histoire-cutscene-texte')?.textContent ?? ''
+    );
+    expect(texteCutscene).not.toMatch(/satisfaction/i);
+    await viderOverlaysHistoireRapide(page, 8);
+});
 
 test('post-monde — couvre les 15 mondes narratifs', () => {
     expect(MONDES_POST_MONDE).toHaveLength(15);

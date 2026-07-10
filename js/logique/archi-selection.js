@@ -1,4 +1,4 @@
-import { BIOMES } from '../config/config.js';
+import { BIOMES } from '../config/biomes.js';
 import { lireStockage } from '../io/progression.js';
 import { afficherEcran } from '../ui/ecrans-ui.js';
 import { ECRANS } from '../etat/store-jeu.js';

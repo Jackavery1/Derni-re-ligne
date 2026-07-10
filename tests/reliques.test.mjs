@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { RELIQUES, ORDRE_BIOMES } from '../js/config/config.js';
+import { RELIQUES } from '../js/config/contenu-jeu.js';
+import { ORDRE_BIOMES } from '../js/config/biomes.js';
 
 describe('reliques', () => {
     for (const id of ORDRE_BIOMES) {

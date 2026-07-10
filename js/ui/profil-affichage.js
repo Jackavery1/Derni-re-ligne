@@ -1,4 +1,4 @@
-import { BIOMES } from '../config/config.js';
+import { BIOMES } from '../config/biomes.js';
 import { etat } from '../etat/store-jeu.js';
 import { obtenirCanvas } from '../logique/dom-utils.js';
 import { obtenirResumeRecordsLocaux } from '../io/progression.js';

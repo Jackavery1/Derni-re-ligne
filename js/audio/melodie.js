@@ -1,4 +1,4 @@
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { AudioMoteur } from './audio.js';
 import { TONIQUES_BIOMES } from './audio-donnees.js';
 import { etat, obtenirBiomeActif } from '../etat/store-jeu.js';

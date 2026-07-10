@@ -12,7 +12,7 @@ import {
     definirNiveauGlobal,
     definirDerniereSecondeTemps,
 } from '../etat/store-jeu.js';
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { annoncer } from '../ui/annonces.js';
 import { afficherNotificationNiveau } from '../ui/ui-notifications.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';

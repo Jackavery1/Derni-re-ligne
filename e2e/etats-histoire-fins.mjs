@@ -366,6 +366,26 @@ export const ETAT_ENTREE_VIDE = {
     mondesDejaMontres: [...ETAT_ENTREE_COSMOS.mondesDejaMontres, 'monde_cosmos'],
 };
 
+/** Première visite Miroir — cutscene d'entrée miroir. */
+export const ETAT_ENTREE_MIROIR = {
+    ...ETAT_AVANT_BOSS_ARCHIVISTE,
+    mondesCompletes: [...ETAT_AVANT_BOSS_ARCHIVISTE.mondesCompletes, 'monde_boss_3'],
+    bossVaincus: ['brasier', 'sentinelle', 'archiviste'],
+    laboDecouvert: true,
+    journauxTrouves: [
+        'journal_1',
+        'journal_2',
+        'journal_3',
+        'journal_4',
+        'journal_5',
+        'journal_6',
+        'journal_7',
+    ],
+    mondesCachesDebloques: ['monde_miroir'],
+    conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 },
+    mondesDejaMontres: [...ETAT_AVANT_BOSS_ARCHIVISTE.mondesCompletes, 'monde_boss_3'],
+};
+
 /** Première visite Trame — cutscene d'entrée trame. */
 export const ETAT_ENTREE_TRAME = {
     ...ETAT_FIN_SECRETE_PRET,

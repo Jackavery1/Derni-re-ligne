@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { attendreApplicationPrete } from './helpers.mjs';
 
 /** @param {import('@playwright/test').Page} page */
@@ -30,4 +30,8 @@ test('application charge hors ligne après precache', async ({ page, context }) 
     await swPromise;
     await attendreApplicationPrete(page);
     await attendrePrecacheShell(page);
+
+    await context.setOffline(true);
+    await expect(page.locator('#ecran-titre')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('#btn-options')).toBeVisible();
 });

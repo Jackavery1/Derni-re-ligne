@@ -1,4 +1,4 @@
-import { BIOMES, ORDRE_BIOMES_LIBRE } from '../config/config.js';
+import { BIOMES, ORDRE_BIOMES_LIBRE } from '../config/biomes.js';
 import { biomeEstDebloqueParHistoire, obtenirMondeHistoirePourBiome } from '../io/progression.js';
 import { modeSprintActif } from './mode-sprint.js';
 import { obtenirRecordSprintBiome } from '../io/progression.js';

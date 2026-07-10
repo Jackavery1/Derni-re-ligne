@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { CONFIG } from '../js/config/config.js';
+import { CONFIG } from '../js/config/config-jeu.js';
 import {
     oracle,
     evaluerPlateau,

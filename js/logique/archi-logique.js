@@ -1,4 +1,4 @@
-import { CONFIG, TETROMINOS } from '../config/config.js';
+import { CONFIG, TETROMINOS } from '../config/config-jeu.js';
 import { creerPlateau, obtenirCouleurPieceParType, obtenirForme } from './piece-jeu.js';
 import { estPositionValidePiece } from './moteur-piece.js';
 import { creerParticulesExplosion } from '../rendu/particules-jeu.js';

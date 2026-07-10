@@ -215,7 +215,7 @@ describe('gestionnaire-difficulte', () => {
         const a65 = profil.find((v) => v.a === 0.65);
         expect(a35).toBeTruthy();
         expect(a65).toBeTruthy();
-        expect(a65.palier).toBeGreaterThanOrEqual(a35.palier);
-        expect(PALIERS_VITESSE_MS[a65.palier]).toBeLessThanOrEqual(PALIERS_VITESSE_MS[a35.palier]);
+        expect(a65.palier).toBeGreaterThan(a35.palier);
+        expect(PALIERS_VITESSE_MS[a65.palier]).toBeLessThan(PALIERS_VITESSE_MS[a35.palier]);
     });
 });

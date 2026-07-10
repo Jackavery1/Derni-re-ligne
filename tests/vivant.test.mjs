@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { CONFIG } from '../js/config/config.js';
+import { CONFIG } from '../js/config/config-jeu.js';
 import { etat, definirBiomeActif } from '../js/etat/store-jeu.js';
 import { creerPlateau } from '../js/logique/piece-jeu.js';
 import {

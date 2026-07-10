@@ -1,5 +1,5 @@
 import { AudioMoteur } from '../audio/audio.js';
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { obtenirActions } from './actions-jeu.js';
 import { ecouter } from '../etat/bus-jeu.js';
 import { creerParticulesLigne } from '../rendu/particules-jeu.js';

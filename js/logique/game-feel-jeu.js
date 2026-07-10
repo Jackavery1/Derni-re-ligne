@@ -4,7 +4,7 @@ import {
     premierBufferInput,
     retirerPremierBufferInput,
 } from './buffer-input-jeu.js';
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { store, etat } from '../etat/store-jeu.js';
 import {
     obtenirPieceAuSol,

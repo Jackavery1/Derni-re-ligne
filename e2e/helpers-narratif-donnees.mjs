@@ -20,6 +20,13 @@ export const SCENES_ENTREE_CAMPAGNE = Object.fromEntries(
     MONDES_CAMPAGNE_PRINCIPALE.map((id) => [id, obtenirSceneEntreeCutscene(CUTSCENES_ENTREE[id])])
 );
 
+export const MONDES_ENTREE_SECRETS = ['monde_miroir', 'monde_trame', 'monde_paradoxe'];
+
+/** Scènes d'entrée des mondes secrets (fin de campagne). */
+export const SCENES_ENTREE_SECRETS = Object.fromEntries(
+    MONDES_ENTREE_SECRETS.map((id) => [id, obtenirSceneEntreeCutscene(CUTSCENES_ENTREE[id])])
+);
+
 /** @param {string} mondeId */
 export function obtenirScenePostMonde(mondeId) {
     const entree = CUTSCENES_POST_MONDE[mondeId];

@@ -1,4 +1,4 @@
-import { CONFIG, TETROMINOS } from '../config/config.js';
+import { CONFIG, TETROMINOS } from '../config/config-jeu.js';
 import { emettre } from '../etat/bus-jeu.js';
 import { remplirSac, detecterTSpin } from './logique-pure.js';
 import { extraireForme, estPositionValideAvecBornes } from './moteur-piece.js';

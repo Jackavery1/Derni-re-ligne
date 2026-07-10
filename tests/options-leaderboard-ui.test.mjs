@@ -54,7 +54,7 @@ describe('options-sync-cloud-ui — leaderboard', () => {
     });
 
     it('peuple les biomes et charge selon les filtres', async () => {
-        const { BIOMES, ORDRE_BIOMES_LIBRE } = await import('../js/config/config.js');
+        const { BIOMES, ORDRE_BIOMES_LIBRE } = await import('../js/config/biomes.js');
         const { peuplerSelectsLeaderboardOptions, rafraichirLeaderboardOptions } =
             await import('../js/ui/options-sync-cloud-ui.js');
 

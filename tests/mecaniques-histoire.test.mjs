@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { BIOMES } from '../js/config/config.js';
+import { BIOMES } from '../js/config/biomes.js';
 import { store } from '../js/etat/store-jeu.js';
 import { etat, definirBiomeActif } from '../js/etat/store-jeu.js';
 import { creerPlateau } from '../js/logique/piece-jeu.js';

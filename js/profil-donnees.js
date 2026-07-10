@@ -1,4 +1,4 @@
-import { CONFIG } from './config/config.js';
+import { CONFIG } from './config/config-jeu.js';
 import { etat } from './etat/store-jeu.js';
 import { obtenirForme } from './logique/piece-jeu.js';
 import { logger } from './logger.js';

@@ -1,4 +1,5 @@
-import { CONFIG, METEO_BIOMES } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
+import { METEO_BIOMES } from '../config/contenu-jeu.js';
 import { etat } from '../etat/store-jeu.js';
 
 export const ETATS_METEO = { REPOS: 'repos', ALERTE: 'alerte', ACTIF: 'actif' };

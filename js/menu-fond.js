@@ -1,8 +1,16 @@
-import { TETROMINOS } from './config/config.js';
+import { TETROMINOS } from './config/config-jeu.js';
+import { BIOMES } from './config/biomes.js';
 import { obtenirEffetsReduits } from './etat/store-jeu.js';
-import { obtenirCouleurPieceParType } from './logique/piece-jeu.js';
 import { obtenirActions } from './logique/actions-jeu.js';
 import { obtenirCanvas } from './logique/dom-utils.js';
+
+const INDEX_COULEUR_PIECE_FOND = { I: 0, O: 1, T: 2, S: 3, Z: 4, J: 5, L: 6 };
+
+function couleurPieceFondMenu(type) {
+    const index = INDEX_COULEUR_PIECE_FOND[type];
+    const couleurs = BIOMES.classique.couleursBlocs;
+    return couleurs[index] ?? couleurs[0];
+}
 
 let canvasMenuFond = null;
 let ctxMenuFond = null;
@@ -41,7 +49,7 @@ function creerPieceFond(posYAleatoire = false) {
         x: Math.random() * (w - taille * 4),
         y: posYAleatoire ? Math.random() * h - h * 0.3 : -taille * 5,
         vy: Math.random() * 0.5 + 0.15,
-        couleur: obtenirCouleurPieceParType(type),
+        couleur: couleurPieceFondMenu(type),
         opacite: Math.random() * 0.18 + 0.06,
     };
 }

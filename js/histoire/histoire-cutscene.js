@@ -1,7 +1,6 @@
 /** Cutscene histoire — orchestration (état séquence, navigation, callbacks). */
-import { store } from '../etat/store-jeu.js';
+import { store, etat } from '../etat/store-jeu.js';
 import { ECRANS } from '../ui/ecrans-config.js';
-import { etat } from '../etat/store-jeu.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { logger } from '../logger.js';
 import { definirHumeurRoboCutscene } from '../rendu/portraits-cutscene.js';
@@ -25,7 +24,6 @@ import {
     stopBouclePortraitsCutscene,
     reinitVisuelPortraitsCutscene,
 } from './histoire-cutscene-portraits.js';
-import { reinitExpressionsCutscene } from '../rendu/expressions-cutscene.js';
 import { assurerFeuilleStyle } from '../ui/charger-feuille-style.js';
 import { AudioMoteur } from '../audio/audio.js';
 import { arreterMachineAEcrire } from './histoire-cutscene-typewriter.js';
@@ -126,7 +124,6 @@ function _terminerCutscene() {
     stopBouclePortraitsCutscene();
     stopFondCutscene();
     reinitVisuelPortraitsCutscene();
-    reinitExpressionsCutscene();
 
     cutsceneLignes = [];
     cutscenePersonnages = [];
@@ -173,7 +170,6 @@ function _demarrerCutsceneHistoire(textes, personnages, onFin, options = {}) {
         logger.warn('[cutscene] éléments portrait introuvables dans le DOM');
     }
     reinitVisuelPortraitsCutscene();
-    reinitExpressionsCutscene();
 
     const entree = normaliserEntreeCutscene(textes, personnages);
     cutsceneLignes = entree.lignes;

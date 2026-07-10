@@ -1,4 +1,4 @@
-import { CONFIG, TETROMINOS } from '../config/config.js';
+import { CONFIG, TETROMINOS } from '../config/config-jeu.js';
 import { etat, obtenirCtx } from '../etat/store-jeu.js';
 import { estPositionValide } from './piece-jeu.js';
 import { afficherTutorielContextuel } from '../ui/tutoriel.js';

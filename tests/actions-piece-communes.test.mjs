@@ -11,7 +11,7 @@ import {
 } from '../js/logique/actions-piece-communes.js';
 import { estPositionValideSurPlateau } from '../js/logique/moteur-piece.js';
 import { extraireForme } from '../js/logique/moteur-piece.js';
-import { CONFIG } from '../js/config/config.js';
+import { CONFIG } from '../js/config/config-jeu.js';
 
 describe('actions-piece-communes', () => {
     it('poserPieceSurPlateau place les cellules', () => {

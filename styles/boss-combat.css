@@ -170,12 +170,12 @@
 }
 
 .histoire-prog-trame--en-cours {
-    color: var(--rose, #ff2d78);
+    color: var(--rose-ui);
     animation: pulse-trame 2.4s ease-in-out infinite;
 }
 
 .histoire-prog-trame-btn.histoire-prog-trame--en-cours {
-    color: var(--rose, #ff2d78);
+    color: var(--rose-ui);
     border-color: rgba(255, 45, 120, 0.55);
 }
 

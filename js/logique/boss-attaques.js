@@ -1,4 +1,4 @@
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { logger } from '../logger.js';
 
 export const COULEUR_BRAISE = '#cc2200';

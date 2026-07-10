@@ -68,6 +68,22 @@ declare global {
                 palier2: number;
                 palierCourant: number | null;
             }>;
+            evaluerPalierDifficulteMonde?: (
+                mondeId: string,
+                lignes?: number
+            ) => Promise<{
+                mondeId: string;
+                palierInitial: number | null;
+                palierApres: number | null;
+                vitesseInit: number;
+                vitesseApres: number;
+            }>;
+            evaluerRespirationDifficulteMonde?: (mondeId: string) => Promise<{
+                mondeId: string;
+                paliers: (number | null)[];
+                amplitude: number;
+                respiration: boolean;
+            }>;
         };
     }
 }

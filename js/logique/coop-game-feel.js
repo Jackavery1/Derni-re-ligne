@@ -1,4 +1,4 @@
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { coop } from './coop-etat.js';
 import {
     ajouterBufferInput,

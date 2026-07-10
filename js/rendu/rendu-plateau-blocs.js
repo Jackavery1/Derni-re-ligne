@@ -1,5 +1,5 @@
 /** Blocs verrouillés et overlays mécaniques sur le plateau. */
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { etat, obtenirCtx, obtenirCanvasPlateau } from '../etat/store-jeu.js';
 import { dessinerCellule } from './rendu-cellule.js';
 import { celluleEstRouillee } from '../histoire/mecaniques-histoire.js';

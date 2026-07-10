@@ -50,7 +50,7 @@
                 },
                 {
                     "a": 0.65,
-                    "palier": 5
+                    "palier": 6
                 },
                 {
                     "a": 0.85,
@@ -79,7 +79,7 @@
                 },
                 {
                     "a": 0.85,
-                    "palier": 4
+                    "palier": 6
                 }
             ],
             "etoile2": {
@@ -114,7 +114,7 @@
                 },
                 {
                     "a": 0.7,
-                    "palier": 4
+                    "palier": 6
                 },
                 {
                     "a": 0.9,
@@ -282,7 +282,7 @@
         },
         "monde_boss_3": {
             "boss": true,
-            "phasePaliers": [8, 10, 9],
+            "phasePaliers": [8, 10, 11],
             "etoile2": {
                 "type": "sans_topout"
             },

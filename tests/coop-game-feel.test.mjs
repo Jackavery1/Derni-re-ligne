@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CONFIG } from '../js/config/config.js';
+import { CONFIG } from '../js/config/config-jeu.js';
 import { coop } from '../js/logique/coop-etat.js';
 import {
     coopReinitialiserGameFeelJoueur,

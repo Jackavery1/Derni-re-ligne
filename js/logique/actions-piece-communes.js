@@ -1,4 +1,4 @@
-import { CONFIG, TETROMINOS } from '../config/config.js';
+import { CONFIG, TETROMINOS } from '../config/config-jeu.js';
 import { obtenirEssaisKick } from './logique-pure.js';
 import { extraireForme } from './moteur-piece.js';
 

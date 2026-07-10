@@ -1,4 +1,4 @@
-import { BIOMES } from '../config/config.js';
+import { BIOMES } from '../config/biomes.js';
 import { AudioMoteur } from '../audio/audio.js';
 import {
     etat,

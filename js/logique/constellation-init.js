@@ -1,4 +1,4 @@
-import { BIOMES, ORDRE_BIOMES_LIBRE } from '../config/config.js';
+import { BIOMES, ORDRE_BIOMES_LIBRE } from '../config/biomes.js';
 import { obtenirDimensionsViewport } from './viewport-dimensions.js';
 import { obtenirCanvas } from './dom-utils.js';
 import { biomeEstDebloqueParHistoire } from '../io/progression.js';

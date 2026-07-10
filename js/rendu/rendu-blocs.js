@@ -1,4 +1,4 @@
-import { BIOMES } from '../config/config.js';
+import { BIOMES } from '../config/biomes.js';
 import { assombrir, eclaircir } from './rendu-blocs-utils.js';
 import {
     dessinerBlocBiseaute,

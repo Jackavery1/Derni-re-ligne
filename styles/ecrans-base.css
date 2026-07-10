@@ -105,14 +105,14 @@
     color: #fff;
 }
 .bouton.discret {
-    border-color: #9a9ac8;
-    color: #b8b8e0;
+    border-color: var(--ui-bordure-discret);
+    color: var(--ui-texte-discret-bouton);
     text-shadow: none;
     box-shadow: none;
     font-size: 0.5rem;
 }
 .bouton.discret:hover {
-    background: #b8b8e0;
+    background: var(--ui-fond-discret-bouton-hover);
     color: var(--fond);
 }
 

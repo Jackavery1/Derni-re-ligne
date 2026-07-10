@@ -12,7 +12,7 @@ export {
     utiliserReserve,
 } from './logique-partie-mouvement.js';
 
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { meteo } from './meteo.js';
 import { etat } from '../etat/store-jeu.js';
 import { vitesseHistoireMs } from './gestionnaire-difficulte.js';

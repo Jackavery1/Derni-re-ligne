@@ -15,11 +15,13 @@ Le precache **dev** (`npm run sync:sw`) liste les modules source non minifies : 
 ## Pipeline medias
 
 ```bash
-npm run media:icones   # img/icon-*.png (integre au build prod)
+npm run media:icones   # regénération manuelle img/icon-*.png (optionnel)
 npm run media:polices   # woff2 depuis @fontsource/*
 npm run media:musique   # sources-bruts/musique → assets/musique/
 npm run media:scenes    # sources-bruts/scenes → assets/cutscenes/
 ```
+
+`npm run build` exécute déjà `compresser-icones.mjs` et `compresser-images-ui.mjs` : pas besoin de `media:icones` avant un build prod.
 
 Format audio cible : `FORMAT_CIBLE = 'opus'` dans `scripts/convertir-musique.mjs` (Ogg Opus + M4A AAC pour Safari). Alternative : `'mp3'` (MP3 VBR seul).
 

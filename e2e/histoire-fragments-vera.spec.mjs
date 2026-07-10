@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { ouvrirCarteHistoire, fermerRecapPostMonde, passerCutsceneEntiere } from './helpers.mjs';
+import { ouvrirCarteHistoire, fermerRecapPostMonde } from './helpers.mjs';
+import { avancerCutsceneJusquaPivot } from './helpers-narratif.mjs';
 import {
     CAS_FRAGMENTS_VERA,
     preparerEtatPremiereCompletionFragment,
@@ -17,27 +18,7 @@ for (const { mondeId, cleFragment, marqueur } of CAS_FRAGMENTS_VERA) {
         await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
             timeout: 10000,
         });
-        for (let i = 0; i < 6; i++) {
-            const trouve = await page
-                .waitForFunction(
-                    (source) => {
-                        const t =
-                            document.getElementById('texte-dialogue-cutscene')?.textContent ??
-                            document.getElementById('texte-narration-cutscene')?.textContent ??
-                            '';
-                        return new RegExp(source, 'i').test(t);
-                    },
-                    marqueur.source,
-                    { timeout: 3000 }
-                )
-                .then(() => true)
-                .catch(() => false);
-            if (trouve) break;
-            await passerCutsceneEntiere(page);
-            await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-                timeout: 10000,
-            });
-        }
+        await avancerCutsceneJusquaPivot(page, marqueur);
         await page.waitForFunction(
             (source) => {
                 const t =
@@ -47,7 +28,7 @@ for (const { mondeId, cleFragment, marqueur } of CAS_FRAGMENTS_VERA) {
                 return new RegExp(source, 'i').test(t);
             },
             marqueur.source,
-            { timeout: 10000 }
+            { timeout: 5000 }
         );
     });
 }

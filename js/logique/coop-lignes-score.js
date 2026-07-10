@@ -1,4 +1,4 @@
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { appliquerScoreLignes } from './score-partie.js';
 import { statsGlobales } from '../achievements.js';
 import { afficherNotificationNiveau } from '../ui/ui-notifications.js';

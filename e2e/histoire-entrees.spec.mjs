@@ -3,8 +3,11 @@ import {
     ouvrirCarteHistoire,
     lancerMondeDepuisCarte,
     attendreSceneCutsceneActive,
+    ETAT_ENTREE_MIROIR,
+    ETAT_ENTREE_TRAME,
+    ETAT_PARADOXE_DEBLOQUE,
 } from './helpers.mjs';
-import { SCENES_ENTREE_CAMPAGNE } from './helpers-narratif-donnees.mjs';
+import { SCENES_ENTREE_CAMPAGNE, SCENES_ENTREE_SECRETS } from './helpers-narratif-donnees.mjs';
 import { MONDES_CAMPAGNE_PRINCIPALE } from './etats-histoire-base.mjs';
 import { preparerEtatPremiereEntree } from './etats-histoire-entrees.mjs';
 
@@ -32,3 +35,41 @@ test('entrees campagne — couvre les 16 mondes principaux', () => {
         expect(SCENES_ENTREE_CAMPAGNE[mondeId]).toBeTruthy();
     }
 });
+
+const ENTREES_SECRETS = [
+    {
+        mondeId: 'monde_miroir',
+        etat: ETAT_ENTREE_MIROIR,
+        marqueur: /Ce lieu n'aurait pas dû exister/i,
+    },
+    {
+        mondeId: 'monde_trame',
+        etat: ETAT_ENTREE_TRAME,
+        marqueur: /Trame Primordiale/i,
+    },
+    {
+        mondeId: 'monde_paradoxe',
+        etat: ETAT_PARADOXE_DEBLOQUE,
+        scene: SCENES_ENTREE_SECRETS.monde_paradoxe,
+    },
+];
+
+for (const cfg of ENTREES_SECRETS) {
+    test(`entree ${cfg.mondeId} — scene ${SCENES_ENTREE_SECRETS[cfg.mondeId]} (audit D)`, async ({
+        page,
+    }) => {
+        test.setTimeout(90000);
+        expect(SCENES_ENTREE_SECRETS[cfg.mondeId]).toBeTruthy();
+
+        await ouvrirCarteHistoire(page, cfg.etat);
+        await lancerMondeDepuisCarte(page, cfg.mondeId);
+
+        if (cfg.scene) {
+            await attendreSceneCutsceneActive(page, cfg.scene, 20000);
+            return;
+        }
+
+        await expect(page.locator('#ecran-histoire-cutscene')).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('#ecran-histoire-cutscene')).toContainText(cfg.marqueur);
+    });
+}

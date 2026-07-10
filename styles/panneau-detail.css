@@ -200,7 +200,8 @@ body.effets-reduits .panneau-detail-progression-fill {
         left: 0;
         bottom: 0;
         width: 100%;
-        max-height: 55dvh;
+        max-height: min(55dvh, calc(100dvh - var(--safe-top) - var(--safe-bottom)));
+        padding-bottom: max(24px, var(--safe-bottom));
         overflow-y: auto;
         overscroll-behavior: contain;
         border-radius: 12px 12px 0 0;
@@ -208,5 +209,31 @@ body.effets-reduits .panneau-detail-progression-fill {
     }
     .panneau-detail-corps--ouvert {
         transform: translateY(0);
+    }
+    .panneau-detail-description {
+        flex: 1 1 auto;
+        min-height: 0;
+        max-height: min(24dvh, 160px);
+    }
+    .panneau-detail-meta,
+    .panneau-detail-condition,
+    .panneau-detail-progression,
+    .panneau-detail-jouer,
+    .panneau-detail-secondaire:not(.element-masque) {
+        flex-shrink: 0;
+    }
+    .panneau-detail-jouer,
+    .panneau-detail-secondaire:not(.element-masque) {
+        margin-top: auto;
+    }
+}
+
+@media (max-width: 768px) and (max-height: 640px) {
+    .panneau-detail-icone-wrap canvas {
+        width: 96px;
+        height: 96px;
+    }
+    .panneau-detail-description {
+        max-height: min(20dvh, 120px);
     }
 }

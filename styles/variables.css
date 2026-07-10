@@ -13,10 +13,98 @@
     --orange: #ff8800;
     --bleu: #4488ff;
     --rose-ui: #ff2d78;
+    --or-ui: #ffbb44;
+    --ui-bordure-discret: #9a9ac8;
+    --ui-texte-discret-bouton: #b8b8e0;
+    --ui-fond-discret-bouton-hover: #b8b8e0;
     --accent-carte: #6644cc;
     --texte: #e0e0ff;
     --texte-dim: rgba(224, 224, 255, 0.75);
     --texte-discret: rgba(224, 224, 255, 0.52);
+
+    /* Boutons menu titre — variantes modes (menu-narratif-cutscene.css) */
+    --menu-separateur: color-mix(in srgb, var(--cyan) 42%, transparent);
+    --menu-separateur-ligne: color-mix(in srgb, var(--cyan) 28%, transparent);
+    --menu-separateur-ombre: color-mix(in srgb, var(--cyan) 25%, transparent);
+    --menu-btn-sous-titre: #cc88ff;
+
+    --menu-jouer-accent: #00ccff;
+    --menu-jouer-texte: #88eeff;
+    --menu-jouer-fond-1: #001525;
+    --menu-jouer-fond-2: #002a4a;
+    --menu-jouer-glow: color-mix(in srgb, var(--menu-jouer-accent) 32%, transparent);
+    --menu-jouer-glow-fort: color-mix(in srgb, var(--menu-jouer-accent) 58%, transparent);
+
+    --menu-architecte-accent: #8899cc;
+    --menu-architecte-texte: #aabbdd;
+    --menu-architecte-fond-1: #0a1020;
+    --menu-architecte-fond-2: #1a2840;
+    --menu-architecte-glow: color-mix(in srgb, var(--menu-architecte-accent) 28%, transparent);
+    --menu-architecte-glow-fort: color-mix(in srgb, var(--menu-architecte-accent) 52%, transparent);
+    --menu-architecte-grille: color-mix(in srgb, var(--menu-architecte-accent) 5%, transparent);
+
+    --menu-codex-accent: #cc9900;
+    --menu-codex-texte: #ffcc44;
+    --menu-codex-fond-1: #1a1000;
+    --menu-codex-fond-2: #2e1f00;
+    --menu-codex-glow: color-mix(in srgb, var(--menu-codex-accent) 32%, transparent);
+    --menu-codex-glow-fort: color-mix(in srgb, var(--menu-codex-accent) 55%, transparent);
+
+    --menu-profil-accent: #0066ff;
+    --menu-profil-texte: #88aaff;
+    --menu-profil-fond-1: #000f22;
+    --menu-profil-fond-2: #001844;
+    --menu-profil-glow: color-mix(in srgb, var(--menu-profil-accent) 32%, transparent);
+    --menu-profil-glow-fort: color-mix(in srgb, var(--menu-profil-accent) 58%, transparent);
+
+    --menu-achievements-accent: #ff9900;
+    --menu-achievements-fond-1: #1a0e00;
+    --menu-achievements-fond-2: #2e1800;
+    --menu-achievements-glow: color-mix(in srgb, var(--menu-achievements-accent) 32%, transparent);
+    --menu-achievements-glow-fort: color-mix(
+        in srgb,
+        var(--menu-achievements-accent) 58%,
+        transparent
+    );
+
+    /* Boutons menu titre — base et campagne (menu-narratif-base.css) */
+    --menu-base-texte: #aaf8ff;
+    --menu-base-fond-1: #001525;
+    --menu-base-fond-2: #002a4a;
+    --menu-base-glow: color-mix(in srgb, var(--cyan) 35%, transparent);
+    --menu-base-glow-fort: color-mix(in srgb, var(--cyan) 55%, transparent);
+
+    --menu-continuer-accent: #00e5ff;
+    --menu-continuer-texte: var(--menu-base-texte);
+    --menu-continuer-fond-1: #001a28;
+    --menu-continuer-fond-2: #003850;
+    --menu-continuer-glow: color-mix(in srgb, var(--menu-continuer-accent) 40%, transparent);
+    --menu-continuer-glow-fort: color-mix(in srgb, var(--menu-continuer-accent) 65%, transparent);
+
+    --menu-nouvelle-accent: #dd00ff;
+    --menu-nouvelle-texte: #ff88ff;
+    --menu-nouvelle-fond-1: #1a0030;
+    --menu-nouvelle-fond-2: #3d0060;
+    --menu-nouvelle-glow: color-mix(in srgb, var(--menu-nouvelle-accent) 45%, transparent);
+    --menu-nouvelle-glow-fort: color-mix(in srgb, var(--menu-nouvelle-accent) 70%, transparent);
+    --menu-nouvelle-ombre: color-mix(in srgb, var(--menu-nouvelle-accent) 18%, transparent);
+    --menu-nouvelle-inset: color-mix(in srgb, var(--menu-nouvelle-accent) 8%, transparent);
+    --menu-nouvelle-shimmer: color-mix(in srgb, var(--menu-nouvelle-texte) 8%, transparent);
+
+    --menu-options-accent: color-mix(in srgb, #b4b4dc 55%, transparent);
+    --menu-options-texte: #c8c8ee;
+    --menu-options-fond-1: color-mix(in srgb, var(--fond) 85%, transparent);
+    --menu-options-fond-2: color-mix(in srgb, #12122a 90%, transparent);
+    --menu-options-glow: color-mix(in srgb, var(--cyan) 12%, transparent);
+    --menu-options-glow-fort: color-mix(in srgb, var(--cyan) 28%, transparent);
+    --menu-options-accent-hover: color-mix(in srgb, var(--cyan) 65%, transparent);
+
+    --menu-dialog-fond-haut: #120018;
+    --menu-dialog-fond-bas: #080010;
+    --menu-dialog-ombre: color-mix(in srgb, var(--rose-ui) 25%, transparent);
+    --menu-danger-texte: #ff9ec8;
+    --menu-danger-ombre: color-mix(in srgb, var(--rose-ui) 25%, transparent);
+
     --police: 'Press Start 2P', monospace;
     --police-ui: var(--font-ui);
 

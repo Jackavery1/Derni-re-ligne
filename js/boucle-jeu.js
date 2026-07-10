@@ -1,4 +1,4 @@
-import { CONFIG } from './config/config.js';
+import { CONFIG } from './config/config-jeu.js';
 import { mettreAJourMeteo } from './logique/meteo.js';
 import { logger, afficherErreurUtilisateur } from './logger.js';
 import {

@@ -1,4 +1,5 @@
-import { BIOMES, CONFIG } from '../config/config.js';
+import { BIOMES } from '../config/biomes.js';
+import { CONFIG } from '../config/config-jeu.js';
 import { annulerMeteo } from './meteo.js';
 import { AudioMoteur } from '../audio/audio.js';
 import {

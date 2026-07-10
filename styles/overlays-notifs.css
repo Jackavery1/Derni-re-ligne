@@ -169,7 +169,7 @@
     font-size: var(--typo-titre-ecran);
     letter-spacing: 3px;
     margin-top: var(--space-2);
-    background: linear-gradient(90deg, #ffbb44 0%, #ff2d78 100%);
+    background: linear-gradient(90deg, var(--or-ui) 0%, var(--rose-ui) 100%);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;

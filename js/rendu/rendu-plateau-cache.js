@@ -1,5 +1,5 @@
 /** Surfaces offscreen mises en cache pour le rendu du plateau (vignette, ambiance, météo). */
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 
 /** @type {HTMLCanvasElement | OffscreenCanvas | null} */
 let cacheVignette = null;

@@ -1,4 +1,4 @@
-import { TOUCHES_DEFAUT } from '../config/config.js';
+import { TOUCHES_DEFAUT } from '../config/config-jeu.js';
 import { lireStockage, ecrireStockage } from '../io/progression.js';
 
 const CLE_STOCKAGE = 'derniereLigne_touches';

@@ -1,4 +1,4 @@
-import { ORDRE_BIOMES_LIBRE } from '../config/config.js';
+import { ORDRE_BIOMES_LIBRE } from '../config/biomes.js';
 import { obtenirDecalageCentreConstellation } from './constellation-zone.js';
 import {
     constellationNoeuds,

@@ -145,7 +145,6 @@ const FICHIERS_A_CACHER = [
     './js/config/biomes.js',
     './js/config/config-jeu.js',
     './js/config/config-sync.js',
-    './js/config/config.js',
     './js/config/contenu-jeu.js',
     './js/etat/bus-jeu.js',
     './js/etat/mode-histoire.js',

@@ -19,7 +19,7 @@ import { CONDITIONS_CODEX } from '../js/codex-conditions.js';
 import { obtenirEtatDeblocage } from '../js/io/progression-histoire.js';
 import { biomeEstDebloqueParHistoire } from '../js/io/progression-records.js';
 import { ACHIEVEMENTS } from '../js/achievements-donnees.js';
-import { ORDRE_BIOMES_LIBRE } from '../js/config/config.js';
+import { ORDRE_BIOMES_LIBRE } from '../js/config/biomes.js';
 import { NOMS_MONDES_REQUIS } from '../js/rendu/constellation-rendu.js';
 import {
     obtenirTexteVerrouillePanneau,

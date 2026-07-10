@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { BIOMES, ORDRE_BIOMES } from '../js/config/config.js';
+import { BIOMES, ORDRE_BIOMES } from '../js/config/biomes.js';
 
 const CLES_REQUISES = [
     'score',

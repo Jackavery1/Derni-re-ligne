@@ -1,4 +1,5 @@
-import { CONFIG, BIOMES } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
+import { BIOMES } from '../config/biomes.js';
 import { etat, obtenirBiomeActif } from '../etat/store-jeu.js';
 import { obtenirDaltonien } from '../ui/accessibilite.js';
 import { obtenirForme, calculerDistanceChute } from '../logique/piece-jeu.js';

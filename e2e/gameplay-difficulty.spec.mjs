@@ -19,3 +19,69 @@ test('gameplay difficulty — palier prologue monte apres progression (audit B)'
     expect(resultat.apres).toBe(resultat.palier2);
     expect(resultat.palierCourant).toBe(2);
 });
+
+test('gameplay difficulty — palier lave monte apres seuil 35% (audit B)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+
+    const resultat = await page.evaluate(async () => {
+        const api = window.__NEO_TEST__;
+        if (!api?.evaluerPalierDifficulteMonde) return null;
+        return api.evaluerPalierDifficulteMonde('monde_lave', 5);
+    });
+
+    expect(resultat).not.toBeNull();
+    expect(resultat.palierInitial).toBe(3);
+    expect(resultat.palierApres).toBeGreaterThan(resultat.palierInitial);
+    expect(resultat.vitesseApres).toBeLessThan(resultat.vitesseInit);
+});
+
+test('gameplay difficulty — respiration eclipse apres pic (audit B)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+
+    const resultat = await page.evaluate(async () => {
+        const api = window.__NEO_TEST__;
+        if (!api?.evaluerRespirationDifficulteMonde) return null;
+        return api.evaluerRespirationDifficulteMonde('monde_eclipse');
+    });
+
+    expect(resultat).not.toBeNull();
+    expect(resultat.respiration).toBe(true);
+    expect(resultat.amplitude).toBeGreaterThanOrEqual(2);
+});
+
+test('gameplay difficulty — respiration glace vagues mid-run (audit B)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+
+    const resultat = await page.evaluate(async () => {
+        const api = window.__NEO_TEST__;
+        if (!api?.evaluerRespirationDifficulteMonde) return null;
+        return api.evaluerRespirationDifficulteMonde('monde_glace');
+    });
+
+    expect(resultat).not.toBeNull();
+    expect(resultat.respiration).toBe(true);
+    expect(resultat.amplitude).toBeGreaterThanOrEqual(2);
+});
+
+test('gameplay difficulty — palier ocean monte apres seuil 40% (audit B)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+
+    const resultat = await page.evaluate(async () => {
+        const api = window.__NEO_TEST__;
+        if (!api?.evaluerPalierDifficulteMonde) return null;
+        return api.evaluerPalierDifficulteMonde('monde_ocean', 5);
+    });
+
+    expect(resultat).not.toBeNull();
+    expect(resultat.palierInitial).toBe(4);
+    expect(resultat.palierApres).toBeGreaterThan(resultat.palierInitial);
+    expect(resultat.vitesseApres).toBeLessThan(resultat.vitesseInit);
+});

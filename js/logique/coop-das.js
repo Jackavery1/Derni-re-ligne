@@ -1,4 +1,4 @@
-import { CONFIG } from '../config/config.js';
+import { CONFIG } from '../config/config-jeu.js';
 
 /** @type {Record<'j1' | 'j2', Record<string, boolean>>} */
 const touchesActives = { j1: {}, j2: {} };

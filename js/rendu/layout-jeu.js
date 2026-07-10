@@ -1,4 +1,4 @@
-import { LAYOUT } from '../config/config.js';
+import { LAYOUT } from '../config/config-jeu.js';
 import { calculerEchelleInterface } from './layout-calcul.js';
 import { lireInsetsSafeArea } from '../logique/safe-area.js';
 import { estViewportPortrait, obtenirDimensionsViewport } from '../logique/viewport-dimensions.js';

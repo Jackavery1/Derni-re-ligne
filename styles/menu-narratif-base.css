@@ -4,11 +4,11 @@
 
 .btn-menu {
     --btn-accent: var(--cyan);
-    --btn-texte: #aaf8ff;
-    --btn-fond-1: #001525;
-    --btn-fond-2: #002a4a;
-    --btn-glow: rgba(0, 245, 255, 0.35);
-    --btn-glow-fort: rgba(0, 245, 255, 0.55);
+    --btn-texte: var(--menu-base-texte);
+    --btn-fond-1: var(--menu-base-fond-1);
+    --btn-fond-2: var(--menu-base-fond-2);
+    --btn-glow: var(--menu-base-glow);
+    --btn-glow-fort: var(--menu-base-glow-fort);
     font-family: var(--font-titre);
     font-size: 0.55rem;
     letter-spacing: 2px;
@@ -54,6 +54,9 @@
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+    min-height: 48px;
+    min-width: 48px;
+    box-sizing: border-box;
     position: relative;
     overflow: hidden;
 }
@@ -114,26 +117,26 @@
 }
 
 .btn-continuer {
-    --btn-accent: #00e5ff;
-    --btn-texte: #aaf8ff;
-    --btn-fond-1: #001a28;
-    --btn-fond-2: #003850;
-    --btn-glow: rgba(0, 229, 255, 0.4);
-    --btn-glow-fort: rgba(0, 229, 255, 0.65);
+    --btn-accent: var(--menu-continuer-accent);
+    --btn-texte: var(--menu-continuer-texte);
+    --btn-fond-1: var(--menu-continuer-fond-1);
+    --btn-fond-2: var(--menu-continuer-fond-2);
+    --btn-glow: var(--menu-continuer-glow);
+    --btn-glow-fort: var(--menu-continuer-glow-fort);
     animation: continuer-pulse 2.2s ease-in-out infinite;
 }
 
 .btn-nouvelle-partie {
-    --btn-accent: #dd00ff;
-    --btn-texte: #ff88ff;
-    --btn-fond-1: #1a0030;
-    --btn-fond-2: #3d0060;
-    --btn-glow: rgba(221, 0, 255, 0.45);
-    --btn-glow-fort: rgba(221, 0, 255, 0.7);
+    --btn-accent: var(--menu-nouvelle-accent);
+    --btn-texte: var(--menu-nouvelle-texte);
+    --btn-fond-1: var(--menu-nouvelle-fond-1);
+    --btn-fond-2: var(--menu-nouvelle-fond-2);
+    --btn-glow: var(--menu-nouvelle-glow);
+    --btn-glow-fort: var(--menu-nouvelle-glow-fort);
     box-shadow:
         0 0 12px var(--btn-glow),
-        0 0 28px rgba(221, 0, 255, 0.18),
-        inset 0 0 16px rgba(221, 0, 255, 0.08),
+        0 0 28px var(--menu-nouvelle-ombre),
+        inset 0 0 16px var(--menu-nouvelle-inset),
         inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 
@@ -148,18 +151,18 @@
     left: -150%;
     width: 80%;
     height: 200%;
-    background: linear-gradient(90deg, transparent, rgba(255, 136, 255, 0.08), transparent);
+    background: linear-gradient(90deg, transparent, var(--menu-nouvelle-shimmer), transparent);
     animation: histoire-shimmer 3s linear infinite;
     pointer-events: none;
 }
 
 .btn-options-titre {
-    --btn-accent: rgba(180, 180, 220, 0.55);
-    --btn-texte: #c8c8ee;
-    --btn-fond-1: rgba(8, 8, 26, 0.85);
-    --btn-fond-2: rgba(18, 18, 42, 0.9);
-    --btn-glow: rgba(0, 245, 255, 0.12);
-    --btn-glow-fort: rgba(0, 245, 255, 0.28);
+    --btn-accent: var(--menu-options-accent);
+    --btn-texte: var(--menu-options-texte);
+    --btn-fond-1: var(--menu-options-fond-1);
+    --btn-fond-2: var(--menu-options-fond-2);
+    --btn-glow: var(--menu-options-glow);
+    --btn-glow-fort: var(--menu-options-glow-fort);
     width: auto;
     min-width: 160px;
     padding: 10px 20px;
@@ -169,7 +172,7 @@
 }
 
 .btn-options-titre:hover:not(.btn-verrouille) {
-    --btn-accent: rgba(0, 245, 255, 0.65);
+    --btn-accent: var(--menu-options-accent-hover);
     --btn-texte: var(--cyan);
     filter: none;
 }
@@ -194,8 +197,12 @@
     width: min(100%, 420px);
     padding: 20px 22px;
     border: 2px solid var(--rose);
-    background: linear-gradient(180deg, #120018 0%, #080010 100%);
-    box-shadow: 0 0 30px rgba(255, 45, 120, 0.25);
+    background: linear-gradient(
+        180deg,
+        var(--menu-dialog-fond-haut) 0%,
+        var(--menu-dialog-fond-bas) 100%
+    );
+    box-shadow: 0 0 30px var(--menu-dialog-ombre);
 }
 
 .dialog-nouvelle-partie-titre {
@@ -222,6 +229,6 @@
 
 .bouton-danger {
     border-color: var(--rose) !important;
-    color: #ff9ec8 !important;
-    box-shadow: 0 0 12px rgba(255, 45, 120, 0.25);
+    color: var(--menu-danger-texte) !important;
+    box-shadow: 0 0 12px var(--menu-danger-ombre);
 }

@@ -426,3 +426,51 @@ test('audit C14 — HUD solo portrait lisible (typo micro + scale plancher)', as
     expect(metriques.fontPx).toBeGreaterThanOrEqual(11);
     expect(metriques.scale).toBeGreaterThanOrEqual(0.52);
 });
+
+test('audit C14b — HUD paysage labels lisibles (>= 9px)', async ({ page }) => {
+    await page.setViewportSize({ width: 667, height: 375 });
+    await demarrerPartie(page);
+
+    const tailles = await page.evaluate(() => {
+        const selecteurs = [
+            '.panneau .section:nth-child(2) .stat-label',
+            '#affichage-restant',
+            '#section-timer-niveau .stat-label',
+        ];
+        return selecteurs.map((sel) => {
+            const el = document.querySelector(sel);
+            if (!el) return null;
+            const px = parseFloat(getComputedStyle(el).fontSize);
+            return Number.isFinite(px) ? px : 0;
+        });
+    });
+
+    for (const taille of tailles.filter((t) => t !== null)) {
+        expect(taille).toBeGreaterThanOrEqual(9);
+    }
+});
+
+test('audit C2 — pause paysage clavier et controles lateraux >= 48px', async ({ page }) => {
+    await page.setViewportSize({ width: 667, height: 375 });
+    await demarrerPartie(page);
+
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#ecran-pause')).not.toHaveClass(/actif/);
+
+    const metriques = await page.evaluate(() => {
+        const paysage = document.getElementById('controles-paysage');
+        const style = paysage ? getComputedStyle(paysage) : null;
+        const rect = document.getElementById('btn-gauche-p')?.getBoundingClientRect();
+        return {
+            paysageVisible: style?.display !== 'none',
+            gaucheH: rect?.height ?? 0,
+            gaucheW: rect?.width ?? 0,
+        };
+    });
+
+    expect(metriques.paysageVisible).toBe(true);
+    expect(metriques.gaucheH).toBeGreaterThanOrEqual(48);
+    expect(metriques.gaucheW).toBeGreaterThanOrEqual(48);
+});

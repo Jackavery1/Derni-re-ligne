@@ -1,4 +1,6 @@
-import { CONFIG, TETROMINOS, BIOMES, RELIQUES } from '../config/config.js';
+import { CONFIG, TETROMINOS } from '../config/config-jeu.js';
+import { BIOMES } from '../config/biomes.js';
+import { RELIQUES } from '../config/contenu-jeu.js';
 import { remplirSac as genererSac } from './logique-pure.js';
 import { extraireForme, estPositionValideSurPlateau } from './moteur-piece.js';
 import { obtenirActions } from './actions-jeu.js';

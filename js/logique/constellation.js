@@ -1,4 +1,4 @@
-import { BIOMES } from '../config/config.js';
+import { BIOMES } from '../config/biomes.js';
 import { mettreAJourVisibiliteModesDebloques } from '../ui/deblocage-ui.js';
 import { biomeEstDebloqueParHistoire } from '../io/progression.js';
 export { NOMS_MONDES_REQUIS } from '../rendu/constellation-rendu.js';

@@ -1,4 +1,4 @@
-import { BIOMES } from './config/config.js';
+import { BIOMES } from './config/biomes.js';
 import { initialiserMeteo, annulerMeteo } from './logique/meteo.js';
 import { initialiserVivant, annulerTimersVivant } from './logique/vivant.js';
 import { AudioMoteur } from './audio/audio.js';

@@ -1,4 +1,4 @@
-import { CONFIG, TETROMINOS } from '../config/config.js';
+import { CONFIG, TETROMINOS } from '../config/config-jeu.js';
 import { estPositionValidePlateau } from './logique-pure.js';
 
 /**

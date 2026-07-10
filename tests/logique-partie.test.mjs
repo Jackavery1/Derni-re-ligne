@@ -50,7 +50,7 @@ import {
 import { reinitialiserBusJeu, ecouter } from '../js/etat/bus-jeu.js';
 import { initialiserVivant } from '../js/logique/vivant.js';
 import { etat, definirRefsCanvas } from '../js/etat/store-jeu.js';
-import { CONFIG } from '../js/config/config.js';
+import { CONFIG } from '../js/config/config-jeu.js';
 import { supprimerLignesDuPlateau } from '../js/logique/logique-pure.js';
 import { creerPlateau, remplirSac } from '../js/logique/piece-jeu.js';
 import { reinitialiserGameFeel } from '../js/logique/game-feel-jeu.js';

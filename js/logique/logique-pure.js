@@ -1,4 +1,4 @@
-import { CONFIG, TABLE_KICK_I, TABLE_KICK_STANDARD } from '../config/config.js';
+import { CONFIG, TABLE_KICK_I, TABLE_KICK_STANDARD } from '../config/config-jeu.js';
 
 export function remplirSac() {
     const sac = Object.keys({ I: 1, O: 1, T: 1, S: 1, Z: 1, J: 1, L: 1 });

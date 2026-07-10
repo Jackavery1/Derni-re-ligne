@@ -24,7 +24,6 @@ let _humeurSauveeTetris = 'neutre';
 /** @type {HTMLCanvasElement|null} */
 let _canvas = null;
 let _arcEnCielActif = false;
-let _couronneActif = false;
 let _clignementInactif = false;
 let _boucleAbonnee = false;
 /** @type {MutationObserver|null} */
@@ -164,10 +163,6 @@ export function definirArcEnCiel(actif) {
     _arcEnCielActif = actif;
 }
 
-export function definirCouronne(actif) {
-    _couronneActif = actif;
-}
-
 export function notifierTetrisRobo() {
     if (_timeoutTetris !== null) {
         clearTimeout(_timeoutTetris);
@@ -241,7 +236,7 @@ function _boucle(timestamp) {
         const t = timestamp / 1000;
         dessinerRobo(ctx, _canvas.width, _canvas.height, _humeurActuelle, t, {
             arcEnCiel: _arcEnCielActif,
-            couronne: _couronneActif,
+            couronne: false,
         });
     } catch (err) {
         logger.warn('[rendu-robo] erreur boucle :', err);

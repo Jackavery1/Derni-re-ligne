@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CONFIG, TETROMINOS } from '../js/config/config.js';
+import { CONFIG, TETROMINOS } from '../js/config/config-jeu.js';
 import {
     definirPieceAuSol,
     definirNbLockResets,
@@ -31,7 +31,7 @@ import {
     lierCouleursTetrominos,
     mettreAJourIndicateurRelique,
 } from '../js/logique/piece-jeu.js';
-import { TOUCHES_DEFAUT } from '../js/config/config.js';
+import { TOUCHES_DEFAUT } from '../js/config/config-jeu.js';
 import { configurerActionsJeu } from '../js/logique/actions-jeu.js';
 
 describe('piece-jeu', () => {

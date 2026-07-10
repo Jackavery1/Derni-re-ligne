@@ -1,4 +1,4 @@
-import { TETROMINOS } from '../config/config.js';
+import { TETROMINOS } from '../config/config-jeu.js';
 import { meteo, ETATS_METEO } from './meteo.js';
 import { emettre } from '../etat/bus-jeu.js';
 import { etat, definirLockDelayRestant, definirPieceAuSol } from '../etat/store-jeu.js';
