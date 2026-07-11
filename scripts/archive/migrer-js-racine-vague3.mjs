@@ -1,12 +1,12 @@
 /**
  * Vague 3 — migration des modules encore à la racine js/*.js → js/<domaine>/
- * Usage : node scripts/migrer-js-racine-vague3.mjs [--dry-run]
+ * Usage : node scripts/archive/migrer-js-racine-vague3.mjs [--dry-run]
  */
 import { mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from 'fs';
 import { dirname, join, normalize, relative, sep } from 'path';
 import { fileURLToPath } from 'url';
 
-const racine = join(dirname(fileURLToPath(import.meta.url)), '..');
+const racine = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const jsDir = join(racine, 'js');
 const dryRun = process.argv.includes('--dry-run');
 

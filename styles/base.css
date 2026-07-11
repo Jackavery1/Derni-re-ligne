@@ -173,19 +173,3 @@ body.effets-reduits .boss-portrait-cadre.flash {
     font-style: normal;
     font-display: swap;
 }
-
-@font-face {
-    font-family: 'Crimson Pro';
-    src: url('../assets/fonts-dist/crimson-pro-latin-400-normal.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Crimson Pro';
-    src: url('../assets/fonts-dist/crimson-pro-latin-400-italic.woff2') format('woff2');
-    font-weight: 400;
-    font-style: italic;
-    font-display: swap;
-}

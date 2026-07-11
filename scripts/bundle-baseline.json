@@ -1,18 +1,20 @@
 {
-    "date": "2026-07-10T03:08:00.000Z",
+    "date": "2026-07-11T02:12:00.000Z",
     "version": "2.5.34",
-    "session": "optimisation-phase-560",
+    "session": "optimisation-nettoyage-precache-fonts",
     "avant": {
-        "bundleJsKo": 586,
-        "entreePrincipaleKo": 12,
-        "chunksJs": 156
-    },
-    "apres": {
         "bundleJsKo": 578,
-        "budgetExclusKo": 20,
         "entreePrincipaleKo": 12,
         "chunksJs": 157,
         "precacheProdKo": 1162.2
     },
-    "notes": "Histoire lazy + dev-init hors budget ; confort 560 non atteint (-18 Ko restants)"
+    "apres": {
+        "bundleJsKo": 578,
+        "budgetExclusPrecacheKo": 20,
+        "policesDiffereesPrecacheKo": 30,
+        "entreePrincipaleKo": 12,
+        "chunksJs": 169,
+        "precacheProdKo": 1109.7
+    },
+    "notes": "Precache prod -52.5 Ko (budget-exclus + Crimson Pro différées) ; boot sans document.fonts.ready"
 }

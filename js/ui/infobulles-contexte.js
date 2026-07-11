@@ -4,17 +4,7 @@ import { INFOBULLES_MODES_JEU } from '../config/contenu-jeu.js';
 import { obtenirInfobulleAttaqueBoss } from '../histoire/histoire-map-briefings-boss.js';
 import { lireStockage, ecrireStockage } from '../io/progression.js';
 import { sansAccentsE } from '../logique/texte-jeu.js';
-import { activerFocusTrap } from './focus-trap.js';
-
-/** @param {unknown} el */
-function estFocusable(el) {
-    return (
-        !!el &&
-        typeof el === 'object' &&
-        'focus' in el &&
-        typeof (/** @type {{ focus?: unknown }} */ (el).focus) === 'function'
-    );
-}
+import { activerFocusTrap, estFocusable } from './focus-trap.js';
 
 const CLE_STOCKAGE = 'derniereLigne_infobullesBiome';
 

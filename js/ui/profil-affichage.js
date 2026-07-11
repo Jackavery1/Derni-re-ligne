@@ -178,5 +178,3 @@ export function afficherProfil() {
         }
     });
 }
-
-export { dessinerHeatmap, dessinerGrapheRythme, dessinerRadar };

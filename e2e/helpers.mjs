@@ -73,6 +73,8 @@ export {
     creerPageIphone14,
 } from './helpers-iphone-safe-area.mjs';
 
+export { ouvrirPremierNiveauArchitecte } from './helpers-archi.mjs';
+
 export {
     MARQUEURS_NARRATIFS_CAMPAGNE,
     SCENES_VICTOIRE_BOSS,

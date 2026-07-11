@@ -95,7 +95,7 @@ Vanilla ES modules en dev, bundle esbuild en prod.
 ## Boucles RAF
 
 - **Principale (partie)** — `boucle-jeu.js` : gravité, DAS, rendu plateau. Suspendue en coop/archi.
-- **Secondaires (UI / ambiance)** — `planificateur-raf.js` : constellation, mascotte ROBO, fonds méta (`fond-ecrans-meta.js`). Une clé par contexte (`constellation`, `rendu-robo`, `fond-meta:<canvasId>`).
+- **Secondaires (UI / ambiance)** — `js/logique/planificateur-raf.js` : constellation, mascotte ROBO, fonds méta (`fond-ecrans-meta.js`). Une clé par contexte (`constellation`, `rendu-robo`, `fond-meta:<canvasId>`).
 
 ```mermaid
 flowchart TB
@@ -118,7 +118,7 @@ flowchart TB
 
     subgraph ui [UI / secondaire]
         nav[ui/navigation-ecrans.js]
-        raf[planificateur-raf.js]
+        raf[js/logique/planificateur-raf.js]
         constellation[constellation.js]
     end
 

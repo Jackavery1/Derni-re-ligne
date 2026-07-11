@@ -5,6 +5,7 @@ import {
     preparerPageSansSw,
     attendreApplicationPrete,
     ETAT_DEBLOCAGE_META_RAPIDE,
+    ouvrirPremierNiveauArchitecte,
 } from './helpers.mjs';
 
 test('écran sélection constellation sans violations critiques', async ({ page }) => {
@@ -45,12 +46,6 @@ test('sélection architecte sans violations critiques', async ({ page }) => {
     const result = await new AxeBuilder({ page }).analyze();
     expect(filtrerViolationsCritiques(result.violations)).toEqual([]);
 });
-
-async function ouvrirPremierNiveauArchitecte(page) {
-    await page.locator('.carte-niveau-archi').first().click();
-    await expect(page.locator('#panneau-detail-corps')).toHaveClass(/panneau-detail-corps--ouvert/);
-    await page.locator('#btn-panneau-detail-jouer').click();
-}
 
 test('lancement niveau architecte affiche le plateau', async ({ page }) => {
     await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);

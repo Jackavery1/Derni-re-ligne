@@ -172,10 +172,6 @@ export function ouvrirEntreeCodex(entree, debloque) {
     void genererListeCodex(chapitreCodexActif);
 }
 
-export function fermerLecteurCodex() {
-    fermerPanneauDetail();
-}
-
 export async function genererListeCodex(chapitre) {
     const CODEX = await chargerDonneesCodex();
     const liste = document.getElementById('codex-liste');

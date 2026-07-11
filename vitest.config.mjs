@@ -12,7 +12,7 @@ const COVERAGE_LOGIC = [
     'js/achievements.js',
     'js/logique/logique-partie.js',
     'js/logique/logique-partie-pose.js',
-    'js/planificateur-raf.js',
+    'js/logique/planificateur-raf.js',
     'js/logique/oracle-placement.js',
     'js/logique/score-partie.js',
     'js/etat/bus-jeu.js',

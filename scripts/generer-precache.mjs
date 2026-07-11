@@ -13,10 +13,37 @@ const EXCLUS_PRECACHE = new Set([
     './js/codex-histoire.js',
 ]);
 
+/** Polices narratif — fetch à la demande (hors shell installable). */
+const POLICES_DIFFERES_PRECACHE = new Set([
+    './assets/fonts-dist/crimson-pro-latin-400-normal.woff2',
+    './assets/fonts-dist/crimson-pro-latin-400-italic.woff2',
+]);
+
 const modeProd = process.argv.includes('--prod');
 const enforceBudget = process.argv.includes('--enforce-budget') || modeProd;
 const racine = modeProd ? 'dist' : '.';
 const precacheListPath = modeProd ? 'dist/sw-precache-list.js' : 'sw-precache-list.js';
+
+/** @returns {Set<string>} */
+function obtenirExclusPrecache() {
+    const exclus = new Set([...EXCLUS_PRECACHE, ...POLICES_DIFFERES_PRECACHE]);
+    if (modeProd) {
+        const budgetPath = join(racine, 'js/budget-exclus.json');
+        if (existsSync(budgetPath)) {
+            try {
+                const liste = JSON.parse(readFileSync(budgetPath, 'utf8'));
+                if (Array.isArray(liste)) {
+                    for (const nom of liste) {
+                        exclus.add(`./js/${nom}`);
+                    }
+                }
+            } catch {
+                /* budget-exclus absent ou illisible */
+            }
+        }
+    }
+    return exclus;
+}
 
 const MODELE_LISTE_PRECACHE = `// Genere par npm run sync:sw — ne pas editer a la main.
 const FICHIERS_A_CACHER = [
@@ -94,7 +121,7 @@ function construireListePrecache() {
         }
     }
 
-    return fichiers.filter((f) => !EXCLUS_PRECACHE.has(f));
+    return fichiers.filter((f) => !obtenirExclusPrecache().has(f));
 }
 
 function mesurerPoids(fichiers) {

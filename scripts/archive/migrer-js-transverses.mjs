@@ -1,16 +1,16 @@
 /**
  * Vague 2 — migration des modules transverses js/*.js → js/<domaine>/
- * Usage : node scripts/migrer-js-transverses.mjs [--dry-run]
+ * Usage : node scripts/archive/migrer-js-transverses.mjs [--dry-run]
  */
 import { mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from 'fs';
 import { dirname, join, normalize, relative, sep } from 'path';
 import { fileURLToPath } from 'url';
 
-const racine = join(dirname(fileURLToPath(import.meta.url)), '..');
+const racine = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const jsDir = join(racine, 'js');
 const dryRun = process.argv.includes('--dry-run');
 
-/** Barrels, entrées et données — restent à la racine js/ (vague 3 : voir scripts/migrer-js-racine-vague3.mjs) */
+/** Barrels, entrées et données — restent à la racine js/ (vague 3 : voir scripts/archive/migrer-js-racine-vague3.mjs) */
 const RESTER_RACINE = new Set([
     'main.js',
     'moteur.js',

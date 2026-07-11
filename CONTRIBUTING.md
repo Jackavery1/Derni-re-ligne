@@ -30,7 +30,7 @@ Node 18+ (`.nvmrc`). Logs verbeux : `?debug=1`. Formatage : `.prettierrc` (Prett
 
 La CI exécute **smoke** sur le bundle prod (`test:e2e:smoke:dist`), puis **responsive multi-viewport** (`test:e2e:responsive:dist` sur `dist/` inclut `audit-c-responsive` + `histoire-responsive`, `test:e2e:responsive` sur les sources), **perf** (`test:e2e:perf` via `E2E_DIST=1` — `run-e2e-dist.mjs` injecte `neo-test-init.js` dans `dist/index.html`), **Lighthouse** desktop + mobile (`lighthouserc.cjs`, `lighthouserc-mobile.cjs`, **bloquant** en CI). La suite E2E complète (`npm run test:e2e`) sert les **modules ES sources** avec la matrice Playwright : `desktop`, `mobile-portrait`, `mobile-landscape`, `iphone-14`, `tablet-landscape` (1024×768) (+ projets visuels mobile). Audits gameplay/narratif : `npm run test:e2e:audit`. Local : `npm run audit:lighthouse` / `audit:lighthouse:mobile` après build.
 
-### Campagne complète D9 (narratif, ~90 min)
+### Campagne complète D9 (narratif, ~60 min)
 
 Parcours fin secrète **avec narratif post-victoire** (sans `sansNarratif`) :
 
@@ -38,23 +38,26 @@ Parcours fin secrète **avec narratif post-victoire** (sans `sansNarratif`) :
 npm run test:e2e:d9
 ```
 
-Timeout spec D9 complet : **5 400 000 ms** (~90 min). Sous-tests D9b : 4–5 min chacun, inclus dans `test:e2e:audit` (CI rapide). Helpers : `e2e/helpers-campagne-narratif.mjs`. **CI nightly :** workflow `e2e-d9-nightly.yml` pour D9 complet (dimanche 03:00 UTC, `workflow_dispatch` manuel).
+Timeout spec D9 complet : **3 600 000 ms** (~60 min). Sous-tests D9b : 4–5 min chacun, inclus dans `test:e2e:audit` (CI rapide). Helpers : `e2e/helpers-campagne-narratif.mjs`, `e2e/helpers-campagne-flux.mjs`. **CI nightly :** workflow `e2e-d9-nightly.yml` pour D9 complet (dimanche 03:00 UTC, `workflow_dispatch` manuel).
 
 **Commit manuel :** `npm run commit -- "type(scope): sujet"` (Conventional Commits obligatoire via hook `commit-msg`). **Push :** le hook `pre-push` exécute lint, format, typecheck, cycles, données et tests unitaires (~1–2 min).
 
 ### Helpers E2E (`e2e/`)
 
-| Fichier                         | Rôle                                                          |
-| ------------------------------- | ------------------------------------------------------------- |
-| `helpers.mjs`                   | Barrel — réexporte tout (importer depuis ici dans les specs)  |
-| `helpers-page.mjs`              | Prep page, attente `data-neo-test-ready`                      |
-| `helpers-partie.mjs`            | Solo : pause, démarrage, fin de partie                        |
-| `helpers-coop.mjs`              | Coop 2 joueurs                                                |
-| `helpers-histoire.mjs`          | Carte histoire, cutscenes, recap                              |
-| `helpers-campagne-narratif.mjs` | Parcours campagne avec narratif (D9, D9b)                     |
-| `helpers-audit-b.mjs`           | Infobulles modes, sélection constellation, vibrations audit B |
-| `helpers-iphone-safe-area.mjs`  | Profils encoche iPhone simulés (audit C14)                    |
-| `helpers-narratif*.mjs`         | Flux cutscene, fragments VERA, overlays                       |
+| Fichier                            | Rôle                                                          |
+| ---------------------------------- | ------------------------------------------------------------- |
+| `helpers.mjs`                      | Barrel — réexporte tout (importer depuis ici dans les specs)  |
+| `helpers-page.mjs`                 | Prep page, attente `data-neo-test-ready`                      |
+| `helpers-partie.mjs`               | Solo : pause, démarrage, fin de partie                        |
+| `helpers-coop.mjs`                 | Coop 2 joueurs                                                |
+| `helpers-histoire.mjs`             | Carte histoire, cutscenes, recap                              |
+| `helpers-campagne-narratif.mjs`    | Parcours campagne avec narratif (D9, D9b)                     |
+| `helpers-campagne-flux.mjs`        | Flux campagne réutilisable (enchaînement, D15)                |
+| `helpers-responsive-metriques.mjs` | Assertions débordement / safe-area responsive                 |
+| `helpers-archi.mjs`                | Mode architecte (ouverture premier niveau)                    |
+| `helpers-audit-b.mjs`              | Infobulles modes, sélection constellation, vibrations audit B |
+| `helpers-iphone-safe-area.mjs`     | Profils encoche iPhone simulés (audit C14)                    |
+| `helpers-narratif*.mjs`            | Flux cutscene, fragments VERA, overlays                       |
 
 ### Piège Live Server / file://
 

@@ -16,14 +16,9 @@ import {
     activerPausePartieTactile,
     activerPauseCoopTactile,
     ETAT_DEBLOCAGE_META_RAPIDE,
+    ouvrirPremierNiveauArchitecte,
 } from './helpers.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-
-async function ouvrirPremierNiveauArchitecte(page) {
-    await page.locator('.carte-niveau-archi').first().click();
-    await expect(page.locator('#panneau-detail-corps')).toHaveClass(/panneau-detail-corps--ouvert/);
-    await page.locator('#btn-panneau-detail-jouer').click();
-}
 
 test('audit C1 — letterbox canvas sans deformation', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });

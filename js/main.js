@@ -63,7 +63,6 @@ async function demarrer() {
             chargerBiomesJeu(),
             chargerContenuJeu(),
             chargerHistoireDonneesMetier(),
-            document.fonts?.ready ?? Promise.resolve(),
         ]);
         definirProgressionChargement(0.9);
         initialiserApplication();
