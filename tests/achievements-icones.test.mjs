@@ -9,7 +9,7 @@ import {
     obtenirLibelleCategorieFiltre,
     estCategorieIndiceMasque,
     ICONE_PAR_ACHIEVEMENT,
-} from '../js/achievements-icones-map.js';
+} from '../js/achievements/achievements-icones-map.js';
 
 describe('achievements-icones-map', () => {
     it('chaque achievement a une icône pixel valide', () => {

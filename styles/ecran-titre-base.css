@@ -80,22 +80,22 @@
     animation: flotterLettre 2s ease-in-out infinite;
 }
 .lettre-t {
-    --couleur-lettre: #ff2a2a;
+    --couleur-lettre: var(--rose);
 }
 .lettre-e {
-    --couleur-lettre: #ff8800;
+    --couleur-lettre: var(--orange);
 }
 .lettre-t2 {
-    --couleur-lettre: #ffe600;
+    --couleur-lettre: var(--jaune);
 }
 .lettre-r {
-    --couleur-lettre: #00d840;
+    --couleur-lettre: var(--vert);
 }
 .lettre-i {
-    --couleur-lettre: #00b8ff;
+    --couleur-lettre: var(--cyan-mascotte);
 }
 .lettre-s {
-    --couleur-lettre: #aa00ff;
+    --couleur-lettre: var(--violet);
 }
 .menu-titre-1 .lettre-titre:nth-child(1) {
     animation-delay: 0s;

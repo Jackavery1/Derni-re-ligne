@@ -1,4 +1,4 @@
-/** Lighthouse CI — profil mobile (390×844, warn non bloquant). */
+/** Lighthouse CI — profil mobile (390×844). */
 module.exports = {
     ci: {
         collect: {

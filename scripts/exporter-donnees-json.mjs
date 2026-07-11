@@ -65,7 +65,7 @@ execSync('node scripts/exporter-codex-archi.mjs', { stdio: 'inherit' });
 fichiersExportes.push(
     'data/codex-textes.json',
     'data/archi-niveaux.json',
-    'js/codex-conditions.js'
+    'js/codex/codex-conditions.js'
 );
 execSync(`npx prettier --write ${fichiersExportes.join(' ')}`, { stdio: 'inherit' });
 

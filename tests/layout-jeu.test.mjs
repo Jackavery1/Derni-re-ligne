@@ -8,7 +8,7 @@ vi.mock('../js/logique/constellation.js', () => ({
     redimensionnerConstellation: vi.fn(),
 }));
 
-vi.mock('../js/menu-fond.js', () => ({
+vi.mock('../js/rendu/menu-fond.js', () => ({
     obtenirCanvasMenuFond: vi.fn(() => null),
     menuAnimActif: false,
 }));

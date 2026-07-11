@@ -9,9 +9,9 @@
 }
 
 body.histoire-active [data-biome='miroir'] #canvas-plateau {
-    border-color: #ff8800 !important;
+    border-color: var(--orange) !important;
     box-shadow:
-        0 0 10px #ff8800,
+        0 0 10px var(--orange),
         0 0 25px rgba(255, 136, 0, 0.35) !important;
 }
 
@@ -22,7 +22,7 @@ body.histoire-active [data-biome='vide'] #affichage-score::after {
 }
 
 body.histoire-active [data-biome='vide'] #canvas-plateau {
-    border-color: #4a3848 !important;
+    border-color: var(--biome-vide-bordure) !important;
     box-shadow:
         0 0 8px rgba(140, 100, 130, 0.18),
         0 0 24px rgba(0, 0, 0, 0.65),
@@ -34,9 +34,9 @@ body.histoire-active [data-biome='eclipse'] .section:not(#section-mascotte) {
 }
 
 body.histoire-active [data-biome='rouille'] #canvas-plateau {
-    border-color: #cd6839 !important;
+    border-color: var(--biome-lave-bordure) !important;
     box-shadow:
-        0 0 10px #cd6839,
+        0 0 10px var(--biome-lave-bordure),
         0 0 25px rgba(180, 80, 20, 0.3),
         inset 0 0 15px rgba(120, 50, 10, 0.08) !important;
 }
@@ -137,7 +137,7 @@ body.histoire-active #indicateur-vide-actif {
 }
 .histoire-cutscene-ligne:last-child {
     border-left-color: rgba(255, 255, 255, 0.25);
-    color: #ffffff;
+    color: var(--texte-inverse);
 }
 
 #btn-cutscene-passer {

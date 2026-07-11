@@ -32,6 +32,10 @@ function creerElement(initialClasses = ['element-masque']) {
             this.childNodes.push(el);
         }),
         childNodes: [],
+        querySelectorAll: vi.fn(function () {
+            return this.childNodes.filter((n) => n?.tagName === 'BUTTON');
+        }),
+        removeEventListener: vi.fn(),
     };
 }
 

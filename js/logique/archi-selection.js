@@ -9,7 +9,7 @@ import { modeDevActif } from './mode-dev-etat.js';
 import { sansAccentsE } from './texte-jeu.js';
 import { rendreIconeSurCanvas } from '../rendu/icones-pixel.js';
 import { dessinerSilhouetteApercu } from '../rendu/archi-apercu-silhouette.js';
-import { obtenirIdIconeBiomeArchi } from '../archi-icones-map.js';
+import { obtenirIdIconeBiomeArchi } from '../rendu/archi-icones-map.js';
 import {
     ouvrirPanneauDetail,
     fermerPanneauDetail,

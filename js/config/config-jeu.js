@@ -11,6 +11,7 @@ export const CONFIG = {
     coyoteTimeMs: 100,
     spawnGraceMs: 500,
     inputBufferMax: 2,
+    sprintInputBufferMax: 3,
     delaiNarratifVictoireHistoireMs: 900,
     dasDelai: 167,
     arrInterval: 33,

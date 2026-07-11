@@ -29,7 +29,7 @@
 }
 
 .objectif-panneau {
-    background: #08081a;
+    background: var(--fond);
     border: 2px solid rgba(0, 245, 255, 0.55);
     box-shadow:
         0 0 24px rgba(0, 245, 255, 0.15),
@@ -54,7 +54,7 @@
     font-family: 'Press Start 2P', monospace;
     font-size: 0.65rem;
     line-height: 1.6;
-    color: #fff;
+    color: var(--texte-inverse);
     margin: 0 0 20px;
 }
 
@@ -71,7 +71,7 @@
     font-size: 1rem;
     font-weight: 600;
     letter-spacing: 1px;
-    color: #00f5ff;
+    color: var(--cyan);
     margin: 0 0 20px;
 }
 
@@ -98,7 +98,7 @@
 }
 
 .objectif-etoile-slot.objectif-etoile-obtenue .objectif-etoile-icone {
-    color: #c044ff;
+    color: var(--violet-clair);
     text-shadow: 0 0 8px rgba(192, 68, 255, 0.8);
 }
 
@@ -125,7 +125,7 @@
 .objectif-recap-titre {
     font-family: 'Press Start 2P', monospace;
     font-size: 0.45rem;
-    color: #00f5ff;
+    color: var(--cyan);
     letter-spacing: 2px;
     margin: 0 0 12px;
 }
@@ -146,7 +146,7 @@
 }
 
 .objectif-recap-etoile.recap-etoile-remplie {
-    color: #c044ff;
+    color: var(--violet-clair);
     text-shadow: 0 0 12px rgba(192, 68, 255, 0.9);
     transform: scale(1.15);
 }
@@ -158,14 +158,14 @@
 .objectif-recap-revelation {
     font-family: 'Rajdhani', sans-serif;
     font-size: 0.9rem;
-    color: #c044ff;
+    color: var(--violet-clair);
     margin-top: 8px;
 }
 
 .objectif-echec-titre {
     font-family: 'Press Start 2P', monospace;
     font-size: 0.5rem;
-    color: #ff006e;
+    color: var(--rose);
     margin: 0 0 24px;
     line-height: 1.8;
 }
@@ -207,7 +207,7 @@ body.histoire-active.partie-active #bandeau-trame-run {
     position: relative;
     font-family: 'Orbitron', sans-serif;
     font-size: 0.55rem;
-    color: #00f5ff;
+    color: var(--cyan);
     letter-spacing: 1px;
 }
 
@@ -216,7 +216,7 @@ body.histoire-active.partie-active #bandeau-trame-run {
     right: 0;
     top: -14px;
     font-size: 0.4rem;
-    color: #ffe600;
+    color: var(--jaune);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;

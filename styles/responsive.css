@@ -2,14 +2,27 @@
            RESPONSIVE
         ================================================ */
 body.contraste-eleve {
-    --fond: #000000;
+    --fond: var(--contraste-fond);
     --fond-panneau: rgba(255, 255, 255, 0.08);
     --bordure: rgba(255, 255, 255, 0.55);
-    --texte: #ffffff;
+    --texte: var(--contraste-texte);
     --texte-dim: rgba(255, 255, 255, 0.75);
 }
 body.contraste-eleve .bouton {
     border-width: 3px;
+}
+body.contraste-eleve .cutscene-police-pixel,
+body.contraste-eleve .cutscene-police-narratif,
+body.contraste-eleve .cutscene-police-stats,
+body.contraste-eleve .cutscene-police-terminal,
+body.contraste-eleve .cutscene-police-ui {
+    color: var(--contraste-texte);
+    text-shadow: none;
+}
+body.contraste-eleve .btn-cutscene,
+body.contraste-eleve .btn-cutscene-passer {
+    border-width: 3px;
+    color: var(--contraste-texte);
 }
 
 @media (max-width: 768px), (max-height: 600px) {

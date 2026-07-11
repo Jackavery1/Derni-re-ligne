@@ -1,9 +1,5 @@
-import {
-    activerModeDev,
-    basculerModeDev,
-    initialiserModeDeveloppeur,
-} from './logique/mode-developpeur.js';
-import { modeDevActif } from './logique/mode-dev-etat.js';
+import { activerModeDev, basculerModeDev, initialiserModeDeveloppeur } from './mode-developpeur.js';
+import { modeDevActif } from './mode-dev-etat.js';
 
 function devDemandeDansUrl() {
     const params = new URLSearchParams(window.location.search);

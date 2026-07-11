@@ -9,11 +9,11 @@
     align-items: flex-end;
     gap: 6px;
     background: rgba(8, 8, 26, 0.92);
-    border: 1px solid var(--meteo-couleur, #ffe600);
+    border: 1px solid var(--meteo-couleur, var(--jaune));
     padding: 8px 14px;
     z-index: 150;
     pointer-events: none;
-    box-shadow: 0 0 16px color-mix(in srgb, var(--meteo-couleur, #ffe600) 35%, transparent);
+    box-shadow: 0 0 16px color-mix(in srgb, var(--meteo-couleur, var(--jaune)) 35%, transparent);
     text-align: right;
     max-width: min(42vw, 220px);
     font-size: 0.55rem;
@@ -72,8 +72,8 @@
 #meteo-texte {
     font-size: clamp(0.4rem, 1.5vw, 0.55rem);
     letter-spacing: 3px;
-    color: var(--meteo-couleur, #ffe600);
-    text-shadow: 0 0 10px var(--meteo-couleur, #ffe600);
+    color: var(--meteo-couleur, var(--jaune));
+    text-shadow: 0 0 10px var(--meteo-couleur, var(--jaune));
 }
 #meteo-barre-alerte {
     width: 100%;
@@ -86,7 +86,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--meteo-couleur, #ffe600);
+    background: var(--meteo-couleur, var(--jaune));
     animation: videBarreAlerte 5s linear forwards;
 }
 

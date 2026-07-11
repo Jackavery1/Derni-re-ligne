@@ -53,18 +53,4 @@ export default [
             'no-unused-vars': ['warn', { varsIgnorePattern: '^FICHIERS_A_CACHER$' }],
         },
     },
-    {
-        files: [
-            'js/histoire-textes.js',
-            'js/portraits-cutscene.js',
-            'js/portraits-cutscene-personnages.js',
-            'js/boss-rendu.js',
-            'js/icones-pixel.js',
-            'js/coop-logique.js',
-        ],
-        rules: {
-            'max-lines': 'off',
-            complexity: 'off',
-        },
-    },
 ];

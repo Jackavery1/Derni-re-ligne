@@ -31,7 +31,7 @@ import {
     obtenirLibelleCategorieFiltre,
     obtenirTexteVerrouille,
     obtenirTexteVerrouillePanneau,
-} from '../../js/achievements-icones-map.js';
+} from '../../js/achievements/achievements-icones-map.js';
 import { obtenirProgressionAchievement } from '../../js/achievements/achievements-progres.js';
 import {
     ouvrirPanneauDetail,

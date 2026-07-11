@@ -41,7 +41,7 @@ vi.mock('../js/ui/ecrans-ui.js', () => ({
     obtenirTempsEcoule: vi.fn(() => 83000),
 }));
 
-vi.mock('../js/boucle-jeu.js', () => ({
+vi.mock('../js/logique/boucle-jeu.js', () => ({
     planifierBoucle,
 }));
 

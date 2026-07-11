@@ -16,9 +16,23 @@ test.describe('gameplay equity', () => {
             const grace = window.__NEO_TEST__?.obtenirGameFeel?.().spawnGraceRestant ?? 0;
             const { CONFIG } = await import('/js/config/config-jeu.js');
             const minMs = (24 * 1000) / 60;
-            return CONFIG.spawnGraceMs >= minMs && grace > 0;
+            const framesConfig = Math.floor((CONFIG.spawnGraceMs * 60) / 1000);
+            return CONFIG.spawnGraceMs >= minMs && grace > 0 && framesConfig >= 24;
         });
         expect(ok).toBe(true);
+    });
+
+    test('spawn grace mesure en frames a 60 fps (audit B G3)', async ({ page }) => {
+        await demarrerPartie(page);
+        const metriques = await page.evaluate(async () => {
+            const { CONFIG } = await import('/js/config/config-jeu.js');
+            const graceRestant = window.__NEO_TEST__?.obtenirGameFeel?.().spawnGraceRestant ?? 0;
+            const framesConfig = Math.floor((CONFIG.spawnGraceMs * 60) / 1000);
+            return { framesConfig, graceRestant, spawnGraceMs: CONFIG.spawnGraceMs };
+        });
+        expect(metriques.framesConfig).toBe(Math.floor((metriques.spawnGraceMs * 60) / 1000));
+        expect(metriques.framesConfig).toBeGreaterThanOrEqual(24);
+        expect(metriques.graceRestant).toBeGreaterThan(0);
     });
 
     test('coyote time actif apres quitter le sol', async ({ page }) => {

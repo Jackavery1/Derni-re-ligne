@@ -1,4 +1,5 @@
 import { assurerFragmentEcran } from './charger-ecrans.js';
+import { activerFocusTrap } from './focus-trap.js';
 import { logger } from '../logger.js';
 
 /**
@@ -23,12 +24,15 @@ export async function demanderConfirmationDialog(config) {
             return;
         }
 
+        let retirerFocusTrap = () => {};
+
         const fermer = (valeur) => {
             dialog.classList.add('element-masque');
             dialog.setAttribute('aria-hidden', 'true');
             btnOui.removeEventListener('click', surOui);
             btnNon.removeEventListener('click', surNon);
             document.removeEventListener('keydown', surEchap);
+            retirerFocusTrap();
             resolve(valeur);
         };
 
@@ -44,6 +48,9 @@ export async function demanderConfirmationDialog(config) {
 
         dialog.classList.remove('element-masque');
         dialog.setAttribute('aria-hidden', 'false');
-        btnNon.focus();
+        retirerFocusTrap = activerFocusTrap(dialog, {
+            elements: [btnNon, btnOui],
+            focusInitial: btnNon,
+        });
     });
 }

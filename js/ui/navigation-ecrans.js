@@ -2,7 +2,7 @@ import { AudioMoteur } from '../audio/audio.js';
 import { ECRANS, etat, definirEcranActuel } from '../etat/store-jeu.js';
 import { FRAGMENTS_REQUIS_PAR_ECRAN } from './ecrans-config.js';
 import { assurerFragmentsEcran } from './charger-ecrans.js';
-import { demarrerAnimationMenu, arreterAnimationMenu } from '../menu-fond.js';
+import { demarrerAnimationMenu, arreterAnimationMenu } from '../rendu/menu-fond.js';
 import { cacherBanniereVivant } from '../logique/vivant.js';
 import { mettreAJourAffichageRecord } from '../rendu/hud-jeu.js';
 import { annoncer } from './annonces.js';

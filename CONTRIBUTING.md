@@ -28,7 +28,7 @@ Node 18+ (`.nvmrc`). Logs verbeux : `?debug=1`. Formatage : `.prettierrc` (Prett
 
 ### Tests E2E sur le bundle prod
 
-La CI exécute **smoke** sur le bundle prod (`test:e2e:smoke:dist`), puis **responsive multi-viewport** (`test:e2e:responsive:dist` sur `dist/`, `test:e2e:responsive` sur les sources), **perf** (`test:e2e:perf` via `E2E_DIST=1` — `run-e2e-dist.mjs` injecte `neo-test-init.js` dans `dist/index.html`), **Lighthouse** desktop + mobile (`lighthouserc.cjs`, `lighthouserc-mobile.cjs`, warn non bloquant). La suite E2E complète (`npm run test:e2e`) sert les **modules ES sources** avec la matrice Playwright : `desktop`, `mobile-portrait`, `mobile-landscape`, `iphone-14`, `tablet-landscape` (1024×768) (+ projets visuels mobile). Audits gameplay/narratif : `npm run test:e2e:audit`. Local : `npm run audit:lighthouse` / `audit:lighthouse:mobile` après build.
+La CI exécute **smoke** sur le bundle prod (`test:e2e:smoke:dist`), puis **responsive multi-viewport** (`test:e2e:responsive:dist` sur `dist/` inclut `audit-c-responsive` + `histoire-responsive`, `test:e2e:responsive` sur les sources), **perf** (`test:e2e:perf` via `E2E_DIST=1` — `run-e2e-dist.mjs` injecte `neo-test-init.js` dans `dist/index.html`), **Lighthouse** desktop + mobile (`lighthouserc.cjs`, `lighthouserc-mobile.cjs`, **bloquant** en CI). La suite E2E complète (`npm run test:e2e`) sert les **modules ES sources** avec la matrice Playwright : `desktop`, `mobile-portrait`, `mobile-landscape`, `iphone-14`, `tablet-landscape` (1024×768) (+ projets visuels mobile). Audits gameplay/narratif : `npm run test:e2e:audit`. Local : `npm run audit:lighthouse` / `audit:lighthouse:mobile` après build.
 
 ### Campagne complète D9 (narratif, ~90 min)
 
@@ -58,7 +58,7 @@ Timeout spec D9 complet : **5 400 000 ms** (~90 min). Sous-tests D9b : 4–5 min
 
 ### Piège Live Server / file://
 
-Le jeu charge des modules ES (`import` depuis `js/`). **Live Server** et l’ouverture directe de `index.html` ne servent pas correctement les modules → écran « Chargement… » infini. Utiliser **`npm start`** (`serve` sur `127.0.0.1:3000`). Pour le bundle prod : `npm run build` puis `npx serve dist`. Voir le watchdog dans `js/chargement-watchdog.js`. En dev, le SW est désactivé sur localhost sauf **`?pwa=1`** (`js/sw-dev.js`).
+Le jeu charge des modules ES (`import` depuis `js/`). **Live Server** et l’ouverture directe de `index.html` ne servent pas correctement les modules → écran « Chargement… » infini. Utiliser **`npm start`** (`serve` sur `127.0.0.1:3000`). Pour le bundle prod : `npm run build` puis `npx serve dist`. Voir le watchdog dans `js/ui/chargement-watchdog.js`. En dev, le SW est désactivé sur localhost sauf **`?pwa=1`** (`js/io/sw-dev.js`).
 
 ### Couverture Vitest (modules ciblés)
 
@@ -66,7 +66,7 @@ Le jeu charge des modules ES (`import` depuis `js/`). **Live Server** et l’ouv
 
 ### Checklist manuelle iPhone (encoches réelles)
 
-Les specs `audit-c-responsive` simulent les encoches iPhone via `e2e/helpers-iphone-safe-area.mjs` (profils 14, 15 Pro, SE, paysage — audit C14). Avant une release mobile, valider sur **iPhone physique** en PWA standalone :
+Les specs `audit-c-responsive` et `e2e/checklist-iphone.spec.mjs` simulent les encoches iPhone via `e2e/helpers-iphone-safe-area.mjs` (profils 14, 15 Pro, SE, paysage — audit C14). Avant une release mobile, valider sur **iPhone physique** en PWA standalone :
 
 1. Pause solo paysage — bouton Reprendre sous l’encoche, zone tactile ≥ 48 px
 2. Pause coop paysage — bouton Reprendre sous l’encoche, pause HUD mobile ≥ 48 px
@@ -146,7 +146,18 @@ git push
 
 ### Textes narratifs (`js/histoire-textes/`)
 
-Les cutscenes et dialogues sont découpés par domaine (`cutscenes-post-monde-*.js`, `cutscenes-entree-*.js`, etc.). Le barrel `js/histoire-textes.js` réexporte l’API publique ; la prod charge `data/histoire-textes.json` (généré par `npm run sync:data`). Après modification des sources JS : `npm run sync:data` puis `npm run verify:data`. Les PNG de cutscene **eager** sont precachés par le SW (`sw.js` → `SCENES_CUTSCENE_PRECACHE`) ; les scènes `lazy: true` (ex. `vide_errance`) restent en chargement runtime. Scripts one-shot archivés : `scripts/archive/decouper-histoire-textes.mjs`, `scripts/archive/split-textes-narratifs.mjs`, `scripts/archive/split-modules-audit.mjs`.
+Les cutscenes et dialogues sont découpés par domaine (`cutscenes-post-monde-*.js`, `cutscenes-entree-*.js`, etc.). Le barrel `js/histoire-textes.js` réexporte l’API publique ; la prod charge `data/histoire-textes.json` (généré par `npm run sync:data`). Après modification des sources JS : `npm run sync:data` puis `npm run verify:data`.
+
+**Scènes cutscene — eager vs lazy (offline)**
+
+| Type                              | Comportement SW                                             | Hors-ligne 1re visite                                           |
+| --------------------------------- | ----------------------------------------------------------- | --------------------------------------------------------------- |
+| **Eager** (4 PNG prologue)        | Install SW (`sw.js`)                                        | Affichage immédiat                                              |
+| **Lazy** (14 PNG fins/interludes) | Precache idle post-install (`PRECACHE_SCENES_ARRIERE_PLAN`) | Fond canvas + fetch runtime ; peut être vide si jamais precaché |
+
+Compromis assumé : boot léger (install minimal) vs couverture offline totale des fins rares. Les scènes `lazy: true` dans `js/rendu/scenes-cutscene.js` restent jouables en ligne ; offline complet après une session ou le precache idle. Ne pas repasser toutes les scènes en eager sans mesurer le budget SW.
+
+Scripts one-shot archivés : `scripts/archive/decouper-histoire-textes.mjs`, `scripts/archive/split-textes-narratifs.mjs`, `scripts/archive/split-modules-audit.mjs`.
 
 ## Commits (usage interne)
 

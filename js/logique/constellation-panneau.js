@@ -4,7 +4,7 @@ import { modeSprintActif } from './mode-sprint.js';
 import { obtenirRecordSprintBiome } from '../io/progression.js';
 import { formaterTemps } from '../rendu/hud-jeu.js';
 import { NOMS_MONDES_REQUIS } from '../rendu/constellation-rendu.js';
-import { obtenirIdIconeBiome } from '../biome-icones-map.js';
+import { obtenirIdIconeBiome } from '../rendu/biome-icones-map.js';
 import {
     ouvrirPanneauDetail,
     fermerPanneauDetail,

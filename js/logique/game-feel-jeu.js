@@ -32,6 +32,9 @@ export function demarrerAre() {
 export function demarrerGraceSpawn() {
     const graceMs = etat.modeJeu === 'sprint' ? CONFIG.sprintSpawnGraceMs : CONFIG.spawnGraceMs;
     store.spawnGraceRestant = graceMs;
+    void import('../ui/infobulles-contexte.js').then(({ proposerInfobulleGraceSpawn }) =>
+        proposerInfobulleGraceSpawn()
+    );
 }
 
 export function areActive() {

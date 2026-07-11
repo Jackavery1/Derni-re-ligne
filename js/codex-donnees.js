@@ -1,4 +1,4 @@
-import { CONDITIONS_CODEX } from './codex-conditions.js';
+import { CONDITIONS_CODEX } from './codex/codex-conditions.js';
 
 /** @typedef {import('./codex/codex-types.js').EntreeCodex} EntreeCodex */
 /** @typedef {Record<string, EntreeCodex>} CODEX */

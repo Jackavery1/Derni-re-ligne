@@ -46,7 +46,7 @@
     max-width: 108px;
     image-rendering: pixelated;
     border: 1px solid rgba(255, 0, 110, 0.2);
-    background: #000;
+    background: var(--contraste-fond);
 }
 
 .boss-attaque-label {
@@ -196,8 +196,8 @@
 }
 
 .archi-filtre-btn.actif {
-    border-color: var(--jaune, #ffbb44);
-    color: var(--jaune, #ffbb44);
+    border-color: var(--jaune);
+    color: var(--jaune);
 }
 
 button.options-hint-controles {
@@ -208,7 +208,7 @@ button.options-hint-controles {
     font-family: 'Rajdhani', var(--font-ui);
     font-size: 0.55rem;
     text-align: left;
-    color: var(--cyan, #00ddc8);
+    color: var(--cyan-mascotte);
     background: rgba(0, 221, 200, 0.06);
     border: 1px solid rgba(0, 221, 200, 0.25);
     border-radius: 4px;
@@ -229,20 +229,20 @@ button.options-hint-controles:hover {
 }
 
 .histoire-detail-guide {
-    color: var(--cyan, #00ddc8);
+    color: var(--cyan-mascotte);
     border: 1px solid rgba(0, 221, 200, 0.25);
     background: rgba(0, 221, 200, 0.06);
 }
 
 .histoire-detail-avertissement {
-    color: var(--orange, #ffaa44);
+    color: var(--orange-clair);
     border: 1px solid rgba(255, 170, 68, 0.35);
     background: rgba(255, 170, 68, 0.08);
 }
 
 .options-hint-controles {
     font-size: 0.48rem;
-    color: var(--gris-clair, #aaa);
+    color: var(--gris-moyen);
     margin-top: 0.75rem;
     line-height: 1.45;
 }

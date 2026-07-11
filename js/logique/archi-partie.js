@@ -2,7 +2,7 @@ import { AudioMoteur } from '../audio/audio.js';
 import { creerPlateau, lierCouleursTetrominos } from './piece-jeu.js';
 import { particules, definirBiomeActif, ECRANS } from '../etat/store-jeu.js';
 import { lireStockage, ecrireStockage } from '../io/progression.js';
-import { planifierBoucle, suspendreBoucleSolo } from '../boucle-jeu.js';
+import { planifierBoucle, suspendreBoucleSolo } from './boucle-jeu.js';
 import { mettreAJourParticules } from '../rendu/particules-jeu.js';
 import { dessinerPreview } from '../rendu/rendu-jeu.js';
 import { obtenirCanvas } from './dom-utils.js';
@@ -12,7 +12,7 @@ import {
     retournerAuMenuTitre,
     appliquerThemeBiome,
 } from '../ui/ecrans-ui.js';
-import { arreterAnimationMenu } from '../menu-fond.js';
+import { arreterAnimationMenu } from '../rendu/menu-fond.js';
 import { basculerOracle, oracle } from './oracle-jeu.js';
 import { statsGlobales, sauvegarderStats, verifierAchievements } from '../achievements.js';
 import { obtenirTousNiveauxArchi } from './archi-generateur.js';

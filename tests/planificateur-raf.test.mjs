@@ -6,7 +6,7 @@ import {
     abonnerBoucleMenuUnifiee,
     desabonnerBoucleMenuUnifiee,
     _reinitialiserPlanificateurRaf,
-} from '../js/planificateur-raf.js';
+} from '../js/logique/planificateur-raf.js';
 
 describe('planificateur-raf', () => {
     /** @type {FrameRequestCallback | null} */

@@ -12,7 +12,7 @@ function chargerDevInit() {
     if (document.querySelector('script[data-dev-init]')) return;
     const script = document.createElement('script');
     script.type = 'module';
-    script.src = 'js/dev-init.js';
+    script.src = 'js/logique/dev-init.js';
     script.dataset.devInit = '1';
     document.head.appendChild(script);
 }

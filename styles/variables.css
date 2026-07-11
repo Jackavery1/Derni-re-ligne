@@ -18,7 +18,27 @@
     --ui-texte-discret-bouton: #b8b8e0;
     --ui-fond-discret-bouton-hover: #b8b8e0;
     --accent-carte: #6644cc;
+    --violet-clair: #c044ff;
+    --oracle-accent: #aa44ff;
+    --oracle-texte: #cc66ff;
+    --texte-inverse: #ffffff;
     --texte: #e0e0ff;
+    --texte-secondaire: #9ab;
+    --texte-principal: #eee;
+    --cyan-mascotte: #00ddc8;
+    --rose-objectif: #ff99ff;
+    --vert-architecte: #44ff88;
+    --carte-texte-clair: #e8d4ff;
+    --gris-clair: #bbb;
+    --gris-moyen: #aaa;
+    --gris-texte-dim: #888;
+    --gris-bordure: #444444;
+    --gris-bordure-sombre: #aaaaaa;
+    --orange-clair: #ffaa44;
+    --biome-vide-bordure: #4a3848;
+    --biome-lave-bordure: #cd6839;
+    --contraste-fond: #000000;
+    --contraste-texte: #ffffff;
     --texte-dim: rgba(224, 224, 255, 0.75);
     --texte-discret: rgba(224, 224, 255, 0.52);
 
@@ -145,6 +165,7 @@
     --space-5: 24px;
     --space-6: 32px;
     --typo-hud-micro: clamp(11px, 0.45rem, 13px);
+    --typo-ui-compact: clamp(10px, 0.42rem, 14px);
     --texte-vide-indicateur: rgba(180, 150, 190, 0.72);
 
     --theme-primaire: var(--cyan);

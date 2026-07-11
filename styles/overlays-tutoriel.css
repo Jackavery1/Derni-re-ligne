@@ -17,7 +17,7 @@
 .overlay-tutoriel-contenu {
     max-width: 560px;
     padding: 24px 28px;
-    border: 2px solid var(--cyan, #00f5ff);
+    border: 2px solid var(--cyan-mascotte);
     background: rgba(6, 8, 24, 0.95);
     box-shadow: 0 0 24px rgba(0, 245, 255, 0.25);
 }
@@ -27,7 +27,7 @@
     font-family: 'Press Start 2P', monospace;
     font-size: 11px;
     line-height: 1.6;
-    color: var(--cyan, #00f5ff);
+    color: var(--cyan-mascotte);
     text-align: center;
 }
 
@@ -60,7 +60,7 @@
     font-weight: 600;
     letter-spacing: 2px;
     text-align: center;
-    color: var(--cyan, #00f5ff);
+    color: var(--cyan-mascotte);
     text-transform: uppercase;
 }
 

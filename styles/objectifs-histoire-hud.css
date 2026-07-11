@@ -1,6 +1,6 @@
 .objectif-hud-modificateur {
     font-size: 0.35rem;
-    color: #ff99ff;
+    color: var(--rose-objectif);
     letter-spacing: 1px;
     margin-top: 4px;
 }
@@ -22,7 +22,7 @@
 }
 
 .objectif-hud-etoile-active {
-    color: #c044ff;
+    color: var(--violet-clair);
     text-shadow: 0 0 6px rgba(192, 68, 255, 0.7);
 }
 
@@ -34,7 +34,7 @@
 
 .objectif-hud-trame-resume {
     font-size: 0.38rem;
-    color: #c044ff;
+    color: var(--violet-clair);
     letter-spacing: 1px;
     margin-bottom: 4px;
 }
@@ -63,7 +63,7 @@
 .bandeau-trame-resume {
     font-family: var(--font-ui);
     font-size: var(--typo-corps);
-    color: #c044ff;
+    color: var(--violet-clair);
     letter-spacing: 0.08em;
     display: block;
     margin-bottom: 2px;
@@ -93,7 +93,7 @@
 .hud-boss-jauge-fill {
     height: 100%;
     width: calc(var(--hud-jauge-ratio) * 100%);
-    background: linear-gradient(90deg, #ff006e, #ffe600);
+    background: linear-gradient(90deg, var(--rose), var(--jaune));
     transition: width 0.2s ease;
 }
 
@@ -104,7 +104,7 @@
 }
 
 .hud-flash-vitesse-descente {
-    color: #c044ff;
+    color: var(--violet-clair);
 }
 
 .histoire-carte-etoiles,
@@ -121,7 +121,7 @@
 }
 
 .histoire-carte-etoile-active {
-    color: #c044ff;
+    color: var(--violet-clair);
     text-shadow: 0 0 8px rgba(192, 68, 255, 0.8);
 }
 

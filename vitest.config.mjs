@@ -42,7 +42,7 @@ export const COVERAGE_ETENDU_EXCLUS_SEUIL_80 = [
     'js/ui/charger-ecrans.js',
     'js/ui/navigation-ecrans.js',
     'js/histoire/histoire-map-rendu.js',
-    'js/boucle-jeu.js',
+    'js/logique/boucle-jeu.js',
     'js/logique/effets-partie.js',
 ];
 

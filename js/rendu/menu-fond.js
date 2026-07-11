@@ -1,8 +1,8 @@
-import { TETROMINOS } from './config/config-jeu.js';
-import { BIOMES } from './config/biomes.js';
-import { obtenirEffetsReduits } from './etat/store-jeu.js';
-import { obtenirActions } from './logique/actions-jeu.js';
-import { obtenirCanvas } from './logique/dom-utils.js';
+import { TETROMINOS } from '../config/config-jeu.js';
+import { BIOMES } from '../config/biomes.js';
+import { obtenirEffetsReduits } from '../etat/store-jeu.js';
+import { obtenirActions } from '../logique/actions-jeu.js';
+import { obtenirCanvas } from '../logique/dom-utils.js';
 
 const INDEX_COULEUR_PIECE_FOND = { I: 0, O: 1, T: 2, S: 3, Z: 4, J: 5, L: 6 };
 

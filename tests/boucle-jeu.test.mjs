@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { mettreAJourFps, suspendreBoucleSolo } from '../js/boucle-jeu.js';
+import { mettreAJourFps, suspendreBoucleSolo } from '../js/logique/boucle-jeu.js';
 import {
     definirFpsMoyen,
     definirEffetsReduits,

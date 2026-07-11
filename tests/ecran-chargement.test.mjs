@@ -32,6 +32,10 @@ function installerDomChargement() {
     noeuds.clear();
     const ecran = creerNoeud('div', { id: 'ecran-chargement', className: 'ecran-chargement' });
     const message = creerNoeud('p', { id: 'ecran-chargement-message' });
+    const progress = creerNoeud('div', {
+        id: 'ecran-chargement-progress',
+        className: 'ecran-chargement-barre',
+    });
     const barre = creerNoeud('div', {
         id: 'ecran-chargement-barre',
         className: 'ecran-chargement-barre-fill',
@@ -42,6 +46,7 @@ function installerDomChargement() {
     };
     void ecran;
     void message;
+    void progress;
     void barre;
 }
 
@@ -71,6 +76,7 @@ describe('ecran-chargement', () => {
 
         definirProgressionChargement(0.5);
         expect(noeuds.get('ecran-chargement-barre')?.style.width).toBe('50%');
+        expect(noeuds.get('ecran-chargement-progress')?.getAttribute('aria-valuenow')).toBe('50');
 
         definirMessageChargement('Presque pret…');
         expect(noeuds.get('ecran-chargement-message')?.textContent).toBe('Presque pret…');

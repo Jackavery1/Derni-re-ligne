@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import ICONES_PIXEL from '../data/icones-pixel.json';
-import { ICONE_BIOME_ARCHI, obtenirIdIconeBiomeArchi } from '../js/archi-icones-map.js';
+import { ICONE_BIOME_ARCHI, obtenirIdIconeBiomeArchi } from '../js/rendu/archi-icones-map.js';
 
 describe('archi-icones-map', () => {
     it('mappe chaque biome architecte vers une icone pixel valide', () => {

@@ -9,7 +9,7 @@ import {
     obtenirLibelleCategorieFiltre,
     obtenirTexteVerrouille,
     obtenirTexteVerrouillePanneau,
-} from '../achievements-icones-map.js';
+} from './achievements-icones-map.js';
 import { obtenirProgressionAchievement } from './achievements-progres.js';
 import {
     ouvrirPanneauDetail,

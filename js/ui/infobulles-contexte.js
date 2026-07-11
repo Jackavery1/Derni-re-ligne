@@ -4,6 +4,17 @@ import { INFOBULLES_MODES_JEU } from '../config/contenu-jeu.js';
 import { obtenirInfobulleAttaqueBoss } from '../histoire/histoire-map-briefings-boss.js';
 import { lireStockage, ecrireStockage } from '../io/progression.js';
 import { sansAccentsE } from '../logique/texte-jeu.js';
+import { activerFocusTrap } from './focus-trap.js';
+
+/** @param {unknown} el */
+function estFocusable(el) {
+    return (
+        !!el &&
+        typeof el === 'object' &&
+        'focus' in el &&
+        typeof (/** @type {{ focus?: unknown }} */ (el).focus) === 'function'
+    );
+}
 
 const CLE_STOCKAGE = 'derniereLigne_infobullesBiome';
 
@@ -34,8 +45,27 @@ function marquerVu(biomeId, type) {
     persisterVu(vu);
 }
 
-/** @param {{ titre: string, texte: string }} contenu */
+/** @type {ReturnType<typeof setTimeout> | null} */
 let _timerInfobulle = null;
+
+/** @type {(() => void) | null} */
+let _retirerFocusTrapInfobulle = null;
+
+/** @type {(() => void) | null} */
+let _retirerEchapInfobulle = null;
+
+function fermerInfobulleContexte() {
+    const overlay = document.getElementById('overlay-infobulle-contexte');
+    if (!overlay) return;
+    overlay.classList.add('element-masque');
+    overlay.setAttribute('aria-hidden', 'true');
+    clearTimeout(_timerInfobulle ?? undefined);
+    _timerInfobulle = null;
+    _retirerEchapInfobulle?.();
+    _retirerEchapInfobulle = null;
+    _retirerFocusTrapInfobulle?.();
+    _retirerFocusTrapInfobulle = null;
+}
 
 /** @param {{ titre: string, texte: string }} contenu @returns {boolean} */
 function afficherInfobulle(contenu) {
@@ -44,17 +74,33 @@ function afficherInfobulle(contenu) {
     const overlay = document.getElementById('overlay-infobulle-contexte');
     if (!overlay) return false;
 
+    fermerInfobulleContexte();
+
     const titre = document.getElementById('infobulle-contexte-titre');
     const texte = document.getElementById('infobulle-contexte-texte');
+    const btn = document.getElementById('btn-infobulle-contexte-fermer');
     if (titre) titre.textContent = sansAccentsE(contenu.titre);
     if (texte) texte.textContent = sansAccentsE(contenu.texte);
 
     overlay.classList.remove('element-masque');
-    const btn = document.getElementById('btn-infobulle-contexte-fermer');
-    const fermer = () => overlay.classList.add('element-masque');
-    if (btn) btn.onclick = fermer;
-    clearTimeout(_timerInfobulle);
-    _timerInfobulle = setTimeout(fermer, 12000);
+    overlay.setAttribute('aria-hidden', 'false');
+    if (btn) btn.onclick = fermerInfobulleContexte;
+
+    /** @param {KeyboardEvent} e */
+    const surEchap = (e) => {
+        if (e.key === 'Escape') fermerInfobulleContexte();
+    };
+    overlay.addEventListener('keydown', surEchap);
+    _retirerEchapInfobulle = () => overlay.removeEventListener('keydown', surEchap);
+
+    if (estFocusable(btn)) {
+        _retirerFocusTrapInfobulle = activerFocusTrap(overlay, {
+            elements: [/** @type {HTMLElement} */ (btn)],
+            focusInitial: /** @type {HTMLElement} */ (btn),
+        });
+    }
+
+    _timerInfobulle = setTimeout(fermerInfobulleContexte, 12000);
     return true;
 }
 
@@ -108,6 +154,21 @@ export function proposerInfobulleRelique(biomeId, relique) {
 const CLE_ORACLE_COOP = 'derniereLigne_infobulleOracleCoop';
 const CLE_MODES_JEU = 'derniereLigne_infobullesModesJeu';
 const CLE_ATTAQUES_BOSS = 'derniereLigne_infobullesBoss';
+const CLE_GRACE_SPAWN = 'derniereLigne_infobulleGraceSpawn';
+
+export function proposerInfobulleGraceSpawn() {
+    if (typeof window !== 'undefined' && window.__NEO_SILENT_NOTIFS__) return;
+    if (lireStockage(CLE_GRACE_SPAWN, '0') === '1') return;
+    if (
+        !afficherInfobulle({
+            titre: 'RESPIRATION AU SPAWN',
+            texte: 'Quelques instants sans game over : placez votre premiere piece avant que le plateau ne durcisse.',
+        })
+    ) {
+        return;
+    }
+    ecrireStockage(CLE_GRACE_SPAWN, '1');
+}
 
 /** @param {'sansFin' | 'sprint' | 'oracle' | 'coop' | 'defiJour'} modeId */
 export function proposerInfobulleModeJeu(modeId) {
@@ -168,4 +229,5 @@ export function _reinitialiserInfobullesContexte() {
     ecrireStockage(CLE_ORACLE_COOP, '0');
     ecrireStockage(CLE_MODES_JEU, '{}');
     ecrireStockage(CLE_ATTAQUES_BOSS, '{}');
+    ecrireStockage(CLE_GRACE_SPAWN, '0');
 }

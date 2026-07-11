@@ -3,7 +3,7 @@ import { mettreAJourVisibiliteModesDebloques } from '../ui/deblocage-ui.js';
 import { biomeEstDebloqueParHistoire } from '../io/progression.js';
 export { NOMS_MONDES_REQUIS } from '../rendu/constellation-rendu.js';
 export { obtenirDecalageCentreConstellation } from './constellation-zone.js';
-import { abonnerBoucleMenuUnifiee, desabonnerBoucleMenuUnifiee } from '../planificateur-raf.js';
+import { abonnerBoucleMenuUnifiee, desabonnerBoucleMenuUnifiee } from './planificateur-raf.js';
 import {
     ouvrirPanneauBiomeConstellation,
     fermerPanneauBiomeConstellation,

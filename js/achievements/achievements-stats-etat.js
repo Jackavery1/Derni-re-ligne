@@ -1,7 +1,7 @@
 import { creerFileNotifications } from '../ui/notifications-file.js';
 import { sansAccentsE } from '../logique/texte-jeu.js';
 import { rendreIconeSurCanvas } from '../rendu/icones-pixel.js';
-import { obtenirIdIconeAchievement } from '../achievements-icones-map.js';
+import { obtenirIdIconeAchievement } from './achievements-icones-map.js';
 
 export function creerStatsVides() {
     return {

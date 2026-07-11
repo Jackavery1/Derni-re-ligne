@@ -128,7 +128,7 @@
     font-size: 0.65rem;
     letter-spacing: 0.08em;
     border-color: rgba(153, 68, 255, 0.55);
-    color: #e8d4ff;
+    color: var(--carte-texte-clair);
 }
 
 .histoire-trame-panneau {
@@ -164,8 +164,8 @@
 }
 
 .histoire-trame-detail-liste .histoire-trame-condition-ok {
-    color: var(--cyan, #00ddc8);
-    border-left-color: var(--cyan, #00ddc8);
+    color: var(--cyan-mascotte);
+    border-left-color: var(--cyan-mascotte);
     background: rgba(0, 221, 200, 0.06);
 }
 

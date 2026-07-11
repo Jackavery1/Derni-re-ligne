@@ -42,7 +42,7 @@
 }
 
 .cna-difficulte--1 {
-    color: #44ff88;
+    color: var(--vert-architecte);
 }
 
 .cna-difficulte--2 {
@@ -56,7 +56,7 @@
 .cna-nom {
     font-family: var(--font-titre);
     font-size: var(--typo-nom-carte);
-    color: #ffffff;
+    color: var(--texte-inverse);
     letter-spacing: 1px;
     line-height: 1.35;
 }
@@ -84,7 +84,7 @@
 }
 
 .cna-statut--fait {
-    color: #44ff88;
+    color: var(--vert-architecte);
 }
 
 .cna-statut--verrouille {
@@ -103,7 +103,7 @@
 }
 
 .archi-diff-legende--1 {
-    color: #44ff88;
+    color: var(--vert-architecte);
 }
 
 .archi-diff-legende--2 {

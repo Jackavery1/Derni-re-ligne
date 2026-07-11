@@ -152,8 +152,8 @@ body.coop-active #conteneur-principal {
 
 #notif-niveau.notif-synchro,
 #notif-niveau.notif-niveau-vert {
-    color: #00ff88;
-    border-color: #00ff88;
+    color: var(--vert);
+    border-color: var(--vert);
     box-shadow: 0 0 16px rgba(0, 255, 136, 0.4);
 }
 

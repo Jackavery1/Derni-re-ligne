@@ -1,5 +1,6 @@
 const ID_ECRAN = 'ecran-chargement';
 const ID_BARRE = 'ecran-chargement-barre';
+const ID_PROGRESS = 'ecran-chargement-progress';
 const ID_MESSAGE = 'ecran-chargement-message';
 const DUREE_SORTIE_MS = 450;
 
@@ -27,9 +28,10 @@ export function definirMessageChargement(message) {
  */
 export function definirProgressionChargement(ratio) {
     const barre = document.getElementById(ID_BARRE);
-    if (!barre) return;
+    const progress = document.getElementById(ID_PROGRESS);
     const pct = Math.max(0, Math.min(1, ratio)) * 100;
-    barre.style.width = `${pct}%`;
+    if (barre) barre.style.width = `${pct}%`;
+    if (progress) progress.setAttribute('aria-valuenow', String(Math.round(pct)));
 }
 
 export function masquerEcranChargement() {

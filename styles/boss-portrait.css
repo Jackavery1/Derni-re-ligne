@@ -1,6 +1,6 @@
 .archi-legende-difficulte {
     font-size: 0.48rem;
-    color: var(--gris-clair, #bbb);
+    color: var(--gris-clair);
     margin: 0.5rem 0;
     text-align: center;
 }
@@ -45,7 +45,7 @@
 
 .go-avertissement-trame {
     font-size: 0.55rem;
-    color: var(--orange, #ffaa44);
+    color: var(--orange-clair);
     text-align: center;
     line-height: 1.45;
     max-width: 22rem;
@@ -57,7 +57,7 @@
 
 .go-continues-campagne {
     font-size: 0.5rem;
-    color: var(--gris-clair, #aaa);
+    color: var(--gris-moyen);
     text-align: center;
     line-height: 1.4;
     max-width: 22rem;
@@ -66,7 +66,7 @@
 
 .objectif-hud-paradoxe {
     font-size: 0.45rem;
-    color: var(--orange, #ffaa44);
+    color: var(--orange-clair);
     line-height: 1.35;
     margin-top: 0.25rem;
     opacity: 0.9;
@@ -74,7 +74,7 @@
 
 .tutoriel-indicateur {
     font-size: 0.5rem;
-    color: var(--texte-dim, #888);
+    color: var(--gris-texte-dim);
     text-align: center;
     margin: 0.25rem 0 0.5rem;
 }
@@ -96,7 +96,7 @@
 }
 
 .profil-records-entete {
-    color: var(--cyan, #00ddc8);
+    color: var(--cyan-mascotte);
     font-weight: bold;
     position: sticky;
     top: 0;
@@ -104,7 +104,7 @@
 }
 
 .profil-records-nom {
-    color: var(--texte-principal, #eee);
+    color: var(--texte-principal);
 }
 
 .boss-trame-attente-barre {

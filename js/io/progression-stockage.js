@@ -39,6 +39,7 @@ export const CLES_STOCKAGE = new Set([
     'derniereLigne_infobullesBoss',
     'derniereLigne_accentsUi',
     'derniereLigne_infobulleOracleCoop',
+    'derniereLigne_infobulleGraceSpawn',
     'derniereLigne_defiJour',
     'derniereLigne_devActif',
     'derniereLigne_haptique',

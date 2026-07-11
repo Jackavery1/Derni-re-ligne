@@ -1,6 +1,6 @@
 import { eclaircir, assombrir } from './rendu-blocs-utils.js';
 import { rendreIconeSurCanvas } from './icones-pixel.js';
-import { obtenirIdIconeBiome } from '../biome-icones-map.js';
+import { obtenirIdIconeBiome } from './biome-icones-map.js';
 
 export const FONDS_BIOME = {
     classique: ['#030412', '#010208'],

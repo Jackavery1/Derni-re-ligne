@@ -1,5 +1,6 @@
 import { lireStockage, ecrireStockage } from '../io/progression.js';
 import { sansAccentsE } from '../logique/texte-jeu.js';
+import { activerFocusTrap } from './focus-trap.js';
 import {
     CLES,
     SLIDES_PROLOGUE,
@@ -96,46 +97,30 @@ let callbackPrologue = null;
 /** @type {(() => void) | null} */
 let callbackLibre = null;
 
-/** @param {HTMLElement} overlay */
-function activerFocusTrap(overlay) {
-    if (!overlay?.querySelectorAll) return;
+/** @type {(() => void) | null} */
+let desactiverEchapTutoriel = null;
+
+/** @param {HTMLElement} overlay @param {() => void} surEchap */
+function ouvrirOverlayTutoriel(overlay, surEchap) {
     desactiverFocusTrap?.();
-    const selecteur =
-        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-    const focusables = /** @type {HTMLElement[]} */ (
-        [...overlay.querySelectorAll(selecteur)].filter(
-            (el) => el instanceof HTMLElement && el.offsetParent !== null
-        )
-    );
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-    const precedent = document.activeElement;
-
-    first?.focus();
-
+    desactiverEchapTutoriel?.();
+    overlay.classList.remove('element-masque');
+    desactiverFocusTrap = activerFocusTrap(overlay);
     /** @param {KeyboardEvent} e */
-    function surTab(e) {
-        if (e.key !== 'Tab' || focusables.length === 0) return;
-        if (e.shiftKey && document.activeElement === first) {
-            e.preventDefault();
-            last?.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-            e.preventDefault();
-            first?.focus();
-        }
-    }
-
-    overlay.addEventListener('keydown', surTab);
-    desactiverFocusTrap = () => {
-        overlay.removeEventListener('keydown', surTab);
-        if (precedent instanceof HTMLElement) precedent.focus();
-        desactiverFocusTrap = null;
+    const handler = (e) => {
+        if (e.key === 'Escape') surEchap();
+    };
+    overlay.addEventListener('keydown', handler);
+    desactiverEchapTutoriel = () => {
+        overlay.removeEventListener('keydown', handler);
+        desactiverEchapTutoriel = null;
     };
 }
 
 function fermerTutoriel(cleStockage, onFermer) {
     marquerTutorielVu(cleStockage);
     desactiverFocusTrap?.();
+    desactiverEchapTutoriel?.();
     indexSlidePrologue = 0;
     indexSlideLibre = 0;
     callbackPrologue = null;
@@ -207,8 +192,7 @@ export function afficherTutorielLibreAvantPartie(onCompris) {
     }
 
     afficherSlideLibre(0);
-    overlay.classList.remove('element-masque');
-    activerFocusTrap(overlay);
+    ouvrirOverlayTutoriel(overlay, () => avancerSlideLibre());
 
     const btnFermer = document.getElementById('btn-tutoriel-fermer');
     if (btnFermer) {
@@ -237,8 +221,7 @@ export function afficherTutorielPrologueApresCutscene(onCompris) {
     }
 
     afficherSlidePrologue(0);
-    overlay.classList.remove('element-masque');
-    activerFocusTrap(overlay);
+    ouvrirOverlayTutoriel(overlay, () => avancerSlidePrologue());
 
     const btnFermer = document.getElementById('btn-tutoriel-fermer');
     if (btnFermer) {
@@ -262,15 +245,15 @@ export function afficherTutorielContextuel(contexte, onFerme = null) {
     if (!overlay) return;
 
     remplirContenu(contenu, false);
-    overlay.classList.remove('element-masque');
-    activerFocusTrap(overlay);
+    const fermerContextuel = () => {
+        fermerTutoriel(cle);
+        onFerme?.();
+    };
+    ouvrirOverlayTutoriel(overlay, fermerContextuel);
 
     const btnFermer = document.getElementById('btn-tutoriel-fermer');
     if (btnFermer) {
         btnFermer.textContent = 'COMPRIS';
-        btnFermer.onclick = () => {
-            fermerTutoriel(cle);
-            onFerme?.();
-        };
+        btnFermer.onclick = fermerContextuel;
     }
 }

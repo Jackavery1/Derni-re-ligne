@@ -1,3 +1,3 @@
-import { initialiserNeoTestApi } from './moteur-init-test-api.js';
+import { initialiserNeoTestApi } from './moteur/moteur-init-test-api.js';
 
 void initialiserNeoTestApi();

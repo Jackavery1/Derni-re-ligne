@@ -1,5 +1,8 @@
 import { logger } from '../logger.js';
-import { abonnerBoucleMenuUnifiee, desabonnerBoucleMenuUnifiee } from '../planificateur-raf.js';
+import {
+    abonnerBoucleMenuUnifiee,
+    desabonnerBoucleMenuUnifiee,
+} from '../logique/planificateur-raf.js';
 import {
     calculerAnimRobo,
     calculerBoundsCapsule,

@@ -19,10 +19,16 @@ const IDENTIFIANTS_STABLES = [
     'localStorage',
 ];
 
-describe('css — tokens menu narratif', () => {
-    for (const fichier of ['styles/menu-narratif-cutscene.css', 'styles/menu-narratif-base.css']) {
+const FEUILLES_EXCLUES = new Set(['variables.css', 'dev.css']);
+
+const feuillesStyles = readdirSync('styles')
+    .filter((f) => f.endsWith('.css') && !FEUILLES_EXCLUES.has(f))
+    .sort();
+
+describe('css — tokens (pas de hex literals hors variables.css)', () => {
+    for (const fichier of feuillesStyles) {
         it(`${fichier} n utilise pas de hex literals`, () => {
-            const css = readFileSync(fichier, 'utf8');
+            const css = readFileSync(join('styles', fichier), 'utf8');
             const hex = css.match(HEX_RE) ?? [];
             expect(hex).toEqual([]);
         });

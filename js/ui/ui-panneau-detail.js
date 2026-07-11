@@ -1,4 +1,5 @@
 import { appliquerContenuPanneau } from './ui-panneau-detail-rendu.js';
+import { activerFocusTrap } from './focus-trap.js';
 
 /**
  * @typedef {object} ConfigIcone
@@ -31,6 +32,8 @@ import { appliquerContenuPanneau } from './ui-panneau-detail-rendu.js';
 let configOuverte = null;
 /** @type {HTMLElement | null} */
 let declencheurFocus = null;
+/** @type {(() => void) | null} */
+let retirerFocusTrapPanneau = null;
 let listenersInitialises = false;
 
 /** @type {Set<() => void>} */
@@ -63,15 +66,19 @@ function obtenirRefs() {
 
 function retirerOuverture() {
     const { racine, corps } = obtenirRefs();
+    retirerFocusTrapPanneau?.();
+    retirerFocusTrapPanneau = null;
     racine?.classList.add('element-masque');
     corps?.classList.remove('panneau-detail-corps--ouvert');
     racine?.setAttribute('aria-hidden', 'true');
+    racine?.setAttribute('aria-modal', 'false');
 }
 
 function afficherOuverture() {
     const { racine, corps, btnFermer } = obtenirRefs();
     racine?.classList.remove('element-masque');
     racine?.setAttribute('aria-hidden', 'false');
+    racine?.setAttribute('aria-modal', 'true');
 
     requestAnimationFrame(() => {
         corps?.classList.add('panneau-detail-corps--ouvert');
@@ -82,8 +89,11 @@ function afficherOuverture() {
         }
     });
 
-    if (btnFermer && typeof (/** @type {HTMLElement} */ (btnFermer).focus) === 'function') {
-        /** @type {HTMLElement} */ (btnFermer).focus({ preventScroll: true });
+    if (corps && btnFermer) {
+        retirerFocusTrapPanneau = activerFocusTrap(corps, {
+            focusInitial: /** @type {HTMLElement} */ (btnFermer),
+            restaurerFocus: false,
+        });
     }
 }
 

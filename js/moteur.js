@@ -1,6 +1,6 @@
 import { configurerActionsMoteur } from './logique/moteur-config-actions.js';
-import { initialiserSystemesMoteur } from './moteur-init-systemes.js';
-import { initialiserInterfaceMoteur } from './moteur-init-interface.js';
+import { initialiserSystemesMoteur } from './moteur/moteur-init-systemes.js';
+import { initialiserInterfaceMoteur } from './moteur/moteur-init-interface.js';
 
 configurerActionsMoteur();
 

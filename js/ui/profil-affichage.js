@@ -14,7 +14,7 @@ import {
     genererTitreStyle,
     obtenirDonneesAffichage,
     obtenirNoteVera,
-} from '../profil-donnees.js';
+} from './profil-donnees.js';
 
 function dimensionnerCanvasProfil(canvas) {
     if (!(canvas instanceof HTMLCanvasElement)) return;

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { estHoteDevLocal, swAutorise } from '../js/sw-dev.js';
+import { estHoteDevLocal, swAutorise } from '../js/io/sw-dev.js';
 
 describe('sw-dev', () => {
     const origine = globalThis.window;

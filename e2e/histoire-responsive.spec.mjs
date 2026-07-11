@@ -12,6 +12,7 @@ import {
     lancerMondeDepuisCarte,
     avancerCutsceneJusquaPivot,
     assertHumeurPortraitCutscene,
+    lancerMondeBossBrasier,
     ETAT_HISTOIRE_BOSS_BRASIER,
     ETAT_CYBER_LABO_PRET,
     ETAT_INFERNO_PRET,
@@ -253,6 +254,39 @@ test('recap post-monde paysage mobile — panneau scrollable', async ({ page }) 
     expect(metriques.overflowY).toBe('auto');
     expect(metriques.boutonH).toBeGreaterThanOrEqual(48);
     await fermerRecapPostMonde(page);
+});
+
+test('boss HUD 480px — portrait visible sans debordement (audit D8)', async ({ page }) => {
+    test.setTimeout(60000);
+    await page.setViewportSize({ width: 480, height: 800 });
+    await ouvrirCarteHistoire(page);
+    await lancerMondeBossBrasier(page);
+
+    await expect(page.locator('#canvas-boss-portrait')).toBeVisible();
+    await expect(page.locator('#boss-nom-affiche')).toContainText('BRASIER');
+
+    const metriques = await page.evaluate(() => {
+        const portrait = document.getElementById('canvas-boss-portrait');
+        const nom = document.getElementById('boss-nom-affiche');
+        const rectP = portrait?.getBoundingClientRect();
+        const rectN = nom?.getBoundingClientRect();
+        return {
+            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+            portraitW: rectP?.width ?? 0,
+            portraitH: rectP?.height ?? 0,
+            dansEcran: Boolean(
+                rectP &&
+                rectN &&
+                rectP.left >= -2 &&
+                rectP.right <= window.innerWidth + 2 &&
+                rectN.bottom <= window.innerHeight + 2
+            ),
+        };
+    });
+    expect(metriques.debord).toBe(false);
+    expect(metriques.portraitW).toBeGreaterThan(0);
+    expect(metriques.portraitH).toBeGreaterThan(0);
+    expect(metriques.dansEcran).toBe(true);
 });
 
 test('recap post-monde portrait 319px — panneau scrollable (audit D8)', async ({ page }) => {

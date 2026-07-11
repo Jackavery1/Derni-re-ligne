@@ -45,14 +45,17 @@ describe('scenes-cutscene — assets et registre', () => {
         }
     });
 
-    it('le SW precache les scenes eager du registre (pas les lazy)', () => {
+    it('le SW precache les scenes eager du registre', () => {
         for (const [, scene] of Object.entries(SCENES_CUTSCENE)) {
             if (scene.lazy) continue;
             const src = scene.src.replace(/^assets\//, './assets/');
             expect(swSource).toContain(src);
         }
+    });
+
+    it('vide_errance est lazy mais precachee en arriere-plan SW', () => {
         expect(SCENES_CUTSCENE.vide_errance?.lazy).toBe(true);
-        expect(swSource).not.toContain('scene_vide_errance');
+        expect(swSource).toContain('scene_vide_errance');
     });
 
     it('vide_errance est annotee lazy et referencee par une cutscene entree', () => {

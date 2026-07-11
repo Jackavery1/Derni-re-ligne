@@ -73,15 +73,15 @@
 
 /* Mascotte canvas ROBO — palette et panneau fixes, indépendants du biome */
 #section-mascotte {
-    --mascotte-lueur: #00ddc8;
+    --mascotte-lueur: var(--cyan-mascotte);
     flex-shrink: 0;
-    background: #08081a !important;
-    border-color: rgba(0, 221, 200, 0.22) !important;
+    background: var(--fond) !important;
+    border-color: color-mix(in srgb, var(--cyan-mascotte) 22%, transparent) !important;
 }
 
 #section-mascotte .section-titre {
-    color: #00ddc8;
-    text-shadow: 0 0 8px rgba(0, 221, 200, 0.35);
+    color: var(--cyan-mascotte);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--cyan-mascotte) 35%, transparent);
 }
 
 /* ═══ ISOLATION COULEUR CANVAS ROBO ═══ */
@@ -93,7 +93,7 @@
     height: auto;
     max-width: 130px;
     image-rendering: pixelated;
-    background: #08081a;
+    background: var(--fond);
     filter: none !important;
     -webkit-filter: none !important;
 }
@@ -124,7 +124,7 @@
     border: 1px solid var(--theme-bordure, var(--bordure));
     color: var(--theme-primaire, var(--texte-dim));
     font-family: var(--police);
-    font-size: 0.42rem;
+    font-size: var(--typo-ui-compact);
     padding: 8px 10px;
     cursor: pointer;
     width: 100%;
@@ -134,6 +134,11 @@
 #btn-pause:hover {
     border-color: var(--theme-accent, var(--cyan));
     color: var(--theme-accent, var(--cyan));
+}
+#btn-pause:focus-visible,
+#btn-mute:focus-visible {
+    outline: 2px solid var(--jaune);
+    outline-offset: 2px;
 }
 
 #btn-mute {

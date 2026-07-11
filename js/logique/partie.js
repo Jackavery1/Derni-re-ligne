@@ -1,7 +1,7 @@
-import { BIOMES } from './config/biomes.js';
-import { initialiserMeteo, annulerMeteo } from './logique/meteo.js';
-import { initialiserVivant, annulerTimersVivant } from './logique/vivant.js';
-import { AudioMoteur } from './audio/audio.js';
+import { BIOMES } from '../config/biomes.js';
+import { initialiserMeteo, annulerMeteo } from './meteo.js';
+import { initialiserVivant, annulerTimersVivant } from './vivant.js';
+import { AudioMoteur } from '../audio/audio.js';
 import {
     etat,
     particules,
@@ -26,7 +26,7 @@ import {
     definirNbLockResets,
     definirAccumulateur,
     definirDernierTimestamp,
-} from './etat/store-jeu.js';
+} from '../etat/store-jeu.js';
 import {
     creerPlateau,
     genererProchainePiece,
@@ -35,56 +35,56 @@ import {
     reinitialiserDas,
     hexVersRgb,
     mettreAJourIndicateurRelique,
-} from './logique/piece-jeu.js';
+} from './piece-jeu.js';
 import {
     initParticulesAmbiance,
     dessinerFileNext,
     rendreFrameJeu,
     demarrerTransition,
-} from './rendu/rendu-jeu.js';
+} from '../rendu/rendu-jeu.js';
 import {
     reinitialiserMascottePartie,
     rafraichirStats,
     afficherEcran,
     cacherEcrans,
     retournerAuMenuTitre,
-} from './ui/ecrans-ui.js';
-import { ECRANS } from './etat/store-jeu.js';
+} from '../ui/ecrans-ui.js';
+import { ECRANS } from '../etat/store-jeu.js';
 import { planifierBoucle } from './boucle-jeu.js';
-import { initStatsPartie } from './achievements.js';
-import { reinitialiserHistoriquePositions } from './rendu/decorations-jeu.js';
+import { initStatsPartie } from '../achievements.js';
+import { reinitialiserHistoriquePositions } from '../rendu/decorations-jeu.js';
 import {
     donneesPartie,
     reinitialiserDonneesPartie,
     signalerApparitionPiece,
-} from './ui/profil-jeu.js';
-import { annoncerPieceCourante } from './ui/annonces.js';
-import { store } from './etat/store-jeu.js';
-import { modeHistoireEnCours } from './etat/mode-histoire.js';
-import { obtenirIdBiomeFond } from './rendu/biome-fond.js';
-import { initialiserAudioBiome } from './audio/audio-partie.js';
-import { logger } from './logger.js';
-import { SEQUENCE_HISTOIRE } from './histoire-donnees.js';
-import { assurerRessourcesPartie } from './io/prefetch-ressources-partie.js';
-import { demarrerBoss, arreterBoss } from './logique/boss-jeu.js';
+} from '../ui/profil-jeu.js';
+import { annoncerPieceCourante } from '../ui/annonces.js';
+import { store } from '../etat/store-jeu.js';
+import { modeHistoireEnCours } from '../etat/mode-histoire.js';
+import { obtenirIdBiomeFond } from '../rendu/biome-fond.js';
+import { initialiserAudioBiome } from '../audio/audio-partie.js';
+import { logger } from '../logger.js';
+import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
+import { assurerRessourcesPartie } from '../io/prefetch-ressources-partie.js';
+import { demarrerBoss, arreterBoss } from './boss-jeu.js';
 import {
     initialiserMecaniquesHistoire,
     arreterMecaniquesHistoire,
-} from './histoire/mecaniques-histoire.js';
-import { reinitialiserConditionsRuntime } from './histoire/conditions-secrets.js';
+} from '../histoire/mecaniques-histoire.js';
+import { reinitialiserConditionsRuntime } from '../histoire/conditions-secrets.js';
 import {
     oracle,
     reinitialiserOraclePartie,
     declencherCalculOracle,
     afficherSectionOracle,
     mettreAJourStatsOracleUI,
-} from './logique/oracle-jeu.js';
-import { demarrerFondBiome, arreterFondBiome } from './rendu/rendu-fond-biome.js';
-import { reinitialiserTimerNiveau } from './logique/timer-niveau.js';
-import { reinitialiserGameFeel, demarrerGraceSpawn } from './logique/game-feel-jeu.js';
-import { rafraichirHudObjectifsHistoire } from './ui/ui-objectifs-hud.js';
-import { demanderConfirmationDialog } from './ui/dialog-confirmation.js';
-export { initialiserCanvas, assurerCanvasPartie } from './logique/partie-canvas.js';
+} from './oracle-jeu.js';
+import { demarrerFondBiome, arreterFondBiome } from '../rendu/rendu-fond-biome.js';
+import { reinitialiserTimerNiveau } from './timer-niveau.js';
+import { reinitialiserGameFeel, demarrerGraceSpawn } from './game-feel-jeu.js';
+import { rafraichirHudObjectifsHistoire } from '../ui/ui-objectifs-hud.js';
+import { demanderConfirmationDialog } from '../ui/dialog-confirmation.js';
+export { initialiserCanvas, assurerCanvasPartie } from './partie-canvas.js';
 
 export async function confirmerRecommencer() {
     const confirme = await demanderConfirmationDialog({
@@ -98,7 +98,7 @@ export async function confirmerRecommencer() {
 
 function _arreterPartieEnCours() {
     arreterFondBiome();
-    void import('./audio/melodie.js').then(({ arreterLectureMelodie }) => arreterLectureMelodie());
+    void import('../audio/melodie.js').then(({ arreterLectureMelodie }) => arreterLectureMelodie());
     annulerTimersVivant();
     etat.estEnCours = false;
     etat.estEnPause = false;
@@ -120,7 +120,7 @@ export function quitterVersMenu() {
 export function quitterVersCarteHistoire() {
     if (!modeHistoireEnCours()) return;
     _arreterPartieEnCours();
-    void import('./histoire/histoire-session.js').then(({ retournerACarte }) => retournerACarte());
+    void import('../histoire/histoire-session.js').then(({ retournerACarte }) => retournerACarte());
 }
 
 function initialiserFeaturesPartie() {
@@ -132,15 +132,13 @@ function initialiserFeaturesPartie() {
     mettreAJourStatsOracleUI();
     document.getElementById('oracle-bonus-go-wrap')?.classList.add('element-masque');
 
-    void import('./audio/melodie.js').then(({ reinitialiserMelodie }) => reinitialiserMelodie());
+    void import('../audio/melodie.js').then(({ reinitialiserMelodie }) => reinitialiserMelodie());
     reinitialiserHistoriquePositions();
     reinitialiserDonneesPartie();
     donneesPartie.biomeId = obtenirBiomeActif();
     initStatsPartie();
-    void import('./codex.js').then((m) => m.planifierVerifierCodex());
-    void import('./logique/constellation.js').then(({ arreterConstellation }) =>
-        arreterConstellation()
-    );
+    void import('../codex.js').then((m) => m.planifierVerifierCodex());
+    void import('./constellation.js').then(({ arreterConstellation }) => arreterConstellation());
 }
 
 function initialiserEtatPartie() {
@@ -204,7 +202,7 @@ function initialiserAudioPartie() {
 }
 
 function initialiserUIPartie() {
-    void import('./rendu/layout-jeu.js').then(({ adapterInterface }) => adapterInterface());
+    void import('../rendu/layout-jeu.js').then(({ adapterInterface }) => adapterInterface());
     const ctxReserve = obtenirCtxReserve();
     const canvasReserve = obtenirCanvasReserve();
     if (!ctxReserve || !canvasReserve) {
@@ -247,7 +245,7 @@ async function _demarrerJeuApresPrep() {
         logger.error('Échec préparation partie :', err);
         return;
     }
-    const { assurerCanvasPartie } = await import('./logique/partie-canvas.js');
+    const { assurerCanvasPartie } = await import('./partie-canvas.js');
     if (!assurerCanvasPartie()) return;
     demarrerTransition();
     initialiserFeaturesPartie();

@@ -11,12 +11,34 @@ import {
 import { chargerContenuJeu } from '../js/config/contenu-jeu.js';
 
 function installerOverlayInfobulle() {
+    /** @type {Record<string, string>} */
+    const attrs = { 'aria-hidden': 'true' };
+    const listeners = new Map();
     const overlay = {
         classList: { add: vi.fn(), remove: vi.fn(), contains: vi.fn(() => false) },
+        setAttribute: vi.fn((name, value) => {
+            attrs[name] = value;
+        }),
+        getAttribute: vi.fn((name) => attrs[name]),
+        addEventListener: vi.fn((type, handler) => {
+            listeners.set(type, handler);
+        }),
+        removeEventListener: vi.fn((type) => {
+            listeners.delete(type);
+        }),
+        dispatchEvent: vi.fn((event) => {
+            listeners.get(event.type)?.(event);
+            return true;
+        }),
     };
     const titre = { textContent: '' };
     const texte = { textContent: '' };
-    const btn = { onclick: null, click: vi.fn() };
+    const btn = {
+        onclick: null,
+        click: vi.fn(),
+        focus: vi.fn(),
+        offsetParent: {},
+    };
     vi.spyOn(document, 'getElementById').mockImplementation((id) => {
         if (id === 'overlay-infobulle-contexte') return overlay;
         if (id === 'infobulle-contexte-titre') return titre;
@@ -27,7 +49,7 @@ function installerOverlayInfobulle() {
         }
         return null;
     });
-    return { overlay, titre, texte };
+    return { overlay, titre, texte, btn };
 }
 
 describe('infobulles-contexte', () => {
@@ -83,5 +105,22 @@ describe('infobulles-contexte', () => {
         const { titre } = installerOverlayInfobulle();
         proposerInfobulleModeJeu('sprint');
         expect(titre.textContent).toBe('');
+    });
+
+    it('expose aria-hidden et focus trap a l ouverture', () => {
+        const { overlay, btn } = installerOverlayInfobulle();
+        proposerInfobulleModeJeu('sansFin');
+        expect(overlay.setAttribute).toHaveBeenCalledWith('aria-hidden', 'false');
+        expect(overlay.classList.remove).toHaveBeenCalledWith('element-masque');
+        expect(btn.focus).toHaveBeenCalled();
+        expect(overlay.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
+    });
+
+    it('ferme sur Escape et remet aria-hidden', () => {
+        const { overlay } = installerOverlayInfobulle();
+        proposerInfobulleModeJeu('oracle');
+        overlay.dispatchEvent({ type: 'keydown', key: 'Escape' });
+        expect(overlay.setAttribute).toHaveBeenCalledWith('aria-hidden', 'true');
+        expect(overlay.classList.add).toHaveBeenCalledWith('element-masque');
     });
 });

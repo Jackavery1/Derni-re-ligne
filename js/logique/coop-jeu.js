@@ -21,7 +21,7 @@ import {
 import { obtenirRecordCoopBiome, sauvegarderRecordCoopBiome } from '../io/progression.js';
 import { planifierSoumissionLeaderboard } from '../io/leaderboard-cloud.js';
 import { finaliserPartieCommune } from './partie-fin-commun.js';
-import { planifierBoucle, suspendreBoucleSolo } from '../boucle-jeu.js';
+import { planifierBoucle, suspendreBoucleSolo } from './boucle-jeu.js';
 import { obtenirBouton } from './dom-utils.js';
 import { mettreAJourParticules } from '../rendu/particules-jeu.js';
 import { mettreAJourSecousse } from '../rendu/rendu-jeu.js';

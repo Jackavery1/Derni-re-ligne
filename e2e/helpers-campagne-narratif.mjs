@@ -11,8 +11,8 @@ const BASE_OPTIONS_CAMPAGNE = {
 /** Parcours narratif optimisé pour la campagne complète (audit D9b). */
 export const OPTIONS_CAMPAGNE_BULK = {
     ...BASE_OPTIONS_CAMPAGNE,
-    max: 45,
-    typewriterTimeout: 3500,
+    max: 40,
+    typewriterTimeout: 2800,
 };
 
 /** Jalons boss / chapitres — assertions plus strictes. */
@@ -22,11 +22,11 @@ export const OPTIONS_CAMPAGNE_JALON = {
     typewriterTimeout: 4000,
 };
 
-/** Campagne complète audit D9 — timeout bulk, plafond jalons. */
+/** Campagne complète audit D9 — timeout bulk réduit, plafond jalons. */
 export const OPTIONS_CAMPAGNE_D9 = {
     ...BASE_OPTIONS_CAMPAGNE,
-    max: 55,
-    typewriterTimeout: 3500,
+    max: 35,
+    typewriterTimeout: 2400,
 };
 
 /** Prépare les conditions Trame via localStorage (sans API inject de test). */

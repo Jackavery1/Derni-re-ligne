@@ -22,7 +22,7 @@ vi.mock('../js/logique/constellation.js', () => ({
     arreterConstellation,
 }));
 
-vi.mock('../js/menu-fond.js', () => ({
+vi.mock('../js/rendu/menu-fond.js', () => ({
     demarrerAnimationMenu: vi.fn(),
     arreterAnimationMenu,
 }));

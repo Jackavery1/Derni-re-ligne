@@ -1,5 +1,8 @@
 import { logger } from '../logger.js';
-import { abonnerBoucleMenuUnifiee, desabonnerBoucleMenuUnifiee } from '../planificateur-raf.js';
+import {
+    abonnerBoucleMenuUnifiee,
+    desabonnerBoucleMenuUnifiee,
+} from '../logique/planificateur-raf.js';
 
 /** @typedef {{ x: number, y: number, rx: number, ry: number, c1: string, c2: string }} NebuleuseMeta */
 /** @typedef {{ x: number, y: number, taille: number, couleur: string }} EtoileLointaine */

@@ -27,6 +27,7 @@ const SCENES_CUTSCENE_ARRIERE_PLAN = [
     './assets/cutscenes/scene_fin_crepuscule.png',
     './assets/cutscenes/scene_fin_lumineuse.png',
     './assets/cutscenes/scene_fin_recommencement.png',
+    './assets/cutscenes/scene_vide_errance.png',
 ];
 
 /** PNG portraits cutscene — aligné sur js/portraits-precache.js */

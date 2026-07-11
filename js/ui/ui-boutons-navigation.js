@@ -8,7 +8,7 @@ import { basculerDefiJour, mettreAJourToggleDefiJour } from '../logique/mode-def
 import { afficherTutorielContextuel } from './tutoriel.js';
 import { mettreAJourVisibiliteModesDebloques } from './deblocage-ui.js';
 import { initialiserBoutonsCampagne } from './ui-boutons-campagne.js';
-import { assurerInputArchi, assurerInputCoop } from '../modes-input-lazy.js';
+import { assurerInputArchi, assurerInputCoop } from '../logique/modes-input-lazy.js';
 import { lierBouton, lierBoutonsSelecteur } from './ui-lier-bouton.js';
 import { vibrerUi } from '../audio/haptique.js';
 

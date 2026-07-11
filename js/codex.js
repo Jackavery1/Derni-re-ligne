@@ -4,7 +4,7 @@ import { creerFileNotifications } from './ui/notifications-file.js';
 import { logger } from './logger.js';
 import { sansAccentsE } from './logique/texte-jeu.js';
 import { rendreIconeSurCanvas } from './rendu/icones-pixel.js';
-import { obtenirIdIcone, obtenirAccentEntree } from './codex-icones-map.js';
+import { obtenirIdIcone, obtenirAccentEntree } from './codex/codex-icones-map.js';
 import {
     ouvrirPanneauDetail,
     fermerPanneauDetail,

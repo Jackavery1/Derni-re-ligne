@@ -25,7 +25,7 @@ import {
     obtenirTempsEcoule,
 } from '../ui/ecrans-ui.js';
 import { ECRANS } from '../etat/store-jeu.js';
-import { planifierBoucle } from '../boucle-jeu.js';
+import { planifierBoucle } from './boucle-jeu.js';
 import { afficherMelodieGameOver } from '../audio/melodie.js';
 import { finaliserPartieCommune } from './partie-fin-commun.js';
 import { modeCoopEnCours } from '../etat/registre-modes.js';

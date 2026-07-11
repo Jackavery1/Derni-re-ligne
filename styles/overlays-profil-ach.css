@@ -87,7 +87,7 @@
 .ach-carte-nom {
     font-family: var(--font-titre);
     font-size: var(--typo-nom-carte);
-    color: #ffffff;
+    color: var(--texte-inverse);
     letter-spacing: 1px;
     line-height: 1.35;
 }

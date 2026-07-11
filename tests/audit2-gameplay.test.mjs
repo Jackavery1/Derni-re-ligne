@@ -15,7 +15,7 @@ import {
 import { store } from '../js/etat/store-jeu.js';
 import { _reinitialiserInfobullesContexte } from '../js/ui/infobulles-contexte.js';
 import { readFileSync } from 'fs';
-import { CONDITIONS_CODEX } from '../js/codex-conditions.js';
+import { CONDITIONS_CODEX } from '../js/codex/codex-conditions.js';
 import { obtenirEtatDeblocage } from '../js/io/progression-histoire.js';
 import { biomeEstDebloqueParHistoire } from '../js/io/progression-records.js';
 import { ACHIEVEMENTS } from '../js/achievements-donnees.js';
@@ -24,7 +24,7 @@ import { NOMS_MONDES_REQUIS } from '../js/rendu/constellation-rendu.js';
 import {
     obtenirTexteVerrouillePanneau,
     obtenirTexteVerrouille,
-} from '../js/achievements-icones-map.js';
+} from '../js/achievements/achievements-icones-map.js';
 
 vi.mock('../js/etat/mode-histoire.js', () => ({
     modeHistoireEnCours: vi.fn(() => true),
@@ -233,9 +233,42 @@ describe('audit 2 — gameplay UX', () => {
             expect(JSON.parse(raw).sprint).toBeUndefined();
         });
 
+        it('propose une infobulle grace spawn une seule fois', async () => {
+            _reinitialiserInfobullesContexte();
+            const classes = new Set(['element-masque']);
+            const overlay = {
+                classList: {
+                    contains: (c) => classes.has(c),
+                    add: (c) => classes.add(c),
+                    remove: (c) => classes.delete(c),
+                },
+                setAttribute: vi.fn(),
+                addEventListener: vi.fn(),
+                removeEventListener: vi.fn(),
+            };
+            const btn = { onclick: null, focus: vi.fn(), offsetParent: {} };
+            vi.spyOn(document, 'getElementById').mockImplementation((id) => {
+                if (id === 'overlay-infobulle-contexte') return overlay;
+                if (id === 'infobulle-contexte-titre') return { textContent: '' };
+                if (id === 'infobulle-contexte-texte') return { textContent: '' };
+                if (id === 'btn-infobulle-contexte-fermer') return btn;
+                return null;
+            });
+            const { proposerInfobulleGraceSpawn } = await import('../js/ui/infobulles-contexte.js');
+            proposerInfobulleGraceSpawn();
+            expect(overlay.classList.contains('element-masque')).toBe(false);
+            expect(localStorage.getItem('derniereLigne_infobulleGraceSpawn')).toBe('1');
+            overlay.classList.add('element-masque');
+            proposerInfobulleGraceSpawn();
+            expect(overlay.classList.contains('element-masque')).toBe(true);
+            vi.restoreAllMocks();
+        });
+
         it('ne consomme pas une infobulle attaque boss si overlay absent', async () => {
-            const overlay = document.getElementById('overlay-infobulle-contexte');
-            overlay?.remove();
+            vi.spyOn(document, 'getElementById').mockImplementation((id) => {
+                if (id === 'overlay-infobulle-contexte') return null;
+                return null;
+            });
             const { proposerInfobulleAttaqueBoss } =
                 await import('../js/ui/infobulles-contexte.js');
             proposerInfobulleAttaqueBoss('faux_fantome');

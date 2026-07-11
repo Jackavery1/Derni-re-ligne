@@ -80,6 +80,25 @@ test.describe('audit E — UI/UX', () => {
         expect(hasFocusRing).toBe(true);
     });
 
+    test('E3c — HUD pause et mute ont un focus visible en partie', async ({ page }) => {
+        const { demarrerPartie } = await import('./helpers-partie.mjs');
+        await preparerPageSansSw(page);
+        await page.goto('/?neoTest=1');
+        await attendreApplicationPrete(page);
+        await demarrerPartie(page);
+
+        for (const id of ['btn-pause', 'btn-mute']) {
+            const btn = page.locator(`#${id}`);
+            await expect(btn).toBeVisible();
+            await btn.focus();
+            const hasFocusRing = await btn.evaluate((el) => {
+                const style = getComputedStyle(el);
+                return style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0;
+            });
+            expect(hasFocusRing, id).toBe(true);
+        }
+    });
+
     test('E3a — prefers-reduced-motion desactive les animations longues', async ({ page }) => {
         await preparerPageSansSw(page);
         await page.emulateMedia({ reducedMotion: 'reduce' });

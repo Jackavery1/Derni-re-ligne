@@ -1,7 +1,7 @@
-import { copierRapportErreurs } from './logger.js';
-import { configurerMeteo } from './logique/meteo.js';
-import { configurerReliques } from './logique/reliques.js';
-import { AudioMoteur, configurerAudioMoteur } from './audio/audio.js';
+import { copierRapportErreurs } from '../logger.js';
+import { configurerMeteo } from '../logique/meteo.js';
+import { configurerReliques } from '../logique/reliques.js';
+import { AudioMoteur, configurerAudioMoteur } from '../audio/audio.js';
 import {
     ecrireStockage,
     sauvegarderBiomeActif,
@@ -11,26 +11,26 @@ import {
     formaterEtoiles,
     biomeEstDebloque,
     migrerClesLocalStorage,
-} from './io/progression.js';
+} from '../io/progression.js';
 import {
     etat,
     definirBiomeActif,
     obtenirBiomeActif,
     obtenirNiveauGlobal,
-} from './etat/store-jeu.js';
-import { obtenirForme, lierCouleursTetrominos } from './logique/piece-jeu.js';
-import { creerParticulesExplosion } from './rendu/particules-jeu.js';
-import { initialiserCanvas, demarrerJeu } from './partie.js';
-import { initialiserEffetsPartie } from './logique/effets-partie.js';
-import { mettreAJourBoutonsMute } from './ui/options-mute-ui.js';
-import { coopEstPrefere } from './logique/coop-preference.js';
-import { appliquerThemeBiome } from './ui/ecrans-ui.js';
-import { initialiserHaptique } from './audio/haptique.js';
-import { appliquerControlesTactilesDepuisStockage } from './logique/controles-tactiles.js';
-import { enregistrerPlanificateurPushCloud } from './io/progression-stockage.js';
+} from '../etat/store-jeu.js';
+import { obtenirForme, lierCouleursTetrominos } from '../logique/piece-jeu.js';
+import { creerParticulesExplosion } from '../rendu/particules-jeu.js';
+import { initialiserCanvas, demarrerJeu } from '../logique/partie.js';
+import { initialiserEffetsPartie } from '../logique/effets-partie.js';
+import { mettreAJourBoutonsMute } from '../ui/options-mute-ui.js';
+import { coopEstPrefere } from '../logique/coop-preference.js';
+import { appliquerThemeBiome } from '../ui/ecrans-ui.js';
+import { initialiserHaptique } from '../audio/haptique.js';
+import { appliquerControlesTactilesDepuisStockage } from '../logique/controles-tactiles.js';
+import { enregistrerPlanificateurPushCloud } from '../io/progression-stockage.js';
 
 function initialiserSyncCloudDiffere() {
-    void import('./io/progression-sync-cloud.js').then(
+    void import('../io/progression-sync-cloud.js').then(
         ({ initialiserSyncCloud, synchroniserCloudAuDemarrage, planifierPushCloud }) => {
             enregistrerPlanificateurPushCloud(planifierPushCloud);
             initialiserSyncCloud();
@@ -94,7 +94,7 @@ export function initialiserSystemesMoteur() {
 
     lierCouleursTetrominos();
 
-    void import('./logique/constellation.js').then(({ configurerConstellation }) =>
+    void import('../logique/constellation.js').then(({ configurerConstellation }) =>
         configurerConstellation({
             obtenirNiveauGlobal,
             obtenirBiomeActif,
@@ -108,17 +108,17 @@ export function initialiserSystemesMoteur() {
             appliquerThemeBiome,
             demarrerJeu,
             demarrerCooperatif: () => {
-                void import('./logique/coop-jeu.js').then(({ demarrerCooperatif }) =>
+                void import('../logique/coop-jeu.js').then(({ demarrerCooperatif }) =>
                     demarrerCooperatif()
                 );
             },
             modeCoopEstActif: coopEstPrefere,
             sonMenu: (type) => AudioMoteur.son(type),
             ouvrirHistoireVersMonde: (mondeId) => {
-                void import('./histoire/histoire-navigation.js').then(
+                void import('../histoire/histoire-navigation.js').then(
                     ({ definirMondeCibleCarte }) => {
                         definirMondeCibleCarte(mondeId);
-                        void import('./histoire/histoire-intro.js').then(
+                        void import('../histoire/histoire-intro.js').then(
                             ({ ouvrirModeHistoireDepuisMenu }) => ouvrirModeHistoireDepuisMenu()
                         );
                     }

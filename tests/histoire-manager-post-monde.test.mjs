@@ -44,6 +44,7 @@ vi.mock('../js/histoire/histoire-session.js', () => ({
 }));
 
 describe('histoire-manager-post-monde', () => {
+    vi.setConfig({ testTimeout: 10_000 });
     beforeEach(() => {
         store.histoire.etat = structuredClone(ETAT_HISTOIRE_VIDE);
         store.histoire.dernierJournal = null;

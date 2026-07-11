@@ -96,15 +96,27 @@
                 />
                 <p class="ecran-chargement-titre">DERNIERE LIGNE</p>
                 <p class="ecran-chargement-message" id="ecran-chargement-message">Chargement…</p>
-                <div class="ecran-chargement-barre" aria-hidden="true">
-                    <div class="ecran-chargement-barre-fill" id="ecran-chargement-barre"></div>
+                <div
+                    class="ecran-chargement-barre"
+                    id="ecran-chargement-progress"
+                    role="progressbar"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-valuenow="0"
+                    aria-labelledby="ecran-chargement-message"
+                >
+                    <div
+                        class="ecran-chargement-barre-fill"
+                        id="ecran-chargement-barre"
+                        aria-hidden="true"
+                    ></div>
                 </div>
             </div>
         </div>
 
         <main id="conteneur-ecrans" tabindex="-1"></main>
 
-        <script type="module" src="js/chargement-watchdog.js?v=2.5.34"></script>
+        <script type="module" src="js/ui/chargement-watchdog.js?v=2.5.34"></script>
         <script type="module" src="js/main.js?v=2.5.34"></script>
         <script type="module" src="js/neo-test-init.js?v=2.5.34"></script>
     </body>

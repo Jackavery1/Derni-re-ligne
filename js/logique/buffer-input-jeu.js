@@ -1,6 +1,14 @@
 import { CONFIG } from '../config/config-jeu.js';
+import { etat } from '../etat/store-jeu.js';
 
 /** @typedef {'tourner_cw' | 'tourner_ccw' | 'hold' | 'gauche' | 'droite' | 'bas' | 'chute'} ActionBufferisee */
+
+export function obtenirInputBufferMax() {
+    if (etat.modeJeu === 'sprint') {
+        return CONFIG.sprintInputBufferMax ?? CONFIG.inputBufferMax ?? 2;
+    }
+    return CONFIG.inputBufferMax ?? 2;
+}
 
 /** @returns {ActionBufferisee[]} */
 export function creerBufferInputVide() {
@@ -21,7 +29,7 @@ export function bufferInputEstVide(file) {
 
 /** @param {ActionBufferisee[] | ActionBufferisee | null | undefined} file @param {ActionBufferisee} action */
 export function ajouterBufferInput(file, action) {
-    const max = CONFIG.inputBufferMax ?? 2;
+    const max = obtenirInputBufferMax();
     const q = Array.isArray(file) ? [...file] : file != null ? [file] : [];
     if (q.length >= max) q.shift();
     q.push(action);

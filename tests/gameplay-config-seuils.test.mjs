@@ -26,6 +26,12 @@ describe('gameplay config — seuils audit B', () => {
         expect(CONFIG.inputBufferMax).toBeLessThanOrEqual(3);
     });
 
+    it('sprintInputBufferMax dans la plage 1-3 actions', () => {
+        expect(CONFIG.sprintInputBufferMax).toBeGreaterThanOrEqual(1);
+        expect(CONFIG.sprintInputBufferMax).toBeLessThanOrEqual(3);
+        expect(CONFIG.sprintInputBufferMax).toBeGreaterThanOrEqual(CONFIG.inputBufferMax);
+    });
+
     it('lockDelay offre une fenetre de placement confortable', () => {
         expect(CONFIG.lockDelay).toBeGreaterThanOrEqual(300);
     });

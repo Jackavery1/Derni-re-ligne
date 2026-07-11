@@ -213,7 +213,7 @@
 .profil-section-label {
     font-family: var(--font-titre);
     font-size: var(--typo-sous-titre);
-    color: #00ddc8;
+    color: var(--cyan-mascotte);
     letter-spacing: 3px;
     margin: 0;
     text-shadow: 0 0 8px rgba(0, 221, 200, 0.35);
@@ -248,7 +248,7 @@
 .psi-val {
     font-family: 'Orbitron', var(--font-stats);
     font-size: var(--typo-stat);
-    color: #00ddc8;
+    color: var(--cyan-mascotte);
     text-shadow: 0 0 8px rgba(0, 221, 200, 0.35);
 }
 .profil-boutons {

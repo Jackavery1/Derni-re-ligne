@@ -102,7 +102,7 @@
 }
 .bouton.rose:hover {
     background: var(--rose);
-    color: #fff;
+    color: var(--texte-inverse);
 }
 .bouton.discret {
     border-color: var(--ui-bordure-discret);

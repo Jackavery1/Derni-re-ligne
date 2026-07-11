@@ -110,6 +110,16 @@ function installerDomPanneau() {
     racine.appendChild(backdrop);
     racine.appendChild(corps);
 
+    for (const el of [racine, corps, btnFermer, btnJouer, description]) {
+        el.addEventListener = vi.fn();
+        el.removeEventListener = vi.fn();
+        el.offsetParent = {};
+        el.querySelectorAll = () =>
+            [btnFermer, btnJouer, description].filter(
+                (n) => !n.classList.contains('element-masque')
+            );
+    }
+
     globalThis.document = {
         body: { classList: { contains: () => false } },
         getElementById: (id) => noeuds.get(id) ?? null,
@@ -232,5 +242,19 @@ describe('ui-panneau-detail', () => {
         expect(noeuds.get('btn-panneau-detail-jouer')?.classList.contains('element-masque')).toBe(
             true
         );
+    });
+
+    it('active aria-modal et focus trap a l ouverture', () => {
+        const { ouvrirPanneauDetail } = globalThis.__panneauDetail;
+        ouvrirPanneauDetail({
+            id: 'test_a11y',
+            accent: '#00f5ff',
+            titre: 'FOCUS',
+        });
+        const racine = noeuds.get('panneau-detail');
+        const corps = noeuds.get('panneau-detail-corps');
+        expect(racine?.setAttribute).toHaveBeenCalledWith('aria-modal', 'true');
+        expect(corps?.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
+        expect(noeuds.get('btn-panneau-detail-fermer')?.focus).toHaveBeenCalled();
     });
 });

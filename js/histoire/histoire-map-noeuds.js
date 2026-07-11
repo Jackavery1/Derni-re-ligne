@@ -4,7 +4,7 @@ import { obtenirEtatHistoire, mondePeutEtreJoue, obtenirEtatMonde } from './hist
 import { sansAccentsE } from '../logique/texte-jeu.js';
 import { dessinerRoboMiniature } from '../rendu/rendu-robo-mini.js';
 import { dessinerIconePixel, iconesPixelChargees } from '../rendu/icones-pixel.js';
-import { obtenirIdIconeMondeHistoire } from '../biome-icones-map.js';
+import { obtenirIdIconeMondeHistoire } from '../rendu/biome-icones-map.js';
 
 function _positionLabel(pos, rayon, w) {
     const centreX = w * 0.5;

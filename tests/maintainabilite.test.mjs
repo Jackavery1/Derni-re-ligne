@@ -135,6 +135,13 @@ describe('maintainabilite', () => {
         expect(depassements, JSON.stringify(depassements, null, 2)).toEqual([]);
     });
 
+    it('racine js/ — barrels et entrees uniquement (vague 3)', () => {
+        const racine = readdirSync(racineJs)
+            .filter((f) => f.endsWith('.js'))
+            .sort();
+        expect(racine.length).toBeLessThanOrEqual(15);
+    });
+
     it('tous les modules js sont listes dans le precache SW dev', () => {
         const swPrecache = readFileSync(join(racineProjet, 'sw-precache-list.js'), 'utf8');
         const debut = swPrecache.indexOf(MARQUEUR_DEBUT);

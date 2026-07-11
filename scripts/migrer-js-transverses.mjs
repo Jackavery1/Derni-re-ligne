@@ -10,39 +10,23 @@ const racine = join(dirname(fileURLToPath(import.meta.url)), '..');
 const jsDir = join(racine, 'js');
 const dryRun = process.argv.includes('--dry-run');
 
-/** Barrels, entrées et données — restent à la racine js/ */
+/** Barrels, entrées et données — restent à la racine js/ (vague 3 : voir scripts/migrer-js-racine-vague3.mjs) */
 const RESTER_RACINE = new Set([
     'main.js',
     'moteur.js',
-    'moteur-init-interface.js',
-    'moteur-init-systemes.js',
-    'moteur-init-test-api.js',
     'neo-test-api.js',
     'neo-test-init.js',
-    'partie.js',
-    'boucle-jeu.js',
     'logger.js',
     'types.js',
-    'sw-dev.js',
-    'planificateur-raf.js',
-    'modes-input-lazy.js',
-    'menu-fond.js',
-    'chargement-watchdog.js',
     'histoire-textes.js',
     'histoire-textes.fallback.js',
     'histoire-textes.fallback.stub.js',
     'histoire-donnees.js',
     'archi-donnees.js',
     'codex-donnees.js',
-    'profil-donnees.js',
     'achievements-donnees.js',
     'achievements.js',
     'codex.js',
-    'codex-conditions.js',
-    'archi-icones-map.js',
-    'codex-icones-map.js',
-    'biome-icones-map.js',
-    'achievements-icones-map.js',
 ]);
 
 const DOMAINES = [

@@ -25,10 +25,10 @@
     gap: 8px;
 }
 .toggle-oracle.actif {
-    border-color: #aa44ff;
-    color: #cc66ff;
+    border-color: var(--oracle-accent);
+    color: var(--oracle-texte);
     box-shadow: 0 0 14px rgba(170, 68, 255, 0.35);
-    text-shadow: 0 0 8px #aa44ff;
+    text-shadow: 0 0 8px var(--oracle-accent);
 }
 .oracle-toggle-desc {
     font-family: 'Rajdhani', var(--font-ui);
@@ -64,13 +64,13 @@
     animation: feedbackOracleCoin 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 #notif-oracle.oracle-feedback-succes {
-    color: #ffe600;
-    border-color: #ffe600;
+    color: var(--jaune);
+    border-color: var(--jaune);
     box-shadow: 0 0 20px rgba(255, 230, 0, 0.5);
 }
 #notif-oracle.oracle-feedback-reset {
-    color: #ff006e;
-    border-color: #ff006e;
+    color: var(--rose);
+    border-color: var(--rose);
     box-shadow: 0 0 20px rgba(255, 0, 110, 0.4);
 }
 
@@ -92,6 +92,6 @@
     grid-column: 1 / -1;
 }
 .oracle-bonus-val {
-    color: #cc66ff;
-    text-shadow: 0 0 8px #aa44ff;
+    color: var(--oracle-texte);
+    text-shadow: 0 0 8px var(--oracle-accent);
 }

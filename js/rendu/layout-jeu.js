@@ -6,7 +6,7 @@ import { estViewportPortrait, obtenirDimensionsViewport } from '../logique/viewp
 export { obtenirDimensionsViewport, estViewportPortrait } from '../logique/viewport-dimensions.js';
 
 export { calculerEchelleInterface } from './layout-calcul.js';
-import { obtenirCanvasMenuFond, menuAnimActif } from '../menu-fond.js';
+import { obtenirCanvasMenuFond, menuAnimActif } from './menu-fond.js';
 import { modeArchiEnCours, modeCoopEnCours } from '../etat/registre-modes.js';
 import { obtenirIdBiomeFond } from './biome-fond.js';
 import { demarrerFondBiome, invaliderCacheFond } from './rendu-fond-biome.js';

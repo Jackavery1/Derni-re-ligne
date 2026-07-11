@@ -7,7 +7,7 @@ import { initialiserApplication } from './moteur.js';
 import { attendreBoutonsPretes } from './ui/ui-init.js';
 import { logger, afficherErreurUtilisateur } from './logger.js';
 import { lireStockage } from './io/progression-stockage.js';
-import { swAutorise, libererSwEnDevLocal } from './sw-dev.js';
+import { swAutorise, libererSwEnDevLocal } from './io/sw-dev.js';
 import { precchargerNavigation } from './ui/navigation-lazy.js';
 import {
     definirProgressionChargement,

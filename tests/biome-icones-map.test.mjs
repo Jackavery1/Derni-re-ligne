@@ -5,7 +5,7 @@ import {
     ICONE_MONDE_HISTOIRE,
     obtenirIdIconeBiome,
     obtenirIdIconeMondeHistoire,
-} from '../js/biome-icones-map.js';
+} from '../js/rendu/biome-icones-map.js';
 
 describe('biome-icones-map', () => {
     it('mappe chaque biome vers une icone pixel valide', () => {
