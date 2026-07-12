@@ -18,8 +18,10 @@ if (!sw.includes('VERSION_SHELL')) {
 if (!sw.includes('VERSION_MEDIAS')) {
     erreurs.push('sw.js VERSION_MEDIAS manquant');
 }
-if (!sw.includes('PRECACHE:DEBUT')) {
-    erreurs.push('sw.js marqueurs PRECACHE manquants');
+
+const swPrecacheList = readFileSync('sw-precache-list.js', 'utf8');
+if (!swPrecacheList.includes('PRECACHE:DEBUT')) {
+    erreurs.push('sw-precache-list.js marqueurs PRECACHE manquants');
 }
 
 const readme = readFileSync('README.md', 'utf8');

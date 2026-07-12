@@ -61,6 +61,13 @@ Historique des versions de Dernière Ligne. Format [semver](https://semver.org/)
 - **Build** : options esbuild prod partagées, compression CSS, somme bundle prod ; mute UI extrait (`options-mute-ui.js`)
 - **Git** : hooks Husky en Node (Windows/Cursor), `npm run release:publish` pour commit + tag + push
 
+### Corrections post-audit (2026-07-13)
+
+- **Gameplay** : buffer 3, coyote 120 ms, courbe Trame, samples SFX boss (`assets/sfx/boss/`), E2E équité/difficulté
+- **Architecture** : `tick-rendu-solo.js`, logger → `js/io/logger.js`
+- **UI/responsive/narration** : tokens contraste, focus trap tutoriel, E2E D9 découpé, helpers mobile
+- SW `dl-shell-v73` ; `verify:versions` lit les marqueurs PRECACHE dans `sw-precache-list.js`
+
 ---
 
 ## [2.5.33] — 2026-06-23
