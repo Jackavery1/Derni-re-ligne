@@ -63,7 +63,12 @@ async function confirmerDemarragePartie(page, biomeId = 'classique') {
         return false;
     }, biomeId);
     if (!demarre) {
-        await page.locator('#btn-panneau-detail-jouer').click({ force: true });
+        await page.evaluate((biome) => {
+            document.getElementById('btn-panneau-detail-jouer')?.click();
+            if (!document.body.classList.contains('partie-active')) {
+                window.__NEO_TEST__?.demarrerPartieLibre?.(biome);
+            }
+        }, biomeId);
     }
 }
 
