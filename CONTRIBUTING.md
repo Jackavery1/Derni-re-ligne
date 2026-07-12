@@ -38,26 +38,27 @@ Parcours fin secrète **avec narratif post-victoire** (sans `sansNarratif`) :
 npm run test:e2e:d9
 ```
 
-Timeout spec D9 complet : **3 600 000 ms** (~60 min). Sous-tests D9b : 4–5 min chacun, inclus dans `test:e2e:audit` (CI rapide). Helpers : `e2e/helpers-campagne-narratif.mjs`, `e2e/helpers-campagne-flux.mjs`. **CI nightly :** workflow `e2e-d9-nightly.yml` pour D9 complet (dimanche 03:00 UTC, `workflow_dispatch` manuel).
+Timeout spec D9 : **3 tests sérialisés** (300 s + 300 s + 360 s max) — mondes 1–8, 9–16, secrets/fin. D9b : variante PR en 3 parties similaires, inclus dans `test:e2e:audit`. Helpers : `e2e/helpers-campagne-narratif.mjs`, `e2e/helpers-narratif-mobile.mjs`. **CI nightly :** workflow `e2e-d9-nightly.yml` (dimanche 03:00 UTC, `workflow_dispatch` manuel).
 
 **Commit manuel :** `npm run commit -- "type(scope): sujet"` (Conventional Commits obligatoire via hook `commit-msg`). **Push :** le hook `pre-push` exécute lint, format, typecheck, cycles, données et tests unitaires (~1–2 min).
 
 ### Helpers E2E (`e2e/`)
 
-| Fichier                            | Rôle                                                          |
-| ---------------------------------- | ------------------------------------------------------------- |
-| `helpers.mjs`                      | Barrel — réexporte tout (importer depuis ici dans les specs)  |
-| `helpers-page.mjs`                 | Prep page, attente `data-neo-test-ready`                      |
-| `helpers-partie.mjs`               | Solo : pause, démarrage, fin de partie                        |
-| `helpers-coop.mjs`                 | Coop 2 joueurs                                                |
-| `helpers-histoire.mjs`             | Carte histoire, cutscenes, recap                              |
-| `helpers-campagne-narratif.mjs`    | Parcours campagne avec narratif (D9, D9b)                     |
-| `helpers-campagne-flux.mjs`        | Flux campagne réutilisable (enchaînement, D15)                |
-| `helpers-responsive-metriques.mjs` | Assertions débordement / safe-area responsive                 |
-| `helpers-archi.mjs`                | Mode architecte (ouverture premier niveau)                    |
-| `helpers-audit-b.mjs`              | Infobulles modes, sélection constellation, vibrations audit B |
-| `helpers-iphone-safe-area.mjs`     | Profils encoche iPhone simulés (audit C14)                    |
-| `helpers-narratif*.mjs`            | Flux cutscene, fragments VERA, overlays                       |
+| Fichier                            | Rôle                                                              |
+| ---------------------------------- | ----------------------------------------------------------------- |
+| `helpers.mjs`                      | Barrel — réexporte tout (importer depuis ici dans les specs)      |
+| `helpers-page.mjs`                 | Prep page, attente `data-neo-test-ready`                          |
+| `helpers-partie.mjs`               | Solo : pause, démarrage, fin de partie                            |
+| `helpers-coop.mjs`                 | Coop 2 joueurs                                                    |
+| `helpers-histoire.mjs`             | Carte histoire, cutscenes, recap                                  |
+| `helpers-campagne-narratif.mjs`    | Parcours campagne avec narratif (D9, D9b)                         |
+| `helpers-narratif-mobile.mjs`      | Métriques boss HUD / mobile narratif (audit D8)                   |
+| `helpers-campagne-flux.mjs`        | Flux campagne réutilisable (enchaînement, D15)                    |
+| `helpers-responsive-metriques.mjs` | Assertions débordement, encoches simulées, boutons tactiles ≥48px |
+| `helpers-archi.mjs`                | Mode architecte (ouverture premier niveau)                        |
+| `helpers-audit-b.mjs`              | Infobulles modes, sélection constellation, vibrations audit B     |
+| `helpers-iphone-safe-area.mjs`     | Profils encoche iPhone simulés (audit C14)                        |
+| `helpers-narratif*.mjs`            | Flux cutscene, fragments VERA, overlays                           |
 
 ### Piège Live Server / file://
 
@@ -66,6 +67,10 @@ Le jeu charge des modules ES (`import` depuis `js/`). **Live Server** et l’ouv
 ### Couverture Vitest (modules ciblés)
 
 `npm run test:coverage` mesure une **liste blanche logique domaine** (`COVERAGE_LOGIC` dans `vitest.config.mjs`, ~30 modules) — pas l’intégralité des ~350 fichiers JS. Rendu canvas, navigation écrans, bus d’événements lourd et préchargement médias sont exclus (couverts par tests dédiés + E2E) ; voir `tests/coverage-perimetre.test.mjs`. Seuils CI : **80 %** sur lines, functions, statements et branches. Les modules **export-only** (`js/codex-histoire.js`) sont exclus du precache SW dev mais restent versionnés pour `npm run sync:data`.
+
+### Viewport, zoom et tactile en partie
+
+Le comportement zoom/scroll est documenté dans [docs/design-tokens.md](docs/design-tokens.md) (section **Zoom et gestures tactiles**) : pas de `user-scalable=no` (accessibilité), `touch-action: manipulation` sur `html/body`, `touch-action: none` limité au plateau (`#zone-jeu`, `#canvas-plateau`) en partie. Hauteurs viewport : préférer `100dvh` (test `tests/css-viewport.test.mjs`). E2E : `audit C15` dans `e2e/audit-c-responsive.spec.mjs`.
 
 ### Checklist manuelle iPhone (encoches réelles)
 

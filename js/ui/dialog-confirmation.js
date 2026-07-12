@@ -1,6 +1,6 @@
 import { assurerFragmentEcran } from './charger-ecrans.js';
 import { activerFocusTrap } from './focus-trap.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 
 /**
  * @param {{

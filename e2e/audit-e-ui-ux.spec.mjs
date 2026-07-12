@@ -1,6 +1,13 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { preparerPageSansSw, attendreApplicationPrete } from './helpers.mjs';
+import {
+    preparerPageSansSw,
+    attendreApplicationPrete,
+    preparerPageModeLibreTutorielActif,
+    attendreNotificationsInitiales,
+    selectionnerBiomeClavier,
+} from './helpers.mjs';
+import { mesurerContrasteCorps, mesurerContrasteTexteDiscret } from './helpers-contraste.mjs';
 
 test.describe('audit E — UI/UX', () => {
     test('E1 — accessibility: no critical violations', async ({ page }) => {
@@ -38,28 +45,16 @@ test.describe('audit E — UI/UX', () => {
         await page.goto('/');
         await attendreApplicationPrete(page);
 
-        const ratio = await page.evaluate(() => {
-            function parseRgb(color) {
-                const m = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-                if (!m) return null;
-                return [Number(m[1]), Number(m[2]), Number(m[3])];
-            }
-            function luminance([r, g, b]) {
-                const [rs, gs, bs] = [r, g, b].map((c) => {
-                    const s = c / 255;
-                    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
-                });
-                return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
-            }
-            const fg = parseRgb(getComputedStyle(document.body).color);
-            const bg = parseRgb(getComputedStyle(document.body).backgroundColor);
-            if (!fg || !bg) return 0;
-            const l1 = luminance(fg);
-            const l2 = luminance(bg);
-            const lighter = Math.max(l1, l2);
-            const darker = Math.min(l1, l2);
-            return (lighter + 0.05) / (darker + 0.05);
-        });
+        const ratio = await mesurerContrasteCorps(page);
+        expect(ratio).toBeGreaterThanOrEqual(4.5);
+    });
+
+    test('E2b — texte discret respecte le contraste AA', async ({ page }) => {
+        await preparerPageSansSw(page);
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+
+        const ratio = await mesurerContrasteTexteDiscret(page);
         expect(ratio).toBeGreaterThanOrEqual(4.5);
     });
 
@@ -78,6 +73,37 @@ test.describe('audit E — UI/UX', () => {
             return outlineVisible || shadowVisible;
         });
         expect(hasFocusRing).toBe(true);
+    });
+
+    test('E3d — tutoriel piege le focus clavier', async ({ page }) => {
+        await preparerPageModeLibreTutorielActif(page);
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+        await attendreNotificationsInitiales(page);
+        await page.locator('#btn-jouer').click();
+        await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+        await selectionnerBiomeClavier(page);
+        await page.locator('#btn-panneau-detail-jouer').click({ force: true });
+
+        const overlay = page.locator('#overlay-tutoriel');
+        await expect(overlay).not.toHaveClass(/element-masque/);
+        await expect(overlay).toHaveAttribute('aria-hidden', 'false');
+
+        const focusPiege = await page.evaluate(() => {
+            const conteneur = document.getElementById('overlay-tutoriel');
+            const bouton = document.getElementById('btn-tutoriel-fermer');
+            if (!conteneur || !bouton) return false;
+            bouton.focus();
+            return document.activeElement === bouton && conteneur.contains(document.activeElement);
+        });
+        expect(focusPiege).toBe(true);
+
+        await page.keyboard.press('Tab');
+        const focusApresTab = await page.evaluate(() => {
+            const conteneur = document.getElementById('overlay-tutoriel');
+            return Boolean(conteneur?.contains(document.activeElement));
+        });
+        expect(focusApresTab).toBe(true);
     });
 
     test('E3c — HUD pause et mute ont un focus visible en partie', async ({ page }) => {

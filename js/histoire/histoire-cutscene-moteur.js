@@ -19,7 +19,7 @@ import {
     demarrerTypewriter,
     afficherTexteComplet,
 } from './histoire-cutscene-typewriter.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 
 /** @param {unknown} entree */
 export function extraireLignesCutscene(entree) {

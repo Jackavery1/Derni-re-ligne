@@ -50,7 +50,7 @@ writeFileSync(
     `/** Journal narratif histoire. */
 import { definirExpressionVera } from '../../js/rendu/portraits-vera.js';
 import { ECRANS } from '../../js/ui/ecrans-config.js';
-import { logger } from '../../js/logger.js';
+import { logger } from '../../js/io/logger.js';
 import { obtenirCanvas } from '../../js/logique/dom-utils.js';
 import { afficherEcranHistoire, cacherEcransHistoire } from '../../js/histoire/histoire-cutscene-nav.js';
 
@@ -94,7 +94,7 @@ writeFileSync(
 import { obtenirHistoireTextesSync } from '../../js/io/charger-histoire-textes.js';
 import { store } from '../../js/etat/store-core.js';
 import { ECRANS } from '../../js/ui/ecrans-config.js';
-import { logger } from '../../js/logger.js';
+import { logger } from '../../js/io/logger.js';
 import {
     definirHumeurRoboCutscene,
     dessinerPortraitCutscene,

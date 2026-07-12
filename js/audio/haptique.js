@@ -50,6 +50,7 @@ export function initialiserHaptique() {
         else if (type === 'hold') vibrer('ui');
         else if (type === 'chute') vibrer('chute');
         else if (type === 'verrou') vibrer('verrou');
+        else if (type.startsWith('boss_')) vibrer('verrou');
     });
 
     ecouter('partie:topout', () => vibrerFinPartie(false));

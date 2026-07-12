@@ -1,3 +1,5 @@
+import { jouerEffetBossProcedural } from './audio-effets-boss-fallback.js';
+
 export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif, obtenirMultEffets }) {
     const multEffets = () => (typeof obtenirMultEffets === 'function' ? obtenirMultEffets() : 1);
     return {
@@ -7,6 +9,18 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif, obtenirMu
 
             const ctx = this.ctx;
             const t = ctx.currentTime;
+            const mult = multEffets();
+
+            if (
+                typeof this.jouerEffetBossSample === 'function' &&
+                this.jouerEffetBossSample(type, mult)
+            ) {
+                return;
+            }
+            if (jouerEffetBossProcedural(ctx, this.gainEffets, type, t, this.volumeEffets, mult)) {
+                return;
+            }
+
             const biomeId = obtenirBiomeActif();
 
             switch (type) {

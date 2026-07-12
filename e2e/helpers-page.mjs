@@ -101,6 +101,25 @@ export async function attendreNotificationsInitiales(page) {
     }
 }
 
+/** @param {import('@playwright/test').Page} page @param {string} idSelect @param {string} valeur */
+export async function forcerValeurSelect(page, idSelect, valeur) {
+    await page.evaluate(
+        ([id, val]) => {
+            const select = document.getElementById(id);
+            if (!select) return;
+            for (const opt of select.options) {
+                if (opt.value === val) {
+                    opt.disabled = false;
+                    select.value = val;
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                    break;
+                }
+            }
+        },
+        [idSelect, valeur]
+    );
+}
+
 /** @param {import('@playwright/test').Page} page */
 export async function fermerInfobulleContexteSiVisible(page) {
     const overlay = page.locator('#overlay-infobulle-contexte');

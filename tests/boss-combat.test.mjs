@@ -18,6 +18,8 @@ import {
     endommagerBossCombat,
     declencherVictoireBoss,
     verifierPhaseBoss,
+    obtenirSonAttaqueBoss,
+    SONS_ATTAQUE_BOSS,
 } from '../js/logique/boss-combat.js';
 
 function reinitialiserEtatBoss() {
@@ -98,5 +100,12 @@ describe('boss-combat', () => {
         await vi.advanceTimersByTimeAsync(DUREE_VICTOIRE_BOSS_MS);
         expect(terminerPartie).toHaveBeenCalledWith(true);
         vi.useRealTimers();
+    });
+
+    it('mappe chaque attaque boss vers un sfx dedie', () => {
+        expect(obtenirSonAttaqueBoss('rangee_braise')).toBe('boss_braise');
+        expect(obtenirSonAttaqueBoss('colonne_gelee')).toBe('boss_gel');
+        expect(obtenirSonAttaqueBoss('distorsion_plateau')).toBe('boss_distorsion');
+        expect(Object.keys(SONS_ATTAQUE_BOSS)).toHaveLength(6);
     });
 });

@@ -102,3 +102,39 @@ test('gameplay difficulty — palier ocean monte apres seuil 40% (audit B)', asy
     expect(resultat.palierApres).toBeGreaterThan(resultat.palierInitial);
     expect(resultat.vitesseApres).toBeLessThan(resultat.vitesseInit);
 });
+
+test('gameplay difficulty — respiration trame paliers 10-14 (audit B G4)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+
+    const resultat = await page.evaluate(async () => {
+        const api = window.__NEO_TEST__;
+        if (!api?.evaluerRespirationDifficulteMonde) return null;
+        return api.evaluerRespirationDifficulteMonde('monde_trame');
+    });
+
+    expect(resultat).not.toBeNull();
+    expect(resultat.respiration).toBe(true);
+    expect(resultat.amplitude).toBeGreaterThanOrEqual(2);
+    const paliers = resultat.paliers.filter((p) => typeof p === 'number');
+    for (let i = 1; i < paliers.length; i++) {
+        expect(paliers[i] - paliers[i - 1]).toBeLessThanOrEqual(2);
+    }
+});
+
+test('gameplay difficulty — prologue sans mort precoce < 30s (audit B G3)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+
+    const resultat = await page.evaluate(async () => {
+        return window.__NEO_TEST__?.evaluerEquiteDemarragePrologue?.();
+    });
+
+    expect(resultat).not.toBeNull();
+    expect(resultat.equiteDemarrage).toBe(true);
+    expect(resultat.surviePassiveAuMoins30s).toBe(true);
+    expect(resultat.vivantActif).toBe(false);
+    expect(resultat.tempsTopOutPassifEstimeMs).toBeGreaterThanOrEqual(30000);
+});

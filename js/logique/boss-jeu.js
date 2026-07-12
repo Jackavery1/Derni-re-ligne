@@ -2,7 +2,7 @@ import { store } from '../etat/store-jeu.js';
 import { etat } from '../etat/store-jeu.js';
 import { BOSS } from '../histoire-donnees.js';
 import { AudioMoteur } from '../audio/audio.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import {
     tickConditionTrame,

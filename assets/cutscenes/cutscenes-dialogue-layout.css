@@ -8,7 +8,7 @@
     padding: 3px 12px 3px 10px;
     border-left: 3px solid currentColor;
     display: inline-block;
-    color: var(--couleur-perso, #ffffff);
+    color: var(--couleur-perso, var(--texte-inverse));
 }
 
 #texte-dialogue-cutscene {
@@ -75,7 +75,7 @@
     left: 0;
     right: 0;
     height: clamp(48px, 9vh, 90px);
-    background: #000;
+    background: var(--contraste-fond);
     z-index: 4;
     pointer-events: none;
     transition: transform 500ms ease;

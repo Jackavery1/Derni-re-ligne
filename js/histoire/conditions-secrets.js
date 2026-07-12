@@ -5,7 +5,7 @@ import { ETAT_HISTOIRE_VIDE } from '../histoire-donnees.js';
 import { sansAccentsE } from '../logique/texte-jeu.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 
 const SEUIL_PLATEAU_TRAME = 0.5;
 export const DUREE_ATTENTE_TRAME_MS = 30000;

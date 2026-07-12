@@ -1,5 +1,5 @@
 /** Export / import records et profil (B10) — fusion locale sans serveur. */
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 
 const PREFIXE_STOCKAGE = 'derniereLigne_';
 

@@ -1,7 +1,7 @@
 import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
 import { obtenirEtatHistoire, mondePeutEtreJoue } from './histoire-mondes.js';
 import { consommerMondeCibleCarte } from './histoire-navigation.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 
 const SEQUENCE_FOCUS = [
     'monde_prologue',
@@ -66,7 +66,7 @@ export function mettreAJourCameraCarte(etatCarte, traiterSelection) {
     const posFinale = etatCarte.positionsNoeuds['monde_finale'];
     const yMax = posFinale ? posFinale.y - h / (ZOOM * 1.8) : cibleY + 800;
 
-    cam.scrollMin = -60;
+    cam.scrollMin = Math.min(-60, cibleY - 40);
     cam.scrollMax = Math.max(cibleY + 40, yMax);
     cam.y = cibleY;
     cam.cibleY = cibleY;

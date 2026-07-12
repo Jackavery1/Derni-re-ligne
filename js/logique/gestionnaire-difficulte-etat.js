@@ -2,7 +2,7 @@ import { DIFFICULTE_MONDES } from '../io/difficulte-mondes-chargement.js';
 import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
 import { SEUILS_COMPLETION } from '../histoire/histoire-mondes.js';
 import { store } from '../etat/store-jeu.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 
 export function creerEtatDifficulteVide() {

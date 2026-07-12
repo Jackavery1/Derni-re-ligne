@@ -4,7 +4,7 @@ import {
     FRAGMENTS_COOP,
     FRAGMENTS_PARTIE,
 } from './ecrans-config.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 
 /** URL absolue d'un fragment HTML, robuste au base href et aux sous-chemins PWA. */
 export function urlFragmentEcran(nom) {

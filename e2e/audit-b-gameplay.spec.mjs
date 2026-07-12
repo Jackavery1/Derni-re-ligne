@@ -119,6 +119,28 @@ test('audit B — animation menu arretee en partie', async ({ page }) => {
     expect(menuInactif).toBe(false);
 });
 
+test('audit B — infobulle grace spawn premiere partie (G3)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.addInitScript(() => {
+        window.__NEO_SILENT_NOTIFS__ = false;
+        localStorage.removeItem('derniereLigne_infobulleGraceSpawn');
+    });
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
+    await page.locator('#btn-jouer').click();
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    await selectionnerBiomeClavier(page);
+    await page.evaluate(() => {
+        document.getElementById('btn-panneau-detail-jouer')?.click();
+    });
+    await attendrePartieVisible(page);
+
+    await expect(page.locator('#overlay-infobulle-contexte')).not.toHaveClass(/element-masque/);
+    await expect(page.locator('#infobulle-contexte-titre')).toContainText(/RESPIRATION/i);
+    await expect(page.locator('#infobulle-contexte-texte')).toContainText(/premiere piece/i);
+});
+
 test('audit B — infobulles modes sprint et sans fin', async ({ page }) => {
     await ouvrirSelectionModes(page);
     await reinitialiserInfobulleMode(page, 'sprint');
@@ -241,6 +263,21 @@ test('audit B — sfx game over apres defaite', async ({ page }) => {
     await page.waitForTimeout(350);
     const sfx = await page.evaluate(() => window.__NEO_TEST__?.obtenirJournalSfxTest?.() ?? []);
     expect(sfx).toContain('game_over');
+});
+
+test('audit B — samples sfx boss charges (G5)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+
+    const etat = await page.evaluate(async () => {
+        return window.__NEO_TEST__?.verifierSamplesBossCharges?.();
+    });
+    expect(Array.isArray(etat)).toBe(true);
+    expect(etat).toHaveLength(6);
+    for (const entree of etat) {
+        expect(entree.charge).toBe(true);
+    }
 });
 
 test('audit B — tutoriel libre avant premiere partie (G3)', async ({ page }) => {

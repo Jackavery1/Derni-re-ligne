@@ -6,7 +6,7 @@ import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { obtenirEtatHistoire } from '../histoire/histoire-mondes.js';
 import { ecouter } from '../etat/bus-jeu.js';
 import { DIFFICULTE_MONDES } from '../io/difficulte-mondes-chargement.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { sansAccentsE } from '../logique/texte-jeu.js';
 import { afficherNotificationNiveau } from './ui-notifications.js';
 import {

@@ -1,7 +1,7 @@
 import { CONFIG } from '../config/config-jeu.js';
 import { etat } from '../etat/store-jeu.js';
 import { obtenirForme } from '../logique/piece-jeu.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { lireStockageJson, ecrireStockageJson } from '../io/progression.js';
 
 const MAX_VERROUS = 200;

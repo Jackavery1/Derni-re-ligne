@@ -1,20 +1,18 @@
 {
-    "date": "2026-07-11T02:12:00.000Z",
+    "date": "2026-07-11T14:25:00.000Z",
     "version": "2.5.34",
-    "session": "optimisation-nettoyage-precache-fonts",
+    "session": "optimisation-nettoyage-e2e-helpers",
     "avant": {
         "bundleJsKo": 578,
-        "entreePrincipaleKo": 12,
-        "chunksJs": 157,
-        "precacheProdKo": 1162.2
-    },
-    "apres": {
-        "bundleJsKo": 578,
-        "budgetExclusPrecacheKo": 20,
-        "policesDiffereesPrecacheKo": 30,
         "entreePrincipaleKo": 12,
         "chunksJs": 169,
         "precacheProdKo": 1109.7
     },
-    "notes": "Precache prod -52.5 Ko (budget-exclus + Crimson Pro différées) ; boot sans document.fonts.ready"
+    "apres": {
+        "bundleJsKo": 578,
+        "entreePrincipaleKo": 12,
+        "chunksJs": 169,
+        "precacheProdKo": 1110.1
+    },
+    "notes": "Session nettoyage E2E (helpers factorises, exports morts). Bundle stable ; pas de phase 6 (splitting) necessaire."
 }

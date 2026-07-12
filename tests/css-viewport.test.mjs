@@ -97,10 +97,13 @@ describe('css viewport mobile', () => {
         );
     });
 
-    it('menus autorisent pinch-zoom, partie active le bloque', () => {
+    it('menus autorisent pinch-zoom, plateau bloque les gestures tactiles', () => {
         const variables = readFileSync(join(STYLES_DIR, 'variables.css'), 'utf8');
+        const hud = readFileSync(join(STYLES_DIR, 'interface-jeu-hud.css'), 'utf8');
         expect(variables).toMatch(/html,\s*\nbody[\s\S]*?touch-action:\s*manipulation/);
-        expect(variables).toMatch(/body\.partie-active[\s\S]*?touch-action:\s*none/);
+        expect(hud).toMatch(/#zone-jeu[\s\S]*?touch-action:\s*none/);
+        expect(hud).toMatch(/#canvas-plateau[\s\S]*?touch-action:\s*none/);
+        expect(hud).toMatch(/#btn-pause[\s\S]*?touch-action:\s*manipulation/);
     });
 
     it('plateau solo expose aria-describedby vers annonce-jeu', () => {

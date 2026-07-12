@@ -54,6 +54,7 @@
         "audit:lighthouse:mobile": "npm run build && npx --yes @lhci/cli autorun --config=lighthouserc-mobile.cjs",
         "media:icones": "node scripts/compresser-icones.mjs",
         "media:musique": "node scripts/convertir-musique.mjs",
+        "media:sfx-boss": "node scripts/generer-sfx-boss.mjs",
         "media:scenes": "node scripts/convertir-scenes.mjs",
         "media:scenes:force": "node scripts/convertir-scenes.mjs --force",
         "media:polices": "node scripts/preparer-polices.mjs",

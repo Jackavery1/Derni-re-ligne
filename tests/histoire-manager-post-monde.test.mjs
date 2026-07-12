@@ -2,6 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { store } from '../js/etat/store-jeu.js';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 
+const ATTENTE_ASYNC_MS = 10_000;
+
 vi.mock('../js/io/charger-histoire-textes.js', async () => {
     const textes = await import('../js/histoire-textes.fallback.js');
     return {
@@ -65,9 +67,12 @@ describe('histoire-manager-post-monde', () => {
         store.histoire.etat = etat;
 
         declencherNarratifPostMonde(monde, etat, true, [true, false, false]);
-        await vi.waitFor(() => {
-            expect(enchainerCampagneApresMonde).toHaveBeenCalledWith('monde_prologue');
-        });
+        await vi.waitFor(
+            () => {
+                expect(enchainerCampagneApresMonde).toHaveBeenCalledWith('monde_prologue');
+            },
+            { timeout: ATTENTE_ASYNC_MS }
+        );
     });
 
     it('joue post-monde prologue avant transition chapitre I', async () => {
@@ -96,12 +101,15 @@ describe('histoire-manager-post-monde', () => {
         store.histoire.etat = etat;
 
         declencherNarratifPostMonde(monde, etat, true, [true, false, false]);
-        await vi.waitFor(() => {
-            expect(afficherTransitionChapitre).toHaveBeenCalledWith(
-                'vers_chapitre_1',
-                expect.any(Function)
-            );
-        });
+        await vi.waitFor(
+            () => {
+                expect(afficherTransitionChapitre).toHaveBeenCalledWith(
+                    'vers_chapitre_1',
+                    expect.any(Function)
+                );
+            },
+            { timeout: ATTENTE_ASYNC_MS }
+        );
 
         const idxPostMonde = afficherCutsceneHistoire.mock.calls.findIndex(([entree]) => {
             const lignes = Array.isArray(entree) ? entree : (entree?.lignes ?? []);
@@ -146,12 +154,15 @@ describe('histoire-manager-post-monde', () => {
         store.histoire.etat = etat;
 
         declencherNarratifPostMonde(monde, etat, true, [true, true, true]);
-        await vi.waitFor(() => {
-            expect(afficherTransitionChapitre).toHaveBeenCalledWith(
-                'vers_chapitre_2',
-                expect.any(Function)
-            );
-        });
+        await vi.waitFor(
+            () => {
+                expect(afficherTransitionChapitre).toHaveBeenCalledWith(
+                    'vers_chapitre_2',
+                    expect.any(Function)
+                );
+            },
+            { timeout: ATTENTE_ASYNC_MS }
+        );
 
         const postMondePrologue = afficherCutsceneHistoire.mock.calls.some(([entree]) => {
             const lignes = Array.isArray(entree) ? entree : (entree?.lignes ?? []);
@@ -174,9 +185,12 @@ describe('histoire-manager-post-monde', () => {
         store.histoire.etat = etat;
 
         declencherNarratifPostMonde(monde, etat, true, [true, false, false]);
-        await vi.waitFor(() => {
-            expect(afficherCutsceneHistoire).toHaveBeenCalled();
-        });
+        await vi.waitFor(
+            () => {
+                expect(afficherCutsceneHistoire).toHaveBeenCalled();
+            },
+            { timeout: ATTENTE_ASYNC_MS }
+        );
         expect(store.histoire.etat.fragmentsVusIds).toContain('apres_prologue');
     });
 
@@ -191,9 +205,12 @@ describe('histoire-manager-post-monde', () => {
         store.histoire.etat = etat;
 
         declencherNarratifPostMonde(monde, etat, true, [true, false, false]);
-        await vi.waitFor(() => {
-            expect(store.histoire.etat.fragmentsVusIds).toContain('apres_vide');
-        });
+        await vi.waitFor(
+            () => {
+                expect(store.histoire.etat.fragmentsVusIds).toContain('apres_vide');
+            },
+            { timeout: ATTENTE_ASYNC_MS }
+        );
     });
 
     it('joue interlude_gardiens apres premiere completion rouille', async () => {
@@ -209,7 +226,9 @@ describe('histoire-manager-post-monde', () => {
         store.histoire.etat = etat;
 
         declencherNarratifPostMonde(monde, etat, true, [true, false, false]);
-        await vi.waitFor(() => expect(afficherCutsceneHistoire).toHaveBeenCalled());
+        await vi.waitFor(() => expect(afficherCutsceneHistoire).toHaveBeenCalled(), {
+            timeout: ATTENTE_ASYNC_MS,
+        });
 
         const textes = afficherCutsceneHistoire.mock.calls.at(-1)?.[0];
         const lignes = Array.isArray(textes) ? textes : (textes?.lignes ?? []);

@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { attendreNotificationsInitiales } from './helpers-page.mjs';
+import { attendreNotificationsInitiales, forcerValeurSelect } from './helpers-page.mjs';
 export {
     obtenirScenePostMonde,
     MARQUEURS_NARRATIFS_POST_MONDE,
@@ -205,21 +205,50 @@ export async function parcourirVictoireBossJusquaPivot(page, bossKey) {
 
 /** @param {import('@playwright/test').Page} page @param {string} mondeId */
 export async function lancerMondeDepuisCarte(page, mondeId) {
+    await expect(page.locator(`#histoire-monde-clavier option[value="${mondeId}"]`)).toBeAttached({
+        timeout: 15000,
+    });
     await page.locator('#histoire-monde-clavier').selectOption(mondeId, { force: true });
-    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await forcerValeurSelect(page, 'histoire-monde-clavier', mondeId);
+    await expect(page.locator('#histoire-monde-details')).not.toHaveClass(
+        /histoire-panneau-masque/,
+        {
+            timeout: 10000,
+        }
+    );
+    await page.evaluate(async (id) => {
+        const { demarrerMondeHistoire } = await import('/js/histoire/histoire-session.js');
+        demarrerMondeHistoire(id);
+    }, mondeId);
     await expect
-        .poll(async () => {
-            return page.evaluate(() => {
-                const cutscene = document.getElementById('ecran-histoire-cutscene');
-                const cutsceneVisible =
-                    cutscene &&
-                    (cutscene.classList.contains('actif') ||
-                        cutscene.classList.contains('cutscene-mode-dialogue') ||
-                        cutscene.classList.contains('cutscene-mode-narration'));
-                const partie = document.body.classList.contains('partie-active');
-                return cutsceneVisible || partie;
-            });
-        })
+        .poll(
+            async () => {
+                return page.evaluate(() => {
+                    const cutscene = document.getElementById('ecran-histoire-cutscene');
+                    const texteDialogue =
+                        document.getElementById('texte-dialogue-cutscene')?.textContent?.trim() ??
+                        '';
+                    const texteNarration =
+                        document.getElementById('texte-narration-cutscene')?.textContent?.trim() ??
+                        '';
+                    const cutsceneOuverte =
+                        cutscene?.classList.contains('actif') ||
+                        Boolean(
+                            document.getElementById('btn-cutscene-suivant')?.offsetParent ||
+                            document.getElementById('btn-cutscene-passer')?.offsetParent
+                        ) ||
+                        texteDialogue.length > 0 ||
+                        texteNarration.length > 0;
+                    const partie = document.body.classList.contains('partie-active');
+                    const objectifs =
+                        document
+                            .getElementById('overlay-objectifs-pre')
+                            ?.classList.contains('objectif-overlay-visible') ?? false;
+                    return cutsceneOuverte || partie || objectifs;
+                });
+            },
+            { timeout: 30000, intervals: [100, 200, 400] }
+        )
         .toBe(true);
     await attendreTypewriterInactif(page, 10000);
 }

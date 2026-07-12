@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { formaterRapportErreurs, copierRapportErreurs, logger, sessionId } from '../js/logger.js';
+import {
+    formaterRapportErreurs,
+    copierRapportErreurs,
+    logger,
+    sessionId,
+} from '../js/io/logger.js';
 
 describe('logger rapport erreurs', () => {
     /** @type {Map<string, string>} */

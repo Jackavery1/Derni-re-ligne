@@ -1,8 +1,9 @@
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { creerContexteAudio } from '../logique/dom-utils.js';
 import { GAMMES, TONIQUES_BIOMES, MUSIQUE_BIOMES } from './audio-donnees.js';
 import { creerMethodesMusique } from './audio-musique.js';
 import { creerMethodesEffets } from './audio-effets.js';
+import { creerMethodesEffetsBoss } from './audio-fichiers-effets-boss.js';
 import {
     obtenirMultiplicateurEffetsBiome,
     obtenirMultiplicateurMusiqueBiome,
@@ -84,6 +85,7 @@ export const AudioMoteur = {
             this.initialise = true;
             this.actif = true;
             this.appliquerVolumes();
+            void this.prechargerEffetsBossSamples?.();
         } catch (err) {
             logger.warn('Web Audio API non disponible :', err);
         }
@@ -133,6 +135,7 @@ export const AudioMoteur = {
         obtenirBiomeActif: () => obtenirBiomeActifFn(),
         obtenirMultEffets: () => obtenirMultiplicateurEffetsBiome(obtenirBiomeActifFn()),
     }),
+    ...creerMethodesEffetsBoss(),
 };
 
 export { GAMMES, TONIQUES_BIOMES, MUSIQUE_BIOMES };

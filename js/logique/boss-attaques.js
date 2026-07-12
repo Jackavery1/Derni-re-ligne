@@ -1,5 +1,5 @@
 import { CONFIG } from '../config/config-jeu.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 
 export const COULEUR_BRAISE = '#cc2200';
 export const COULEUR_GLACE_B = '#aaeeff';

@@ -1,4 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+vi.mock('../js/ui/focus-trap.js', () => ({
+    activerFocusTrap: vi.fn(() => () => {}),
+}));
+
+import { activerFocusTrap } from '../js/ui/focus-trap.js';
 import {
     initialiserTutoriel,
     afficherTutorielContextuel,
@@ -10,7 +16,13 @@ import {
 
 function creerElement(initialClasses = ['element-masque']) {
     const classes = new Set(initialClasses);
+    const attributes = { 'aria-hidden': 'true' };
     return {
+        attributes,
+        setAttribute: (name, value) => {
+            attributes[name] = value;
+        },
+        getAttribute: (name) => attributes[name],
         classList: {
             contains: (c) => classes.has(c),
             add: (c) => {
@@ -51,6 +63,7 @@ describe('tutoriel', () => {
 
     beforeEach(() => {
         localStorage.clear();
+        vi.mocked(activerFocusTrap).mockClear();
         overlay = creerElement(['element-masque']);
         btnFermer = creerElement([]);
         corps = creerElement([]);
@@ -81,6 +94,7 @@ describe('tutoriel', () => {
     it('affiche le tutoriel prologue avec contrôles la première fois', () => {
         afficherTutorielPrologueApresCutscene();
         expect(overlay.classList.contains('element-masque')).toBe(false);
+        expect(overlay.getAttribute('aria-hidden')).toBe('false');
         expect(corps.replaceChildren).toHaveBeenCalled();
         expect(blocControles.replaceChildren).toHaveBeenCalled();
         expect(blocControles.classList.contains('element-masque')).toBe(false);
@@ -121,6 +135,12 @@ describe('tutoriel', () => {
 
     it('le tutoriel libre compte 3 slides', () => {
         expect(NOMBRE_SLIDES_LIBRE).toBe(3);
+    });
+
+    it('active le focus trap a l ouverture du tutoriel libre', () => {
+        afficherTutorielLibreAvantPartie();
+        expect(activerFocusTrap).toHaveBeenCalledTimes(1);
+        expect(activerFocusTrap.mock.calls[0][0]).toBe(overlay);
     });
 
     it('appelle onCompris directement si le tutoriel libre a déjà été vu', () => {

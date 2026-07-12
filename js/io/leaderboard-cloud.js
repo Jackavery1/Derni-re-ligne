@@ -1,5 +1,5 @@
 /** Classement global B10 via Supabase REST (opt-in, même config que sync cloud). */
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import {
     syncCloudActif,
     syncCloudConfigure,

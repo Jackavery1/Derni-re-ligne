@@ -33,7 +33,7 @@
     font-family: var(--font-titre);
     font-size: clamp(9px, 1.3vw, 14px);
     letter-spacing: 1px;
-    color: #e0f8ff;
+    color: var(--cutscene-pixel-texte);
 }
 .cutscene-police-narratif {
     font-family: var(--font-narratif);
@@ -52,7 +52,7 @@
     font-family: 'Courier New', monospace;
     font-size: clamp(11px, 1.3vw, 14px);
     letter-spacing: 1px;
-    color: #aaffaa;
+    color: var(--cutscene-terminal-texte);
 }
 .cutscene-police-ui {
     font-family: var(--font-ui);
@@ -121,7 +121,7 @@
 }
 .btn-cutscene:focus-visible,
 .btn-cutscene-passer:focus-visible {
-    outline: 2px solid var(--cyan, #00f5ff);
+    outline: 2px solid var(--cyan);
     outline-offset: 2px;
 }
 .btn-cutscene-hint {

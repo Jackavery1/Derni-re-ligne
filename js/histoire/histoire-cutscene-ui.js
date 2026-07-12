@@ -1,4 +1,4 @@
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { POSITION_PERSONNAGE } from './histoire-cutscene-config.js';
 import { lierCanvasFondCutscene } from './histoire-cutscene-fonds.js';
 

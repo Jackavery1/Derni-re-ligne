@@ -1,5 +1,5 @@
 /** Couche localStorage : clés autorisées, lecture/écriture sécurisée. */
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { estCleProgressionB10 } from './progression-export-b10.js';
 
 export const PREFIXE_STOCKAGE = 'derniereLigne_';

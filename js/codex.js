@@ -1,7 +1,7 @@
 import { statsGlobales } from './achievements.js';
 import { lireStockageJson, ecrireStockageJson, estTableauIds } from './io/progression.js';
 import { creerFileNotifications } from './ui/notifications-file.js';
-import { logger } from './logger.js';
+import { logger } from './io/logger.js';
 import { sansAccentsE } from './logique/texte-jeu.js';
 import { rendreIconeSurCanvas } from './rendu/icones-pixel.js';
 import { obtenirIdIcone, obtenirAccentEntree } from './codex/codex-icones-map.js';

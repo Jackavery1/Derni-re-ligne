@@ -2,7 +2,7 @@
 import { CONFIG_FOND_CUTSCENE } from './histoire-cutscene-config.js';
 import { obtenirScene, obtenirImageScenePrechargee, precharger } from '../rendu/scenes-cutscene.js';
 import { obtenirEffetsAccessibiliteReduits } from '../ui/accessibilite.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { dessinerFondCanvas } from './histoire-cutscene-fonds-animes.js';
 import { dessinerImageScene } from './histoire-cutscene-fonds-scenes.js';
 

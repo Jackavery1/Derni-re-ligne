@@ -40,7 +40,17 @@
     --contraste-fond: #000000;
     --contraste-texte: #ffffff;
     --texte-dim: rgba(224, 224, 255, 0.75);
-    --texte-discret: rgba(224, 224, 255, 0.52);
+    --texte-discret: var(--texte-dim);
+
+    /* Cutscenes — thèmes et typo */
+    --cutscene-fond-robo-1: #001a2e;
+    --cutscene-fond-robo-2: #010a14;
+    --cutscene-fond-vera-1: #1a0010;
+    --cutscene-fond-vera-2: #0a0005;
+    --cutscene-fond-systeme: #000d00;
+    --cutscene-fond-narrateur: #020210;
+    --cutscene-pixel-texte: #e0f8ff;
+    --cutscene-terminal-texte: #aaffaa;
 
     --fond-chargement-1: #2a1048;
     --fond-chargement-2: #120818;
@@ -200,9 +210,7 @@ body {
     touch-action: manipulation;
 }
 
-body.partie-active {
-    touch-action: none;
-}
+/* Scroll/zoom : overflow hidden sur html/body ; gestures bloquées sur le plateau uniquement (voir #canvas-plateau). */
 
 /* Grille de fond animée */
 body::before {

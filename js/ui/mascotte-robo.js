@@ -6,7 +6,7 @@ import {
     definirClignementInactifMascotte,
     demarrerBoucleRobo,
 } from '../rendu/rendu-robo.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 
 /** @param {string} humeur */
 export function convertirHumeurVersCanvas(humeur) {

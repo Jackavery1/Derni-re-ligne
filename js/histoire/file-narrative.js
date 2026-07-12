@@ -1,4 +1,4 @@
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 
 /**
  * @typedef {{ id: string, condition?: () => boolean, executer: (suivant: () => void) => void }} EtapeNarrative

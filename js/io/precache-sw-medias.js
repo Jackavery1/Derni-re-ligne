@@ -1,4 +1,4 @@
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 
 function planifierIdle(callback) {
     if (typeof requestIdleCallback === 'function') {

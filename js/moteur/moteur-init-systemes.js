@@ -1,4 +1,4 @@
-import { copierRapportErreurs } from '../logger.js';
+import { copierRapportErreurs } from '../io/logger.js';
 import { configurerMeteo } from '../logique/meteo.js';
 import { configurerReliques } from '../logique/reliques.js';
 import { AudioMoteur, configurerAudioMoteur } from '../audio/audio.js';

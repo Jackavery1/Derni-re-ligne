@@ -7,11 +7,15 @@ import {
     assertHumeurPortraitCutscene,
     parcourirVictoireBossJusquaPivot,
     lancerMondeDepuisCarte,
+    lancerMondeBossBrasier,
     ouvrirIntroHistoire,
+    attendreSceneCutsceneActive,
     ETAT_ENTREE_COSMOS,
     ETAT_ENTREE_VIDE,
     ETAT_ENTREE_TRAME,
 } from './helpers.mjs';
+import { preparerEtatPremiereEntree } from './etats-histoire-entrees.mjs';
+import { SCENES_ENTREE_CAMPAGNE } from './helpers-narratif-donnees.mjs';
 import {
     ETAT_HISTOIRE_BOSS_BRASIER,
     ETAT_AVANT_BOSS_SENTINELLE,
@@ -22,6 +26,7 @@ import {
     ETAT_AVANT_FIN_SECRETE,
 } from './etats-histoire.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { mesurerBossPortraitHud, assertBossPortraitDansEcran } from './helpers-narratif-mobile.mjs';
 
 test('victoire Brasier — transition seuil_brasier → labo (audit D)', async ({ page }) => {
     test.setTimeout(45000);
@@ -197,6 +202,14 @@ test('entree cosmos — humeur distorsion menacante (audit D)', async ({ page })
     await assertHumeurPortraitCutscene(page, 'distorsion', 'menacante');
 });
 
+test('entree vide — scene vide_errance active (audit D3)', async ({ page }) => {
+    test.setTimeout(90000);
+    const etat = preparerEtatPremiereEntree('monde_vide');
+    await ouvrirCarteHistoire(page, etat);
+    await lancerMondeDepuisCarte(page, 'monde_vide');
+    await attendreSceneCutsceneActive(page, SCENES_ENTREE_CAMPAGNE.monde_vide);
+});
+
 test('entree vide — humeur distorsion menacante (audit D)', async ({ page }) => {
     test.setTimeout(45000);
     await ouvrirCarteHistoire(page, ETAT_ENTREE_VIDE);
@@ -211,4 +224,16 @@ test('entree trame — humeur VERA inquiete (audit D)', async ({ page }) => {
     await lancerMondeDepuisCarte(page, 'monde_trame');
     await avancerCutsceneJusquaPivot(page, /Tu es là/i);
     await assertHumeurPortraitCutscene(page, 'vera', 'inquiete');
+});
+
+test('boss HUD 480px — portrait visible sans debordement (audit D8)', async ({ page }) => {
+    test.setTimeout(60000);
+    await page.setViewportSize({ width: 480, height: 800 });
+    await ouvrirCarteHistoire(page, ETAT_HISTOIRE_BOSS_BRASIER);
+    await lancerMondeBossBrasier(page);
+
+    await expect(page.locator('#canvas-boss-portrait')).toBeVisible();
+    await expect(page.locator('#boss-nom-affiche')).toContainText('BRASIER');
+
+    assertBossPortraitDansEcran(await mesurerBossPortraitHud(page));
 });

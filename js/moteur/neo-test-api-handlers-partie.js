@@ -23,5 +23,14 @@ export function creerHandlersPartie() {
         obtenirColonnePieceActive: () =>
             typeof etat.pieceActuelle?.x === 'number' ? etat.pieceActuelle.x : null,
         obtenirMusiqueActive: () => AudioMoteur.biomeMusique,
+        obtenirDelaiPremierEvenementVivant: async (biomeId = 'lave') => {
+            const { COMPORTEMENTS_VIVANT } = await import('../logique/vivant-comportements.js');
+            const { delaiMinimumVivantEffectif } = await import('../logique/vivant.js');
+            const config = COMPORTEMENTS_VIVANT[biomeId];
+            if (!config) return null;
+            const delaiMs = delaiMinimumVivantEffectif(config, 1);
+            const frames60 = Math.floor((delaiMs * 60) / 1000);
+            return { biomeId, delaiMs, frames60, delaiMinimumConfig: config.delaiMinimum };
+        },
     };
 }

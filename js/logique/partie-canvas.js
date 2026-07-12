@@ -1,4 +1,4 @@
-import { logger, afficherErreurUtilisateur } from '../logger.js';
+import { logger, afficherErreurUtilisateur } from '../io/logger.js';
 import { obtenirCanvas } from './dom-utils.js';
 import {
     etat,

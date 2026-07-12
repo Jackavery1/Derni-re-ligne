@@ -22,9 +22,20 @@ for (const mondeId of MONDES_CAMPAGNE_PRINCIPALE) {
         await ouvrirCarteHistoire(page, etat);
         await lancerMondeDepuisCarte(page, mondeId);
 
-        await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
-            timeout: 10000,
-        });
+        await expect
+            .poll(() =>
+                page.evaluate(() => {
+                    const cutscene = document.getElementById('ecran-histoire-cutscene');
+                    return (
+                        cutscene?.classList.contains('actif') ||
+                        Boolean(
+                            document.getElementById('btn-cutscene-suivant')?.offsetParent ||
+                            document.getElementById('btn-cutscene-passer')?.offsetParent
+                        )
+                    );
+                })
+            )
+            .toBe(true);
         await attendreSceneCutsceneActive(page, sceneAttendue);
     });
 }

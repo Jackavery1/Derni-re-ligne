@@ -105,6 +105,7 @@ function ouvrirOverlayTutoriel(overlay, surEchap) {
     desactiverFocusTrap?.();
     desactiverEchapTutoriel?.();
     overlay.classList.remove('element-masque');
+    overlay.setAttribute('aria-hidden', 'false');
     desactiverFocusTrap = activerFocusTrap(overlay);
     /** @param {KeyboardEvent} e */
     const handler = (e) => {
@@ -126,6 +127,7 @@ function fermerTutoriel(cleStockage, onFermer) {
     callbackPrologue = null;
     callbackLibre = null;
     document.getElementById('overlay-tutoriel')?.classList.add('element-masque');
+    document.getElementById('overlay-tutoriel')?.setAttribute('aria-hidden', 'true');
     onFermer?.();
 }
 

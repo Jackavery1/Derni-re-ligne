@@ -1,4 +1,4 @@
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { idPortraitRendu } from '../histoire/histoire-cutscene-config.js';
 
 export const HUMEURS_PERSONNAGES = {

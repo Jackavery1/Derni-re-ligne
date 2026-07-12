@@ -6,7 +6,7 @@
 import { lireStockage, ecrireStockage } from '../io/progression.js';
 import { obtenirHistoireTextesSync, chargerHistoireTextes } from '../io/charger-histoire-textes.js';
 import { ECRANS } from '../ui/ecrans-config.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { activerModeHistoire } from '../etat/mode-histoire.js';
 
 const CLE_INTRO_VUE = 'derniereLigne_introHistoireVue';

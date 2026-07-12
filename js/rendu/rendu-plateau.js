@@ -1,7 +1,7 @@
 /** Orchestration du rendu Canvas du plateau de jeu (fond, blocs, pièces, particules). */
 import { CONFIG } from '../config/config-jeu.js';
 import { meteo } from '../logique/meteo.js';
-import { logger, afficherErreurUtilisateur } from '../logger.js';
+import { logger, afficherErreurUtilisateur } from '../io/logger.js';
 import {
     etat,
     particules,

@@ -1,6 +1,6 @@
 import { PALIERS_VITESSE_MS, VITESSE_PLANCHER_MS } from '../io/difficulte-mondes-chargement.js';
 import { store } from '../etat/store-jeu.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { emettre, ecouter } from '../etat/bus-jeu.js';
 import { obtenirSuiviDifficulte } from './gestionnaire-difficulte-etat.js';
 

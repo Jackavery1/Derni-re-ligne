@@ -96,6 +96,8 @@ function construireListePrecache() {
         ...listerPlat('html', './html/', '.html'),
         ...listerPlat('data', './data/', '.json'),
         ...listerPlat('assets/fonts-dist', './assets/fonts-dist/', '.woff2'),
+        ...listerPlat('assets/sfx/boss', './assets/sfx/boss/', '.ogg'),
+        ...listerPlat('assets/sfx/boss', './assets/sfx/boss/', '.wav'),
     ];
 
     if (modeProd) {

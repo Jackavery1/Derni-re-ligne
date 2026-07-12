@@ -2,7 +2,7 @@
 import { store, etat } from '../etat/store-jeu.js';
 import { ECRANS } from '../ui/ecrans-config.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { definirHumeurRoboCutscene } from '../rendu/portraits-cutscene.js';
 import { afficherEcranHistoire, cacherEcransHistoire } from './histoire-cutscene-nav.js';
 import {

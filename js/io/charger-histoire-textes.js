@@ -1,5 +1,5 @@
 /** Chargement runtime des textes histoire depuis JSON (fallback module source en dev). */
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 
 /** @type {typeof import('../histoire-textes.js') | null} */
 let cache = null;

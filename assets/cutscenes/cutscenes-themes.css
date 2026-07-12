@@ -1,5 +1,10 @@
 #ecran-histoire-cutscene[data-personnage='robo'] {
-    background: radial-gradient(ellipse at 25% 60%, #001a2e 0%, #010a14 60%, #000 100%);
+    background: radial-gradient(
+        ellipse at 25% 60%,
+        var(--cutscene-fond-robo-1) 0%,
+        var(--cutscene-fond-robo-2) 60%,
+        var(--contraste-fond) 100%
+    );
 }
 #ecran-histoire-cutscene[data-personnage='robo'] .cutscene-fond-overlay {
     background: repeating-linear-gradient(
@@ -12,14 +17,19 @@
 }
 
 #ecran-histoire-cutscene[data-personnage='vera'] {
-    background: radial-gradient(ellipse at 75% 30%, #1a0010 0%, #0a0005 55%, #000 100%);
+    background: radial-gradient(
+        ellipse at 75% 30%,
+        var(--cutscene-fond-vera-1) 0%,
+        var(--cutscene-fond-vera-2) 55%,
+        var(--contraste-fond) 100%
+    );
 }
 #ecran-histoire-cutscene[data-personnage='vera'] .cutscene-fond-overlay {
     background: radial-gradient(ellipse at 80% 20%, rgba(255, 0, 110, 0.08) 0%, transparent 60%);
 }
 
 #ecran-histoire-cutscene[data-personnage='distorsion'] {
-    background: #000000;
+    background: var(--contraste-fond);
 }
 #ecran-histoire-cutscene[data-personnage='distorsion'] .cutscene-fond-overlay {
     background: radial-gradient(
@@ -52,7 +62,7 @@
 }
 
 #ecran-histoire-cutscene[data-personnage='systeme'] {
-    background: #000d00;
+    background: var(--cutscene-fond-systeme);
 }
 #ecran-histoire-cutscene[data-personnage='systeme'] .cutscene-fond-overlay {
     background: repeating-linear-gradient(
@@ -68,7 +78,7 @@
 #ecran-histoire-cutscene[data-personnage='sentinelle'],
 #ecran-histoire-cutscene[data-personnage='archiviste'],
 #ecran-histoire-cutscene[data-personnage='avantgarde'] {
-    background: #020210;
+    background: var(--cutscene-fond-narrateur);
 }
 
 .cutscene-portrait-zone {
@@ -112,14 +122,14 @@
     0%,
     90%,
     100% {
-        text-shadow: 0 0 8px #b400ff;
+        text-shadow: 0 0 8px var(--violet);
         transform: translateX(0);
     }
     91% {
         transform: translateX(3px);
         text-shadow:
-            2px 0 #00ffff,
-            -2px 0 #ff006e;
+            2px 0 var(--cyan),
+            -2px 0 var(--rose);
     }
     92% {
         transform: translateX(-2px);

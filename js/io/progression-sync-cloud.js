@@ -1,5 +1,5 @@
 /** Sync cloud automatique B10 via Supabase REST (opt-in). */
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { exporterProgressionB10, importerProgressionB10 } from './progression-stockage.js';
 import {
     syncCloudActif,

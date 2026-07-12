@@ -3,7 +3,7 @@ import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-e
 import { creerFile } from './file-narrative.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { extraireLignesCutscene } from './histoire-cutscene-moteur.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import {
     SCENE_DEFAUT_POST_MONDE,
     SCENE_DEFAUT_TRANSITION_CHAPITRE,

@@ -47,6 +47,7 @@
 #zone-jeu {
     position: relative;
     flex-shrink: 0;
+    touch-action: none;
 }
 
 #canvas-plateau {
@@ -130,6 +131,7 @@
     width: 100%;
     transition: all 0.2s;
     letter-spacing: 1px;
+    touch-action: manipulation;
 }
 #btn-pause:hover {
     border-color: var(--theme-accent, var(--cyan));
@@ -153,6 +155,7 @@
     transition: all 0.2s;
     letter-spacing: 1px;
     margin-top: 6px;
+    touch-action: manipulation;
 }
 #btn-mute:hover {
     border-color: var(--cyan);

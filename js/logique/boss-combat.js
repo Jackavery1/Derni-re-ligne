@@ -17,6 +17,26 @@ import {
     reagirRoboBossVaincu,
 } from '../ui/mascotte-robo.js';
 import { degelColonnes, executerAttaqueBoss } from './boss-attaques.js';
+
+/** @type {Record<string, string>} */
+export const SONS_ATTAQUE_BOSS = {
+    rangee_braise: 'boss_braise',
+    colonne_gelee: 'boss_gel',
+    inverser_controles: 'boss_controles',
+    faux_fantome: 'boss_fantome',
+    distorsion_plateau: 'boss_distorsion',
+    permutation_colonnes: 'boss_permutation',
+};
+
+/** @param {string} typeAttaque */
+export function obtenirSonAttaqueBoss(typeAttaque) {
+    return SONS_ATTAQUE_BOSS[typeAttaque] ?? null;
+}
+
+function jouerSonAttaqueBoss(typeAttaque) {
+    const son = obtenirSonAttaqueBoss(typeAttaque);
+    if (son && !AudioMoteur.muet) AudioMoteur.son(son);
+}
 import {
     enqueueDialogueBoss,
     notifierTransitionPhaseBoss,
@@ -118,34 +138,34 @@ function afficherEffetAttaqueBoss(type, dureeMs, resultat) {
                 enqueueDialogueBoss('🔥 BRAISE CONTENUE');
             } else {
                 enqueueDialogueBoss('🔥 RANGÉE DE BRAISE');
-                if (!AudioMoteur.muet) AudioMoteur.son('verrou');
+                jouerSonAttaqueBoss(type);
             }
             break;
         case 'colonne_gelee': {
             const colonnes = /** @type {number[] | undefined} */ (resultat);
             if (colonnes?.length) {
                 enqueueDialogueBoss(`❄ COLONNES ${colonnes.map((c) => c + 1).join(', ')} GELÉES`);
-                if (!AudioMoteur.muet) AudioMoteur.son('hold');
+                jouerSonAttaqueBoss(type);
             }
             break;
         }
         case 'inverser_controles':
             enqueueDialogueBoss('⚠ CONTRÔLES INVERSÉS');
-            if (!AudioMoteur.muet) AudioMoteur.son('niveau');
+            jouerSonAttaqueBoss(type);
             break;
         case 'faux_fantome':
             enqueueDialogueBoss('⚠ FANTOME ROSE = PIÈGE');
-            if (!AudioMoteur.muet) AudioMoteur.son('rotation');
+            jouerSonAttaqueBoss(type);
             break;
         case 'distorsion_plateau':
             enqueueDialogueBoss('∞ DISTORSION ACTIVE');
-            if (!AudioMoteur.muet) AudioMoteur.son('rotation');
+            jouerSonAttaqueBoss(type);
             break;
         case 'permutation_colonnes': {
             const cols = /** @type {[number, number] | null | undefined} */ (resultat);
             if (cols) {
                 enqueueDialogueBoss(`🌀 PERMUTATION DES COLONNES ${cols[0] + 1} ↔ ${cols[1] + 1}`);
-                if (!AudioMoteur.muet) AudioMoteur.son('rotation');
+                jouerSonAttaqueBoss(type);
             }
             break;
         }

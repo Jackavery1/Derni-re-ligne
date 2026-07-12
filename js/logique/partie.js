@@ -63,7 +63,7 @@ import { store } from '../etat/store-jeu.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { obtenirIdBiomeFond } from '../rendu/biome-fond.js';
 import { initialiserAudioBiome } from '../audio/audio-partie.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
 import { assurerRessourcesPartie } from '../io/prefetch-ressources-partie.js';
 import { demarrerBoss, arreterBoss } from './boss-jeu.js';

@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'fs';
 
 const lines = readFileSync('js/achievements.js', 'utf8').split('\n');
 
-const statsHeader = `import { logger } from '../../js/logger.js';
+const statsHeader = `import { logger } from '../../js/io/logger.js';
 import {
     lireStockageJson,
     ecrireStockageJson,

@@ -1,49 +1,95 @@
 import { test, expect } from '@playwright/test';
-import { terminerCutscenesVersEcranFin } from './helpers.mjs';
+import { ouvrirCarteHistoire, terminerCutscenesVersEcranFin } from './helpers.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-import { parcourirCampagneFinSecreteNarratif } from './helpers-campagne-narratif.mjs';
+import { MONDES_CAMPAGNE_PRINCIPALE } from './etats-histoire.mjs';
+import {
+    OPTIONS_CAMPAGNE_D9,
+    OPTIONS_CAMPAGNE_JALON,
+    parcourirMondesCampagneNarratif,
+    victoireMondeAvecNarratif,
+    preparerConditionsTrameOrganiques,
+} from './helpers-campagne-narratif.mjs';
 
-test('campagne complete — flags fin secrete avec narratif post-victoire (audit D9) @slow', async ({
-    page,
-}) => {
-    test.setTimeout(3_600_000);
-    const etatDepart = {
-        ...ETAT_HISTOIRE_VIDE,
-        mondesDejaMontres: ['monde_prologue'],
-    };
+const CAMPAGNE_PARTIE_1 = MONDES_CAMPAGNE_PRINCIPALE.slice(0, 8);
+const CAMPAGNE_PARTIE_2 = MONDES_CAMPAGNE_PRINCIPALE.slice(8);
 
-    await parcourirCampagneFinSecreteNarratif(page, etatDepart);
-
-    const progression = await page.evaluate(async () => {
-        const brut = localStorage.getItem('derniereLigne_histoire');
-        const sauve = brut ? JSON.parse(brut) : {};
-        const typeFin = await window.__NEO_TEST__?.obtenirTypeFinHistoire?.();
-        return {
-            typeFin,
-            mondesCompletes: sauve.mondesCompletes ?? [],
-            finSecreteObtenue: sauve.conditionsParadoxe?.finSecreteObtenue === true,
+test.describe.serial('audit D9 — campagne complete avec narratif @slow', () => {
+    test('partie principale — mondes 1 à 8', async ({ page }) => {
+        test.setTimeout(300_000);
+        const etatDepart = {
+            ...ETAT_HISTOIRE_VIDE,
+            mondesDejaMontres: ['monde_prologue'],
         };
+        await ouvrirCarteHistoire(page, etatDepart);
+        await parcourirMondesCampagneNarratif(page, CAMPAGNE_PARTIE_1, OPTIONS_CAMPAGNE_D9);
     });
 
-    expect(progression.typeFin).toBe('fin_secrete');
-    expect(progression.mondesCompletes).toContain('monde_trame');
-    expect(progression.mondesCompletes).toContain('monde_finale');
-
-    await page.evaluate(async () => {
-        await window.__NEO_TEST__?.declencherFinHistoire?.('fin_secrete');
-    });
-    await terminerCutscenesVersEcranFin(page);
-    await expect(page.locator('#ecran-histoire-fin')).toHaveAttribute('data-fin', 'fin_secrete');
-    await expect(page.locator('#histoire-fin-titre')).toContainText(/LIGNE PARFAITE/i);
-
-    const apresOutro = await page.evaluate(() => {
-        const brut = localStorage.getItem('derniereLigne_histoire');
-        const sauve = brut ? JSON.parse(brut) : {};
-        return {
-            finSecreteObtenue: sauve.conditionsParadoxe?.finSecreteObtenue === true,
-            toutesFin: sauve.toutesFinObtenues ?? [],
+    test('partie principale — mondes 9 à 16', async ({ page }) => {
+        test.setTimeout(300_000);
+        const etatDepart = {
+            ...ETAT_HISTOIRE_VIDE,
+            mondesCompletes: [...CAMPAGNE_PARTIE_1],
+            bossVaincus: ['brasier', 'sentinelle'],
+            mondesDejaMontres: ['monde_prologue', ...CAMPAGNE_PARTIE_1],
         };
+        await ouvrirCarteHistoire(page, etatDepart);
+        await parcourirMondesCampagneNarratif(page, CAMPAGNE_PARTIE_2, OPTIONS_CAMPAGNE_D9);
     });
-    expect(apresOutro.toutesFin).toContain('fin_secrete');
-    expect(apresOutro.finSecreteObtenue).toBe(true);
+
+    test('secrets, fin secrete et flags progression', async ({ page }) => {
+        test.setTimeout(360_000);
+        const etatDepart = {
+            ...ETAT_HISTOIRE_VIDE,
+            mondesCompletes: [...MONDES_CAMPAGNE_PRINCIPALE],
+            mondesCachesDebloques: ['monde_miroir'],
+            mondesDejaMontres: ['monde_prologue', ...MONDES_CAMPAGNE_PRINCIPALE],
+            bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde'],
+            conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 },
+        };
+        await ouvrirCarteHistoire(page, etatDepart);
+
+        await victoireMondeAvecNarratif(page, 'monde_miroir', OPTIONS_CAMPAGNE_JALON);
+        await preparerConditionsTrameOrganiques(page);
+        await parcourirMondesCampagneNarratif(
+            page,
+            ['monde_trame', 'monde_finale'],
+            OPTIONS_CAMPAGNE_JALON
+        );
+
+        const progression = await page.evaluate(async () => {
+            const brut = localStorage.getItem('derniereLigne_histoire');
+            const sauve = brut ? JSON.parse(brut) : {};
+            const typeFin = await window.__NEO_TEST__?.obtenirTypeFinHistoire?.();
+            return {
+                typeFin,
+                mondesCompletes: sauve.mondesCompletes ?? [],
+                finSecreteObtenue: sauve.conditionsParadoxe?.finSecreteObtenue === true,
+            };
+        });
+
+        expect(progression.typeFin).toBe('fin_secrete');
+        expect(progression.mondesCompletes).toContain('monde_trame');
+        expect(progression.mondesCompletes).toContain('monde_finale');
+
+        await page.evaluate(async () => {
+            await window.__NEO_TEST__?.declencherFinHistoire?.('fin_secrete');
+        });
+        await terminerCutscenesVersEcranFin(page);
+        await expect(page.locator('#ecran-histoire-fin')).toHaveAttribute(
+            'data-fin',
+            'fin_secrete'
+        );
+        await expect(page.locator('#histoire-fin-titre')).toContainText(/LIGNE PARFAITE/i);
+
+        const apresOutro = await page.evaluate(() => {
+            const brut = localStorage.getItem('derniereLigne_histoire');
+            const sauve = brut ? JSON.parse(brut) : {};
+            return {
+                finSecreteObtenue: sauve.conditionsParadoxe?.finSecreteObtenue === true,
+                toutesFin: sauve.toutesFinObtenues ?? [],
+            };
+        });
+        expect(apresOutro.toutesFin).toContain('fin_secrete');
+        expect(apresOutro.finSecreteObtenue).toBe(true);
+    });
 });

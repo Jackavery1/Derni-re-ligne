@@ -5,6 +5,7 @@ import {
     preparerPageSansSw,
     attendreApplicationPrete,
     attendreNotificationsInitiales,
+    forcerValeurSelect,
 } from './helpers-page.mjs';
 import { attendreTypewriterInactif } from './helpers-narratif.mjs';
 
@@ -40,12 +41,7 @@ export async function selectionnerBiomeClavier(page, option = { value: 'classiqu
     const valeur = option.value ?? 'classique';
     await expect(select.locator(`option[value="${valeur}"]`)).toBeAttached({ timeout: 15000 });
     await select.selectOption(option.value ? option : { value: valeur }, { force: true });
-    await page.evaluate((id) => {
-        const el = document.getElementById('sel-biome-clavier');
-        if (!el || el.value === id) return;
-        el.value = id;
-        el.dispatchEvent(new Event('change', { bubbles: true }));
-    }, valeur);
+    await forcerValeurSelect(page, 'sel-biome-clavier', valeur);
     await expect(page.locator('#panneau-detail')).not.toHaveClass(/element-masque/, {
         timeout: 5000,
     });

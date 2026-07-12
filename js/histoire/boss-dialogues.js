@@ -1,7 +1,7 @@
 import { store } from '../etat/store-jeu.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { obtenirHistoireTextesSync } from '../io/charger-histoire-textes.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import {
     notifierPresentationBossPortrait,
     notifierDebutCombatBossPortrait,

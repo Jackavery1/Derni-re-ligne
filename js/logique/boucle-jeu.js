@@ -1,6 +1,5 @@
-import { CONFIG } from '../config/config-jeu.js';
 import { mettreAJourMeteo } from './meteo.js';
-import { logger, afficherErreurUtilisateur } from '../logger.js';
+import { logger, afficherErreurUtilisateur } from '../io/logger.js';
 import {
     etat,
     particules,
@@ -34,19 +33,10 @@ import { obtenirActions } from './actions-jeu.js';
 import { partieSpecialiseeActive } from '../etat/registre-modes.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import {
-    dessinerPlateau,
-    dessinerPieceFantome,
-    dessinerPieceActive,
-    dessinerFlashLignes,
-    dessinerFlashVerrou,
-    dessinerFlashTopout,
-    dessinerParticules,
-    dessinerTextesFlottants,
     mettreAJourAmbiante,
     mettreAJourTransition,
     mettreAJourParticulesAmbiance,
     mettreAJourTextesFlottants,
-    obtenirDecalageSecousse,
     mettreAJourSecousse,
 } from '../rendu/rendu-jeu.js';
 import { mettreAJourParticules } from '../rendu/particules-jeu.js';
@@ -54,9 +44,8 @@ import { mettreAJourAffichageTemps } from '../rendu/hud-jeu.js';
 import { tickTimerNiveau } from './timer-niveau.js';
 import { verrouillerPiece, vitesseChute } from './logique-partie.js';
 import { menuAnimActif, mettreAJourMenuFond } from '../rendu/menu-fond.js';
-import { mettreAJourHistoriquePositions, dessinerDecorations } from '../rendu/decorations-jeu.js';
+import { mettreAJourHistoriquePositions } from '../rendu/decorations-jeu.js';
 import { mettreAJourVivant } from './vivant.js';
-import { dessinerAvertissementsVivant } from '../rendu/rendu-vivant.js';
 import { mettreAJourBoss, bossEstActif, bossEstVaincu } from './boss-jeu.js';
 import { mettreAJourMecaniquesHistoire } from '../histoire/mecaniques-histoire.js';
 import {
@@ -65,36 +54,11 @@ import {
     activerPieceAuSol,
     quitterSolPiece,
 } from './game-feel-jeu.js';
-import {
-    dessinerMotifsAccessibilite,
-    dessinerMotifsPieceCourante,
-} from '../rendu/rendu-accessibilite.js';
 import { recupererZenApresTopOut } from './logique-partie-verrouillage.js';
+import { dessinerFrameSolo, rendrePortraitBossLazy } from '../rendu/tick-rendu-solo.js';
 
 const SEUIL_ERREURS_BOUCLE = 5;
 let erreursConsecutivesBoucle = 0;
-
-/** @type {typeof import('../rendu/boss-rendu.js') | null} */
-let _bossRenduModule = null;
-
-async function _rendrePortraitBossLazy(timestamp) {
-    if (!_bossRenduModule) {
-        _bossRenduModule = await import('../rendu/boss-rendu.js');
-    }
-    _bossRenduModule.rendrePortraitBoss(timestamp);
-}
-
-/** @type {typeof import('./oracle-jeu.js') | null} */
-let _oracleModule = null;
-
-async function _dessinerSuggestionOracleLazy() {
-    if (!_oracleModule) {
-        _oracleModule = await import('./oracle-jeu.js');
-    }
-    if (_oracleModule.oracle.actif) {
-        _oracleModule.dessinerSuggestionOracle();
-    }
-}
 
 export function mettreAJourFps(deltaTemps) {
     if (deltaTemps <= 0) return;
@@ -146,41 +110,6 @@ export function planifierBoucle() {
     definirIdFrame(requestAnimationFrame(boucleJeu));
 }
 
-function dessinerFrameSolo(ctx, enPartie) {
-    const canvasPlateau = obtenirCanvasPlateau();
-    ctx.save();
-    const dec = obtenirDecalageSecousse();
-    ctx.translate(dec.x, dec.y);
-    ctx.globalCompositeOperation = 'source-over';
-    dessinerPlateau();
-    dessinerMotifsAccessibilite(ctx, etat.plateau, CONFIG.taille);
-    dessinerAvertissementsVivant();
-    dessinerFlashLignes();
-    if (etat.pieceActuelle) {
-        dessinerPieceFantome();
-        void _dessinerSuggestionOracleLazy();
-        dessinerPieceActive();
-        dessinerMotifsPieceCourante(ctx);
-    }
-    dessinerFlashVerrou();
-    dessinerFlashTopout();
-    dessinerParticules();
-    if (enPartie) dessinerDecorations();
-
-    if (obtenirTransitionAlpha() < 1 && canvasPlateau) {
-        ctx.save();
-        ctx.globalAlpha = 1 - obtenirTransitionAlpha();
-        ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, canvasPlateau.width, canvasPlateau.height);
-        ctx.restore();
-    }
-
-    ctx.restore();
-    ctx.save();
-    dessinerTextesFlottants();
-    ctx.restore();
-}
-
 function _mettreAJourGravitePiece(deltaTemps) {
     if (!etat.pieceActuelle || areActive()) return;
     const peutDescendre = estPositionValide(etat.pieceActuelle, 0, 1);
@@ -221,7 +150,7 @@ function _mettreAJourPartieActive(deltaTemps, timestamp) {
     tickTimerNiveau();
     if (bossEstActif()) {
         if (!bossEstVaincu()) mettreAJourBoss(deltaTemps);
-        void _rendrePortraitBossLazy(timestamp);
+        void rendrePortraitBossLazy(timestamp);
     }
     mettreAJourAmbiante(deltaTemps);
     mettreAJourIndicateurRelique();

@@ -1,7 +1,7 @@
 /** Journal narratif histoire. */
 import { definirExpressionVera } from '../rendu/portraits-vera.js';
 import { ECRANS } from '../ui/ecrans-config.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { obtenirCanvas } from '../logique/dom-utils.js';
 import { afficherEcranHistoire } from './histoire-cutscene-nav.js';
 

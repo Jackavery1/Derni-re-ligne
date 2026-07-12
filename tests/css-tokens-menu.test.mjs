@@ -20,15 +20,28 @@ const IDENTIFIANTS_STABLES = [
 ];
 
 const FEUILLES_EXCLUES = new Set(['variables.css', 'dev.css']);
+const AGREGATEURS_CUTSCENES = new Set(['cutscenes.css']);
 
 const feuillesStyles = readdirSync('styles')
     .filter((f) => f.endsWith('.css') && !FEUILLES_EXCLUES.has(f))
+    .sort();
+
+const feuillesCutscenes = readdirSync(join('assets', 'cutscenes'))
+    .filter((f) => f.endsWith('.css') && !AGREGATEURS_CUTSCENES.has(f))
     .sort();
 
 describe('css — tokens (pas de hex literals hors variables.css)', () => {
     for (const fichier of feuillesStyles) {
         it(`${fichier} n utilise pas de hex literals`, () => {
             const css = readFileSync(join('styles', fichier), 'utf8');
+            const hex = css.match(HEX_RE) ?? [];
+            expect(hex).toEqual([]);
+        });
+    }
+
+    for (const fichier of feuillesCutscenes) {
+        it(`assets/cutscenes/${fichier} n utilise pas de hex literals`, () => {
+            const css = readFileSync(join('assets', 'cutscenes', fichier), 'utf8');
             const hex = css.match(HEX_RE) ?? [];
             expect(hex).toEqual([]);
         });

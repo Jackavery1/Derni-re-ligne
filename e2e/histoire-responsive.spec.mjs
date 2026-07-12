@@ -18,6 +18,7 @@ import {
     ETAT_INFERNO_PRET,
 } from './helpers.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { mesurerBossPortraitHud, assertBossPortraitDansEcran } from './helpers-narratif-mobile.mjs';
 
 test('cutscene paysage mobile — boutons dans la zone visible', async ({ page }) => {
     test.setTimeout(45000);
@@ -265,28 +266,7 @@ test('boss HUD 480px — portrait visible sans debordement (audit D8)', async ({
     await expect(page.locator('#canvas-boss-portrait')).toBeVisible();
     await expect(page.locator('#boss-nom-affiche')).toContainText('BRASIER');
 
-    const metriques = await page.evaluate(() => {
-        const portrait = document.getElementById('canvas-boss-portrait');
-        const nom = document.getElementById('boss-nom-affiche');
-        const rectP = portrait?.getBoundingClientRect();
-        const rectN = nom?.getBoundingClientRect();
-        return {
-            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
-            portraitW: rectP?.width ?? 0,
-            portraitH: rectP?.height ?? 0,
-            dansEcran: Boolean(
-                rectP &&
-                rectN &&
-                rectP.left >= -2 &&
-                rectP.right <= window.innerWidth + 2 &&
-                rectN.bottom <= window.innerHeight + 2
-            ),
-        };
-    });
-    expect(metriques.debord).toBe(false);
-    expect(metriques.portraitW).toBeGreaterThan(0);
-    expect(metriques.portraitH).toBeGreaterThan(0);
-    expect(metriques.dansEcran).toBe(true);
+    assertBossPortraitDansEcran(await mesurerBossPortraitHud(page));
 });
 
 test('recap post-monde portrait 319px — panneau scrollable (audit D8)', async ({ page }) => {

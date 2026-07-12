@@ -37,6 +37,7 @@ export {
     attendreApplicationPrete,
     attendreNotificationsInitiales,
     fermerInfobulleContexteSiVisible,
+    forcerValeurSelect,
 } from './helpers-page.mjs';
 
 export {
@@ -77,7 +78,6 @@ export { ouvrirPremierNiveauArchitecte } from './helpers-archi.mjs';
 
 export {
     MARQUEURS_NARRATIFS_CAMPAGNE,
-    SCENES_VICTOIRE_BOSS,
     lireTexteCutsceneActive,
     cliquerCutsceneSuivant,
     attendreCutsceneVictoireBoss,
@@ -92,8 +92,6 @@ export {
     viderOverlaysHistoireRapide,
     passerCutsceneEntiere,
     terminerCutscenesVersEcranFin,
-    obtenirScenePostMonde,
-    attendreFinOverlaysHistoire,
     attendreTypewriterInactif,
 } from './helpers-narratif.mjs';
 

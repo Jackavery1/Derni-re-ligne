@@ -6,7 +6,7 @@ import { definirBiomeActif } from '../etat/store-etat-partie.js';
 import { sauvegarderBiomeActif, sauvegarderEtatHistoire } from '../io/progression.js';
 import { obtenirActions } from '../logique/actions-jeu.js';
 import { ECRANS } from '../ui/ecrans-config.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { arreterBoss } from '../logique/boss-jeu.js';
 import { paradoxeEstDebloque } from './monde-paradoxe-etat.js';
 import { arreterFondFin } from '../rendu/fin-bg-rendu.js';

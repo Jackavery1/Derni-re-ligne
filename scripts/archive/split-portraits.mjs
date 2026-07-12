@@ -31,7 +31,7 @@ ${personnagesBody}
 writeFileSync(
     'js/portraits-cutscene.js',
     `${lines.slice(0, 9).join('\n')}
-import { logger } from '../../js/logger.js';
+import { logger } from '../../js/io/logger.js';
 import { dessinerPortraitCutsceneInterne } from '../../js/rendu/portraits-cutscene-personnages.js';
 
 export function dessinerPortraitCutscene(ctx, w, h, personnageId, t) {

@@ -11,7 +11,7 @@ Référence unique des variables CSS (`styles/variables.css`) et de leur usage. 
 | `--bordure`       | `rgba(0,245,255,0.2)`    | Contours néon discrets                           |
 | `--texte`         | `#e0e0ff`                | Texte principal (contraste ≥ 4.5:1 sur `--fond`) |
 | `--texte-dim`     | `rgba(224,224,255,0.75)` | Labels secondaires                               |
-| `--texte-discret` | `rgba(224,224,255,0.52)` | Mentions tertiaires                              |
+| `--texte-discret` | `var(--texte-dim)`       | Mentions tertiaires (alias AA, test E2b)         |
 
 ## Boutons discrets
 
@@ -55,6 +55,19 @@ Référence unique des variables CSS (`styles/variables.css`) et de leur usage. 
 | `--biome-lave-bordure`  | `#cd6839` | Bordure plateau biome Lave / Rouille   |
 | `--contraste-fond`      | `#000000` | Fond mode contraste élevé              |
 | `--contraste-texte`     | `#ffffff` | Texte mode contraste élevé             |
+
+## Cutscenes
+
+| Token                       | Valeur    | Usage                             |
+| --------------------------- | --------- | --------------------------------- |
+| `--cutscene-fond-robo-1`    | `#001a2e` | Dégradé fond ROBO                 |
+| `--cutscene-fond-robo-2`    | `#010a14` | Dégradé fond ROBO (fin)           |
+| `--cutscene-fond-vera-1`    | `#1a0010` | Dégradé fond VERA                 |
+| `--cutscene-fond-vera-2`    | `#0a0005` | Dégradé fond VERA (fin)           |
+| `--cutscene-fond-systeme`   | `#000d00` | Fond personnage système           |
+| `--cutscene-fond-narrateur` | `#020210` | Fond narrateur / boss secondaires |
+| `--cutscene-pixel-texte`    | `#e0f8ff` | Police pixel cutscene             |
+| `--cutscene-terminal-texte` | `#aaffaa` | Police terminal cutscene          |
 
 ## Boutons menu titre (modes libre / collection)
 
@@ -131,7 +144,7 @@ Résolution interne plateau : **320×640** px (`LAYOUT.plateauLargeur` / `platea
 
 - **Viewport** : pas de `user-scalable=no` — le zoom navigateur reste disponible (accessibilité).
 - **Menus / accueil** : `touch-action: manipulation` sur `html, body` (`styles/variables.css`) — évite le double-tap zoom accidentel sans bloquer le pinch-zoom système.
-- **Partie active** : `body.partie-active { touch-action: none; }` — empêche le scroll pendant le jeu ; le pinch-zoom reste géré par l’OS en PWA standalone.
+- **Partie active** : `touch-action: none` sur `#zone-jeu` / `#canvas-plateau` uniquement ; boutons HUD (`#btn-pause`, `#btn-mute`) et contrôles tactiles en `manipulation`. Scroll bloqué par `overflow: hidden` sur `html, body`.
 - **Clavier** : pause, menus et rebind des touches (`Options → Contrôles`) restent disponibles sur desktop et mobile avec clavier externe.
 
 ## Hors tokens

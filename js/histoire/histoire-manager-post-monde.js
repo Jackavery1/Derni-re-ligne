@@ -14,7 +14,7 @@ import { store } from '../etat/store-jeu.js';
 import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
 import { sauvegarderEtatHistoire } from '../io/progression.js';
 import { definirExpressionVera } from '../rendu/portraits-vera.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { creerFile } from './file-narrative.js';
 import { extraireLignesCutscene } from './histoire-cutscene-moteur.js';

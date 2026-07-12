@@ -2,7 +2,7 @@ import { CONFIG } from '../config/config-jeu.js';
 import { store } from '../etat/store-jeu.js';
 import { etat, obtenirBiomeActif } from '../etat/store-jeu.js';
 import { ecouter } from '../etat/bus-jeu.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { obtenirEtatHistoire, sauvegarderEtatHistoireStore } from './histoire-mondes.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { verifierConditionMiroir, verifierConditionC3 } from './conditions-secrets.js';

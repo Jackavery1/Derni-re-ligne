@@ -413,7 +413,7 @@ export function verifierPhaseBoss() {
 import { etat } from '../../js/etat/store-jeu.js';
 import { BOSS } from '../../js/histoire-donnees.js';
 import { AudioMoteur } from '../../js/audio/audio.js';
-import { logger } from '../../js/logger.js';
+import { logger } from '../../js/io/logger.js';
 import { modeHistoireEnCours } from '../../js/etat/mode-histoire.js';
 import {
     tickConditionTrame,

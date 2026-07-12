@@ -197,9 +197,10 @@ export const DIFFICULTE_MONDES = {
         objectifLignes: 16,
         profilVitesse: [
             { a: 0, palier: 9 },
-            { a: 0.35, palier: 11 },
-            { a: 0.6, palier: 13 },
-            { a: 0.85, palier: 14 },
+            { a: 0.35, palier: 10 },
+            { a: 0.55, palier: 12 },
+            { a: 0.72, palier: 13 },
+            { a: 0.9, palier: 14 },
         ],
         etoile2: { type: 'tetris', valeur: 2 },
         etoile3: { type: 'sans_topout' },

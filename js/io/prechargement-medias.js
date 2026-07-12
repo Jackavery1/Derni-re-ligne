@@ -6,7 +6,7 @@ import { SCENE_DEFAUT_POST_MONDE } from '../histoire/histoire-narratif-scenes.js
 import { URLS_PORTRAITS_PRECACHE } from '../rendu/portraits-precache.js';
 import { ECRANS } from '../ui/ecrans-config.js';
 import { store } from '../etat/store-jeu.js';
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 
 /** @type {AbortController | null} */
 let controleurActif = null;

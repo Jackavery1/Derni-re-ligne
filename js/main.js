@@ -5,7 +5,7 @@ import { chargerHistoireDonneesMetier } from './histoire-donnees.js';
 import { demarrerPrecacheMediasSwArrierePlan } from './io/precache-sw-medias.js';
 import { initialiserApplication } from './moteur.js';
 import { attendreBoutonsPretes } from './ui/ui-init.js';
-import { logger, afficherErreurUtilisateur } from './logger.js';
+import { logger, afficherErreurUtilisateur } from './io/logger.js';
 import { lireStockage } from './io/progression-stockage.js';
 import { swAutorise, libererSwEnDevLocal } from './io/sw-dev.js';
 import { precchargerNavigation } from './ui/navigation-lazy.js';

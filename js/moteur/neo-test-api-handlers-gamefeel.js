@@ -45,5 +45,15 @@ export function creerHandlersGameFeel() {
         viderJournalSfxTest: () => {
             AudioMoteur._journalSfxTest?.splice(0);
         },
+        verifierSamplesBossCharges: async () => {
+            AudioMoteur.init();
+            await AudioMoteur.prechargerEffetsBossSamples?.();
+            const { EFFETS_BOSS_SAMPLES, effetBossSampleCharge } =
+                await import('../audio/audio-fichiers-effets-boss.js');
+            return EFFETS_BOSS_SAMPLES.map((type) => ({
+                type,
+                charge: effetBossSampleCharge(type),
+            }));
+        },
     };
 }

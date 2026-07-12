@@ -1,4 +1,4 @@
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { lireStockageJson, ecrireStockageJson, chargerEtatHistoire } from '../io/progression.js';
 import { CLE_STATS, creerStatsVides, statsGlobales } from './achievements-stats-etat.js';
 

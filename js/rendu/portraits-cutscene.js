@@ -1,4 +1,4 @@
-import { logger } from '../logger.js';
+import { logger } from '../io/logger.js';
 import { dessinerPortraitCutsceneInterne } from './portraits-cutscene-personnages.js';
 
 export {

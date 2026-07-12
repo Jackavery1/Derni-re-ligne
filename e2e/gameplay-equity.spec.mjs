@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { demarrerPartie } from './helpers.mjs';
+import { demarrerPartie, demarrerPartieCoop } from './helpers.mjs';
 
 test.describe('gameplay equity', () => {
     test('grace spawn active au demarrage de partie', async ({ page }) => {
@@ -67,15 +67,41 @@ test.describe('gameplay equity', () => {
         expect(apresAre.bufferApresAre).toEqual([]);
     });
 
-    test('buffer conserve deux inputs sans ecrasement', async ({ page }) => {
+    test('buffer conserve trois inputs sans ecrasement (audit B G2)', async ({ page }) => {
         await demarrerPartie(page);
         const buffer = await page.evaluate(() => {
             const api = window.__NEO_TEST__;
             api?.bufferiserInputTest?.('gauche');
             api?.bufferiserInputTest?.('tourner_cw');
+            api?.bufferiserInputTest?.('droite');
             return api?.obtenirGameFeel?.().inputBuffer ?? [];
         });
-        expect(buffer).toEqual(['gauche', 'tourner_cw']);
+        expect(buffer).toEqual(['gauche', 'tourner_cw', 'droite']);
+    });
+
+    test('grace spawn expire apres au moins 24 frames a 60 fps', async ({ page }) => {
+        await demarrerPartie(page);
+        const metriques = await page.evaluate(async () => {
+            const api = window.__NEO_TEST__;
+            const { CONFIG } = await import('/js/config/config-jeu.js');
+            const { demarrerGraceSpawn } = await import('/js/logique/game-feel-jeu.js');
+            demarrerGraceSpawn();
+            const frameMs = 1000 / 60;
+            let ticks = 0;
+            while ((api?.obtenirGameFeel?.().spawnGraceRestant ?? 0) > 0 && ticks < 120) {
+                api?.tickGameFeel?.(frameMs);
+                ticks++;
+            }
+            const framesConfig = Math.floor((CONFIG.spawnGraceMs * 60) / 1000);
+            return {
+                ticks,
+                graceRestant: api?.obtenirGameFeel?.().spawnGraceRestant ?? -1,
+                framesConfig,
+            };
+        });
+        expect(metriques.graceRestant).toBe(0);
+        expect(metriques.ticks).toBeGreaterThanOrEqual(24);
+        expect(metriques.ticks).toBeLessThanOrEqual(metriques.framesConfig + 2);
     });
 
     test('input clavier ArrowLeft deplace la piece en partie', async ({ page }) => {
@@ -86,5 +112,41 @@ test.describe('gameplay equity', () => {
         expect(typeof avant).toBe('number');
         expect(typeof apres).toBe('number');
         expect(apres).toBeLessThan(avant);
+    });
+
+    test('delai premier evenement vivant >= 120 frames a 60fps (audit B G3)', async ({ page }) => {
+        await demarrerPartie(page);
+        const metriques = await page.evaluate(async () => {
+            return window.__NEO_TEST__?.obtenirDelaiPremierEvenementVivant?.('lave');
+        });
+        expect(metriques).not.toBeNull();
+        expect(metriques.frames60).toBeGreaterThanOrEqual(120);
+        expect(metriques.delaiMs).toBeGreaterThanOrEqual(22000);
+    });
+
+    test('buffer sprint autorise 3 actions (audit B G2)', async ({ page }) => {
+        await demarrerPartie(page);
+        const buffer = await page.evaluate(async () => {
+            const { etat } = await import('/js/etat/store-jeu.js');
+            etat.modeJeu = 'sprint';
+            const api = window.__NEO_TEST__;
+            api?.bufferiserInputTest?.('gauche');
+            api?.bufferiserInputTest?.('tourner_cw');
+            api?.bufferiserInputTest?.('droite');
+            return api?.obtenirGameFeel?.().inputBuffer ?? [];
+        });
+        expect(buffer).toEqual(['gauche', 'tourner_cw', 'droite']);
+    });
+
+    test('buffer coop j1 autorise 3 actions (audit B G2)', async ({ page }) => {
+        await demarrerPartieCoop(page);
+        const buffer = await page.evaluate(async () => {
+            return window.__NEO_TEST__?.remplirBufferCoopTest?.('j1', [
+                'gauche',
+                'tourner_cw',
+                'droite',
+            ]);
+        });
+        expect(buffer).toEqual(['gauche', 'tourner_cw', 'droite']);
     });
 });

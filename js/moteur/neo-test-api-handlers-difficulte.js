@@ -92,5 +92,39 @@ export function creerHandlersDifficulte() {
                 respiration: min != null && max != null && max - min >= 2 && paliers.length >= 3,
             };
         },
+        evaluerEquiteDemarragePrologue: async () => {
+            const { CONFIG } = await import('../config/config-jeu.js');
+            const { chargerDifficulteMondes, DIFFICULTE_MONDES, PALIERS_VITESSE_MS } =
+                await import('../io/difficulte-mondes-chargement.js');
+            const { COMPORTEMENTS_VIVANT } = await import('../logique/vivant-comportements.js');
+            await chargerDifficulteMondes();
+
+            const config = DIFFICULTE_MONDES.monde_prologue;
+            const objectif = config?.objectifLignes ?? 10;
+            const profil = config?.profilVitesse ?? [];
+            const palierDebut = profil[0]?.palier ?? 1;
+            const seuilMontee = profil.find((_, i) => i > 0)?.a ?? 0.55;
+            const lignesAvantMontee = Math.ceil(objectif * seuilMontee);
+            const vitessePalier1Ms = PALIERS_VITESSE_MS[palierDebut] ?? PALIERS_VITESSE_MS[1];
+            const piecesMinimumTopOut = Math.ceil(CONFIG.lignes / 2);
+            const chuteMoyenneLignes = CONFIG.lignes / 2;
+            const tempsParPieceMs = chuteMoyenneLignes * vitessePalier1Ms + CONFIG.lockDelay;
+            const tempsTopOutPassifEstimeMs = piecesMinimumTopOut * tempsParPieceMs;
+            const seuilMortPrecoceMs = 30000;
+            const vivantPrologue = COMPORTEMENTS_VIVANT.prologue ?? null;
+
+            return {
+                spawnGraceMs: CONFIG.spawnGraceMs,
+                vitessePalier1Ms,
+                lignesAvantMonteePalier2: lignesAvantMontee,
+                tempsTopOutPassifEstimeMs,
+                vivantActif: vivantPrologue != null,
+                surviePassiveAuMoins30s: tempsTopOutPassifEstimeMs >= seuilMortPrecoceMs,
+                equiteDemarrage:
+                    tempsTopOutPassifEstimeMs >= seuilMortPrecoceMs &&
+                    CONFIG.spawnGraceMs >= (24 * 1000) / 60 &&
+                    vivantPrologue == null,
+            };
+        },
     };
 }

@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { ETAT_DEBLOCAGE_META_RAPIDE } from './etats-histoire.mjs';
-import { preparerPageSansSw } from './helpers-page.mjs';
+import { preparerPageSansSw, forcerValeurSelect } from './helpers-page.mjs';
 import { fermerPanneauDetailSiOuvert } from './helpers-partie.mjs';
 
 /** @param {import('@playwright/test').Page} page */
@@ -30,25 +30,6 @@ export async function preparerSelectionPremiereVisiteModes(
         localStorage.removeItem('derniereLigne_infobullesModesJeu');
         localStorage.removeItem('derniereLigne_infobulleOracleCoop');
     });
-}
-
-/** @param {import('@playwright/test').Page} page @param {string} selectId @param {string} value */
-async function forcerValeurSelect(page, selectId, value) {
-    await page.evaluate(
-        ([id, val]) => {
-            const select = document.getElementById(id);
-            if (!select) return;
-            for (const opt of select.options) {
-                if (opt.value === val) {
-                    opt.disabled = false;
-                    select.value = val;
-                    select.dispatchEvent(new Event('change', { bubbles: true }));
-                    break;
-                }
-            }
-        },
-        [selectId, value]
-    );
 }
 
 /** @param {import('@playwright/test').Page} page @param {string} biomeId */
