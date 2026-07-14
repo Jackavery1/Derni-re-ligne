@@ -131,7 +131,7 @@ export function choisirAttaqueCombinaison(disponibles, derniereType = null) {
  * @property {(string | number)[][]} plateau
  * @property {object} effets
  * @property {object | null} bossActif
- * @property {{ derniereAttaqueType?: string | null } | null} [bossEtat]
+ * @property {object | null} [bossEtat]
  */
 
 export const REGISTRE_ATTAQUES_BOSS = {

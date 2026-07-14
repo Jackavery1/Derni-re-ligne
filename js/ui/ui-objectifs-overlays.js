@@ -282,7 +282,7 @@ export function afficherRecapAvantNarratif(monde, etoiles, onFin, avantAffichage
     });
 }
 
-/** @param {() => void} onFerme */
+/** @param {(() => void)=} onFerme */
 export function fermerRecapAvecCallback(onFerme) {
     const cb = _callbackRecap ?? onFerme;
     fermerOverlayRecapMonde();
