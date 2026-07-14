@@ -130,25 +130,37 @@ function _commencerDepuisPanneau() {
  * @param {() => void} onCommencer
  */
 function afficherPanneauObjectifs(monde, onCommencer) {
-    initialiserUiObjectifs();
-    _ancrerOverlaysAuBody();
-    _callbackPanneauPre = onCommencer;
-    _remplirPanneauPreMonde(monde);
+    const montrer = () => {
+        initialiserUiObjectifs();
+        _ancrerOverlaysAuBody();
+        _callbackPanneauPre = onCommencer;
+        _remplirPanneauPreMonde(monde);
 
-    _cacherEcransPourObjectifs();
+        _cacherEcransPourObjectifs();
 
-    _afficher('overlay-objectifs-pre');
-    _el('overlay-objectifs-pre')?.classList.add('objectif-overlay-visible');
-    _el('btn-objectifs-commencer')?.focus({ preventScroll: true });
+        _afficher('overlay-objectifs-pre');
+        _el('overlay-objectifs-pre')?.classList.add('objectif-overlay-visible');
+        _el('btn-objectifs-commencer')?.focus({ preventScroll: true });
 
-    _retirerEcouteurEscape();
-    _ecouteurEscape = (ev) => {
-        if (ev.key === 'Escape') {
-            ev.preventDefault();
-            _commencerDepuisPanneau();
-        }
+        _retirerEcouteurEscape();
+        _ecouteurEscape = (ev) => {
+            if (ev.key === 'Escape') {
+                ev.preventDefault();
+                _commencerDepuisPanneau();
+            }
+        };
+        document.addEventListener('keydown', _ecouteurEscape);
     };
-    document.addEventListener('keydown', _ecouteurEscape);
+
+    if (!_el('overlay-objectifs-pre')) {
+        void import('./charger-ecrans.js').then(async ({ assurerFragmentsPartie }) => {
+            await assurerFragmentsPartie();
+            montrer();
+        });
+        return;
+    }
+
+    montrer();
 }
 
 function fermerOverlayObjectifsPre() {

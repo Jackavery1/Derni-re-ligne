@@ -72,11 +72,8 @@ export async function ouvrirCarteHistoire(page, etatHistoire = ETAT_HISTOIRE_BOS
 
 /** @param {import('@playwright/test').Page} page */
 export async function lancerMondeBossBrasier(page) {
-    await page.locator('#histoire-monde-clavier').selectOption('monde_boss_1', { force: true });
-    await expect(page.locator('#histoire-monde-details')).not.toHaveClass(
-        /histoire-panneau-masque/
-    );
-    await page.locator('.bouton-jouer-monde').click({ force: true });
+    const { lancerMondeDepuisCarte } = await import('./helpers-narratif.mjs');
+    await lancerMondeDepuisCarte(page, 'monde_boss_1');
     await passerFluxLancementMonde(page);
     await expect(page.locator('#section-boss')).toBeVisible();
     await expect(page.locator('#boss-nom-affiche')).not.toHaveText('BOSS');

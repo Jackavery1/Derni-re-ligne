@@ -17,6 +17,7 @@ export function estNeoTestAutorise() {
  *   simulerVictoireSprint?: () => void,
  *   obtenirColonnePieceActive?: () => number | null,
  *   obtenirMusiqueActive?: () => string | null,
+ *   demarrerMondeHistoire?: (mondeId: string) => Promise<void>,
  *   declencherFinHistoire?: (finId: string) => Promise<void>,
  *   declencherPostMondeNarratif?: (mondeId: string) => Promise<void>,
  *   simulerVictoireMondeHistoire?: (mondeId: string, lignes?: number, sansNarratif?: boolean) => Promise<void>,

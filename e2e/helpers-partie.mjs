@@ -82,7 +82,11 @@ export async function attendrePartieVisible(page) {
 /** @param {import('@playwright/test').Page} page */
 export async function passerFluxLancementMonde(page) {
     for (let i = 0; i < 24; i++) {
-        if (await page.locator('body').evaluate((el) => el.classList.contains('partie-active'))) {
+        const etat = await page.evaluate(() => ({
+            partieActive: document.body.classList.contains('partie-active'),
+            bossVisible: Boolean(document.getElementById('section-boss')?.offsetParent),
+        }));
+        if (etat.partieActive || etat.bossVisible) {
             break;
         }
 
@@ -118,7 +122,13 @@ export async function passerFluxLancementMonde(page) {
         }
     }
 
-    await attendrePartieVisible(page);
+    const bossVisible = await page
+        .locator('#section-boss')
+        .isVisible()
+        .catch(() => false);
+    if (!bossVisible) {
+        await attendrePartieVisible(page);
+    }
 }
 
 /** @param {import('@playwright/test').Page} page */

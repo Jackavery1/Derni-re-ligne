@@ -15,6 +15,7 @@ import {
     afficherTutorielContextuel,
 } from '../ui/tutoriel.js';
 import { chargerHistoireTextes } from '../io/charger-histoire-textes.js';
+import { chargerDifficulteMondes } from '../io/difficulte-mondes-chargement.js';
 import {
     obtenirEtatHistoire,
     mondePeutEtreJoue,
@@ -40,6 +41,7 @@ export function demarrerMondeHistoire(mondeId) {
 /** @param {string} mondeId */
 async function _demarrerMondeHistoireInterne(mondeId) {
     await chargerHistoireTextes();
+    await chargerDifficulteMondes();
     if (mondeId === 'monde_paradoxe') {
         demarrerMondeHistoireCache(mondeId);
         return;

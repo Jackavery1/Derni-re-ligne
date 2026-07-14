@@ -216,10 +216,23 @@ export async function lancerMondeDepuisCarte(page, mondeId) {
             timeout: 10000,
         }
     );
-    await page.evaluate(async (id) => {
-        const { demarrerMondeHistoire } = await import('/js/histoire/histoire-session.js');
-        demarrerMondeHistoire(id);
+    const lance = await page.evaluate(async (id) => {
+        if (typeof window.__NEO_TEST__?.demarrerMondeHistoire === 'function') {
+            await window.__NEO_TEST__.demarrerMondeHistoire(id);
+            return true;
+        }
+        try {
+            const { demarrerMondeHistoire } = await import('/js/histoire/histoire-session.js');
+            demarrerMondeHistoire(id);
+            return true;
+        } catch {
+            document.querySelector('.bouton-jouer-monde')?.click();
+            return false;
+        }
     }, mondeId);
+    if (!lance) {
+        await page.locator('.bouton-jouer-monde').click({ force: true });
+    }
     await expect
         .poll(
             async () => {

@@ -11,6 +11,15 @@ import { obtenirActions } from '../logique/actions-jeu.js';
  */
 export function creerHandlersHistoire(depsSync) {
     return {
+        demarrerMondeHistoire: async (mondeId) => {
+            activerModeHistoire();
+            await chargerHistoireTextes();
+            const { chargerDifficulteMondes } =
+                await import('../io/difficulte-mondes-chargement.js');
+            await chargerDifficulteMondes();
+            const { demarrerMondeHistoire } = await import('../histoire/histoire-session.js');
+            demarrerMondeHistoire(mondeId);
+        },
         declencherFinHistoire: async (finId) => {
             activerModeHistoire();
             await chargerHistoireTextes();

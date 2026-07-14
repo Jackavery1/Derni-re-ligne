@@ -8,18 +8,25 @@ import {
     demarrerPartieCoop,
     terminerPartieCourante,
     activerPausePartie,
+    activerPauseCoopTactile,
     appliquerSafeAreaIphone,
     creerPageIphone14,
     ouvrirCarteHistoire,
     ANNOTATION_C11,
     attendreApplicationPrete,
     preparerPageSansSw,
+    lancerMondeDepuisCarte,
+    fermerRecapPostMonde,
+    passerCutsceneEntiere,
+    attendreJournalHistoire,
+    ouvrirPremierNiveauArchitecte,
 } from './helpers.mjs';
 import {
     assertPasDeDebordementHorizontal,
     assertBoutonTactileMin,
 } from './helpers-responsive-metriques.mjs';
-import { ETAT_DEBLOCAGE_META_RAPIDE } from './etats-histoire.mjs';
+import { ETAT_DEBLOCAGE_META_RAPIDE, ETAT_CYBER_LABO_PRET } from './etats-histoire.mjs';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
 
 test.describe('checklist iPhone — simulation safe-area (CONTRIBUTING)', () => {
     test.beforeEach(async () => {
@@ -42,9 +49,9 @@ test.describe('checklist iPhone — simulation safe-area (CONTRIBUTING)', () => 
         const page = await context.newPage();
         await demarrerPartieCoop(page);
         await appliquerSafeAreaIphone(page, 'iPhone 14 landscape');
-        await page.keyboard.press('p');
-        await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
-        await assertBoutonTactileMin(page, '#btn-reprendre');
+        await activerPauseCoopTactile(page);
+        await expect(page.locator('#ecran-pause-coop')).toHaveClass(/actif/);
+        await assertBoutonTactileMin(page, '#btn-coop-reprendre');
         await context.close();
     });
 
@@ -73,12 +80,18 @@ test.describe('checklist iPhone — simulation safe-area (CONTRIBUTING)', () => 
     test('5. journal histoire — scrollable, fermer ≥48px', async ({ page }) => {
         test.setTimeout(60000);
         await page.setViewportSize({ width: 319, height: 844 });
-        await ouvrirCarteHistoire(page, ETAT_DEBLOCAGE_META_RAPIDE);
-        await page.evaluate(() => {
-            document.getElementById('btn-histoire-journal')?.click();
+        await ouvrirCarteHistoire(page, ETAT_CYBER_LABO_PRET);
+        await page.evaluate(async () => {
+            await window.__NEO_TEST__?.simulerVictoireMondeHistoire?.('monde_cyber', 99);
         });
-        await expect(page.locator('#ecran-histoire-journal')).toHaveClass(/actif/);
-        const scrollable = await page.locator('#ecran-histoire-journal').evaluate((el) => {
+        await expect(page.locator('#overlay-recap-monde')).toBeVisible({ timeout: 10000 });
+        await fermerRecapPostMonde(page);
+        await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+            timeout: 10000,
+        });
+        await passerCutsceneEntiere(page);
+        await attendreJournalHistoire(page);
+        const scrollable = await page.locator('#histoire-journal-texte').evaluate((el) => {
             const s = getComputedStyle(el);
             return s.overflowY === 'auto' || s.overflowY === 'scroll';
         });
@@ -89,17 +102,13 @@ test.describe('checklist iPhone — simulation safe-area (CONTRIBUTING)', () => 
     test('6. cutscene portrait 319px — boutons visibles', async ({ page }) => {
         test.setTimeout(60000);
         await page.setViewportSize({ width: 319, height: 844 });
-        await preparerPageSansSw(page);
-        await page.goto('/');
-        await attendreApplicationPrete(page);
-        await page.locator('#btn-nouvelle-partie').click();
-        await expect(page.locator('#ecran-histoire-cutscene, #ecran-histoire-map')).toBeVisible({
-            timeout: 15000,
+        await ouvrirCarteHistoire(page, ETAT_HISTOIRE_VIDE);
+        await lancerMondeDepuisCarte(page, 'monde_prologue');
+        await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+            timeout: 10000,
         });
-        const cutscene = page.locator('#ecran-histoire-cutscene.actif');
-        if (await cutscene.count()) {
-            await assertBoutonTactileMin(page, '#btn-cutscene-suivant, #btn-cutscene-passer');
-        }
+        await assertBoutonTactileMin(page, '#btn-cutscene-suivant');
+        await assertBoutonTactileMin(page, '#btn-cutscene-passer');
     });
 
     test('7. architecte portrait — contrôles utilisables', async ({ page }) => {
@@ -108,7 +117,8 @@ test.describe('checklist iPhone — simulation safe-area (CONTRIBUTING)', () => 
         await page.goto('/');
         await attendreApplicationPrete(page);
         await page.locator('#btn-architecte').click();
-        await expect(page.locator('#ecran-architecte')).toHaveClass(/actif/);
+        await ouvrirPremierNiveauArchitecte(page);
+        await expect(page.locator('#interface-jeu-archi')).toBeVisible();
         await assertPasDeDebordementHorizontal(page);
     });
 });

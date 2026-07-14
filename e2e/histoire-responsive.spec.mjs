@@ -15,27 +15,16 @@ import {
     lancerMondeBossBrasier,
     ETAT_HISTOIRE_BOSS_BRASIER,
     ETAT_CYBER_LABO_PRET,
-    ETAT_INFERNO_PRET,
 } from './helpers.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { preparerEtatPremiereEntree } from './etats-histoire-entrees.mjs';
 import { mesurerBossPortraitHud, assertBossPortraitDansEcran } from './helpers-narratif-mobile.mjs';
 
 test('cutscene paysage mobile — boutons dans la zone visible', async ({ page }) => {
     test.setTimeout(45000);
     await page.setViewportSize({ width: 844, height: 390 });
-    await page.addInitScript((etat) => {
-        localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
-        localStorage.setItem('dl_migration_v1', '1');
-        localStorage.setItem('derniereLigne_tutorielVu', '1');
-        localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
-        localStorage.setItem('derniereLigne_introHistoireVue', '1');
-    }, ETAT_HISTOIRE_VIDE);
-    await page.goto('/');
-    await attendreApplicationPrete(page);
-    await attendreNotificationsInitiales(page);
-    await page.locator('#btn-continuer').click();
-    await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });
-    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await ouvrirCarteHistoire(page, ETAT_HISTOIRE_VIDE);
+    await lancerMondeDepuisCarte(page, 'monde_prologue');
 
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 10000 });
 
@@ -56,19 +45,8 @@ test('cutscene paysage mobile — boutons dans la zone visible', async ({ page }
 test('cutscene ultra-etroit 319px — pas de debordement', async ({ page }) => {
     test.setTimeout(45000);
     await page.setViewportSize({ width: 319, height: 568 });
-    await page.addInitScript((etat) => {
-        localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
-        localStorage.setItem('dl_migration_v1', '1');
-        localStorage.setItem('derniereLigne_tutorielVu', '1');
-        localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
-        localStorage.setItem('derniereLigne_introHistoireVue', '1');
-    }, ETAT_HISTOIRE_VIDE);
-    await page.goto('/');
-    await attendreApplicationPrete(page);
-    await attendreNotificationsInitiales(page);
-    await page.locator('#btn-continuer').click();
-    await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });
-    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await ouvrirCarteHistoire(page, ETAT_HISTOIRE_VIDE);
+    await lancerMondeDepuisCarte(page, 'monde_prologue');
 
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 10000 });
 
@@ -100,17 +78,7 @@ test('cutscene ultra-etroit 319px — portraits visibles sans debordement (audit
 }) => {
     test.setTimeout(60000);
     await page.setViewportSize({ width: 319, height: 568 });
-    await page.addInitScript((etat) => {
-        localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
-        localStorage.setItem('dl_migration_v1', '1');
-        localStorage.setItem('derniereLigne_tutorielVu', '1');
-        localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
-        localStorage.setItem('derniereLigne_introHistoireVue', '1');
-    }, ETAT_HISTOIRE_VIDE);
-    await page.goto('/');
-    await attendreApplicationPrete(page);
-    await attendreNotificationsInitiales(page);
-    await page.locator('#btn-continuer').click();
+    await ouvrirCarteHistoire(page, ETAT_HISTOIRE_VIDE);
     await lancerMondeDepuisCarte(page, 'monde_prologue');
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
         timeout: 10000,
@@ -197,12 +165,14 @@ test('journal mobile ultra-etroit 319px — contenu scrollable (audit D8)', asyn
 
 test('carte histoire 319px — overlay objectifs pre-partie lisible (audit D8)', async ({ page }) => {
     await page.setViewportSize({ width: 319, height: 568 });
-    await ouvrirCarteHistoire(page, ETAT_INFERNO_PRET);
-    await page.locator('#histoire-monde-clavier').selectOption('monde_lave', { force: true });
-    await page.locator('.bouton-jouer-monde').click({ force: true });
-
+    const etatLavePanneau = {
+        ...preparerEtatPremiereEntree('monde_lave'),
+        mondesDejaMontres: ['monde_prologue', 'monde_lave'],
+    };
+    await ouvrirCarteHistoire(page, etatLavePanneau);
+    await lancerMondeDepuisCarte(page, 'monde_lave');
     await expect(page.locator('#overlay-objectifs-pre')).toHaveClass(/objectif-overlay-visible/, {
-        timeout: 10000,
+        timeout: 15000,
     });
 
     const metriques = await page.evaluate(() => {
@@ -418,20 +388,9 @@ test('iphone — cutscene respecte encoche simulee (audit C11)', async ({ browse
     test.info().annotations.push(ANNOTATION_C11);
 
     const { context, page } = await creerPageIphone14(browser);
-    await page.addInitScript((etat) => {
-        localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
-        localStorage.setItem('dl_migration_v1', '1');
-        localStorage.setItem('derniereLigne_tutorielVu', '1');
-        localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
-        localStorage.setItem('derniereLigne_introHistoireVue', '1');
-    }, ETAT_HISTOIRE_VIDE);
-    await page.goto('/');
-    await attendreApplicationPrete(page);
+    await ouvrirCarteHistoire(page, ETAT_HISTOIRE_VIDE);
     await appliquerSafeAreaIphone(page);
-    await attendreNotificationsInitiales(page);
-    await page.locator('#btn-continuer').click();
-    await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });
-    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await lancerMondeDepuisCarte(page, 'monde_prologue');
 
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
         timeout: 10000,
