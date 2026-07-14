@@ -1,4 +1,4 @@
-import { AudioMoteur } from '../audio/audio.js';
+﻿import { AudioMoteur } from '../audio/audio.js';
 import { ECRANS, etat, definirEcranActuel } from '../etat/store-jeu.js';
 import { FRAGMENTS_REQUIS_PAR_ECRAN } from './ecrans-config.js';
 import { assurerFragmentsEcran } from './charger-ecrans.js';
@@ -13,7 +13,7 @@ import { demarrerFondMeta, arreterFondMeta } from '../rendu/fond-ecrans-meta.js'
 import { adapterNotifsJeu } from '../rendu/layout-jeu.js';
 import { chargerIconesPixel } from '../rendu/icones-pixel.js';
 import { prefetchRessourcesPartie } from '../io/prefetch-ressources-partie.js';
-import { chargerAchievementsDonnees } from '../achievements-donnees.js';
+import { chargerAchievementsDonnees } from '../achievements/achievements-donnees-chargement.js';
 
 const FONDS_META = {
     [ECRANS.CODEX]: { canvasId: 'fond-meta-codex', teinte: '#ff2d78' },

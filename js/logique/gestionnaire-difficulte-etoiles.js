@@ -1,9 +1,9 @@
-import { DIFFICULTE_MONDES } from '../io/difficulte-mondes-chargement.js';
+﻿import { DIFFICULTE_MONDES } from '../io/difficulte-mondes-chargement.js';
 import { store } from '../etat/store-jeu.js';
 
 /**
  * @param {string} mondeId
- * @param {import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} [etatHist]
+ * @param {import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} [etatHist]
  * @returns {[boolean, boolean, boolean]}
  */
 export function calculerEtoiles(mondeId, etatHist) {
@@ -28,7 +28,7 @@ export function calculerEtoiles(mondeId, etatHist) {
     return [true, etoile2, etoile3];
 }
 
-/** @param {object} def @param {typeof store.histoire.difficulte.suiviEtoiles} suivi @param {import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE | null} hist @param {string} mondeId */
+/** @param {object} def @param {typeof store.histoire.difficulte.suiviEtoiles} suivi @param {import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE | null} hist @param {string} mondeId */
 function evaluerDefiEtoile(def, suivi, hist, mondeId) {
     switch (def.type) {
         case 'sans_topout':
@@ -52,7 +52,7 @@ function evaluerDefiEtoile(def, suivi, hist, mondeId) {
     }
 }
 
-/** @param {import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} etatHist @param {string} mondeId @param {[boolean, boolean, boolean]} etoiles */
+/** @param {import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} etatHist @param {string} mondeId @param {[boolean, boolean, boolean]} etoiles */
 export function fusionnerEtoilesPersistees(etatHist, mondeId, etoiles) {
     if (!etatHist.etoilesParMonde) etatHist.etoilesParMonde = {};
     const ex = etatHist.etoilesParMonde[mondeId] ?? [false, false, false];
@@ -63,7 +63,7 @@ export function fusionnerEtoilesPersistees(etatHist, mondeId, etoiles) {
     ];
 }
 
-/** @param {import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} etatHist @param {string} mondeId */
+/** @param {import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} etatHist @param {string} mondeId */
 export function obtenirEtoilesPersistees(etatHist, mondeId) {
     return etatHist?.etoilesParMonde?.[mondeId] ?? [false, false, false];
 }

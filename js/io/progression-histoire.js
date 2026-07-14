@@ -1,5 +1,5 @@
-/** État narratif persisté (localStorage) et règles de déblocage des modes. */
-import { ETAT_HISTOIRE_VIDE, JOURNAUX_VERA } from '../histoire-donnees.js';
+﻿/** État narratif persisté (localStorage) et règles de déblocage des modes. */
+import { ETAT_HISTOIRE_VIDE, JOURNAUX_VERA } from '../histoire/histoire-donnees-exports.js';
 import { modeDevActif } from '../logique/mode-dev-etat.js';
 import { lireStockageJson, ecrireStockageJson } from './progression-stockage.js';
 
@@ -67,7 +67,7 @@ function _fusionnerLegacyHistoire(etat) {
     }
 }
 
-/** @param {import('../histoire-donnees.js').EtatHistoire} etat */
+/** @param {import('../histoire/histoire-donnees-exports.js').EtatHistoire} etat */
 function _reconcilierFlagsHistoire(etat) {
     if (!Array.isArray(etat.bossVaincus)) etat.bossVaincus = [];
     if (!Array.isArray(etat.journauxTrouves)) etat.journauxTrouves = [];

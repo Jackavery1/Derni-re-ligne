@@ -1,9 +1,10 @@
 {
     "name": "Dernière Ligne",
-    "short_name": "DerniereLigne",
+    "short_name": "DLigne",
     "description": "Tetris narratif — La Fragmentation",
     "id": "./index.html",
     "start_url": "./index.html",
+    "scope": "./",
     "display": "standalone",
     "orientation": "any",
     "theme_color": "#08081a",
@@ -28,6 +29,15 @@
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "assets/splash-chargement.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Écran de chargement — Dernière Ligne"
         }
     ],
     "related_applications": [],

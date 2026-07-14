@@ -112,10 +112,26 @@ export function attaqueDistorsionPlateau(effets, dureeMs) {
 }
 
 /**
+ * Choisit une attaque de boss en évitant la répétition immédiate du même type.
+ * @param {string[]} disponibles
+ * @param {string | null} [derniereType]
+ * @returns {string | null}
+ */
+export function choisirAttaqueCombinaison(disponibles, derniereType = null) {
+    if (!disponibles?.length) return null;
+    const typesUniques = [...new Set(disponibles)];
+    if (typesUniques.length === 1) return disponibles[0];
+    const candidats = disponibles.filter((type) => type !== derniereType);
+    const pool = candidats.length > 0 ? candidats : disponibles;
+    return pool[Math.floor(Math.random() * pool.length)];
+}
+
+/**
  * @typedef {object} ContexteAttaqueBoss
  * @property {(string | number)[][]} plateau
  * @property {object} effets
  * @property {object | null} bossActif
+ * @property {{ derniereAttaqueType?: string | null } | null} [bossEtat]
  */
 
 export const REGISTRE_ATTAQUES_BOSS = {
@@ -182,7 +198,11 @@ export function executerAttaqueBoss(boss, phaseIndex, ctx) {
             'colonne_gelee',
             'inverser_controles',
         ];
-        const type = disponibles[Math.floor(Math.random() * disponibles.length)];
+        const type = choisirAttaqueCombinaison(
+            disponibles,
+            ctx.bossEtat?.derniereAttaqueType ?? null
+        );
+        if (type && ctx.bossEtat) ctx.bossEtat.derniereAttaqueType = type;
         return {
             type,
             dureeMs: 8000,

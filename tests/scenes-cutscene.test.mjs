@@ -17,6 +17,7 @@ import {
     SCENE_DEFAUT_POST_MONDE,
     SCENE_DEFAUT_INTERLUDE,
 } from '../js/histoire/histoire-narratif-scenes.js';
+import { lireCheminsScenesArrierePlanSw } from '../e2e/helpers-sw-precache.mjs';
 
 const racine = join(import.meta.dirname, '..');
 const swSource = readFileSync(join(racine, 'sw.js'), 'utf8');
@@ -53,9 +54,49 @@ describe('scenes-cutscene — assets et registre', () => {
         }
     });
 
+    it('interlude_gardiens est precachee a l install (monde rouille)', () => {
+        const installBloc =
+            swSource.match(/SCENES_CUTSCENE_INSTALL\s*=\s*\[([\s\S]*?)\];/)?.[1] ?? '';
+        expect(installBloc).toContain('scene_interlude_gardiens');
+    });
+
+    it('interlude_elle est precachee a l install (monde eclipse)', () => {
+        const installBloc =
+            swSource.match(/SCENES_CUTSCENE_INSTALL\s*=\s*\[([\s\S]*?)\];/)?.[1] ?? '';
+        expect(installBloc).toContain('scene_interlude_elle');
+    });
+
+    it('seuil_brasier est precachee a l install (premier boss)', () => {
+        expect(swSource).toContain('scene_seuil_brasier');
+        const installBloc =
+            swSource.match(/SCENES_CUTSCENE_INSTALL\s*=\s*\[([\s\S]*?)\];/)?.[1] ?? '';
+        expect(installBloc).toContain('scene_seuil_brasier');
+    });
+
     it('vide_errance est lazy mais precachee en arriere-plan SW', () => {
         expect(SCENES_CUTSCENE.vide_errance?.lazy).toBe(true);
         expect(swSource).toContain('scene_vide_errance');
+    });
+
+    it('chaque scene lazy du registre est precachee install ou arriere-plan SW', () => {
+        const installBloc =
+            swSource.match(/SCENES_CUTSCENE_INSTALL\s*=\s*\[([\s\S]*?)\];/)?.[1] ?? '';
+        const arrierePlanBloc =
+            swSource.match(/SCENES_CUTSCENE_ARRIERE_PLAN\s*=\s*\[([\s\S]*?)\];/)?.[1] ?? '';
+        for (const [id, scene] of Object.entries(SCENES_CUTSCENE)) {
+            if (!scene.lazy) continue;
+            const src = scene.src.replace(/^assets\//, './assets/');
+            const precache = installBloc.includes(src) || arrierePlanBloc.includes(src);
+            expect(precache, `${id} doit etre precachee`).toBe(true);
+        }
+    });
+
+    it('helper E2E aligne sur SCENES_CUTSCENE_ARRIERE_PLAN', () => {
+        const chemins = lireCheminsScenesArrierePlanSw();
+        expect(chemins.length).toBeGreaterThanOrEqual(10);
+        for (const chemin of chemins) {
+            expect(swSource).toContain(chemin);
+        }
     });
 
     it('vide_errance est annotee lazy et referencee par une cutscene entree', () => {

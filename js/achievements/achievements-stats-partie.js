@@ -1,4 +1,4 @@
-import { chargerEtatHistoire, sauvegarderEtatHistoire } from '../io/progression.js';
+﻿import { chargerEtatHistoire, sauvegarderEtatHistoire } from '../io/progression.js';
 import { store, obtenirBiomeActif } from '../etat/store-jeu.js';
 import { melodie } from '../audio/melodie.js';
 import { reinitialiserStatsAchievementsHistoire } from './achievements-histoire.js';
@@ -6,7 +6,7 @@ import {
     ACHIEVEMENTS,
     chargerAchievementsDonnees,
     achievementsDonneesChargees,
-} from '../achievements-donnees.js';
+} from '../achievements/achievements-donnees-chargement.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { fileAchievements, statsGlobales } from './achievements-stats-etat.js';
 import { sauvegarderStats } from './achievements-stats-persistance.js';

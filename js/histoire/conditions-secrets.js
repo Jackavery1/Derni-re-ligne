@@ -1,7 +1,7 @@
-import { store } from '../etat/store-jeu.js';
+﻿import { store } from '../etat/store-jeu.js';
 import { etat } from '../etat/store-jeu.js';
 import { CONFIG } from '../config/config-jeu.js';
-import { ETAT_HISTOIRE_VIDE } from '../histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../histoire/histoire-donnees-exports.js';
 import { sansAccentsE } from '../logique/texte-jeu.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
@@ -25,7 +25,7 @@ function _sauvegarderEtat(etatHist) {
     persisterEtatHistoire(etatHist);
 }
 
-/** @param {string} mondeId @param {typeof import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} etatHist */
+/** @param {string} mondeId @param {typeof import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} etatHist */
 function _ajouterMondeCacheDebloque(mondeId, etatHist) {
     if (!Array.isArray(etatHist.mondesCachesDebloques)) {
         etatHist.mondesCachesDebloques = [];
@@ -74,7 +74,7 @@ function _debloquerMiroir(etatHist) {
 /**
  * Cas differe : les 3 Tetris CYBER ont ete realises AVANT la victoire sur
  * l'Archiviste. Verifie les conditions persistees et debloque avec notification.
- * @param {typeof import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} etatHist
+ * @param {typeof import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} etatHist
  */
 export function verifierDeblocageMiroirDiffere(etatHist) {
     if (etatHist.mondesCachesDebloques?.includes('monde_miroir')) return;
@@ -202,7 +202,7 @@ export function obtenirSecondesRestantesAttenteTrame() {
 
 /**
  * Resume des 4 conditions pour debloquer la Trame Primordiale.
- * @param {typeof import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} etatHist
+ * @param {typeof import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} etatHist
  */
 /** @param {string} mondeId @returns {string | null} */
 export function obtenirGuideMondeSecret(mondeId) {

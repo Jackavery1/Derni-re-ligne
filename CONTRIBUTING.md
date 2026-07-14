@@ -74,6 +74,8 @@ Le comportement zoom/scroll est documenté dans [docs/design-tokens.md](docs/des
 
 ### Checklist manuelle iPhone (encoches réelles)
 
+**Automatisé :** `npm run verify:iphone-checklist` (8 points simulés — voir [docs/checklist-iphone-release.md](docs/checklist-iphone-release.md)).
+
 Les specs `audit-c-responsive` et `e2e/checklist-iphone.spec.mjs` simulent les encoches iPhone via `e2e/helpers-iphone-safe-area.mjs` (profils 14, 15 Pro, SE, paysage — audit C14). Avant une release mobile, valider sur **iPhone physique** en PWA standalone :
 
 1. Pause solo paysage — bouton Reprendre sous l’encoche, zone tactile ≥ 48 px

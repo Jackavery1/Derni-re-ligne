@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+﻿import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
     modeDevActif,
     activerSessionDev,
     desactiverSessionDev,
 } from '../js/logique/mode-dev-etat.js';
 import { mondePeutEtreJoue } from '../js/histoire/histoire-mondes.js';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 
 function mockSessionStorage() {
     const store = new Map();

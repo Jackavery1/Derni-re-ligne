@@ -418,11 +418,7 @@
             "pvMax": 10,
             "attaqueIntervalleMs": 16000,
             "attaqueType": "combinaison",
-            "attaquesDisponibles": [
-                "permutation_colonnes",
-                "permutation_colonnes",
-                "colonne_gelee"
-            ],
+            "attaquesDisponibles": ["permutation_colonnes", "colonne_gelee", "inverser_controles"],
             "portrait": "drawBossPortraitAvantgarde",
             "texteApparition": "La Distorsion t'attend. Je te prépare.",
             "texteDefaite": "Tu... es prêt. Elle... aussi."

@@ -120,8 +120,8 @@
 
 #boite-dialogue-cutscene {
     grid-column: 2;
-    background: rgba(4, 4, 18, 0.9);
-    border: 1px solid rgba(0, 221, 200, 0.45);
+    background: var(--rgba-4-4-18-0-9);
+    border: 1px solid var(--rgba-0-221-200-0-45);
     border-radius: 3px;
     padding: 14px 20px 12px;
     position: relative;
@@ -130,8 +130,8 @@
     width: 100%;
     justify-self: center;
     box-shadow:
-        0 0 24px rgba(0, 0, 0, 0.8),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+        0 0 24px var(--rgba-0-0-0-0-8),
+        inset 0 0 0 1px var(--rgba-255-255-255-0-04);
 }
 
 #ecran-histoire-cutscene[data-personnage='robo'] #boite-dialogue-cutscene {

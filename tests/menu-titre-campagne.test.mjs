@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+﻿import { describe, it, expect, beforeEach } from 'vitest';
 import {
     aProgressionCampagne,
     campagnePeutEtreContinuee,
@@ -14,7 +14,7 @@ import {
     estCleProgression,
     estClePreference,
 } from '../js/io/progression.js';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 import { introHistoireDejaVue } from '../js/histoire/histoire-intro.js';
 
 describe('menu-titre-campagne', () => {

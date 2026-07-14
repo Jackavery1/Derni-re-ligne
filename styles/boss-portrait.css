@@ -1,13 +1,13 @@
 .archi-legende-difficulte {
-    font-size: 0.48rem;
+    font-size: var(--typo-ui-hint);
     color: var(--gris-clair);
     margin: 0.5rem 0;
     text-align: center;
 }
 
 .profil-records-sous-titre {
-    font-size: 0.42rem;
-    color: rgba(255, 255, 255, 0.45);
+    font-size: var(--typo-ui-compact);
+    color: var(--rgba-255-255-255-0-45);
     margin: 0 0 0.5rem;
 }
 
@@ -24,7 +24,7 @@
 
 @media (max-width: 480px) {
     .histoire-prog-item {
-        font-size: 0.48rem;
+        font-size: var(--typo-ui-hint);
     }
 
     .menu-titre-dl .dl-mot-2,
@@ -44,19 +44,19 @@
 }
 
 .go-avertissement-trame {
-    font-size: 0.55rem;
+    font-size: var(--typo-ui-note);
     color: var(--orange-clair);
     text-align: center;
     line-height: 1.45;
     max-width: 22rem;
     margin: 0.5rem auto 0;
     padding: 0.4rem 0.6rem;
-    border: 1px solid rgba(255, 170, 68, 0.35);
-    background: rgba(255, 170, 68, 0.08);
+    border: 1px solid var(--rgba-255-170-68-0-35);
+    background: var(--rgba-255-170-68-0-08);
 }
 
 .go-continues-campagne {
-    font-size: 0.5rem;
+    font-size: var(--typo-ui-caption);
     color: var(--gris-moyen);
     text-align: center;
     line-height: 1.4;
@@ -65,7 +65,7 @@
 }
 
 .objectif-hud-paradoxe {
-    font-size: 0.45rem;
+    font-size: var(--typo-ui-label);
     color: var(--orange-clair);
     line-height: 1.35;
     margin-top: 0.25rem;
@@ -73,7 +73,7 @@
 }
 
 .tutoriel-indicateur {
-    font-size: 0.5rem;
+    font-size: var(--typo-ui-caption);
     color: var(--gris-texte-dim);
     text-align: center;
     margin: 0.25rem 0 0.5rem;
@@ -82,7 +82,7 @@
 .profil-records-table {
     display: grid;
     gap: 0.2rem;
-    font-size: 0.48rem;
+    font-size: var(--typo-ui-hint);
     max-height: 10rem;
     overflow-y: auto;
 }
@@ -92,7 +92,7 @@
     grid-template-columns: 1.4fr 1fr 0.8fr;
     gap: 0.35rem;
     padding: 0.2rem 0.35rem;
-    border-bottom: 1px solid rgba(0, 221, 200, 0.12);
+    border-bottom: 1px solid var(--rgba-0-221-200-0-12);
 }
 
 .profil-records-entete {
@@ -100,7 +100,7 @@
     font-weight: bold;
     position: sticky;
     top: 0;
-    background: rgba(8, 12, 20, 0.92);
+    background: var(--rgba-8-12-20-0-92);
 }
 
 .profil-records-nom {
@@ -109,8 +109,8 @@
 
 .boss-trame-attente-barre {
     height: 6px;
-    background: rgba(0, 245, 255, 0.15);
-    border: 1px solid rgba(0, 245, 255, 0.35);
+    background: var(--rgba-0-245-255-0-15);
+    border: 1px solid var(--rgba-0-245-255-0-35);
     border-radius: 3px;
     overflow: hidden;
 }
@@ -130,7 +130,7 @@
     align-items: center;
     justify-content: center;
     pointer-events: none;
-    background: rgba(0, 0, 0, 0.55);
+    background: var(--rgba-0-0-0-0-55);
     opacity: 0;
     transition: opacity 0.4s ease;
 }
@@ -155,7 +155,7 @@
 
 .boss-presentation-nom {
     font-family: 'Press Start 2P', monospace;
-    font-size: 0.55rem;
+    font-size: var(--typo-ui-note);
     letter-spacing: 2px;
     line-height: 1.6;
     text-shadow: 0 0 12px currentColor;
@@ -207,8 +207,8 @@
         margin: 0;
         padding: 6px 8px;
         box-sizing: border-box;
-        background: rgba(8, 8, 26, 0.94);
-        border: 1px solid rgba(255, 0, 110, 0.35);
+        background: var(--rgba-8-8-26-0-94);
+        border: 1px solid var(--rgba-255-0-110-0-35);
         border-radius: 4px;
         max-height: calc(var(--boss-dialogue-lh, 1.25em) * 2 + 12px);
     }
@@ -237,9 +237,9 @@
 #indicateur-boss-attaque {
     padding: 5px 3px;
     text-align: center;
-    border: 1px solid rgba(255, 0, 110, 0.3);
+    border: 1px solid var(--rgba-255-0-110-0-3);
     font-size: var(--typo-hud-micro);
     letter-spacing: 1px;
     color: var(--rose);
-    background: rgba(255, 0, 110, 0.04);
+    background: var(--rgba-255-0-110-0-04);
 }

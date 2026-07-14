@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+﻿import { test, expect } from '@playwright/test';
 import {
     preparerPageSansSw,
     attendreApplicationPrete,
@@ -7,7 +7,7 @@ import {
     attendreNotificationsInitiales,
     ETAT_DEBLOCAGE_META_RAPIDE,
 } from './helpers.mjs';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 
 test.describe('régressions visuelles', () => {
     test.beforeEach(async ({ page }) => {

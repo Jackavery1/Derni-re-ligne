@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
+﻿import { test, expect } from '@playwright/test';
 import { ouvrirCarteHistoire, fermerRecapPostMonde } from './helpers.mjs';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 import { avancerFluxPostVictoire } from './helpers-campagne-flux.mjs';
 
 const ETAT_PROLOGUE_PRET = {

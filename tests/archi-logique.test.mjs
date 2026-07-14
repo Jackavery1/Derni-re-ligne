@@ -17,7 +17,7 @@ import {
     archi_annuler,
     archi_reinitialiserEtatNiveau,
 } from '../js/logique/archi-logique.js';
-import { NIVEAUX_ARCHI } from '../js/archi-donnees.js';
+import { NIVEAUX_ARCHI } from '../js/archi-donnees/assembleur-niveaux.js';
 import { creerPlateau } from '../js/logique/piece-jeu.js';
 
 describe('archi_parserSilhouette', () => {

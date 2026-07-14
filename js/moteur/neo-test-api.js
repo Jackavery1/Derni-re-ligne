@@ -29,6 +29,10 @@ export function estNeoTestAutorise() {
  *   simulerTopVolontairePrologue?: () => Promise<void>,
  *   emettreEvenementBusJeu?: (evenement: string, payload?: unknown) => void,
  *   menuAnimActif?: () => boolean,
+ *   simulerTickConditionTrameDistorsion?: (dtMs?: number) => Promise<{
+ *     actionDistorsionFaite: boolean,
+ *     persistee: boolean,
+ *   }>,
  *   simulerGameOverBossDistorsion?: () => void | Promise<void>,
  *   terminerPartieCoop?: () => Promise<void>,
  *   basculerPauseCoop?: () => Promise<void>,
@@ -71,6 +75,15 @@ export function estNeoTestAutorise() {
  *     amplitude: number,
  *     respiration: boolean,
  *   }>,
+ *   obtenirDelaiPremierEvenementVivant?: (biomeId?: string) => Promise<{
+ *     biomeId: string,
+ *     delaiMs: number,
+ *     frames60: number,
+ *     delaiMinimumConfig: number,
+ *   } | null>,
+ *   obtenirExpressionBossCombat?: () => 'calme' | 'agressif' | 'vacillant',
+ *   obtenirPvBossCombat?: () => { pv: number, pvMax: number, vaincu: boolean } | null,
+ *   endommagerBossTest?: (nbLignes?: number) => 'calme' | 'agressif' | 'vacillant',
  * }} api
  */
 export function exposerNeoTestApi(api) {

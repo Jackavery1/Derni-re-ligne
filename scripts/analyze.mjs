@@ -83,7 +83,7 @@ const result = await esbuild.build({
     ...optionsCommunesProd,
     entryPoints: {
         bundle: 'js/main.js',
-        'neo-test-init': 'js/neo-test-init.js',
+        'neo-test-init': 'js/moteur/neo-test-init.js',
         'dev-init': 'js/logique/dev-init.js',
     },
     outdir: dossierAnalyse,

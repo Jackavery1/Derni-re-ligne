@@ -11,8 +11,8 @@
         0deg,
         transparent 0px,
         transparent 3px,
-        rgba(0, 245, 255, 0.015) 3px,
-        rgba(0, 245, 255, 0.015) 4px
+        var(--rgba-0-245-255-0-015) 3px,
+        var(--rgba-0-245-255-0-015) 4px
     );
 }
 
@@ -25,7 +25,7 @@
     );
 }
 #ecran-histoire-cutscene[data-personnage='vera'] .cutscene-fond-overlay {
-    background: radial-gradient(ellipse at 80% 20%, rgba(255, 0, 110, 0.08) 0%, transparent 60%);
+    background: radial-gradient(ellipse at 80% 20%, var(--rgba-255-0-110-0-08) 0%, transparent 60%);
 }
 
 #ecran-histoire-cutscene[data-personnage='distorsion'] {
@@ -34,8 +34,8 @@
 #ecran-histoire-cutscene[data-personnage='distorsion'] .cutscene-fond-overlay {
     background: radial-gradient(
         ellipse at 50% 50%,
-        rgba(180, 0, 255, 0.1) 0%,
-        rgba(255, 0, 110, 0.05) 50%,
+        var(--rgba-180-0-255-0-1) 0%,
+        var(--rgba-255-0-110-0-05) 50%,
         transparent 80%
     );
     animation: distorsion-fond-cycle 5s linear infinite;
@@ -69,8 +69,8 @@
         0deg,
         transparent 0px,
         transparent 2px,
-        rgba(0, 255, 68, 0.02) 2px,
-        rgba(0, 255, 68, 0.02) 3px
+        var(--rgba-0-255-68-0-02) 2px,
+        var(--rgba-0-255-68-0-02) 3px
     );
 }
 
@@ -92,9 +92,9 @@
 .cutscene-canvas-portrait {
     width: 96px;
     height: 96px;
-    border: 1px solid var(--portrait-couleur, rgba(255, 255, 255, 0.2));
+    border: 1px solid var(--portrait-couleur, var(--rgba-255-255-255-0-2));
     border-radius: 4px;
-    box-shadow: 0 0 12px var(--portrait-couleur, rgba(255, 255, 255, 0.1));
+    box-shadow: 0 0 12px var(--portrait-couleur, var(--rgba-255-255-255-0-1));
     transition:
         border-color 0.4s ease,
         box-shadow 0.4s ease;
@@ -104,7 +104,7 @@
     font-family: var(--font-stats);
     font-size: clamp(8px, 1vw, 11px);
     letter-spacing: 3px;
-    color: var(--portrait-couleur, rgba(255, 255, 255, 0.6));
+    color: var(--portrait-couleur, var(--rgba-255-255-255-0-6));
     text-shadow: 0 0 8px var(--portrait-couleur, transparent);
     text-transform: uppercase;
     min-height: 16px;

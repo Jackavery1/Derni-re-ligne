@@ -11,7 +11,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(8, 8, 26, 0.93);
+    background: var(--rgba-8-8-26-0-93);
     backdrop-filter: blur(10px);
     z-index: 100;
 }
@@ -38,31 +38,31 @@
 
 .panneau-meta {
     position: relative;
-    background: linear-gradient(160deg, rgba(13, 10, 32, 0.92), rgba(8, 8, 26, 0.88));
-    border: 1px solid rgba(102, 68, 204, 0.45);
+    background: linear-gradient(160deg, var(--rgba-13-10-32-0-92), var(--rgba-8-8-26-0-88));
+    border: 1px solid var(--rgba-102-68-204-0-45);
     border-radius: 6px;
     box-shadow:
-        0 0 18px rgba(102, 68, 204, 0.18),
-        inset 0 0 24px rgba(0, 0, 0, 0.45);
+        0 0 18px var(--rgba-102-68-204-0-18),
+        inset 0 0 24px var(--rgba-0-0-0-0-45);
     backdrop-filter: blur(2px);
 }
 .panneau-meta--accent-cyan {
-    border-color: rgba(0, 221, 200, 0.5);
+    border-color: var(--rgba-0-221-200-0-5);
     box-shadow:
-        0 0 18px rgba(0, 221, 200, 0.16),
-        inset 0 0 24px rgba(0, 0, 0, 0.45);
+        0 0 18px var(--rgba-0-221-200-0-16),
+        inset 0 0 24px var(--rgba-0-0-0-0-45);
 }
 .panneau-meta--accent-magenta {
-    border-color: rgba(255, 45, 120, 0.5);
+    border-color: var(--rgba-255-45-120-0-5);
     box-shadow:
-        0 0 18px rgba(255, 45, 120, 0.16),
-        inset 0 0 24px rgba(0, 0, 0, 0.45);
+        0 0 18px var(--rgba-255-45-120-0-16),
+        inset 0 0 24px var(--rgba-0-0-0-0-45);
 }
 .panneau-meta--accent-or {
-    border-color: rgba(255, 187, 68, 0.5);
+    border-color: var(--rgba-255-187-68-0-5);
     box-shadow:
-        0 0 18px rgba(255, 187, 68, 0.16),
-        inset 0 0 24px rgba(0, 0, 0, 0.45);
+        0 0 18px var(--rgba-255-187-68-0-16),
+        inset 0 0 24px var(--rgba-0-0-0-0-45);
 }
 
 /* Boutons UI globaux */
@@ -70,7 +70,6 @@
     background: transparent;
     border: 2px solid var(--cyan);
     color: var(--cyan);
-    font-family: var(--police);
     font-size: clamp(0.55rem, 2vw, 0.75rem);
     padding: var(--space-3) var(--space-5);
     min-height: 48px;
@@ -81,8 +80,8 @@
     transition: all 0.15s;
     text-shadow: 0 0 8px var(--cyan);
     box-shadow:
-        0 0 8px rgba(0, 245, 255, 0.3),
-        inset 0 0 8px rgba(0, 245, 255, 0.08);
+        0 0 8px var(--rgba-0-245-255-0-3),
+        inset 0 0 8px var(--rgba-0-245-255-0-08);
 }
 .bouton:hover,
 .bouton:active {
@@ -90,15 +89,15 @@
     color: var(--fond);
     box-shadow:
         0 0 25px var(--cyan),
-        0 0 50px rgba(0, 245, 255, 0.4);
+        0 0 50px var(--rgba-0-245-255-0-4);
 }
 .bouton.rose {
     border-color: var(--rose);
     color: var(--rose);
     text-shadow: 0 0 8px var(--rose);
     box-shadow:
-        0 0 8px rgba(255, 0, 110, 0.3),
-        inset 0 0 8px rgba(255, 0, 110, 0.08);
+        0 0 8px var(--rgba-255-0-110-0-3),
+        inset 0 0 8px var(--rgba-255-0-110-0-08);
 }
 .bouton.rose:hover {
     background: var(--rose);
@@ -109,7 +108,7 @@
     color: var(--ui-texte-discret-bouton);
     text-shadow: none;
     box-shadow: none;
-    font-size: 0.5rem;
+    font-size: var(--typo-ui-compact);
 }
 .bouton.discret:hover {
     background: var(--ui-fond-discret-bouton-hover);
@@ -153,8 +152,8 @@
 .toggle-oracle:focus-visible,
 .histoire-prog-trame-btn:focus-visible,
 a:focus-visible {
-    outline: 2px solid var(--jaune);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
 }
 
 .sr-only {

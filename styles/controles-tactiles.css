@@ -10,7 +10,7 @@
     flex-direction: column;
     gap: 6px;
     padding: 8px 12px calc(14px + var(--safe-bottom));
-    background: linear-gradient(transparent, rgba(8, 8, 26, 0.97) 30%);
+    background: linear-gradient(transparent, var(--rgba-8-8-26-0-97) 30%);
     z-index: 50;
 }
 
@@ -21,7 +21,7 @@
 }
 
 .btn-tactile {
-    background: rgba(0, 245, 255, 0.07);
+    background: var(--rgba-0-245-255-0-07);
     border: 1px solid var(--bordure);
     color: var(--texte);
     font-family: var(--police);
@@ -38,34 +38,34 @@
     transition: background 0.08s;
 }
 .btn-tactile:active {
-    background: rgba(0, 245, 255, 0.25);
+    background: var(--rgba-0-245-255-0-25);
     box-shadow: 0 0 14px var(--cyan);
 }
 .btn-tactile.violet {
-    border-color: rgba(180, 0, 255, 0.4);
+    border-color: var(--rgba-180-0-255-0-4);
     color: var(--violet);
 }
 .btn-tactile.violet:active {
-    background: rgba(180, 0, 255, 0.25);
+    background: var(--rgba-180-0-255-0-25);
     box-shadow: 0 0 14px var(--violet);
 }
 .btn-tactile.rouge {
-    border-color: rgba(255, 0, 110, 0.4);
+    border-color: var(--rgba-255-0-110-0-4);
     color: var(--rose);
 }
 .btn-tactile.rouge:active {
-    background: rgba(255, 0, 110, 0.2);
+    background: var(--rgba-255-0-110-0-2);
 }
 .btn-tactile.jaune {
-    border-color: rgba(255, 230, 0, 0.45);
+    border-color: var(--rgba-255-230-0-0-45);
     color: var(--jaune);
 }
 .btn-tactile.jaune:active {
-    background: rgba(255, 230, 0, 0.2);
+    background: var(--rgba-255-230-0-0-2);
     box-shadow: 0 0 14px var(--jaune);
 }
 .btn-tactile.large {
     width: 90px;
-    font-size: 0.5rem;
+    font-size: var(--typo-ui-caption);
     letter-spacing: 1px;
 }

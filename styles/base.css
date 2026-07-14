@@ -66,7 +66,7 @@ body.effets-reduits .boss-portrait-cadre.flash {
 .vivant-barre-piste {
     width: 100%;
     height: 3px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--rgba-255-255-255-0-1);
     margin-top: 4px;
     overflow: hidden;
 }
@@ -82,11 +82,11 @@ body.effets-reduits .boss-portrait-cadre.flash {
 }
 
 .section-vide-titre {
-    color: rgba(255, 255, 255, 0.2);
+    color: var(--rgba-255-255-255-0-2);
 }
 
 .section-vide-msg {
-    font-size: 0.26rem;
+    font-size: var(--typo-hud-micro);
     color: var(--texte-discret);
     letter-spacing: 1px;
     text-align: center;

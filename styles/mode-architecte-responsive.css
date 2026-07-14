@@ -34,7 +34,7 @@
     }
 
     body.archi-active #interface-jeu-archi .stat-valeur {
-        font-size: 0.52rem;
+        font-size: var(--typo-ui-caption);
         line-height: 1.15;
     }
 

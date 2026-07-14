@@ -135,11 +135,38 @@ describe('maintainabilite', () => {
         expect(depassements, JSON.stringify(depassements, null, 2)).toEqual([]);
     });
 
+    it('tous les specs e2e ne depassent pas 400 lignes', () => {
+        const e2eDir = join(racineProjet, 'e2e');
+        const depassements = [];
+        for (const nom of readdirSync(e2eDir).filter((f) => f.endsWith('.spec.mjs'))) {
+            const lignes = compterLignes(join(e2eDir, nom));
+            if (lignes > 400) depassements.push({ fichier: nom, lignes });
+        }
+        expect(depassements, JSON.stringify(depassements, null, 2)).toEqual([]);
+    });
+
     it('racine js/ — barrels et entrees uniquement (vague 3)', () => {
+        const allowlist = new Set([
+            'achievements.js',
+            'codex.js',
+            'histoire-textes.fallback.js',
+            'histoire-textes.fallback.stub.js',
+            'histoire-textes.js',
+            'main.js',
+            'moteur.js',
+            'types.js',
+        ]);
         const racine = readdirSync(racineJs)
             .filter((f) => f.endsWith('.js'))
             .sort();
-        expect(racine.length).toBeLessThanOrEqual(15);
+        expect(racine.length).toBeLessThanOrEqual(allowlist.size);
+        expect(racine).toEqual([...allowlist].sort());
+    });
+
+    it('precache shell : SFX boss en ogg uniquement (wav a la demande)', () => {
+        const swPrecache = readFileSync(join(racineProjet, 'sw-precache-list.js'), 'utf8');
+        expect(swPrecache).toMatch(/boss_braise\.ogg/);
+        expect(swPrecache).not.toMatch(/\.wav/);
     });
 
     it('tous les modules js sont listes dans le precache SW dev', () => {
@@ -150,7 +177,7 @@ describe('maintainabilite', () => {
         expect(fin).toBeGreaterThan(debut);
         const blocPrecache = swPrecache.slice(debut, fin);
 
-        const exclusPrecache = new Set(['./js/codex-histoire.js']);
+        const exclusPrecache = new Set(['./js/codex-histoire.js', './js/logique/dev-init.js']);
 
         const manquants = listerFichiersJs(racineJs)
             .map(

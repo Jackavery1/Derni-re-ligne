@@ -3,10 +3,13 @@
         ================================================ */
 body.contraste-eleve {
     --fond: var(--contraste-fond);
-    --fond-panneau: rgba(255, 255, 255, 0.08);
-    --bordure: rgba(255, 255, 255, 0.55);
+    --fond-panneau: var(--rgba-255-255-255-0-08);
+    --bordure: var(--rgba-255-255-255-0-55);
     --texte: var(--contraste-texte);
-    --texte-dim: rgba(255, 255, 255, 0.75);
+    --texte-dim: var(--texte);
+    --gris-texte-dim: var(--texte);
+    --menu-btn-sous-titre: var(--texte);
+    --menu-separateur: var(--texte);
 }
 body.contraste-eleve .bouton {
     border-width: 3px;

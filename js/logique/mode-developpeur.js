@@ -1,4 +1,4 @@
-import { SEQUENCE_HISTOIRE, JOURNAUX_VERA } from '../histoire-donnees.js';
+﻿import { SEQUENCE_HISTOIRE, JOURNAUX_VERA } from '../histoire/histoire-donnees-exports.js';
 import { chargerEtatHistoire, sauvegarderEtatHistoire, ecrireStockage } from '../io/progression.js';
 import { mettreAJourVisibiliteModesDebloques } from '../ui/deblocage-ui.js';
 import { reinitialiserCampagneComplete } from '../histoire/reinitialiser-campagne.js';

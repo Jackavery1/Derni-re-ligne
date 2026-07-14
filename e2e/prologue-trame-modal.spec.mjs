@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
+﻿import { test, expect } from '@playwright/test';
 import { attendreApplicationPrete, attendrePartieVisible } from './helpers.mjs';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 
 test('prologue deja complete avec modal TRAME ouverte — partie visible', async ({ page }) => {
     test.setTimeout(60000);

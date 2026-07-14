@@ -1,4 +1,4 @@
-import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
+﻿import { SEQUENCE_HISTOIRE } from '../histoire/histoire-donnees-exports.js';
 import { ecranVersMonde } from './histoire-map-camera.js';
 
 /** @param {{ canvasCarte: HTMLCanvasElement | null }} etatCarte @param {number} clientX @param {number} clientY */

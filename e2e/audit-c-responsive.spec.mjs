@@ -1,15 +1,11 @@
-import { test, expect } from '@playwright/test';
+﻿import { test, expect } from '@playwright/test';
 import {
     preparerPageSansSw,
     attendreApplicationPrete,
     demarrerPartie,
     demarrerPartieCoop,
-    demarrerPartieViaClavier,
-    terminerPartieCourante,
-    terminerPartieCoopCourante,
     appliquerSafeAreaIphone,
     PROFILS_IPHONE_SAFE_AREA,
-    ANNOTATION_C11,
     creerPageIphone14,
     ouvrirCarteHistoire,
     lancerMondeDepuisCarte,
@@ -18,7 +14,7 @@ import {
     ETAT_DEBLOCAGE_META_RAPIDE,
     ouvrirPremierNiveauArchitecte,
 } from './helpers.mjs';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 import {
     mesurerEncocheHaut,
     mesurerEncocheLaterale,
@@ -26,11 +22,23 @@ import {
     assertEncocheHautRespectee,
     assertEncocheLateraleRespectee,
     assertBoutonsTactilesMin,
+    mesurerBoutonsPauseTactile,
+    assertPauseTactileMin,
 } from './helpers-responsive-metriques.mjs';
 
 test('audit C1 — letterbox canvas sans deformation', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await demarrerPartie(page);
+    await expect
+        .poll(
+            () =>
+                page.evaluate(() => {
+                    const canvas = document.getElementById('canvas-plateau');
+                    return Boolean(canvas && canvas.width > 0 && canvas.height > 0);
+                }),
+            { timeout: 5000 }
+        )
+        .toBe(true);
 
     const metriques = await page.evaluate(() => {
         const canvas = document.getElementById('canvas-plateau');
@@ -49,98 +57,6 @@ test('audit C1 — letterbox canvas sans deformation', async ({ page }) => {
     expect(metriques.ratioAffiche).toBeCloseTo(0.5, 1);
     expect(metriques.scale).toBeGreaterThan(0);
     expect(metriques.overflowX).toBe(false);
-});
-
-test('audit C11 — pause paysage respecte encoche simulee', async ({ page }) => {
-    test.info().annotations.push(ANNOTATION_C11);
-    await demarrerPartie(page);
-    await page.setViewportSize({ width: 667, height: 375 });
-    await appliquerSafeAreaIphone(page);
-    await page.keyboard.press('Escape');
-    await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
-
-    const metriques = await mesurerEncocheHaut(page, {
-        idEcran: 'ecran-pause',
-        selecteurBouton: '#btn-reprendre',
-    });
-    assertEncocheHautRespectee(metriques, { safeTop: '47px' });
-});
-
-test('audit C11 — game over paysage respecte encoche simulee', async ({ page }) => {
-    test.info().annotations.push(ANNOTATION_C11);
-    await page.setViewportSize({ width: 667, height: 375 });
-    await demarrerPartieViaClavier(page);
-    await appliquerSafeAreaIphone(page);
-    await terminerPartieCourante(page);
-    await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/, { timeout: 10000 });
-
-    const metriques = await mesurerEncocheHaut(page, {
-        idEcran: 'ecran-game-over',
-        selecteurBouton: '#ecran-game-over .go-boutons .bouton',
-    });
-    assertEncocheHautRespectee(metriques);
-});
-
-test('audit C11 — pause coop paysage respecte encoche simulee', async ({ page }) => {
-    test.info().annotations.push(ANNOTATION_C11);
-    await demarrerPartieCoop(page);
-    await page.setViewportSize({ width: 667, height: 375 });
-    await appliquerSafeAreaIphone(page);
-    await activerPauseCoopTactile(page);
-    await expect(page.locator('#ecran-pause-coop')).toHaveClass(/actif/);
-
-    const metriques = await mesurerEncocheHaut(page, {
-        idEcran: 'ecran-pause-coop',
-        selecteurBouton: '#btn-coop-reprendre',
-    });
-    assertEncocheHautRespectee(metriques);
-});
-
-test('audit C11 — game over coop paysage respecte encoche simulee', async ({ page }) => {
-    test.info().annotations.push(ANNOTATION_C11);
-    await demarrerPartieCoop(page);
-    await page.setViewportSize({ width: 667, height: 375 });
-    await appliquerSafeAreaIphone(page);
-    await terminerPartieCoopCourante(page);
-
-    const metriques = await mesurerEncocheHaut(page, {
-        idEcran: 'ecran-game-over-coop',
-        selecteurBouton: '#ecran-game-over-coop .go-boutons .bouton',
-    });
-    assertEncocheHautRespectee(metriques);
-});
-
-test('audit C11 — architecte paysage respecte encoche simulee', async ({ page }) => {
-    test.info().annotations.push(ANNOTATION_C11);
-    await page.setViewportSize({ width: 667, height: 375 });
-    await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
-    await page.goto('/');
-    await attendreApplicationPrete(page);
-    await appliquerSafeAreaIphone(page);
-    await page.locator('#btn-architecte').click();
-    await ouvrirPremierNiveauArchitecte(page);
-    await expect(page.locator('#interface-jeu-archi')).toBeVisible({ timeout: 5000 });
-
-    const metriques = await page.evaluate(() => {
-        const conteneur = document.getElementById('conteneur-principal-archi');
-        const style = conteneur ? getComputedStyle(conteneur) : null;
-        const valider = document.getElementById('btn-archi-valider-p');
-        const rect = valider?.getBoundingClientRect();
-        return {
-            paddingTop: style?.paddingTop ?? '',
-            validerH: rect?.height ?? 0,
-            validerW: rect?.width ?? 0,
-            paysageVisible:
-                getComputedStyle(
-                    document.getElementById('controles-archi-paysage') ?? document.body
-                ).display !== 'none',
-        };
-    });
-    expect(parseFloat(metriques.paddingTop)).toBeGreaterThanOrEqual(46);
-    expect(metriques.paysageVisible).toBe(true);
-    assertBoutonsTactilesMin([
-        { id: 'btn-archi-valider-p', h: metriques.validerH, w: metriques.validerW },
-    ]);
 });
 
 test('audit C1 — architecte telephone paysage tactile valider', async ({ page }) => {
@@ -166,44 +82,17 @@ test('audit C1 — architecte telephone paysage tactile valider', async ({ page 
     assertBoutonsTactilesMin(metriques);
 });
 
-test('audit C11 — carte histoire iPhone respecte encoche simulee', async ({ browser }) => {
-    test.info().annotations.push(ANNOTATION_C11);
-    const { context, page } = await creerPageIphone14(browser);
-    await ouvrirCarteHistoire(page, ETAT_DEBLOCAGE_META_RAPIDE);
-    await appliquerSafeAreaIphone(page);
-
-    const metriques = await mesurerEncocheHaut(page, {
-        idEcran: 'histoire-map-header',
-        selecteurBouton: '#btn-histoire-retour',
-    });
-    assertEncocheHautRespectee(metriques, { safeTop: '47px' });
-    await context.close();
-});
-
 test('audit C12 — pause portrait au touch', { tag: '@touch-only' }, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await demarrerPartie(page);
     await activerPausePartieTactile(page);
     await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
 
-    const metriques = await page.evaluate(() => {
-        const reprendre = document.getElementById('btn-reprendre');
-        const quitter = document.getElementById('btn-pause-quitter');
-        const rect = reprendre?.getBoundingClientRect();
-        const quitterRect = quitter?.getBoundingClientRect();
-        return {
-            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
-            boutonH: rect?.height ?? 0,
-            boutonW: rect?.width ?? 0,
-            quitterH: quitterRect?.height ?? 0,
-            quitterW: quitterRect?.width ?? 0,
-        };
+    const metriques = await mesurerBoutonsPauseTactile(page, {
+        reprendreId: 'btn-reprendre',
+        secondaireId: 'btn-pause-quitter',
     });
-    expect(metriques.debord).toBe(false);
-    expect(metriques.boutonH).toBeGreaterThanOrEqual(48);
-    expect(metriques.boutonW).toBeGreaterThanOrEqual(48);
-    expect(metriques.quitterH).toBeGreaterThanOrEqual(48);
-    expect(metriques.quitterW).toBeGreaterThanOrEqual(48);
+    assertPauseTactileMin(metriques);
 });
 
 test('audit C12 — pause coop portrait au touch', { tag: '@touch-only' }, async ({ page }) => {
@@ -212,24 +101,11 @@ test('audit C12 — pause coop portrait au touch', { tag: '@touch-only' }, async
     await activerPauseCoopTactile(page);
     await expect(page.locator('#ecran-pause-coop')).toHaveClass(/actif/);
 
-    const metriques = await page.evaluate(() => {
-        const reprendre = document.getElementById('btn-coop-reprendre');
-        const pauseMobile = document.getElementById('btn-pause-coop-mobile');
-        const rect = reprendre?.getBoundingClientRect();
-        const pauseRect = pauseMobile?.getBoundingClientRect();
-        return {
-            debord: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
-            boutonH: rect?.height ?? 0,
-            boutonW: rect?.width ?? 0,
-            pauseH: pauseRect?.height ?? 0,
-            pauseW: pauseRect?.width ?? 0,
-        };
+    const metriques = await mesurerBoutonsPauseTactile(page, {
+        reprendreId: 'btn-coop-reprendre',
+        secondaireId: 'btn-pause-coop-mobile',
     });
-    expect(metriques.debord).toBe(false);
-    expect(metriques.boutonH).toBeGreaterThanOrEqual(48);
-    expect(metriques.boutonW).toBeGreaterThanOrEqual(48);
-    expect(metriques.pauseH).toBeGreaterThanOrEqual(48);
-    expect(metriques.pauseW).toBeGreaterThanOrEqual(48);
+    assertPauseTactileMin(metriques);
 });
 
 test(

@@ -1,4 +1,4 @@
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+﻿import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 import { MONDES_CAMPAGNE_PRINCIPALE } from './etats-histoire-base.mjs';
 
 const BOSS_PAR_MONDE = {

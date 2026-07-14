@@ -1,4 +1,4 @@
-import { BIOMES } from '../config/biomes.js';
+﻿import { BIOMES } from '../config/biomes.js';
 import { lireStockage } from '../io/progression.js';
 import { afficherEcran } from '../ui/ecrans-ui.js';
 import { ECRANS } from '../etat/store-jeu.js';
@@ -26,7 +26,7 @@ import { demarrerArchi } from './archi-partie.js';
 
 let archiSelectionListenersInitialises = false;
 
-/** @param {import('../archi-donnees.js').NiveauArchi} niv @param {string} accent */
+/** @param {import('../archi-donnees/assembleur-niveaux.js').NiveauArchi} niv @param {string} accent */
 function dessinerApercuCarteArchi(canvas, niv, accent) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -37,7 +37,7 @@ function dessinerApercuCarteArchi(canvas, niv, accent) {
     rendreIconeSurCanvas(canvas, obtenirIdIconeBiomeArchi(niv.biome));
 }
 
-/** @param {import('../archi-donnees.js').NiveauArchi} niv */
+/** @param {import('../archi-donnees/assembleur-niveaux.js').NiveauArchi} niv */
 function obtenirDescriptionObjectifArchi(niv) {
     const inventaire = niv.pieces.map((p) => `${p.type}×${p.qte}`).join(', ');
     return [
@@ -47,7 +47,7 @@ function obtenirDescriptionObjectifArchi(niv) {
 }
 
 /**
- * @param {import('../archi-donnees.js').NiveauArchi} niv
+ * @param {import('../archi-donnees/assembleur-niveaux.js').NiveauArchi} niv
  * @param {{ debloque: boolean, fait: boolean, meilleur: number, etoiles: number }} etat
  */
 function obtenirMetaDetailArchi(niv, etat) {
@@ -68,7 +68,7 @@ function obtenirMetaDetailArchi(niv, etat) {
     return lignes;
 }
 
-/** @param {import('../archi-donnees.js').NiveauArchi} niv */
+/** @param {import('../archi-donnees/assembleur-niveaux.js').NiveauArchi} niv */
 export function ouvrirDetailNiveauArchi(niv) {
     initialiserPanneauDetail();
     const cle = `derniereLigne_archi_${niv.id}`;

@@ -1,5 +1,5 @@
-import { DIFFICULTE_MONDES } from '../io/difficulte-mondes-chargement.js';
-import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
+﻿import { DIFFICULTE_MONDES } from '../io/difficulte-mondes-chargement.js';
+import { SEQUENCE_HISTOIRE } from '../histoire/histoire-donnees-exports.js';
 import { SEUILS_COMPLETION } from '../histoire/histoire-mondes.js';
 import { store } from '../etat/store-jeu.js';
 import { logger } from '../io/logger.js';

@@ -1,4 +1,4 @@
-import { activerModeHistoire } from '../etat/mode-histoire.js';
+﻿import { activerModeHistoire } from '../etat/mode-histoire.js';
 import { chargerHistoireTextes } from '../io/charger-histoire-textes.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from '../histoire/histoire-etat.js';
 import { store, etat } from '../etat/store-jeu.js';
@@ -31,7 +31,7 @@ export function creerHandlersHistoire(depsSync) {
             await chargerHistoireTextes();
             const { declencherNarratifPostMonde } =
                 await import('../histoire/histoire-manager-post-monde.js');
-            const { SEQUENCE_HISTOIRE } = await import('../histoire-donnees.js');
+            const { SEQUENCE_HISTOIRE } = await import('../histoire/histoire-donnees-exports.js');
             const { rafraichirEtatHistoire } = await import('../histoire/histoire-mondes.js');
             const { assurerFragmentsPartie } = await import('../ui/charger-ecrans.js');
             const monde = SEQUENCE_HISTOIRE.find((m) => m.id === mondeId);
@@ -48,7 +48,7 @@ export function creerHandlersHistoire(depsSync) {
         simulerVictoireMondeHistoire: async (mondeId, lignes = 99, sansNarratif = false) => {
             activerModeHistoire();
             await chargerHistoireTextes();
-            const { SEQUENCE_HISTOIRE } = await import('../histoire-donnees.js');
+            const { SEQUENCE_HISTOIRE } = await import('../histoire/histoire-donnees-exports.js');
             const monde = SEQUENCE_HISTOIRE.find((m) => m.id === mondeId);
             if (!monde) return;
             store.histoire.mondeActuel = mondeId;
@@ -58,7 +58,7 @@ export function creerHandlersHistoire(depsSync) {
             const { assurerFragmentsPartie } = await import('../ui/charger-ecrans.js');
             await assurerFragmentsPartie();
             if (monde.estBoss && monde.bossId) {
-                const { BOSS } = await import('../histoire-donnees.js');
+                const { BOSS } = await import('../histoire/histoire-donnees-exports.js');
                 const boss = BOSS[monde.bossId];
                 if (boss) {
                     store.histoire.boss.actif = boss;
@@ -80,7 +80,7 @@ export function creerHandlersHistoire(depsSync) {
             const { immediat = true } = options;
             activerModeHistoire();
             await chargerHistoireTextes();
-            const { SEQUENCE_HISTOIRE } = await import('../histoire-donnees.js');
+            const { SEQUENCE_HISTOIRE } = await import('../histoire/histoire-donnees-exports.js');
             const monde = SEQUENCE_HISTOIRE.find((m) => m.id === mondeId);
             if (!monde || monde.estBoss) return;
             store.histoire.mondeActuel = mondeId;
@@ -106,6 +106,7 @@ export function creerHandlersHistoire(depsSync) {
             return obtenirTypeFin();
         },
         obtenirSceneCutsceneActive: depsSync.obtenirSceneCutsceneActive,
+        obtenirSrcSceneCutsceneActive: depsSync.obtenirSrcSceneCutsceneActive,
         typewriterEstActif: depsSync.typewriterEstActif,
         obtenirHumeurPortraitCutscene: depsSync.obtenirHumeurPortraitCutscene,
         simulerTopVolontairePrologue: async () => {
@@ -117,6 +118,46 @@ export function creerHandlersHistoire(depsSync) {
         },
         emettreEvenementBusJeu: (evenement, payload) => emettre(evenement, payload),
         menuAnimActif: () => menuAnimActif,
+        simulerTickConditionTrameDistorsion: async (dtMs) => {
+            activerModeHistoire();
+            store.histoire.mondeActuel = 'monde_finale';
+            store.histoire.boss.actif = { id: 'distorsion' };
+            const etatHist = obtenirEtatHistoirePersiste();
+            etatHist.conditionsTrame = {
+                ...etatHist.conditionsTrame,
+                miroirComplete: true,
+                tousJournauxTrouves: true,
+                tousBossSansContinue: true,
+                actionDistorsionFaite: false,
+            };
+            persisterEtatHistoire(etatHist);
+            store.histoire.etat = etatHist;
+
+            const { CONFIG } = await import('../config/config-jeu.js');
+            const { creerPlateau } = await import('../logique/piece-jeu.js');
+            etat.plateau = creerPlateau();
+            const total = CONFIG.lignes * CONFIG.colonnes;
+            const aRemplir = Math.ceil(total * 0.55);
+            let posees = 0;
+            for (let l = CONFIG.lignes - 1; l >= 0 && posees < aRemplir; l--) {
+                for (let c = 0; c < CONFIG.colonnes && posees < aRemplir; c++) {
+                    etat.plateau[l][c] = '#00f5ff';
+                    posees++;
+                }
+            }
+
+            const { tickConditionTrame, reinitialiserConditionsRuntime, DUREE_ATTENTE_TRAME_MS } =
+                await import('../histoire/conditions-secrets.js');
+            reinitialiserConditionsRuntime();
+            tickConditionTrame(16);
+            tickConditionTrame(dtMs ?? DUREE_ATTENTE_TRAME_MS);
+
+            const { chargerEtatHistoire } = await import('../io/progression.js');
+            return {
+                actionDistorsionFaite: etatHist.conditionsTrame.actionDistorsionFaite,
+                persistee: chargerEtatHistoire().conditionsTrame.actionDistorsionFaite,
+            };
+        },
         simulerGameOverBossDistorsion: async () => {
             activerModeHistoire();
             store.histoire.mondeActuel = 'monde_finale';

@@ -1,4 +1,4 @@
-import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
+﻿import { SEQUENCE_HISTOIRE } from '../histoire/histoire-donnees-exports.js';
 import { enchainementCampagneActif } from './preferences-campagne.js';
 import { afficherNotificationTransitionCampagne } from '../ui/ui-notifications.js';
 import { store } from '../etat/store-jeu.js';

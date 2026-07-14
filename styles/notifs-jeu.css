@@ -67,17 +67,17 @@ body.partie-active #notif-achievement.visible {
 }
 
 body.partie-active .ach-entete {
-    font-size: 0.38rem;
+    font-size: var(--typo-ui-mini);
     letter-spacing: 2px;
 }
 
 body.partie-active #ach-nom {
-    font-size: 0.55rem;
+    font-size: var(--typo-ui-note);
     letter-spacing: 1px;
 }
 
 body.partie-active #ach-description {
-    font-size: 0.4rem;
+    font-size: var(--typo-ui-mini);
 }
 
 body.partie-active .ach-badge {
@@ -100,15 +100,15 @@ body.partie-active #notif-codex.visible {
 }
 
 body.partie-active .codex-notif-label {
-    font-size: 0.36rem;
+    font-size: var(--typo-ui-compact);
 }
 
 body.partie-active .codex-notif-chapitre {
-    font-size: 0.38rem;
+    font-size: var(--typo-ui-mini);
 }
 
 body.partie-active .codex-notif-titre {
-    font-size: 0.5rem;
+    font-size: var(--typo-ui-caption);
 }
 
 body.partie-active #notif-oracle {
@@ -129,7 +129,7 @@ body.partie-active #banniere-meteo {
     align-items: center;
     gap: 8px;
     padding: 10px 12px;
-    font-size: 0.62rem;
+    font-size: var(--typo-ui-moyen);
     text-align: left;
 }
 
@@ -151,7 +151,7 @@ body.partie-active #banniere-vivant {
     align-items: center;
     gap: 8px;
     padding: 10px 12px;
-    font-size: 0.58rem;
+    font-size: var(--typo-ui-note);
     animation: apparitionVivantRail 0.35s ease-out;
 }
 
@@ -160,11 +160,11 @@ body.partie-active #banniere-vivant.visible {
 }
 
 body.partie-active #vivant-nom {
-    font-size: 0.46rem;
+    font-size: var(--typo-ui-label);
 }
 
 body.partie-active #vivant-desc {
-    font-size: 0.38rem;
+    font-size: var(--typo-ui-mini);
 }
 
 body.partie-active #vivant-icone {
@@ -172,7 +172,7 @@ body.partie-active #vivant-icone {
 }
 
 body.partie-active #vivant-compte-rebours {
-    font-size: 0.62rem;
+    font-size: var(--typo-ui-moyen);
 }
 
 body.partie-active[data-notif-layout='above'] .zone-notifs-jeu {

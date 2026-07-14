@@ -66,15 +66,15 @@ body.partie-active #conteneur-principal {
 }
 
 .section-titre {
-    font-size: 0.42rem;
+    font-size: var(--typo-ui-compact);
     color: var(--theme-primaire, var(--cyan));
     letter-spacing: 2px;
     text-shadow: 0 0 6px var(--theme-primaire, var(--cyan));
 }
 
 .canvas-preview {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--rgba-0-0-0-0-3);
+    border: 1px solid var(--rgba-255-255-255-0-05);
     overflow: hidden;
     display: block;
     max-width: 100%;
@@ -156,7 +156,7 @@ body.partie-active #conteneur-principal {
     width: 100%;
     height: 4px;
     margin-top: var(--space-1);
-    background: rgba(255, 255, 255, 0.12);
+    background: var(--rgba-255-255-255-0-12);
     border-radius: 2px;
     overflow: hidden;
 }

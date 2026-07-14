@@ -41,7 +41,7 @@ body.coop-active #conteneur-principal {
     gap: 12px;
     align-items: center;
     padding: 4px 10px;
-    background: rgba(0, 0, 0, 0.55);
+    background: var(--rgba-0-0-0-0-55);
     border: 1px solid var(--vert);
     font-family: var(--police);
     font-size: var(--typo-hud-micro);
@@ -60,7 +60,7 @@ body.coop-active #conteneur-principal {
 }
 
 .coop-joueur-badge {
-    font-size: 0.45rem;
+    font-size: var(--typo-ui-label);
     letter-spacing: 3px;
     text-align: center;
     padding: 6px;
@@ -118,11 +118,11 @@ body.coop-active #conteneur-principal {
 }
 
 .btn-coop-tactile {
-    background: rgba(255, 255, 255, 0.07);
+    background: var(--rgba-255-255-255-0-07);
     border: 1px solid var(--bordure);
     color: var(--texte);
     font-family: var(--police);
-    font-size: 0.6rem;
+    font-size: var(--typo-ui-secondaire);
     width: 48px;
     height: 48px;
     min-width: 48px;
@@ -136,15 +136,15 @@ body.coop-active #conteneur-principal {
     -webkit-tap-highlight-color: transparent;
 }
 .btn-coop-tactile.j1 {
-    border-color: rgba(0, 245, 255, 0.4);
+    border-color: var(--rgba-0-245-255-0-4);
     color: var(--cyan);
 }
 .btn-coop-tactile.j2 {
-    border-color: rgba(255, 0, 110, 0.4);
+    border-color: var(--rgba-255-0-110-0-4);
     color: var(--rose);
 }
 .btn-coop-tactile:active {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--rgba-255-255-255-0-2);
 }
 .btn-coop-petit {
     font-size: var(--typo-hud-micro);
@@ -154,14 +154,14 @@ body.coop-active #conteneur-principal {
 #notif-niveau.notif-niveau-vert {
     color: var(--vert);
     border-color: var(--vert);
-    box-shadow: 0 0 16px rgba(0, 255, 136, 0.4);
+    box-shadow: 0 0 16px var(--rgba-0-255-136-0-4);
 }
 
 .go-deco-coop {
     display: flex;
     gap: 12px;
     justify-content: center;
-    font-size: 0.5rem;
+    font-size: var(--typo-ui-caption);
     letter-spacing: 2px;
 }
 .go-deco-sep {
@@ -171,7 +171,7 @@ body.coop-active #conteneur-principal {
     font-size: 1.2rem;
 }
 .coop-go-fautif {
-    font-size: 0.35rem;
+    font-size: var(--typo-ui-compact);
     color: var(--texte-dim);
     letter-spacing: 2px;
     text-align: center;
@@ -187,11 +187,11 @@ body.coop-active #conteneur-principal {
     min-width: 48px;
     min-height: 48px;
     padding: 8px 14px;
-    background: rgba(0, 0, 0, 0.72);
+    background: var(--rgba-0-0-0-0-72);
     border: 1px solid var(--bordure);
     color: var(--texte);
     font-family: var(--police);
-    font-size: 0.42rem;
+    font-size: var(--typo-ui-compact);
     letter-spacing: 1px;
     cursor: pointer;
     border-radius: 4px;

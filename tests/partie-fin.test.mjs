@@ -200,7 +200,7 @@ describe('partie-fin', () => {
         terminerPartie(true);
         expect(afficherEcran).not.toHaveBeenCalled();
         expect(surFinDeMondeHistoire).not.toHaveBeenCalled();
-        vi.advanceTimersByTime(350);
+        vi.advanceTimersByTime(280);
         expect(afficherEcran).toHaveBeenCalledWith('ecran-game-over');
         vi.advanceTimersByTime(900);
         await vi.waitFor(() => {

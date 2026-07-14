@@ -1,7 +1,7 @@
-import { chargerNiveauxArchi } from './archi-niveaux-loader.js';
+﻿import { chargerNiveauxArchi } from './archi-niveaux-loader.js';
 
 /** Gabarits procéduraux — puzzles supplémentaires après les niveaux manuels. */
-/** @type {import('../archi-donnees.js').NiveauArchi[]} */
+/** @type {import('../archi-donnees/assembleur-niveaux.js').NiveauArchi[]} */
 const MODELES_PROCEDURAUX = [
     {
         id: 'ligne',
@@ -149,7 +149,7 @@ const MODELES_PROCEDURAUX = [
     },
 ];
 
-/** @returns {import('../archi-donnees.js').NiveauArchi[]} */
+/** @returns {import('../archi-donnees/assembleur-niveaux.js').NiveauArchi[]} */
 export function obtenirNiveauxArchiProceduraux() {
     return MODELES_PROCEDURAUX.map((m) => ({
         id: `proc_${m.id}`,
@@ -163,7 +163,7 @@ export function obtenirNiveauxArchiProceduraux() {
     }));
 }
 
-/** @returns {Promise<import('../archi-donnees.js').NiveauArchi[]>} */
+/** @returns {Promise<import('../archi-donnees/assembleur-niveaux.js').NiveauArchi[]>} */
 export function obtenirTousNiveauxArchi() {
     return chargerNiveauxArchi();
 }

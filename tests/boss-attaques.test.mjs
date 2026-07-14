@@ -6,6 +6,8 @@ import {
     attaqueColonneGelee,
     degelColonnes,
     hauteurEmpilement,
+    choisirAttaqueCombinaison,
+    executerAttaqueBoss,
     COULEUR_GLACE_B,
 } from '../js/logique/boss-attaques.js';
 
@@ -42,5 +44,32 @@ describe('boss-attaques', () => {
         const cols = attaqueColonneGelee(plateau, effets, 2, 5000);
         expect(cols).toHaveLength(2);
         expect(effets.timerDegelMs).toBe(5000);
+    });
+
+    it('choisirAttaqueCombinaison evite la repetition immediate', () => {
+        const disponibles = ['rangee_braise', 'colonne_gelee', 'inverser_controles'];
+        for (let i = 0; i < 80; i++) {
+            const derniere = disponibles[i % disponibles.length];
+            const choix = choisirAttaqueCombinaison(disponibles, derniere);
+            expect(choix).not.toBe(derniere);
+        }
+    });
+
+    it('executerAttaqueBoss combinaison met a jour derniereAttaqueType', () => {
+        const plateau = creerPlateau();
+        const bossEtat = { derniereAttaqueType: 'colonne_gelee' };
+        const ctx = {
+            plateau,
+            effets: { colonnesGelees: [], timerDegelMs: 0 },
+            bossActif: { attaquesDisponibles: ['rangee_braise', 'colonne_gelee'] },
+            bossEtat,
+        };
+        const boss = {
+            attaqueType: 'combinaison',
+            attaquesDisponibles: ['rangee_braise', 'colonne_gelee'],
+        };
+        const attaque = executerAttaqueBoss(boss, 0, ctx);
+        expect(attaque?.type).toBe('rangee_braise');
+        expect(bossEtat.derniereAttaqueType).toBe('rangee_braise');
     });
 });

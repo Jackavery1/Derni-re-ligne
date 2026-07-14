@@ -14,7 +14,7 @@
     gap: 18px;
     padding: 24px 28px;
     border: 2px solid var(--bordure);
-    background: rgba(8, 8, 26, 0.95);
+    background: var(--rgba-8-8-26-0-95);
     max-width: min(90vw, 420px);
     width: 100%;
     flex-shrink: 0;
@@ -34,7 +34,7 @@
     border: 1px solid var(--bordure);
     color: var(--texte-dim);
     font-family: var(--police);
-    font-size: 0.36rem;
+    font-size: var(--typo-ui-compact);
     padding: 10px 8px;
     cursor: pointer;
     letter-spacing: 1px;
@@ -45,7 +45,7 @@
     border-color: var(--cyan);
     color: var(--cyan);
     text-shadow: 0 0 8px var(--cyan);
-    box-shadow: 0 0 10px rgba(0, 245, 255, 0.25);
+    box-shadow: 0 0 10px var(--rgba-0-245-255-0-25);
 }
 
 .options-panneau {
@@ -60,7 +60,7 @@
 }
 
 .options-controles-intro {
-    font-size: 0.38rem;
+    font-size: var(--typo-ui-mini);
     color: var(--texte-dim);
     letter-spacing: 2px;
     text-align: center;
@@ -68,7 +68,7 @@
 }
 
 .options-confidentialite {
-    font-size: 0.34rem;
+    font-size: var(--typo-ui-compact);
     color: var(--texte-dim);
     letter-spacing: 1px;
     line-height: 1.6;
@@ -90,8 +90,8 @@
 .options-sync-config .option-texte {
     width: 100%;
     padding: 6px 8px;
-    font-size: 0.34rem;
-    background: rgba(0, 0, 0, 0.35);
+    font-size: var(--typo-ui-compact);
+    background: var(--rgba-0-0-0-0-35);
     border: 1px solid var(--bordure);
     color: var(--texte);
 }
@@ -149,7 +149,7 @@
 }
 
 .options-controles-mobile {
-    font-size: 0.32rem;
+    font-size: var(--typo-ui-compact);
     color: var(--texte-dim);
     letter-spacing: 1px;
     line-height: 1.7;
@@ -172,7 +172,7 @@
 }
 
 .option-label {
-    font-size: 0.38rem;
+    font-size: var(--typo-ui-mini);
     color: var(--texte-dim);
     letter-spacing: 2px;
 }
@@ -217,13 +217,13 @@
 #ecran-options .opt-toggle[aria-pressed='true'] {
     border-color: var(--cyan);
     color: var(--cyan);
-    text-shadow: 0 0 8px rgba(0, 245, 255, 0.45);
-    box-shadow: 0 0 12px rgba(0, 245, 255, 0.25);
+    text-shadow: 0 0 8px var(--rgba-0-245-255-0-45);
+    box-shadow: 0 0 12px var(--rgba-0-245-255-0-25);
 }
 
 #ecran-options .opt-toggle--on:hover,
 #ecran-options .opt-toggle[aria-pressed='true']:hover {
-    background: rgba(0, 245, 255, 0.12);
+    background: var(--rgba-0-245-255-0-12);
     color: var(--cyan);
 }
 

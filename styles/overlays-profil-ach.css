@@ -20,7 +20,7 @@
     color: var(--or-ui);
     letter-spacing: 5px;
     text-align: center;
-    text-shadow: 0 0 14px rgba(255, 187, 68, 0.55);
+    text-shadow: 0 0 14px var(--rgba-255-187-68-0-55);
 }
 .ach-galerie-soustitre {
     font-family: 'Orbitron', var(--font-stats);
@@ -39,7 +39,7 @@
     border-color: color-mix(in srgb, var(--accent-carte) 55%, transparent);
     box-shadow:
         0 0 10px color-mix(in srgb, var(--accent-carte) 20%, transparent),
-        inset 0 0 24px rgba(0, 0, 0, 0.45);
+        inset 0 0 24px var(--rgba-0-0-0-0-45);
     padding: var(--space-4) var(--space-3);
     display: flex;
     flex-direction: column;
@@ -60,14 +60,14 @@
     border-color: color-mix(in srgb, var(--accent-carte) 80%, transparent);
     box-shadow:
         0 0 20px color-mix(in srgb, var(--accent-carte) 38%, transparent),
-        inset 0 0 24px rgba(0, 0, 0, 0.45);
+        inset 0 0 24px var(--rgba-0-0-0-0-45);
     transform: translateY(-2px);
 }
 .ach-carte.selectionnee {
     border-color: var(--accent-carte);
     box-shadow:
         0 0 22px color-mix(in srgb, var(--accent-carte) 55%, transparent),
-        inset 0 0 20px rgba(0, 0, 0, 0.5);
+        inset 0 0 20px var(--rgba-0-0-0-0-5);
     transform: translateY(-1px);
 }
 .ach-carte.debloque {

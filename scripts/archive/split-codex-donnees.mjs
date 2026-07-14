@@ -1,7 +1,7 @@
-import { readFileSync, writeFileSync, mkdirSync } from 'fs';
+﻿import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
-const src = readFileSync('js/codex-donnees.js', 'utf8').split('\n');
+const src = readFileSync('js/codex/codex-donnees-chargement.js', 'utf8').split('\n');
 const dir = 'js/codex-donnees';
 mkdirSync(dir, { recursive: true });
 
@@ -23,7 +23,7 @@ closeObject('reliques.js');
 closeObject('chroniques.js');
 
 writeFileSync(
-    'js/codex-donnees.js',
+    'js/codex/codex-donnees-chargement.js',
     `import { CODEX_HISTOIRE } from '../../js/histoire/codex-histoire.js';
 import { CODEX_MONDES } from '../../js/codex-donnees/mondes.js';
 import { CODEX_RELIQUES } from '../../js/codex-donnees/reliques.js';

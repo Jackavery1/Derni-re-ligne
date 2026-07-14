@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 import { obtenirResumeConditionsTrame } from '../js/histoire/conditions-secrets.js';
 import {
     peutContinuerBossGratuit,
@@ -18,7 +18,7 @@ import { readFileSync } from 'fs';
 import { CONDITIONS_CODEX } from '../js/codex/codex-conditions.js';
 import { obtenirEtatDeblocage } from '../js/io/progression-histoire.js';
 import { biomeEstDebloqueParHistoire } from '../js/io/progression-records.js';
-import { ACHIEVEMENTS } from '../js/achievements-donnees.js';
+import { ACHIEVEMENTS } from '../js/achievements/achievements-donnees-chargement.js';
 import { ORDRE_BIOMES_LIBRE } from '../js/config/biomes.js';
 import { NOMS_MONDES_REQUIS } from '../js/rendu/constellation-rendu.js';
 import {
@@ -292,7 +292,7 @@ describe('audit 2 — gameplay UX', () => {
         });
 
         it('ajoute des niveaux architecte proceduraux', async () => {
-            const { NIVEAUX_ARCHI } = await import('../js/archi-donnees.js');
+            const { NIVEAUX_ARCHI } = await import('../js/archi-donnees/assembleur-niveaux.js');
             const { obtenirNiveauxArchiProceduraux, obtenirTousNiveauxArchi } =
                 await import('../js/logique/archi-generateur.js');
             expect(obtenirNiveauxArchiProceduraux().length).toBeGreaterThanOrEqual(10);

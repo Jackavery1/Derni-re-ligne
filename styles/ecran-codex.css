@@ -59,7 +59,7 @@
     border-bottom-color: var(--rose-ui);
     color: var(--rose-ui);
     text-shadow: 0 0 6px var(--rose-ui);
-    box-shadow: 0 4px 12px rgba(255, 45, 120, 0.15);
+    box-shadow: 0 4px 12px var(--rgba-255-45-120-0-15);
 }
 .codex-onglet:hover:not(.actif) {
     border-color: var(--texte-dim);
@@ -79,7 +79,7 @@
     border-color: color-mix(in srgb, var(--accent-carte) 55%, transparent);
     box-shadow:
         0 0 10px color-mix(in srgb, var(--accent-carte) 22%, transparent),
-        inset 0 0 24px rgba(0, 0, 0, 0.45);
+        inset 0 0 24px var(--rgba-0-0-0-0-45);
     padding: 6px 6px 8px;
     min-width: 0;
     min-height: 0;
@@ -98,14 +98,14 @@
     border-color: var(--accent-carte);
     box-shadow:
         0 0 22px color-mix(in srgb, var(--accent-carte) 55%, transparent),
-        inset 0 0 20px rgba(0, 0, 0, 0.5);
+        inset 0 0 20px var(--rgba-0-0-0-0-5);
     transform: translateY(-1px);
 }
 .codex-item.debloque:hover {
     border-color: color-mix(in srgb, var(--accent-carte) 75%, transparent);
     box-shadow:
         0 0 18px color-mix(in srgb, var(--accent-carte) 38%, transparent),
-        inset 0 0 24px rgba(0, 0, 0, 0.45);
+        inset 0 0 24px var(--rgba-0-0-0-0-45);
     transform: translateY(-2px);
 }
 .codex-item.verrouille {

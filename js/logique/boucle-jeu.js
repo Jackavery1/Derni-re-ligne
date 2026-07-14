@@ -1,4 +1,3 @@
-import { mettreAJourMeteo } from './meteo.js';
 import { logger, afficherErreurUtilisateur } from '../io/logger.js';
 import {
     etat,
@@ -9,53 +8,28 @@ import {
     flashTopout,
     secousse,
     obtenirTransitionAlpha,
-    obtenirLockDelayRestant,
-    obtenirPieceAuSol,
-    obtenirEffetsAccessibiliteReduits,
     obtenirFpsMoyen,
     obtenirIdFrame,
     obtenirBoucleActive,
     obtenirDernierTimestamp,
-    obtenirAccumulateur,
-    obtenirCanvasPlateau,
+    obtenirEffetsAccessibiliteReduits,
     obtenirCtx,
+    obtenirCanvasPlateau,
     definirFpsMoyen,
     definirEffetsReduits,
     definirBoucleActive,
     definirIdFrame,
     definirDernierTimestamp,
-    definirLockDelayRestant,
-    definirAccumulateur,
 } from '../etat/store-jeu.js';
-import { mettreAJourDas, mettreAJourIndicateurRelique, estPositionValide } from './piece-jeu.js';
-import { mettreAJourGamepad } from './input-gamepad.js';
-import { obtenirActions } from './actions-jeu.js';
 import { partieSpecialiseeActive } from '../etat/registre-modes.js';
-import { modeHistoireEnCours } from '../etat/mode-histoire.js';
-import {
-    mettreAJourAmbiante,
-    mettreAJourTransition,
-    mettreAJourParticulesAmbiance,
-    mettreAJourTextesFlottants,
-    mettreAJourSecousse,
-} from '../rendu/rendu-jeu.js';
-import { mettreAJourParticules } from '../rendu/particules-jeu.js';
-import { mettreAJourAffichageTemps } from '../rendu/hud-jeu.js';
-import { tickTimerNiveau } from './timer-niveau.js';
-import { verrouillerPiece, vitesseChute } from './logique-partie.js';
+import { mettreAJourTransition } from '../rendu/rendu-jeu.js';
 import { menuAnimActif, mettreAJourMenuFond } from '../rendu/menu-fond.js';
-import { mettreAJourHistoriquePositions } from '../rendu/decorations-jeu.js';
-import { mettreAJourVivant } from './vivant.js';
-import { mettreAJourBoss, bossEstActif, bossEstVaincu } from './boss-jeu.js';
-import { mettreAJourMecaniquesHistoire } from '../histoire/mecaniques-histoire.js';
+import { dessinerFrameSolo } from '../rendu/tick-rendu-solo.js';
 import {
-    mettreAJourGameFeel,
-    areActive,
-    activerPieceAuSol,
-    quitterSolPiece,
-} from './game-feel-jeu.js';
-import { recupererZenApresTopOut } from './logique-partie-verrouillage.js';
-import { dessinerFrameSolo, rendrePortraitBossLazy } from '../rendu/tick-rendu-solo.js';
+    mettreAJourTickPartieActive,
+    mettreAJourTimersEffets,
+    effetsVisuelsActifs,
+} from './boucle-jeu-tick.js';
 
 const SEUIL_ERREURS_BOUCLE = 5;
 let erreursConsecutivesBoucle = 0;
@@ -110,71 +84,6 @@ export function planifierBoucle() {
     definirIdFrame(requestAnimationFrame(boucleJeu));
 }
 
-function _mettreAJourGravitePiece(deltaTemps) {
-    if (!etat.pieceActuelle || areActive()) return;
-    const peutDescendre = estPositionValide(etat.pieceActuelle, 0, 1);
-    if (peutDescendre) {
-        quitterSolPiece();
-        definirAccumulateur(obtenirAccumulateur() + deltaTemps);
-        if (obtenirAccumulateur() >= vitesseChute()) {
-            definirAccumulateur(0);
-            etat.pieceActuelle.y++;
-            mettreAJourHistoriquePositions();
-        }
-        return;
-    }
-    if (!obtenirPieceAuSol()) {
-        activerPieceAuSol();
-        return;
-    }
-    definirLockDelayRestant(obtenirLockDelayRestant() - deltaTemps);
-    if (obtenirLockDelayRestant() <= 0) verrouillerPiece();
-}
-
-function _mettreAJourPartieActive(deltaTemps, timestamp) {
-    if (!modeHistoireEnCours()) {
-        mettreAJourMeteo(deltaTemps);
-    }
-    mettreAJourMecaniquesHistoire(deltaTemps, timestamp);
-    if (!modeHistoireEnCours()) {
-        mettreAJourVivant(deltaTemps);
-    }
-    mettreAJourDas(deltaTemps);
-    if (!partieSpecialiseeActive()) mettreAJourGamepad(obtenirActions);
-    mettreAJourGameFeel(deltaTemps, recupererZenApresTopOut);
-    _mettreAJourGravitePiece(deltaTemps);
-    mettreAJourParticules(deltaTemps);
-    mettreAJourParticulesAmbiance(deltaTemps);
-    mettreAJourTextesFlottants(deltaTemps);
-    mettreAJourAffichageTemps();
-    tickTimerNiveau();
-    if (bossEstActif()) {
-        if (!bossEstVaincu()) mettreAJourBoss(deltaTemps);
-        void rendrePortraitBossLazy(timestamp);
-    }
-    mettreAJourAmbiante(deltaTemps);
-    mettreAJourIndicateurRelique();
-}
-
-function _mettreAJourTimersEffets(deltaTemps) {
-    if (flashVerrou.timer > 0) flashVerrou.timer -= deltaTemps;
-    if (flashLignes.timer > 0) flashLignes.timer -= deltaTemps;
-    if (flashTopout.timer > 0) flashTopout.timer -= deltaTemps;
-    mettreAJourSecousse(deltaTemps);
-}
-
-function _effetsVisuelsActifs() {
-    return (
-        obtenirTransitionAlpha() < 1 ||
-        particules.length > 0 ||
-        textesFlottants.length > 0 ||
-        flashVerrou.timer > 0 ||
-        flashLignes.timer > 0 ||
-        flashTopout.timer > 0 ||
-        secousse.timer > 0
-    );
-}
-
 function boucleJeu(timestamp) {
     if (partieSpecialiseeActive()) {
         suspendreBoucleSolo();
@@ -198,14 +107,14 @@ function boucleJeu(timestamp) {
         const enPartie = etat.estEnCours && !etat.estEnPause;
 
         if (enPartie) {
-            _mettreAJourPartieActive(deltaTemps, timestamp);
+            mettreAJourTickPartieActive(deltaTemps, timestamp);
         }
 
         if (obtenirTransitionAlpha() < 1) mettreAJourTransition();
 
-        _mettreAJourTimersEffets(deltaTemps);
+        mettreAJourTimersEffets(deltaTemps);
 
-        if (enPartie || _effetsVisuelsActifs()) {
+        if (enPartie || effetsVisuelsActifs()) {
             dessinerFrameSolo(ctx, enPartie);
         }
         erreursConsecutivesBoucle = 0;

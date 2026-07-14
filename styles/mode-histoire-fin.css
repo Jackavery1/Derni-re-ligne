@@ -1,5 +1,5 @@
 #ecran-histoire-fin {
-    background: rgba(0, 0, 0, 0.98);
+    background: var(--rgba-0-0-0-0-98);
 }
 #canvas-fin-bg {
     position: absolute;
@@ -58,7 +58,7 @@
     color: var(--texte);
     line-height: 2.2;
     letter-spacing: 1px;
-    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    border-left: 2px solid var(--rgba-255-255-255-0-1);
     padding-left: 12px;
     opacity: 0;
     animation: apparitionParaFin 0.6s ease forwards;
@@ -92,8 +92,8 @@
     margin-top: 4px;
 }
 .histoire-fin-stat-item {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--rgba-255-255-255-0-03);
+    border: 1px solid var(--rgba-255-255-255-0-08);
     padding: 8px 10px;
     display: flex;
     flex-direction: column;
@@ -101,13 +101,13 @@
     gap: 4px;
 }
 .histoire-fin-stat-label {
-    font-size: 0.26rem;
+    font-size: var(--typo-hud-micro);
     color: var(--texte-dim);
     letter-spacing: 2px;
     text-align: center;
 }
 .histoire-fin-stat-valeur {
-    font-size: 0.4rem;
+    font-size: clamp(11px, 0.4rem, 14px);
     letter-spacing: 1px;
     text-align: center;
 }
@@ -119,21 +119,21 @@
     margin-top: 8px;
 }
 .histoire-fin-hint {
-    font-size: 0.26rem;
-    color: rgba(255, 255, 255, 0.18);
+    font-size: var(--typo-hud-micro);
+    color: var(--rgba-255-255-255-0-18);
     letter-spacing: 2px;
     text-align: center;
     margin-top: 4px;
     font-style: italic;
 }
 #ecran-histoire-fin[data-fin='fin_normale'] {
-    background: rgba(0, 0, 20, 0.97);
+    background: var(--rgba-0-0-20-0-97);
 }
 #ecran-histoire-fin[data-fin='fin_vraie'] {
-    background: rgba(0, 8, 8, 0.97);
+    background: var(--rgba-0-8-8-0-97);
 }
 #ecran-histoire-fin[data-fin='fin_secrete'] {
-    background: rgba(10, 8, 0, 0.97);
+    background: var(--rgba-10-8-0-0-97);
 }
 #ecran-histoire-fin[data-fin='fin_normale'] #histoire-fin-hint {
     display: block;
@@ -148,19 +148,19 @@
     font-size: clamp(0.4rem, 1.5vw, 0.55rem);
     letter-spacing: 3px;
     color: var(--jaune);
-    background: rgba(8, 8, 26, 0.96);
+    background: var(--rgba-8-8-26-0-96);
     border: 2px solid var(--jaune);
     padding: 14px 28px;
     text-align: center;
-    box-shadow: 0 0 30px rgba(255, 230, 0, 0.4);
+    box-shadow: 0 0 30px var(--rgba-255-230-0-0-4);
     text-shadow: 0 0 10px var(--jaune);
     pointer-events: none;
     animation: apparitionSecret 4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .noeud-cache-debloque-label {
-    font-size: 0.26rem;
-    color: rgba(255, 230, 0, 0.55);
+    font-size: var(--typo-hud-micro);
+    color: var(--rgba-255-230-0-0-55);
     letter-spacing: 2px;
     text-align: center;
     margin-top: 3px;

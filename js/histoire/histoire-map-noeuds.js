@@ -1,4 +1,4 @@
-import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
+﻿import { SEQUENCE_HISTOIRE } from '../histoire/histoire-donnees-exports.js';
 import { BIOMES } from '../config/biomes.js';
 import { obtenirEtatHistoire, mondePeutEtreJoue, obtenirEtatMonde } from './histoire-mondes.js';
 import { sansAccentsE } from '../logique/texte-jeu.js';

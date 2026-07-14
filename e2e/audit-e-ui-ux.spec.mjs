@@ -156,6 +156,21 @@ test.describe('audit E — UI/UX', () => {
         expect(actif).toBe(true);
     });
 
+    test('E3e — toggle daltonien persiste (audit E10)', async ({ page }) => {
+        await preparerPageSansSw(page);
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+        await page.locator('#btn-options').click();
+        await expect(page.locator('#ecran-options')).toHaveClass(/actif/);
+        const btn = page.locator('#btn-toggle-daltonien');
+        await expect(btn).toBeVisible();
+        await btn.click();
+        const actif = await page.evaluate(
+            () => localStorage.getItem('derniereLigne_daltonien') === 'true'
+        );
+        expect(actif).toBe(true);
+    });
+
     test('E4 — interactive elements have adequate size (48px) on selection screen', async ({
         page,
     }) => {

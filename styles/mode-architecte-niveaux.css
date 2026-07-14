@@ -3,14 +3,14 @@
     border-color: color-mix(in srgb, var(--accent-carte) 80%, transparent);
     box-shadow:
         0 0 18px color-mix(in srgb, var(--accent-carte) 38%, transparent),
-        inset 0 0 24px rgba(0, 0, 0, 0.45);
+        inset 0 0 24px var(--rgba-0-0-0-0-45);
 }
 
 .carte-niveau-archi:hover {
     border-color: color-mix(in srgb, var(--accent-carte) 80%, transparent);
     box-shadow:
         0 0 20px color-mix(in srgb, var(--accent-carte) 38%, transparent),
-        inset 0 0 24px rgba(0, 0, 0, 0.45);
+        inset 0 0 24px var(--rgba-0-0-0-0-45);
     transform: translateY(-2px);
 }
 
@@ -18,7 +18,7 @@
     border-color: var(--accent-carte);
     box-shadow:
         0 0 22px color-mix(in srgb, var(--accent-carte) 55%, transparent),
-        inset 0 0 20px rgba(0, 0, 0, 0.5);
+        inset 0 0 20px var(--rgba-0-0-0-0-5);
     transform: translateY(-1px);
 }
 
@@ -92,7 +92,7 @@
 }
 
 .cna-etoiles {
-    font-size: 0.65rem;
+    font-size: var(--typo-ui-moyen);
     color: var(--jaune);
     letter-spacing: 1px;
 }
@@ -123,7 +123,7 @@
     flex-direction: column;
     gap: 6px;
     padding: 8px 12px calc(14px + var(--safe-bottom));
-    background: linear-gradient(transparent, rgba(8, 8, 26, 0.97) 30%);
+    background: linear-gradient(transparent, var(--rgba-8-8-26-0-97) 30%);
     z-index: 50;
 }
 
@@ -190,7 +190,7 @@ body.archi-active.controles-tactiles-actifs #controles-archi {
     }
 
     body.archi-active #interface-jeu-archi .stat-valeur {
-        font-size: 0.52rem;
+        font-size: var(--typo-ui-caption);
         line-height: 1.15;
     }
 

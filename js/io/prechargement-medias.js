@@ -1,4 +1,4 @@
-import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
+﻿import { SEQUENCE_HISTOIRE } from '../histoire/histoire-donnees-exports.js';
 import { obtenirEtatHistoire, mondePeutEtreJoue } from '../histoire/histoire-mondes.js';
 import { obtenirHistoireTextesSync } from './charger-histoire-textes.js';
 import { SCENES_CUTSCENE } from '../rendu/scenes-cutscene.js';

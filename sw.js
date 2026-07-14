@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v73';
+const VERSION_SHELL = 'dl-shell-v78';
 const VERSION_MEDIAS = 'dl-medias-v7';
 
 /** Precache install : splash, CSS cutscenes, scènes prologue (parcours early). */
@@ -10,20 +10,20 @@ const SCENES_CUTSCENE_INSTALL = [
     './assets/cutscenes/scene_labo.png',
     './assets/cutscenes/scene_trame.png',
     './assets/cutscenes/scene_fragmentation.png',
+    './assets/cutscenes/scene_seuil_brasier.png',
+    './assets/cutscenes/scene_interlude_gardiens.png',
+    './assets/cutscenes/scene_interlude_elle.png',
 ];
 
 /** Precache différé post-boot (idle) — scènes eager hors prologue. */
 const SCENES_CUTSCENE_ARRIERE_PLAN = [
-    './assets/cutscenes/scene_seuil_brasier.png',
     './assets/cutscenes/scene_seuil_sentinelle.png',
     './assets/cutscenes/scene_seuil_archiviste.png',
     './assets/cutscenes/scene_seuil_avantgarde.png',
     './assets/cutscenes/scene_antre_distorsion.png',
     './assets/cutscenes/scene_miroir.png',
     './assets/cutscenes/scene_trame_primordiale.png',
-    './assets/cutscenes/scene_interlude_gardiens.png',
     './assets/cutscenes/scene_interlude_veille.png',
-    './assets/cutscenes/scene_interlude_elle.png',
     './assets/cutscenes/scene_fin_crepuscule.png',
     './assets/cutscenes/scene_fin_lumineuse.png',
     './assets/cutscenes/scene_fin_recommencement.png',
@@ -113,11 +113,11 @@ async function evincerPistesMusique(cache, urlAbsolue) {
  * @param {FetchEvent} evenement
  */
 async function gererFetchMedia(evenement) {
-    const cache = await caches.open(VERSION_MEDIAS);
-    const reponseCache = await cache.match(evenement.request);
+    const reponseCache = await chercherDansCache(evenement.request, VERSION_MEDIAS);
 
     if (reponseCache) return reponseCache;
 
+    const cache = await caches.open(VERSION_MEDIAS);
     try {
         const reponseReseau = await fetch(evenement.request);
         if (reponseReseau && reponseReseau.status === 200 && reponseReseau.type !== 'error') {

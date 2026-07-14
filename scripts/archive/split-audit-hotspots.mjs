@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync } from 'fs';
+﻿import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
 function splitRenduBlocsStyles() {
@@ -411,7 +411,7 @@ export function verifierPhaseBoss() {
 
     const bossMain = `import { store } from '../../js/etat/store-core.js';
 import { etat } from '../../js/etat/store-jeu.js';
-import { BOSS } from '../../js/histoire-donnees.js';
+import { BOSS } from '../../js/histoire/histoire-donnees-exports.js';
 import { AudioMoteur } from '../../js/audio/audio.js';
 import { logger } from '../../js/io/logger.js';
 import { modeHistoireEnCours } from '../../js/etat/mode-histoire.js';

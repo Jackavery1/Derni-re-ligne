@@ -186,9 +186,9 @@ export const DIFFICULTE_MONDES = {
     monde_miroir: {
         objectifLignes: 14,
         profilVitesse: [
-            { a: 0, palier: 11 },
-            { a: 0.45, palier: 9 },
-            { a: 0.8, palier: 7 },
+            { a: 0, palier: 9 },
+            { a: 0.45, palier: 10 },
+            { a: 0.8, palier: 11 },
         ],
         etoile2: { type: 'tetris', valeur: 1 },
         etoile3: { type: 'sans_topout' },
@@ -197,9 +197,10 @@ export const DIFFICULTE_MONDES = {
         objectifLignes: 16,
         profilVitesse: [
             { a: 0, palier: 9 },
-            { a: 0.35, palier: 10 },
-            { a: 0.55, palier: 12 },
-            { a: 0.72, palier: 13 },
+            { a: 0.3, palier: 10 },
+            { a: 0.45, palier: 11 },
+            { a: 0.6, palier: 12 },
+            { a: 0.75, palier: 13 },
             { a: 0.9, palier: 14 },
         ],
         etoile2: { type: 'tetris', valeur: 2 },

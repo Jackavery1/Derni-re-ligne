@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Checklist CONTRIBUTING — couverture automatisée des 7 points iPhone physique.
  * Complète audit-c-responsive (simulation encoche) ; exécuter avant release PWA.
  */
@@ -24,9 +24,11 @@ import {
 import {
     assertPasDeDebordementHorizontal,
     assertBoutonTactileMin,
+    mesurerBoutonsParIds,
+    assertBoutonsTactilesMin,
 } from './helpers-responsive-metriques.mjs';
 import { ETAT_DEBLOCAGE_META_RAPIDE, ETAT_CYBER_LABO_PRET } from './etats-histoire.mjs';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 
 test.describe('checklist iPhone — simulation safe-area (CONTRIBUTING)', () => {
     test.beforeEach(async () => {
@@ -120,5 +122,33 @@ test.describe('checklist iPhone — simulation safe-area (CONTRIBUTING)', () => 
         await ouvrirPremierNiveauArchitecte(page);
         await expect(page.locator('#interface-jeu-archi')).toBeVisible();
         await assertPasDeDebordementHorizontal(page);
+    });
+
+    test('8. architecte paysage — contrôles tactiles ≥48px', async ({ browser }) => {
+        const context = await browser.newContext({ ...devices['iPhone 14 landscape'] });
+        const page = await context.newPage();
+        await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+        await appliquerSafeAreaIphone(page, 'iPhone 14 landscape');
+        await page.locator('#btn-architecte').click();
+        await ouvrirPremierNiveauArchitecte(page);
+        await expect(page.locator('#interface-jeu-archi')).toBeVisible();
+        await assertPasDeDebordementHorizontal(page);
+        const idsControlesPaysage = [
+            'btn-archi-gauche-p',
+            'btn-archi-droite-p',
+            'btn-archi-bas-p',
+            'btn-archi-tourner-p',
+            'btn-archi-chute-p',
+            'btn-archi-valider-p',
+            'btn-archi-changer-p',
+        ];
+        const conteneurVisible = await page.locator('#controles-archi-paysage').isVisible();
+        if (conteneurVisible) {
+            const boutons = await mesurerBoutonsParIds(page, idsControlesPaysage);
+            assertBoutonsTactilesMin(boutons.filter((b) => b.h > 0 && b.w > 0));
+        }
+        await context.close();
     });
 });

@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'fs';
+﻿import { readFileSync, writeFileSync } from 'fs';
 
 const lines = readFileSync('js/achievements.js', 'utf8').split('\n');
 
@@ -14,13 +14,13 @@ import { obtenirBiomeActif } from '../../js/etat/store-jeu.js';
 import { melodie } from '../../js/audio/melodie.js';
 import { creerFileNotifications } from '../../js/ui/notifications-file.js';
 import { reinitialiserStatsAchievementsHistoire } from '../../js/achievements/achievements-histoire.js';
-import { ACHIEVEMENTS } from '../../js/achievements-donnees.js';
+import { ACHIEVEMENTS } from '../../js/achievements/achievements-donnees-chargement.js';
 import { sansAccentsE } from '../../js/logique/texte-jeu.js';
 import { modeHistoireEnCours } from '../../js/etat/mode-histoire.js';
 
 `;
 
-const uiHeader = `import { ACHIEVEMENTS } from '../../js/achievements-donnees.js';
+const uiHeader = `import { ACHIEVEMENTS } from '../../js/achievements/achievements-donnees-chargement.js';
 import { sansAccentsE } from '../../js/logique/texte-jeu.js';
 import { statsGlobales } from '../../js/achievements/achievements-stats.js';
 import { rendreIconeSurCanvas, rendreIconeGlitchSurCanvas } from '../../js/rendu/icones-pixel.js';
@@ -48,7 +48,7 @@ writeFileSync('js/achievements-ui.js', uiHeader + lines.slice(345).join('\n') + 
 
 writeFileSync(
     'js/achievements.js',
-    `export { ACHIEVEMENTS } from '../../js/achievements-donnees.js';
+    `export { ACHIEVEMENTS } from '../../js/achievements/achievements-donnees-chargement.js';
 export {
     statsGlobales,
     chargerStats,

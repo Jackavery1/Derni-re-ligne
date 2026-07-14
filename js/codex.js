@@ -1,4 +1,4 @@
-import { statsGlobales } from './achievements.js';
+﻿import { statsGlobales } from './achievements.js';
 import { lireStockageJson, ecrireStockageJson, estTableauIds } from './io/progression.js';
 import { creerFileNotifications } from './ui/notifications-file.js';
 import { logger } from './io/logger.js';
@@ -16,15 +16,15 @@ import {
 const CLE_CODEX = 'derniereLigne_codex';
 const CLE_CODEX_VUS = 'derniereLigne_codexVus';
 
-/** @type {import('./codex-donnees.js').CODEX | null} */
+/** @type {import('./codex/codex-donnees-chargement.js').CODEX | null} */
 let codexDonnees = null;
-/** @type {Promise<import('./codex-donnees.js').CODEX> | null} */
+/** @type {Promise<import('./codex/codex-donnees-chargement.js').CODEX> | null} */
 let promesseCodex = null;
 
 export async function chargerDonneesCodex() {
     if (codexDonnees) return codexDonnees;
     if (!promesseCodex) {
-        promesseCodex = import('./codex-donnees.js')
+        promesseCodex = import('./codex/codex-donnees-chargement.js')
             .then((module) => module.chargerCodexComplet())
             .then((codex) => {
                 codexDonnees = codex;
@@ -149,7 +149,7 @@ export async function changerChapitreCodex(chapitre, btn) {
 }
 
 /**
- * @param {import('./codex-donnees.js').CODEX[string]} entree
+ * @param {import('./codex/codex-donnees-chargement.js').CODEX[string]} entree
  * @param {boolean} debloque
  */
 export function ouvrirEntreeCodex(entree, debloque) {

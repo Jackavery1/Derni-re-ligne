@@ -1,9 +1,11 @@
-import { test } from '@playwright/test';
+﻿import { test } from '@playwright/test';
 import { ouvrirCarteHistoire, parcourirFluxPostVictoireAvecAssertions } from './helpers.mjs';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 import { MONDES_CAMPAGNE_PRINCIPALE } from './etats-histoire.mjs';
 
-test('campagne — cutscenes intermediaires boss et chapitres (audit D15)', async ({ page }) => {
+test('campagne — cutscenes intermediaires boss et chapitres (audit D15) @slow', async ({
+    page,
+}) => {
     test.setTimeout(900000);
     const etatDepart = {
         ...ETAT_HISTOIRE_VIDE,

@@ -3,7 +3,6 @@ import { expect } from '@playwright/test';
 import { ETAT_HISTOIRE_BOSS_BRASIER } from './etats-histoire.mjs';
 import {
     boutonEstVisible,
-    elementAClasse,
     preparerPremierLancement,
     preparerPageSansSw,
     attendreApplicationPrete,
@@ -49,7 +48,9 @@ export async function attendreRenduCarteHistoire(page) {
 /** @param {import('@playwright/test').Page} page */
 export async function fermerRecapPostMonde(page) {
     await expect(page.locator('#overlay-recap-monde')).toBeVisible({ timeout: 10000 });
-    await page.locator('#btn-recap-continuer').click({ force: true });
+    await page.evaluate(() => {
+        document.getElementById('btn-recap-continuer')?.click();
+    });
 }
 
 /** @param {import('@playwright/test').Page} page @param {object} [etatHistoire] */
@@ -80,31 +81,47 @@ export async function lancerMondeBossBrasier(page) {
 }
 
 /** @param {import('@playwright/test').Page} page */
+export async function lancerMondeBossSentinelle(page) {
+    const { lancerMondeDepuisCarte } = await import('./helpers-narratif.mjs');
+    await lancerMondeDepuisCarte(page, 'monde_boss_2');
+    await passerFluxLancementMonde(page);
+    await expect(page.locator('#section-boss')).toBeVisible();
+    await expect(page.locator('#boss-nom-affiche')).toContainText(/SENTINELLE/i);
+}
+
+/** @param {import('@playwright/test').Page} page */
 export async function passerCutsceneHistoire(page) {
     for (let i = 0; i < 40; i++) {
-        if (await elementAClasse(page, 'ecran-histoire-map', 'actif')) {
-            return;
-        }
+        const action = await page.evaluate(() => {
+            if (document.getElementById('ecran-histoire-map')?.classList.contains('actif')) {
+                return 'done';
+            }
+            const passer = document.getElementById('btn-cutscene-passer');
+            if (passer?.offsetParent) {
+                passer.click();
+                return 'passer';
+            }
+            const suivant = document.getElementById('btn-cutscene-suivant');
+            if (suivant?.offsetParent) {
+                suivant.click();
+                return 'suivant';
+            }
+            const tutoriel = document.getElementById('btn-tutoriel-fermer');
+            if (tutoriel?.offsetParent) {
+                tutoriel.click();
+                return 'tutoriel';
+            }
+            return 'wait';
+        });
 
-        if (await boutonEstVisible(page, '#btn-cutscene-passer')) {
-            await page.locator('#btn-cutscene-passer').click({ force: true });
-            continue;
-        }
+        if (action === 'done') return;
 
-        if (await boutonEstVisible(page, '#btn-cutscene-suivant')) {
-            await page.locator('#btn-cutscene-suivant').click({ force: true });
-            continue;
-        }
-
-        if (await boutonEstVisible(page, '#btn-tutoriel-fermer')) {
-            await page.locator('#btn-tutoriel-fermer').click();
-            continue;
-        }
-
-        try {
-            await attendreTypewriterInactif(page, 400);
-        } catch {
-            /* typewriter ou cutscene inactive */
+        if (action === 'wait') {
+            try {
+                await attendreTypewriterInactif(page, 400);
+            } catch {
+                /* typewriter ou cutscene inactive */
+            }
         }
     }
 

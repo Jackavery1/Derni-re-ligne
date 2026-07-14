@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
+﻿import { test, expect } from '@playwright/test';
 import { ouvrirCarteHistoire, terminerCutscenesVersEcranFin } from './helpers.mjs';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 import { MONDES_CAMPAGNE_PRINCIPALE } from './etats-histoire.mjs';
 import {
     OPTIONS_CAMPAGNE_D9,
@@ -8,6 +8,8 @@ import {
     parcourirMondesCampagneNarratif,
     victoireMondeAvecNarratif,
     preparerConditionsTrameOrganiques,
+    capturerEtatHistoireCampagne,
+    chargerEtatHistoireCampagne,
 } from './helpers-campagne-narratif.mjs';
 
 const CAMPAGNE_PARTIE_1 = MONDES_CAMPAGNE_PRINCIPALE.slice(0, 8);
@@ -22,29 +24,27 @@ test.describe.serial('audit D9 — campagne complete avec narratif @slow', () =>
         };
         await ouvrirCarteHistoire(page, etatDepart);
         await parcourirMondesCampagneNarratif(page, CAMPAGNE_PARTIE_1, OPTIONS_CAMPAGNE_D9);
+        await capturerEtatHistoireCampagne(page, 'd9-partie1');
     });
 
     test('partie principale — mondes 9 à 16', async ({ page }) => {
         test.setTimeout(300_000);
-        const etatDepart = {
-            ...ETAT_HISTOIRE_VIDE,
-            mondesCompletes: [...CAMPAGNE_PARTIE_1],
-            bossVaincus: ['brasier', 'sentinelle'],
-            mondesDejaMontres: ['monde_prologue', ...CAMPAGNE_PARTIE_1],
-        };
+        const etatDepart = chargerEtatHistoireCampagne('d9-partie1');
+        expect(etatDepart).toBeTruthy();
         await ouvrirCarteHistoire(page, etatDepart);
         await parcourirMondesCampagneNarratif(page, CAMPAGNE_PARTIE_2, OPTIONS_CAMPAGNE_D9);
+        await capturerEtatHistoireCampagne(page, 'd9-partie2');
     });
 
     test('secrets, fin secrete et flags progression', async ({ page }) => {
         test.setTimeout(360_000);
+        const etatSauve = chargerEtatHistoireCampagne('d9-partie2');
+        expect(etatSauve).toBeTruthy();
         const etatDepart = {
-            ...ETAT_HISTOIRE_VIDE,
-            mondesCompletes: [...MONDES_CAMPAGNE_PRINCIPALE],
-            mondesCachesDebloques: ['monde_miroir'],
-            mondesDejaMontres: ['monde_prologue', ...MONDES_CAMPAGNE_PRINCIPALE],
-            bossVaincus: ['brasier', 'sentinelle', 'archiviste', 'avantgarde'],
-            conditionsMiroir: { bossArchivisteVaincu: true, tetrisTriplesCyber: 3 },
+            ...etatSauve,
+            mondesCachesDebloques: [
+                ...new Set([...(etatSauve.mondesCachesDebloques ?? []), 'monde_miroir']),
+            ],
         };
         await ouvrirCarteHistoire(page, etatDepart);
 

@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync, rmSync } from 'fs';
+﻿import { mkdirSync, writeFileSync, rmSync } from 'fs';
 import { execSync } from 'child_process';
 import { ecrireHistoireTextesJson } from './generer-histoire-json.mjs';
 

@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { ACHIEVEMENTS } from '../js/achievements-donnees.js';
+﻿import { describe, it, expect } from 'vitest';
+import { ACHIEVEMENTS } from '../js/achievements/achievements-donnees-chargement.js';
 import ICONES_PIXEL from '../data/icones-pixel.json';
 import {
     obtenirIdIconeAchievement,

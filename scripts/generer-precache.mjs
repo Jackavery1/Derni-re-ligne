@@ -11,6 +11,7 @@ const EXCLUS_PRECACHE = new Set([
     './img/icon-512.png',
     './img/icon-maskable-512.png',
     './js/codex-histoire.js',
+    './js/logique/dev-init.js',
 ]);
 
 /** Polices narratif — fetch à la demande (hors shell installable). */
@@ -97,7 +98,6 @@ function construireListePrecache() {
         ...listerPlat('data', './data/', '.json'),
         ...listerPlat('assets/fonts-dist', './assets/fonts-dist/', '.woff2'),
         ...listerPlat('assets/sfx/boss', './assets/sfx/boss/', '.ogg'),
-        ...listerPlat('assets/sfx/boss', './assets/sfx/boss/', '.wav'),
     ];
 
     if (modeProd) {

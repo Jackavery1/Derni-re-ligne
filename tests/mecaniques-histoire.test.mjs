@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+﻿import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { BIOMES } from '../js/config/biomes.js';
 import { store } from '../js/etat/store-jeu.js';
 import { etat, definirBiomeActif } from '../js/etat/store-jeu.js';
 import { creerPlateau } from '../js/logique/piece-jeu.js';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 import { supprimerLignesDuPlateauExcluantRouille } from '../js/logique/logique-pure.js';
 import {
     biomeActuelMecanique,

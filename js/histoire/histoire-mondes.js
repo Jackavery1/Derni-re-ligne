@@ -1,4 +1,4 @@
-import { JOURNAUX_VERA, SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
+﻿import { JOURNAUX_VERA, SEQUENCE_HISTOIRE } from '../histoire/histoire-donnees-exports.js';
 import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
 import { chargerEtatHistoire, sauvegarderEtatHistoire } from '../io/progression.js';
 import { store } from '../etat/store-jeu.js';
@@ -20,7 +20,7 @@ export const SEUILS_COMPLETION = {
     trame: 16,
 };
 
-/** @returns {import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} */
+/** @returns {import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} */
 export function obtenirEtatHistoire() {
     return obtenirEtatHistoirePersiste();
 }
@@ -32,7 +32,7 @@ export function rafraichirEtatHistoire() {
 
 /**
  * @param {string} mondeId
- * @param {import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} [etatHist]
+ * @param {import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} [etatHist]
  * @returns {'verrouille'|'disponible'|'complete'}
  */
 export function obtenirEtatMonde(mondeId, etatHist) {
@@ -44,7 +44,7 @@ export function obtenirEtatMonde(mondeId, etatHist) {
 
 /**
  * @param {string} mondeId
- * @param {import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} [etatHist]
+ * @param {import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} [etatHist]
  * @returns {boolean}
  */
 export function mondePeutEtreJoue(mondeId, etatHist) {
@@ -64,7 +64,7 @@ export function mondePeutEtreJoue(mondeId, etatHist) {
     return etat.mondesCompletes.includes(mondePrecedent.id);
 }
 
-/** @param {string} mondeId @param {import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} etat */
+/** @param {string} mondeId @param {import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} etat */
 function mondeSecretEstDebloque(mondeId, etat) {
     switch (mondeId) {
         case 'monde_miroir':
@@ -92,7 +92,7 @@ function mondeSecretEstDebloque(mondeId, etat) {
 /**
  * Prochain monde narratif non complété après `mondeId` (ordre global).
  * @param {string} mondeId
- * @param {import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} [etatHist]
+ * @param {import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} [etatHist]
  * @returns {string | null}
  */
 export function obtenirProchainMondeCampagne(mondeId, etatHist) {
@@ -127,7 +127,7 @@ export function obtenirProgressionGlobale() {
     return { nbCompletes, nbTotal, nbJournaux, nbJournauxTotal };
 }
 
-/** @param {import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} etatHist */
+/** @param {import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} etatHist */
 export function sauvegarderEtatHistoireStore(etatHist) {
     sauvegarderEtatHistoire(etatHist);
     store.histoire.etat = etatHist;

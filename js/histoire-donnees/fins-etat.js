@@ -1,4 +1,4 @@
-// Etat initial histoire (runtime) — donnees narratives dans data/histoire-donnees.json
+﻿// Etat initial histoire (runtime) — donnees narratives dans data/histoire-donnees.json
 
 /**
  * @typedef {Object} EtatHistoire

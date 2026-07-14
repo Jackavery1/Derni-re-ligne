@@ -1,6 +1,6 @@
-import { store } from '../etat/store-jeu.js';
+﻿import { store } from '../etat/store-jeu.js';
 import { logger } from '../io/logger.js';
-import { FINS, ETAT_HISTOIRE_VIDE } from '../histoire-donnees.js';
+import { FINS, ETAT_HISTOIRE_VIDE } from '../histoire/histoire-donnees-exports.js';
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
 import { ECRANS } from '../ui/ecrans-config.js';
 import { assurerFragmentsEcran } from '../ui/charger-ecrans.js';

@@ -80,6 +80,9 @@ function _enregistrerRecordsFinPartie(victoire, scoreFinal) {
     return nouveauRecordSprint;
 }
 
+/** Délai avant affichage game over (laisse le feedback audio/haptique se lire). */
+export const DELAI_GAME_OVER_MS = 280;
+
 /** @param {boolean} [victoire] @param {{ immediat?: boolean }} [options] */
 export function terminerPartie(victoire = false, options = {}) {
     const { immediat = false } = options;
@@ -148,7 +151,7 @@ export function terminerPartie(victoire = false, options = {}) {
     if (immediat) {
         montrerGameOver();
     } else {
-        setTimeout(montrerGameOver, 350);
+        setTimeout(montrerGameOver, DELAI_GAME_OVER_MS);
     }
 
     setTimeout(() => afficherMelodieGameOver(), 400);

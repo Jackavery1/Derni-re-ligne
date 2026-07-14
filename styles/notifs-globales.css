@@ -10,8 +10,8 @@
     background: var(--fond);
     border: 1px solid var(--cyan);
     z-index: 300;
-    font-size: 0.38rem;
-    box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+    font-size: var(--typo-hud-micro);
+    box-shadow: 0 0 20px var(--rgba-0-245-255-0-3);
 }
 #notif-maj-sw.visible {
     display: flex;
@@ -24,11 +24,11 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(8, 8, 26, 0.95);
+    background: var(--rgba-8-8-26-0-95);
     border: 2px solid var(--violet);
     padding: 12px 18px;
     z-index: 300;
-    box-shadow: 0 0 25px rgba(180, 0, 255, 0.35);
+    box-shadow: 0 0 25px var(--rgba-180-0-255-0-35);
     max-width: 280px;
     transition: bottom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     pointer-events: none;
@@ -45,7 +45,7 @@
     image-rendering: pixelated;
 }
 .codex-notif-label {
-    font-size: 0.26rem;
+    font-size: var(--typo-ui-compact);
     color: var(--violet);
     letter-spacing: 3px;
     margin-bottom: 2px;
@@ -57,7 +57,7 @@
     letter-spacing: 2px;
 }
 .codex-notif-titre {
-    font-size: 0.4rem;
+    font-size: var(--typo-hud-micro);
     color: var(--texte);
     letter-spacing: 1px;
     margin-top: 2px;

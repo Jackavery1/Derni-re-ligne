@@ -21,7 +21,9 @@ export async function fermerPanneauDetailSiOuvert(page) {
 /** @param {import('@playwright/test').Page} page */
 export async function activerPausePartie(page) {
     await fermerPanneauDetailSiOuvert(page);
-    await page.locator('#btn-pause').click();
+    await page.evaluate(() => {
+        document.getElementById('btn-pause')?.click();
+    });
 }
 
 /** @param {import('@playwright/test').Page} page */
@@ -82,43 +84,46 @@ export async function attendrePartieVisible(page) {
 /** @param {import('@playwright/test').Page} page */
 export async function passerFluxLancementMonde(page) {
     for (let i = 0; i < 24; i++) {
-        const etat = await page.evaluate(() => ({
-            partieActive: document.body.classList.contains('partie-active'),
-            bossVisible: Boolean(document.getElementById('section-boss')?.offsetParent),
-        }));
-        if (etat.partieActive || etat.bossVisible) {
-            break;
-        }
+        const action = await page.evaluate(() => {
+            if (document.body.classList.contains('partie-active')) return 'done';
+            if (document.getElementById('section-boss')?.offsetParent) return 'done';
 
-        if (await boutonEstVisible(page, '#btn-objectifs-commencer')) {
-            await page.locator('#btn-objectifs-commencer').click();
-            continue;
-        }
+            const objectifs = document.getElementById('btn-objectifs-commencer');
+            if (objectifs?.offsetParent) {
+                objectifs.click();
+                return 'objectifs';
+            }
+            const passer = document.getElementById('btn-cutscene-passer');
+            if (passer?.offsetParent) {
+                passer.click();
+                return 'passer';
+            }
+            const suivant = document.getElementById('btn-cutscene-suivant');
+            if (suivant?.offsetParent) {
+                suivant.click();
+                return 'suivant';
+            }
+            const tutoriel = document.getElementById('btn-tutoriel-fermer');
+            if (tutoriel?.offsetParent) {
+                tutoriel.click();
+                return 'tutoriel';
+            }
+            const journal = document.getElementById('btn-journal-fermer');
+            if (journal?.offsetParent) {
+                journal.click();
+                return 'journal';
+            }
+            return 'wait';
+        });
 
-        if (await boutonEstVisible(page, '#btn-cutscene-passer')) {
-            await page.locator('#btn-cutscene-passer').click({ force: true });
-            continue;
-        }
+        if (action === 'done') break;
 
-        if (await boutonEstVisible(page, '#btn-cutscene-suivant')) {
-            await page.locator('#btn-cutscene-suivant').click({ force: true });
-            continue;
-        }
-
-        if (await boutonEstVisible(page, '#btn-tutoriel-fermer')) {
-            await page.locator('#btn-tutoriel-fermer').click();
-            continue;
-        }
-
-        if (await boutonEstVisible(page, '#btn-journal-fermer')) {
-            await page.locator('#btn-journal-fermer').click({ force: true });
-            continue;
-        }
-
-        try {
-            await attendreTypewriterInactif(page, 500);
-        } catch {
-            /* attente courte entre étapes du flux */
+        if (action === 'wait') {
+            try {
+                await attendreTypewriterInactif(page, 500);
+            } catch {
+                /* attente courte entre étapes du flux */
+            }
         }
     }
 

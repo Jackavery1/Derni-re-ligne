@@ -1,4 +1,4 @@
-/** @typedef {import('../archi-donnees.js').NiveauArchi} NiveauArchi */
+﻿/** @typedef {import('../archi-donnees/assembleur-niveaux.js').NiveauArchi} NiveauArchi */
 
 /** @type {NiveauArchi[] | null} */
 let cache = null;

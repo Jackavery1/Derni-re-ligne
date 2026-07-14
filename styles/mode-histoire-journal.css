@@ -1,5 +1,5 @@
 #ecran-histoire-journal {
-    background: rgba(5, 5, 20, 0.97);
+    background: var(--rgba-5-5-20-0-97);
 }
 #histoire-journal-contenu {
     display: flex;
@@ -9,21 +9,21 @@
     padding: 22px 20px;
     max-width: min(90vw, 400px);
     border: 2px solid var(--rose);
-    background: rgba(8, 8, 26, 0.99);
-    box-shadow: 0 0 40px rgba(255, 0, 110, 0.12);
+    background: var(--rgba-8-8-26-0-99);
+    box-shadow: 0 0 40px var(--rgba-255-0-110-0-12);
     animation: apparitionJournal 0.3s ease-out;
     max-height: calc(90dvh - var(--safe-top) - var(--safe-bottom));
     overflow: hidden;
     scrollbar-width: thin;
 }
 .histoire-journal-numero {
-    font-size: 0.27rem;
-    color: rgba(255, 0, 110, 0.6);
+    font-size: var(--typo-hud-micro);
+    color: var(--rgba-255-0-110-0-6);
     letter-spacing: 4px;
 }
 #canvas-journal-illust {
     width: 100%;
-    border: 1px solid rgba(255, 0, 110, 0.2);
+    border: 1px solid var(--rgba-255-0-110-0-2);
     image-rendering: pixelated;
 }
 .histoire-journal-titre {
@@ -57,7 +57,7 @@
     line-height: 2;
     letter-spacing: 0.5px;
     padding: 4px 10px;
-    border-left: 2px solid rgba(255, 0, 110, 0.3);
+    border-left: 2px solid var(--rgba-255-0-110-0-3);
     text-align: left;
 }
 

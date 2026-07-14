@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+﻿import { describe, it, expect } from 'vitest';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 import { obtenirProchainMondeCampagne } from '../js/histoire/histoire-mondes.js';
 
 describe('obtenirProchainMondeCampagne', () => {

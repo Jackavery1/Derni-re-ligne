@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+﻿import { describe, it, expect, beforeEach } from 'vitest';
 import { reinitialiserBusJeu, emettre } from '../js/etat/bus-jeu.js';
 import { store } from '../js/etat/store-jeu.js';
 import { activerModeHistoire, desactiverModeHistoire } from '../js/etat/mode-histoire.js';
@@ -21,7 +21,7 @@ import {
     obtenirSuiviDifficulte,
     suiviDifficulteActif,
 } from '../js/logique/gestionnaire-difficulte.js';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 import { PALIERS_VITESSE_MS, DIFFICULTE_MONDES } from '../js/io/difficulte-mondes-chargement.js';
 
 describe('gestionnaire-difficulte', () => {

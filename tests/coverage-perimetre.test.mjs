@@ -44,10 +44,13 @@ describe('coverage-perimetre', () => {
 
     it('chiffre le perimetre etendu (hors seuil 80 %)', () => {
         const config = readFileSync(join(racine, 'vitest.config.mjs'), 'utf8');
+        const etendu = readFileSync(join(racine, 'vitest.config.etendu.mjs'), 'utf8');
         const blocEtendu =
             config.match(/COVERAGE_ETENDU_EXCLUS_SEUIL_80 = \[([\s\S]*?)\];/)?.[1] ?? '';
         const exclus = [...blocEtendu.matchAll(/'js\/([^']+)'/g)].map((m) => m[1]);
         expect(exclus.length).toBeGreaterThanOrEqual(6);
+        expect(etendu).toMatch(/COVERAGE_ETENDU_EXCLUS_SEUIL_80/);
+        expect(etendu).toMatch(/COVERAGE_LOGIC/);
         const incl = lireConfigCoverage();
         expect(incl.length).toBeGreaterThanOrEqual(20);
         const totalModulesJs = readFileSync(

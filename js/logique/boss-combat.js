@@ -54,6 +54,7 @@ function ctxAttaque() {
         plateau: etat.plateau,
         effets: store.histoire.boss.effets,
         bossActif: store.histoire.boss.actif,
+        bossEtat: store.histoire.boss,
     };
 }
 

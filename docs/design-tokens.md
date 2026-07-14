@@ -2,16 +2,20 @@
 
 Référence unique des variables CSS (`styles/variables.css`) et de leur usage. Toute nouvelle couleur UI doit passer par un token existant ou être ajoutée ici avant usage dans les feuilles de style.
 
+## Couleurs semi-transparentes (`tokens-rgba.css`)
+
+Les valeurs `rgba(...)` hors couleurs de base sont centralisées dans `styles/tokens-rgba.css` (importé par `styles/main.css`). Chaque token suit le motif `--<contexte>-<role>-<alpha>` (ex. `--hud-fond-04`, `--menu-jouer-bordure-35`). Règle : pas de `rgba()` littéral dans les feuilles de style hors `variables.css` et `tokens-rgba.css` (garde-fou `tests/css-tokens-menu.test.mjs`). Pour ajouter une transparence : créer le token dans `tokens-rgba.css`, puis le référencer via `var(--…)` dans la feuille cible.
+
 ## Couleurs de base
 
-| Token             | Valeur                   | Usage                                            |
-| ----------------- | ------------------------ | ------------------------------------------------ |
-| `--fond`          | `#08081a`                | Arrière-plan global                              |
-| `--fond-panneau`  | `rgba(0,245,255,0.04)`   | Panneaux HUD, cartes                             |
-| `--bordure`       | `rgba(0,245,255,0.2)`    | Contours néon discrets                           |
-| `--texte`         | `#e0e0ff`                | Texte principal (contraste ≥ 4.5:1 sur `--fond`) |
-| `--texte-dim`     | `rgba(224,224,255,0.75)` | Labels secondaires                               |
-| `--texte-discret` | `var(--texte-dim)`       | Mentions tertiaires (alias AA, test E2b)         |
+| Token             | Valeur                 | Usage                                             |
+| ----------------- | ---------------------- | ------------------------------------------------- |
+| `--fond`          | `#08081a`              | Arrière-plan global                               |
+| `--fond-panneau`  | `rgba(0,245,255,0.04)` | Panneaux HUD, cartes                              |
+| `--bordure`       | `rgba(0,245,255,0.2)`  | Contours néon discrets                            |
+| `--texte`         | `#e0e0ff`              | Texte principal (contraste ≥ 4.5:1 sur `--fond`)  |
+| `--texte-dim`     | `#b8b8e0`              | Labels secondaires (AA sur `--fond`)              |
+| `--texte-discret` | `var(--texte-dim)`     | Mentions tertiaires (test E2b, ratio alpha blend) |
 
 ## Boutons discrets
 
@@ -108,7 +112,24 @@ Tokens `--menu-*` dans `variables.css`, consommés par `menu-narratif-cutscene.c
 | `--font-ui`       | Rajdhani       | Boutons, menus, labels |
 | `--font-narratif` | Crimson Pro    | Dialogues, cutscenes   |
 
-Échelles : `--taille-titre-xl` … `--typo-narratif` (voir `variables.css`). HUD micro : `--typo-hud-micro` ; compact UI : `--typo-ui-compact`.
+Échelles : `--taille-titre-xl` … `--typo-narratif` (voir `variables.css`).
+
+| Token                                                            | Plancher | Usage                                |
+| ---------------------------------------------------------------- | -------- | ------------------------------------ |
+| `--typo-hud-micro`                                               | 11px     | Labels HUD, stats secondaires        |
+| `--typo-ui-compact`                                              | 11px     | Options, constellation, layout jeu   |
+| `--typo-ui-mini`                                                 | 11px     | Mentions tertiaires (titre, notifs)  |
+| `--typo-ui-caption`                                              | 11px     | Légendes boss, contrôles tactiles    |
+| `--typo-ui-label`                                                | 11px     | Labels formulaires, objectifs        |
+| `--typo-ui-hint`                                                 | 11px     | Hints discrets, portraits            |
+| `--typo-ui-note`                                                 | 11px     | Notes HUD, bannières                 |
+| `--typo-ui-secondaire`                                           | 11px     | Sous-titres mode architecte / oracle |
+| `--typo-ui-moyen`                                                | 11px     | Corps compact (carte, menu)          |
+| `--typo-boss-attaque` / `--typo-boss-timer` / `--typo-boss-aide` | 11px     | HUD boss en combat                   |
+
+Focus clavier : `--focus-ring` (jaune), `--focus-ring-width`, `--focus-ring-offset` — appliqués sur boutons, menus et cutscenes.
+
+Garde-fou : pas de `font-size` en `rem` < 0,66 hors `clamp()` / `var(--typo-*)` (`tests/css-tokens-menu.test.mjs`).
 
 ## Espacement
 
@@ -146,6 +167,7 @@ Résolution interne plateau : **320×640** px (`LAYOUT.plateauLargeur` / `platea
 - **Menus / accueil** : `touch-action: manipulation` sur `html, body` (`styles/variables.css`) — évite le double-tap zoom accidentel sans bloquer le pinch-zoom système.
 - **Partie active** : `touch-action: none` sur `#zone-jeu` / `#canvas-plateau` uniquement ; boutons HUD (`#btn-pause`, `#btn-mute`) et contrôles tactiles en `manipulation`. Scroll bloqué par `overflow: hidden` sur `html, body`.
 - **Clavier** : pause, menus et rebind des touches (`Options → Contrôles`) restent disponibles sur desktop et mobile avec clavier externe.
+- **Validation device** : checklist iPhone (safe-area, paysage architecte, pinch-zoom en menus) — `docs/checklist-iphone-release.md`, `npm run verify:iphone-checklist`, tests `e2e/checklist-iphone.spec.mjs`.
 
 ## Hors tokens
 

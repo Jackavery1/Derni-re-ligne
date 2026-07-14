@@ -39,14 +39,14 @@
     font-family: var(--font-narratif);
     font-size: clamp(17px, 2vw, 22px);
     font-style: italic;
-    color: rgba(255, 200, 220, 0.92);
+    color: var(--rgba-255-200-220-0-92);
     line-height: 1.9;
 }
 .cutscene-police-stats {
     font-family: var(--font-stats);
     font-size: clamp(12px, 1.4vw, 16px);
     letter-spacing: 2px;
-    color: rgba(200, 180, 255, 0.9);
+    color: var(--rgba-200-180-255-0-9);
 }
 .cutscene-police-terminal {
     font-family: 'Courier New', monospace;
@@ -57,7 +57,7 @@
 .cutscene-police-ui {
     font-family: var(--font-ui);
     font-size: clamp(16px, 1.8vw, 20px);
-    color: rgba(255, 255, 255, 0.65);
+    color: var(--rgba-255-255-255-0-65);
     font-weight: 400;
 }
 
@@ -87,7 +87,7 @@
     font-family: var(--font-stats);
     font-size: 9px;
     letter-spacing: 2px;
-    color: rgba(255, 255, 255, 0.25);
+    color: var(--rgba-255-255-255-0-25);
 }
 
 .cutscene-controles {
@@ -102,9 +102,9 @@
     font-family: var(--font-stats);
     font-size: clamp(9px, 1vw, 11px);
     letter-spacing: 2px;
-    color: rgba(255, 255, 255, 0.7);
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--rgba-255-255-255-0-7);
+    background: var(--rgba-255-255-255-0-06);
+    border: 1px solid var(--rgba-255-255-255-0-15);
     padding: 8px 20px;
     min-height: 48px;
     min-width: 48px;
@@ -116,13 +116,13 @@
         border-color 0.2s;
 }
 .btn-cutscene:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.35);
+    background: var(--rgba-255-255-255-0-12);
+    border-color: var(--rgba-255-255-255-0-35);
 }
 .btn-cutscene:focus-visible,
 .btn-cutscene-passer:focus-visible {
-    outline: 2px solid var(--cyan);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
 }
 .btn-cutscene-hint {
     font-size: 0.75em;
@@ -134,7 +134,7 @@
     font-family: var(--font-ui);
     font-size: 11px;
     letter-spacing: 2px;
-    color: rgba(255, 255, 255, 0.45);
+    color: var(--rgba-255-255-255-0-45);
     background: none;
     border: none;
     cursor: pointer;
@@ -146,5 +146,5 @@
     min-width: 48px;
 }
 .btn-cutscene-passer:hover {
-    color: rgba(255, 255, 255, 0.75);
+    color: var(--rgba-255-255-255-0-75);
 }

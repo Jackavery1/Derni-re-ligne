@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+﻿import { describe, it, expect, beforeEach } from 'vitest';
 import { BIOMES } from '../js/config/biomes.js';
 import { store } from '../js/etat/store-jeu.js';
 import { etat, definirBiomeActif } from '../js/etat/store-jeu.js';
@@ -16,7 +16,7 @@ import {
     tickConditionTrame,
     reinitialiserConditionsRuntime,
 } from '../js/histoire/conditions-secrets.js';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 
 describe('entrée partie distorsion (monde_finale)', () => {
     beforeEach(() => {

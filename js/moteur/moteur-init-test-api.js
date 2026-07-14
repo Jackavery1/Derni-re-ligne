@@ -7,9 +7,10 @@ import {
     initialiserJournalSfxTest,
 } from './neo-test-api-handlers-gamefeel.js';
 import { creerHandlersDifficulte } from './neo-test-api-handlers-difficulte.js';
+import { creerHandlersBoss } from './neo-test-api-handlers-boss.js';
 
 export function initialiserNeoTestApi() {
-    void import('../neo-test-api.js').then(async ({ exposerNeoTestApi, estNeoTestAutorise }) => {
+    void import('./neo-test-api.js').then(async ({ exposerNeoTestApi, estNeoTestAutorise }) => {
         if (!estNeoTestAutorise()) return;
         const depsSync = await chargerDepsCutsceneSync();
         initialiserJournalSfxTest();
@@ -19,6 +20,7 @@ export function initialiserNeoTestApi() {
             ...creerHandlersCoop(),
             ...creerHandlersGameFeel(),
             ...creerHandlersDifficulte(),
+            ...creerHandlersBoss(),
         });
     });
 }

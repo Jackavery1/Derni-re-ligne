@@ -1,13 +1,13 @@
 .objectif-hud-modificateur {
-    font-size: 0.35rem;
+    font-size: var(--typo-ui-compact);
     color: var(--rose-objectif);
     letter-spacing: 1px;
     margin-top: 4px;
 }
 
 .objectif-hud-palier {
-    font-size: 0.35rem;
-    color: rgba(255, 255, 255, 0.45);
+    font-size: var(--typo-ui-compact);
+    color: var(--rgba-255-255-255-0-45);
     letter-spacing: 1px;
 }
 
@@ -17,23 +17,23 @@
 }
 
 .objectif-hud-etoile {
-    font-size: 0.55rem;
-    color: rgba(180, 0, 255, 0.25);
+    font-size: var(--typo-ui-note);
+    color: var(--rgba-180-0-255-0-25);
 }
 
 .objectif-hud-etoile-active {
     color: var(--violet-clair);
-    text-shadow: 0 0 6px rgba(192, 68, 255, 0.7);
+    text-shadow: 0 0 6px var(--rgba-192-68-255-0-7);
 }
 
 .objectif-hud-trame {
     margin-top: 6px;
     padding-top: 6px;
-    border-top: 1px solid rgba(180, 0, 255, 0.25);
+    border-top: 1px solid var(--rgba-180-0-255-0-25);
 }
 
 .objectif-hud-trame-resume {
-    font-size: 0.38rem;
+    font-size: var(--typo-ui-compact);
     color: var(--violet-clair);
     letter-spacing: 1px;
     margin-bottom: 4px;
@@ -44,7 +44,7 @@
     margin: 0;
     padding: 0;
     font-size: var(--typo-hud-micro);
-    color: rgba(255, 255, 255, 0.65);
+    color: var(--rgba-255-255-255-0-65);
     line-height: 1.45;
 }
 
@@ -55,8 +55,8 @@
     right: 0;
     z-index: 12;
     padding: 6px 12px;
-    background: rgba(12, 4, 24, 0.92);
-    border-bottom: 1px solid rgba(192, 68, 255, 0.45);
+    background: var(--rgba-12-4-24-0-92);
+    border-bottom: 1px solid var(--rgba-192-68-255-0-45);
     pointer-events: none;
 }
 
@@ -78,15 +78,15 @@
     gap: 8px 14px;
     font-family: var(--font-ui);
     font-size: clamp(11px, 1.1vw, 13px);
-    color: rgba(255, 255, 255, 0.75);
+    color: var(--rgba-255-255-255-0-75);
 }
 
 .hud-boss-jauge-wrap {
     --hud-jauge-ratio: 1;
     width: 100%;
     height: 8px;
-    background: rgba(255, 0, 110, 0.15);
-    border: 1px solid rgba(255, 0, 110, 0.35);
+    background: var(--rgba-255-0-110-0-15);
+    border: 1px solid var(--rgba-255-0-110-0-35);
     margin-bottom: 4px;
 }
 
@@ -98,8 +98,8 @@
 }
 
 .hud-boss-phase {
-    font-size: 0.35rem;
-    color: rgba(255, 0, 110, 0.75);
+    font-size: var(--typo-ui-compact);
+    color: var(--rgba-255-0-110-0-75);
     letter-spacing: 1px;
 }
 
@@ -117,12 +117,12 @@
 
 .histoire-carte-etoile {
     font-size: 1rem;
-    color: rgba(180, 0, 255, 0.25);
+    color: var(--rgba-180-0-255-0-25);
 }
 
 .histoire-carte-etoile-active {
     color: var(--violet-clair);
-    text-shadow: 0 0 8px rgba(192, 68, 255, 0.8);
+    text-shadow: 0 0 8px var(--rgba-192-68-255-0-8);
 }
 
 /* ================================================

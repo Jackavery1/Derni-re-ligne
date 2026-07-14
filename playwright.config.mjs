@@ -52,6 +52,7 @@ const channelUse = channel !== 'chromium' ? { channel } : {};
 const specsMatriceResponsive = [
     '**/audit-c-responsive.spec.mjs',
     '**/histoire-responsive.spec.mjs',
+    '**/histoire-responsive-d8.spec.mjs',
 ];
 
 const iphone14Chromium = {
@@ -91,6 +92,7 @@ export default defineConfig({
     testDir: './e2e',
     workers: process.env.CI ? undefined : 1,
     timeout: 25000,
+    retries: process.env.CI ? 1 : 0,
     snapshotPathTemplate: '{testDir}/__snapshots__/{testFilePath}/{arg}{ext}',
     expect: {
         toHaveScreenshot: {

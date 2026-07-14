@@ -39,7 +39,7 @@
     --biome-lave-bordure: #cd6839;
     --contraste-fond: #000000;
     --contraste-texte: #ffffff;
-    --texte-dim: rgba(224, 224, 255, 0.75);
+    --texte-dim: #b8b8e0;
     --texte-discret: var(--texte-dim);
 
     /* Cutscenes — thèmes et typo */
@@ -175,7 +175,21 @@
     --space-5: 24px;
     --space-6: 32px;
     --typo-hud-micro: clamp(11px, 0.45rem, 13px);
-    --typo-ui-compact: clamp(10px, 0.42rem, 14px);
+    --typo-ui-compact: clamp(11px, 0.42rem, 14px);
+    --typo-ui-mini: clamp(11px, 0.38rem, 13px);
+    --typo-ui-caption: clamp(11px, 0.5rem, 14px);
+    --typo-ui-secondaire: clamp(11px, 0.6rem, 15px);
+    --typo-ui-label: clamp(11px, 0.45rem, 14px);
+    --typo-ui-hint: clamp(11px, 0.48rem, 15px);
+    --typo-ui-moyen: clamp(11px, 0.65rem, 16px);
+    --typo-ui-note: clamp(11px, 0.55rem, 16px);
+    --typo-boss-attaque: clamp(11px, 0.65rem, 13px);
+    --typo-boss-timer: clamp(11px, 0.6rem, 12px);
+    --typo-boss-aide: clamp(11px, 0.55rem, 12px);
+
+    --focus-ring: var(--jaune);
+    --focus-ring-width: 2px;
+    --focus-ring-offset: 2px;
     --texte-vide-indicateur: rgba(180, 150, 190, 0.72);
 
     --theme-primaire: var(--cyan);
@@ -218,8 +232,8 @@ body::before {
     position: fixed;
     inset: 0;
     background:
-        linear-gradient(rgba(0, 245, 255, 0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 245, 255, 0.025) 1px, transparent 1px);
+        linear-gradient(var(--rgba-0-245-255-0-025) 1px, transparent 1px),
+        linear-gradient(90deg, var(--rgba-0-245-255-0-025) 1px, transparent 1px);
     background-size: 40px 40px;
     pointer-events: none;
     z-index: 0;

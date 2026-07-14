@@ -64,16 +64,16 @@ body.archi-active #controles-paysage {
     justify-content: space-between;
     padding: 4px 6px;
     border: 1px solid var(--bordure);
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--rgba-255-255-255-0-03);
     font-size: var(--typo-hud-micro);
     letter-spacing: 1px;
 }
 
 .archi-inv-item.selectionne {
     border-color: var(--jaune);
-    background: rgba(255, 230, 0, 0.08);
+    background: var(--rgba-255-230-0-0-08);
     color: var(--jaune);
-    box-shadow: 0 0 8px rgba(255, 230, 0, 0.2);
+    box-shadow: 0 0 8px var(--rgba-255-230-0-0-2);
 }
 
 .archi-inv-item.epuise {
@@ -81,7 +81,7 @@ body.archi-active #controles-paysage {
 }
 
 .archi-inv-qte {
-    font-size: 0.45rem;
+    font-size: var(--typo-ui-label);
     color: var(--cyan);
     text-shadow: 0 0 6px var(--cyan);
 }
@@ -106,7 +106,7 @@ body.archi-active #controles-paysage {
 }
 
 #archi-niveau-nom {
-    font-size: 0.35rem;
+    font-size: var(--typo-ui-compact);
     color: var(--texte);
     letter-spacing: 1px;
     text-align: center;
@@ -114,7 +114,7 @@ body.archi-active #controles-paysage {
 }
 
 #archi-difficulte-etoiles {
-    font-size: 0.6rem;
+    font-size: var(--typo-ui-secondaire);
     text-align: center;
     margin-top: 4px;
     color: var(--jaune);
@@ -146,7 +146,7 @@ body.archi-active #controles-paysage {
     border-color: color-mix(in srgb, var(--accent-carte) 55%, transparent);
     box-shadow:
         0 0 10px color-mix(in srgb, var(--accent-carte) 20%, transparent),
-        inset 0 0 24px rgba(0, 0, 0, 0.45);
+        inset 0 0 24px var(--rgba-0-0-0-0-45);
     padding: 16px 12px;
     display: flex;
     flex-direction: column;

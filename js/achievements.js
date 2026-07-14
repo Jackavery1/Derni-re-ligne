@@ -1,4 +1,4 @@
-export { ACHIEVEMENTS } from './achievements-donnees.js';
+export { ACHIEVEMENTS } from './achievements/achievements-donnees-chargement.js';
 export {
     statsGlobales,
     chargerStats,

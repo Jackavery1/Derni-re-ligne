@@ -27,8 +27,8 @@
         0deg,
         transparent,
         transparent 3px,
-        rgba(0, 0, 0, 0.06) 3px,
-        rgba(0, 0, 0, 0.06) 4px
+        var(--rgba-0-0-0-0-06) 3px,
+        var(--rgba-0-0-0-0-06) 4px
     );
     pointer-events: none;
     z-index: 1;
@@ -146,7 +146,7 @@
     color: var(--cyan);
     text-shadow:
         0 0 14px var(--cyan),
-        0 0 35px rgba(0, 245, 255, 0.4);
+        0 0 35px var(--rgba-0-245-255-0-4);
     animation: pulseLueur 2.5s ease-in-out infinite 0.4s;
 }
 
@@ -161,14 +161,14 @@
     align-items: center;
     gap: 6px;
     padding: 10px 28px;
-    border: 1px solid rgba(255, 230, 0, 0.3);
-    background: rgba(255, 230, 0, 0.04);
+    border: 1px solid var(--rgba-255-230-0-0-3);
+    background: var(--rgba-255-230-0-0-04);
     box-shadow:
-        0 0 12px rgba(255, 230, 0, 0.08),
-        inset 0 0 12px rgba(255, 230, 0, 0.04);
+        0 0 12px var(--rgba-255-230-0-0-08),
+        inset 0 0 12px var(--rgba-255-230-0-0-04);
 }
 .menu-record-label {
-    font-size: 0.38rem;
+    font-size: var(--typo-ui-mini);
     color: var(--texte-dim);
     letter-spacing: 3px;
 }
@@ -194,7 +194,7 @@
 }
 
 .bouton-mode {
-    font-size: 0.38rem;
+    font-size: var(--typo-ui-mini);
     padding: 10px 14px;
     letter-spacing: 1px;
 }
@@ -204,12 +204,12 @@
     color: var(--fond);
     text-shadow: none;
     box-shadow:
-        0 0 18px rgba(0, 245, 255, 0.55),
-        inset 0 0 10px rgba(0, 245, 255, 0.12);
+        0 0 18px var(--rgba-0-245-255-0-55),
+        inset 0 0 10px var(--rgba-0-245-255-0-12);
 }
 
 .bouton-mode:not(.actif):hover {
-    background: rgba(0, 245, 255, 0.12);
+    background: var(--rgba-0-245-255-0-12);
 }
 
 /* Guide des touches (options) */
@@ -217,11 +217,11 @@
     display: grid;
     grid-template-columns: auto auto;
     gap: 6px 24px;
-    font-size: 0.38rem;
+    font-size: var(--typo-ui-mini);
     color: var(--texte-dim);
     padding: 12px 20px;
     border: 1px solid var(--bordure);
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--rgba-0-0-0-0-2);
 }
 .guide dt {
     color: var(--cyan);

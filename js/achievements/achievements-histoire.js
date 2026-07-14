@@ -1,7 +1,7 @@
-import { store } from '../etat/store-jeu.js';
+﻿import { store } from '../etat/store-jeu.js';
 import { chargerEtatHistoire, sauvegarderEtatHistoire } from '../io/progression.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
-import { ETAT_HISTOIRE_VIDE } from '../histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../histoire/histoire-donnees-exports.js';
 import { ACHIEVEMENTS_HISTOIRE_CONDITIONS } from './achievements-conditions-histoire.js';
 
 function etatH() {

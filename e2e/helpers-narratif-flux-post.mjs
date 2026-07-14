@@ -1,6 +1,5 @@
 import { expect } from '@playwright/test';
 import { MARQUEURS_NARRATIFS_CAMPAGNE } from './helpers-narratif-donnees.mjs';
-import { boutonEstVisible } from './helpers-page.mjs';
 import {
     attendreOverlayPostVictoire,
     avancerCutsceneUneLigne,
@@ -9,11 +8,13 @@ import {
 
 /** @param {import('@playwright/test').Page} page */
 async function fermerTutorielSiVisible(page) {
-    if (await boutonEstVisible(page, '#btn-tutoriel-fermer')) {
-        await page.locator('#btn-tutoriel-fermer').click({ force: true });
+    const ferme = await page.evaluate(() => {
+        const btn = document.getElementById('btn-tutoriel-fermer');
+        if (!btn?.offsetParent) return false;
+        btn.click();
         return true;
-    }
-    return false;
+    });
+    return ferme;
 }
 
 /** @param {import('@playwright/test').Page} page @param {string[]} corpus @param {number} typewriterTimeout @param {boolean} [strictTypewriter] */
@@ -34,11 +35,13 @@ async function parcourirCutscenePostVictoire(page, corpus, typewriterTimeout, st
         );
         if (t.trim()) corpus.push(t);
         if (!avance) {
-            const passer = page.locator('#btn-cutscene-passer');
-            if (await passer.isVisible().catch(() => false)) {
-                await passer.click({ force: true });
-                continue;
-            }
+            const passe = await page.evaluate(() => {
+                const btn = document.getElementById('btn-cutscene-passer');
+                if (!btn?.offsetParent) return false;
+                btn.click();
+                return true;
+            });
+            if (passe) continue;
             break;
         }
     }
@@ -122,7 +125,9 @@ export async function parcourirFluxPostVictoireAvecAssertions(
         pausesConsecutives = 0;
 
         if (etat.recap) {
-            await page.locator('#btn-recap-continuer').click({ force: true });
+            await page.evaluate(() => {
+                document.getElementById('btn-recap-continuer')?.click();
+            });
             continue;
         }
         if (etat.cutscene) {

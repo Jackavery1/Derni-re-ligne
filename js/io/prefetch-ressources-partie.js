@@ -1,7 +1,7 @@
-import { assurerFragmentsPartie } from '../ui/charger-ecrans.js';
+﻿import { assurerFragmentsPartie } from '../ui/charger-ecrans.js';
 import { assurerCanvasPartie } from '../logique/partie-canvas.js';
 import { chargerDifficulteMondes } from './difficulte-mondes-chargement.js';
-import { chargerAchievementsDonnees } from '../achievements-donnees.js';
+import { chargerAchievementsDonnees } from '../achievements/achievements-donnees-chargement.js';
 import { lierCouleursTetrominos } from '../logique/piece-jeu.js';
 
 /** @type {Promise<void> | null} */

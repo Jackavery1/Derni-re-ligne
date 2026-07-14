@@ -1,4 +1,4 @@
-import { ETAT_HISTOIRE_VIDE } from '../histoire-donnees.js';
+﻿import { ETAT_HISTOIRE_VIDE } from '../histoire/histoire-donnees-exports.js';
 import { sauvegarderEtatHistoire } from '../io/progression-histoire.js';
 import { supprimerStockageProgression } from '../io/progression-stockage.js';
 import { ecrireStockage } from '../io/progression-stockage.js';

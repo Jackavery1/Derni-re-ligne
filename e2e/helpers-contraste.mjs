@@ -3,36 +3,49 @@
 /** @param {import('@playwright/test').Page} page */
 export async function mesurerContrasteCorps(page) {
     return page.evaluate(() => {
-        function analyserRgb(couleur) {
-            const m = couleur.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-            if (m) return [Number(m[1]), Number(m[2]), Number(m[3])];
+        /** @param {string} couleur */
+        function analyserCouleur(couleur) {
+            const rgba = couleur.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+            if (rgba) {
+                return {
+                    rgb: [Number(rgba[1]), Number(rgba[2]), Number(rgba[3])],
+                    alpha: rgba[4] != null ? Number(rgba[4]) : 1,
+                };
+            }
             const court = couleur.match(/^#([0-9a-f]{3})$/i);
             if (court) {
                 const [r, g, b] = court[1].split('');
                 const etendu = r + r + g + g + b + b;
                 const v = Number.parseInt(etendu, 16);
-                return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
+                return { rgb: [(v >> 16) & 255, (v >> 8) & 255, v & 255], alpha: 1 };
             }
             const long = couleur.match(/^#([0-9a-f]{6})$/i);
             if (long) {
                 const v = Number.parseInt(long[1], 16);
-                return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
+                return { rgb: [(v >> 16) & 255, (v >> 8) & 255, v & 255], alpha: 1 };
             }
             return null;
         }
-        function luminance([r, g, b]) {
-            const [rs, gs, bs] = [r, g, b].map((c) => {
+        /** @param {number[]} fg @param {number} alpha @param {number[]} bg */
+        function melangerRgb(fg, alpha, bg) {
+            return fg.map((c, i) => Math.round(c * alpha + bg[i] * (1 - alpha)));
+        }
+        /** @param {number[]} rgb */
+        function luminance(rgb) {
+            const [rs, gs, bs] = rgb.map((c) => {
                 const s = c / 255;
                 return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
             });
             return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
         }
+        /** @param {string} couleurPremierPlan @param {string} couleurFond */
         function ratioDepuisCouleurs(couleurPremierPlan, couleurFond) {
-            const fg = analyserRgb(couleurPremierPlan);
-            const bg = analyserRgb(couleurFond);
+            const fg = analyserCouleur(couleurPremierPlan);
+            const bg = analyserCouleur(couleurFond);
             if (!fg || !bg) return 0;
-            const l1 = luminance(fg);
-            const l2 = luminance(bg);
+            const rgbEffectif = melangerRgb(fg.rgb, fg.alpha, bg.rgb);
+            const l1 = luminance(rgbEffectif);
+            const l2 = luminance(bg.rgb);
             const lighter = Math.max(l1, l2);
             const darker = Math.min(l1, l2);
             return (lighter + 0.05) / (darker + 0.05);
@@ -47,36 +60,49 @@ export async function mesurerContrasteCorps(page) {
 /** @param {import('@playwright/test').Page} page */
 export async function mesurerContrasteTexteDiscret(page) {
     return page.evaluate(() => {
-        function analyserRgb(couleur) {
-            const m = couleur.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-            if (m) return [Number(m[1]), Number(m[2]), Number(m[3])];
+        /** @param {string} couleur */
+        function analyserCouleur(couleur) {
+            const rgba = couleur.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+            if (rgba) {
+                return {
+                    rgb: [Number(rgba[1]), Number(rgba[2]), Number(rgba[3])],
+                    alpha: rgba[4] != null ? Number(rgba[4]) : 1,
+                };
+            }
             const court = couleur.match(/^#([0-9a-f]{3})$/i);
             if (court) {
                 const [r, g, b] = court[1].split('');
                 const etendu = r + r + g + g + b + b;
                 const v = Number.parseInt(etendu, 16);
-                return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
+                return { rgb: [(v >> 16) & 255, (v >> 8) & 255, v & 255], alpha: 1 };
             }
             const long = couleur.match(/^#([0-9a-f]{6})$/i);
             if (long) {
                 const v = Number.parseInt(long[1], 16);
-                return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
+                return { rgb: [(v >> 16) & 255, (v >> 8) & 255, v & 255], alpha: 1 };
             }
             return null;
         }
-        function luminance([r, g, b]) {
-            const [rs, gs, bs] = [r, g, b].map((c) => {
+        /** @param {number[]} fg @param {number} alpha @param {number[]} bg */
+        function melangerRgb(fg, alpha, bg) {
+            return fg.map((c, i) => Math.round(c * alpha + bg[i] * (1 - alpha)));
+        }
+        /** @param {number[]} rgb */
+        function luminance(rgb) {
+            const [rs, gs, bs] = rgb.map((c) => {
                 const s = c / 255;
                 return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
             });
             return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
         }
+        /** @param {string} couleurPremierPlan @param {string} couleurFond */
         function ratioDepuisCouleurs(couleurPremierPlan, couleurFond) {
-            const fg = analyserRgb(couleurPremierPlan);
-            const bg = analyserRgb(couleurFond);
+            const fg = analyserCouleur(couleurPremierPlan);
+            const bg = analyserCouleur(couleurFond);
             if (!fg || !bg) return 0;
-            const l1 = luminance(fg);
-            const l2 = luminance(bg);
+            const rgbEffectif = melangerRgb(fg.rgb, fg.alpha, bg.rgb);
+            const l1 = luminance(rgbEffectif);
+            const l2 = luminance(bg.rgb);
             const lighter = Math.max(l1, l2);
             const darker = Math.min(l1, l2);
             return (lighter + 0.05) / (darker + 0.05);

@@ -112,18 +112,23 @@ export function creerHandlersDifficulte() {
             const tempsTopOutPassifEstimeMs = piecesMinimumTopOut * tempsParPieceMs;
             const seuilMortPrecoceMs = 30000;
             const vivantPrologue = COMPORTEMENTS_VIVANT.prologue ?? null;
+            const framesAvantPremierPicDifficulte = Math.floor(
+                ((lignesAvantMontee * tempsParPieceMs) / 1000) * 60
+            );
 
             return {
                 spawnGraceMs: CONFIG.spawnGraceMs,
                 vitessePalier1Ms,
                 lignesAvantMonteePalier2: lignesAvantMontee,
                 tempsTopOutPassifEstimeMs,
+                framesAvantPremierPicDifficulte,
                 vivantActif: vivantPrologue != null,
                 surviePassiveAuMoins30s: tempsTopOutPassifEstimeMs >= seuilMortPrecoceMs,
                 equiteDemarrage:
                     tempsTopOutPassifEstimeMs >= seuilMortPrecoceMs &&
                     CONFIG.spawnGraceMs >= (24 * 1000) / 60 &&
-                    vivantPrologue == null,
+                    vivantPrologue == null &&
+                    framesAvantPremierPicDifficulte >= 120,
             };
         },
     };

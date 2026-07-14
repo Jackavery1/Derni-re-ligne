@@ -27,7 +27,7 @@
 #ecran-titre .menu-bloc-libre .btn-menu,
 #ecran-titre .menu-bloc-collection .btn-menu {
     font-family: var(--font-stats);
-    font-size: clamp(0.38rem, 2.8vw, 0.48rem);
+    font-size: var(--typo-ui-mini);
     flex-direction: column;
     gap: 6px;
     padding: 12px 8px 10px;

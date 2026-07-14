@@ -1,4 +1,4 @@
-import { obtenirHistoireTextesSync } from '../io/charger-histoire-textes.js';
+﻿import { obtenirHistoireTextesSync } from '../io/charger-histoire-textes.js';
 import {
     afficherVictoireBoss,
     afficherTransitionChapitre,
@@ -19,7 +19,7 @@ import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { creerFile } from './file-narrative.js';
 import { extraireLignesCutscene } from './histoire-cutscene-moteur.js';
 import { SCENE_DEFAUT_INTERLUDE } from './histoire-narratif-scenes.js';
-import { JOURNAUX_VERA } from '../histoire-donnees.js';
+import { JOURNAUX_VERA } from '../histoire/histoire-donnees-exports.js';
 const INTERLUDES_PAR_MONDE = {
     monde_rouille: 'interlude_gardiens',
     monde_eclipse: 'interlude_elle',

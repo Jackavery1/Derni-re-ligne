@@ -1,6 +1,6 @@
-import { chargerEtatHistoire } from '../io/progression-histoire.js';
+﻿import { chargerEtatHistoire } from '../io/progression-histoire.js';
 import { lireStockage } from '../io/progression-stockage.js';
-import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
+import { SEQUENCE_HISTOIRE } from '../histoire/histoire-donnees-exports.js';
 import { sansAccentsE } from '../logique/texte-jeu.js';
 import { demanderConfirmationDialog } from '../ui/dialog-confirmation.js';
 
@@ -9,7 +9,7 @@ function introHistoireDejaVue() {
 }
 
 /**
- * @param {import('../histoire-donnees.js').EtatHistoire} etat
+ * @param {import('../histoire/histoire-donnees-exports.js').EtatHistoire} etat
  * @returns {boolean}
  */
 export function aProgressionCampagne(etat) {

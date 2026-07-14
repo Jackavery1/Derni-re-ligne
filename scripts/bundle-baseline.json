@@ -1,18 +1,20 @@
 {
-    "date": "2026-07-11T14:25:00.000Z",
+    "date": "2026-07-14T19:25:00.000Z",
     "version": "2.5.34",
-    "session": "optimisation-nettoyage-e2e-helpers",
+    "session": "optimisation-nettoyage-precache-wav",
     "avant": {
-        "bundleJsKo": 578,
-        "entreePrincipaleKo": 12,
-        "chunksJs": 169,
-        "precacheProdKo": 1109.7
+        "bundleJsKo": 589.6,
+        "entreePrincipaleKo": 11.7,
+        "chunksJs": 185,
+        "precacheProdKo": 1352.1,
+        "precacheDevKo": 2406
     },
     "apres": {
-        "bundleJsKo": 578,
-        "entreePrincipaleKo": 12,
-        "chunksJs": 169,
-        "precacheProdKo": 1110.1
+        "bundleJsKo": 589.6,
+        "entreePrincipaleKo": 11.7,
+        "chunksJs": 183,
+        "precacheProdKo": 1150.1,
+        "precacheDevKo": 2204.2
     },
-    "notes": "Session nettoyage E2E (helpers factorises, exports morts). Bundle stable ; pas de phase 6 (splitting) necessaire."
+    "notes": "WAV boss hors precache shell (-202 Ko prod). dev-init hors precache dev. Helper E2E lireCheminsScenesArrierePlanSw() dedup sw.js."
 }

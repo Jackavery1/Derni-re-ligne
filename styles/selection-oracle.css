@@ -10,7 +10,7 @@
 }
 .toggle-oracle {
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--rgba-255-255-255-0-2);
     color: var(--texte-dim);
     font-family: var(--police);
     font-size: clamp(0.42rem, 1.4vw, 0.55rem);
@@ -27,7 +27,7 @@
 .toggle-oracle.actif {
     border-color: var(--oracle-accent);
     color: var(--oracle-texte);
-    box-shadow: 0 0 14px rgba(170, 68, 255, 0.35);
+    box-shadow: 0 0 14px var(--rgba-170-68-255-0-35);
     text-shadow: 0 0 8px var(--oracle-accent);
 }
 .oracle-toggle-desc {
@@ -56,7 +56,7 @@
     letter-spacing: 2px;
     text-align: right;
     border: 1px solid;
-    background: rgba(8, 8, 26, 0.92);
+    background: var(--rgba-8-8-26-0-92);
     max-width: min(42vw, 220px);
     transition: none;
 }
@@ -66,12 +66,12 @@
 #notif-oracle.oracle-feedback-succes {
     color: var(--jaune);
     border-color: var(--jaune);
-    box-shadow: 0 0 20px rgba(255, 230, 0, 0.5);
+    box-shadow: 0 0 20px var(--rgba-255-230-0-0-5);
 }
 #notif-oracle.oracle-feedback-reset {
     color: var(--rose);
     border-color: var(--rose);
-    box-shadow: 0 0 20px rgba(255, 0, 110, 0.4);
+    box-shadow: 0 0 20px var(--rgba-255-0-110-0-4);
 }
 
 .oracle-mult-vert {
@@ -85,7 +85,7 @@
 }
 .oracle-dev-val {
     color: var(--jaune);
-    font-size: 0.6rem;
+    font-size: var(--typo-ui-secondaire);
 }
 
 .go-stat-oracle {

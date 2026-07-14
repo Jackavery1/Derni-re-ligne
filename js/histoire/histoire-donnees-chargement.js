@@ -1,4 +1,4 @@
-export const SEQUENCE_HISTOIRE = [];
+﻿export const SEQUENCE_HISTOIRE = [];
 export const JOURNAUX_VERA = [];
 export const BOSS = {};
 export const FINS = {};

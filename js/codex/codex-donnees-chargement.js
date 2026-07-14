@@ -1,6 +1,6 @@
-import { CONDITIONS_CODEX } from './codex/codex-conditions.js';
+import { CONDITIONS_CODEX } from './codex-conditions.js';
 
-/** @typedef {import('./codex/codex-types.js').EntreeCodex} EntreeCodex */
+/** @typedef {import('./codex-types.js').EntreeCodex} EntreeCodex */
 /** @typedef {Record<string, EntreeCodex>} CODEX */
 
 /** @param {Record<string, object>} textes */

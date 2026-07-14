@@ -169,3 +169,9 @@ export function estFondCutsceneActif() {
 export function obtenirSceneCutsceneActive() {
     return _sceneIdCourante;
 }
+
+export function obtenirSrcSceneCutsceneActive() {
+    if (!_sceneIdCourante) return null;
+    const scene = obtenirScene(_sceneIdCourante);
+    return scene?.src ?? null;
+}

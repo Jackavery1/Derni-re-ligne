@@ -1,4 +1,4 @@
-import { CONFIG, TETROMINOS } from '../config/config-jeu.js';
+﻿import { CONFIG, TETROMINOS } from '../config/config-jeu.js';
 import { creerPlateau, obtenirCouleurPieceParType, obtenirForme } from './piece-jeu.js';
 import { estPositionValidePiece } from './moteur-piece.js';
 import { creerParticulesExplosion } from '../rendu/particules-jeu.js';
@@ -27,7 +27,7 @@ export function modeArchiActif() {
     return archi.actif;
 }
 
-/** @param {import('../archi-donnees.js').NiveauArchi} niveau */
+/** @param {import('../archi-donnees/assembleur-niveaux.js').NiveauArchi} niveau */
 export function archi_parserSilhouette(niveau) {
     const sil = Array.from({ length: CONFIG.lignes }, () => Array(CONFIG.colonnes).fill(false));
     const lignes = niveau.silhouette;

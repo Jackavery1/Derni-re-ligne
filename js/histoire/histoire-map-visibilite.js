@@ -1,4 +1,4 @@
-import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
+﻿import { SEQUENCE_HISTOIRE } from '../histoire/histoire-donnees-exports.js';
 import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
 import { mondePeutEtreJoue } from './histoire-mondes.js';
 

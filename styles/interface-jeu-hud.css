@@ -32,8 +32,8 @@
 #barre-progression-wrapper {
     width: 100%;
     height: 6px;
-    background: rgba(0, 255, 136, 0.1);
-    border: 1px solid rgba(0, 255, 136, 0.25);
+    background: var(--rgba-0-255-136-0-1);
+    border: 1px solid var(--rgba-0-255-136-0-25);
 }
 
 #barre-progression-fill {
@@ -148,7 +148,7 @@
     border: 1px solid var(--bordure);
     color: var(--texte-dim);
     font-family: var(--police);
-    font-size: 0.55rem;
+    font-size: var(--typo-ui-note);
     padding: 8px 10px;
     cursor: pointer;
     width: 100%;

@@ -12,33 +12,37 @@ body.histoire-active [data-biome='miroir'] #canvas-plateau {
     border-color: var(--orange) !important;
     box-shadow:
         0 0 10px var(--orange),
-        0 0 25px rgba(255, 136, 0, 0.35) !important;
+        0 0 25px var(--rgba-255-136-0-0-35) !important;
 }
 
 body.histoire-active [data-biome='vide'] #affichage-score::after {
     content: ' [?]';
-    color: rgba(200, 160, 180, 0.22);
+    color: var(--rgba-200-160-180-0-22);
     font-size: 0.3em;
 }
 
 body.histoire-active [data-biome='vide'] #canvas-plateau {
     border-color: var(--biome-vide-bordure) !important;
     box-shadow:
-        0 0 8px rgba(140, 100, 130, 0.18),
-        0 0 24px rgba(0, 0, 0, 0.65),
-        inset 0 0 28px rgba(0, 0, 0, 0.45) !important;
+        0 0 8px var(--rgba-140-100-130-0-18),
+        0 0 24px var(--rgba-0-0-0-0-65),
+        inset 0 0 28px var(--rgba-0-0-0-0-45) !important;
 }
 
 body.histoire-active [data-biome='eclipse'] .section:not(#section-mascotte) {
-    background: linear-gradient(180deg, rgba(255, 200, 0, 0.04) 0%, rgba(50, 30, 120, 0.06) 100%);
+    background: linear-gradient(
+        180deg,
+        var(--rgba-255-200-0-0-04) 0%,
+        var(--rgba-50-30-120-0-06) 100%
+    );
 }
 
 body.histoire-active [data-biome='rouille'] #canvas-plateau {
     border-color: var(--biome-lave-bordure) !important;
     box-shadow:
         0 0 10px var(--biome-lave-bordure),
-        0 0 25px rgba(180, 80, 20, 0.3),
-        inset 0 0 15px rgba(120, 50, 10, 0.08) !important;
+        0 0 25px var(--rgba-180-80-20-0-3),
+        inset 0 0 15px var(--rgba-120-50-10-0-08) !important;
 }
 
 body.histoire-active [data-biome='trame'] #canvas-plateau {
@@ -59,7 +63,7 @@ body.histoire-active #indicateur-vide-actif {
 }
 
 #ecran-histoire-cutscene {
-    background: rgba(0, 0, 0, 0.96);
+    background: var(--rgba-0-0-0-0-96);
 }
 
 #histoire-cutscene-contenu {
@@ -87,8 +91,8 @@ body.histoire-active #indicateur-vide-actif {
     align-items: center;
     justify-content: center;
     font-size: 1.8rem;
-    background: rgba(255, 0, 110, 0.06);
-    box-shadow: 0 0 16px rgba(255, 0, 110, 0.2);
+    background: var(--rgba-255-0-110-0-06);
+    box-shadow: 0 0 16px var(--rgba-255-0-110-0-2);
     transition:
         border-color 0.3s,
         box-shadow 0.3s;
@@ -117,8 +121,8 @@ body.histoire-active #indicateur-vide-actif {
     text-align: left;
     width: 100%;
     padding: 10px 12px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--rgba-0-0-0-0-3);
+    border: 1px solid var(--rgba-255-255-255-0-06);
 }
 #histoire-cutscene-lignes::-webkit-scrollbar {
     display: none;
@@ -133,10 +137,10 @@ body.histoire-active #indicateur-vide-actif {
     opacity: 0;
     animation: apparitionLigneCutscene 0.45s ease forwards;
     padding-left: 10px;
-    border-left: 2px solid rgba(255, 255, 255, 0.08);
+    border-left: 2px solid var(--rgba-255-255-255-0-08);
 }
 .histoire-cutscene-ligne:last-child {
-    border-left-color: rgba(255, 255, 255, 0.25);
+    border-left-color: var(--rgba-255-255-255-0-25);
     color: var(--texte-inverse);
 }
 
@@ -151,8 +155,8 @@ body.histoire-active #indicateur-vide-actif {
 }
 
 .histoire-cs-progress {
-    font-size: 0.25rem;
-    color: rgba(255, 255, 255, 0.2);
+    font-size: var(--typo-ui-compact);
+    color: var(--rgba-255-255-255-0-2);
     letter-spacing: 2px;
     text-align: center;
     min-height: 1em;
@@ -164,8 +168,8 @@ body.histoire-active #indicateur-vide-actif {
     letter-spacing: 2px;
     text-align: center;
     padding: 4px 8px;
-    border: 1px solid rgba(255, 230, 0, 0.3);
-    background: rgba(255, 230, 0, 0.04);
+    border: 1px solid var(--rgba-255-230-0-0-3);
+    background: var(--rgba-255-230-0-0-04);
     animation: clignoteBoss 1.5s ease-in-out infinite;
 }
 

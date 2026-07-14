@@ -6,7 +6,7 @@
     top: max(10px, var(--safe-top));
     left: 50%;
     transform: translate(-50%, -120%) scale(0.9);
-    background: rgba(8, 8, 26, 0.92);
+    background: var(--rgba-8-8-26-0-92);
     border: 2px solid transparent;
     color: var(--vert);
     font-family: var(--police);
@@ -30,14 +30,14 @@
 #notif-niveau.notif-campagne.visible {
     visibility: visible;
     border-color: var(--cyan);
-    box-shadow: 0 0 24px rgba(0, 245, 255, 0.3);
+    box-shadow: 0 0 24px var(--rgba-0-245-255-0-3);
     text-shadow: 0 0 8px var(--cyan);
     animation: apparitionNiveauBandeauCampagne 2.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 #notif-niveau.visible {
     visibility: visible;
     border-color: var(--vert);
-    box-shadow: 0 0 20px rgba(0, 255, 136, 0.25);
+    box-shadow: 0 0 20px var(--rgba-0-255-136-0-25);
     text-shadow: 0 0 8px var(--vert);
     animation: apparitionNiveauBandeau 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
@@ -49,11 +49,11 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(8, 8, 26, 0.95);
+    background: var(--rgba-8-8-26-0-95);
     border: 2px solid var(--jaune);
     padding: 12px 18px;
     z-index: 300;
-    box-shadow: 0 0 25px rgba(255, 230, 0, 0.4);
+    box-shadow: 0 0 25px var(--rgba-255-230-0-0-4);
     max-width: 300px;
     transition: bottom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     pointer-events: none;
@@ -81,7 +81,7 @@
     margin-bottom: 3px;
 }
 #ach-nom {
-    font-size: 0.42rem;
+    font-size: var(--typo-ui-compact);
     color: var(--texte);
     letter-spacing: 2px;
     margin-bottom: 2px;
@@ -93,12 +93,12 @@
 }
 
 .bouton-achievements {
-    font-size: 0.5rem;
+    font-size: var(--typo-ui-caption);
     padding: 10px 20px;
 }
 
 .bouton-profil {
-    font-size: 0.42rem;
+    font-size: var(--typo-ui-compact);
     padding: 8px 16px;
 }
 
@@ -149,13 +149,13 @@
     font-size: clamp(0.75rem, 1.4vw, 0.95rem);
     font-variant: small-caps;
     letter-spacing: 2px;
-    color: rgba(0, 221, 200, 0.62);
+    color: var(--rgba-0-221-200-0-62);
 }
 .profil-rapport-ref {
     font-family: 'Orbitron', var(--font-stats);
     font-size: clamp(0.55rem, 1vw, 0.7rem);
     letter-spacing: 3px;
-    color: rgba(0, 221, 200, 0.45);
+    color: var(--rgba-0-221-200-0-45);
 }
 .profil-titre {
     font-family: var(--font-titre);
@@ -174,13 +174,13 @@
     -webkit-background-clip: text;
     color: transparent;
     text-shadow: none;
-    filter: drop-shadow(0 0 14px rgba(255, 45, 120, 0.45));
+    filter: drop-shadow(0 0 14px var(--rgba-255-45-120-0-45));
 }
 .profil-note-vera {
     font-family: 'Crimson Pro', var(--font-narratif);
     font-size: var(--typo-narratif);
     font-style: italic;
-    color: rgba(255, 153, 255, 0.82);
+    color: var(--rgba-255-153-255-0-82);
     margin: var(--space-3) auto 0;
     max-width: 36rem;
     line-height: 1.55;
@@ -189,7 +189,7 @@
     font-family: 'Crimson Pro', var(--font-narratif);
     font-size: var(--typo-narratif);
     font-style: italic;
-    color: rgba(255, 153, 255, 0.75);
+    color: var(--rgba-255-153-255-0-75);
     margin: var(--space-4) auto 0;
     max-width: 28rem;
     line-height: 1.6;
@@ -197,7 +197,7 @@
 .profil-biome-badge {
     font-family: 'Orbitron', var(--font-stats);
     font-size: var(--typo-stat);
-    color: rgba(0, 221, 200, 0.7);
+    color: var(--rgba-0-221-200-0-7);
     letter-spacing: 3px;
     margin-top: var(--space-2);
 }
@@ -216,13 +216,13 @@
     color: var(--cyan-mascotte);
     letter-spacing: 3px;
     margin: 0;
-    text-shadow: 0 0 8px rgba(0, 221, 200, 0.35);
+    text-shadow: 0 0 8px var(--rgba-0-221-200-0-35);
 }
 .profil-canvas {
     width: 100%;
     display: block;
     border: none;
-    background: rgba(8, 8, 26, 0.35);
+    background: var(--rgba-8-8-26-0-35);
     image-rendering: auto;
 }
 .profil-stats-chiffrees {
@@ -249,7 +249,7 @@
     font-family: 'Orbitron', var(--font-stats);
     font-size: var(--typo-stat);
     color: var(--cyan-mascotte);
-    text-shadow: 0 0 8px rgba(0, 221, 200, 0.35);
+    text-shadow: 0 0 8px var(--rgba-0-221-200-0-35);
 }
 .profil-boutons {
     display: flex;

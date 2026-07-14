@@ -1,4 +1,4 @@
-import { JOURNAUX_VERA } from '../histoire-donnees.js';
+﻿import { JOURNAUX_VERA } from '../histoire/histoire-donnees-exports.js';
 import { BIOMES } from '../config/biomes.js';
 import { obtenirEtatMonde, SEUILS_COMPLETION } from './histoire-mondes.js';
 import { modeDevActif } from '../logique/mode-dev-etat.js';

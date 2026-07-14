@@ -64,6 +64,7 @@ export {
     fermerRecapPostMonde,
     ouvrirCarteHistoire,
     lancerMondeBossBrasier,
+    lancerMondeBossSentinelle,
     passerCutsceneHistoire,
 } from './helpers-histoire.mjs';
 

@@ -124,10 +124,70 @@ export function assertEncocheLateraleRespectee(
     expect(metriques.boutonH).toBeGreaterThanOrEqual(minH);
 }
 
+/**
+ * @param {import('@playwright/test').Page} page
+ * @param {{ reprendreId: string, secondaireId: string }} opts
+ */
+export async function mesurerBoutonsPauseTactile(page, { reprendreId, secondaireId }) {
+    return page.evaluate(
+        ({ reprendreId, secondaireId }) => {
+            const reprendre = document.getElementById(reprendreId);
+            const secondaire = document.getElementById(secondaireId);
+            const rect = reprendre?.getBoundingClientRect();
+            const secRect = secondaire?.getBoundingClientRect();
+            return {
+                debord:
+                    document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+                reprendreH: rect?.height ?? 0,
+                reprendreW: rect?.width ?? 0,
+                secondaireH: secRect?.height ?? 0,
+                secondaireW: secRect?.width ?? 0,
+            };
+        },
+        { reprendreId, secondaireId }
+    );
+}
+
+/** @param {Record<string, number | boolean>} metriques @param {number} [min=48] */
+export function assertPauseTactileMin(metriques, min = 48) {
+    expect(metriques.debord).toBe(false);
+    expect(metriques.reprendreH).toBeGreaterThanOrEqual(min);
+    expect(metriques.reprendreW).toBeGreaterThanOrEqual(min);
+    expect(metriques.secondaireH).toBeGreaterThanOrEqual(min);
+    expect(metriques.secondaireW).toBeGreaterThanOrEqual(min);
+}
+
 /** @param {Array<{ id: string, h: number, w: number }>} boutons @param {number} [min=48] */
 export function assertBoutonsTactilesMin(boutons, min = 48) {
     for (const btn of boutons) {
         expect(btn.h, btn.id).toBeGreaterThanOrEqual(min);
         expect(btn.w, btn.id).toBeGreaterThanOrEqual(min);
     }
+}
+
+/**
+ * @param {import('@playwright/test').Page} page
+ * @param {{ overlayId: string, boutonId: string }} opts
+ */
+export async function assertFocusPiegeOverlay(page, { overlayId, boutonId }) {
+    await expect(page.locator(`#${overlayId}`)).toHaveAttribute('aria-hidden', 'false');
+
+    const focusPiege = await page.evaluate(
+        ({ overlayId, boutonId }) => {
+            const conteneur = document.getElementById(overlayId);
+            const bouton = document.getElementById(boutonId);
+            if (!conteneur || !bouton) return false;
+            bouton.focus();
+            return document.activeElement === bouton && conteneur.contains(document.activeElement);
+        },
+        { overlayId, boutonId }
+    );
+    expect(focusPiege).toBe(true);
+
+    await page.keyboard.press('Tab');
+    const focusApresTab = await page.evaluate((overlayId) => {
+        const conteneur = document.getElementById(overlayId);
+        return Boolean(conteneur?.contains(document.activeElement));
+    }, overlayId);
+    expect(focusApresTab).toBe(true);
 }

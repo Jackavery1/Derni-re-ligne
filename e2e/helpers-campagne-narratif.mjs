@@ -1,5 +1,9 @@
 /** Helpers E2E — parcours campagne avec narratif actif (audits D9 / D9b). */
+import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { MONDES_CAMPAGNE_PRINCIPALE } from './etats-histoire.mjs';
+import { ETAT_D9_PARTIE1, ETAT_D9_PARTIE2 } from './etats-histoire-campagne-d9.mjs';
 import { ouvrirCarteHistoire } from './helpers-histoire.mjs';
 import { parcourirFluxPostVictoireAvecAssertions } from './helpers-narratif-flux-post.mjs';
 
@@ -7,6 +11,31 @@ const BASE_OPTIONS_CAMPAGNE = {
     exigerCorpus: true,
     verifierAudio: true,
 };
+
+const D9_CACHE_DIR = join(dirname(fileURLToPath(import.meta.url)), '.cache');
+
+const FIXTURES_D9 = {
+    'd9-partie1': ETAT_D9_PARTIE1,
+    'd9-partie2': ETAT_D9_PARTIE2,
+};
+
+/** @param {import('@playwright/test').Page} page @param {string} cle */
+export async function capturerEtatHistoireCampagne(page, cle) {
+    const etat = await page.evaluate(() => {
+        const brut = localStorage.getItem('derniereLigne_histoire');
+        return brut ? JSON.parse(brut) : null;
+    });
+    mkdirSync(D9_CACHE_DIR, { recursive: true });
+    writeFileSync(join(D9_CACHE_DIR, `${cle}.json`), JSON.stringify(etat));
+    return etat;
+}
+
+/** @param {string} cle */
+export function chargerEtatHistoireCampagne(cle) {
+    const chemin = join(D9_CACHE_DIR, `${cle}.json`);
+    if (existsSync(chemin)) return JSON.parse(readFileSync(chemin, 'utf8'));
+    return FIXTURES_D9[cle] ?? null;
+}
 
 /** Parcours narratif optimisé pour la campagne complète (audit D9b). */
 export const OPTIONS_CAMPAGNE_BULK = {
@@ -22,11 +51,18 @@ export const OPTIONS_CAMPAGNE_JALON = {
     typewriterTimeout: 4000,
 };
 
-/** Campagne complète audit D9 — timeout bulk réduit, plafond jalons. */
+/** Campagne PR — 2 mondes, timeout réduit (audit D9 fixtures courtes). */
+export const OPTIONS_CAMPAGNE_PR = {
+    ...BASE_OPTIONS_CAMPAGNE,
+    max: 25,
+    typewriterTimeout: 2000,
+};
+
+/** Campagne complète audit D9 — timeouts réduits, reprise serial plus tolérante. */
 export const OPTIONS_CAMPAGNE_D9 = {
     ...BASE_OPTIONS_CAMPAGNE,
-    max: 35,
-    typewriterTimeout: 2400,
+    max: 32,
+    typewriterTimeout: 2000,
 };
 
 /** Prépare les conditions Trame via localStorage (sans API inject de test). */

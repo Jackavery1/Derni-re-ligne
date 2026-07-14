@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+﻿import { readFileSync } from 'fs';
 import { beforeEach } from 'vitest';
 import { reinitialiserBusJeu } from '../js/etat/bus-jeu.js';
 import * as textesHistoire from '../js/histoire-textes.js';
@@ -18,8 +18,8 @@ const achievementsHistoireJson = JSON.parse(
 import { chargerBiomesJeu } from '../js/config/biomes.js';
 import { chargerContenuJeu } from '../js/config/contenu-jeu.js';
 import { chargerDifficulteMondes } from '../js/io/difficulte-mondes-chargement.js';
-import { chargerAchievementsDonnees } from '../js/achievements-donnees.js';
-import { chargerHistoireDonneesMetier } from '../js/histoire-donnees.js';
+import { chargerAchievementsDonnees } from '../js/achievements/achievements-donnees-chargement.js';
+import { chargerHistoireDonneesMetier } from '../js/histoire/histoire-donnees-exports.js';
 
 globalThis.fetch = async (url) => {
     const href = String(url);

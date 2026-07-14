@@ -1,5 +1,5 @@
-/** Niveaux Architecte (nature) — export JSON via scripts/exporter-codex-archi.mjs. */
-/** @typedef {import('../archi-donnees.js').NiveauArchi} NiveauArchi */
+﻿/** Niveaux Architecte (nature) — export JSON via scripts/exporter-codex-archi.mjs. */
+/** @typedef {import('../archi-donnees/assembleur-niveaux.js').NiveauArchi} NiveauArchi */
 
 /** @type {NiveauArchi[]} */
 export const NIVEAUX_ARCHI_NATURE = [

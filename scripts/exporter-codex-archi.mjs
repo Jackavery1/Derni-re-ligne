@@ -1,9 +1,9 @@
-import { writeFileSync } from 'fs';
+﻿import { writeFileSync } from 'fs';
 import { CODEX_HISTOIRE } from '../js/histoire/codex-histoire.js';
 import { CODEX_MONDES } from '../js/codex-donnees/mondes.js';
 import { CODEX_RELIQUES } from '../js/codex-donnees/reliques.js';
 import { CODEX_CHRONIQUES } from '../js/codex-donnees/chroniques.js';
-import { NIVEAUX_ARCHI } from '../js/archi-donnees.js';
+import { NIVEAUX_ARCHI } from '../js/archi-donnees/assembleur-niveaux.js';
 import { obtenirNiveauxArchiProceduraux } from '../js/logique/archi-generateur.js';
 
 function extraireTextesCodex(sources) {

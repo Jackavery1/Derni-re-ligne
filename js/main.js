@@ -1,7 +1,7 @@
-import { chargerEcrans } from './ui/charger-ecrans.js';
+﻿import { chargerEcrans } from './ui/charger-ecrans.js';
 import { chargerBiomesJeu } from './config/biomes.js';
 import { chargerContenuJeu } from './config/contenu-jeu.js';
-import { chargerHistoireDonneesMetier } from './histoire-donnees.js';
+import { chargerHistoireDonneesMetier } from './histoire/histoire-donnees-exports.js';
 import { demarrerPrecacheMediasSwArrierePlan } from './io/precache-sw-medias.js';
 import { initialiserApplication } from './moteur.js';
 import { attendreBoutonsPretes } from './ui/ui-init.js';

@@ -30,7 +30,7 @@ const buildResult = await esbuild.build({
     ...optionsCommunesProd,
     entryPoints: {
         bundle: 'js/main.js',
-        'neo-test-init': 'js/neo-test-init.js',
+        'neo-test-init': 'js/moteur/neo-test-init.js',
         'dev-init': 'js/logique/dev-init.js',
     },
     outdir: `${dist}/js`,
@@ -67,7 +67,10 @@ writeFileSync(
             /<script type="module" src="js\/main\.js\?v=[^"']+"><\/script>/,
             `<script type="module" src="js/bundle.js" integrity="${bundleIntegrity}" crossorigin="anonymous"></script>`
         )
-        .replace(/\n?\s*<script type="module" src="js\/neo-test-init\.js[^"]*"><\/script>/, '')
+        .replace(
+            /\n?\s*<script type="module" src="js\/moteur\/neo-test-init\.js[^"]*"><\/script>/,
+            ''
+        )
 );
 
 cpSync('sw.js', `${dist}/sw.js`);

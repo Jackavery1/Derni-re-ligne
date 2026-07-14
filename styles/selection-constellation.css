@@ -50,7 +50,7 @@
     inset: 0;
     z-index: 3;
     pointer-events: auto;
-    background: rgba(0, 0, 12, 0.45);
+    background: var(--rgba-0-0-12-0-45);
 }
 .sel-panneau-backdrop:not(.element-masque) {
     display: block;
@@ -143,14 +143,14 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    background: rgba(8, 8, 26, 0.92);
+    background: var(--rgba-8-8-26-0-92);
     border-top: 1px solid var(--bordure);
     border-left: 1px solid var(--bordure);
 }
 
 .sel-barre-modes-titre {
     margin: 0 0 4px;
-    font-size: 0.42rem;
+    font-size: var(--typo-ui-compact);
     letter-spacing: 3px;
     color: var(--texte-dim);
     text-transform: uppercase;
@@ -164,7 +164,7 @@
 
 .sel-biome-label {
     display: block;
-    font-size: 0.38rem;
+    font-size: var(--typo-ui-mini);
     letter-spacing: 2px;
     color: var(--texte-dim);
     text-transform: uppercase;
@@ -177,10 +177,10 @@
     min-height: 48px;
     padding: 10px 12px;
     font-family: inherit;
-    font-size: 0.45rem;
+    font-size: var(--typo-ui-label);
     letter-spacing: 1px;
     color: var(--texte);
-    background: rgba(8, 8, 26, 0.88);
+    background: var(--rgba-8-8-26-0-88);
     border: 1px solid var(--bordure);
     border-radius: 4px;
     touch-action: manipulation;
@@ -228,7 +228,7 @@ body:has(#sel-barre-modes:not(.element-masque)) .panneau-detail-corps {
         width: 100%;
         max-height: min(42dvh, 320px);
         border-left: none;
-        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.45);
+        box-shadow: 0 -8px 32px var(--rgba-0-0-0-0-45);
     }
 
     body:has(#sel-barre-modes:not(.element-masque)) .panneau-detail-corps {

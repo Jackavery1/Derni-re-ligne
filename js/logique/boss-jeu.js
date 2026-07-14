@@ -1,6 +1,6 @@
-import { store } from '../etat/store-jeu.js';
+﻿import { store } from '../etat/store-jeu.js';
 import { etat } from '../etat/store-jeu.js';
-import { BOSS } from '../histoire-donnees.js';
+import { BOSS } from '../histoire/histoire-donnees-exports.js';
 import { AudioMoteur } from '../audio/audio.js';
 import { logger } from '../io/logger.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
@@ -56,6 +56,7 @@ export function demarrerBoss(bossId) {
     store.histoire.boss.timerPortrait = 0;
     store.histoire.boss._textesMiAffiches = null;
     store.histoire.boss._flashAttaque = false;
+    store.histoire.boss.derniereAttaqueType = null;
     reinitialiserMecaniquesBoss();
 
     afficherSectionBoss(true);

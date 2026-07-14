@@ -26,6 +26,7 @@ import {
     basculerOracleDepuisSelection,
     basculerCoopDepuisSelection,
     terminerPartieCourante,
+    lancerMondeBossBrasier,
 } from './helpers.mjs';
 
 async function ouvrirSelectionModes(page, etat = ETAT_DEBLOCAGE_META_RAPIDE) {
@@ -260,9 +261,27 @@ test('audit B — sfx game over apres defaite', async ({ page }) => {
     await demarrerPartie(page);
     await page.evaluate(() => window.__NEO_TEST__?.viderJournalSfxTest?.());
     await terminerPartieCourante(page);
-    await page.waitForTimeout(350);
+    await page.waitForTimeout(280);
     const sfx = await page.evaluate(() => window.__NEO_TEST__?.obtenirJournalSfxTest?.() ?? []);
     expect(sfx).toContain('game_over');
+});
+
+test('audit B — HUD boss labels lisibles (>= 11px)', async ({ page }) => {
+    test.setTimeout(60000);
+    await ouvrirCarteHistoire(page);
+    await lancerMondeBossBrasier(page);
+
+    const tailles = await page.evaluate(() => {
+        return ['.boss-nom', '.boss-hp-label', '.boss-attaque-label'].map((sel) => {
+            const el = document.querySelector(sel);
+            if (!el) return 0;
+            return parseFloat(getComputedStyle(el).fontSize) || 0;
+        });
+    });
+
+    for (const taille of tailles) {
+        expect(taille).toBeGreaterThanOrEqual(11);
+    }
 });
 
 test('audit B — samples sfx boss charges (G5)', async ({ page }) => {
@@ -302,6 +321,33 @@ test('audit B — tutoriel libre avant premiere partie (G3)', async ({ page }) =
 
     await attendrePartieVisible(page);
     await expect(page.locator('#overlay-tutoriel')).toHaveClass(/element-masque/);
+});
+
+test('audit B — frames avant premier obstacle vivant >= 120 (G3)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+
+    const resultat = await page.evaluate(async () => {
+        return window.__NEO_TEST__?.evaluerDelaisPremiersObstaclesVivants?.();
+    });
+
+    expect(resultat).not.toBeNull();
+    expect(resultat.tousAuDessusSeuil).toBe(true);
+    expect(resultat.minimum?.frames60).toBeGreaterThanOrEqual(120);
+    for (const entree of resultat.biomes) {
+        expect(entree.frames60).toBeGreaterThanOrEqual(120);
+    }
+});
+
+test('audit B — pause recommencer sans dialog (G6)', async ({ page }) => {
+    await demarrerPartie(page);
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
+    await page.locator('#btn-recommencer').click();
+    await expect(page.locator('#dialog-recommencer-partie')).toHaveClass(/element-masque/);
+    await expect(page.locator('body')).toHaveClass(/partie-active/);
+    await expect(page.locator('#ecran-pause')).not.toHaveClass(/actif/);
 });
 
 test('audit B — game over rejouer sans dialog recommencer (G6)', async ({ page }) => {

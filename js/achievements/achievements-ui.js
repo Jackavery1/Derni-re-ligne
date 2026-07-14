@@ -1,4 +1,4 @@
-import { ACHIEVEMENTS } from '../achievements-donnees.js';
+﻿import { ACHIEVEMENTS } from '../achievements/achievements-donnees-chargement.js';
 import { sansAccentsE } from '../logique/texte-jeu.js';
 import { statsGlobales } from './achievements-stats.js';
 import { rendreIconeSurCanvas, rendreIconeGlitchSurCanvas } from '../rendu/icones-pixel.js';
@@ -26,7 +26,7 @@ function formaterDateGravure(timestamp) {
     return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
 }
 
-/** @param {import('../achievements-donnees.js').ACHIEVEMENTS[string]} ach */
+/** @param {import('../achievements/achievements-donnees-chargement.js').ACHIEVEMENTS[string]} ach */
 export function ouvrirExploitMemorial(ach) {
     initialiserPanneauDetail();
     const debloque = !!statsGlobales.debloqués[ach.id];

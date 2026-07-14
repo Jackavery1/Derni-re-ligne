@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+﻿import { describe, it, expect, beforeEach } from 'vitest';
+import { readFileSync } from 'fs';
 import { store } from '../js/etat/store-jeu.js';
 import {
     chargerEtatHistoire,
@@ -8,7 +9,7 @@ import {
     obtenirRecordCoopBiome,
     sauvegarderRecordCoopBiome,
 } from '../js/io/progression.js';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 import { obtenirTypeFin, SCENE_DEFAUT_POST_MONDE } from '../js/histoire/histoire-narratif.js';
 import { CUTSCENES_POST_MONDE } from '../js/histoire-textes/cutscenes-post-monde.js';
 import { CUTSCENES_VICTOIRE_BOSS } from '../js/histoire-textes/cutscenes-boss-victoire.js';
@@ -312,6 +313,15 @@ describe('corrections audit', () => {
         it('Sentinelle vouvoie en phase 1 et game over', () => {
             expect(DIALOGUES_COMBAT_BOSS.sentinelle.phases[0]).toContain('Vos pièces');
             expect(DIALOGUES_COMBAT_BOSS.sentinelle.gameOver).toContain('vous a eu');
+        });
+
+        it('Avant-Garde — attaques combinaison diversifiees (audit B G2)', () => {
+            const { BOSS } = JSON.parse(readFileSync('data/histoire-donnees.json', 'utf8'));
+            expect([...new Set(BOSS.avantgarde.attaquesDisponibles)]).toEqual([
+                'permutation_colonnes',
+                'colonne_gelee',
+                'inverser_controles',
+            ]);
         });
 
         it('distorsion_secret sans métaphore binaire explicite', () => {

@@ -1,4 +1,4 @@
-import { chargerEtatHistoire } from '../io/progression.js';
+﻿import { chargerEtatHistoire } from '../io/progression.js';
 import { estCategorieIndiceMasque } from './achievements-icones-map.js';
 
 const BOSS_PRINCIPAUX = ['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'distorsion'];
@@ -10,12 +10,12 @@ const BOSS_PRINCIPAUX = ['brasier', 'sentinelle', 'archiviste', 'avantgarde', 'd
  * @property {(actuel: number, cible: number) => string} [formaterTexte]
  */
 
-/** @returns {import('../histoire-donnees.js').EtatHistoire} */
+/** @returns {import('../histoire/histoire-donnees-exports.js').EtatHistoire} */
 function etatHistoire() {
     return chargerEtatHistoire();
 }
 
-/** @param {keyof import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE['prouessesHistoire']} champ */
+/** @param {keyof import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE['prouessesHistoire']} champ */
 function lireProuesse(champ) {
     return etatHistoire().prouessesHistoire?.[champ] ?? 0;
 }

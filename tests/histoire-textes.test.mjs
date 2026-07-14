@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+﻿import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import {
     PORTRAITS,
@@ -14,7 +14,7 @@ import { INTRO_HISTOIRE, OUTRO_FINS } from '../js/histoire-textes/intro-interlud
 import { TRANSITIONS_CHAPITRE } from '../js/histoire-textes/chapitres.js';
 import { SCENES_CUTSCENE } from '../js/rendu/scenes-cutscene.js';
 import { FRAGMENTS_VERA_SIGNAL } from '../js/histoire-textes/journaux.js';
-import { SEQUENCE_HISTOIRE } from '../js/histoire-donnees.js';
+import { SEQUENCE_HISTOIRE } from '../js/histoire/histoire-donnees-exports.js';
 import { HUMEURS_PERSONNAGES } from '../js/rendu/expressions-cutscene.js';
 import { idPortraitRendu } from '../js/histoire/histoire-cutscene-config.js';
 import { CLE_FRAGMENT_PAR_MONDE } from '../js/histoire/histoire-manager-post-monde.js';

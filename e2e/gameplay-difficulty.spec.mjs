@@ -137,4 +137,24 @@ test('gameplay difficulty — prologue sans mort precoce < 30s (audit B G3)', as
     expect(resultat.surviePassiveAuMoins30s).toBe(true);
     expect(resultat.vivantActif).toBe(false);
     expect(resultat.tempsTopOutPassifEstimeMs).toBeGreaterThanOrEqual(30000);
+    expect(resultat.framesAvantPremierPicDifficulte).toBeGreaterThanOrEqual(120);
+});
+
+test('gameplay difficulty — respiration miroir paliers 9-11 (audit B G4)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+
+    const resultat = await page.evaluate(async () => {
+        const api = window.__NEO_TEST__;
+        if (!api?.evaluerRespirationDifficulteMonde) return null;
+        return api.evaluerRespirationDifficulteMonde('monde_miroir');
+    });
+
+    expect(resultat).not.toBeNull();
+    expect(resultat.paliers).toEqual([9, 10, 11]);
+    const paliers = resultat.paliers.filter((p) => typeof p === 'number');
+    for (let i = 1; i < paliers.length; i++) {
+        expect(paliers[i] - paliers[i - 1]).toBeLessThanOrEqual(2);
+    }
 });

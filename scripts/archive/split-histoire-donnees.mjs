@@ -1,7 +1,7 @@
-import { readFileSync, writeFileSync, mkdirSync } from 'fs';
+﻿import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
-const src = readFileSync('js/histoire-donnees.js', 'utf8').split('\n');
+const src = readFileSync('js/histoire/histoire-donnees-exports.js', 'utf8').split('\n');
 const dir = 'js/histoire-donnees';
 mkdirSync(dir, { recursive: true });
 
@@ -16,7 +16,7 @@ write('fins-etat.js', 241, 344, '// Fins et etat initial histoire\n');
 write('sequence-histoire.js', 349, src.length, '// Sequence narrative complete\n');
 
 writeFileSync(
-    'js/histoire-donnees.js',
+    'js/histoire/histoire-donnees-exports.js',
     `// Barrel histoire-donnees — re-exporte les sous-modules
 export * from './histoire-donnees/personnages-boss.js';
 export * from './histoire-donnees/journaux-donnees.js';

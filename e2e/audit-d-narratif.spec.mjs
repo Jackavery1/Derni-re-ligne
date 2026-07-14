@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+﻿import { test, expect } from '@playwright/test';
 import {
     ouvrirCarteHistoire,
     attendreCutsceneVictoireBoss,
@@ -7,13 +7,13 @@ import {
     assertHumeurPortraitCutscene,
     parcourirVictoireBossJusquaPivot,
     lancerMondeDepuisCarte,
-    lancerMondeBossBrasier,
     ouvrirIntroHistoire,
     attendreSceneCutsceneActive,
     ETAT_ENTREE_COSMOS,
     ETAT_ENTREE_VIDE,
     ETAT_ENTREE_TRAME,
 } from './helpers.mjs';
+import { assertScenePngCutsceneChargee } from './helpers-narratif.mjs';
 import { preparerEtatPremiereEntree } from './etats-histoire-entrees.mjs';
 import { SCENES_ENTREE_CAMPAGNE } from './helpers-narratif-donnees.mjs';
 import {
@@ -25,8 +25,7 @@ import {
     ETAT_AVANT_FIN_NORMALE,
     ETAT_AVANT_FIN_SECRETE,
 } from './etats-histoire.mjs';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
-import { mesurerBossPortraitHud, assertBossPortraitDansEcran } from './helpers-narratif-mobile.mjs';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 
 test('victoire Brasier — transition seuil_brasier → labo (audit D)', async ({ page }) => {
     test.setTimeout(45000);
@@ -43,6 +42,16 @@ test('victoire Brasier — humeur ROBO triste (audit D)', async ({ page }) => {
     await attendreCutsceneVictoireBoss(page);
     await avancerCutsceneJusquaPivot(page, /Moi non plus je ne sais pas comment m'arrêter/i);
     await assertHumeurPortraitCutscene(page, 'robo', 'triste');
+});
+
+test('entree prologue — scene PNG labo chargee (audit D/C5)', async ({ page }) => {
+    test.setTimeout(45000);
+    await ouvrirCarteHistoire(page, ETAT_HISTOIRE_VIDE);
+    await lancerMondeDepuisCarte(page, 'monde_prologue');
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 10000,
+    });
+    await assertScenePngCutsceneChargee(page, 'labo');
 });
 
 test('entree prologue — humeur VERA douce (audit D)', async ({ page }) => {
@@ -224,16 +233,4 @@ test('entree trame — humeur VERA inquiete (audit D)', async ({ page }) => {
     await lancerMondeDepuisCarte(page, 'monde_trame');
     await avancerCutsceneJusquaPivot(page, /Tu es là/i);
     await assertHumeurPortraitCutscene(page, 'vera', 'inquiete');
-});
-
-test('boss HUD 480px — portrait visible sans debordement (audit D8)', async ({ page }) => {
-    test.setTimeout(60000);
-    await page.setViewportSize({ width: 480, height: 800 });
-    await ouvrirCarteHistoire(page, ETAT_HISTOIRE_BOSS_BRASIER);
-    await lancerMondeBossBrasier(page);
-
-    await expect(page.locator('#canvas-boss-portrait')).toBeVisible();
-    await expect(page.locator('#boss-nom-affiche')).toContainText('BRASIER');
-
-    assertBossPortraitDansEcran(await mesurerBossPortraitHud(page));
 });

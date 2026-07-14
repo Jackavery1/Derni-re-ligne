@@ -26,7 +26,7 @@
     --btn-glow: var(--menu-base-glow);
     --btn-glow-fort: var(--menu-base-glow-fort);
     font-family: var(--font-titre);
-    font-size: 0.55rem;
+    font-size: var(--typo-ui-note);
     letter-spacing: 2px;
     padding: 10px 14px 10px 16px;
     border: 2px solid var(--btn-accent);
@@ -47,14 +47,14 @@
             0deg,
             transparent,
             transparent 2px,
-            rgba(0, 0, 0, 0.12) 2px,
-            rgba(0, 0, 0, 0.12) 4px
+            var(--rgba-0-0-0-0-12) 2px,
+            var(--rgba-0-0-0-0-12) 4px
         ),
         linear-gradient(135deg, var(--btn-fond-1) 0%, var(--btn-fond-2) 52%, var(--btn-fond-1) 100%);
     box-shadow:
         0 0 10px var(--btn-glow),
-        inset 0 1px 0 rgba(255, 255, 255, 0.07),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+        inset 0 1px 0 var(--rgba-255-255-255-0-07),
+        inset 0 -1px 0 var(--rgba-0-0-0-0-35);
     text-shadow: 0 0 10px color-mix(in srgb, var(--btn-accent) 55%, transparent);
     cursor: pointer;
     touch-action: manipulation;
@@ -82,8 +82,8 @@
     box-shadow:
         0 0 16px var(--btn-glow-fort),
         0 0 32px var(--btn-glow),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+        inset 0 1px 0 var(--rgba-255-255-255-0-1),
+        inset 0 -1px 0 var(--rgba-0-0-0-0-35);
 }
 
 .btn-menu:active:not(.btn-verrouille) {
@@ -128,7 +128,7 @@
 
 .btn-continuer .btn-sous-titre,
 .btn-nouvelle-partie .btn-sous-titre {
-    font-size: 0.48em;
+    font-size: var(--typo-ui-hint);
     letter-spacing: 2px;
 }
 
@@ -153,7 +153,7 @@
         0 0 12px var(--btn-glow),
         0 0 28px var(--menu-nouvelle-ombre),
         inset 0 0 16px var(--menu-nouvelle-inset),
-        inset 0 1px 0 rgba(255, 255, 255, 0.07);
+        inset 0 1px 0 var(--rgba-255-255-255-0-07);
 }
 
 .btn-nouvelle-partie--seul {
@@ -182,7 +182,7 @@
     width: auto;
     min-width: 160px;
     padding: 10px 20px;
-    font-size: 0.48rem;
+    font-size: var(--typo-ui-hint);
     gap: 8px;
     text-shadow: none;
 }
@@ -201,7 +201,7 @@
     align-items: center;
     justify-content: center;
     padding: 24px;
-    background: rgba(0, 0, 0, 0.72);
+    background: var(--rgba-0-0-0-0-72);
     backdrop-filter: blur(4px);
 }
 
@@ -223,14 +223,14 @@
 
 .dialog-nouvelle-partie-titre {
     font-family: var(--font-titre);
-    font-size: 0.65rem;
+    font-size: var(--typo-ui-moyen);
     letter-spacing: 2px;
     color: var(--rose);
     margin-bottom: 12px;
 }
 
 .dialog-nouvelle-partie-texte {
-    font-size: 0.42rem;
+    font-size: var(--typo-ui-compact);
     line-height: 1.7;
     color: var(--texte-dim);
     margin-bottom: 18px;

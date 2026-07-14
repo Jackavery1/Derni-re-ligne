@@ -149,4 +149,13 @@ test.describe('gameplay equity', () => {
         });
         expect(buffer).toEqual(['gauche', 'tourner_cw', 'droite']);
     });
+
+    test('boss combinaison sans repetition consecutive (audit B G2)', async ({ page }) => {
+        await demarrerPartie(page);
+        const resultat = await page.evaluate(() =>
+            window.__NEO_TEST__?.simulerTiragesAttaqueCombinaison?.(60)
+        );
+        expect(resultat?.tirages).toBe(60);
+        expect(resultat?.repetitionsConsecutives).toBe(0);
+    });
 });

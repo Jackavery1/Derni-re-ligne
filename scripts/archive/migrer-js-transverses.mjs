@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Vague 2 — migration des modules transverses js/*.js → js/<domaine>/
  * Usage : node scripts/archive/migrer-js-transverses.mjs [--dry-run]
  */
@@ -21,10 +21,10 @@ const RESTER_RACINE = new Set([
     'histoire-textes.js',
     'histoire-textes.fallback.js',
     'histoire-textes.fallback.stub.js',
-    'histoire-donnees.js',
-    'archi-donnees.js',
-    'codex-donnees.js',
-    'achievements-donnees.js',
+    'histoire/histoire-donnees-exports.js',
+    'archi-donnees/assembleur-niveaux.js',
+    'codex/codex-donnees-chargement.js',
+    'achievements/achievements-donnees-chargement.js',
     'achievements.js',
     'codex.js',
 ]);

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { estNeoTestAutorise, exposerNeoTestApi } from '../js/neo-test-api.js';
+import { estNeoTestAutorise, exposerNeoTestApi } from '../js/moteur/neo-test-api.js';
 
 describe('neo-test-api', () => {
     afterEach(() => {

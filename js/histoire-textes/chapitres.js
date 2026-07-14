@@ -1,4 +1,4 @@
-export const TRANSITIONS_CHAPITRE = {
+﻿export const TRANSITIONS_CHAPITRE = {
     vers_chapitre_1: [
         {
             personnage: 'robo',
@@ -116,7 +116,7 @@ export const TRANSITIONS_CHAPITRE = {
 };
 
 // ============================================================
-// TEXTES DE FINS (complement des donnees dans histoire-donnees.js)
+// TEXTES DE FINS (complement des donnees dans histoire/histoire-donnees-exports.js)
 // ============================================================
 export const EPILOGUES = {
     fin_normale: {

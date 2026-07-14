@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
+﻿import { test, expect } from '@playwright/test';
 import { ouvrirCarteHistoire, terminerCutscenesVersEcranFin } from './helpers.mjs';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 import { MONDES_CAMPAGNE_PRINCIPALE } from './etats-histoire.mjs';
 import {
     OPTIONS_CAMPAGNE_BULK,
@@ -13,7 +13,7 @@ import {
 const CAMPAGNE_NARRATIF_PARTIE_1 = MONDES_CAMPAGNE_PRINCIPALE.slice(0, 8);
 const CAMPAGNE_NARRATIF_PARTIE_2 = MONDES_CAMPAGNE_PRINCIPALE.slice(8);
 
-test.describe.serial('audit D9b — campagne complete avec narratif', () => {
+test.describe.serial('audit D9b — campagne complete avec narratif @slow', () => {
     test('partie principale — mondes 1 à 8', async ({ page }) => {
         test.setTimeout(300000);
         const etatDepart = {

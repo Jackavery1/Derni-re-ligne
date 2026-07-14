@@ -1,4 +1,4 @@
-import { SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
+﻿import { SEQUENCE_HISTOIRE } from '../histoire/histoire-donnees-exports.js';
 import { obtenirEtatHistoire, mondePeutEtreJoue } from './histoire-mondes.js';
 import { consommerMondeCibleCarte } from './histoire-navigation.js';
 import { logger } from '../io/logger.js';

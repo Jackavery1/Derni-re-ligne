@@ -32,5 +32,32 @@ export function creerHandlersPartie() {
             const frames60 = Math.floor((delaiMs * 60) / 1000);
             return { biomeId, delaiMs, frames60, delaiMinimumConfig: config.delaiMinimum };
         },
+        evaluerDelaisPremiersObstaclesVivants: async () => {
+            const { COMPORTEMENTS_VIVANT } = await import('../logique/vivant-comportements.js');
+            const { delaiMinimumVivantEffectif } = await import('../logique/vivant.js');
+            const seuilFrames = 120;
+            const biomes = Object.entries(COMPORTEMENTS_VIVANT)
+                .filter(([, config]) => config != null)
+                .map(([id, config]) => {
+                    const delaiMs = delaiMinimumVivantEffectif(config, 1);
+                    const frames60 = Math.floor((delaiMs * 60) / 1000);
+                    return {
+                        biomeId: id,
+                        delaiMs,
+                        frames60,
+                        delaiMinimumConfig: config.delaiMinimum,
+                    };
+                });
+            const minimum = biomes.reduce(
+                (acc, entree) => (entree.frames60 < acc.frames60 ? entree : acc),
+                biomes[0] ?? null
+            );
+            return {
+                seuilFrames,
+                biomes,
+                minimum,
+                tousAuDessusSeuil: biomes.every((b) => b.frames60 >= seuilFrames),
+            };
+        },
     };
 }

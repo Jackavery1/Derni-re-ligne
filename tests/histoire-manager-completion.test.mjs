@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { store } from '../js/etat/store-jeu.js';
-import { ETAT_HISTOIRE_VIDE } from '../js/histoire-donnees.js';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 import { persisterEtatHistoire } from '../js/histoire/histoire-etat.js';
 import {
     SEUILS_COMPLETION,

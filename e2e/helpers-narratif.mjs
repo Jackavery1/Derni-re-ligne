@@ -140,6 +140,24 @@ export async function attendreSceneCutsceneActive(page, sceneId, timeout = 15000
         .toBe(sceneId);
 }
 
+/** @param {import('@playwright/test').Page} page @param {string} sceneId @param {number} [timeout] */
+export async function assertScenePngCutsceneChargee(page, sceneId, timeout = 30000) {
+    await page.waitForFunction(
+        () =>
+            document
+                .getElementById('ecran-histoire-cutscene')
+                ?.classList.contains('cutscene-scene-image'),
+        null,
+        { timeout }
+    );
+    await attendreSceneCutsceneActive(page, sceneId, timeout);
+    const src = await page.evaluate(
+        () => window.__NEO_TEST__?.obtenirSrcSceneCutsceneActive?.() ?? null
+    );
+    expect(src).toMatch(new RegExp(sceneId.replace(/_/g, '_')));
+    expect(src).toMatch(/\.png$/);
+}
+
 /** @param {import('@playwright/test').Page} page @param {string} mondeId @param {number} [lignes] */
 export async function simulerVictoireBossHistoire(page, mondeId, lignes = 99) {
     await page.evaluate(

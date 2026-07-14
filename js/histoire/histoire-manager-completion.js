@@ -1,4 +1,4 @@
-import { JOURNAUX_VERA, SEQUENCE_HISTOIRE } from '../histoire-donnees.js';
+﻿import { JOURNAUX_VERA, SEQUENCE_HISTOIRE } from '../histoire/histoire-donnees-exports.js';
 import { SEUILS_COMPLETION } from './histoire-mondes.js';
 import { store } from '../etat/store-jeu.js';
 import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
@@ -28,7 +28,7 @@ function obtenirEtatHistoire() {
     return obtenirEtatHistoirePersiste();
 }
 
-/** @param {typeof SEQUENCE_HISTOIRE[number]} monde @param {string} mondeId @param {number} lignes @param {import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} etatHist @param {number} seuil */
+/** @param {typeof SEQUENCE_HISTOIRE[number]} monde @param {string} mondeId @param {number} lignes @param {import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} etatHist @param {number} seuil */
 function _enregistrerPremiereCompletion(monde, mondeId, lignes, etatHist, seuil) {
     if (etatHist.mondesCompletes.includes(mondeId)) {
         return { journalDebloque: null, premiereCompletionCeMonde: false };
@@ -51,7 +51,7 @@ function _enregistrerPremiereCompletion(monde, mondeId, lignes, etatHist, seuil)
     return { journalDebloque, premiereCompletionCeMonde: true };
 }
 
-/** @param {typeof SEQUENCE_HISTOIRE[number]} monde @param {import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} etatHist */
+/** @param {typeof SEQUENCE_HISTOIRE[number]} monde @param {import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} etatHist */
 function _enregistrerProgressionBoss(monde, etatHist) {
     if (!monde.estBoss || !monde.bossId) return;
     if (!etatHist.bossVaincus.includes(monde.bossId)) {
@@ -86,7 +86,7 @@ function _enregistrerProgressionBoss(monde, etatHist) {
     }
 }
 
-/** @param {typeof SEQUENCE_HISTOIRE[number]} monde @param {import('../histoire-donnees.js').ETAT_HISTOIRE_VIDE} etatHist @param {ReturnType<typeof verifierJournalBiome>} journalDebloque */
+/** @param {typeof SEQUENCE_HISTOIRE[number]} monde @param {import('../histoire/histoire-donnees-exports.js').ETAT_HISTOIRE_VIDE} etatHist @param {ReturnType<typeof verifierJournalBiome>} journalDebloque */
 function _persisterCompletionMonde(monde, etatHist, journalDebloque) {
     if (etatHist.journauxTrouves.length >= JOURNAUX_VERA.length) {
         etatHist.conditionsTrame.tousJournauxTrouves = true;

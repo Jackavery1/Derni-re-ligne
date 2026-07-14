@@ -35,7 +35,6 @@ const COVERAGE_LOGIC = [
     'js/histoire/histoire-map-fond-donnees.js',
 ];
 
-/** Modules exclus du seuil 80 % mais suivis par test:coverage:etendu (seuil 55 % branches). */
 export const COVERAGE_ETENDU_EXCLUS_SEUIL_80 = [
     'js/rendu/rendu-plateau-pieces.js',
     'js/rendu/rendu-fx.js',
