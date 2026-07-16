@@ -20,7 +20,7 @@ Ce document n’est **pas une certification WCAG formelle** ; il décrit le pér
 ## Tests automatisés
 
 - **`e2e/a11y.spec.mjs`** — violations Axe critiques/sérieuses (hors contraste optionnel) sur titre, sélection, pause, game over, codex, profil, achievements, options.
-- **`e2e/histoire.spec.mjs`** — carte histoire (violations critiques).
+- **`e2e/histoire.spec.mjs`** / **`e2e/a11y.spec.mjs`** — carte histoire et écrans principaux (violations critiques).
 - **`e2e/smoke-core.spec.mjs`** — contraste écran titre et options.
 
 Commande : `npm run test:e2e -- e2e/a11y.spec.mjs`

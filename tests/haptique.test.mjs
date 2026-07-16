@@ -46,4 +46,9 @@ describe('haptique', () => {
         emettre('lignes:effacees', { nbSupprimees: 4 });
         expect(navigator.vibrate).toHaveBeenCalledWith([15, 40, 15, 40, 20]);
     });
+
+    it('vibre motif boss distinct (audit B G5)', () => {
+        vibrer('boss');
+        expect(navigator.vibrate).toHaveBeenCalledWith([45, 35, 70, 35, 50]);
+    });
 });

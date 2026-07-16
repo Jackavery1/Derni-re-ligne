@@ -164,9 +164,26 @@ test('post-monde — re-completion prologue sans cutscene post-monde (audit D)',
     );
     await page.locator('#btn-recap-continuer').click({ force: true });
 
-    await page.waitForTimeout(800);
+    await page.waitForFunction(
+        () => {
+            const cutscene = document.getElementById('ecran-histoire-cutscene');
+            const carte = document.getElementById('ecran-histoire-map');
+            const texte =
+                document.getElementById('histoire-cutscene-texte')?.textContent ??
+                document.getElementById('texte-dialogue-cutscene')?.textContent ??
+                '';
+            const cutsceneVisible = cutscene?.classList.contains('actif');
+            const carteVisible = carte?.classList.contains('actif');
+            return carteVisible || (cutsceneVisible && !/satisfaction/i.test(texte));
+        },
+        null,
+        { timeout: 10000 }
+    );
     const texteCutscene = await page.evaluate(
-        () => document.getElementById('histoire-cutscene-texte')?.textContent ?? ''
+        () =>
+            document.getElementById('histoire-cutscene-texte')?.textContent ??
+            document.getElementById('texte-dialogue-cutscene')?.textContent ??
+            ''
     );
     expect(texteCutscene).not.toMatch(/satisfaction/i);
     await viderOverlaysHistoireRapide(page, 8);

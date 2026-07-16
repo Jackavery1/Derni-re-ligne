@@ -3,6 +3,7 @@ import { CONFIG } from '../config/config-jeu.js';
 import { store } from '../etat/store-jeu.js';
 import { etat } from '../etat/store-jeu.js';
 import { AudioMoteur } from '../audio/audio.js';
+import { vibrerBossAttaque } from '../audio/haptique.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { creerParticulesExplosion } from '../rendu/particules-jeu.js';
 import { enregistrerVictoireBossTimer } from '../achievements/achievements-histoire.js';
@@ -116,6 +117,7 @@ export function declencherVictoireBoss() {
 export function executerAttaqueBossCombat() {
     if (!store.histoire.boss.actif || store.histoire.boss.vaincu) return;
     store.histoire.boss._flashAttaque = true;
+    vibrerBossAttaque();
     reagirRoboBossAttaque();
     setTimeout(() => {
         if (store.histoire.boss.actif) store.histoire.boss._flashAttaque = false;

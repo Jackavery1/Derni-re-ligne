@@ -42,7 +42,7 @@
     }
 
     .histoire-progression {
-        font-size: clamp(0.34rem, 1.2vw, 0.42rem);
+        font-size: var(--typo-ui-mini);
     }
 
     #histoire-monde-details {

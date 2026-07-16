@@ -64,6 +64,8 @@ Timeout spec D9 : **3 tests sérialisés** (300 s + 300 s + 360 s max) — monde
 
 Le jeu charge des modules ES (`import` depuis `js/`). **Live Server** et l’ouverture directe de `index.html` ne servent pas correctement les modules → écran « Chargement… » infini. Utiliser **`npm start`** (`serve` sur `127.0.0.1:3000`). Pour le bundle prod : `npm run build` puis `npx serve dist`. Voir le watchdog dans `js/ui/chargement-watchdog.js`. En dev, le SW est désactivé sur localhost sauf **`?pwa=1`** (`js/io/sw-dev.js`).
 
+Les E2E Playwright démarrent aussi un `serve` sur le port **3000** (`reuseExistingServer` hors CI). Si un autre processus occupe déjà ce port (autre `serve`, preview staging, etc.), les tests échouent sur `data-neo-test-ready` absent : libérer le port avant de relancer (`Get-NetTCPConnection -LocalPort 3000` puis tuer le PID, ou `npx kill-port 3000`).
+
 ### Couverture Vitest (modules ciblés)
 
 `npm run test:coverage` mesure une **liste blanche logique domaine** (`COVERAGE_LOGIC` dans `vitest.config.mjs`, ~30 modules) — pas l’intégralité des ~350 fichiers JS. Rendu canvas, navigation écrans, bus d’événements lourd et préchargement médias sont exclus (couverts par tests dédiés + E2E) ; voir `tests/coverage-perimetre.test.mjs`. Seuils CI : **80 %** sur lines, functions, statements et branches. Les modules **export-only** (`js/codex-histoire.js`) sont exclus du precache SW dev mais restent versionnés pour `npm run sync:data`.
@@ -71,6 +73,8 @@ Le jeu charge des modules ES (`import` depuis `js/`). **Live Server** et l’ouv
 ### Viewport, zoom et tactile en partie
 
 Le comportement zoom/scroll est documenté dans [docs/design-tokens.md](docs/design-tokens.md) (section **Zoom et gestures tactiles**) : pas de `user-scalable=no` (accessibilité), `touch-action: manipulation` sur `html/body`, `touch-action: none` limité au plateau (`#zone-jeu`, `#canvas-plateau`) en partie. Hauteurs viewport : préférer `100dvh` (test `tests/css-viewport.test.mjs`). E2E : `audit C15` dans `e2e/audit-c-responsive.spec.mjs`.
+
+En `partie-active`, le paysage étroit (`max-height: 768px` + `max-width: 900px`) active `#controles-paysage` — **aucun overlay d’orientation bloquant** (choix assumé, testé e2e C2/C11).
 
 ### Checklist manuelle iPhone (encoches réelles)
 
@@ -167,7 +171,7 @@ Les cutscenes et dialogues sont découpés par domaine (`cutscenes-post-monde-*.
 
 Compromis assumé : boot léger (install minimal) vs couverture offline totale des fins rares. Les scènes `lazy: true` dans `js/rendu/scenes-cutscene.js` restent jouables en ligne ; offline complet après une session ou le precache idle. Ne pas repasser toutes les scènes en eager sans mesurer le budget SW.
 
-Scripts one-shot archivés : `scripts/archive/decouper-histoire-textes.mjs`, `scripts/archive/split-textes-narratifs.mjs`, `scripts/archive/split-modules-audit.mjs`.
+Scripts one-shot de migration : déjà appliqués ; l’historique reste dans Git (anciens chemins `scripts/archive/`). Pour la doc modules : `npm run analyze`.
 
 ## Commits (usage interne)
 

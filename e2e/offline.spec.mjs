@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
-import { attendreApplicationPrete } from './helpers.mjs';
+import {
+    attendreApplicationPrete,
+    preparerPremierLancement,
+    passerCutsceneHistoire,
+} from './helpers.mjs';
+import { assertScenePngCutsceneChargee } from './helpers-narratif.mjs';
 import { lireCheminsScenesArrierePlanSw } from './helpers-sw-precache.mjs';
 
 /** @param {import('@playwright/test').Page} page */
@@ -34,10 +39,10 @@ async function attendrePrecacheShell(page) {
     );
 }
 
-/** @param {import('@playwright/test').Page} page @param {string} cheminRelatif */
-async function attendrePrecacheMediasCutscene(page, cheminRelatif) {
+/** @param {import('@playwright/test').Page} page @param {string} cheminRelatif @param {number} [tailleMin] */
+async function attendrePrecacheMediasCutscene(page, cheminRelatif, tailleMin = 1000) {
     await page.waitForFunction(
-        async (chemin) => {
+        async ({ chemin, min }) => {
             const variantes = [
                 chemin,
                 chemin.replace(/^\.\//, '/'),
@@ -52,12 +57,12 @@ async function attendrePrecacheMediasCutscene(page, cheminRelatif) {
                 const entree = await cache.match(variante);
                 if (entree?.ok) {
                     const blob = await entree.blob();
-                    if (blob.size > 1000) return true;
+                    if (blob.size >= min) return true;
                 }
             }
             return false;
         },
-        cheminRelatif,
+        { chemin: cheminRelatif, min: tailleMin },
         { timeout: 180000, polling: 500 }
     );
 }
@@ -101,6 +106,43 @@ test('offline — titre portrait 390px apres precache (audit C5)', async ({ page
     await expect(page.locator('#ecran-titre')).toBeVisible({ timeout: 5000 });
     await expect(page.locator('#btn-options')).toBeVisible();
     await expect(page.locator('#overlay-orientation')).toHaveCount(0);
+});
+
+test('offline — cutscene intro jouable (audit C5/D3)', async ({ page, context }) => {
+    test.setTimeout(240000);
+    await preparerPremierLancement(page);
+    await page.addInitScript(() => {
+        window.__NEO_SILENT_NOTIFS__ = true;
+    });
+    await precacherShellEtScenesInstall(page, context);
+    await attendrePrecacheMediasCutscene(page, './assets/cutscenes/cutscenes.css', 50);
+    await attendrePrecacheMediasCutscene(page, './assets/cutscenes/cutscenes-structure.css', 500);
+
+    // Warm-up en ligne : charge modules/fragments cutscene dans le runtime.
+    await expect(page.locator('#btn-nouvelle-partie')).toBeVisible({ timeout: 10000 });
+    await page.evaluate(() => {
+        document.getElementById('btn-nouvelle-partie')?.click();
+    });
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 20000,
+    });
+    await assertScenePngCutsceneChargee(page, 'observatoire');
+
+    await passerCutsceneHistoire(page);
+
+    // Hors-ligne sans navigation document : rejoue l'intro via l'API déjà prefetchée.
+    await context.setOffline(true);
+    await page.evaluate(async () => {
+        const { chargerHistoireTextes } = await import('/js/io/charger-histoire-textes.js');
+        const { obtenirSequenceIntro } = await import('/js/histoire/histoire-intro.js');
+        const { afficherCutsceneHistoire } = await import('/js/histoire/histoire-manager-ui.js');
+        await chargerHistoireTextes();
+        afficherCutsceneHistoire(obtenirSequenceIntro(), null, () => {}, { intro: true });
+    });
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 20000,
+    });
+    await assertScenePngCutsceneChargee(page, 'observatoire');
 });
 
 test('cutscene PNG prologue precachee a l install (audit C5/D3)', async ({ page, context }) => {

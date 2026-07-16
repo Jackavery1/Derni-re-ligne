@@ -65,8 +65,10 @@ export function initialiserUiObjectifs() {
 
         ecouter('difficulte:vague', ({ montee, palierApres }) => {
             _flashVague(montee);
-            if (montee && palierApres != null) {
-                afficherNotificationNiveau(`PALIER P${palierApres}`);
+            if (palierApres != null) {
+                afficherNotificationNiveau(
+                    montee ? `PALIER P${palierApres}` : `ACCALMIE P${palierApres}`
+                );
             }
             rafraichirHudObjectifsHistoire();
         });

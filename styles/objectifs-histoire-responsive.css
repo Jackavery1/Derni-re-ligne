@@ -10,7 +10,7 @@
     }
 
     .objectif-monde-nom {
-        font-size: clamp(0.48rem, 3.6vw, 0.65rem);
+        font-size: clamp(11px, 3.6vw, 0.65rem);
         word-break: break-word;
         hyphens: auto;
     }
@@ -47,11 +47,11 @@
     .objectif-btn-commencer {
         min-height: 48px;
         padding: 14px 10px;
-        font-size: clamp(0.38rem, 2.8vw, 0.45rem);
+        font-size: var(--typo-ui-mini);
     }
 
     .objectif-recap-titre {
-        font-size: clamp(0.38rem, 2.8vw, 0.45rem);
+        font-size: var(--typo-ui-mini);
     }
 
     .objectif-recap-etoiles {
@@ -69,16 +69,16 @@
     }
 
     .objectif-hud-titre {
-        font-size: clamp(0.38rem, 2vw, 0.48rem);
+        font-size: var(--typo-ui-mini);
     }
 
     .objectif-hud-lignes {
-        font-size: clamp(0.48rem, 2.4vw, 0.58rem);
+        font-size: clamp(11px, 2.4vw, 0.58rem);
     }
 
     .objectif-hud-palier,
     .objectif-hud-modificateur {
-        font-size: clamp(0.34rem, 1.8vw, 0.4rem);
+        font-size: var(--typo-hud-micro);
         word-break: break-word;
     }
 
@@ -99,7 +99,7 @@
     }
 
     .objectif-hud-etoile {
-        font-size: clamp(0.45rem, 2.4vw, 0.55rem);
+        font-size: clamp(11px, 2.4vw, 0.55rem);
     }
 
     #histoire-monde-details .histoire-detail-nom {

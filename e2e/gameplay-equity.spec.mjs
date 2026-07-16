@@ -46,6 +46,23 @@ test.describe('gameplay equity', () => {
         expect(coyoteOk).toBe(true);
     });
 
+    test('coyote time mesure en frames a 60 fps (audit B G2)', async ({ page }) => {
+        await demarrerPartie(page);
+        const metriques = await page.evaluate(async () => {
+            const { CONFIG } = await import('/js/config/config-jeu.js');
+            const api = window.__NEO_TEST__;
+            api?.activerPieceAuSolTest?.();
+            api?.quitterSolPieceTest?.();
+            const framesConfig = Math.floor((CONFIG.coyoteTimeMs * 60) / 1000);
+            const coyoteRestant = api?.obtenirGameFeel?.().coyoteRestant ?? 0;
+            return { framesConfig, coyoteRestant, coyoteTimeMs: CONFIG.coyoteTimeMs };
+        });
+        expect(metriques.framesConfig).toBe(Math.floor((metriques.coyoteTimeMs * 60) / 1000));
+        expect(metriques.framesConfig).toBeGreaterThanOrEqual(4);
+        expect(metriques.framesConfig).toBeLessThanOrEqual(8);
+        expect(metriques.coyoteRestant).toBeGreaterThan(0);
+    });
+
     test('ARE bloque les controles puis libere le buffer', async ({ page }) => {
         await demarrerPartie(page);
         const apresAre = await page.evaluate(() => {
@@ -157,5 +174,10 @@ test.describe('gameplay equity', () => {
         );
         expect(resultat?.tirages).toBe(60);
         expect(resultat?.repetitionsConsecutives).toBe(0);
+        expect(resultat?.pool).toEqual([
+            'permutation_colonnes',
+            'colonne_gelee',
+            'inverser_controles',
+        ]);
     });
 });

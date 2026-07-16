@@ -29,12 +29,12 @@
 
     .menu-titre-dl .dl-mot-2,
     .histoire-titre-principale .dl-mot-2 {
-        font-size: clamp(0.55rem, 2.8vw, 0.7rem);
+        font-size: clamp(11px, 2.8vw, 0.7rem);
     }
 
     .sel-biome-nom,
     .histoire-detail-nom {
-        font-size: clamp(0.5rem, 3vw, 0.65rem);
+        font-size: clamp(11px, 3vw, 0.65rem);
     }
 }
 
@@ -191,7 +191,7 @@
     }
 
     .boss-presentation-nom {
-        font-size: clamp(0.38rem, 3.2vw, 0.55rem);
+        font-size: clamp(11px, 3.2vw, 0.55rem);
         line-height: 1.5;
         max-width: 100%;
         word-break: break-word;

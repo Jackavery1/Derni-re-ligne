@@ -90,6 +90,33 @@ export async function lancerMondeBossSentinelle(page) {
 }
 
 /** @param {import('@playwright/test').Page} page */
+export async function lancerMondeBossArchiviste(page) {
+    const { lancerMondeDepuisCarte } = await import('./helpers-narratif.mjs');
+    await lancerMondeDepuisCarte(page, 'monde_boss_3');
+    await passerFluxLancementMonde(page);
+    await expect(page.locator('#section-boss')).toBeVisible();
+    await expect(page.locator('#boss-nom-affiche')).toContainText(/ARCHIVISTE/i);
+}
+
+/** @param {import('@playwright/test').Page} page */
+export async function lancerMondeBossAvantGarde(page) {
+    const { lancerMondeDepuisCarte } = await import('./helpers-narratif.mjs');
+    await lancerMondeDepuisCarte(page, 'monde_boss_4');
+    await passerFluxLancementMonde(page);
+    await expect(page.locator('#section-boss')).toBeVisible();
+    await expect(page.locator('#boss-nom-affiche')).toContainText(/AVANT-GARDE|AVANTGARDE/i);
+}
+
+/** @param {import('@playwright/test').Page} page */
+export async function lancerMondeBossDistorsion(page) {
+    const { lancerMondeDepuisCarte } = await import('./helpers-narratif.mjs');
+    await lancerMondeDepuisCarte(page, 'monde_finale');
+    await passerFluxLancementMonde(page);
+    await expect(page.locator('#section-boss')).toBeVisible();
+    await expect(page.locator('#boss-nom-affiche')).toContainText(/DISTORSION/i);
+}
+
+/** @param {import('@playwright/test').Page} page */
 export async function passerCutsceneHistoire(page) {
     for (let i = 0; i < 40; i++) {
         const action = await page.evaluate(() => {

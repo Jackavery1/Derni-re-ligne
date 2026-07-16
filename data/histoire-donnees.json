@@ -432,6 +432,7 @@
             "pvMax": 32,
             "attaqueIntervalleMs": 13000,
             "attaqueType": "rangee_braise",
+            "attaquesDisponibles": ["colonne_gelee", "inverser_controles", "permutation_colonnes"],
             "phases": [
                 {
                     "pvSeuil": 32,

@@ -6,9 +6,11 @@
 | ---------------------------- | ------------------------------------------ | ------------------------------------------------------- |
 | App shell (precache SW prod) | 2048 Ko (alerte 1800 Ko)                   | `npm run audit:poids`                                   |
 | JS minifie (dist)            | 588 Ko max (confort 560 Ko, entree ~12 Ko) | `npm run build` puis `node scripts/verifier-bundle.mjs` |
-| Polices woff2                | 300 Ko                                     | audit                                                   |
-| Scene cutscene PNG           | 200 Ko / image                             | audit                                                   |
-| Piste musique                | 3,5 Mo                                     | audit                                                   |
+
+En prod, `scripts/esbuild-strip-logger.mjs` retire les appels `logger.debug` / `logger.info` (littéraux inclus) avant minify — `DEBUG` est déjà faux via `__NEO_PROD__`, mais les chaînes restaient sinon dans le budget CI.
+| Polices woff2 | 300 Ko | audit |
+| Scene cutscene PNG | 200 Ko / image | audit |
+| Piste musique | 3,5 Mo | audit |
 
 Le precache **dev** (`npm run sync:sw`) liste les modules source non minifies : le poids affiche depasse souvent 2048 Ko sans bloquer la CI (avertissement desactive en dev).
 
@@ -35,4 +37,4 @@ Regenerer le precache prod apres build : `npm run build` (inclut `generer-precac
 
 ## Polices
 
-Les polices legacy `fonts/*.ttf` ne sont plus deployees : uniquement `assets/fonts-dist/*.woff2` dans le precache.
+Les polices legacy `fonts/*.ttf` ne sont plus déployées : uniquement `assets/fonts-dist/*.woff2` dans le precache. Le build prod (`scripts/build.mjs`) **exclut** aussi les `.ttf` et les `.wav` boss du dossier `dist/` (OGG precaché ; sans WAV → fallback procédural sur navigateurs sans Ogg).

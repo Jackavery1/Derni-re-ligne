@@ -43,15 +43,20 @@
 
 .bouton-pause-quitter {
     width: 100%;
-    border-color: var(--texte-dim) !important;
-    color: var(--texte-dim) !important;
+    border-color: var(--ui-bordure-discret) !important;
+    color: var(--ui-texte-discret-bouton) !important;
     box-shadow: none !important;
     text-shadow: none !important;
     font-size: clamp(0.5rem, 2vw, 0.65rem) !important;
 }
 .bouton-pause-quitter:hover {
-    background: var(--texte-dim) !important;
+    background: var(--ui-fond-discret-bouton-hover) !important;
     color: var(--fond) !important;
+}
+
+.pause-boutons .bouton:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
 }
 
 @media (max-width: 768px) {

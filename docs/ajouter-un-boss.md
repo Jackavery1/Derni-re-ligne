@@ -2,14 +2,15 @@
 
 ## Checklist
 
-1. **`js/histoire-donnees.js`** — entrée `BOSS` + `bossId` sur le monde
-2. **`js/boss-jeu.js`** — attaques, dégâts (`endommagerBoss`)
-3. **`js/boss-dialogues.js`** — déclenchement runtime (pas de texte ici)
+1. **`data/histoire-donnees.json`** — entrée `BOSS` + `bossId` sur le monde (chargé via `js/histoire/histoire-donnees-chargement.js`)
+2. **`js/logique/boss-jeu.js`** + **`js/logique/boss-combat.js`** / **`js/logique/boss-attaques.js`** — attaques, dégâts
+3. **`js/histoire/boss-dialogues.js`** — déclenchement runtime (pas de texte ici)
 4. **`js/histoire-textes/dialogues-boss.js`** — répliques combat (`DIALOGUES_COMBAT_BOSS`)
-5. **`js/boss-rendu.js`** — portrait canvas (si besoin)
+5. **`js/rendu/boss-rendu.js`** — portrait canvas (si besoin)
 6. **`html/interface-jeu.html`** — section `#section-boss`
-7. **`js/histoire-textes/cutscenes-boss.js`** — cutscene victoire
-8. **`tests/boss-jeu.test.mjs`** + **`tests/boss-dialogues.test.mjs`**
+7. **`js/histoire-textes/cutscenes-boss.js`** (+ `cutscenes-boss-victoire*.js`) — cutscene victoire
+8. **`js/histoire/histoire-map-briefings-boss.js`** — briefing carte + infobulles attaques
+9. **`tests/boss-jeu.test.mjs`** + **`tests/boss-dialogues.test.mjs`**
 
 ## Dialogues de combat
 
@@ -26,7 +27,7 @@ mon_boss: {
 },
 ```
 
-### Déclenchement (`boss-dialogues.js`)
+### Déclenchement (`js/histoire/boss-dialogues.js`)
 
 | Événement                 | Fonction                                                                |
 | ------------------------- | ----------------------------------------------------------------------- |
@@ -45,5 +46,5 @@ Exporter les textes : `npm run sync:data` (régénère `data/histoire-textes.jso
 
 ```bash
 npm test && npm run lint
-npm run test:e2e -- e2e/histoire.spec.mjs
+npm run test:e2e -- e2e/histoire.spec.mjs e2e/gameplay-boss-humeurs.spec.mjs
 ```

@@ -66,6 +66,22 @@ describe('scenes-cutscene — assets et registre', () => {
         expect(installBloc).toContain('scene_interlude_elle');
     });
 
+    it('partials CSS cutscenes sont precaches a l install (offline DEV @import)', () => {
+        const installBloc =
+            swSource.match(/SCENES_CUTSCENE_INSTALL\s*=\s*\[([\s\S]*?)\];/)?.[1] ?? '';
+        for (const partial of [
+            'cutscenes.css',
+            'cutscenes-structure.css',
+            'cutscenes-dialogue-layout.css',
+            'cutscenes-themes.css',
+            'cutscenes-typo-controles.css',
+            'cutscenes-responsive.css',
+            'cutscenes-journal.css',
+        ]) {
+            expect(installBloc, partial).toContain(partial);
+        }
+    });
+
     it('seuil_brasier est precachee a l install (premier boss)', () => {
         expect(swSource).toContain('scene_seuil_brasier');
         const installBloc =

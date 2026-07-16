@@ -31,7 +31,7 @@
 
 .cutscene-police-pixel {
     font-family: var(--font-titre);
-    font-size: clamp(9px, 1.3vw, 14px);
+    font-size: var(--typo-ui-compact);
     letter-spacing: 1px;
     color: var(--cutscene-pixel-texte);
 }
@@ -50,7 +50,7 @@
 }
 .cutscene-police-terminal {
     font-family: 'Courier New', monospace;
-    font-size: clamp(11px, 1.3vw, 14px);
+    font-size: var(--typo-ui-compact);
     letter-spacing: 1px;
     color: var(--cutscene-terminal-texte);
 }
@@ -85,7 +85,7 @@
 
 .cutscene-progress {
     font-family: var(--font-stats);
-    font-size: 9px;
+    font-size: var(--typo-ui-mini);
     letter-spacing: 2px;
     color: var(--rgba-255-255-255-0-25);
 }
@@ -100,7 +100,7 @@
 
 .btn-cutscene {
     font-family: var(--font-stats);
-    font-size: clamp(9px, 1vw, 11px);
+    font-size: var(--typo-ui-mini);
     letter-spacing: 2px;
     color: var(--rgba-255-255-255-0-7);
     background: var(--rgba-255-255-255-0-06);
@@ -132,7 +132,7 @@
 
 .btn-cutscene-passer {
     font-family: var(--font-ui);
-    font-size: 11px;
+    font-size: var(--typo-ui-mini);
     letter-spacing: 2px;
     color: var(--rgba-255-255-255-0-45);
     background: none;

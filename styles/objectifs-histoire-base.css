@@ -199,7 +199,7 @@ body.histoire-active.partie-active #bandeau-trame-run {
 }
 
 .objectif-hud-titre {
-    font-size: clamp(0.38rem, 1.6vw, 0.48rem);
+    font-size: var(--typo-ui-mini);
     letter-spacing: 1px;
 }
 

@@ -32,14 +32,14 @@
 }
 .sel-titre-jeu {
     display: block;
-    font-size: clamp(0.5rem, 2vw, 0.75rem);
+    font-size: var(--typo-ui-compact);
     letter-spacing: 5px;
     color: var(--texte-dim);
     text-transform: uppercase;
 }
 .sel-sous-titre {
     display: block;
-    font-size: clamp(0.3rem, 1.2vw, 0.42rem);
+    font-size: var(--typo-ui-mini);
     color: var(--texte-dim);
     letter-spacing: 3px;
     margin-top: 6px;
@@ -262,11 +262,4 @@ body:has(#sel-barre-modes:not(.element-masque)) .panneau-detail-corps {
 
 body.effets-reduits #sel-info-biome {
     transition: none;
-}
-
-.bouton:focus-visible,
-.btn-tactile:focus-visible,
-#btn-pause:focus-visible {
-    outline: 2px solid var(--jaune);
-    outline-offset: 3px;
 }

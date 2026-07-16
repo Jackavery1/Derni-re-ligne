@@ -18,6 +18,7 @@ vi.mock('../js/io/progression.js', () => ({
     calculerPointsProgression: vi.fn(() => 2),
     obtenirRecordBiome: vi.fn(() => 1000),
     sauvegarderNiveauGlobal: vi.fn(),
+    sauvegarderRecordSprintBiome: vi.fn(() => false),
 }));
 
 vi.mock('../js/etat/store-jeu.js', () => ({
@@ -155,7 +156,10 @@ describe('partie-fin', () => {
             'btn-histoire-carte': { classList: { add: vi.fn(), remove: vi.fn(), toggle: vi.fn() } },
         };
         document.getElementById = (id) => elements[id] ?? null;
-        document.querySelector = (sel) => (sel === '.go-titre' ? elements['go-titre'] : null);
+        document.querySelector = (sel) =>
+            sel === '#ecran-game-over .go-titre' || sel === '.go-titre'
+                ? elements['go-titre']
+                : null;
         etat.estEnCours = true;
         etat.lignes = 12;
         etat.niveau = 3;

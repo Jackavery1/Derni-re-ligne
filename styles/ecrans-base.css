@@ -147,6 +147,8 @@
 .btn-tactile:focus-visible,
 .btn-coop-tactile:focus-visible,
 .btn-pause-style:focus-visible,
+#btn-pause:focus-visible,
+#btn-mute:focus-visible,
 .ach-filtre-btn:focus-visible,
 .options-onglet:focus-visible,
 .toggle-oracle:focus-visible,

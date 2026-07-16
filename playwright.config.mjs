@@ -51,9 +51,24 @@ const channelUse = channel !== 'chromium' ? { channel } : {};
 
 const specsMatriceResponsive = [
     '**/audit-c-responsive.spec.mjs',
+    '**/audit-c-responsive-encoche.spec.mjs',
     '**/histoire-responsive.spec.mjs',
     '**/histoire-responsive-d8.spec.mjs',
+    '**/histoire-responsive-encoche.spec.mjs',
+    '**/histoire-carte-mobile.spec.mjs',
 ];
+
+/** Desktop : tests portrait / touch exclus (paysage reste sur desktop). */
+const grepInvertDesktop = /@viewport-mobile-portrait|@viewport-mobile-etroit|@touch-only/;
+
+/** Projets mobile portrait : tests paysage exclus. */
+const grepPortraitMatrice = /@viewport-mobile-portrait|@viewport-mobile-etroit|@touch-only/;
+const grepInvertPortraitMatrice = /@desktop-only|@viewport-mobile-landscape/;
+
+/** Projets mobile paysage : tests portrait exclus. */
+const grepLandscapeMatrice = /@viewport-mobile-landscape/;
+const grepInvertLandscapeMatrice =
+    /@desktop-only|@viewport-mobile-portrait|@viewport-mobile-etroit|@touch-only/;
 
 const iphone14Chromium = {
     viewport: devices['iPhone 14'].viewport,
@@ -108,12 +123,14 @@ export default defineConfig({
     projects: [
         {
             name: 'desktop',
-            grepInvert: /@viewport-mobile-portrait|@viewport-mobile-etroit|@touch-only/,
+            grepInvert: grepInvertDesktop,
             use: { ...channelUse, viewport: { width: 1280, height: 800 } },
         },
         {
             name: 'mobile-portrait',
             testMatch: specsMatriceResponsive,
+            grep: grepPortraitMatrice,
+            grepInvert: grepInvertPortraitMatrice,
             use: {
                 ...channelUse,
                 viewport: { width: 390, height: 844 },
@@ -124,6 +141,8 @@ export default defineConfig({
         {
             name: 'mobile-landscape',
             testMatch: specsMatriceResponsive,
+            grep: grepLandscapeMatrice,
+            grepInvert: grepInvertLandscapeMatrice,
             use: {
                 ...channelUse,
                 viewport: { width: 667, height: 375 },
@@ -134,21 +153,29 @@ export default defineConfig({
         {
             name: 'iphone-14',
             testMatch: specsMatriceResponsive,
+            grep: grepPortraitMatrice,
+            grepInvert: grepInvertPortraitMatrice,
             use: { ...channelUse, ...iphone14Chromium },
         },
         {
             name: 'iphone-15-pro',
             testMatch: specsMatriceResponsive,
+            grep: grepPortraitMatrice,
+            grepInvert: grepInvertPortraitMatrice,
             use: { ...channelUse, ...iphone15ProChromium },
         },
         {
             name: 'iphone-se',
             testMatch: specsMatriceResponsive,
+            grep: grepPortraitMatrice,
+            grepInvert: grepInvertPortraitMatrice,
             use: { ...channelUse, ...iphoneSeChromium },
         },
         {
             name: 'tablet-landscape',
             testMatch: specsMatriceResponsive,
+            grep: grepLandscapeMatrice,
+            grepInvert: grepInvertLandscapeMatrice,
             use: {
                 ...channelUse,
                 viewport: { width: 1024, height: 768 },

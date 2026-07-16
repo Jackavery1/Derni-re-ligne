@@ -83,13 +83,17 @@ export async function attendrePartieVisible(page) {
 
 /** @param {import('@playwright/test').Page} page */
 export async function passerFluxLancementMonde(page) {
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 36; i++) {
         const action = await page.evaluate(() => {
             if (document.body.classList.contains('partie-active')) return 'done';
             if (document.getElementById('section-boss')?.offsetParent) return 'done';
 
+            const overlayObjectifs = document.getElementById('overlay-objectifs-pre');
             const objectifs = document.getElementById('btn-objectifs-commencer');
-            if (objectifs?.offsetParent) {
+            const objectifsVisibles =
+                Boolean(objectifs?.offsetParent) ||
+                overlayObjectifs?.classList.contains('objectif-overlay-visible');
+            if (objectifs && objectifsVisibles) {
                 objectifs.click();
                 return 'objectifs';
             }
@@ -124,6 +128,8 @@ export async function passerFluxLancementMonde(page) {
             } catch {
                 /* attente courte entre étapes du flux */
             }
+        } else {
+            await page.waitForTimeout(50);
         }
     }
 

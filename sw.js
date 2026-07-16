@@ -1,11 +1,17 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v78';
-const VERSION_MEDIAS = 'dl-medias-v7';
+const VERSION_SHELL = 'dl-shell-v79';
+const VERSION_MEDIAS = 'dl-medias-v8';
 
-/** Precache install : splash, CSS cutscenes, scènes prologue (parcours early). */
+/** Precache install : splash, CSS cutscenes (+ partials DEV), scènes prologue (parcours early). */
 const SCENES_CUTSCENE_INSTALL = [
     './assets/splash-chargement.png',
     './assets/cutscenes/cutscenes.css',
+    './assets/cutscenes/cutscenes-structure.css',
+    './assets/cutscenes/cutscenes-dialogue-layout.css',
+    './assets/cutscenes/cutscenes-themes.css',
+    './assets/cutscenes/cutscenes-typo-controles.css',
+    './assets/cutscenes/cutscenes-responsive.css',
+    './assets/cutscenes/cutscenes-journal.css',
     './assets/cutscenes/scene_observatoire.png',
     './assets/cutscenes/scene_labo.png',
     './assets/cutscenes/scene_trame.png',
@@ -116,6 +122,12 @@ async function gererFetchMedia(evenement) {
     const reponseCache = await chercherDansCache(evenement.request, VERSION_MEDIAS);
 
     if (reponseCache) return reponseCache;
+
+    // Partials CSS cutscenes (DEV @import) peuvent aussi etre dans le shell.
+    if (/\.css$/.test(new URL(evenement.request.url).pathname)) {
+        const shellHit = await chercherDansCache(evenement.request, VERSION_SHELL);
+        if (shellHit) return shellHit;
+    }
 
     const cache = await caches.open(VERSION_MEDIAS);
     try {

@@ -205,6 +205,9 @@ button.options-hint-controles {
     width: 100%;
     margin: 0.65rem 0 0;
     padding: 0.45rem 0.5rem;
+    min-height: 48px;
+    min-width: 48px;
+    box-sizing: border-box;
     font-family: 'Rajdhani', var(--font-ui);
     font-size: var(--typo-ui-note);
     text-align: left;

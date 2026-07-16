@@ -1,10 +1,8 @@
 import { BIOMES } from '../config/biomes.js';
-import { CONFIG } from '../config/config-jeu.js';
 import { annulerMeteo } from './meteo.js';
 import { AudioMoteur } from '../audio/audio.js';
 import {
     calculerPointsProgression,
-    obtenirRecordBiome,
     sauvegarderNiveauGlobal,
     sauvegarderRecordSprintBiome,
 } from '../io/progression.js';
@@ -13,30 +11,25 @@ import {
     obtenirBiomeActif,
     obtenirNiveauGlobal,
     ajouterNiveauGlobal,
+    ECRANS,
+    store,
 } from '../etat/store-jeu.js';
 import {
     appliquerHumeurMascotte,
     reagirRoboGameOver,
-    reagirRoboNouveauRecord,
     afficherEcran,
     sauvegarderRecord,
     mettreAJourAffichageRecord,
-    formaterTemps,
     obtenirTempsEcoule,
 } from '../ui/ecrans-ui.js';
-import { ECRANS } from '../etat/store-jeu.js';
 import { planifierBoucle } from './boucle-jeu.js';
 import { afficherMelodieGameOver } from '../audio/melodie.js';
 import { finaliserPartieCommune } from './partie-fin-commun.js';
 import { modeCoopEnCours } from '../etat/registre-modes.js';
-import { store } from '../etat/store-jeu.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { defiJourActif } from './mode-defi-jour.js';
 import { obtenirDefiDuJour, enregistrerScoreDefiJour } from './defi-jour.js';
-import { enregistrerTopOut, arreterSuiviMonde } from './gestionnaire-difficulte.js';
-import { obtenirEtatHistoire } from '../histoire/histoire-mondes.js';
-import { peutContinuerBossGratuit } from '../histoire/histoire-boss-continue.js';
-import { sansAccentsE } from './texte-jeu.js';
+import { enregistrerTopOut } from './gestionnaire-difficulte.js';
 import {
     bossEstActif,
     arreterBoss,
@@ -44,11 +37,15 @@ import {
     appliquerRepliqueGameOverBoss,
 } from './boss-jeu.js';
 import { onGameOverHistoire } from '../histoire/mecaniques-histoire.js';
-import { oracle, obtenirScoreFinalOracle } from './oracle-jeu.js';
-import { statsGlobales } from '../achievements.js';
+import { obtenirScoreFinalOracle } from './oracle-jeu.js';
 import { vibrerFinPartie } from '../audio/haptique.js';
 import { arreterFondBiome } from '../rendu/rendu-fond-biome.js';
 import { planifierSoumissionLeaderboard } from '../io/leaderboard-cloud.js';
+import {
+    appliquerStatsOracleFinPartie,
+    remplirEcranGameOver,
+    afficherActionsFinHistoire,
+} from '../ui/partie-fin-ecran-go.js';
 
 function _soumettreLeaderboardSiRecord(nouveauRecordMarathon, nouveauRecordSprint, scoreFinal) {
     if (modeHistoireEnCours() || modeCoopEnCours()) return;
@@ -78,6 +75,14 @@ function _enregistrerRecordsFinPartie(victoire, scoreFinal) {
         }
     }
     return nouveauRecordSprint;
+}
+
+function _appliquerProgressionFinPartie(scoreFinal) {
+    const points = calculerPointsProgression(scoreFinal, etat.lignes);
+    if (points > 0) {
+        ajouterNiveauGlobal(points);
+        sauvegarderNiveauGlobal(obtenirNiveauGlobal());
+    }
 }
 
 /** Délai avant affichage game over (laisse le feedback audio/haptique se lire). */
@@ -114,11 +119,11 @@ export function terminerPartie(victoire = false, options = {}) {
           : 'Partie terminee ! Victoire';
 
     const textes = BIOMES[obtenirBiomeActif()]?.textes ?? BIOMES.classique.textes;
-    const titreGo = document.querySelector('.go-titre');
+    const titreGo = document.querySelector('#ecran-game-over .go-titre');
     if (titreGo) titreGo.textContent = victoire ? 'VICTOIRE !' : textes.gameOver;
 
     const scoreFinal = obtenirScoreFinalOracle();
-    _appliquerStatsOracleFinPartie(scoreFinal);
+    appliquerStatsOracleFinPartie(scoreFinal);
 
     const nouveauRecord = modeHistoireEnCours() ? false : sauvegarderRecord(scoreFinal);
     const nouveauRecordSprint = _enregistrerRecordsFinPartie(victoire, scoreFinal);
@@ -126,7 +131,7 @@ export function terminerPartie(victoire = false, options = {}) {
     _appliquerProgressionFinPartie(scoreFinal);
 
     mettreAJourAffichageRecord();
-    _remplirEcranGameOver(scoreFinal, nouveauRecord);
+    remplirEcranGameOver(scoreFinal, nouveauRecord);
 
     finaliserPartieCommune({
         score: scoreFinal,
@@ -136,7 +141,7 @@ export function terminerPartie(victoire = false, options = {}) {
         annonceVictoire,
         annonceDefaite: 'Partie terminee',
     });
-    _afficherActionsFinHistoire(victoire);
+    afficherActionsFinHistoire(victoire);
 
     if (!victoire) {
         appliquerRepliqueGameOverBoss(true, bossIdDefaite);
@@ -155,122 +160,4 @@ export function terminerPartie(victoire = false, options = {}) {
     }
 
     setTimeout(() => afficherMelodieGameOver(), 400);
-}
-
-function _appliquerStatsOracleFinPartie(scoreFinal) {
-    void scoreFinal;
-    if (!oracle.actif) return;
-    statsGlobales.oraclePartiesJouees++;
-    statsGlobales.oracleTotalDeviations += oracle.piecesIgnorees;
-    statsGlobales.oracleDeviationsPartieActuelle = oracle.piecesIgnorees;
-    if (oracle.multiplicateur > statsGlobales.oracleMeilleuresMult) {
-        statsGlobales.oracleMeilleuresMult = oracle.multiplicateur;
-    }
-    if (oracle.scoreBonus > 0) {
-        const elBonus = document.getElementById('oracle-bonus-go');
-        if (elBonus) {
-            elBonus.textContent = `+${oracle.scoreBonus.toLocaleString('fr-FR')}`;
-            document.getElementById('oracle-bonus-go-wrap')?.classList.remove('element-masque');
-        }
-    }
-}
-
-function _appliquerProgressionFinPartie(scoreFinal) {
-    const points = calculerPointsProgression(scoreFinal, etat.lignes);
-    if (points > 0) {
-        ajouterNiveauGlobal(points);
-        sauvegarderNiveauGlobal(obtenirNiveauGlobal());
-    }
-}
-
-function _remplirEcranGameOver(scoreFinal, nouveauRecord) {
-    const scoreEl = document.getElementById('score-final');
-    const lignesEl = document.getElementById('lignes-finales');
-    const niveauEl = document.getElementById('niveau-final');
-    const recordEl = document.getElementById('record-final');
-    const tempsEl = document.getElementById('temps-final');
-    if (!scoreEl || !lignesEl || !niveauEl || !recordEl || !tempsEl) return;
-
-    scoreEl.textContent = scoreFinal.toLocaleString('fr-FR');
-    lignesEl.textContent = String(etat.lignes);
-    niveauEl.textContent = String(etat.niveau);
-    recordEl.textContent = obtenirRecordBiome(obtenirBiomeActif()).toLocaleString('fr-FR');
-    tempsEl.textContent = formaterTemps(obtenirTempsEcoule());
-
-    const badge = document.getElementById('badge-record');
-    badge?.classList.toggle('element-masque', !nouveauRecord);
-    if (nouveauRecord) reagirRoboNouveauRecord();
-}
-
-function _afficherContinuesCampagneGameOver() {
-    const el = document.getElementById('go-continues-campagne');
-    if (!el) return;
-
-    if (!modeHistoireEnCours()) {
-        el.classList.add('element-masque');
-        return;
-    }
-
-    const nb = obtenirEtatHistoire()?.nbContinuesUtilises ?? 0;
-    if (nb <= 0) {
-        el.classList.add('element-masque');
-        return;
-    }
-
-    el.textContent = sansAccentsE(
-        `Continues campagne utilises : ${nb} — peut affecter la fin Trame.`
-    );
-    el.classList.remove('element-masque');
-}
-
-function _afficherActionsFinHistoire(victoire = false) {
-    const btnContinue = document.getElementById('btn-continue-boss');
-    const btnCarte = document.getElementById('btn-histoire-carte');
-    if (!modeHistoireEnCours()) {
-        btnCarte?.classList.add('element-masque');
-        btnContinue?.classList.add('element-masque');
-        document.getElementById('go-avertissement-trame')?.classList.add('element-masque');
-        document.getElementById('go-continues-campagne')?.classList.add('element-masque');
-        arreterSuiviMonde();
-    } else {
-        const lancerFinMonde = () => {
-            void import('../histoire/histoire-manager-completion.js').then(
-                ({ surFinDeMondeHistoire }) => surFinDeMondeHistoire(etat.lignes, etat.score)
-            );
-        };
-        if (victoire) {
-            setTimeout(lancerFinMonde, CONFIG.delaiNarratifVictoireHistoireMs);
-        } else {
-            lancerFinMonde();
-        }
-        const continueGratuit = peutContinuerBossGratuit();
-        btnContinue?.classList.toggle('element-masque', !continueGratuit);
-        if (continueGratuit) btnCarte?.classList.add('element-masque');
-        _afficherAvertissementTrameGameOver(continueGratuit);
-        _afficherContinuesCampagneGameOver();
-    }
-}
-
-function _afficherAvertissementTrameGameOver(continueGratuit) {
-    const el = document.getElementById('go-avertissement-trame');
-    if (!el) return;
-
-    if (continueGratuit) {
-        el.textContent = sansAccentsE(
-            'Continue gratuit disponible — sans impact sur la fin Trame (condition 3/4).'
-        );
-        el.classList.remove('element-masque');
-        return;
-    }
-
-    const etatHist = obtenirEtatHistoire();
-    if (etatHist.conditionsTrame?.tousBossSansContinue === false) {
-        el.textContent = sansAccentsE(
-            "Un Continue empeche la fin Trame. La condition « Tous les boss sans continue » n'est plus remplie."
-        );
-        el.classList.remove('element-masque');
-        return;
-    }
-
-    el.classList.add('element-masque');
 }

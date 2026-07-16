@@ -18,9 +18,6 @@ const MONDES_VAGUES_INTENTIONNELLES = new Set([
     'monde_fuochi',
     'monde_cosmos',
     'monde_vide',
-    'monde_miroir',
-    'monde_trame',
-    'monde_paradoxe',
 ]);
 
 describe('difficulte profils — montee monotone', () => {

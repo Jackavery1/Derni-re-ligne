@@ -27,7 +27,7 @@ const fragmentsCharges = new Set();
  * @param {string} url
  * @returns {Promise<Response>}
  */
-async function fetchAvecRetry(url) {
+export async function fetchAvecRetry(url) {
     /** @type {Error | undefined} */
     let derniereErreur;
     for (let tentative = 0; tentative < MAX_TENTATIVES; tentative++) {

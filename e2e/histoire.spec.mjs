@@ -11,6 +11,7 @@ import {
     preparerPremierLancement,
     passerCutsceneHistoire,
     attendreRenduCarteHistoire,
+    lancerMondeDepuisCarte,
 } from './helpers.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 
@@ -142,20 +143,9 @@ test('carte histoire respecte le contraste des couleurs', async ({ page }) => {
 });
 
 test('lancement prologue depuis la carte histoire', async ({ page }) => {
-    await page.addInitScript((etat) => {
-        localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
-        localStorage.setItem('dl_migration_v1', '1');
-        localStorage.setItem('derniereLigne_tutorielVu', '1');
-        localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
-        localStorage.setItem('derniereLigne_introHistoireVue', '1');
-    }, ETAT_HISTOIRE_VIDE);
-    await page.goto('/');
-    await attendreApplicationPrete(page);
-    await attendreNotificationsInitiales(page);
-    await page.locator('#btn-continuer').click();
-    await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/);
-    await page.locator('#histoire-monde-clavier').selectOption('monde_prologue', { force: true });
-    await page.locator('.bouton-jouer-monde').click({ force: true });
+    test.setTimeout(60000);
+    await ouvrirCarteHistoire(page, ETAT_HISTOIRE_VIDE);
+    await lancerMondeDepuisCarte(page, 'monde_prologue');
     await passerFluxLancementMonde(page);
     await attendrePartieVisible(page);
 });

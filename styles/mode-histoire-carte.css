@@ -74,7 +74,7 @@
     animation: none;
 }
 .histoire-sous-titre {
-    font-size: clamp(0.36rem, 1.3vw, 0.44rem);
+    font-size: var(--typo-ui-mini);
     color: var(--rgba-255-255-255-0-7);
     letter-spacing: 0.15em;
     margin-top: 9px;
@@ -83,7 +83,7 @@
     display: flex;
     gap: 16px;
     align-items: center;
-    font-size: clamp(0.36rem, 1.3vw, 0.44rem);
+    font-size: var(--typo-ui-mini);
     color: var(--rgba-255-255-255-0-85);
     text-shadow: 0 0 6px var(--rgba-0-221-200-0-5);
     letter-spacing: 2px;
@@ -119,7 +119,6 @@
 .histoire-prog-trame-btn:focus-visible {
     background: var(--rgba-255-45-120-0-16);
     border-color: var(--rgba-255-45-120-0-6);
-    outline: none;
 }
 
 .histoire-detail-briefing {
@@ -207,7 +206,7 @@
     pointer-events: auto;
 }
 .histoire-detail-nom {
-    font-size: clamp(0.45rem, 1.8vw, 0.62rem);
+    font-size: var(--typo-ui-compact);
     letter-spacing: 3px;
     color: var(--detail-couleur, var(--cyan));
     text-shadow: 0 0 8px var(--detail-couleur, var(--cyan));

@@ -84,6 +84,13 @@ export function estNeoTestAutorise() {
  *   obtenirExpressionBossCombat?: () => 'calme' | 'agressif' | 'vacillant',
  *   obtenirPvBossCombat?: () => { pv: number, pvMax: number, vaincu: boolean } | null,
  *   endommagerBossTest?: (nbLignes?: number) => 'calme' | 'agressif' | 'vacillant',
+ *   forcerAttaqueBossTest?: () => boolean,
+ *   simulerTiragesAttaqueCombinaison?: (tirages?: number, disponibles?: string[] | null) => {
+ *     repetitionsConsecutives: number,
+ *     tirages: number,
+ *     pool: string[],
+ *   },
+ *   obtenirFlashAttaqueBossTest?: () => boolean,
  * }} api
  */
 export function exposerNeoTestApi(api) {

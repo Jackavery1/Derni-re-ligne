@@ -22,17 +22,22 @@ function _mettreAJourGuideEtAvertissement(monde, etatMonde, estBoss) {
 
     const elAvert = document.getElementById('histoire-detail-avert');
     const btnBriefing = document.getElementById('btn-histoire-briefing-distorsion');
-    const mondesDifficiles = [
-        'monde_miroir',
-        'monde_trame',
-        'monde_vide',
+    const mondesRespiration = [
+        'monde_glace',
         'monde_eclipse',
-        'monde_finale',
+        'monde_cyber',
+        'monde_fuochi',
+        'monde_cosmos',
+        'monde_vide',
     ];
+    const mondesDifficiles = ['monde_miroir', 'monde_trame', 'monde_finale'];
     if (elAvert) {
         let texteAvert = '';
         if (estBoss && etatMonde === 'disponible' && monde.bossId) {
             texteAvert = obtenirBriefingMecaniqueBoss(monde.bossId);
+        } else if (etatMonde === 'disponible' && mondesRespiration.includes(monde.id) && !estBoss) {
+            texteAvert =
+                'Courbe en vagues — après les pics de vitesse, des ACCALMIES offrent une respiration.';
         } else if (etatMonde === 'disponible' && mondesDifficiles.includes(monde.id) && !estBoss) {
             texteAvert =
                 'Monde exigeant — prenez le temps de lire les objectifs et les mécaniques du biome.';

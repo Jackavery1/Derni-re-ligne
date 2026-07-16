@@ -1,4 +1,5 @@
 import { resolve } from 'path';
+import { creerPluginStripLoggerDebug } from './esbuild-strip-logger.mjs';
 
 export const racineJs = resolve('js');
 
@@ -26,5 +27,5 @@ export const optionsCommunesProd = {
         __NEO_PROD__: 'true',
     },
     metafile: true,
-    plugins: [creerPluginStubHistoireFallback()],
+    plugins: [creerPluginStubHistoireFallback(), creerPluginStripLoggerDebug()],
 };

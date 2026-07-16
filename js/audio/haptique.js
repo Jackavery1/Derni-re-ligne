@@ -13,6 +13,7 @@ const MOTIFS = {
     verrou: 14,
     ligne: [10, 30, 10],
     tetris: [15, 40, 15, 40, 20],
+    boss: [45, 35, 70, 35, 50],
     gameOver: [80, 50, 80],
     victoire: [20, 30, 20, 30, 40],
 };
@@ -50,7 +51,7 @@ export function initialiserHaptique() {
         else if (type === 'hold') vibrer('ui');
         else if (type === 'chute') vibrer('chute');
         else if (type === 'verrou') vibrer('verrou');
-        else if (type.startsWith('boss_')) vibrer('verrou');
+        else if (type.startsWith('boss_')) vibrer('boss');
     });
 
     ecouter('partie:topout', () => vibrerFinPartie(false));
@@ -75,4 +76,8 @@ export function vibrerUi() {
 
 export function vibrerFinPartie(victoire) {
     vibrer(victoire ? 'victoire' : 'gameOver');
+}
+
+export function vibrerBossAttaque() {
+    vibrer('boss');
 }

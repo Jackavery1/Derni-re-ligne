@@ -34,6 +34,26 @@ import {
 const SEUIL_ERREURS_BOUCLE = 5;
 let erreursConsecutivesBoucle = 0;
 
+export { SEUIL_ERREURS_BOUCLE };
+
+export function reinitialiserErreursBoucle() {
+    erreursConsecutivesBoucle = 0;
+}
+
+/** @param {unknown} err @returns {boolean} true si la boucle a été suspendue */
+export function enregistrerErreurBoucle(err) {
+    erreursConsecutivesBoucle += 1;
+    logger.error('Erreur boucle jeu:', err);
+    if (erreursConsecutivesBoucle >= SEUIL_ERREURS_BOUCLE) {
+        afficherErreurUtilisateur(
+            'Une erreur empêche le jeu de fonctionner. Rechargez la page ou retournez au menu.'
+        );
+        suspendreBoucleSolo();
+        return true;
+    }
+    return false;
+}
+
 export function mettreAJourFps(deltaTemps) {
     if (deltaTemps <= 0) return;
     const fps = 1000 / deltaTemps;
@@ -119,15 +139,7 @@ function boucleJeu(timestamp) {
         }
         erreursConsecutivesBoucle = 0;
     } catch (err) {
-        erreursConsecutivesBoucle++;
-        logger.error('Erreur boucle jeu:', err);
-        if (erreursConsecutivesBoucle >= SEUIL_ERREURS_BOUCLE) {
-            afficherErreurUtilisateur(
-                'Une erreur empêche le jeu de fonctionner. Rechargez la page ou retournez au menu.'
-            );
-            suspendreBoucleSolo();
-            return;
-        }
+        if (enregistrerErreurBoucle(err)) return;
     } finally {
         planifierBoucle();
     }

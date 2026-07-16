@@ -6,6 +6,17 @@ import { fileURLToPath } from 'url';
 const racineProjet = join(dirname(fileURLToPath(import.meta.url)), '..');
 const racineJs = join(racineProjet, 'js');
 const SEUIL_HOTSPOT_LIGNES = 450;
+const SEUIL_SIGNAL_DECOUPAGE = 300;
+const TAGS_MATRICE_RESPONSIVE =
+    /@viewport-mobile-portrait|@viewport-mobile-landscape|@viewport-mobile-etroit|@touch-only|@desktop-only/;
+const SPECS_MATRICE_RESPONSIVE = [
+    'audit-c-responsive.spec.mjs',
+    'audit-c-responsive-encoche.spec.mjs',
+    'histoire-responsive.spec.mjs',
+    'histoire-responsive-d8.spec.mjs',
+    'histoire-responsive-encoche.spec.mjs',
+    'histoire-carte-mobile.spec.mjs',
+];
 const MARQUEUR_DEBUT = '/* PRECACHE:DEBUT */';
 const MARQUEUR_FIN = '/* PRECACHE:FIN */';
 
@@ -163,6 +174,32 @@ describe('maintainabilite', () => {
         expect(racine).toEqual([...allowlist].sort());
     });
 
+    it('precache shell inclut cutscenes.css pour offline narratif', () => {
+        const swPrecache = readFileSync(join(racineProjet, 'sw-precache-list.js'), 'utf8');
+        expect(swPrecache).toMatch(/assets\/cutscenes\/cutscenes\.css/);
+    });
+
+    it('progression-stockage reste sous le seuil signal decoupage (audit A4)', () => {
+        const lignes = compterLignes(join(racineJs, 'io', 'progression-stockage.js'));
+        expect(lignes).toBeLessThanOrEqual(SEUIL_SIGNAL_DECOUPAGE);
+    });
+
+    it('specs matrice responsive portent un tag viewport (audit C6)', () => {
+        const e2eDir = join(racineProjet, 'e2e');
+        const sansTag = [];
+        for (const nom of SPECS_MATRICE_RESPONSIVE) {
+            const contenu = readFileSync(join(e2eDir, nom), 'utf8');
+            const blocs = contenu.match(/test\([\s\S]*?\{[\s\S]*?\},[\s\S]*?\)/g) ?? [];
+            for (const bloc of blocs) {
+                if (!bloc.startsWith('test(')) continue;
+                if (TAGS_MATRICE_RESPONSIVE.test(bloc)) continue;
+                const titre = bloc.match(/test\(\s*['"`]([^'"`]+)/)?.[1] ?? nom;
+                sansTag.push(`${nom}: ${titre}`);
+            }
+        }
+        expect(sansTag, JSON.stringify(sansTag, null, 2)).toEqual([]);
+    });
+
     it('precache shell : SFX boss en ogg uniquement (wav a la demande)', () => {
         const swPrecache = readFileSync(join(racineProjet, 'sw-precache-list.js'), 'utf8');
         expect(swPrecache).toMatch(/boss_braise\.ogg/);
@@ -177,7 +214,7 @@ describe('maintainabilite', () => {
         expect(fin).toBeGreaterThan(debut);
         const blocPrecache = swPrecache.slice(debut, fin);
 
-        const exclusPrecache = new Set(['./js/codex-histoire.js', './js/logique/dev-init.js']);
+        const exclusPrecache = new Set(['./js/logique/dev-init.js']);
 
         const manquants = listerFichiersJs(racineJs)
             .map(

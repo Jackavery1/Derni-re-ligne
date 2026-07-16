@@ -72,4 +72,26 @@ describe('boss-attaques', () => {
         expect(attaque?.type).toBe('rangee_braise');
         expect(bossEtat.derniereAttaqueType).toBe('rangee_braise');
     });
+
+    it('combinaison_glace_glitch sans pool explicite exclut la braise', () => {
+        const plateau = creerPlateau();
+        const types = new Set();
+        for (let i = 0; i < 40; i++) {
+            const bossEtat = {};
+            const attaque = executerAttaqueBoss({ attaqueType: 'combinaison_glace_glitch' }, 0, {
+                plateau,
+                effets: {
+                    colonnesGelees: [],
+                    timerDegelMs: 0,
+                    bossControlesInverses: false,
+                    timerControlesInverses: 0,
+                },
+                bossActif: null,
+                bossEtat,
+            });
+            if (attaque?.type) types.add(attaque.type);
+        }
+        expect(types.has('rangee_braise')).toBe(false);
+        expect(types.size).toBeGreaterThan(0);
+    });
 });

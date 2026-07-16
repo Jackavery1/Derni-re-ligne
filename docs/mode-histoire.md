@@ -4,18 +4,21 @@ Campagne « La Fragmentation » : 17 mondes visibles + 3 secrets, 5 boss (Brasie
 
 ## Fichiers clés
 
-| Fichier                  | Rôle                                             |
-| ------------------------ | ------------------------------------------------ |
-| `histoire-donnees.js`    | Mondes, boss, seuils                             |
-| `histoire-manager.js`    | Carte, lancement, sauvegarde                     |
-| `histoire-map.js`        | Barrel carte (layout, scroll, focus, visibilité) |
-| `histoire-narratif.js`   | Cutscenes, journaux                              |
-| `histoire-textes/`       | Contenu narratif (barrel `histoire-textes.js`)   |
-| `boss-jeu.js`            | Combats boss                                     |
-| `boss-dialogues.js`      | Répliques combat (phases, tetris, game over)     |
-| `texte-jeu.js`           | Normalisation UI (`sansAccentsE`)                |
-| `mecaniques-histoire.js` | Rouille, éclipse, vide…                          |
-| `conditions-secrets.js`  | Mondes miroir, trame, paradoxe                   |
+| Fichier                    | Rôle                                             |
+| -------------------------- | ------------------------------------------------ |
+| `histoire-donnees.js`      | Mondes, boss, seuils                             |
+| `histoire-manager.js`      | Carte, lancement, sauvegarde                     |
+| `histoire-map.js`          | Barrel carte (layout, scroll, focus, visibilité) |
+| `histoire-narratif.js`     | Cutscenes, journaux                              |
+| `histoire-textes/`         | Contenu narratif (barrel `histoire-textes.js`)   |
+| `rendu/scenes-cutscene.js` | Registre `SCENES_CUTSCENE` (fonds, flags `lazy`) |
+| `boss-jeu.js`              | Combats boss                                     |
+| `boss-dialogues.js`        | Répliques combat (phases, tetris, game over)     |
+| `texte-jeu.js`             | Normalisation UI (`sansAccentsE`)                |
+| `mecaniques-histoire.js`   | Rouille, éclipse, vide…                          |
+| `conditions-secrets.js`    | Mondes miroir, trame, paradoxe                   |
+
+Les fonds cutscene sont déclarés dans `js/rendu/scenes-cutscene.js` (`SCENES_CUTSCENE`) : scènes critiques en precache install, scènes rares avec `lazy: true` (chargement idle / à la demande).
 
 ## Textes UI vs narration
 
@@ -86,10 +89,10 @@ Lecture/écriture du flag actif : `modeHistoireEnCours()`, `activerModeHistoire(
 
 ## Tests
 
-| Type      | Fichiers                                                                                                                                                                                                                                                            |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Unitaires | `tests/histoire-*.test.mjs`, `tests/boss-dialogues.test.mjs`, `tests/cutscene-ui.test.mjs`, `tests/mecaniques-histoire.test.mjs`                                                                                                                                    |
-| E2E       | `e2e/audit-d-narratif.spec.mjs`, `e2e/histoire.spec.mjs`, `e2e/histoire-campagne-{enchainement,d9,d9b,d15}.spec.mjs`, `e2e/histoire-narratif.spec.mjs`, `e2e/histoire-post-monde.spec.mjs`, `e2e/histoire-responsive.spec.mjs`, `e2e/prologue-trame-modal.spec.mjs` |
+| Type      | Fichiers                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unitaires | `tests/histoire-*.test.mjs`, `tests/boss-dialogues.test.mjs`, `tests/cutscene-ui.test.mjs`, `tests/mecaniques-histoire.test.mjs`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| E2E       | `e2e/audit-d-narratif.spec.mjs`, `e2e/histoire.spec.mjs`, `e2e/histoire-entrees.spec.mjs`, `e2e/histoire-fragments-vera.spec.mjs`, `e2e/histoire-journaux-vera.spec.mjs`, `e2e/histoire-mondes.spec.mjs`, `e2e/histoire-carte-mobile.spec.mjs`, `e2e/histoire-narratif.spec.mjs`, `e2e/histoire-narratif-fins.spec.mjs`, `e2e/histoire-post-monde.spec.mjs`, `e2e/histoire-responsive.spec.mjs`, `e2e/histoire-responsive-d8.spec.mjs`, `e2e/histoire-responsive-encoche.spec.mjs`, `e2e/histoire-campagne-{enchainement,d9,d9b,d15,pr}.spec.mjs`, `e2e/prologue-trame-modal.spec.mjs`, `e2e/gameplay-boss-humeurs.spec.mjs` |
 
 `npm run test:e2e:audit` exécute les specs audit gameplay, responsive, narratif (`audit-d-narratif`, `histoire-post-monde`, extraits campagne).
 

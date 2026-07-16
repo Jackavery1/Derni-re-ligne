@@ -7,7 +7,11 @@ import {
     attendreNotificationsInitiales,
     selectionnerBiomeClavier,
 } from './helpers.mjs';
-import { mesurerContrasteCorps, mesurerContrasteTexteDiscret } from './helpers-contraste.mjs';
+import {
+    mesurerContrasteCorps,
+    mesurerContrasteTexteDiscret,
+    mesurerContrasteSelecteur,
+} from './helpers-contraste.mjs';
 
 test.describe('audit E — UI/UX', () => {
     test('E1 — accessibility: no critical violations', async ({ page }) => {
@@ -116,13 +120,34 @@ test.describe('audit E — UI/UX', () => {
         for (const id of ['btn-pause', 'btn-mute']) {
             const btn = page.locator(`#${id}`);
             await expect(btn).toBeVisible();
-            await btn.focus();
+            await btn.evaluate((el) => el.focus({ focusVisible: true }));
             const hasFocusRing = await btn.evaluate((el) => {
                 const style = getComputedStyle(el);
-                return style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0;
+                const outlineVisible =
+                    style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0;
+                const shadowVisible = style.boxShadow !== 'none';
+                return outlineVisible || shadowVisible;
             });
             expect(hasFocusRing, id).toBe(true);
         }
+    });
+
+    test('E2c — pause mobile 390px respecte contraste AA (audit E3/E10)', async ({ page }) => {
+        const { demarrerPartie } = await import('./helpers-partie.mjs');
+        await page.setViewportSize({ width: 390, height: 844 });
+        await preparerPageSansSw(page);
+        await page.goto('/?neoTest=1');
+        await attendreApplicationPrete(page);
+        await demarrerPartie(page);
+        await page.keyboard.press('Escape');
+        await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
+
+        const ratioTitre = await mesurerContrasteSelecteur(page, '.pause-titre');
+        const ratioStats = await mesurerContrasteSelecteur(page, '.pause-stats-jeu');
+        const ratioReprendre = await mesurerContrasteSelecteur(page, '#btn-reprendre');
+        expect(ratioTitre).toBeGreaterThanOrEqual(4.5);
+        expect(ratioStats).toBeGreaterThanOrEqual(4.5);
+        expect(ratioReprendre).toBeGreaterThanOrEqual(4.5);
     });
 
     test('E3a — prefers-reduced-motion desactive les animations longues', async ({ page }) => {

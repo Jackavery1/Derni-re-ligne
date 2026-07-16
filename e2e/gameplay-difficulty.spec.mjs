@@ -86,6 +86,22 @@ test('gameplay difficulty — respiration glace vagues mid-run (audit B)', async
     expect(resultat.amplitude).toBeGreaterThanOrEqual(2);
 });
 
+test('gameplay difficulty — respiration cyber vagues mid-run (audit B)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+
+    const resultat = await page.evaluate(async () => {
+        const api = window.__NEO_TEST__;
+        if (!api?.evaluerRespirationDifficulteMonde) return null;
+        return api.evaluerRespirationDifficulteMonde('monde_cyber');
+    });
+
+    expect(resultat).not.toBeNull();
+    expect(resultat.respiration).toBe(true);
+    expect(resultat.amplitude).toBeGreaterThanOrEqual(2);
+});
+
 test('gameplay difficulty — palier ocean monte apres seuil 40% (audit B)', async ({ page }) => {
     await preparerPageSansSw(page);
     await page.goto('/?neoTest=1');

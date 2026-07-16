@@ -50,7 +50,16 @@ writeFileSync(
 cpSync('styles', `${dist}/styles`, { recursive: true });
 execSync('node scripts/compresser-css.mjs', { stdio: 'inherit' });
 cpSync('html', `${dist}/html`, { recursive: true });
-if (existsSync('assets')) cpSync('assets', `${dist}/assets`, { recursive: true });
+if (existsSync('assets')) {
+    cpSync('assets', `${dist}/assets`, {
+        recursive: true,
+        filter: (src) => {
+            const bas = src.toLowerCase();
+            if (bas.endsWith('.wav') || bas.endsWith('.ttf')) return false;
+            return true;
+        },
+    });
+}
 execSync('node scripts/bundler-cutscenes-css.mjs dist/assets/cutscenes', { stdio: 'inherit' });
 cpSync('manifest.json', `${dist}/manifest.json`);
 cpSync('img', `${dist}/img`, { recursive: true });

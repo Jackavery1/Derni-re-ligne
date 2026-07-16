@@ -4,24 +4,26 @@ Vanilla ES modules en dev, bundle esbuild en prod.
 
 **Entrée :** `index.html` → `js/main.js` → `js/moteur.js`
 
+Exclusions d’audit volontaires : [`AUDIT-EXCLUSIONS.md`](../AUDIT-EXCLUSIONS.md).
+
 ## Couches
 
-| Couche      | Dossiers / exemples                                                               |
-| ----------- | --------------------------------------------------------------------------------- |
-| Données     | `config/`, `histoire-textes/`, `contenu-jeu.js`                                   |
-| Logique     | `logique/logique-pure.js`, `logique/moteur-piece.js`, `logique/score-partie.js`   |
-| État        | `etat/store-core.js`, `etat/store-jeu.js`, `etat/mode-histoire.js`                |
-| Solo        | `partie.js`, `logique/logique-partie.js`, `boucle-jeu.js`, `logique/piece-jeu.js` |
-| Coop        | `coop-jeu.js`, `logique/coop-logique.js`                                          |
-| Histoire    | `histoire/histoire-manager.js`, `histoire-cutscene*.js`, `boss-jeu.js`            |
-| Rendu / UI  | `rendu/rendu-jeu.js`, `ui/navigation-ecrans.js`, `rendu/hud-jeu.js`               |
-| Persistance | `io/progression.js`                                                               |
+| Couche      | Dossiers / exemples                                                                               |
+| ----------- | ------------------------------------------------------------------------------------------------- |
+| Données     | `config/`, `histoire-textes/`, `contenu-jeu.js`                                                   |
+| Logique     | `logique/logique-pure.js`, `logique/moteur-piece.js`, `logique/score-partie.js`                   |
+| État        | `etat/store-core.js`, `etat/store-jeu.js`, `etat/mode-histoire.js`                                |
+| Solo        | `logique/partie.js`, `logique/logique-partie.js`, `logique/boucle-jeu.js`, `logique/piece-jeu.js` |
+| Coop        | `logique/coop-jeu.js`, `logique/coop-logique.js`                                                  |
+| Histoire    | `histoire/histoire-manager.js`, `histoire-cutscene*.js`, `boss-jeu.js`                            |
+| Rendu / UI  | `rendu/rendu-jeu.js`, `ui/navigation-ecrans.js`, `rendu/hud-jeu.js`                               |
+| Persistance | `io/progression.js`                                                                               |
 
 ## Organisation des fichiers
 
 - **Domaines par convention** — voir `docs/domaines.md` (préfixes `logique-`, `histoire-`, `rendu-`, etc.).
 - **Sous-dossiers ciblés** — autorisés pour le **contenu** volumineux (`js/histoire-textes/`). Barrel parent (`histoire-textes.js`) + export JSON inchangés.
-- **Migration par domaines** — dossiers `js/config/`, `js/logique/`, `js/etat/`, etc. (`scripts/archive/migrer-js-domaines.mjs`). Ne pas déplacer les gros sous-arbres de données (`histoire-textes/`, `*-donnees/`) sans plan dédié.
+- **Migration par domaines** — dossiers `js/config/`, `js/logique/`, `js/etat/`, etc. (migrations one-shot déjà appliquées). Ne pas déplacer les gros sous-arbres de données (`histoire-textes/`, `*-donnees/`) sans plan dédié.
 - **Cutscenes** — responsabilités séparées :
     - `histoire-cutscene.js` — orchestration (séquence, callbacks)
     - `histoire-cutscene-ui.js` — DOM, zones texte, progress
@@ -50,6 +52,14 @@ Vanilla ES modules en dev, bundle esbuild en prod.
 ## Partie solo (résumé)
 
 `demarrerJeu()` → boucle RAF → gravité / DAS / lock → `verrouillerPiece()` → `score-partie.js` → rendu.
+
+## Découpage partie-fin
+
+| Module                      | Rôle                                                    |
+| --------------------------- | ------------------------------------------------------- |
+| `partie-fin.js`             | Orchestration fin solo (records, leaderboard, délai GO) |
+| `partie-fin-commun.js`      | Stats / profil / annonce partagés solo+coop             |
+| `ui/partie-fin-ecran-go.js` | Remplissage DOM game-over + actions histoire / Trame    |
 
 ## Découpage logique-partie
 
@@ -94,7 +104,7 @@ Vanilla ES modules en dev, bundle esbuild en prod.
 
 ## Boucles RAF
 
-- **Principale (partie)** — `boucle-jeu.js` : gravité, DAS, rendu plateau. Suspendue en coop/archi.
+- **Principale (partie)** — `logique/boucle-jeu.js` : gravité, DAS, rendu plateau. Suspendue en coop/archi.
 - **Secondaires (UI / ambiance)** — `js/logique/planificateur-raf.js` : constellation, mascotte ROBO, fonds méta (`fond-ecrans-meta.js`). Une clé par contexte (`constellation`, `rendu-robo`, `fond-meta:<canvasId>`).
 
 ```mermaid
@@ -111,8 +121,8 @@ flowchart TB
     end
 
     subgraph solo [Solo]
-        partie[partie.js]
-        boucle[boucle-jeu.js]
+        partie[logique/partie.js]
+        boucle[logique/boucle-jeu.js]
         logique[logique-partie*.js]
     end
 
@@ -146,15 +156,15 @@ flowchart TB
 - **Handlers globaux** — `main.js` capture `error` et `unhandledrejection` → `logger.js` + bannière `#banniere-erreur`.
 - **Journal session** — 10 dernières entrées warn/error en `sessionStorage` ; bouton « Copier rapport » exporte JSON (`formaterRapportErreurs()`).
 - **Chargement écrans** — `charger-ecrans.js` : 3 tentatives fetch avec backoff exponentiel avant échec fatal.
-- **Boucle de jeu** — `boucle-jeu.js` suspend après 5 erreurs consécutives de rendu.
+- **Boucle de jeu** — `logique/boucle-jeu.js` suspend après 5 erreurs consécutives de rendu.
 - **Debug** — `?debug=1` active logs `debug`/`info` et stack traces détaillées.
 
 ## Performance
 
 - **RAF conditionnelle** — `aBesoinDeBoucle()` suspend la boucle principale quand inutile.
-- **FPS adaptatif** — EWMA dans `boucle-jeu.js` ; effets réduits si FPS < 45 ou `prefers-reduced-motion`.
+- **FPS adaptatif** — EWMA dans `logique/boucle-jeu.js` ; effets réduits si FPS < 45 ou `prefers-reduced-motion`.
 - **Cache canvas** — gradients statiques (vignette, ambiance bas, masque météo) en offscreen dans `rendu-plateau.js` ; fonds biome/méta pré-générés (`rendu-fond-biome-donnees.js` + couche statique, particules isolées dans `rendu-fond-biome-particules.js`).
-- **Budget bundle** — `scripts/verifier-bundle.mjs` en CI (max **588 Ko**, confort 560 Ko ; chunks test exclus via `budget-exclus.json`) ; `npm run analyze` après build.
+- **Budget bundle** — `scripts/verifier-bundle.mjs` en CI (max **588 Ko**, confort 560 Ko ; chunks test exclus via `budget-exclus.json` ; strip `logger.debug`/`info` via `esbuild-strip-logger.mjs`) ; `npm run analyze` après build.
 
 ## Guides
 

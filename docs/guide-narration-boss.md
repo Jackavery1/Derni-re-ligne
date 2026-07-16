@@ -13,7 +13,8 @@ Le boss est lié à son biome/chapitre. Les dialogues doivent refléter l'enviro
 - **Brasier (Ch.1)** → chaos primaire, chaleur incontrôlable, manque de frein
 - **Sentinelle (Ch.2)** → ordre gelé, perfection mécanique, harmonie forcée
 - **Archiviste (Ch.3)** → stase mémoire, vérités cachées, autorité silencieuse
-- **Cosmos (Ch.4)** → transcendance, fusion ordre/chaos, rédemption possible
+- **Avant-Garde (Ch.4)** → entraînement, fusion ordre/chaos, préparation à la Distorsion
+- **Distorsion (finale)** → souffrance, mémoire fragmentée, choix de fin
 
 ### 2. Arc émotionnel
 
@@ -29,7 +30,7 @@ APRÈS     → Conséquence, transition narrative, leçon apprise
 
 Les mécaniques spéciales (Rouille, Éclipse, etc.) sont des manifestations du boss.
 
-**Exemple:** "La Sentinelle te paralyse" → mécanque Éclipse qui ralentit le joueur.
+**Exemple:** "La Sentinelle te paralyse" → mécanique Éclipse qui ralentit le joueur.
 
 ---
 
@@ -67,14 +68,14 @@ Mais la régularité n'est pas la force. C'est une chaîne."
 ### Après combat
 
 - Reconnaître la victoire du joueur
-- Révéler une verdité sur soi-même
+- Révéler une vérité sur soi-même
 - Transition vers prochain chapitre/monde
 
 **Exemple (Brasier vaincu):**
 
 ```
 "Tu as maîtrisé l'informe. C'est ce que je ne pouvais pas faire.
-Peut-être que la rédemoption existe pour ceux qui apprennent."
+Peut-être que la rédemption existe pour ceux qui apprennent."
 ```
 
 ---
@@ -123,11 +124,11 @@ PENDANT:"Chaque action que tu fais réécrit l'histoire que j'ai mémorisée."
 APRÈS:  "Peut-être que la sagesse réside dans savoir oublier."
 ```
 
-### Cosmos (Ch.4) — Synthèse
+### Avant-Garde (Ch.4) — Synthèse
 
 - **Ton:** Mystérieux, poétique, catalyseur de transformation
-- **Motifs:** Harmonie chaos/ordre, danse cosmique, transcendance
-- **Arc:** Synthèse de tous les boss → révélation finale → choix du joueur
+- **Motifs:** Harmonie chaos/ordre, danse cosmique, préparation
+- **Arc:** Synthèse des gardiens → révélation → seuil vers Distorsion
 
 **Dialogues clés:**
 
@@ -136,6 +137,14 @@ AVANT:  "Tes trois premiers adversaires t'ont préparé à ceci."
 PENDANT:"Maintenant tu comprends: chaos ET ordre coexistent."
 APRÈS:  "Le monde change parce que tu as choisi de le voir différemment."
 ```
+
+### Distorsion (finale) — Souffrance
+
+- **Ton:** Fragilisé, intime, multiple (phases)
+- **Motifs:** Mémoire brisée, braise/gel/glitch, plateau distordu
+- **Arc:** Confrontation → reconnaissance → fin (normale / vraie / secrète)
+
+**Voir aussi :** `docs/canon-personnages.md`, `docs/ajouter-un-boss.md`.
 
 ---
 

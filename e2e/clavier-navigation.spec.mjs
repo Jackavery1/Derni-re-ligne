@@ -95,4 +95,13 @@ test.describe('clavier navigation', () => {
         await expect(page.locator('#ecran-game-over')).not.toHaveClass(/actif/, { timeout: 10000 });
         await expect(page.locator('body')).toHaveClass(/partie-active/);
     });
+
+    test('game over — Enter sur rejouer relance', async ({ page }) => {
+        await demarrerPartie(page);
+        await terminerPartieCourante(page);
+        await page.locator('#btn-rejouer').focus();
+        await page.keyboard.press('Enter');
+        await expect(page.locator('#ecran-game-over')).not.toHaveClass(/actif/, { timeout: 10000 });
+        await expect(page.locator('body')).toHaveClass(/partie-active/);
+    });
 });

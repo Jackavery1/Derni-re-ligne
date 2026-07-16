@@ -26,5 +26,7 @@ describe('build prod', () => {
             /#ecran-histoire-cutscene/
         );
         expect(readFileSync('dist/data/histoire-textes.json', 'utf8')).not.toMatch(/\n {2}"/);
+        const precache = readFileSync('dist/sw-precache-list.js', 'utf8');
+        expect(precache).toMatch(/assets\/cutscenes\/cutscenes\.css/);
     }, 90_000);
 });

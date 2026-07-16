@@ -100,6 +100,17 @@ const FEUILLES_MENU_TYPO = [
     'menu-narratif-base.css',
     'menu-narratif-cutscene.css',
     'ecran-titre-menu.css',
+    'selection-constellation.css',
+    'mode-histoire-carte.css',
+    'mode-histoire-responsive.css',
+    'mode-histoire-fin.css',
+];
+
+const FEUILLES_HUD_TYPO = [
+    'objectifs-histoire-base.css',
+    'objectifs-histoire-responsive.css',
+    'objectifs-histoire-hud.css',
+    'boss-portrait.css',
 ];
 
 describe('css — menu titre typo lisible', () => {
@@ -108,6 +119,15 @@ describe('css — menu titre typo lisible', () => {
             const css = readFileSync(join('styles', fichier), 'utf8');
             expect(lignesMicroEmIllisibles(css)).toEqual([]);
         });
+        it(`${fichier} n utilise pas de clamp rem sans plancher 11px`, () => {
+            const css = readFileSync(join('styles', fichier), 'utf8');
+            expect(lignesClampRemSansPlancherPx(css)).toEqual([]);
+        });
+    }
+});
+
+describe('css — HUD objectifs / boss typo lisible', () => {
+    for (const fichier of FEUILLES_HUD_TYPO) {
         it(`${fichier} n utilise pas de clamp rem sans plancher 11px`, () => {
             const css = readFileSync(join('styles', fichier), 'utf8');
             expect(lignesClampRemSansPlancherPx(css)).toEqual([]);

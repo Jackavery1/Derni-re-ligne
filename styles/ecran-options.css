@@ -36,6 +36,9 @@
     font-family: var(--police);
     font-size: var(--typo-ui-compact);
     padding: 10px 8px;
+    min-height: 48px;
+    min-width: 48px;
+    box-sizing: border-box;
     cursor: pointer;
     letter-spacing: 1px;
     transition: all 0.15s;

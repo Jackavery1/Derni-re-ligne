@@ -324,6 +324,16 @@ describe('corrections audit', () => {
             ]);
         });
 
+        it('Distorsion — combinaison glace/glitch sans braise (audit B G2)', () => {
+            const { BOSS } = JSON.parse(readFileSync('data/histoire-donnees.json', 'utf8'));
+            expect([...new Set(BOSS.distorsion.attaquesDisponibles)]).toEqual([
+                'colonne_gelee',
+                'inverser_controles',
+                'permutation_colonnes',
+            ]);
+            expect(BOSS.distorsion.attaquesDisponibles).not.toContain('rangee_braise');
+        });
+
         it('distorsion_secret sans métaphore binaire explicite', () => {
             const ligne = CUTSCENES_VICTOIRE_BOSS.distorsion_secret.find(
                 (l) => l.personnage === 'distorsion' && l.texte.includes('binaire')

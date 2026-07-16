@@ -10,7 +10,6 @@ const EXCLUS_PRECACHE = new Set([
     './styles/dev.css',
     './img/icon-512.png',
     './img/icon-maskable-512.png',
-    './js/codex-histoire.js',
     './js/logique/dev-init.js',
 ]);
 
@@ -98,6 +97,7 @@ function construireListePrecache() {
         ...listerPlat('data', './data/', '.json'),
         ...listerPlat('assets/fonts-dist', './assets/fonts-dist/', '.woff2'),
         ...listerPlat('assets/sfx/boss', './assets/sfx/boss/', '.ogg'),
+        ...listerPlat('assets/cutscenes', './assets/cutscenes/', '.css'),
     ];
 
     if (modeProd) {

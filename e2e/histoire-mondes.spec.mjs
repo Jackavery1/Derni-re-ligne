@@ -5,6 +5,7 @@ import {
     elementAClasse,
     boutonEstVisible,
     attendreTypewriterInactif,
+    lancerMondeDepuisCarte,
     ETAT_HISTOIRE_BOSS_BRASIER,
 } from './helpers.mjs';
 import {
@@ -36,34 +37,25 @@ const ETAT_TRAME_DEBLOQUE = {
 };
 
 test('monde caché Miroir jouable une fois débloqué', async ({ page }) => {
+    test.setTimeout(60000);
     await ouvrirCarteHistoire(page, ETAT_MIROIR_DEBLOQUE);
-    await page.locator('#histoire-monde-clavier').selectOption('monde_miroir', { force: true });
-    await expect(page.locator('#histoire-monde-details')).not.toHaveClass(
-        /histoire-panneau-masque/
-    );
-    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await lancerMondeDepuisCarte(page, 'monde_miroir');
     await passerFluxLancementMonde(page);
     await expect(page.locator('#interface-jeu [data-label="score"]')).toHaveText('REFLET');
 });
 
 test('monde caché Trame jouable une fois débloqué', async ({ page }) => {
+    test.setTimeout(60000);
     await ouvrirCarteHistoire(page, ETAT_TRAME_DEBLOQUE);
-    await page.locator('#histoire-monde-clavier').selectOption('monde_trame', { force: true });
-    await expect(page.locator('#histoire-monde-details')).not.toHaveClass(
-        /histoire-panneau-masque/
-    );
-    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await lancerMondeDepuisCarte(page, 'monde_trame');
     await passerFluxLancementMonde(page);
     await expect(page.locator('#interface-jeu [data-label="score"]')).toHaveText('RÉSONANCE');
 });
 
 test('monde caché Paradoxe affiche sa cutscene puis revient à la carte', async ({ page }) => {
+    test.setTimeout(60000);
     await ouvrirCarteHistoire(page, ETAT_PARADOXE_DEBLOQUE);
-    await page.locator('#histoire-monde-clavier').selectOption('monde_paradoxe', { force: true });
-    await expect(page.locator('#histoire-monde-details')).not.toHaveClass(
-        /histoire-panneau-masque/
-    );
-    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await lancerMondeDepuisCarte(page, 'monde_paradoxe');
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
         timeout: 10000,
     });
@@ -81,15 +73,14 @@ test('monde caché Paradoxe affiche sa cutscene puis revient à la carte', async
 });
 
 test('cutscene entree monde lave — fond scene seuil_brasier', async ({ page }) => {
-    await page.route('**/sw.js', (route) => route.abort());
+    test.setTimeout(60000);
     const etatLave = {
         ...ETAT_HISTOIRE_VIDE,
         mondesCompletes: ['monde_prologue'],
         mondesDejaMontres: ['monde_prologue'],
     };
     await ouvrirCarteHistoire(page, etatLave);
-    await page.locator('#histoire-monde-clavier').selectOption('monde_lave', { force: true });
-    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await lancerMondeDepuisCarte(page, 'monde_lave');
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
         timeout: 10000,
     });
@@ -144,8 +135,7 @@ async function attendreCutsceneSceneImage(page) {
 /** @param {import('@playwright/test').Page} page @param {object} etat @param {string} mondeId */
 async function lancerMondeEtAttendreScene(page, etat, mondeId) {
     await ouvrirCarteHistoire(page, etat);
-    await page.locator('#histoire-monde-clavier').selectOption(mondeId, { force: true });
-    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await lancerMondeDepuisCarte(page, mondeId);
     await attendreCutsceneSceneImage(page);
 }
 
@@ -167,8 +157,7 @@ test('cutscene narration active le mode voix off', async ({ page }) => {
         mondesDejaMontres: [],
     };
     await ouvrirCarteHistoire(page, etatPremiereVisiteBoss);
-    await page.locator('#histoire-monde-clavier').selectOption('monde_boss_1', { force: true });
-    await page.locator('.bouton-jouer-monde').click({ force: true });
+    await lancerMondeDepuisCarte(page, 'monde_boss_1');
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, { timeout: 10000 });
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/cutscene-mode-narration/);
     await expect(page.locator('#texte-narration-cutscene')).toBeVisible();

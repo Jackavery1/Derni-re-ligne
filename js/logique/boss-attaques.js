@@ -193,11 +193,11 @@ export function executerAttaqueBoss(boss, phaseIndex, ctx) {
     }
 
     if (typeAttaque === 'combinaison' || typeAttaque === 'combinaison_glace_glitch') {
-        const disponibles = boss.attaquesDisponibles ?? [
-            'rangee_braise',
-            'colonne_gelee',
-            'inverser_controles',
-        ];
+        const disponibles =
+            boss.attaquesDisponibles ??
+            (typeAttaque === 'combinaison_glace_glitch'
+                ? ['colonne_gelee', 'inverser_controles', 'permutation_colonnes']
+                : ['rangee_braise', 'colonne_gelee', 'inverser_controles']);
         const type = choisirAttaqueCombinaison(
             disponibles,
             ctx.bossEtat?.derniereAttaqueType ?? null

@@ -12,7 +12,7 @@ const MOTS_CLEFS_BRIEFING = {
     sentinelle: /gel|colonn/i,
     archiviste: /fant[oô]me|invers/i,
     avantgarde: /permut|gel/i,
-    distorsion: /fant[oô]me|gel|invers/i,
+    distorsion: /braise|glace|glitch|distorsion/i,
 };
 
 describe('histoire-map-briefings-boss', () => {
@@ -37,18 +37,25 @@ describe('histoire-map-briefings-boss', () => {
 
     it('expose une infobulle pour le faux fantôme', () => {
         const info = obtenirInfobulleAttaqueBoss('faux_fantome');
-        expect(info?.titre).toMatch(/FANTOME/i);
+        expect(info?.titre).toMatch(/FANT[OÔ]ME/i);
         expect(info?.texte).toMatch(/rose/i);
         expect(obtenirInfobulleAttaqueBoss('inconnu')).toBeNull();
     });
 
     it('couvre les attaques boss à infobulle', () => {
         expect(Object.keys(INFOBULLES_ATTAQUES_BOSS).sort()).toEqual([
+            'colonne_gelee',
             'distorsion_plateau',
             'faux_fantome',
             'inverser_controles',
             'permutation_colonnes',
+            'rangee_braise',
         ]);
+    });
+
+    it('expose une infobulle pour la braise et le gel', () => {
+        expect(obtenirInfobulleAttaqueBoss('rangee_braise')?.titre).toMatch(/BRAISE/i);
+        expect(obtenirInfobulleAttaqueBoss('colonne_gelee')?.titre).toMatch(/GEL/i);
     });
 
     for (const bossId of Object.keys(BRIEFINGS_MECANIQUES_BOSS)) {

@@ -65,6 +65,9 @@ export {
     ouvrirCarteHistoire,
     lancerMondeBossBrasier,
     lancerMondeBossSentinelle,
+    lancerMondeBossArchiviste,
+    lancerMondeBossAvantGarde,
+    lancerMondeBossDistorsion,
     passerCutsceneHistoire,
 } from './helpers-histoire.mjs';
 

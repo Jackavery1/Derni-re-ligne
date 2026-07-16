@@ -82,7 +82,7 @@
 
 /* Titre GAME OVER avec glitch */
 .go-titre {
-    font-size: clamp(1.1rem, 4.5vw, 1.8rem);
+    font-size: var(--typo-titre-ecran);
     color: var(--rose);
     text-align: center;
     line-height: 1.5;
@@ -149,9 +149,6 @@
     letter-spacing: 0.04em;
 }
 
-.go-titre {
-    font-size: var(--typo-titre-ecran);
-}
 .go-stat-valeur.jaune {
     color: var(--jaune);
     text-shadow: 0 0 8px var(--jaune);
@@ -186,7 +183,7 @@
 }
 
 .melodie-titre-oeuvre {
-    font-size: clamp(0.35rem, 1.4vw, 0.5rem);
+    font-size: var(--typo-ui-mini);
     color: var(--jaune);
     text-shadow: 0 0 8px var(--jaune);
     letter-spacing: 2px;
@@ -209,7 +206,7 @@
     background: var(--rgba-255-230-0-0-1);
     border: 1px solid var(--jaune);
     color: var(--jaune);
-    font-size: clamp(0.38rem, 1.5vw, 0.5rem);
+    font-size: var(--typo-ui-caption);
     padding: 10px 20px;
     letter-spacing: 3px;
     text-shadow: 0 0 10px var(--jaune);

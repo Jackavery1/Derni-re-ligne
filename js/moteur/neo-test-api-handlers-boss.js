@@ -1,5 +1,9 @@
 import { store } from '../etat/store-jeu.js';
-import { endommagerBossCombat, verifierPhaseBoss } from '../logique/boss-combat.js';
+import {
+    endommagerBossCombat,
+    verifierPhaseBoss,
+    executerAttaqueBossCombat,
+} from '../logique/boss-combat.js';
 import { obtenirExpressionBossCombat } from '../histoire/reactions-boss-portrait.js';
 import { choisirAttaqueCombinaison } from '../logique/boss-attaques.js';
 
@@ -20,16 +24,24 @@ export function creerHandlersBoss() {
             verifierPhaseBoss();
             return obtenirExpressionBossCombat();
         },
-        simulerTiragesAttaqueCombinaison: (tirages = 50) => {
-            const disponibles = ['rangee_braise', 'colonne_gelee', 'inverser_controles'];
+        forcerAttaqueBossTest: () => {
+            if (!store.histoire.boss.actif || store.histoire.boss.vaincu) return false;
+            executerAttaqueBossCombat();
+            return true;
+        },
+        simulerTiragesAttaqueCombinaison: (tirages = 50, disponibles = null) => {
+            const pool = disponibles?.length
+                ? disponibles
+                : ['permutation_colonnes', 'colonne_gelee', 'inverser_controles'];
             let derniere = null;
             let repetitionsConsecutives = 0;
             for (let i = 0; i < tirages; i++) {
-                const type = choisirAttaqueCombinaison(disponibles, derniere);
+                const type = choisirAttaqueCombinaison(pool, derniere);
                 if (type === derniere) repetitionsConsecutives++;
                 derniere = type;
             }
-            return { repetitionsConsecutives, tirages };
+            return { repetitionsConsecutives, tirages, pool };
         },
+        obtenirFlashAttaqueBossTest: () => store.histoire.boss._flashAttaque === true,
     };
 }

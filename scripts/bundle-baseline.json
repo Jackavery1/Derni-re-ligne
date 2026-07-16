@@ -1,20 +1,20 @@
 {
-    "date": "2026-07-14T19:25:00.000Z",
+    "date": "2026-07-16T14:30:00.000Z",
     "version": "2.5.34",
-    "session": "optimisation-nettoyage-precache-wav",
+    "session": "optimisation-nettoyage",
     "avant": {
-        "bundleJsKo": 589.6,
-        "entreePrincipaleKo": 11.7,
+        "bundleJsKo": 587,
+        "entreePrincipaleKo": 12,
         "chunksJs": 185,
-        "precacheProdKo": 1352.1,
-        "precacheDevKo": 2406
+        "precacheProdKo": 1166.4,
+        "distAssetsNote": "incluait WAV boss + TTF legacy"
     },
     "apres": {
-        "bundleJsKo": 589.6,
-        "entreePrincipaleKo": 11.7,
-        "chunksJs": 183,
-        "precacheProdKo": 1150.1,
-        "precacheDevKo": 2204.2
+        "bundleJsKo": 587,
+        "entreePrincipaleKo": 12,
+        "chunksJs": 185,
+        "precacheProdKo": 1166.8,
+        "distAssetsNote": "WAV/TTF exclus du dist (filter build.mjs)"
     },
-    "notes": "WAV boss hors precache shell (-202 Ko prod). dev-init hors precache dev. Helper E2E lireCheminsScenesArrierePlanSw() dedup sw.js."
+    "notes": "Nettoyage: archive scripts, CHANGELOG allégé, barrel paradoxe déjà parti, interpolerCouleurPortrait mort, docs pattern. Opti: dist sans .wav/.ttf (~317 Ko deploy)."
 }

@@ -54,7 +54,7 @@
     text-align: left;
 }
 .histoire-fin-para {
-    font-size: clamp(0.33rem, 1.3vw, 0.46rem);
+    font-size: var(--typo-narratif);
     color: var(--texte);
     line-height: 2.2;
     letter-spacing: 1px;
@@ -145,7 +145,7 @@
     transform: translate(-50%, -50%) scale(0);
     z-index: 400;
     font-family: var(--police);
-    font-size: clamp(0.4rem, 1.5vw, 0.55rem);
+    font-size: var(--typo-ui-compact);
     letter-spacing: 3px;
     color: var(--jaune);
     background: var(--rgba-8-8-26-0-96);
