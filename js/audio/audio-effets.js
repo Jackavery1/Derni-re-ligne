@@ -175,6 +175,29 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif, obtenirMu
                         o.stop(ti + 0.2);
                     });
                     break;
+                case 'accalmie':
+                    [
+                        noteVersFreq(12, 0, biomeId),
+                        noteVersFreq(5, 0, biomeId),
+                        noteVersFreq(0, 0, biomeId),
+                    ].forEach((freq, i) => {
+                        const o = ctx.createOscillator();
+                        const g = ctx.createGain();
+                        o.type = 'triangle';
+                        o.frequency.value = freq;
+                        const ti = t + i * 0.12;
+                        g.gain.setValueAtTime(0, ti);
+                        g.gain.linearRampToValueAtTime(
+                            0.16 * this.volumeEffets * multEffets(),
+                            ti + 0.03
+                        );
+                        g.gain.linearRampToValueAtTime(0, ti + 0.22);
+                        o.connect(g);
+                        g.connect(this.gainEffets);
+                        o.start(ti);
+                        o.stop(ti + 0.24);
+                    });
+                    break;
                 case 'game_over':
                     [
                         noteVersFreq(7, 0, biomeId),

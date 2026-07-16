@@ -71,6 +71,16 @@ describe('css viewport mobile', () => {
         expect(violations).toEqual([]);
     });
 
+    it('HUD pause/mute compensent --iface-scale pour cibles >= 48px ecran', () => {
+        const hud = readFileSync(join(STYLES_DIR, 'interface-jeu-hud.css'), 'utf8');
+        expect(hud).toMatch(/#btn-pause[\s\S]*?min-height:\s*var\(--hud-touch-min/);
+        const layout = readFileSync(
+            join(import.meta.dirname, '..', 'js', 'rendu', 'layout-jeu.js'),
+            'utf8'
+        );
+        expect(layout).toMatch(/--hud-touch-min/);
+    });
+
     it('journal et fin histoire utilisent dvh avec safe-area en max-height de base', () => {
         const css = ['mode-histoire-journal.css', 'mode-histoire-fin.css']
             .map((f) => readFileSync(join(STYLES_DIR, f), 'utf8'))

@@ -5,11 +5,11 @@ import { annulerTimersVivant } from './vivant.js';
 import { arreterBoss } from './boss-jeu.js';
 import { arreterMecaniquesHistoire } from '../histoire/mecaniques-histoire.js';
 import { reinitialiserMascottePartie, retournerAuMenuTitre } from '../ui/ecrans-ui.js';
-import { arreterFondBiome } from '../rendu/rendu-fond-biome.js';
+import { emettre } from '../etat/bus-jeu.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 
 export function arreterPartieEnCours() {
-    arreterFondBiome();
+    emettre('fond-biome:arreter');
     void import('../audio/melodie.js').then(({ arreterLectureMelodie }) => arreterLectureMelodie());
     annulerTimersVivant();
     etat.estEnCours = false;

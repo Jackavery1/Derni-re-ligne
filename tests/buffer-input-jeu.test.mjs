@@ -11,17 +11,19 @@ import {
 } from '../js/logique/buffer-input-jeu.js';
 
 describe('buffer-input-jeu', () => {
-    it('conserve trois actions en marathon avant decrasement du plus ancien', () => {
+    it('conserve quatre actions en marathon avant decrasement du plus ancien', () => {
         etat.modeJeu = 'marathon';
         let file = creerBufferInputVide();
         file = ajouterBufferInput(file, 'gauche');
         file = ajouterBufferInput(file, 'tourner_cw');
         file = ajouterBufferInput(file, 'droite');
-        expect(file).toEqual(['gauche', 'tourner_cw', 'droite']);
-
         file = ajouterBufferInput(file, 'bas');
-        expect(file).toEqual(['tourner_cw', 'droite', 'bas']);
-        expect(file.length).toBe(CONFIG.inputBufferMax);
+        expect(file).toEqual(['gauche', 'tourner_cw', 'droite', 'bas']);
+        expect(obtenirInputBufferMax()).toBe(CONFIG.marathonInputBufferMax);
+
+        file = ajouterBufferInput(file, 'hold');
+        expect(file).toEqual(['tourner_cw', 'droite', 'bas', 'hold']);
+        expect(file.length).toBe(CONFIG.marathonInputBufferMax);
         etat.modeJeu = 'sansFin';
     });
 

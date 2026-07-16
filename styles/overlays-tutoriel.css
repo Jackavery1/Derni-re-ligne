@@ -24,7 +24,7 @@
 
 .tutoriel-titre {
     margin: 0 0 var(--space-4);
-    font-family: 'Press Start 2P', monospace;
+    font-family: var(--font-titre);
     font-size: var(--typo-ui-compact);
     line-height: 1.6;
     color: var(--cyan-mascotte);

@@ -1,6 +1,7 @@
 import { dessinerMotifBiome } from './rendu-motifs-biome.js';
 import { obtenirEffetsAccessibiliteReduits } from '../ui/accessibilite.js';
 import { store } from '../etat/store-jeu.js';
+import { ecouter } from '../etat/bus-jeu.js';
 import { resoudreConfigFondBiome, obtenirConfigFondBiome } from './rendu-fond-biome-donnees.js';
 import {
     creerParticulesFondBiome,
@@ -14,6 +15,7 @@ let _biomeCourant = null;
 let _particules = [];
 let _rafId = null;
 let _actif = false;
+let _busInitialise = false;
 
 export function demarrerFondBiome(biomeId) {
     const cle = resoudreConfigFondBiome(biomeId);
@@ -50,6 +52,21 @@ export function arreterFondBiome() {
         _rafId = null;
     }
     if (_ctx && _canvas) _ctx.clearRect(0, 0, _canvas.width, _canvas.height);
+}
+
+/** Branche démarrage / arrêt fond biome sur le bus (évite imports rendu depuis la logique). */
+export function initialiserFondBiomeBus() {
+    if (_busInitialise || typeof window === 'undefined') return;
+    _busInitialise = true;
+    ecouter('fond-biome:demarrer', (payload) => {
+        demarrerFondBiome(payload?.biomeId);
+    });
+    ecouter('fond-biome:arreter', () => arreterFondBiome());
+}
+
+/** @internal tests */
+export function _reinitialiserFondBiomeBusPourTests() {
+    _busInitialise = false;
 }
 
 export function invaliderCacheFond() {

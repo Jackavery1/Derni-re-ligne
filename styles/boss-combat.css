@@ -128,7 +128,7 @@
 }
 
 .infobulle-contexte-titre {
-    font-size: 0.75rem;
+    font-size: var(--typo-ui-caption);
     color: var(--cyan);
     margin-bottom: 0.75rem;
 }

@@ -47,7 +47,7 @@
     color: var(--ui-texte-discret-bouton) !important;
     box-shadow: none !important;
     text-shadow: none !important;
-    font-size: clamp(0.5rem, 2vw, 0.65rem) !important;
+    font-size: var(--typo-ui-mini) !important;
 }
 .bouton-pause-quitter:hover {
     background: var(--ui-fond-discret-bouton-hover) !important;

@@ -12,9 +12,11 @@ import {
     obtenirTransitionAlpha,
     obtenirTransitionDebut,
     definirTransitionAlpha,
-    definirTransitionDebut,
+    demarrerTransition,
     obtenirEffetsAccessibiliteReduits,
 } from '../etat/store-jeu.js';
+
+export { demarrerTransition };
 
 export function declencherSecousse(intensite) {
     if (obtenirEffetsAccessibiliteReduits()) return;
@@ -81,11 +83,6 @@ export function dessinerFlashTopout() {
     obtenirCtx().fillStyle = '#ff2244';
     obtenirCtx().fillRect(0, 0, canvasPlateau.width, canvasPlateau.height);
     obtenirCtx().restore();
-}
-
-export function demarrerTransition() {
-    definirTransitionAlpha(0);
-    definirTransitionDebut(performance.now());
 }
 
 export function mettreAJourTransition() {

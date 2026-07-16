@@ -157,9 +157,10 @@ Résolution interne plateau : **320×640** px (`LAYOUT.plateauLargeur` / `platea
 ## Intentions UX
 
 - **Contraste** : texte principal et boutons `.bouton` visent WCAG AA (4.5:1) ; tests Axe dans `e2e/a11y.spec.mjs` et `e2e/audit-e-ui-ux.spec.mjs`.
-- **Cibles tactiles** : `.bouton` et `.btn-menu` min 48×48px (`styles/ecrans-base.css`, `styles/menu-narratif-base.css`).
+- **Cibles tactiles** : `.bouton` et `.btn-menu` min 48×48px (`styles/ecrans-base.css`, `styles/menu-narratif-base.css`). HUD pause/mute : `layout-jeu.js` pose `--hud-touch-min` (= ceil(48 / scale)) et force hauteur écran ≥48 px malgré `--iface-scale`. En modes architecte et coop, `#controles-mobile` / `#controles-paysage` sont masqués volontairement (`styles/responsive.css`) — contrôles dédiés ≥48 (checklist M7/M8).
 - **Motion** : `prefers-reduced-motion` réduit les animations longues (test E3a).
 - **Letterbox** : `--iface-scale` applique un scale uniforme sans déformation du canvas (`js/rendu/layout-jeu.js`).
+- **Hitbox carte** : plancher 24 px sur les nœuds histoire (`js/histoire/histoire-map-pick.js`, TU `histoire-map-pick`).
 
 ## Zoom et gestures tactiles
 

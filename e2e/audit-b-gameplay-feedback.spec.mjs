@@ -39,6 +39,50 @@ test('audit B — flash topout declenche a la mort (G5)', async ({ page }) => {
     expect(timer).toBeGreaterThan(0);
 });
 
+test('audit B — toast ACCALMIE sur descente de palier (G4/G5)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+    await page.evaluate(() => {
+        window.__NEO_TEST__?.emettreEvenementBusJeu?.('difficulte:vague', {
+            montee: false,
+            palierApres: 6,
+        });
+    });
+    await expect(page.locator('#notif-niveau')).toContainText(/ACCALMIE\s*[−-]\s*P6/i);
+});
+
+test('audit B — toast VITESSE + et sfx niveau sur montee (G4/G5)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+    await page.evaluate(() => window.__NEO_TEST__?.viderJournalSfxTest?.());
+    await page.evaluate(() => {
+        window.__NEO_TEST__?.emettreEvenementBusJeu?.('difficulte:vague', {
+            montee: true,
+            palierApres: 4,
+        });
+    });
+    await expect(page.locator('#notif-niveau')).toContainText(/VITESSE\s*\+\s*P4/i);
+    const sfx = await page.evaluate(() => window.__NEO_TEST__?.obtenirJournalSfxTest?.() ?? []);
+    expect(sfx).toContain('niveau');
+});
+
+test('audit B — sfx accalmie sur descente de palier (G5)', async ({ page }) => {
+    await preparerPageSansSw(page);
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+    await page.evaluate(() => window.__NEO_TEST__?.viderJournalSfxTest?.());
+    await page.evaluate(() => {
+        window.__NEO_TEST__?.emettreEvenementBusJeu?.('difficulte:vague', {
+            montee: false,
+            palierApres: 6,
+        });
+    });
+    const sfx = await page.evaluate(() => window.__NEO_TEST__?.obtenirJournalSfxTest?.() ?? []);
+    expect(sfx).toContain('accalmie');
+});
+
 test('audit B — haptique attaque boss distincte (G5)', async ({ page }) => {
     test.setTimeout(60000);
     await installerJournalVibrations(page);
@@ -75,7 +119,16 @@ test('audit B — sfx game over apres defaite', async ({ page }) => {
     await demarrerPartie(page);
     await page.evaluate(() => window.__NEO_TEST__?.viderJournalSfxTest?.());
     await terminerPartieCourante(page);
-    await page.waitForTimeout(280);
+    const sfx = await page.evaluate(() => window.__NEO_TEST__?.obtenirJournalSfxTest?.() ?? []);
+    expect(sfx).toContain('game_over');
+});
+
+test('audit B — sfx mort au topout (G5)', async ({ page }) => {
+    await demarrerPartie(page);
+    await page.evaluate(() => window.__NEO_TEST__?.viderJournalSfxTest?.());
+    await page.evaluate(() => {
+        window.__NEO_TEST__?.emettreEvenementBusJeu?.('partie:topout');
+    });
     const sfx = await page.evaluate(() => window.__NEO_TEST__?.obtenirJournalSfxTest?.() ?? []);
     expect(sfx).toContain('game_over');
 });

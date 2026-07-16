@@ -59,6 +59,7 @@ export {
     definirEcranActuel,
     definirTransitionAlpha,
     definirTransitionDebut,
+    demarrerTransition,
     definirCouleurAmbRgb,
     definirDerniereSecondeTemps,
     definirLockDelayRestant,

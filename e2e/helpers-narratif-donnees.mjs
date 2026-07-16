@@ -118,3 +118,41 @@ export const HUMEURS_POST_MONDE_PIVOT = Object.fromEntries(
         })
         .filter((entree) => entree !== null)
 );
+
+/** @param {unknown} cutscene */
+function extraireLignesCutsceneDonnees(cutscene) {
+    if (!cutscene) return [];
+    if (Array.isArray(cutscene)) return cutscene;
+    return (
+        /** @type {{ lignes?: { personnage?: string, texte?: string, humeur?: string }[] }} */ (
+            cutscene
+        ).lignes ?? []
+    );
+}
+
+/** Pivot humeur entrée — première réplique portraitée avec humeur (audit D1/D4). */
+export const HUMEURS_ENTREE_PIVOT = Object.fromEntries(
+    Object.entries(CUTSCENES_ENTREE)
+        .map(([mondeId, entree]) => {
+            const ligne = extraireLignesCutsceneDonnees(entree).find(
+                (l) =>
+                    l.humeur &&
+                    (l.personnage === 'robo' ||
+                        l.personnage === 'vera' ||
+                        l.personnage === 'distorsion')
+            );
+            if (!ligne?.texte) return null;
+            const extrait = ligne.texte
+                .slice(0, Math.min(28, ligne.texte.length))
+                .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            return [
+                mondeId,
+                {
+                    personnage: ligne.personnage,
+                    humeur: ligne.humeur,
+                    pivot: new RegExp(extrait, 'i'),
+                },
+            ];
+        })
+        .filter((entree) => entree !== null)
+);

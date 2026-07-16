@@ -10,8 +10,8 @@
     border: 2px solid transparent;
     color: var(--vert);
     font-family: var(--police);
-    font-size: clamp(0.45rem, 2vw, 0.65rem);
-    padding: 10px 22px;
+    font-size: var(--typo-ui-mini);
+    padding: calc(var(--space-2) + 2px) calc(var(--space-4) + 6px);
     text-align: center;
     z-index: 200;
     pointer-events: none;
@@ -48,10 +48,10 @@
     right: 20px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--space-3);
     background: var(--rgba-8-8-26-0-95);
     border: 2px solid var(--jaune);
-    padding: 12px 18px;
+    padding: var(--space-3) calc(var(--space-4) + 2px);
     z-index: 300;
     box-shadow: 0 0 25px var(--rgba-255-230-0-0-4);
     max-width: 300px;
@@ -94,12 +94,12 @@
 
 .bouton-achievements {
     font-size: var(--typo-ui-caption);
-    padding: 10px 20px;
+    padding: calc(var(--space-2) + 2px) calc(var(--space-4) + 4px);
 }
 
 .bouton-profil {
     font-size: var(--typo-ui-compact);
-    padding: 8px 16px;
+    padding: var(--space-2) var(--space-4);
 }
 
 .profil-contenu {
@@ -146,20 +146,20 @@
 }
 .profil-rapport-meta {
     font-family: 'Rajdhani', var(--font-ui);
-    font-size: clamp(0.75rem, 1.4vw, 0.95rem);
+    font-size: clamp(11px, 1.4vw, 0.95rem);
     font-variant: small-caps;
     letter-spacing: 2px;
     color: var(--rgba-0-221-200-0-62);
 }
 .profil-rapport-ref {
     font-family: 'Orbitron', var(--font-stats);
-    font-size: clamp(0.55rem, 1vw, 0.7rem);
+    font-size: clamp(11px, 1vw, 0.7rem);
     letter-spacing: 3px;
     color: var(--rgba-0-221-200-0-45);
 }
 .profil-titre {
     font-family: var(--font-titre);
-    font-size: clamp(0.5rem, 1.2vw, 0.7rem);
+    font-size: clamp(11px, 1.2vw, 0.7rem);
     color: var(--cyan);
     letter-spacing: 5px;
     text-shadow: 0 0 10px var(--cyan);
@@ -228,15 +228,15 @@
 .profil-stats-chiffrees {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: var(--space-3);
     width: 100%;
 }
 .profil-stat-item {
-    padding: 16px 12px;
+    padding: var(--space-4) var(--space-3);
     text-align: center;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: calc(var(--space-1) + 2px);
     min-width: 0;
 }
 .psi-label {
@@ -253,7 +253,7 @@
 }
 .profil-boutons {
     display: flex;
-    gap: 12px;
+    gap: var(--space-3);
     flex-wrap: wrap;
     justify-content: center;
 }

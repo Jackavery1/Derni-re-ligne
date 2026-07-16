@@ -34,7 +34,7 @@
 
     .sel-biome-nom,
     .histoire-detail-nom {
-        font-size: clamp(11px, 3vw, 0.65rem);
+        font-size: var(--typo-ui-mini);
     }
 }
 
@@ -154,7 +154,7 @@
 }
 
 .boss-presentation-nom {
-    font-family: 'Press Start 2P', monospace;
+    font-family: var(--font-titre);
     font-size: var(--typo-ui-note);
     letter-spacing: 2px;
     line-height: 1.6;
@@ -191,7 +191,7 @@
     }
 
     .boss-presentation-nom {
-        font-size: clamp(11px, 3.2vw, 0.55rem);
+        font-size: var(--typo-hud-micro);
         line-height: 1.5;
         max-width: 100%;
         word-break: break-word;
@@ -225,11 +225,11 @@
 .go-boss-replique {
     font-family: 'Crimson Pro', Georgia, serif;
     font-style: italic;
-    font-size: 0.75rem;
+    font-size: var(--typo-ui-caption);
     color: var(--texte-dim);
     text-align: center;
     max-width: 28em;
-    margin: 8px auto 0;
+    margin: var(--space-2) auto 0;
     line-height: 1.5;
     letter-spacing: 0.5px;
 }

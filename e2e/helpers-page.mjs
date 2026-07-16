@@ -1,6 +1,7 @@
 /** Helpers E2E — préparation page et attente du bootstrap applicatif. */
 import { expect } from '@playwright/test';
 import { ETAT_DEBLOCAGE_MONDE_LIBRE } from './etats-histoire.mjs';
+import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 
 /** @param {import('@playwright/test').Page} page @param {string} selector */
 export async function boutonEstVisible(page, selector) {
@@ -69,6 +70,30 @@ export async function preparerPageModeLibreTutorielActif(
         localStorage.setItem('derniereLigne_tutorielVu', '1');
         localStorage.setItem('derniereLigne_tutorielHistoireVu', '1');
         localStorage.removeItem('derniereLigne_tutorielLibreVu');
+        localStorage.setItem('derniereLigne_tutorielCoopVu', '1');
+        localStorage.setItem('derniereLigne_tutorielArchitecteVu', '1');
+        localStorage.setItem('derniereLigne_tutorielOracleVu', '1');
+        localStorage.setItem('derniereLigne_tutorielDistorsionVu', '1');
+        localStorage.setItem('derniereLigne_introHistoireVue', '1');
+        localStorage.setItem('derniereLigne_infobulleOracleCoop', '1');
+        localStorage.setItem('derniereLigne_histoire', JSON.stringify(etat));
+        if ('serviceWorker' in navigator) {
+            void navigator.serviceWorker.getRegistrations().then((regs) => {
+                for (const reg of regs) void reg.unregister();
+            });
+        }
+    }, etatHistoire);
+}
+
+/** Histoire ouverte, tutoriel prologue non vu (après cutscene d’entrée). */
+export async function preparerPageTutorielHistoireActif(page, etatHistoire = ETAT_HISTOIRE_VIDE) {
+    await page.route('**/sw.js', (route) => route.abort());
+    await page.addInitScript((etat) => {
+        window.__NEO_SILENT_NOTIFS__ = true;
+        localStorage.setItem('dl_migration_v1', '1');
+        localStorage.setItem('derniereLigne_tutorielVu', '1');
+        localStorage.removeItem('derniereLigne_tutorielHistoireVu');
+        localStorage.setItem('derniereLigne_tutorielLibreVu', '1');
         localStorage.setItem('derniereLigne_tutorielCoopVu', '1');
         localStorage.setItem('derniereLigne_tutorielArchitecteVu', '1');
         localStorage.setItem('derniereLigne_tutorielOracleVu', '1');

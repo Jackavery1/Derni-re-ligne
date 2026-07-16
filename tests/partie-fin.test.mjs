@@ -19,6 +19,7 @@ vi.mock('../js/io/progression.js', () => ({
     obtenirRecordBiome: vi.fn(() => 1000),
     sauvegarderNiveauGlobal: vi.fn(),
     sauvegarderRecordSprintBiome: vi.fn(() => false),
+    sauvegarderRecordBiome: vi.fn(() => false),
 }));
 
 vi.mock('../js/etat/store-jeu.js', () => ({
@@ -36,9 +37,11 @@ vi.mock('../js/ui/ecrans-ui.js', () => ({
     reagirRoboNouveauRecord: vi.fn(),
     annoncer: vi.fn(),
     afficherEcran,
-    sauvegarderRecord: vi.fn(() => false),
     mettreAJourAffichageRecord: vi.fn(),
     formaterTemps: vi.fn(() => '01:23'),
+}));
+
+vi.mock('../js/logique/temps-partie.js', () => ({
     obtenirTempsEcoule: vi.fn(() => 83000),
 }));
 
@@ -120,23 +123,25 @@ vi.mock('../js/logique/oracle-jeu.js', () => ({
     obtenirScoreFinalOracle: vi.fn(() => 4500),
 }));
 
-vi.mock('../js/rendu/rendu-fond-biome.js', () => ({
-    arreterFondBiome: vi.fn(),
-}));
-
 vi.mock('../js/logique/coop-logique.js', () => ({
     coop: { actif: false },
 }));
 
 import { terminerPartie } from '../js/logique/partie-fin.js';
+import {
+    initialiserPartieFinEffets,
+    _reinitialiserPartieFinEffetsPourTests,
+} from '../js/ui/partie-fin-effets.js';
 import { surFinDeMondeHistoire } from '../js/histoire/histoire-manager-completion.js';
 import { etat } from '../js/etat/store-jeu.js';
-import { sauvegarderRecord } from '../js/ui/ecrans-ui.js';
+import { sauvegarderRecordBiome } from '../js/io/progression.js';
 
 describe('partie-fin', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         vi.useFakeTimers();
+        _reinitialiserPartieFinEffetsPourTests();
+        initialiserPartieFinEffets();
         const elements = {
             'go-titre': { textContent: '' },
             'score-final': { textContent: '' },
@@ -163,6 +168,10 @@ describe('partie-fin', () => {
         etat.estEnCours = true;
         etat.lignes = 12;
         etat.niveau = 3;
+        etat.tempsDebut = Date.now() - 83000;
+        etat.tempsPauseAccumule = 0;
+        etat.estEnPause = false;
+        etat.tempsPauseDebut = null;
         modeHistoireEnCours.mockReturnValue(false);
     });
 
@@ -196,7 +205,7 @@ describe('partie-fin', () => {
     it('ne persiste pas le record biome en mode histoire', () => {
         modeHistoireEnCours.mockReturnValue(true);
         terminerPartie(false);
-        expect(sauvegarderRecord).not.toHaveBeenCalled();
+        expect(sauvegarderRecordBiome).not.toHaveBeenCalled();
     });
 
     it('victoire histoire affiche le game over puis retarde le narratif', async () => {

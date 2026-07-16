@@ -6,6 +6,7 @@ export {
     MARQUEURS_NARRATIFS_CAMPAGNE,
     SCENES_VICTOIRE_BOSS,
     HUMEURS_POST_MONDE_PIVOT,
+    HUMEURS_ENTREE_PIVOT,
 } from './helpers-narratif-donnees.mjs';
 export {
     attendreTypewriterInactif,

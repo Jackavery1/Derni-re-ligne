@@ -1,4 +1,5 @@
 import { AudioMoteur } from '../audio/audio.js';
+import { jouerSfxMortPartie, reinitialiserSfxMortPartie } from '../audio/sfx-mort-partie.js';
 import { CONFIG } from '../config/config-jeu.js';
 import { obtenirActions } from './actions-jeu.js';
 import { ecouter } from '../etat/bus-jeu.js';
@@ -71,7 +72,17 @@ export function initialiserEffetsPartie() {
     brancherBusReactionsMascotte(ecouter);
     ecouter('piece:son', ({ type }) => AudioMoteur.son(type));
 
-    ecouter('partie:topout', () => declencherFlashTopout());
+    ecouter('fond-biome:demarrer', () => reinitialiserSfxMortPartie());
+
+    ecouter('partie:topout', () => {
+        declencherFlashTopout();
+        jouerSfxMortPartie();
+    });
+
+    ecouter('difficulte:vague', ({ montee }) => {
+        AudioMoteur.son(montee === false ? 'accalmie' : 'niveau');
+        AudioMoteur.relancerIntervalleMusique();
+    });
 
     ecouter('partie:stats', () => rafraichirStats());
 

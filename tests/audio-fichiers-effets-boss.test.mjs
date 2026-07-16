@@ -13,11 +13,8 @@ describe('audio fichiers effets boss', () => {
         viderCacheBuffersEffetsBoss();
     });
 
-    it('expose les URLs ogg et wav par type', () => {
-        expect(urlsEffetBoss('boss_braise')).toEqual([
-            'assets/sfx/boss/boss_braise.ogg',
-            'assets/sfx/boss/boss_braise.wav',
-        ]);
+    it('expose les URLs ogg par type', () => {
+        expect(urlsEffetBoss('boss_braise')).toEqual(['assets/sfx/boss/boss_braise.ogg']);
     });
 
     it('reconnait les six types boss', () => {
@@ -39,18 +36,17 @@ describe('audio fichiers effets boss', () => {
         expect(buffer).toBeNull();
     });
 
-    it('decode le premier format disponible', async () => {
+    it('decode le format ogg disponible', async () => {
         const fakeBuffer = { duration: 0.2 };
         const decodeAudioData = vi.fn(async () => fakeBuffer);
         globalThis.fetch = vi
             .fn()
-            .mockResolvedValueOnce({ ok: false })
             .mockResolvedValueOnce({ ok: true, arrayBuffer: async () => new ArrayBuffer(8) });
 
         const buffer = await chargerBufferEffetBoss('boss_braise', { decodeAudioData });
         expect(buffer).toBe(fakeBuffer);
         expect(decodeAudioData).toHaveBeenCalledTimes(1);
-        expect(fetch).toHaveBeenCalledTimes(2);
+        expect(fetch).toHaveBeenCalledTimes(1);
     });
 
     it('jouerEffetBossSample retourne true avec buffer charge', async () => {

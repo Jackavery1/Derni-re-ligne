@@ -1,4 +1,4 @@
-/** Lecture assets/sfx/boss/{type}.{ogg,wav} avec fallback procédural dans audio-effets.js */
+/** Lecture assets/sfx/boss/{type}.ogg avec fallback procédural dans audio-effets.js */
 
 /** @type {readonly string[]} */
 export const EFFETS_BOSS_SAMPLES = [
@@ -29,8 +29,7 @@ export function estEffetBossSample(type) {
  * @returns {string[]}
  */
 export function urlsEffetBoss(type) {
-    const base = `assets/sfx/boss/${type}`;
-    return [`${base}.ogg`, `${base}.wav`];
+    return [`assets/sfx/boss/${type}.ogg`];
 }
 
 /**

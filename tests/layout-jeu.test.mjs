@@ -26,7 +26,7 @@ vi.mock('../js/etat/registre-modes.js', () => ({
     modeArchiEnCours: vi.fn(() => false),
 }));
 
-vi.mock('../js/rendu/biome-fond.js', () => ({
+vi.mock('../js/etat/biome-fond.js', () => ({
     obtenirIdBiomeFond: vi.fn(() => 'classique'),
 }));
 

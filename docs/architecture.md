@@ -55,11 +55,14 @@ Exclusions d’audit volontaires : [`AUDIT-EXCLUSIONS.md`](../AUDIT-EXCLUSIONS.m
 
 ## Découpage partie-fin
 
-| Module                      | Rôle                                                    |
-| --------------------------- | ------------------------------------------------------- |
-| `partie-fin.js`             | Orchestration fin solo (records, leaderboard, délai GO) |
-| `partie-fin-commun.js`      | Stats / profil / annonce partagés solo+coop             |
-| `ui/partie-fin-ecran-go.js` | Remplissage DOM game-over + actions histoire / Trame    |
+| Module                      | Rôle                                                               |
+| --------------------------- | ------------------------------------------------------------------ |
+| `partie-fin-constantes.js`  | `DELAI_GAME_OVER_MS` (partagé logique/UI)                          |
+| `partie-fin.js`             | Orchestration fin solo (records, leaderboard, émet `partie:finie`) |
+| `partie-fin-commun.js`      | Stats / codex + bus `partie:finale-commune` (solo+coop)            |
+| `ui/partie-fin-effets.js`   | Écoute bus — annonce, profil, audio, haptique, affichage GO        |
+| `ui/partie-fin-ecran-go.js` | Remplissage DOM game-over + actions histoire / Trame               |
+| `rendu-fond-biome.js`       | `initialiserFondBiomeBus` — `fond-biome:demarrer` / `arreter`      |
 
 ## Découpage logique-partie
 
@@ -146,10 +149,14 @@ flowchart TB
 ## Dépendances entre modules
 
 1. **Logique → bus** — pas d'import direct logique → UI/audio (sauf barrels testés).
-2. **Store** — lectures via `store-jeu.js` / `store-histoire.js` ; éviter `store-core` hors modules état.
-3. **Cycles** — vérifiés par `npm run check:circular` depuis `main.js`.
-4. **Barrels** — `logique-partie.js`, `rendu-jeu.js`, `progression.js` : point d'entrée stable pour les consommateurs.
-5. **Index modules** — `docs/modules-index.md` (hotspots > 450 L, régénéré par `npm run analyze` ; détail dans `dist/modules-index.json`).
+2. **Logique → rendu** — interdit hors allowlist gelée (`tests/maintainabilite.test.mjs` :
+   boucle, effets, boss, archi, coop, constellation, vivant, `partie-init`). Les démarrages
+   fond biome / transition passent par le bus ou l'état (`fond-biome:*`, `demarrerTransition` dans
+   `store-etat-partie`).
+3. **Store** — lectures via `store-jeu.js` / `store-histoire.js` ; éviter `store-core` hors modules état.
+4. **Cycles** — vérifiés par `npm run check:circular` depuis `main.js`.
+5. **Barrels** — `logique-partie.js`, `rendu-jeu.js`, `progression.js` : point d'entrée stable pour les consommateurs.
+6. **Index modules** — `docs/modules-index.md` (hotspots > 450 L, régénéré par `npm run analyze` ; détail dans `dist/modules-index.json`).
 
 ## Gestion des erreurs
 

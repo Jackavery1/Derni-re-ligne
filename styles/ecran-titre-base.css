@@ -60,7 +60,7 @@
 }
 
 .menu-etoiles {
-    font-size: clamp(0.4rem, 1.5vw, 0.55rem);
+    font-size: var(--typo-ui-mini);
     color: var(--texte-dim);
     letter-spacing: 12px;
     margin-bottom: 4px;
@@ -173,14 +173,14 @@
     letter-spacing: 3px;
 }
 .menu-record-valeur {
-    font-size: clamp(0.55rem, 2vw, 0.8rem);
+    font-size: var(--taille-titre-md);
     color: var(--jaune);
     text-shadow: 0 0 10px var(--jaune);
 }
 
 /* Bouton JOUER — plus proéminent */
 .bouton-jouer {
-    font-size: clamp(0.7rem, 2.5vw, 0.95rem) !important;
+    font-size: clamp(11px, 2.5vw, 0.95rem) !important;
     padding: 18px 48px !important;
     letter-spacing: 5px;
     animation: pulseBordureJouer 3s ease-in-out infinite;

@@ -1,5 +1,4 @@
 /** Journal narratif histoire. */
-import { definirExpressionVera } from '../rendu/portraits-vera.js';
 import { ECRANS } from '../ui/ecrans-config.js';
 import { logger } from '../io/logger.js';
 import { obtenirCanvas } from '../logique/dom-utils.js';
@@ -19,7 +18,6 @@ function _lierBoutonJournalFermer() {
 }
 
 export function afficherJournalHistoire(journal, onFermer) {
-    definirExpressionVera('journal_decouvert');
     const elTitre = document.getElementById('histoire-journal-titre');
     if (!elTitre) {
         void _afficherJournalApresChargementDom(journal, onFermer);

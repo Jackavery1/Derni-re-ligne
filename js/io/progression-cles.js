@@ -33,7 +33,6 @@ export const CLES_STOCKAGE = new Set([
     'derniereLigne_infobullesBiome',
     'derniereLigne_infobullesModesJeu',
     'derniereLigne_infobullesBoss',
-    'derniereLigne_accentsUi',
     'derniereLigne_infobulleOracleCoop',
     'derniereLigne_infobulleGraceSpawn',
     'derniereLigne_defiJour',
@@ -61,7 +60,6 @@ export const CLES_PREFERENCES = new Set([
     'derniereLigne_enchainementCampagne',
     'derniereLigne_mixBiomes',
     'derniereLigne_touches',
-    'derniereLigne_accentsUi',
     'dl_migration_v1',
 ]);
 

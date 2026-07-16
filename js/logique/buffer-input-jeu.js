@@ -7,7 +7,7 @@ export function obtenirInputBufferMax() {
     if (etat.modeJeu === 'sprint') {
         return CONFIG.sprintInputBufferMax ?? CONFIG.inputBufferMax ?? 2;
     }
-    return CONFIG.inputBufferMax ?? 2;
+    return CONFIG.marathonInputBufferMax ?? CONFIG.inputBufferMax ?? 2;
 }
 
 /** @returns {ActionBufferisee[]} */

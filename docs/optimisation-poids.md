@@ -37,4 +37,7 @@ Regenerer le precache prod apres build : `npm run build` (inclut `generer-precac
 
 ## Polices
 
-Les polices legacy `fonts/*.ttf` ne sont plus déployées : uniquement `assets/fonts-dist/*.woff2` dans le precache. Le build prod (`scripts/build.mjs`) **exclut** aussi les `.ttf` et les `.wav` boss du dossier `dist/` (OGG precaché ; sans WAV → fallback procédural sur navigateurs sans Ogg).
+Les polices legacy `fonts/*.ttf` / `assets/fonts/*.ttf` ont été retirées du dépôt :
+uniquement `assets/fonts-dist/*.woff2` (precache). Le build prod exclut toujours
+les `.ttf` et `.wav` éventuels. Les SFX boss sont en **OGG seul** dans
+`assets/sfx/boss/` ; sans décodage Ogg → fallback procédural (`audio-effets.js`).

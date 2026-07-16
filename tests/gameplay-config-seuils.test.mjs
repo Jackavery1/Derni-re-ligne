@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CONFIG } from '../js/config/config-jeu.js';
-import { DELAI_GAME_OVER_MS } from '../js/logique/partie-fin.js';
+import { DELAI_GAME_OVER_MS } from '../js/logique/partie-fin-constantes.js';
 import { COMPORTEMENTS_VIVANT } from '../js/logique/vivant-comportements.js';
 import { delaiMinimumVivantEffectif } from '../js/logique/vivant.js';
 
@@ -32,10 +32,15 @@ describe('gameplay config — seuils audit B', () => {
         expect(CONFIG.inputBufferMax).toBeLessThanOrEqual(3);
     });
 
+    it('marathonInputBufferMax offre une marge 1-4 actions (audit B G2)', () => {
+        expect(CONFIG.marathonInputBufferMax).toBeGreaterThanOrEqual(1);
+        expect(CONFIG.marathonInputBufferMax).toBeLessThanOrEqual(4);
+        expect(CONFIG.marathonInputBufferMax).toBeGreaterThanOrEqual(CONFIG.inputBufferMax);
+    });
+
     it('sprintInputBufferMax dans la plage 1-3 actions', () => {
         expect(CONFIG.sprintInputBufferMax).toBeGreaterThanOrEqual(1);
         expect(CONFIG.sprintInputBufferMax).toBeLessThanOrEqual(3);
-        expect(CONFIG.sprintInputBufferMax).toBeGreaterThanOrEqual(CONFIG.inputBufferMax);
     });
 
     it('lockDelay offre une fenetre de placement confortable', () => {

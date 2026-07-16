@@ -76,7 +76,7 @@ export function calculerPositionsNoeuds(etatCarte) {
             'monde_paradoxe',
             Math.round(0.12 * w),
             yPrologue - 55,
-            Math.round(20 * 0.45)
+            Math.round(20 * 0.7)
         );
     }
 }

@@ -70,7 +70,7 @@
     background: transparent;
     border: 2px solid var(--cyan);
     color: var(--cyan);
-    font-size: clamp(0.55rem, 2vw, 0.75rem);
+    font-size: clamp(11px, 2vw, 0.75rem);
     padding: var(--space-3) var(--space-5);
     min-height: 48px;
     min-width: 48px;
@@ -150,9 +150,16 @@
 #btn-pause:focus-visible,
 #btn-mute:focus-visible,
 .ach-filtre-btn:focus-visible,
+.ach-carte:focus-visible,
 .options-onglet:focus-visible,
+.codex-onglet:focus-visible,
+.codex-item:focus-visible,
 .toggle-oracle:focus-visible,
 .histoire-prog-trame-btn:focus-visible,
+button.options-hint-controles:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
 a:focus-visible {
     outline: var(--focus-ring-width) solid var(--focus-ring);
     outline-offset: var(--focus-ring-offset);
@@ -185,6 +192,6 @@ a:focus-visible {
     background: var(--jaune);
     color: var(--fond);
     font-family: inherit;
-    font-size: 0.75rem;
+    font-size: var(--typo-ui-caption);
     text-decoration: none;
 }

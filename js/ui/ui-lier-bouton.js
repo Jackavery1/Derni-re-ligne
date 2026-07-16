@@ -1,7 +1,7 @@
 const MARQUEUR = 'data-neo-btn-lie';
 
 /**
- * Attache un handler click une seule fois (safe apres lazy-load de fragments HTML).
+ * Attache un handler click une seule fois (sûr après lazy-load de fragments HTML).
  * @param {string} id
  * @param {EventListener} handler
  */

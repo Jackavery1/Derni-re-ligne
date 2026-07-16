@@ -82,6 +82,28 @@ describe('histoire-narratif — metadata cutscene', () => {
         const post = obtenirCutscenePostMonde('monde_lave', true);
         expect(post?.scene).toBe('seuil_brasier');
         expect(post?.lignes).toHaveLength(1);
+        expect(post?.lignes[0]).toEqual(
+            expect.objectContaining({ scene: 'seuil_brasier', personnage: 'robo' })
+        );
+    });
+
+    it('obtenirCutscenePostMonde propage scene d enveloppe sur chaque ligne', () => {
+        obtenirHistoireTextesSync.mockReturnValue({
+            CUTSCENES_ENTREE: {},
+            CUTSCENES_POST_MONDE: {
+                monde_prologue: {
+                    scene: 'labo',
+                    lignes: [
+                        { personnage: 'robo', texte: 'A', humeur: 'content' },
+                        { personnage: 'robo', texte: 'B', humeur: 'excite' },
+                    ],
+                },
+            },
+            CUTSCENES_VICTOIRE_BOSS: {},
+        });
+        const post = obtenirCutscenePostMonde('monde_prologue', true);
+        expect(post?.scene).toBe('labo');
+        expect(post?.lignes.every((l) => l.scene === 'labo')).toBe(true);
     });
 
     it('afficherVictoireBoss enveloppe les lignes avec la scene par defaut du boss', async () => {

@@ -54,7 +54,7 @@
     left: 0;
     right: 0;
     z-index: 12;
-    padding: 6px 12px;
+    padding: calc(var(--space-1) + 2px) var(--space-3);
     background: var(--rgba-12-4-24-0-92);
     border-bottom: 1px solid var(--rgba-192-68-255-0-45);
     pointer-events: none;
@@ -75,9 +75,9 @@
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px 14px;
+    gap: var(--space-2) calc(var(--space-3) + 2px);
     font-family: var(--font-ui);
-    font-size: clamp(11px, 1.1vw, 13px);
+    font-size: var(--taille-titre-md);
     color: var(--rgba-255-255-255-0-75);
 }
 
@@ -110,9 +110,9 @@
 .histoire-carte-etoiles,
 .histoire-detail-etoiles {
     display: flex;
-    gap: 6px;
+    gap: calc(var(--space-1) + 2px);
     justify-content: center;
-    margin: 8px 0;
+    margin: var(--space-2) 0;
 }
 
 .histoire-carte-etoile {

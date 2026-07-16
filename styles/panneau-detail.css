@@ -125,7 +125,7 @@ body.effets-reduits .panneau-detail-corps {
     padding: 0;
     width: 100%;
     font-family: 'Orbitron', var(--font-stats);
-    font-size: clamp(0.5rem, 1vw, 0.65rem);
+    font-size: var(--typo-ui-mini);
     color: var(--accent-carte);
     letter-spacing: 1px;
 }
@@ -162,7 +162,7 @@ body.effets-reduits .panneau-detail-progression-fill {
 }
 .panneau-detail-progression-texte {
     font-family: 'Orbitron', var(--font-stats);
-    font-size: clamp(0.55rem, 1vw, 0.7rem);
+    font-size: clamp(11px, 1vw, 0.7rem);
     color: var(--accent-carte);
     text-align: center;
     letter-spacing: 0.5px;

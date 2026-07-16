@@ -4,9 +4,10 @@ import {
     haptiqueActif,
     definirHaptiqueActif,
     initialiserHaptique,
+    _reinitialiserHaptiquePourTests,
 } from '../js/audio/haptique.js';
 import { definirReduireEffetsAccessibilite } from '../js/ui/accessibilite.js';
-import { emettre } from '../js/etat/bus-jeu.js';
+import { emettre, reinitialiserBusJeu } from '../js/etat/bus-jeu.js';
 
 describe('haptique', () => {
     beforeEach(() => {
@@ -14,6 +15,8 @@ describe('haptique', () => {
         definirHaptiqueActif(true);
         definirReduireEffetsAccessibilite(false);
         vi.stubGlobal('navigator', { vibrate: vi.fn() });
+        reinitialiserBusJeu();
+        _reinitialiserHaptiquePourTests();
     });
 
     afterEach(() => {
@@ -50,5 +53,22 @@ describe('haptique', () => {
     it('vibre motif boss distinct (audit B G5)', () => {
         vibrer('boss');
         expect(navigator.vibrate).toHaveBeenCalledWith([45, 35, 70, 35, 50]);
+    });
+
+    it('vibre motifs vague up/down (audit B G5)', () => {
+        vibrer('vagueUp');
+        expect(navigator.vibrate).toHaveBeenCalledWith([12, 28, 18]);
+        vi.mocked(navigator.vibrate).mockClear();
+        vibrer('vagueDown');
+        expect(navigator.vibrate).toHaveBeenCalledWith([18, 40, 12]);
+    });
+
+    it('ecoute difficulte:vague pour haptique paliers', () => {
+        initialiserHaptique();
+        emettre('difficulte:vague', { montee: true, palierApres: 4 });
+        expect(navigator.vibrate).toHaveBeenCalledWith([12, 28, 18]);
+        vi.mocked(navigator.vibrate).mockClear();
+        emettre('difficulte:vague', { montee: false, palierApres: 3 });
+        expect(navigator.vibrate).toHaveBeenCalledWith([18, 40, 12]);
     });
 });

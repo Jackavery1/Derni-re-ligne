@@ -2,11 +2,13 @@ import { test, expect } from '@playwright/test';
 import {
     preparerPageSansSw,
     preparerPageModeLibreTutorielActif,
+    preparerPageTutorielHistoireActif,
     attendreApplicationPrete,
     attendreNotificationsInitiales,
     demarrerPartie,
     selectionnerBiomeClavier,
     attendrePartieVisible,
+    lancerMondeDepuisCarte,
     ETAT_FIN_VRAIE_PRET,
     terminerPartieCourante,
 } from './helpers.mjs';
@@ -78,6 +80,49 @@ test('audit B — tutoriel libre avant premiere partie (G3)', async ({ page }) =
     await page.locator('#btn-tutoriel-fermer').click();
 
     await attendrePartieVisible(page);
+    await expect(page.locator('#overlay-tutoriel')).toHaveClass(/element-masque/);
+});
+
+test('audit B — tutoriel histoire prologue 3 slides (G3)', async ({ page }) => {
+    test.setTimeout(90000);
+    await preparerPageTutorielHistoireActif(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await attendreNotificationsInitiales(page);
+    await page.locator('#btn-continuer').click();
+    await expect(page.locator('#ecran-histoire-map')).toHaveClass(/actif/, { timeout: 20000 });
+    await lancerMondeDepuisCarte(page, 'monde_prologue');
+
+    for (let i = 0; i < 48; i++) {
+        const etat = await page.evaluate(() => {
+            const tut = document.getElementById('overlay-tutoriel');
+            if (tut && !tut.classList.contains('element-masque')) return 'tutoriel';
+            const passer = document.getElementById('btn-cutscene-passer');
+            if (passer?.offsetParent) {
+                passer.click();
+                return 'passer';
+            }
+            const suivant = document.getElementById('btn-cutscene-suivant');
+            if (suivant?.offsetParent) {
+                suivant.click();
+                return 'suivant';
+            }
+            return 'wait';
+        });
+        if (etat === 'tutoriel') break;
+        await page.waitForTimeout(80);
+    }
+
+    await expect(page.locator('#overlay-tutoriel')).not.toHaveClass(/element-masque/);
+    await expect(page.locator('#tutoriel-titre')).toContainText(/BIENVENUE/i);
+    await expect(page.locator('#tutoriel-indicateur')).toContainText('1 / 3');
+
+    await page.locator('#btn-tutoriel-fermer').click();
+    await expect(page.locator('#tutoriel-indicateur')).toContainText('2 / 3');
+    await page.locator('#btn-tutoriel-fermer').click();
+    await expect(page.locator('#tutoriel-indicateur')).toContainText('3 / 3');
+    await page.locator('#btn-tutoriel-fermer').click();
+
     await expect(page.locator('#overlay-tutoriel')).toHaveClass(/element-masque/);
 });
 

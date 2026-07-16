@@ -22,6 +22,7 @@ import {
 } from './ui-objectifs-overlays.js';
 
 let _listenersAttaches = false;
+let _boutonsObjectifsAttaches = false;
 
 /** Ferme les overlays narratifs qui peuvent masquer ou bloquer la zone de jeu. */
 export function fermerOverlaysFluxPartie() {
@@ -46,28 +47,15 @@ export function afficherRecapAvantNarratif(monde, etoiles, onFin) {
 
 export function initialiserUiObjectifs() {
     ancrerOverlaysObjectifsAuBody();
-    const btn = _el('btn-objectifs-commencer');
-    const recap = _el('overlay-recap-monde');
-    const btnRecap = _el('btn-recap-continuer');
-    if (!btn && !recap && !btnRecap) return;
 
     if (!_listenersAttaches) {
         _listenersAttaches = true;
-
-        btn?.addEventListener('click', () => commencerDepuisPanneauObjectifs());
-
-        btn?.addEventListener('keydown', (ev) => {
-            if (ev.key === 'Enter' || ev.key === ' ') {
-                ev.preventDefault();
-                commencerDepuisPanneauObjectifs();
-            }
-        });
 
         ecouter('difficulte:vague', ({ montee, palierApres }) => {
             _flashVague(montee);
             if (palierApres != null) {
                 afficherNotificationNiveau(
-                    montee ? `PALIER P${palierApres}` : `ACCALMIE P${palierApres}`
+                    montee ? `VITESSE + P${palierApres}` : `ACCALMIE − P${palierApres}`
                 );
             }
             rafraichirHudObjectifsHistoire();
@@ -81,6 +69,18 @@ export function initialiserUiObjectifs() {
 
         ecouter('lignes:effacees', () => {
             if (modeHistoireEnCours()) rafraichirHudObjectifsHistoire();
+        });
+    }
+
+    const btn = _el('btn-objectifs-commencer');
+    if (btn && !_boutonsObjectifsAttaches) {
+        _boutonsObjectifsAttaches = true;
+        btn.addEventListener('click', () => commencerDepuisPanneauObjectifs());
+        btn.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter' || ev.key === ' ') {
+                ev.preventDefault();
+                commencerDepuisPanneauObjectifs();
+            }
         });
     }
 

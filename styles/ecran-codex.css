@@ -48,8 +48,10 @@
     border-bottom: 2px solid transparent;
     color: var(--texte-dim);
     font-family: var(--police);
-    font-size: clamp(0.45rem, 1.2vw, 0.6rem);
+    font-size: var(--typo-ui-mini);
     padding: var(--space-3) var(--space-4);
+    min-height: 48px;
+    min-width: 48px;
     cursor: pointer;
     letter-spacing: 1px;
     transition: all 0.15s;

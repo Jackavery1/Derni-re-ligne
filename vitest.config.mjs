@@ -33,14 +33,17 @@ const COVERAGE_LOGIC = [
     'js/rendu/portraits-cutscene-etat.js',
     'js/histoire/histoire-map-briefings-boss.js',
     'js/histoire/histoire-map-fond-donnees.js',
+    'js/rendu/rendu-plateau-pieces.js',
+    'js/logique/temps-partie.js',
+    'js/histoire/histoire-map-rendu.js',
+    'js/logique/partie-fin-commun.js',
+    'js/logique/partie-fin-constantes.js',
 ];
 
 export const COVERAGE_ETENDU_EXCLUS_SEUIL_80 = [
-    'js/rendu/rendu-plateau-pieces.js',
     'js/rendu/rendu-fx.js',
     'js/ui/charger-ecrans.js',
     'js/ui/navigation-ecrans.js',
-    'js/histoire/histoire-map-rendu.js',
     'js/logique/boucle-jeu.js',
     'js/logique/effets-partie.js',
 ];

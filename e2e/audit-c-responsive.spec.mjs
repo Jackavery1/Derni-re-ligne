@@ -332,6 +332,43 @@ test(
     }
 );
 
+test('audit C2 — codex onglets >= 48px', { tag: '@viewport-mobile-portrait' }, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await preparerPageSansSw(page);
+    await page.goto('/');
+    await attendreApplicationPrete(page);
+    await page.locator('#btn-codex').click();
+    await expect(page.locator('#ecran-codex')).toHaveClass(/actif/);
+
+    const metriques = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll('.codex-onglet')).map((el, i) => {
+            const r = el.getBoundingClientRect();
+            return {
+                id: el.getAttribute('data-chapitre') ?? `onglet-${i}`,
+                h: r.height,
+                w: r.width,
+            };
+        });
+    });
+
+    expect(metriques.length).toBeGreaterThan(0);
+    for (const m of metriques) {
+        expect(m.h, m.id).toBeGreaterThanOrEqual(48);
+        expect(m.w, m.id).toBeGreaterThanOrEqual(48);
+    }
+});
+
+test(
+    'audit C2 — pause et mute HUD >= 48px portrait',
+    { tag: '@viewport-mobile-portrait' },
+    async ({ page }) => {
+        await page.setViewportSize({ width: 390, height: 844 });
+        await demarrerPartie(page);
+        const metriques = await mesurerBoutonsParIds(page, ['btn-pause', 'btn-mute']);
+        assertBoutonsTactilesMin(metriques);
+    }
+);
+
 test(
     'audit C15 — partie active bloque scroll tactile (touch-action)',
     { tag: '@viewport-mobile-portrait' },

@@ -32,7 +32,7 @@ export function noeudSousCurseur(etatCarte, cx, cy) {
         if (!etatCarte.mondesVisibles.has(id)) continue;
         const dx = mx - pos.x;
         const dy = my - pos.y;
-        const hitRadius = pos.rayon + 10;
+        const hitRadius = Math.max(pos.rayon + 10, 24);
         if (dx * dx + dy * dy <= hitRadius * hitRadius) {
             const monde = SEQUENCE_HISTOIRE.find((m) => m.id === id);
             if (!monde) continue;

@@ -37,6 +37,30 @@ test('audit B — haptique sur mute en partie', async ({ page }) => {
     expect(ok).toBe(true);
 });
 
+test('audit B — haptique sur difficulte:vague (G5)', async ({ page }) => {
+    await installerJournalVibrations(page);
+    await preparerPageSansSw(page);
+    await page.goto('/?neoTest=1');
+    await attendreApplicationPrete(page);
+
+    const motifs = await page.evaluate(() => {
+        window.__NEO_VIBRATE_LOG__ = [];
+        window.__NEO_TEST__?.emettreEvenementBusJeu?.('difficulte:vague', {
+            montee: true,
+            palierApres: 5,
+        });
+        window.__NEO_TEST__?.emettreEvenementBusJeu?.('difficulte:vague', {
+            montee: false,
+            palierApres: 4,
+        });
+        return window.__NEO_VIBRATE_LOG__ ?? [];
+    });
+    expect(motifs).toEqual([
+        [12, 28, 18],
+        [18, 40, 12],
+    ]);
+});
+
 test('audit B — haptique sur rafraichir leaderboard', async ({ page }) => {
     await installerJournalVibrations(page);
     await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);

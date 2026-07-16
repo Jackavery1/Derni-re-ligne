@@ -9,8 +9,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: max(16px, var(--safe-top)) max(16px, var(--safe-right)) max(16px, var(--safe-bottom))
-        max(16px, var(--safe-left));
+    padding: max(var(--space-4), var(--safe-top)) max(var(--space-4), var(--safe-right))
+        max(var(--space-4), var(--safe-bottom)) max(var(--space-4), var(--safe-left));
     box-sizing: border-box;
     background: var(--rgba-0-0-0-0-72);
     opacity: 0;
@@ -34,7 +34,7 @@
     box-shadow:
         0 0 24px var(--rgba-0-245-255-0-15),
         inset 0 0 40px var(--rgba-0-245-255-0-04);
-    padding: 28px 32px;
+    padding: calc(var(--space-5) + 4px) var(--space-6);
     max-width: 420px;
     width: min(92vw, 420px);
     text-align: center;
@@ -43,58 +43,58 @@
 }
 
 .objectif-chapitre {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.75rem;
+    font-family: var(--font-ui);
+    font-size: var(--typo-ui-caption);
     letter-spacing: 3px;
-    color: var(--rgba-0-245-255-0-65);
-    margin: 0 0 8px;
+    color: var(--cyan);
+    margin: 0 0 var(--space-2);
 }
 
 .objectif-monde-nom {
-    font-family: 'Press Start 2P', monospace;
+    font-family: var(--font-titre);
     font-size: var(--typo-ui-moyen);
     line-height: 1.6;
     color: var(--texte-inverse);
-    margin: 0 0 20px;
+    margin: 0 0 calc(var(--space-4) + 4px);
 }
 
 .objectif-principal-label {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.7rem;
+    font-family: var(--font-ui);
+    font-size: var(--typo-ui-mini);
     letter-spacing: 2px;
     color: var(--texte-discret);
-    margin: 0 0 4px;
+    margin: 0 0 var(--space-1);
 }
 
 .objectif-principal-texte {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1rem;
+    font-family: var(--font-ui);
+    font-size: var(--typo-corps);
     font-weight: 600;
     letter-spacing: 1px;
     color: var(--cyan);
-    margin: 0 0 20px;
+    margin: 0 0 calc(var(--space-4) + 4px);
 }
 
 .objectif-etoiles-liste {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-bottom: 24px;
+    gap: calc(var(--space-2) + 2px);
+    margin-bottom: var(--space-5);
     text-align: left;
 }
 
 .objectif-etoile-slot {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 10px;
+    gap: calc(var(--space-2) + 2px);
+    padding: var(--space-2) calc(var(--space-2) + 2px);
     border: 1px solid var(--rgba-180-0-255-0-25);
     background: var(--rgba-180-0-255-0-05);
 }
 
 .objectif-etoile-icone {
     color: var(--rgba-180-0-255-0-35);
-    font-size: 1.1rem;
+    font-size: var(--typo-stat);
 }
 
 .objectif-etoile-slot.objectif-etoile-obtenue .objectif-etoile-icone {
@@ -103,8 +103,8 @@
 }
 
 .objectif-etoile-libelle {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.85rem;
+    font-family: var(--font-ui);
+    font-size: var(--typo-ui-secondaire);
     color: var(--rgba-220-220-240-0-85);
 }
 
@@ -116,25 +116,25 @@
 .objectif-btn-commencer {
     width: 100%;
     min-height: 48px;
-    font-family: 'Press Start 2P', monospace;
+    font-family: var(--font-titre);
     font-size: var(--typo-ui-label);
-    padding: 14px;
+    padding: calc(var(--space-3) + 2px);
     box-sizing: border-box;
 }
 
 .objectif-recap-titre {
-    font-family: 'Press Start 2P', monospace;
+    font-family: var(--font-titre);
     font-size: var(--typo-ui-label);
     color: var(--cyan);
     letter-spacing: 2px;
-    margin: 0 0 12px;
+    margin: 0 0 var(--space-3);
 }
 
 .objectif-recap-etoiles {
     display: flex;
     justify-content: center;
-    gap: 16px;
-    margin: 20px 0;
+    gap: var(--space-4);
+    margin: calc(var(--space-4) + 4px) 0;
 }
 
 .objectif-recap-etoile {
@@ -156,24 +156,24 @@
 }
 
 .objectif-recap-revelation {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.9rem;
+    font-family: var(--font-ui);
+    font-size: var(--typo-ui-moyen);
     color: var(--violet-clair);
-    margin-top: 8px;
+    margin-top: var(--space-2);
 }
 
 .objectif-echec-titre {
-    font-family: 'Press Start 2P', monospace;
+    font-family: var(--font-titre);
     font-size: var(--typo-ui-caption);
     color: var(--rose);
-    margin: 0 0 24px;
+    margin: 0 0 var(--space-5);
     line-height: 1.8;
 }
 
 .objectif-echec-actions {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: calc(var(--space-2) + 2px);
 }
 
 .objectif-btn-secondaire {
@@ -183,8 +183,8 @@
 
 #section-objectifs-histoire {
     flex-direction: column;
-    gap: 6px;
-    padding: 8px;
+    gap: calc(var(--space-1) + 2px);
+    padding: var(--space-2);
     border: 1px solid var(--rgba-0-245-255-0-2);
     background: var(--rgba-0-245-255-0-03);
 }
@@ -205,7 +205,7 @@ body.histoire-active.partie-active #bandeau-trame-run {
 
 .objectif-hud-lignes {
     position: relative;
-    font-family: 'Orbitron', sans-serif;
+    font-family: var(--font-stats);
     font-size: var(--typo-ui-note);
     color: var(--cyan);
     letter-spacing: 1px;
@@ -214,7 +214,7 @@ body.histoire-active.partie-active #bandeau-trame-run {
 .hud-flash-vitesse {
     position: absolute;
     right: 0;
-    top: -14px;
+    top: calc(var(--space-3) * -1 - 2px);
     font-size: var(--typo-ui-mini);
     color: var(--jaune);
     opacity: 0;

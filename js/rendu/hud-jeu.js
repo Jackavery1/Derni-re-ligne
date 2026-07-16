@@ -18,6 +18,9 @@ import { afficherNotificationNiveau } from '../ui/ui-notifications.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { obtenirSuiviDifficulte } from '../logique/gestionnaire-difficulte.js';
 import { obtenirScoreAffiche } from '../logique/oracle-jeu.js';
+import { obtenirTempsEcoule } from '../logique/temps-partie.js';
+
+export { obtenirTempsEcoule };
 
 export function chargerProgression() {
     definirNiveauGlobal(chargerNiveauGlobal());
@@ -38,15 +41,6 @@ export function formaterTemps(ms) {
     const mm = Math.floor(sec / 60);
     const ss = sec % 60;
     return `${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
-}
-
-export function obtenirTempsEcoule() {
-    if (!etat.tempsDebut) return 0;
-    let total = Date.now() - etat.tempsDebut - etat.tempsPauseAccumule;
-    if (etat.estEnPause && etat.tempsPauseDebut) {
-        total -= Date.now() - etat.tempsPauseDebut;
-    }
-    return Math.max(0, total);
 }
 
 export function mettreAJourAffichageTemps() {

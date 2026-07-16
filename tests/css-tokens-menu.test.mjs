@@ -111,6 +111,20 @@ const FEUILLES_HUD_TYPO = [
     'objectifs-histoire-responsive.css',
     'objectifs-histoire-hud.css',
     'boss-portrait.css',
+    'selection-oracle.css',
+    'ecran-titre-base.css',
+    'overlays-bannieres.css',
+    'ecran-codex.css',
+    'ecrans-base.css',
+    'ecran-pause.css',
+    'overlays-notifs.css',
+    'notifs-jeu.css',
+    'mode-histoire-journal.css',
+    'panneau-detail.css',
+    'overlays-profil-ach.css',
+    'mode-histoire-carte.css',
+    'mode-histoire-fin.css',
+    'ecran-options.css',
 ];
 
 describe('css — menu titre typo lisible', () => {

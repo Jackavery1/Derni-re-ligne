@@ -103,6 +103,10 @@ export function definirTransitionAlpha(v) {
 export function definirTransitionDebut(v) {
     store.transitionDebut = v;
 }
+export function demarrerTransition() {
+    definirTransitionAlpha(0);
+    definirTransitionDebut(performance.now());
+}
 export function definirCouleurAmbRgb([r, g, b]) {
     store.couleurAmbRgb[0] = r;
     store.couleurAmbRgb[1] = g;

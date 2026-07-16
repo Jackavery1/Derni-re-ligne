@@ -29,6 +29,25 @@ const ALLOWLIST_STORE_CORE = new Set([
     'mode-histoire.js',
 ]);
 
+/** Modules logique autorisés à importer rendu/ (couplage legacy — ne pas élargir). */
+const ALLOWLIST_LOGIQUE_VERS_RENDU = new Set([
+    'archi-logique.js',
+    'archi-partie.js',
+    'archi-selection.js',
+    'boss-combat.js',
+    'boss-jeu.js',
+    'boucle-jeu.js',
+    'boucle-jeu-tick.js',
+    'constellation-boucle.js',
+    'constellation-panneau.js',
+    'constellation.js',
+    'coop-input.js',
+    'coop-jeu.js',
+    'effets-partie.js',
+    'partie-init.js',
+    'vivant.js',
+]);
+
 function listerFichiersJs(dossier) {
     /** @type {string[]} */
     const fichiers = [];
@@ -70,6 +89,20 @@ describe('maintainabilite', () => {
             }
         }
         expect(violations, JSON.stringify(violations, null, 2)).toEqual([]);
+    });
+
+    it('logique → rendu : uniquement allowlist (audit A1/A6)', () => {
+        const dossierLogique = join(racineJs, 'logique');
+        const violations = [];
+        for (const chemin of listerFichiersJs(dossierLogique)) {
+            const nom = chemin.split(/[/\\]/).pop();
+            const contenu = readFileSync(chemin, 'utf8');
+            if (!/from ['"][^'"]*\/rendu\//.test(contenu)) continue;
+            if (ALLOWLIST_LOGIQUE_VERS_RENDU.has(nom)) continue;
+            violations.push(nom);
+        }
+        expect(violations, JSON.stringify(violations, null, 2)).toEqual([]);
+        expect(ALLOWLIST_LOGIQUE_VERS_RENDU.has('partie.js')).toBe(false);
     });
 
     it(`aucun module js ne depasse ${SEUIL_HOTSPOT_LIGNES} lignes`, () => {

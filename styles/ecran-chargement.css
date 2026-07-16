@@ -6,8 +6,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: calc(16px + var(--safe-top)) calc(16px + var(--safe-right))
-        calc(16px + var(--safe-bottom)) calc(16px + var(--safe-left));
+    padding: calc(var(--space-4) + var(--safe-top)) calc(var(--space-4) + var(--safe-right))
+        calc(var(--space-4) + var(--safe-bottom)) calc(var(--space-4) + var(--safe-left));
     background: radial-gradient(
         ellipse at 50% 35%,
         var(--fond-chargement-1) 0%,
@@ -31,7 +31,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14px;
+    gap: calc(var(--space-3) + 2px);
     width: min(100%, 440px);
 }
 
@@ -47,7 +47,7 @@
 
 .ecran-chargement-titre {
     font-family: var(--font-titre, 'Press Start 2P', monospace);
-    font-size: clamp(0.55rem, 2.4vw, 0.75rem);
+    font-size: clamp(11px, 2.4vw, 0.75rem);
     letter-spacing: 4px;
     color: var(--rose);
     text-shadow: 0 0 12px var(--glow-rose-chargement-fort);
@@ -64,8 +64,8 @@
 
 .ecran-chargement-barre {
     width: min(100%, 280px);
-    height: 4px;
-    margin-top: 4px;
+    height: var(--space-1);
+    margin-top: var(--space-1);
     background: var(--rgba-255-255-255-0-08);
     border: 1px solid var(--bordure-violet-chargement);
     border-radius: 2px;

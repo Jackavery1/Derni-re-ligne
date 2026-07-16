@@ -6,8 +6,9 @@
 @media (max-width: 768px) {
     #btn-pause,
     #btn-mute {
-        min-height: 48px;
-        min-width: 48px;
+        min-height: var(--hud-touch-min, 48px);
+        min-width: var(--hud-touch-min, 48px);
+        box-sizing: border-box;
     }
 }
 
@@ -15,9 +16,9 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin-top: 6px;
-    padding-top: 8px;
+    gap: var(--space-1);
+    margin-top: var(--space-1);
+    padding-top: var(--space-2);
     border-top: 1px solid var(--bordure);
 }
 
@@ -126,7 +127,7 @@
     color: var(--theme-primaire, var(--texte-dim));
     font-family: var(--police);
     font-size: var(--typo-ui-compact);
-    padding: 8px 10px;
+    padding: var(--space-2) calc(var(--space-2) + 2px);
     cursor: pointer;
     width: 100%;
     transition: all 0.2s;
@@ -144,12 +145,12 @@
     color: var(--texte-dim);
     font-family: var(--police);
     font-size: var(--typo-ui-note);
-    padding: 8px 10px;
+    padding: var(--space-2) calc(var(--space-2) + 2px);
     cursor: pointer;
     width: 100%;
     transition: all 0.2s;
     letter-spacing: 1px;
-    margin-top: 6px;
+    margin-top: var(--space-1);
     touch-action: manipulation;
 }
 #btn-mute:hover {

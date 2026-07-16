@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync, statSync } from 'fs';
+import { mkdirSync, writeFileSync, statSync, unlinkSync } from 'fs';
 import { join } from 'path';
 import { trouverFfmpeg, executerFfmpeg } from './media-utils.mjs';
 
@@ -188,19 +188,21 @@ for (const [nom, generer] of Object.entries(GENERATEURS)) {
     const pcm = generer();
     writeFileSync(cheminWav, encoderWav(pcm));
     const koWav = Math.round((statSync(cheminWav).size / 1024) * 10) / 10;
-    process.stdout.write(`  ${nom}.wav — ${koWav} Ko`);
+    process.stdout.write(`  ${nom}.wav (temp) — ${koWav} Ko`);
 
     if (ffmpeg) {
         const cheminOgg = join(OUT_DIR, `${nom}.ogg`);
         convertirOgg(ffmpeg, cheminWav, cheminOgg);
         const koOgg = Math.round((statSync(cheminOgg).size / 1024) * 10) / 10;
         process.stdout.write(` → ${nom}.ogg — ${koOgg} Ko`);
+        unlinkSync(cheminWav);
+        process.stdout.write(' (wav retire)');
     }
     process.stdout.write('\n');
 }
 
 if (!ffmpeg) {
-    console.log('\nffmpeg absent — seuls les .wav sont produits (decodeAudioData OK).');
+    console.log('\nffmpeg absent — .wav temporaires conserves (decodeAudioData OK en local).');
 }
 
 console.log(

@@ -83,7 +83,7 @@ export async function attendrePartieVisible(page) {
 
 /** @param {import('@playwright/test').Page} page */
 export async function passerFluxLancementMonde(page) {
-    for (let i = 0; i < 36; i++) {
+    for (let i = 0; i < 48; i++) {
         const action = await page.evaluate(() => {
             if (document.body.classList.contains('partie-active')) return 'done';
             if (document.getElementById('section-boss')?.offsetParent) return 'done';
@@ -124,12 +124,42 @@ export async function passerFluxLancementMonde(page) {
 
         if (action === 'wait') {
             try {
-                await attendreTypewriterInactif(page, 500);
+                await page.waitForFunction(
+                    () => {
+                        if (document.body.classList.contains('partie-active')) return true;
+                        if (document.getElementById('section-boss')?.offsetParent) return true;
+                        const objectifs = document.getElementById('btn-objectifs-commencer');
+                        const overlayObjectifs = document.getElementById('overlay-objectifs-pre');
+                        if (
+                            objectifs &&
+                            (objectifs.offsetParent ||
+                                overlayObjectifs?.classList.contains('objectif-overlay-visible'))
+                        ) {
+                            return true;
+                        }
+                        if (document.getElementById('btn-cutscene-passer')?.offsetParent) {
+                            return true;
+                        }
+                        if (document.getElementById('btn-cutscene-suivant')?.offsetParent) {
+                            return true;
+                        }
+                        if (document.getElementById('btn-tutoriel-fermer')?.offsetParent) {
+                            return true;
+                        }
+                        return false;
+                    },
+                    null,
+                    { timeout: 900 }
+                );
             } catch {
-                /* attente courte entre étapes du flux */
+                try {
+                    await attendreTypewriterInactif(page, 500);
+                } catch {
+                    /* attente courte entre étapes du flux */
+                }
             }
         } else {
-            await page.waitForTimeout(50);
+            await page.waitForTimeout(80);
         }
     }
 

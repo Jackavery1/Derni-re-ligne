@@ -1,16 +1,16 @@
 #banniere-meteo {
     position: fixed;
-    top: max(10px, var(--safe-top));
-    right: max(12px, var(--safe-right));
+    top: max(calc(var(--space-2) + 2px), var(--safe-top));
+    right: max(var(--space-3), var(--safe-right));
     left: auto;
     transform: none;
     display: none;
     flex-direction: column;
     align-items: flex-end;
-    gap: 6px;
+    gap: calc(var(--space-1) + 2px);
     background: var(--rgba-8-8-26-0-92);
     border: 1px solid var(--meteo-couleur, var(--jaune));
-    padding: 8px 14px;
+    padding: var(--space-2) calc(var(--space-3) + 2px);
     z-index: 150;
     pointer-events: none;
     box-shadow: 0 0 16px color-mix(in srgb, var(--meteo-couleur, var(--jaune)) 35%, transparent);
@@ -24,15 +24,15 @@
 
 #banniere-vivant {
     position: fixed;
-    top: max(10px, var(--safe-top));
-    left: max(12px, var(--safe-left));
+    top: max(calc(var(--space-2) + 2px), var(--safe-top));
+    left: max(var(--space-3), var(--safe-left));
     transform: none;
     display: none;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
     background: var(--rgba-8-8-26-0-9);
     border: 1px solid var(--rgba-255-255-255-0-15);
-    padding: 8px 12px;
+    padding: var(--space-2) var(--space-3);
     z-index: 140;
     pointer-events: none;
     max-width: min(42vw, 240px);
@@ -48,7 +48,7 @@
 .vivant-textes {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: calc(var(--space-1) - 1px);
 }
 #vivant-nom {
     font-size: var(--typo-ui-mini);
@@ -62,7 +62,7 @@
 #vivant-compte-rebours {
     font-size: var(--typo-ui-note);
     color: var(--texte-dim);
-    min-width: 24px;
+    min-width: var(--space-5);
     text-align: right;
 }
 
@@ -70,7 +70,7 @@
     font-size: 2rem;
 }
 #meteo-texte {
-    font-size: clamp(0.4rem, 1.5vw, 0.55rem);
+    font-size: var(--typo-ui-mini);
     letter-spacing: 3px;
     color: var(--meteo-couleur, var(--jaune));
     text-shadow: 0 0 10px var(--meteo-couleur, var(--jaune));
@@ -91,7 +91,7 @@
 }
 
 #indicateur-meteo {
-    padding: 6px 4px;
+    padding: calc(var(--space-1) + 2px) var(--space-1);
     text-align: center;
     border: 1px solid var(--rgba-255-255-255-0-1);
     font-size: var(--typo-hud-micro);
@@ -99,7 +99,7 @@
     color: var(--meteo-actif-couleur, var(--jaune));
 }
 #meteo-barre-duree {
-    margin-top: 4px;
+    margin-top: var(--space-1);
     height: 2px;
     background: var(--meteo-actif-couleur, var(--jaune));
     transition: width 0.5s linear;

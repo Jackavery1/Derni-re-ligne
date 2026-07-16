@@ -84,16 +84,28 @@ test.describe('gameplay equity', () => {
         expect(apresAre.bufferApresAre).toEqual([]);
     });
 
-    test('buffer conserve trois inputs sans ecrasement (audit B G2)', async ({ page }) => {
+    test('buffer marathon conserve quatre inputs sans ecrasement (audit B G2)', async ({
+        page,
+    }) => {
         await demarrerPartie(page);
         const buffer = await page.evaluate(() => {
             const api = window.__NEO_TEST__;
             api?.bufferiserInputTest?.('gauche');
             api?.bufferiserInputTest?.('tourner_cw');
             api?.bufferiserInputTest?.('droite');
+            api?.bufferiserInputTest?.('bas');
             return api?.obtenirGameFeel?.().inputBuffer ?? [];
         });
-        expect(buffer).toEqual(['gauche', 'tourner_cw', 'droite']);
+        expect(buffer).toEqual(['gauche', 'tourner_cw', 'droite', 'bas']);
+    });
+
+    test('lockDelay offre une fenetre >= 300ms (audit B G2)', async ({ page }) => {
+        await demarrerPartie(page);
+        const metriques = await page.evaluate(async () => {
+            const { CONFIG } = await import('/js/config/config-jeu.js');
+            return { lockDelay: CONFIG.lockDelay };
+        });
+        expect(metriques.lockDelay).toBeGreaterThanOrEqual(300);
     });
 
     test('grace spawn expire apres au moins 24 frames a 60 fps', async ({ page }) => {

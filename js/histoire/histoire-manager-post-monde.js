@@ -13,7 +13,6 @@ import {
 import { store } from '../etat/store-jeu.js';
 import { obtenirEtatHistoirePersiste } from './histoire-etat.js';
 import { sauvegarderEtatHistoire } from '../io/progression.js';
-import { definirExpressionVera } from '../rendu/portraits-vera.js';
 import { logger } from '../io/logger.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { creerFile } from './file-narrative.js';
@@ -205,19 +204,11 @@ export function declencherNarratifPostMonde(monde, etatHist, premiereCompletion,
         executer: (suivant) => {
             if (monde.bossId === 'distorsion') {
                 const typeFin = obtenirTypeFin();
-                definirExpressionVera(
-                    typeFin === 'fin_secrete'
-                        ? 'fin_secrete'
-                        : typeFin === 'fin_vraie'
-                          ? 'fin_vraie'
-                          : 'fin_normale'
-                );
                 afficherVictoireBoss(monde.bossId, typeFinVersCleBoss(typeFin), () => {
                     declencherFin(typeFin);
                 });
                 return;
             }
-            definirExpressionVera('boss_vaincu');
             afficherVictoireBoss(monde.bossId, 'normal', suivant);
         },
     });
@@ -228,7 +219,6 @@ export function declencherNarratifPostMonde(monde, etatHist, premiereCompletion,
         executer: (suivant) => {
             const journal = store.histoire.dernierJournal;
             store.histoire.dernierJournal = null;
-            definirExpressionVera('journal_decouvert');
             afficherJournalVera(journal, suivant);
         },
     });
@@ -254,7 +244,6 @@ export function declencherNarratifPostMonde(monde, etatHist, premiereCompletion,
         condition: () => Boolean(obtenirTransitionApresVictoire(monde.id)),
         executer: (suivant) => {
             const cleTrans = obtenirTransitionApresVictoire(monde.id);
-            definirExpressionVera('chapitre_complete');
             afficherTransitionChapitre(cleTrans, suivant);
         },
     });

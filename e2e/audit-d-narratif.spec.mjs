@@ -8,7 +8,6 @@ import {
     parcourirVictoireBossJusquaPivot,
     lancerMondeDepuisCarte,
     ouvrirIntroHistoire,
-    attendreSceneCutsceneActive,
     ETAT_ENTREE_COSMOS,
     ETAT_ENTREE_VIDE,
     ETAT_ENTREE_TRAME,
@@ -216,7 +215,7 @@ test('entree vide — scene vide_errance active (audit D3)', async ({ page }) =>
     const etat = preparerEtatPremiereEntree('monde_vide');
     await ouvrirCarteHistoire(page, etat);
     await lancerMondeDepuisCarte(page, 'monde_vide');
-    await attendreSceneCutsceneActive(page, SCENES_ENTREE_CAMPAGNE.monde_vide);
+    await assertScenePngCutsceneChargee(page, SCENES_ENTREE_CAMPAGNE.monde_vide);
 });
 
 test('entree vide — humeur distorsion menacante (audit D)', async ({ page }) => {
@@ -231,6 +230,29 @@ test('entree trame — humeur VERA inquiete (audit D)', async ({ page }) => {
     test.setTimeout(45000);
     await ouvrirCarteHistoire(page, ETAT_ENTREE_TRAME);
     await lancerMondeDepuisCarte(page, 'monde_trame');
+    await assertScenePngCutsceneChargee(page, 'trame_primordiale');
     await avancerCutsceneJusquaPivot(page, /Tu es là/i);
     await assertHumeurPortraitCutscene(page, 'vera', 'inquiete');
+});
+
+test('entree lave — humeur ROBO alerte + PNG lazy (audit D)', async ({ page }) => {
+    test.setTimeout(45000);
+    const etat = preparerEtatPremiereEntree('monde_lave');
+    await ouvrirCarteHistoire(page, etat);
+    await lancerMondeDepuisCarte(page, 'monde_lave');
+    await assertScenePngCutsceneChargee(page, 'seuil_brasier');
+    await avancerCutsceneJusquaPivot(page, /Le feu brûle trop fort/i);
+    await assertHumeurPortraitCutscene(page, 'robo', 'alerte');
+});
+
+test('entree ocean — humeur ROBO neutre (audit D)', async ({ page }) => {
+    test.setTimeout(45000);
+    const etat = preparerEtatPremiereEntree('monde_ocean');
+    await ouvrirCarteHistoire(page, etat);
+    await lancerMondeDepuisCarte(page, 'monde_ocean');
+    await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+        timeout: 10000,
+    });
+    await avancerCutsceneJusquaPivot(page, /Sous la surface/i);
+    await assertHumeurPortraitCutscene(page, 'robo', 'neutre');
 });

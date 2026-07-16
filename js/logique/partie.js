@@ -5,17 +5,15 @@
     definirDerniereSecondeTemps,
 } from '../etat/store-jeu.js';
 import { planifierBoucle } from './boucle-jeu.js';
-import { demarrerTransition } from '../rendu/rendu-jeu.js';
 import { afficherEcran, cacherEcrans } from '../ui/ecrans-ui.js';
-import { ECRANS } from '../etat/store-jeu.js';
-import { store } from '../etat/store-jeu.js';
+import { ECRANS, store, demarrerTransition } from '../etat/store-jeu.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { logger } from '../io/logger.js';
 import { SEQUENCE_HISTOIRE } from '../histoire/histoire-donnees-exports.js';
 import { assurerRessourcesPartie } from '../io/prefetch-ressources-partie.js';
 import { demarrerBoss, arreterBoss } from './boss-jeu.js';
-import { demarrerFondBiome } from '../rendu/rendu-fond-biome.js';
-import { obtenirIdBiomeFond } from '../rendu/biome-fond.js';
+import { obtenirIdBiomeFond } from '../etat/biome-fond.js';
+import { emettre } from '../etat/bus-jeu.js';
 import { AudioMoteur } from '../audio/audio.js';
 import { annulerTimersVivant } from './vivant.js';
 import { initialiserEtatPartie } from './partie-etat.js';
@@ -63,7 +61,7 @@ async function _demarrerJeuApresPrep() {
     }
 
     initialiserUIPartie();
-    demarrerFondBiome(obtenirIdBiomeFond());
+    emettre('fond-biome:demarrer', { biomeId: obtenirIdBiomeFond() });
     planifierBoucle();
 }
 

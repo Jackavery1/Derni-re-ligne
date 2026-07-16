@@ -40,7 +40,7 @@
     color: var(--jaune);
 }
 .histoire-fin-titre {
-    font-size: clamp(0.65rem, 2.5vw, 0.95rem);
+    font-size: clamp(11px, 2.5vw, 0.95rem);
     color: var(--jaune);
     letter-spacing: 4px;
     text-shadow: 0 0 14px var(--jaune);

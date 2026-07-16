@@ -22,6 +22,8 @@ import { obtenirForme, lierCouleursTetrominos } from '../logique/piece-jeu.js';
 import { creerParticulesExplosion } from '../rendu/particules-jeu.js';
 import { initialiserCanvas, demarrerJeu } from '../logique/partie.js';
 import { initialiserEffetsPartie } from '../logique/effets-partie.js';
+import { initialiserPartieFinEffets } from '../ui/partie-fin-effets.js';
+import { initialiserFondBiomeBus } from '../rendu/rendu-fond-biome.js';
 import { mettreAJourBoutonsMute } from '../ui/options-mute-ui.js';
 import { coopEstPrefere } from '../logique/coop-preference.js';
 import { appliquerThemeBiome } from '../ui/ecrans-ui.js';
@@ -47,9 +49,11 @@ function initialiserSyncCloudDiffere() {
 export function initialiserSystemesMoteur() {
     migrerClesLocalStorage();
     initialiserHaptique();
+    initialiserFondBiomeBus();
     appliquerControlesTactilesDepuisStockage();
     initialiserSyncCloudDiffere();
     initialiserEffetsPartie();
+    initialiserPartieFinEffets();
     configurerMeteo({
         obtenirEtat: () => etat,
         obtenirBiomeActif,

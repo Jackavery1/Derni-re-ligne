@@ -13,7 +13,7 @@ body.partie-active .zone-notifs-jeu {
     pointer-events: none;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: calc(var(--space-1) + 2px);
     overflow-x: hidden;
     overflow-y: auto;
     box-sizing: border-box;
@@ -38,8 +38,8 @@ body.partie-active .zone-notifs-jeu > * {
 }
 
 body.partie-active #notif-niveau {
-    font-size: clamp(0.52rem, 2.4vw, 0.72rem);
-    padding: 10px 14px;
+    font-size: clamp(11px, 2.4vw, 0.72rem);
+    padding: calc(var(--space-2) + 2px) calc(var(--space-3) + 2px);
     text-align: center;
 }
 
@@ -54,8 +54,8 @@ body.partie-active #notif-niveau.notif-campagne.visible {
 body.partie-active #notif-achievement {
     display: none;
     align-items: center;
-    gap: 10px;
-    padding: 12px 14px;
+    gap: calc(var(--space-2) + 2px);
+    padding: var(--space-3) calc(var(--space-3) + 2px);
     transition: opacity 0.35s ease;
     opacity: 0;
 }
@@ -87,8 +87,8 @@ body.partie-active .ach-badge {
 body.partie-active #notif-codex {
     display: none;
     align-items: center;
-    gap: 10px;
-    padding: 12px 14px;
+    gap: calc(var(--space-2) + 2px);
+    padding: var(--space-3) calc(var(--space-3) + 2px);
     transition: opacity 0.35s ease;
     opacity: 0;
 }
@@ -113,8 +113,8 @@ body.partie-active .codex-notif-titre {
 
 body.partie-active #notif-oracle {
     display: none;
-    font-size: clamp(0.5rem, 2vw, 0.68rem);
-    padding: 10px 14px;
+    font-size: var(--typo-ui-mini);
+    padding: calc(var(--space-2) + 2px) calc(var(--space-3) + 2px);
     text-align: center;
 }
 
@@ -127,8 +127,8 @@ body.partie-active #banniere-meteo {
     display: none;
     flex-direction: row;
     align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
+    gap: var(--space-2);
+    padding: calc(var(--space-2) + 2px) var(--space-3);
     font-size: var(--typo-ui-moyen);
     text-align: left;
 }
@@ -138,7 +138,7 @@ body.partie-active #banniere-meteo.visible {
 }
 
 body.partie-active #meteo-texte {
-    font-size: clamp(0.46rem, 1.8vw, 0.62rem);
+    font-size: var(--typo-ui-mini);
     letter-spacing: 2px;
 }
 
@@ -149,8 +149,8 @@ body.partie-active #meteo-icone {
 body.partie-active #banniere-vivant {
     display: none;
     align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
+    gap: var(--space-2);
+    padding: calc(var(--space-2) + 2px) var(--space-3);
     font-size: var(--typo-ui-note);
     animation: apparitionVivantRail 0.35s ease-out;
 }
@@ -206,14 +206,14 @@ body.partie-active .overlay-infobulle-contexte:not(.element-masque) {
 
 body.partie-active .overlay-infobulle-contenu {
     max-width: 100%;
-    padding: 0.95rem 1.05rem;
+    padding: calc(var(--space-3) + 2px) calc(var(--space-3) + 4px);
 }
 
 body.partie-active .infobulle-contexte-titre {
-    font-size: 0.85rem;
+    font-size: var(--typo-ui-secondaire);
 }
 
 body.partie-active .infobulle-contexte-texte {
-    font-size: 0.75rem;
+    font-size: var(--typo-ui-caption);
     line-height: 1.55;
 }

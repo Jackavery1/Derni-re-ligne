@@ -14,6 +14,8 @@ const MOTIFS = {
     ligne: [10, 30, 10],
     tetris: [15, 40, 15, 40, 20],
     boss: [45, 35, 70, 35, 50],
+    vagueUp: [12, 28, 18],
+    vagueDown: [18, 40, 12],
     gameOver: [80, 50, 80],
     victoire: [20, 30, 20, 30, 40],
 };
@@ -54,11 +56,13 @@ export function initialiserHaptique() {
         else if (type.startsWith('boss_')) vibrer('boss');
     });
 
-    ecouter('partie:topout', () => vibrerFinPartie(false));
-
     ecouter('lignes:effacees', ({ nbSupprimees }) => {
         if (nbSupprimees >= 4) vibrer('tetris');
         else if (nbSupprimees > 0) vibrer('ligne');
+    });
+
+    ecouter('difficulte:vague', ({ montee }) => {
+        vibrer(montee ? 'vagueUp' : 'vagueDown');
     });
 }
 
@@ -80,4 +84,9 @@ export function vibrerFinPartie(victoire) {
 
 export function vibrerBossAttaque() {
     vibrer('boss');
+}
+
+/** @internal tests */
+export function _reinitialiserHaptiquePourTests() {
+    initialises = false;
 }

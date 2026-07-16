@@ -6,8 +6,18 @@ import {
     ETAT_ENTREE_MIROIR,
     ETAT_ENTREE_TRAME,
     ETAT_PARADOXE_DEBLOQUE,
+    ETAT_AVANT_FIN_NORMALE,
 } from './helpers.mjs';
-import { SCENES_ENTREE_CAMPAGNE, SCENES_ENTREE_SECRETS } from './helpers-narratif-donnees.mjs';
+import {
+    SCENES_ENTREE_CAMPAGNE,
+    SCENES_ENTREE_SECRETS,
+    HUMEURS_ENTREE_PIVOT,
+} from './helpers-narratif-donnees.mjs';
+import {
+    assertScenePngCutsceneChargee,
+    assertHumeurPortraitCutscene,
+    avancerCutsceneJusquaPivot,
+} from './helpers-narratif.mjs';
 import { MONDES_CAMPAGNE_PRINCIPALE } from './etats-histoire-base.mjs';
 import { preparerEtatPremiereEntree } from './etats-histoire-entrees.mjs';
 
@@ -76,11 +86,79 @@ for (const cfg of ENTREES_SECRETS) {
         await lancerMondeDepuisCarte(page, cfg.mondeId);
 
         if (cfg.scene) {
-            await attendreSceneCutsceneActive(page, cfg.scene, 20000);
+            await assertScenePngCutsceneChargee(page, cfg.scene, 20000);
             return;
         }
 
         await expect(page.locator('#ecran-histoire-cutscene')).toBeVisible({ timeout: 10000 });
         await expect(page.locator('#ecran-histoire-cutscene')).toContainText(cfg.marqueur);
+        const sceneSecret = SCENES_ENTREE_SECRETS[cfg.mondeId];
+        if (sceneSecret) {
+            await assertScenePngCutsceneChargee(page, sceneSecret, 20000);
+        }
     });
 }
+
+const ENTREES_HUMEUR_CAMPAGNE = MONDES_CAMPAGNE_PRINCIPALE.filter((id) => HUMEURS_ENTREE_PIVOT[id]);
+
+for (const mondeId of ENTREES_HUMEUR_CAMPAGNE) {
+    const cfg = HUMEURS_ENTREE_PIVOT[mondeId];
+    test(`entree ${mondeId} — humeur ${cfg.personnage} ${cfg.humeur} (audit D)`, async ({
+        page,
+    }) => {
+        test.setTimeout(90000);
+        const etat = preparerEtatPremiereEntree(mondeId);
+        await ouvrirCarteHistoire(page, etat);
+        await lancerMondeDepuisCarte(page, mondeId);
+        await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+            timeout: 15000,
+        });
+        await avancerCutsceneJusquaPivot(page, cfg.pivot);
+        await assertHumeurPortraitCutscene(page, cfg.personnage, cfg.humeur);
+    });
+}
+
+const ENTREES_HUMEUR_SECRETS = [
+    { mondeId: 'monde_miroir', etat: ETAT_ENTREE_MIROIR, humeurCle: 'monde_miroir' },
+    { mondeId: 'monde_trame', etat: ETAT_ENTREE_TRAME, humeurCle: 'monde_trame' },
+    { mondeId: 'monde_paradoxe', etat: ETAT_PARADOXE_DEBLOQUE, humeurCle: 'monde_paradoxe' },
+    { mondeId: 'monde_finale', etat: ETAT_AVANT_FIN_NORMALE, humeurCle: 'monde_finale' },
+    {
+        mondeId: 'monde_finale',
+        etat: {
+            ...ETAT_AVANT_FIN_NORMALE,
+            mondesCompletes: [...ETAT_AVANT_FIN_NORMALE.mondesCompletes, 'monde_miroir'],
+            conditionsTrame: {
+                ...ETAT_AVANT_FIN_NORMALE.conditionsTrame,
+                miroirComplete: true,
+            },
+        },
+        humeurCle: 'monde_finale_miroir',
+        label: 'monde_finale_miroir',
+    },
+].filter((e) => HUMEURS_ENTREE_PIVOT[e.humeurCle]);
+
+for (const { mondeId, etat, humeurCle, label } of ENTREES_HUMEUR_SECRETS) {
+    const cfg = HUMEURS_ENTREE_PIVOT[humeurCle];
+    const nomTest = label ?? mondeId;
+    test(`entree ${nomTest} — humeur ${cfg.personnage} ${cfg.humeur} (audit D)`, async ({
+        page,
+    }) => {
+        test.setTimeout(90000);
+        await ouvrirCarteHistoire(page, etat);
+        await lancerMondeDepuisCarte(page, mondeId);
+        await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
+            timeout: 15000,
+        });
+        await avancerCutsceneJusquaPivot(page, cfg.pivot);
+        await assertHumeurPortraitCutscene(page, cfg.personnage, cfg.humeur);
+    });
+}
+
+test('humeurs entree — couvre les 21 pivots HUMEURS_ENTREE_PIVOT', () => {
+    const couverts = new Set([
+        ...ENTREES_HUMEUR_CAMPAGNE,
+        ...ENTREES_HUMEUR_SECRETS.map((e) => e.humeurCle),
+    ]);
+    expect([...couverts].sort()).toEqual(Object.keys(HUMEURS_ENTREE_PIVOT).sort());
+});

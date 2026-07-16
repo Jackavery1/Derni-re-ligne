@@ -8,7 +8,9 @@ import {
     attendreJournalHistoire,
     lancerMondeDepuisCarte,
     lancerMondeBossBrasier,
+    lancerMondeBossSentinelle,
     ETAT_HISTOIRE_BOSS_BRASIER,
+    ETAT_AVANT_BOSS_SENTINELLE,
     ETAT_CYBER_LABO_PRET,
 } from './helpers.mjs';
 import { preparerEtatPremiereEntree } from './etats-histoire-entrees.mjs';
@@ -167,6 +169,22 @@ test(
 
         await expect(page.locator('#canvas-boss-portrait')).toBeVisible();
         await expect(page.locator('#boss-nom-affiche')).toContainText('BRASIER');
+
+        assertBossPortraitDansEcran(await mesurerBossPortraitHud(page));
+    }
+);
+
+test(
+    'boss HUD 480px — Sentinelle portrait sans debordement (audit D8)',
+    { tag: '@viewport-mobile-portrait' },
+    async ({ page }) => {
+        test.setTimeout(60000);
+        await page.setViewportSize({ width: 480, height: 800 });
+        await ouvrirCarteHistoire(page, ETAT_AVANT_BOSS_SENTINELLE);
+        await lancerMondeBossSentinelle(page);
+
+        await expect(page.locator('#canvas-boss-portrait')).toBeVisible();
+        await expect(page.locator('#boss-nom-affiche')).toContainText(/SENTINELLE/i);
 
         assertBossPortraitDansEcran(await mesurerBossPortraitHud(page));
     }

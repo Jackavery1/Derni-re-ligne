@@ -23,6 +23,7 @@ import {
     MARQUEURS_NARRATIFS_POST_MONDE,
     MARQUEURS_NARRATIFS_CAMPAGNE,
     HUMEURS_POST_MONDE_PIVOT,
+    HUMEURS_ENTREE_PIVOT,
 } from '../e2e/helpers-narratif.mjs';
 import { chargerDonneesCodex, codexDebloque, verifierCodex } from '../js/codex.js';
 import { statsGlobales } from '../js/achievements.js';
@@ -110,6 +111,24 @@ describe('corrections audit', () => {
                 )
                 .sort();
             expect(Object.keys(HUMEURS_POST_MONDE_PIVOT).sort()).toEqual(mondesAvecHumeur);
+        });
+
+        it('pivots humeur entree E2E — couverture ROBO/VERA/Distorsion', () => {
+            const mondesAvecHumeur = Object.keys(CUTSCENES_ENTREE)
+                .filter((id) => {
+                    const entree = CUTSCENES_ENTREE[id];
+                    const lignes = Array.isArray(entree) ? entree : (entree?.lignes ?? []);
+                    return lignes.some(
+                        (l) =>
+                            l.humeur &&
+                            (l.personnage === 'robo' ||
+                                l.personnage === 'vera' ||
+                                l.personnage === 'distorsion')
+                    );
+                })
+                .sort();
+            expect(Object.keys(HUMEURS_ENTREE_PIVOT).sort()).toEqual(mondesAvecHumeur);
+            expect(Object.keys(HUMEURS_ENTREE_PIVOT).length).toBeGreaterThanOrEqual(16);
         });
     });
 

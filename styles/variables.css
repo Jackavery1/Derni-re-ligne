@@ -155,7 +155,7 @@
     /* ===== TAILLES TYPOGRAPHIQUES ===== */
     --taille-titre-xl: clamp(16px, 2.5vw, 28px);
     --taille-titre-lg: clamp(12px, 1.8vw, 20px);
-    --taille-titre-md: clamp(9px, 1.2vw, 14px);
+    --taille-titre-md: clamp(11px, 1.2vw, 14px);
     --taille-stats-lg: clamp(14px, 1.5vw, 18px);
     --taille-stats-md: clamp(11px, 1.2vw, 14px);
     --taille-ui-lg: clamp(15px, 1.6vw, 18px);

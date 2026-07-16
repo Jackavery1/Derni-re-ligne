@@ -110,13 +110,28 @@ describe('effets-partie', () => {
         expect(son).toHaveBeenCalledWith('tetris');
     });
 
-    it('declenche flash topout', async () => {
+    it('declenche flash topout et sfx mort', async () => {
         const { initialiserEffetsPartie } = await chargerEffets();
         const { declencherFlashTopout } = await import('../js/rendu/rendu-jeu.js');
         const { emettre } = await import('../js/etat/bus-jeu.js');
+        const { reinitialiserSfxMortPartie } = await import('../js/audio/sfx-mort-partie.js');
+        reinitialiserSfxMortPartie();
         initialiserEffetsPartie();
         emettre('partie:topout');
         expect(declencherFlashTopout).toHaveBeenCalled();
+        expect(son).toHaveBeenCalledWith('game_over');
+    });
+
+    it('joue sfx niveau sur montee et accalmie sur descente (audit B G5)', async () => {
+        const { initialiserEffetsPartie } = await chargerEffets();
+        const { emettre } = await import('../js/etat/bus-jeu.js');
+        initialiserEffetsPartie();
+        emettre('difficulte:vague', { montee: true, palierApres: 4 });
+        expect(son).toHaveBeenCalledWith('niveau');
+        son.mockClear();
+        emettre('difficulte:vague', { montee: false, palierApres: 6 });
+        expect(son).toHaveBeenCalledWith('accalmie');
+        expect(relancerIntervalleMusique).toHaveBeenCalled();
     });
 
     it('termine sprint a 40 lignes', async () => {

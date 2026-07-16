@@ -1,6 +1,7 @@
 import { CONFIG } from '../config/config-jeu.js';
 import { etat, obtenirBiomeActif } from '../etat/store-jeu.js';
-import { reagirRoboNouveauRecord, formaterTemps, obtenirTempsEcoule } from './ecrans-ui.js';
+import { reagirRoboNouveauRecord, formaterTemps } from './ecrans-ui.js';
+import { obtenirTempsEcoule } from '../logique/temps-partie.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { obtenirRecordBiome } from '../io/progression.js';
 import { obtenirEtatHistoire } from '../histoire/histoire-mondes.js';

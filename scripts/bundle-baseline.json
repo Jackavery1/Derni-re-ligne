@@ -1,20 +1,24 @@
 {
-    "date": "2026-07-16T14:30:00.000Z",
+    "date": "2026-07-16T16:40:00.000Z",
     "version": "2.5.34",
     "session": "optimisation-nettoyage",
     "avant": {
-        "bundleJsKo": 587,
-        "entreePrincipaleKo": 12,
-        "chunksJs": 185,
-        "precacheProdKo": 1166.4,
-        "distAssetsNote": "incluait WAV boss + TTF legacy"
+        "bundleJsKo": 588,
+        "entreePrincipaleKo": 15,
+        "chunksJs": 188,
+        "precacheProdKo": 1171.9,
+        "imagesSourceKo": 2547.7,
+        "jsSourceKo": 1772.7,
+        "totalSourceKo": 4686.6
     },
     "apres": {
-        "bundleJsKo": 587,
-        "entreePrincipaleKo": 12,
-        "chunksJs": 185,
-        "precacheProdKo": 1166.8,
-        "distAssetsNote": "WAV/TTF exclus du dist (filter build.mjs)"
+        "bundleJsKo": 588,
+        "entreePrincipaleKo": 15,
+        "chunksJs": 187,
+        "precacheProdKo": 1171,
+        "imagesSourceKo": 2230.5,
+        "jsSourceKo": 1768.6,
+        "totalSourceKo": 4365.2
     },
-    "notes": "Nettoyage: archive scripts, CHANGELOG allégé, barrel paradoxe déjà parti, interpolerCouleurPortrait mort, docs pattern. Opti: dist sans .wav/.ttf (~317 Ko deploy)."
+    "notes": "Nettoyage: portraits-vera write-only, accentsUi mort, TTF legacy x2, WAV boss x6. Opti: −321 Ko source (TTF+WAV), −1 chunk JS, precache −0.9 Ko. Bundle JS inchangé au plafond 588."
 }

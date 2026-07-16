@@ -8,7 +8,7 @@ export { obtenirDimensionsViewport, estViewportPortrait } from '../logique/viewp
 export { calculerEchelleInterface } from './layout-calcul.js';
 import { obtenirCanvasMenuFond, menuAnimActif } from './menu-fond.js';
 import { modeArchiEnCours, modeCoopEnCours } from '../etat/registre-modes.js';
-import { obtenirIdBiomeFond } from './biome-fond.js';
+import { obtenirIdBiomeFond } from '../etat/biome-fond.js';
 import { demarrerFondBiome, invaliderCacheFond } from './rendu-fond-biome.js';
 import { etat } from '../etat/store-jeu.js';
 
@@ -57,6 +57,15 @@ function appliquerEchelleInterface(echelle, iface, largeurTotale, hauteurTotale,
     echelle.style.setProperty('--iface-echelle-h', `${hauteurTotale * scale}px`);
     iface.style.setProperty('--iface-w', `${largeurTotale}px`);
     iface.style.setProperty('--iface-scale', String(scale));
+    const touchMinPx = `${Math.ceil(48 / scale + 1e-9)}px`;
+    iface.style.setProperty('--hud-touch-min', touchMinPx);
+    for (const id of ['btn-pause', 'btn-mute']) {
+        const btn = document.getElementById(id);
+        if (!btn) continue;
+        btn.style.setProperty('min-height', touchMinPx, 'important');
+        btn.style.setProperty('min-width', touchMinPx, 'important');
+        btn.style.setProperty('height', touchMinPx, 'important');
+    }
 }
 
 function bonusHauteurTimerMarathon() {

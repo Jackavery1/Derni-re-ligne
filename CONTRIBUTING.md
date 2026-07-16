@@ -38,7 +38,7 @@ Parcours fin secrète **avec narratif post-victoire** (sans `sansNarratif`) :
 npm run test:e2e:d9
 ```
 
-Timeout spec D9 : **3 tests sérialisés** (300 s + 300 s + 360 s max) — mondes 1–8, 9–16, secrets/fin. D9b : variante PR en 3 parties similaires, inclus dans `test:e2e:audit`. Helpers : `e2e/helpers-campagne-narratif.mjs`, `e2e/helpers-narratif-mobile.mjs`. **CI nightly :** workflow `e2e-d9-nightly.yml` (dimanche 03:00 UTC, `workflow_dispatch` manuel).
+Timeout spec D9 : **3 tests sérialisés** (300 s + 300 s + 360 s max) — mondes 1–8, 9–16, secrets/fin. D9b : variante complète avec narratif, taguée `@slow` → **exclue** de `test:e2e:audit` (`--grep-invert @slow`) ; tourne en nightly / `npm run test:e2e:d9b`. Helpers : `e2e/helpers-campagne-narratif.mjs`, `e2e/helpers-narratif-mobile.mjs`. **CI nightly :** workflow `e2e-d9-nightly.yml` (dimanche 03:00 UTC, `workflow_dispatch` manuel).
 
 **Commit manuel :** `npm run commit -- "type(scope): sujet"` (Conventional Commits obligatoire via hook `commit-msg`). **Push :** le hook `pre-push` exécute lint, format, typecheck, cycles, données et tests unitaires (~1–2 min).
 

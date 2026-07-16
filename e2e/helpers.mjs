@@ -34,6 +34,7 @@ export {
     preparerPremierLancement,
     preparerPageSansSw,
     preparerPageModeLibreTutorielActif,
+    preparerPageTutorielHistoireActif,
     attendreApplicationPrete,
     attendreNotificationsInitiales,
     fermerInfobulleContexteSiVisible,

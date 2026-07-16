@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: var(--space-4);
     padding: clamp(18px, 3vw, 28px) clamp(20px, 4vw, 36px);
     border: 2px solid var(--rgba-255-0-110-0-5);
     background: var(--rgba-8-8-26-0-9);
@@ -94,7 +94,7 @@
 /* Pièces décoratives en haut du game over */
 .go-deco {
     display: flex;
-    gap: 8px;
+    gap: var(--space-2);
     align-items: center;
     font-size: 1.2rem;
     line-height: 1;
@@ -120,18 +120,18 @@
 .go-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: var(--space-2);
     width: 100%;
 }
 
 .go-stat {
     background: var(--rgba-255-255-255-0-03);
     border: 1px solid var(--bordure);
-    padding: 10px 8px;
+    padding: calc(var(--space-2) + 2px) var(--space-2);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: calc(var(--space-1) + 2px);
     transition: border-color 0.3s;
 }
 .go-stat:hover {
@@ -171,7 +171,7 @@
     width: 100%;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
 }
 
 .melodie-titre-label {
@@ -188,7 +188,7 @@
     text-shadow: 0 0 8px var(--jaune);
     letter-spacing: 2px;
     text-align: center;
-    margin-bottom: 8px;
+    margin-bottom: var(--space-2);
 }
 
 #canvas-melodie {
@@ -207,7 +207,7 @@
     border: 1px solid var(--jaune);
     color: var(--jaune);
     font-size: var(--typo-ui-caption);
-    padding: 10px 20px;
+    padding: calc(var(--space-2) + 2px) calc(var(--space-4) + 4px);
     letter-spacing: 3px;
     text-shadow: 0 0 10px var(--jaune);
     animation: recordPulse 1.5s ease-in-out infinite;
@@ -216,14 +216,14 @@
 
 .go-boutons {
     display: flex;
-    gap: 12px;
+    gap: var(--space-3);
     flex-wrap: wrap;
     justify-content: center;
 }
 
 @media (max-width: 768px) {
     .go-contenu {
-        margin: 12px;
+        margin: var(--space-3);
         max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 24px);
         overflow-y: auto;
         overflow-x: hidden;
@@ -244,8 +244,8 @@
     }
 
     .go-contenu {
-        gap: 10px;
-        padding: 12px 16px;
+        gap: calc(var(--space-2) + 2px);
+        padding: var(--space-3) var(--space-4);
         max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 24px);
         overflow-y: auto;
         overflow-x: hidden;
@@ -254,7 +254,7 @@
     .go-stats {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
+        gap: var(--space-2);
         width: 100%;
     }
 

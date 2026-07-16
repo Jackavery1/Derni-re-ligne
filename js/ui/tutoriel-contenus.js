@@ -22,6 +22,7 @@ export const SLIDES_PROLOGUE = [
         lignes: [
             'Chaque monde se termine après un quota de lignes ou un combat de boss — visez ★★★ pour les secrets.',
             'Les boss changent de phase quand leur jauge baisse ; le palier de vitesse monte en partie.',
+            'À l’atterrissage, un court délai (lock) et une fenêtre coyote permettent encore de bouger — ce n’est pas un bug.',
             'Chaque biome modifie les règles (météo, cellules vivantes, reliques…) : lisez l’indicateur sous l’objectif.',
         ],
     },
@@ -45,6 +46,7 @@ export const SLIDES_LIBRE = [
             'Choisissez un biome sur la constellation, puis effacez des lignes pour monter en niveau.',
             'En marathon, le compteur TEMPS NIV. force un passage de niveau à zéro — la barre sous le chrono montre le temps restant.',
             'Le sprint vise 40 lignes au chrono, sans timer de niveau.',
+            'À l’atterrissage, un court délai (lock) et une fenêtre coyote permettent encore de bouger — ce n’est pas un bug.',
         ],
         avecControles: true,
     },

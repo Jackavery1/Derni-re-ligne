@@ -224,11 +224,28 @@ export function obtenirCutscenePostMonde(mondeId, premiereCompletion) {
     const entree = _textes().CUTSCENES_POST_MONDE[mondeId];
     const lignes = extraireLignesCutscene(entree);
     if (!lignes.length) return null;
+
+    /** @param {typeof lignes} lignesBrutes @param {string | null} scene */
+    const propagerScene = (lignesBrutes, scene) => {
+        if (!scene) return lignesBrutes;
+        return lignesBrutes.map((l) => {
+            if (!l || typeof l !== 'object') return l;
+            if (/** @type {{ scene?: string }} */ (l).scene) return l;
+            return { ...l, scene };
+        });
+    };
+
     if (Array.isArray(entree)) {
         const scene = lignes[0]?.scene ?? SCENE_DEFAUT_POST_MONDE[mondeId] ?? null;
-        return scene ? { scene, lignes: entree } : { lignes: entree };
+        const lignesProp = propagerScene(entree, scene);
+        return scene ? { scene, lignes: lignesProp } : { lignes: lignesProp };
     }
-    if (entree?.scene) return entree;
+    if (entree?.scene) {
+        return {
+            scene: entree.scene,
+            lignes: propagerScene(lignes, entree.scene),
+        };
+    }
     const scene = SCENE_DEFAUT_POST_MONDE[mondeId];
-    return scene ? { scene, lignes } : { lignes };
+    return scene ? { scene, lignes: propagerScene(lignes, scene) } : { lignes };
 }
