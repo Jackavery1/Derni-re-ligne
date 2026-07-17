@@ -21,6 +21,23 @@ vi.mock('../js/ui/navigation-lazy.js', () => ({
     cacherEcransDiffere: vi.fn(),
 }));
 
+vi.mock('../js/ui/navigation-actions.js', () => ({
+    configurerNavigationActions: vi.fn(),
+    obtenirNavigationActions: vi.fn(() => ({
+        cacherEcrans: null,
+        afficherEcranAsync: null,
+    })),
+    afficherEcranDiffere: vi.fn((id) => {
+        const el = globalThis.document.getElementById(id);
+        el?.classList?.add?.('actif');
+    }),
+    afficherEcranDiffereAsync: vi.fn(async (id) => {
+        const el = globalThis.document.getElementById(id);
+        el?.classList?.add?.('actif');
+    }),
+    cacherEcransDiffere: vi.fn(),
+}));
+
 vi.mock('../js/rendu/scenes-cutscene.js', async (importOriginal) => {
     const mod = await importOriginal();
     return { ...mod, prechargerScenes: vi.fn(async () => {}) };

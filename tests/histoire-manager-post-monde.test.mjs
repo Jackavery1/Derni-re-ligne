@@ -250,4 +250,29 @@ describe('histoire-manager-post-monde', () => {
             expect(fragment.length, cle).toBeGreaterThan(0);
         }
     });
+
+    it('fragment VERA propage la scene post-monde (audit D5)', async () => {
+        const { chargerHistoireTextes } = await import('../js/io/charger-histoire-textes.js');
+        await chargerHistoireTextes();
+        const { declencherNarratifPostMonde } =
+            await import('../js/histoire/histoire-manager-post-monde.js');
+        const { afficherCutsceneHistoire } = await import('../js/histoire/histoire-manager-ui.js');
+        const { SCENE_DEFAUT_POST_MONDE } =
+            await import('../js/histoire/histoire-narratif-scenes.js');
+
+        const monde = { id: 'monde_ocean', biomeId: 'ocean', estBoss: false };
+        const etat = structuredClone(ETAT_HISTOIRE_VIDE);
+        store.histoire.etat = etat;
+
+        declencherNarratifPostMonde(monde, etat, true, [true, false, false]);
+        await vi.waitFor(() => expect(afficherCutsceneHistoire).toHaveBeenCalled(), {
+            timeout: ATTENTE_ASYNC_MS,
+        });
+
+        const textes = afficherCutsceneHistoire.mock.calls[0]?.[0];
+        expect(textes?.scene).toBe(SCENE_DEFAUT_POST_MONDE.monde_ocean);
+        expect(textes?.lignes?.every((l) => l.scene === SCENE_DEFAUT_POST_MONDE.monde_ocean)).toBe(
+            true
+        );
+    });
 });

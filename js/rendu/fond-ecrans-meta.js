@@ -21,7 +21,24 @@ function arretRafMeta() {
     }
 }
 
-const COULEURS_ANIM = ['#00ddc8', '#6644cc', '#ffffff', '#ffffff', '#00ddc8', '#6644cc'];
+const COULEURS_ANIM_FALLBACK = ['#00ddc8', '#6644cc', '#ffffff', '#ffffff', '#00ddc8', '#6644cc'];
+
+function lireTokenCouleur(nom, fallback) {
+    if (typeof document === 'undefined') return fallback;
+    const v = getComputedStyle(document.documentElement).getPropertyValue(nom).trim();
+    return v || fallback;
+}
+
+function couleursAnimMeta() {
+    if (typeof document === 'undefined') {
+        return { palette: COULEURS_ANIM_FALLBACK, rose: '#ff2d78' };
+    }
+    const cyan = lireTokenCouleur('--cyan-mascotte', '#00ddc8');
+    const accent = lireTokenCouleur('--accent-carte', '#6644cc');
+    const blanc = lireTokenCouleur('--texte-inverse', '#ffffff');
+    const rose = lireTokenCouleur('--rose-ui', '#ff2d78');
+    return { palette: [cyan, accent, blanc, blanc, cyan, accent], rose };
+}
 
 function creerRng(seed) {
     let s = seed >>> 0;
@@ -68,6 +85,9 @@ function creerSurface(w, h) {
 
 function genererDonnees(w, h, teinte) {
     const rng = creerRng(w * 65537 + h * 131);
+    const { palette, rose } = couleursAnimMeta();
+    const accentCarte = lireTokenCouleur('--accent-carte', '#6644cc');
+    const cyan = lireTokenCouleur('--cyan-mascotte', '#00ddc8');
     const nebuleuses = [];
     const nbNeb = 2 + Math.floor(rng() * 2);
     for (let i = 0; i < nbNeb; i++) {
@@ -77,8 +97,8 @@ function genererDonnees(w, h, teinte) {
             i === nbNeb - 1 && teinte
                 ? rgbaTeinte(teinte, 0.08)
                 : i % 2 === 0
-                  ? 'rgba(102,68,204,0.10)'
-                  : 'rgba(0,221,200,0.06)';
+                  ? rgbaTeinte(accentCarte, 0.1)
+                  : rgbaTeinte(cyan, 0.06);
         nebuleuses.push({
             x: rng() * w,
             y: rng() * h,
@@ -108,7 +128,7 @@ function genererDonnees(w, h, teinte) {
             y: rng() * h,
             type: rng() < 0.5 ? 'plus' : 'croix',
             taille: 5,
-            couleur: rare ? '#ff2d78' : COULEURS_ANIM[Math.floor(rng() * COULEURS_ANIM.length)],
+            couleur: rare ? rose : palette[Math.floor(rng() * palette.length)],
             vitesse: 0.8 + rng() * 1.6,
             dephasage: rng() * Math.PI * 2,
             derivePxMin: 2 + rng() * 2,

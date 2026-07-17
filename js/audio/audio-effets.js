@@ -1,5 +1,70 @@
 import { jouerEffetBossProcedural } from './audio-effets-boss-fallback.js';
 
+function jouerSfxJuiceScore(ctx, gainEffets, volumeEffets, mult, t, type, noteVersFreq, biomeId) {
+    if (type === 'tspin' || type === 'tspin_mini') {
+        const freqs =
+            type === 'tspin'
+                ? [
+                      noteVersFreq(0, 0, biomeId),
+                      noteVersFreq(4, 0, biomeId),
+                      noteVersFreq(7, 0, biomeId),
+                      noteVersFreq(11, 0, biomeId),
+                  ]
+                : [noteVersFreq(0, 0, biomeId), noteVersFreq(7, 0, biomeId)];
+        freqs.forEach((freq, i) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = 'triangle';
+            o.frequency.value = freq;
+            const ti = t + i * 0.05;
+            g.gain.setValueAtTime(0, ti);
+            g.gain.linearRampToValueAtTime(0.16 * volumeEffets * mult, ti + 0.02);
+            g.gain.linearRampToValueAtTime(0, ti + 0.2);
+            o.connect(g);
+            g.connect(gainEffets);
+            o.start(ti);
+            o.stop(ti + 0.22);
+        });
+        return true;
+    }
+    if (type === 'combo') {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'square';
+        o.frequency.setValueAtTime(noteVersFreq(0, 0, biomeId), t);
+        o.frequency.linearRampToValueAtTime(noteVersFreq(12, 0, biomeId), t + 0.12);
+        g.gain.setValueAtTime(0.12 * volumeEffets * mult, t);
+        g.gain.linearRampToValueAtTime(0, t + 0.14);
+        o.connect(g);
+        g.connect(gainEffets);
+        o.start(t);
+        o.stop(t + 0.15);
+        return true;
+    }
+    if (type === 'b2b') {
+        [
+            noteVersFreq(0, 0, biomeId),
+            noteVersFreq(7, 0, biomeId),
+            noteVersFreq(12, 0, biomeId),
+        ].forEach((freq, i) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = 'sawtooth';
+            o.frequency.value = freq;
+            const ti = t + i * 0.07;
+            g.gain.setValueAtTime(0, ti);
+            g.gain.linearRampToValueAtTime(0.14 * volumeEffets * mult, ti + 0.02);
+            g.gain.linearRampToValueAtTime(0, ti + 0.18);
+            o.connect(g);
+            g.connect(gainEffets);
+            o.start(ti);
+            o.stop(ti + 0.2);
+        });
+        return true;
+    }
+    return false;
+}
+
 export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif, obtenirMultEffets }) {
     const multEffets = () => (typeof obtenirMultEffets === 'function' ? obtenirMultEffets() : 1);
     return {
@@ -22,6 +87,20 @@ export function creerMethodesEffets({ noteVersFreq, obtenirBiomeActif, obtenirMu
             }
 
             const biomeId = obtenirBiomeActif();
+            if (
+                jouerSfxJuiceScore(
+                    ctx,
+                    this.gainEffets,
+                    this.volumeEffets,
+                    mult,
+                    t,
+                    type,
+                    noteVersFreq,
+                    biomeId
+                )
+            ) {
+                return;
+            }
 
             switch (type) {
                 case 'deplacement': {

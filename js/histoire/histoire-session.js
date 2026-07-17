@@ -26,7 +26,7 @@ import { modeDevActif } from '../logique/mode-dev-etat.js';
 import { obtenirActionsHistoire, configurerActionsHistoire } from './histoire-actions.js';
 import { arreterSuiviMonde, demarrerSuiviMonde } from '../logique/gestionnaire-difficulte.js';
 import { activerModeHistoire, desactiverModeHistoire } from '../etat/mode-histoire.js';
-import { cacherEcransDiffere, afficherEcranDiffere } from '../ui/navigation-lazy.js';
+import { cacherEcransDiffere, afficherEcranDiffere } from '../ui/navigation-actions.js';
 import { utiliserContinueGratuitDistorsion } from './histoire-boss-continue.js';
 
 function fermerOverlaysFluxPartie() {
@@ -155,15 +155,12 @@ export async function enchainerCampagneApresMonde(mondeId) {
     document.body.classList.remove('partie-active');
 
     const suivantId = id ? obtenirProchainMondeCampagne(id) : null;
-    const [{ afficherBoutonCarteGameOver }, { cacherEcrans, afficherEcran }] = await Promise.all([
-        import('./histoire-manager-ui.js'),
-        import('../ui/navigation-ecrans.js'),
-    ]);
+    const { afficherBoutonCarteGameOver } = await import('./histoire-manager-ui.js');
 
     if (suivantId && enchainementCampagneActif()) {
         afficherBoutonCarteGameOver(false);
         fermerOverlaysFluxPartie();
-        cacherEcrans();
+        cacherEcransDiffere();
         const mondeSuivant = SEQUENCE_HISTOIRE.find((m) => m.id === suivantId);
         if (mondeSuivant) {
             afficherNotificationTransitionCampagne(mondeSuivant.nomAffiche ?? mondeSuivant.id);
@@ -173,7 +170,7 @@ export async function enchainerCampagneApresMonde(mondeId) {
     }
 
     afficherBoutonCarteGameOver(true);
-    afficherEcran(ECRANS.GAME_OVER);
+    afficherEcranDiffere(ECRANS.GAME_OVER);
     return false;
 }
 
@@ -184,10 +181,7 @@ export async function retournerACarte() {
     document.body.classList.remove('histoire-active');
     arreterBoss();
     arreterFondFin();
-    const [{ afficherBoutonCarteGameOver }, { afficherEcran }] = await Promise.all([
-        import('./histoire-manager-ui.js'),
-        import('../ui/navigation-ecrans.js'),
-    ]);
+    const { afficherBoutonCarteGameOver } = await import('./histoire-manager-ui.js');
     afficherBoutonCarteGameOver(false);
 
     if (store.histoire.dernierJournal) {
@@ -196,11 +190,11 @@ export async function retournerACarte() {
         const { afficherJournalVera } = await import('./histoire-narratif.js');
         afficherJournalVera(journal, () => {
             activerModeHistoire();
-            afficherEcran(ECRANS.HISTOIRE_MAP);
+            afficherEcranDiffere(ECRANS.HISTOIRE_MAP);
         });
     } else {
         activerModeHistoire();
-        afficherEcran(ECRANS.HISTOIRE_MAP);
+        afficherEcranDiffere(ECRANS.HISTOIRE_MAP);
     }
 }
 

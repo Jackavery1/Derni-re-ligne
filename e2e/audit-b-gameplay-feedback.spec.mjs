@@ -133,6 +133,60 @@ test('audit B — sfx mort au topout (G5)', async ({ page }) => {
     expect(sfx).toContain('game_over');
 });
 
+test('audit B — sfx tspin combo b2b (G5)', async ({ page }) => {
+    await demarrerPartie(page);
+    await page.evaluate(() => window.__NEO_TEST__?.viderJournalSfxTest?.());
+    await page.evaluate(() => {
+        window.__NEO_TEST__?.emettreEvenementBusJeu?.('score:maj', {
+            nbLignes: 2,
+            result: {
+                points: 400,
+                combo: 3,
+                tetris: false,
+                tSpin: 'full',
+                backToBack: false,
+                levelUp: false,
+            },
+        });
+        window.__NEO_TEST__?.emettreEvenementBusJeu?.('score:maj', {
+            nbLignes: 4,
+            result: {
+                points: 1200,
+                combo: 1,
+                tetris: true,
+                tSpin: null,
+                backToBack: true,
+                levelUp: false,
+            },
+        });
+    });
+    const sfx = await page.evaluate(() => window.__NEO_TEST__?.obtenirJournalSfxTest?.() ?? []);
+    expect(sfx).toContain('tspin');
+    expect(sfx).toContain('combo');
+    expect(sfx).toContain('b2b');
+});
+
+test('audit B — haptique synchronisee au topout (G5)', async ({ page }) => {
+    await installerJournalVibrations(page);
+    await demarrerPartie(page);
+    const motif = await page.evaluate(() => {
+        window.__NEO_VIBRATE_LOG__ = [];
+        window.__NEO_TEST__?.emettreEvenementBusJeu?.('partie:topout');
+        return window.__NEO_VIBRATE_LOG__?.[0] ?? null;
+    });
+    expect(motif).toEqual([80, 50, 80]);
+});
+
+test('audit B — soft-drop DAS guideline a 0 (G2)', async ({ page }) => {
+    await demarrerPartie(page);
+    const soft = await page.evaluate(async () => {
+        const { CONFIG } = await import('/js/config/config-jeu.js');
+        return { dasDelaiSoft: CONFIG.dasDelaiSoft, dasDelai: CONFIG.dasDelai };
+    });
+    expect(soft.dasDelaiSoft).toBe(0);
+    expect(soft.dasDelai).toBeGreaterThan(0);
+});
+
 test('audit B — HUD boss labels lisibles (>= 11px)', async ({ page }) => {
     test.setTimeout(60000);
     await ouvrirCarteHistoire(page);

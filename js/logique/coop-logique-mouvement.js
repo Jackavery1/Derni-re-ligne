@@ -70,8 +70,11 @@ export function coop_deplacerBas(joueur) {
     jData.poseApresRotation = false;
     if (deplacerPieceSiValide(p, 0, 1, (piece, dx, dy) => coop_estPositionValide(piece, dx, dy))) {
         coop.score += 1;
+        const accKey = joueur === 'j1' ? 'accJ1' : 'accJ2';
+        coop[accKey] = 0;
         coop_rafraichirStats();
         coopQuitterSolPiece(joueur);
+        emettre('piece:son', { type: 'deplacement' });
     }
 }
 

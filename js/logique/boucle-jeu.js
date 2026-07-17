@@ -87,9 +87,6 @@ export function suspendreBoucleSolo() {
 }
 
 export function planifierBoucle() {
-    const ctx = obtenirCtx();
-    const canvasPlateau = obtenirCanvasPlateau();
-    if (!ctx || !canvasPlateau) return;
     if (!aBesoinDeBoucle()) {
         definirBoucleActive(false);
         const idFrame = obtenirIdFrame();
@@ -98,6 +95,8 @@ export function planifierBoucle() {
         definirDernierTimestamp(0);
         return;
     }
+    const plateauPret = Boolean(obtenirCtx() && obtenirCanvasPlateau());
+    if (!plateauPret && !menuAnimActif) return;
     if (!obtenirBoucleActive()) definirDernierTimestamp(0);
     definirBoucleActive(true);
     cancelAnimationFrame(obtenirIdFrame());
@@ -109,33 +108,32 @@ function boucleJeu(timestamp) {
         suspendreBoucleSolo();
         return;
     }
-    const ctx = obtenirCtx();
-    const canvasPlateau = obtenirCanvasPlateau();
-    if (!ctx || !canvasPlateau) {
-        planifierBoucle();
-        return;
-    }
 
     try {
         const dernierTimestamp = obtenirDernierTimestamp();
         const deltaTemps = dernierTimestamp ? timestamp - dernierTimestamp : 0;
         definirDernierTimestamp(timestamp);
-        mettreAJourFps(deltaTemps);
 
         if (menuAnimActif) mettreAJourMenuFond(deltaTemps);
 
-        const enPartie = etat.estEnCours && !etat.estEnPause;
+        const ctx = obtenirCtx();
+        const canvasPlateau = obtenirCanvasPlateau();
+        if (ctx && canvasPlateau) {
+            mettreAJourFps(deltaTemps);
 
-        if (enPartie) {
-            mettreAJourTickPartieActive(deltaTemps, timestamp);
-        }
+            const enPartie = etat.estEnCours && !etat.estEnPause;
 
-        if (obtenirTransitionAlpha() < 1) mettreAJourTransition();
+            if (enPartie) {
+                mettreAJourTickPartieActive(deltaTemps, timestamp);
+            }
 
-        mettreAJourTimersEffets(deltaTemps);
+            if (obtenirTransitionAlpha() < 1) mettreAJourTransition();
 
-        if (enPartie || effetsVisuelsActifs()) {
-            dessinerFrameSolo(ctx, enPartie);
+            mettreAJourTimersEffets(deltaTemps);
+
+            if (enPartie || effetsVisuelsActifs()) {
+                dessinerFrameSolo(ctx, enPartie);
+            }
         }
         erreursConsecutivesBoucle = 0;
     } catch (err) {

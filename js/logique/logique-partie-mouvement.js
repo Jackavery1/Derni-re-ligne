@@ -1,7 +1,12 @@
 import { TETROMINOS } from '../config/config-jeu.js';
 import { meteo, ETATS_METEO } from './meteo.js';
 import { emettre } from '../etat/bus-jeu.js';
-import { etat, definirLockDelayRestant, definirPieceAuSol } from '../etat/store-jeu.js';
+import {
+    etat,
+    definirLockDelayRestant,
+    definirPieceAuSol,
+    definirAccumulateur,
+} from '../etat/store-jeu.js';
 import { estPositionValide, calculerDistanceChute, reinitialiserLockDelay } from './piece-jeu.js';
 import {
     compterRotation,
@@ -90,8 +95,10 @@ export function deplacerBas() {
     if (estPositionValide(etat.pieceActuelle, 0, 1)) {
         etat.pieceActuelle.y++;
         etat.score++;
+        definirAccumulateur(0);
         definirPieceAuSol(false);
         definirLockDelayRestant(0);
+        emettre('piece:son', { type: 'deplacement' });
         emettre('partie:stats');
     }
 }
@@ -103,8 +110,10 @@ export function chuteRapide() {
         if (estPositionValide(etat.pieceActuelle, 0, 1)) {
             etat.pieceActuelle.y++;
             etat.score++;
+            definirAccumulateur(0);
             definirPieceAuSol(false);
             definirLockDelayRestant(0);
+            emettre('piece:son', { type: 'deplacement' });
             emettre('partie:stats');
         }
         return;

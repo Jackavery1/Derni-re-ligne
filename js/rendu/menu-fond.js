@@ -110,7 +110,11 @@ export function mettreAJourMenuFond(deltaTemps) {
 export function demarrerAnimationMenu() {
     if (menuAnimActif) return;
     menuAnimActif = true;
-    if (piecesFond.length === 0) initPiecesFond();
+    const canvas = obtenirCanvasMenuFond();
+    const { w, h } = obtenirDimensionsMenuFond();
+    if (piecesFond.length === 0 || !canvas || canvas.width !== w || canvas.height !== h) {
+        initPiecesFond();
+    }
     obtenirActions().planifierBoucle?.();
 }
 

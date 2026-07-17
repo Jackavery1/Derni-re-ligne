@@ -153,7 +153,8 @@ export function mettreAJourDas(deltaTemps) {
         if (!dasEtat[code]) dasEtat[code] = { moment: 0, repete: false };
         const das = dasEtat[code];
         das.moment += deltaTemps;
-        if (!das.repete && das.moment >= CONFIG.dasDelai) {
+        const delaiInitial = code === touches.bas ? CONFIG.dasDelaiSoft : CONFIG.dasDelai;
+        if (!das.repete && das.moment >= delaiInitial) {
             das.repete = true;
             das.moment = 0;
             action();

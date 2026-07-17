@@ -94,7 +94,7 @@
     }
 
     .objectif-hud-etoiles {
-        gap: 3px;
+        gap: var(--space-1);
         flex-wrap: wrap;
     }
 
@@ -142,7 +142,7 @@
         bottom: calc(56px + var(--safe-bottom));
         max-width: min(92vw, 340px);
         padding: var(--space-3) var(--space-4);
-        gap: 5px;
+        gap: var(--space-1);
     }
 }
 

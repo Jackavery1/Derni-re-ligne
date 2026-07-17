@@ -15,6 +15,7 @@ export const CONFIG = {
     sprintInputBufferMax: 3,
     delaiNarratifVictoireHistoireMs: 900,
     dasDelai: 167,
+    dasDelaiSoft: 0,
     arrInterval: 33,
     sprintLignes: 40,
     sprintVitesseBase: 1000,

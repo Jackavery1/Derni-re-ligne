@@ -215,6 +215,7 @@ export const CUTSCENES_ENTREE_FINALE = {
             scene: 'trame_primordiale',
             personnage: 'vera',
             texte: "Mais ce que tu en feras après — ça, c'est toi.",
+            humeur: 'determinee',
         },
     ],
 

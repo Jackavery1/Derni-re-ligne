@@ -835,7 +835,8 @@
             {
                 "scene": "trame_primordiale",
                 "personnage": "vera",
-                "texte": "Mais ce que tu en feras après — ça, c'est toi."
+                "texte": "Mais ce que tu en feras après — ça, c'est toi.",
+                "humeur": "determinee"
             }
         ],
         "monde_paradoxe": {
@@ -1898,7 +1899,8 @@
                 },
                 {
                     "personnage": "robo",
-                    "texte": "Pour la première fois, je comprends que c'était ça, le but."
+                    "texte": "Pour la première fois, je comprends que c'était ça, le but.",
+                    "humeur": "content"
                 }
             ]
         },

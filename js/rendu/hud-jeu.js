@@ -19,8 +19,9 @@ import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { obtenirSuiviDifficulte } from '../logique/gestionnaire-difficulte.js';
 import { obtenirScoreAffiche } from '../logique/oracle-jeu.js';
 import { obtenirTempsEcoule } from '../logique/temps-partie.js';
+import { formaterTemps } from '../logique/formatage.js';
 
-export { obtenirTempsEcoule };
+export { obtenirTempsEcoule, formaterTemps };
 
 export function chargerProgression() {
     definirNiveauGlobal(chargerNiveauGlobal());
@@ -34,13 +35,6 @@ export function sauvegarderRecord(score) {
 export function mettreAJourAffichageRecord() {
     const el = document.getElementById('menu-record-val');
     if (el) el.textContent = obtenirRecordBiome(obtenirBiomeActif()).toLocaleString('fr-FR');
-}
-
-export function formaterTemps(ms) {
-    const sec = Math.max(0, Math.floor(ms / 1000));
-    const mm = Math.floor(sec / 60);
-    const ss = sec % 60;
-    return `${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
 }
 
 export function mettreAJourAffichageTemps() {

@@ -21,6 +21,7 @@ const MOTIFS = {
 };
 
 let initialises = false;
+let haptiqueMortJoue = false;
 
 export function haptiqueActif() {
     if (typeof navigator === 'undefined' || typeof navigator.vibrate !== 'function') return false;
@@ -46,6 +47,16 @@ export function vibrer(type) {
 export function initialiserHaptique() {
     if (initialises || typeof window === 'undefined') return;
     initialises = true;
+
+    ecouter('fond-biome:demarrer', () => {
+        haptiqueMortJoue = false;
+    });
+
+    ecouter('partie:topout', () => {
+        if (haptiqueMortJoue) return;
+        haptiqueMortJoue = true;
+        vibrer('gameOver');
+    });
 
     ecouter('piece:son', ({ type }) => {
         if (type === 'deplacement') vibrer('deplacement');
@@ -79,6 +90,10 @@ export function vibrerUi() {
 }
 
 export function vibrerFinPartie(victoire) {
+    if (!victoire) {
+        if (haptiqueMortJoue) return;
+        haptiqueMortJoue = true;
+    }
     vibrer(victoire ? 'victoire' : 'gameOver');
 }
 
@@ -89,4 +104,5 @@ export function vibrerBossAttaque() {
 /** @internal tests */
 export function _reinitialiserHaptiquePourTests() {
     initialises = false;
+    haptiqueMortJoue = false;
 }

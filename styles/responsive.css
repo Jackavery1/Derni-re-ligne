@@ -91,7 +91,7 @@ body.contraste-eleve .btn-cutscene-passer {
     }
     #section-mascotte {
         padding: 4px 2px;
-        gap: 2px;
+        gap: calc(var(--space-1) / 2);
     }
     #section-mascotte .section-titre {
         font-size: var(--typo-hud-micro);
@@ -100,7 +100,7 @@ body.contraste-eleve .btn-cutscene-passer {
     .panneau .section:nth-child(2) {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 2px 4px;
+        gap: calc(var(--space-1) / 2) var(--space-1);
         align-content: start;
     }
 
@@ -122,7 +122,7 @@ body.contraste-eleve .btn-cutscene-passer {
         grid-column: 1 / -1;
         margin-top: 2px;
         padding-top: 4px;
-        gap: 3px;
+        gap: var(--space-1);
     }
 
     #section-progression #affichage-restant {

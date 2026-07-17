@@ -162,6 +162,17 @@ describe('piece-jeu', () => {
         touchesActives[TOUCHES_DEFAUT.gauche] = false;
     });
 
+    it('mettreAJourDas soft-drop sans delai initial (guideline)', () => {
+        let appels = 0;
+        configurerActionsJeu({ deplacerBas: () => appels++ });
+        dasEtat[TOUCHES_DEFAUT.bas] = { moment: 0, repete: false };
+        touchesActives[TOUCHES_DEFAUT.bas] = true;
+        mettreAJourDas(1);
+        expect(appels).toBe(1);
+        expect(CONFIG.dasDelaiSoft).toBe(0);
+        touchesActives[TOUCHES_DEFAUT.bas] = false;
+    });
+
     it('mettreAJourIndicateurRelique affiche le compte a rebours', () => {
         const indic = {
             style: { display: 'none', color: '' },

@@ -44,8 +44,8 @@
 
 #notif-achievement {
     position: fixed;
-    bottom: -120px;
-    right: 20px;
+    bottom: calc(-120px - var(--safe-bottom));
+    right: max(20px, var(--safe-right));
     display: flex;
     align-items: center;
     gap: var(--space-3);
@@ -59,7 +59,7 @@
     pointer-events: none;
 }
 #notif-achievement.visible {
-    bottom: 24px;
+    bottom: calc(24px + var(--safe-bottom));
 }
 .ach-badge {
     flex-shrink: 0;

@@ -17,7 +17,7 @@ import { logger } from '../io/logger.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { creerFile } from './file-narrative.js';
 import { extraireLignesCutscene } from './histoire-cutscene-moteur.js';
-import { SCENE_DEFAUT_INTERLUDE } from './histoire-narratif-scenes.js';
+import { SCENE_DEFAUT_INTERLUDE, SCENE_DEFAUT_POST_MONDE } from './histoire-narratif-scenes.js';
 import { JOURNAUX_VERA } from '../histoire/histoire-donnees-exports.js';
 const INTERLUDES_PAR_MONDE = {
     monde_rouille: 'interlude_gardiens',
@@ -98,10 +98,15 @@ function _executerFragmentVera(mondeId, suivant) {
     store.histoire.etat = etatHist;
 
     const fragment = FRAGMENTS_VERA_SIGNAL[cleFragment];
+    const scene = SCENE_DEFAUT_POST_MONDE[mondeId] ?? 'labo';
+    const lignes = Array.isArray(fragment)
+        ? fragment.map((l) => (l?.scene ? l : { ...l, scene }))
+        : fragment;
+    const entree = Array.isArray(fragment) ? { scene, lignes } : fragment;
     try {
         void import('./histoire-manager-ui.js')
             .then(({ afficherCutsceneHistoire }) => {
-                afficherCutsceneHistoire(fragment, null, suivant);
+                afficherCutsceneHistoire(entree, null, suivant);
             })
             .catch((err) => {
                 logger.warn('[histoire] fragment VERA indisponible :', err);

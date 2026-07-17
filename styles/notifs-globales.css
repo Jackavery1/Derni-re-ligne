@@ -19,8 +19,8 @@
 
 #notif-codex {
     position: fixed;
-    bottom: -110px;
-    left: 20px;
+    bottom: calc(-110px - var(--safe-bottom));
+    left: max(20px, var(--safe-left));
     display: flex;
     align-items: center;
     gap: 12px;
@@ -34,7 +34,7 @@
     pointer-events: none;
 }
 #notif-codex.visible {
-    bottom: 24px;
+    bottom: calc(24px + var(--safe-bottom));
 }
 .codex-notif-icone-wrap {
     line-height: 0;

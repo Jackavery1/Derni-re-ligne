@@ -30,6 +30,8 @@ export function reinitialiserDasCoop() {
     dasEtat.j2 = {};
 }
 
+const CODES_SOFT_DROP = new Set(['KeyS', 'ArrowDown']);
+
 /**
  * @param {number} deltaTemps
  * @param {Record<'j1' | 'j2', Partial<Record<string, () => void>>>} actionParJoueur
@@ -41,7 +43,8 @@ export function mettreAJourDasCoop(deltaTemps, actionParJoueur) {
             const das = dasEtat[joueur][code] ?? { moment: 0, repete: false };
             dasEtat[joueur][code] = das;
             das.moment += deltaTemps;
-            if (!das.repete && das.moment >= CONFIG.dasDelai) {
+            const delaiInitial = CODES_SOFT_DROP.has(code) ? CONFIG.dasDelaiSoft : CONFIG.dasDelai;
+            if (!das.repete && das.moment >= delaiInitial) {
                 das.repete = true;
                 das.moment = 0;
                 action();

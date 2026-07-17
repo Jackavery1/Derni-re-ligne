@@ -175,11 +175,13 @@ export async function passerFluxLancementMonde(page) {
 /** @param {import('@playwright/test').Page} page */
 export async function demarrerPartie(page) {
     await preparerPageSansSw(page);
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
     await attendreApplicationPrete(page);
     await attendreNotificationsInitiales(page);
-    await page.locator('#btn-jouer').click();
-    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    const btnJouer = page.locator('#btn-jouer');
+    await expect(btnJouer).toBeVisible({ timeout: 15000 });
+    await btnJouer.click();
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/, { timeout: 10000 });
     await selectionnerBiomeClavier(page);
     await confirmerDemarragePartie(page);
     await attendrePartieVisible(page);
@@ -188,15 +190,17 @@ export async function demarrerPartie(page) {
 /** @param {import('@playwright/test').Page} page */
 export async function demarrerPartieViaClavier(page) {
     await preparerPageSansSw(page);
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
     const fermerTutoriel = page.locator('#btn-tutoriel-fermer');
     if (await boutonEstVisible(page, '#btn-tutoriel-fermer')) {
         await fermerTutoriel.click();
     }
     await attendreApplicationPrete(page);
     await attendreNotificationsInitiales(page);
-    await page.locator('#btn-jouer').click();
-    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
+    const btnJouer = page.locator('#btn-jouer');
+    await expect(btnJouer).toBeVisible({ timeout: 15000 });
+    await btnJouer.click();
+    await expect(page.locator('#ecran-selection')).toHaveClass(/actif/, { timeout: 10000 });
     await selectionnerBiomeClavier(page);
     await confirmerDemarragePartie(page);
     await attendrePartieVisible(page);

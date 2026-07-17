@@ -5,6 +5,7 @@ import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { logger } from '../io/logger.js';
 import { definirHumeurRoboCutscene } from '../rendu/portraits-cutscene.js';
 import { afficherEcranHistoire, cacherEcransHistoire } from './histoire-cutscene-nav.js';
+import { afficherEcranDiffere } from '../ui/navigation-actions.js';
 import {
     stopFondCutscene,
     definirSceneCutsceneFond,
@@ -107,10 +108,7 @@ function _ctxNavigationLignes() {
 function _restaurerEcranSiAucunActif() {
     if (document.querySelector('.ecran.actif') || overlayNarratifVisible()) return;
     if (!modeHistoireEnCours() || etat.estEnCours) return;
-    void import('../ui/navigation-ecrans.js').then(({ afficherEcran }) => {
-        if (document.querySelector('.ecran.actif') || overlayNarratifVisible()) return;
-        afficherEcran(ECRANS.GAME_OVER);
-    });
+    afficherEcranDiffere(ECRANS.GAME_OVER);
 }
 
 function _terminerCutscene() {

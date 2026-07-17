@@ -4,6 +4,7 @@ import {
     haptiqueActif,
     definirHaptiqueActif,
     initialiserHaptique,
+    vibrerFinPartie,
     _reinitialiserHaptiquePourTests,
 } from '../js/audio/haptique.js';
 import { definirReduireEffetsAccessibilite } from '../js/ui/accessibilite.js';
@@ -70,5 +71,14 @@ describe('haptique', () => {
         vi.mocked(navigator.vibrate).mockClear();
         emettre('difficulte:vague', { montee: false, palierApres: 3 });
         expect(navigator.vibrate).toHaveBeenCalledWith([18, 40, 12]);
+    });
+
+    it('vibre gameOver au topout sans doublon sur fin partie (audit B G5)', () => {
+        initialiserHaptique();
+        emettre('partie:topout');
+        expect(navigator.vibrate).toHaveBeenCalledWith([80, 50, 80]);
+        vi.mocked(navigator.vibrate).mockClear();
+        vibrerFinPartie(false);
+        expect(navigator.vibrate).not.toHaveBeenCalled();
     });
 });

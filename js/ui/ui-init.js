@@ -16,6 +16,9 @@ export function initialiserBoutons() {
             void import('./ui-raccourcis-histoire.js').then(({ initialiserRaccourcisHistoire }) =>
                 initialiserRaccourcisHistoire()
             );
+            void import('./ui-raccourcis-ecrans.js').then(({ initialiserRaccourcisEcrans }) =>
+                initialiserRaccourcisEcrans()
+            );
         });
     return promesseBoutons;
 }

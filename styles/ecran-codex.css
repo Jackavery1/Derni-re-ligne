@@ -4,7 +4,7 @@
     align-items: center;
     gap: var(--space-4);
     padding: var(--space-5) var(--space-4) var(--space-6);
-    max-height: 100dvh;
+    max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom));
     overflow-y: auto;
     scrollbar-width: none;
     position: relative;

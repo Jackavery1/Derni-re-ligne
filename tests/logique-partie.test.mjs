@@ -49,7 +49,12 @@ import {
 } from '../js/logique/logique-partie.js';
 import { reinitialiserBusJeu, ecouter } from '../js/etat/bus-jeu.js';
 import { initialiserVivant } from '../js/logique/vivant.js';
-import { etat, definirRefsCanvas } from '../js/etat/store-jeu.js';
+import {
+    etat,
+    definirRefsCanvas,
+    definirAccumulateur,
+    obtenirAccumulateur,
+} from '../js/etat/store-jeu.js';
 import { CONFIG } from '../js/config/config-jeu.js';
 import { supprimerLignesDuPlateau } from '../js/logique/logique-pure.js';
 import { creerPlateau, remplirSac } from '../js/logique/piece-jeu.js';
@@ -291,6 +296,18 @@ describe('logique-partie', () => {
         deplacerBas();
         expect(etat.score).toBe(1);
         expect(etat.pieceActuelle.y).toBe(1);
+    });
+
+    it('deplacerBas reset accumulateur gravite et emet son (audit B G2/G5)', () => {
+        const sons = [];
+        ecouter('piece:son', (p) => sons.push(p?.type));
+        etat.estEnCours = true;
+        etat.pieceActuelle = { type: 'O', rotation: 0, x: 4, y: 0 };
+        etat.score = 0;
+        definirAccumulateur(400);
+        deplacerBas();
+        expect(obtenirAccumulateur()).toBe(0);
+        expect(sons).toContain('deplacement');
     });
 
     it('verrouillerPiece pose la pièce et charge la suivante', () => {

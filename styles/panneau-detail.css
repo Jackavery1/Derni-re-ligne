@@ -48,20 +48,9 @@ body.effets-reduits .panneau-detail-corps {
 }
 .panneau-detail-fermer {
     align-self: flex-end;
-    background: transparent;
-    border: 1px solid var(--bordure);
-    color: var(--texte-dim);
-    font-family: var(--police);
-    font-size: var(--typo-ui-note);
-    cursor: pointer;
-    padding: 10px 14px;
     min-width: 48px;
     min-height: 48px;
-    letter-spacing: 1px;
-}
-.panneau-detail-fermer:hover {
-    color: var(--texte);
-    border-color: var(--accent-carte);
+    padding: 10px 14px;
 }
 .panneau-detail-icone-wrap {
     display: flex;

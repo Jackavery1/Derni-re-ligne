@@ -145,6 +145,7 @@ export function initialiserEffetsPartie() {
             const label = result.tSpin === 'full' ? 'T-SPIN !' : 'T-SPIN MINI !';
             afficherTexteFlottant(label, '#b400ff', 14);
             annoncer(label);
+            AudioMoteur.son(result.tSpin === 'full' ? 'tspin' : 'tspin_mini');
         }
 
         if (nbLignes > 0) {
@@ -156,6 +157,7 @@ export function initialiserEffetsPartie() {
                 if (result.backToBack) {
                     afficherTexteFlottant('BACK-TO-BACK !', '#ff006e', 13);
                     annoncer('Back-to-back Tetris');
+                    AudioMoteur.son('b2b');
                 }
             } else {
                 if (nbLignes === 3) afficherTexteFlottant('TRIPLE !', '#b400ff', 14);
@@ -165,6 +167,7 @@ export function initialiserEffetsPartie() {
             if (result.combo >= 2) {
                 afficherTexteFlottant(`COMBO x${result.combo}`, '#00ff88', 11);
                 annoncer(`Combo ${result.combo}`);
+                AudioMoteur.son('combo');
             }
 
             if (result.points > 0) {

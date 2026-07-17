@@ -8,6 +8,9 @@ import { obtenirHistoireTextesSync, chargerHistoireTextes } from '../io/charger-
 import { ECRANS } from '../ui/ecrans-config.js';
 import { logger } from '../io/logger.js';
 import { activerModeHistoire } from '../etat/mode-histoire.js';
+import { afficherEcranDiffereAsync } from '../ui/navigation-actions.js';
+import { precchargerNavigation } from '../ui/navigation-lazy.js';
+import { assurerActionsHistoire } from './histoire-assurer-actions.js';
 
 const CLE_INTRO_VUE = 'derniereLigne_introHistoireVue';
 
@@ -38,12 +41,12 @@ export async function ouvrirModeHistoireDepuisMenu() {
     const dejaVue = introHistoireDejaVue();
     logger.debug('[intro] introHistoireDejaVue =', dejaVue);
 
-    const { afficherEcranAsync } = await import('../ui/navigation-ecrans.js');
+    await Promise.all([assurerActionsHistoire(), precchargerNavigation()]);
 
     if (dejaVue) {
         logger.debug('[intro] branche carte directe (intro deja vue)');
         activerModeHistoire();
-        await afficherEcranAsync(ECRANS.HISTOIRE_MAP);
+        await afficherEcranDiffereAsync(ECRANS.HISTOIRE_MAP);
         return;
     }
 
@@ -88,10 +91,10 @@ export async function ouvrirModeHistoireDepuisMenu() {
 
         logger.debug('[intro] affichage carte histoire');
         activerModeHistoire();
-        await afficherEcranAsync(ECRANS.HISTOIRE_MAP);
+        await afficherEcranDiffereAsync(ECRANS.HISTOIRE_MAP);
     } catch (err) {
         logger.error('[intro] echec flux intro (flag non modifie):', err);
-        const { afficherEcranAsync } = await import('../ui/navigation-ecrans.js');
-        await afficherEcranAsync(ECRANS.TITRE);
+        await precchargerNavigation();
+        await afficherEcranDiffereAsync(ECRANS.TITRE);
     }
 }

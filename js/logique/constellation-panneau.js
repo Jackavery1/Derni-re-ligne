@@ -1,10 +1,10 @@
 import { BIOMES, ORDRE_BIOMES_LIBRE } from '../config/biomes.js';
+import { NOMS_MONDES_REQUIS } from '../config/constellation-donnees.js';
+import { obtenirIdIconeBiome } from '../config/biome-icones.js';
 import { biomeEstDebloqueParHistoire, obtenirMondeHistoirePourBiome } from '../io/progression.js';
 import { modeSprintActif } from './mode-sprint.js';
 import { obtenirRecordSprintBiome } from '../io/progression.js';
-import { formaterTemps } from '../rendu/hud-jeu.js';
-import { NOMS_MONDES_REQUIS } from '../rendu/constellation-rendu.js';
-import { obtenirIdIconeBiome } from '../rendu/biome-icones-map.js';
+import { formaterTemps } from './formatage.js';
 import {
     ouvrirPanneauDetail,
     fermerPanneauDetail,

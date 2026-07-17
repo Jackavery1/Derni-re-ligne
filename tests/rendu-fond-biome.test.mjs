@@ -12,6 +12,8 @@ describe('rendu-fond-biome-donnees', () => {
     it('resout les alias biome courts', () => {
         expect(resoudreConfigFondBiome('lave')).toBe('monde_lave');
         expect(resoudreConfigFondBiome('monde_ocean')).toBe('monde_ocean');
+        expect(resoudreConfigFondBiome('classique')).toBe('monde_prologue');
+        expect(resoudreConfigFondBiome('rouille')).toBe('monde_rouille');
         expect(resoudreConfigFondBiome('inconnu')).toBeNull();
     });
 

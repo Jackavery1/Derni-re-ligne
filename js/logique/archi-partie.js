@@ -247,7 +247,12 @@ export async function archi_afficherResultat(score, etoiles) {
     if (elScore) elScore.textContent = String(score);
     if (elEtoiles) {
         elEtoiles.textContent = '★'.repeat(etoiles) + '☆'.repeat(3 - etoiles);
-        elEtoiles.style.color = etoiles === 3 ? '#ffe600' : etoiles === 2 ? '#aaeeff' : '#888';
+        elEtoiles.style.color =
+            etoiles === 3
+                ? 'var(--jaune)'
+                : etoiles === 2
+                  ? 'var(--cyan)'
+                  : 'var(--gris-texte-dim)';
     }
     if (elPrecision) elPrecision.textContent = `${Math.round(archi.precisionActuelle * 100)}%`;
     if (elPieces) {

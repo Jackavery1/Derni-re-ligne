@@ -11,7 +11,6 @@
     --jaune: #ffe600;
     --violet: #b400ff;
     --orange: #ff8800;
-    --bleu: #4488ff;
     --rose-ui: #ff2d78;
     --or-ui: #ffbb44;
     --ui-bordure-discret: #9a9ac8;
@@ -24,14 +23,14 @@
     --texte-inverse: #ffffff;
     --texte: #e0e0ff;
     --texte-secondaire: #9ab;
-    --texte-principal: #eee;
+    --texte-principal: var(--texte);
     --cyan-mascotte: #00ddc8;
     --rose-objectif: #ff99ff;
     --vert-architecte: #44ff88;
     --carte-texte-clair: #e8d4ff;
-    --gris-clair: #bbb;
+    --gris-clair: var(--gris-moyen);
     --gris-moyen: #aaa;
-    --gris-texte-dim: #888;
+    --gris-texte-dim: #999;
     --gris-bordure: #444444;
     --gris-bordure-sombre: #aaaaaa;
     --orange-clair: #ffaa44;
@@ -190,7 +189,7 @@
     --focus-ring: var(--jaune);
     --focus-ring-width: 2px;
     --focus-ring-offset: 2px;
-    --texte-vide-indicateur: rgba(180, 150, 190, 0.72);
+    --texte-vide-indicateur: rgba(180, 150, 190, 0.82);
 
     --theme-primaire: var(--cyan);
     --theme-score: var(--jaune);

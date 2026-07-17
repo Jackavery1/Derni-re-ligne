@@ -11,6 +11,8 @@ import {
     mesurerContrasteCorps,
     mesurerContrasteTexteDiscret,
     mesurerContrasteSelecteur,
+    mesurerContrasteVariable,
+    mesurerContrasteSondesUi,
 } from './helpers-contraste.mjs';
 
 test.describe('audit E — UI/UX', () => {
@@ -60,6 +62,25 @@ test.describe('audit E — UI/UX', () => {
 
         const ratio = await mesurerContrasteTexteDiscret(page);
         expect(ratio).toBeGreaterThanOrEqual(4.5);
+    });
+
+    test('E2d — textes attenues UI respectent contraste AA (audit E3/E10)', async ({ page }) => {
+        await preparerPageSansSw(page);
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+
+        for (const nom of [
+            '--rgba-255-255-255-0-55',
+            '--texte-vide-indicateur',
+            '--gris-texte-dim',
+        ]) {
+            const ratio = await mesurerContrasteVariable(page, nom);
+            expect(ratio, nom).toBeGreaterThanOrEqual(4.5);
+        }
+
+        const ratiosLive = await mesurerContrasteSondesUi(page);
+        expect(ratiosLive.palier, '.objectif-hud-palier').toBeGreaterThanOrEqual(4.5);
+        expect(ratiosLive.vide, '#indicateur-vide-actif').toBeGreaterThanOrEqual(4.5);
     });
 
     test('E3 — buttons have visible focus states', async ({ page }) => {

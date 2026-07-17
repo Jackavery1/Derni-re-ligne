@@ -4,7 +4,7 @@ import { FINS, ETAT_HISTOIRE_VIDE } from '../histoire/histoire-donnees-exports.j
 import { obtenirEtatHistoirePersiste, persisterEtatHistoire } from './histoire-etat.js';
 import { ECRANS } from '../ui/ecrans-config.js';
 import { assurerFragmentsEcran } from '../ui/charger-ecrans.js';
-import { afficherEcranDiffere } from '../ui/navigation-lazy.js';
+import { afficherEcranDiffere, afficherEcranDiffereAsync } from '../ui/navigation-actions.js';
 import { demarrerFondFin, arreterFondFin } from '../rendu/fin-bg-rendu.js';
 import { activerModeHistoire, desactiverModeHistoire } from '../etat/mode-histoire.js';
 import { verifierAchievements, statsGlobales, sauvegarderStats } from '../achievements.js';
@@ -130,7 +130,6 @@ async function _afficherEcranFin(finId, etatHist) {
 }
 
 async function _afficherEcranFinAsync() {
-    const { afficherEcranDiffereAsync } = await import('../ui/navigation-lazy.js');
     await afficherEcranDiffereAsync(ECRANS.HISTOIRE_FIN);
 }
 

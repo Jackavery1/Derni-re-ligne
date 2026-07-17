@@ -134,6 +134,38 @@ describe('effets-partie', () => {
         expect(relancerIntervalleMusique).toHaveBeenCalled();
     });
 
+    it('joue sfx tspin combo et b2b sur score:maj (audit B G5)', async () => {
+        const { initialiserEffetsPartie } = await chargerEffets();
+        const { emettre } = await import('../js/etat/bus-jeu.js');
+        initialiserEffetsPartie();
+        emettre('score:maj', {
+            nbLignes: 2,
+            result: {
+                points: 400,
+                combo: 3,
+                tetris: false,
+                tSpin: 'full',
+                backToBack: false,
+                levelUp: false,
+            },
+        });
+        expect(son).toHaveBeenCalledWith('tspin');
+        expect(son).toHaveBeenCalledWith('combo');
+        son.mockClear();
+        emettre('score:maj', {
+            nbLignes: 4,
+            result: {
+                points: 1200,
+                combo: 1,
+                tetris: true,
+                tSpin: null,
+                backToBack: true,
+                levelUp: false,
+            },
+        });
+        expect(son).toHaveBeenCalledWith('b2b');
+    });
+
     it('termine sprint a 40 lignes', async () => {
         const { initialiserEffetsPartie } = await chargerEffets();
         const { etat } = await import('../js/etat/store-jeu.js');

@@ -39,8 +39,6 @@ const ALLOWLIST_LOGIQUE_VERS_RENDU = new Set([
     'boucle-jeu.js',
     'boucle-jeu-tick.js',
     'constellation-boucle.js',
-    'constellation-panneau.js',
-    'constellation.js',
     'coop-input.js',
     'coop-jeu.js',
     'effets-partie.js',

@@ -88,6 +88,8 @@ function redimensionnerCanvas() {
 }
 
 export async function demarrerCarteHistoire() {
+    const { assurerActionsHistoire } = await import('./histoire-assurer-actions.js');
+    await assurerActionsHistoire();
     arreterCarteHistoire();
     rafraichirEtatHistoire();
     mettreAJourEnteteHistoire();

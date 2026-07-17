@@ -1,8 +1,10 @@
+import { afficherEcranDiffereAsync, cacherEcransDiffere } from '../ui/navigation-actions.js';
+
 export async function afficherEcranHistoire(idEcran) {
-    const { afficherEcranAsync } = await import('../ui/navigation-ecrans.js');
-    await afficherEcranAsync(idEcran);
+    await afficherEcranDiffereAsync(idEcran);
 }
 
 export function cacherEcransHistoire() {
-    return import('../ui/navigation-ecrans.js').then(({ cacherEcrans }) => cacherEcrans());
+    cacherEcransDiffere();
+    return Promise.resolve();
 }

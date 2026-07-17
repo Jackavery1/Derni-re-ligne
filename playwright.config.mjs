@@ -105,7 +105,8 @@ const webServer = {
 
 export default defineConfig({
     testDir: './e2e',
-    workers: process.env.CI ? undefined : 1,
+    // CI : plafonner pour éviter contention CPU/IO (chargement / typewriter flaky).
+    workers: process.env.CI ? 2 : 1,
     timeout: 25000,
     retries: process.env.CI ? 1 : 0,
     snapshotPathTemplate: '{testDir}/__snapshots__/{testFilePath}/{arg}{ext}',

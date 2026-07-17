@@ -278,6 +278,40 @@ describe('histoire-textes — cohérence portraits', () => {
         }
     });
 
+    it('toute ligne parlante portrait a une humeur explicite (audit D4)', () => {
+        const sansHumeur = [];
+        const collecter = (nomRegistre, cle, ligne) => {
+            if (!ligne?.texte) return;
+            const pid = ligne.personnage ?? 'narrateur';
+            if (pid === 'narrateur') return;
+            const rendu = idPortraitRendu(pid);
+            const valides = HUMEURS_PERSONNAGES[rendu] ?? HUMEURS_PERSONNAGES[pid];
+            if (!valides) return;
+            if (!ligne.humeur) {
+                sansHumeur.push(`${nomRegistre}.${cle} [${pid}] ${ligne.texte.slice(0, 40)}`);
+            }
+        };
+        for (const { nomRegistre, cle, ligne } of itererLignesNarratives(REGISTRES_NARRATIFS)) {
+            collecter(nomRegistre, cle, ligne);
+        }
+        for (const ligne of INTRO_HISTOIRE.lignes ?? []) {
+            collecter('INTRO_HISTOIRE', 'intro', ligne);
+        }
+        for (const [cle, entree] of Object.entries(TRANSITIONS_CHAPITRE)) {
+            for (const ligne of extraireLignesCutscene(entree)) {
+                collecter('TRANSITIONS_CHAPITRE', cle, ligne);
+            }
+        }
+        expect(sansHumeur, sansHumeur.join('\n')).toEqual([]);
+    });
+
+    it('fragments VERA ont une scene post-monde associee (audit D5)', () => {
+        for (const [mondeId, cleFragment] of Object.entries(CLE_FRAGMENT_PAR_MONDE)) {
+            expect(SCENE_DEFAUT_POST_MONDE[mondeId], `${mondeId} → ${cleFragment}`).toBeTruthy();
+            expect(FRAGMENTS_VERA_SIGNAL[cleFragment]?.length, cleFragment).toBeGreaterThan(0);
+        }
+    });
+
     it('humeurs intro et transitions chapitre sont valides', () => {
         const lignes = [
             ...(INTRO_HISTOIRE.lignes ?? []).map((ligne) => ({

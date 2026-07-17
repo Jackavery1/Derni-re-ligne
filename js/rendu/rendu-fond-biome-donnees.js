@@ -104,6 +104,8 @@ export const CONFIGS_FOND_BIOME = {
 };
 
 const ALIAS_FOND_BIOME = {
+    classique: 'monde_prologue',
+    prologue: 'monde_prologue',
     lave: 'monde_lave',
     ocean: 'monde_ocean',
     foret: 'monde_foret',
@@ -114,6 +116,7 @@ const ALIAS_FOND_BIOME = {
     fuochi: 'monde_fuochi',
     cosmos: 'monde_cosmos',
     vide: 'monde_vide',
+    rouille: 'monde_rouille',
 };
 
 /** @param {string} biomeId */

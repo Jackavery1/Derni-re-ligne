@@ -191,3 +191,35 @@ export async function assertFocusPiegeOverlay(page, { overlayId, boutonId }) {
     }, overlayId);
     expect(focusApresTab).toBe(true);
 }
+
+/** @param {import('@playwright/test').Page} page */
+export async function assertLetterboxPlateau(page) {
+    await expect
+        .poll(
+            () =>
+                page.evaluate(() => {
+                    const canvas = document.getElementById('canvas-plateau');
+                    return Boolean(canvas && canvas.width > 0 && canvas.height > 0);
+                }),
+            { timeout: 5000 }
+        )
+        .toBe(true);
+
+    const metriques = await page.evaluate(() => {
+        const canvas = document.getElementById('canvas-plateau');
+        const iface = document.getElementById('interface-jeu');
+        if (!canvas || !iface) return null;
+        const rect = canvas.getBoundingClientRect();
+        const ratioInterne = canvas.width / canvas.height;
+        const ratioAffiche = rect.width / rect.height;
+        const scale = parseFloat(getComputedStyle(iface).getPropertyValue('--iface-scale') || '1');
+        const overflowX = document.documentElement.scrollWidth > window.innerWidth + 2;
+        return { ratioInterne, ratioAffiche, scale, overflowX };
+    });
+
+    expect(metriques).not.toBeNull();
+    expect(metriques.ratioInterne).toBeCloseTo(0.5, 2);
+    expect(metriques.ratioAffiche).toBeCloseTo(0.5, 1);
+    expect(metriques.scale).toBeGreaterThan(0);
+    expect(metriques.overflowX).toBe(false);
+}

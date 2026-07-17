@@ -152,6 +152,7 @@ export const EPILOGUES = {
             {
                 personnage: 'robo',
                 texte: "Pour la première fois, je comprends que c'était ça, le but.",
+                humeur: 'content',
             },
         ],
     },

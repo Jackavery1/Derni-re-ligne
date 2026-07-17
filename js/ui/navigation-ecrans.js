@@ -14,6 +14,7 @@ import { adapterNotifsJeu } from '../rendu/layout-jeu.js';
 import { chargerIconesPixel } from '../rendu/icones-pixel.js';
 import { prefetchRessourcesPartie } from '../io/prefetch-ressources-partie.js';
 import { chargerAchievementsDonnees } from '../achievements/achievements-donnees-chargement.js';
+import { configurerNavigationActions } from './navigation-actions.js';
 
 const FONDS_META = {
     [ECRANS.CODEX]: { canvasId: 'fond-meta-codex', teinte: '#ff2d78' },
@@ -213,3 +214,8 @@ export function retournerAuMenuTitre(apresNavigation) {
     afficherEcran(ECRANS.TITRE);
     apresNavigation?.();
 }
+
+configurerNavigationActions({
+    cacherEcrans,
+    afficherEcranAsync,
+});

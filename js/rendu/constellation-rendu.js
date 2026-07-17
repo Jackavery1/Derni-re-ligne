@@ -1,6 +1,7 @@
 import { eclaircir, assombrir } from './rendu-blocs-utils.js';
 import { rendreIconeSurCanvas } from './icones-pixel.js';
 import { obtenirIdIconeBiome } from './biome-icones-map.js';
+export { NOMS_MONDES_REQUIS } from '../config/constellation-donnees.js';
 
 export const FONDS_BIOME = {
     classique: ['#030412', '#010208'],
@@ -18,23 +19,6 @@ export const FONDS_BIOME = {
     miroir: ['#100804', '#060402'],
     trame: ['#080010', '#030006'],
     paradoxe: ['#020002', '#000000'],
-};
-
-export const NOMS_MONDES_REQUIS = {
-    lave: 'INFERNO (Ch. I)',
-    ocean: 'ABYSSES (Ch. II)',
-    foret: 'LA CANOPÉE (Ch. II)',
-    glace: 'ARCTIQUE (Ch. II)',
-    desert: 'LE DÉSERT (Ch. III)',
-    cyber: 'CYBER (Ch. III)',
-    fuochi: "FEUX D'ARTIFICE (Ch. IV)",
-    cosmos: 'COSMOS (Ch. IV)',
-    rouille: 'LA ROUILLE (Histoire Ch. I)',
-    eclipse: "L'ÉCLIPSE (Histoire Ch. III)",
-    vide: 'LE VIDE (Histoire Ch. IV)',
-    miroir: 'MONDE MIROIR (secret)',
-    trame: 'TRAME PRIMORDIALE (secret)',
-    paradoxe: 'PARADOXE (secret)',
 };
 
 export function dessinerFondBiome(ctx, w, h, biomeId) {

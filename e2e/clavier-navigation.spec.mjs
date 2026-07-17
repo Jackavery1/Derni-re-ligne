@@ -72,6 +72,38 @@ test.describe('clavier navigation', () => {
         await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
     });
 
+    test('Escape ferme options vers le titre', async ({ page }) => {
+        await preparerPageSansSw(page);
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+        await page.locator('#btn-options').click();
+        await expect(page.locator('#ecran-options')).toHaveClass(/actif/, { timeout: 10000 });
+        await page.keyboard.press('Escape');
+        await expect(page.locator('#ecran-titre')).toHaveClass(/actif/, { timeout: 10000 });
+    });
+
+    test('Escape ferme codex vers le titre', async ({ page }) => {
+        await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+        await page.locator('#btn-codex').click();
+        await expect(page.locator('#ecran-codex')).toHaveClass(/actif/, { timeout: 10000 });
+        await page.keyboard.press('Escape');
+        await expect(page.locator('#ecran-titre')).toHaveClass(/actif/, { timeout: 10000 });
+    });
+
+    test('Escape ferme selection archi vers le titre', async ({ page }) => {
+        await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
+        await page.goto('/');
+        await attendreApplicationPrete(page);
+        await page.locator('#btn-architecte').click();
+        await expect(page.locator('#ecran-archi-selection')).toHaveClass(/actif/, {
+            timeout: 10000,
+        });
+        await page.keyboard.press('Escape');
+        await expect(page.locator('#ecran-titre')).toHaveClass(/actif/, { timeout: 10000 });
+    });
+
     test('Escape bascule pause en partie', async ({ page }) => {
         await demarrerPartie(page);
         await page.keyboard.press('Escape');

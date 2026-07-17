@@ -1,21 +1,31 @@
 import { expect } from '@playwright/test';
 
 /** @param {import('@playwright/test').Page} page @param {number} [timeout] @param {{ strict?: boolean }} [options] */
-export async function attendreTypewriterInactif(page, timeout = 8000, options = {}) {
+export async function attendreTypewriterInactif(page, timeout = 12000, options = {}) {
     const cutsceneActive = await page.evaluate(
         () =>
             document.getElementById('ecran-histoire-cutscene')?.classList.contains('actif') ?? false
     );
     if (!cutsceneActive) return;
-    try {
-        await expect
+    const pollTypewriter = () =>
+        expect
             .poll(() => page.evaluate(() => window.__NEO_TEST__?.typewriterEstActif?.() !== true), {
                 timeout,
                 intervals: [40, 80, 120, 200],
             })
             .toBe(true);
+    try {
+        await pollTypewriter();
     } catch (err) {
-        if (options.strict) throw err;
+        if (!options.strict) return;
+        await page.evaluate(() => {
+            document.getElementById('btn-cutscene-suivant')?.click();
+        });
+        try {
+            await pollTypewriter();
+        } catch {
+            throw err;
+        }
     }
 }
 

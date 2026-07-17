@@ -27,38 +27,37 @@ Les valeurs `rgba(...)` hors couleurs de base sont centralisées dans `styles/to
 
 ## Palette accent
 
-| Token                   | Valeur    | Usage                                  |
-| ----------------------- | --------- | -------------------------------------- |
-| `--cyan`                | `#00f5ff` | Primaire néon, focus, liens actifs     |
-| `--rose`                | `#ff006e` | Alerte, danger narratif                |
-| `--rose-ui`             | `#ff2d78` | Boutons accent, CTA secondaires        |
-| `--or-ui`               | `#ffbb44` | Dégradés chauds (profil, titres)       |
-| `--vert`                | `#00ff88` | Succès, validation                     |
-| `--jaune`               | `#ffe600` | Score, records                         |
-| `--violet`              | `#b400ff` | Boss, mystère                          |
-| `--orange`              | `#ff8800` | Avertissements gameplay                |
-| `--bleu`                | `#4488ff` | Infos, liens froids                    |
-| `--accent-carte`        | `#6644cc` | Carte histoire, chemins                |
-| `--violet-clair`        | `#c044ff` | Étoiles objectifs, accents violet      |
-| `--oracle-accent`       | `#aa44ff` | Toggle Oracle actif                    |
-| `--oracle-texte`        | `#cc66ff` | Texte toggle Oracle actif              |
-| `--texte-inverse`       | `#ffffff` | Texte blanc sur panneaux sombres       |
-| `--texte-secondaire`    | `#9ab`    | Labels options, texte atténué          |
-| `--texte-principal`     | `#eee`    | Corps de texte clair (portraits boss)  |
-| `--cyan-mascotte`       | `#00ddc8` | Section mascotte, tutoriel, infobulles |
-| `--rose-objectif`       | `#ff99ff` | Objectifs histoire (HUD)               |
-| `--vert-architecte`     | `#44ff88` | Mode architecte, validations éditeur   |
-| `--carte-texte-clair`   | `#e8d4ff` | Texte carte histoire                   |
-| `--gris-clair`          | `#bbb`    | Texte secondaire neutre                |
-| `--gris-moyen`          | `#aaa`    | Hints, labels discrets                 |
-| `--gris-texte-dim`      | `#888`    | Métadonnées atténuées                  |
-| `--gris-bordure`        | `#444444` | Contours boutons verrouillés           |
-| `--gris-bordure-sombre` | `#aaaaaa` | Texte / bordures atténuées secondaires |
-| `--orange-clair`        | `#ffaa44` | Avertissements doux (boss, options)    |
-| `--biome-vide-bordure`  | `#4a3848` | Bordure plateau biome Vide             |
-| `--biome-lave-bordure`  | `#cd6839` | Bordure plateau biome Lave / Rouille   |
-| `--contraste-fond`      | `#000000` | Fond mode contraste élevé              |
-| `--contraste-texte`     | `#ffffff` | Texte mode contraste élevé             |
+| Token                   | Valeur              | Usage                                     |
+| ----------------------- | ------------------- | ----------------------------------------- |
+| `--cyan`                | `#00f5ff`           | Primaire néon, focus, liens actifs        |
+| `--rose`                | `#ff006e`           | Alerte, danger narratif                   |
+| `--rose-ui`             | `#ff2d78`           | Boutons accent, CTA secondaires           |
+| `--or-ui`               | `#ffbb44`           | Dégradés chauds (profil, titres)          |
+| `--vert`                | `#00ff88`           | Succès, validation                        |
+| `--jaune`               | `#ffe600`           | Score, records                            |
+| `--violet`              | `#b400ff`           | Boss, mystère                             |
+| `--orange`              | `#ff8800`           | Avertissements gameplay                   |
+| `--accent-carte`        | `#6644cc`           | Carte histoire, chemins                   |
+| `--violet-clair`        | `#c044ff`           | Étoiles objectifs, accents violet         |
+| `--oracle-accent`       | `#aa44ff`           | Toggle Oracle actif                       |
+| `--oracle-texte`        | `#cc66ff`           | Texte toggle Oracle actif                 |
+| `--texte-inverse`       | `#ffffff`           | Texte blanc sur panneaux sombres          |
+| `--texte-secondaire`    | `#9ab`              | Labels options, texte atténué             |
+| `--texte-principal`     | `var(--texte)`      | Alias corps clair (portraits)             |
+| `--cyan-mascotte`       | `#00ddc8`           | Section mascotte, tutoriel, infobulles    |
+| `--rose-objectif`       | `#ff99ff`           | Objectifs histoire (HUD)                  |
+| `--vert-architecte`     | `#44ff88`           | Mode architecte, validations éditeur      |
+| `--carte-texte-clair`   | `#e8d4ff`           | Texte carte histoire                      |
+| `--gris-clair`          | `var(--gris-moyen)` | Alias texte secondaire neutre             |
+| `--gris-moyen`          | `#aaa`              | Hints, labels discrets                    |
+| `--gris-texte-dim`      | `#999`              | Métadonnées atténuées (≥ AA sur `--fond`) |
+| `--gris-bordure`        | `#444444`           | Contours boutons verrouillés              |
+| `--gris-bordure-sombre` | `#aaaaaa`           | Texte / bordures atténuées secondaires    |
+| `--orange-clair`        | `#ffaa44`           | Avertissements doux (boss, options)       |
+| `--biome-vide-bordure`  | `#4a3848`           | Bordure plateau biome Vide                |
+| `--biome-lave-bordure`  | `#cd6839`           | Bordure plateau biome Lave / Rouille      |
+| `--contraste-fond`      | `#000000`           | Fond mode contraste élevé                 |
+| `--contraste-texte`     | `#ffffff`           | Texte mode contraste élevé                |
 
 ## Cutscenes
 

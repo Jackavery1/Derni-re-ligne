@@ -112,8 +112,9 @@ export async function preparerPageTutorielHistoireActif(page, etatHistoire = ETA
 /** @param {import('@playwright/test').Page} page */
 export async function attendreApplicationPrete(page) {
     await expect(page.locator('body')).toHaveAttribute('data-neo-test-ready', '1', {
-        timeout: 25000,
+        timeout: 30000,
     });
+    await expect(page.locator('#ecran-chargement')).not.toHaveClass(/actif/, { timeout: 15000 });
     await expect(page.locator('#ecran-titre')).toHaveClass(/actif/, { timeout: 15000 });
 }
 
