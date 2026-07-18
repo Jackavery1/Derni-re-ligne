@@ -40,12 +40,13 @@ const buildResult = await esbuild.build({
     logLevel: 'info',
 });
 
-writeFileSync(`${dist}/js/metafile.json`, JSON.stringify(buildResult.metafile));
-
 writeFileSync(
     `${dist}/js/budget-exclus.json`,
     JSON.stringify(listerSortiesTestUniquement(buildResult.metafile), null, 0)
 );
+
+mkdirSync('scripts/.cache', { recursive: true });
+writeFileSync('scripts/.cache/metafile-build.json', JSON.stringify(buildResult.metafile));
 
 cpSync('styles', `${dist}/styles`, { recursive: true });
 execSync('node scripts/compresser-css.mjs', { stdio: 'inherit' });
@@ -55,7 +56,9 @@ if (existsSync('assets')) {
         recursive: true,
         filter: (src) => {
             const bas = src.toLowerCase();
-            if (bas.endsWith('.wav') || bas.endsWith('.ttf')) return false;
+            if (bas.endsWith('.wav') || bas.endsWith('.ttf') || bas.endsWith('.meta.json')) {
+                return false;
+            }
             return true;
         },
     });
@@ -83,6 +86,21 @@ writeFileSync(
 );
 
 cpSync('sw.js', `${dist}/sw.js`);
+const swProd = readFileSync(`${dist}/sw.js`, 'utf8').replace(
+    /const SCENES_CUTSCENE_INSTALL = \[[\s\S]*?\];/,
+    `const SCENES_CUTSCENE_INSTALL = [
+    './assets/splash-chargement.png',
+    './assets/cutscenes/cutscenes.css',
+    './assets/cutscenes/scene_observatoire.png',
+    './assets/cutscenes/scene_labo.png',
+    './assets/cutscenes/scene_trame.png',
+    './assets/cutscenes/scene_fragmentation.png',
+    './assets/cutscenes/scene_seuil_brasier.png',
+    './assets/cutscenes/scene_interlude_gardiens.png',
+    './assets/cutscenes/scene_interlude_elle.png',
+];`
+);
+writeFileSync(`${dist}/sw.js`, swProd);
 cpSync('sw-precache.js', `${dist}/sw-precache.js`);
 cpSync('sw-precache-list.js', `${dist}/sw-precache-list.js`);
 execSync('node scripts/generer-precache.mjs --prod', { stdio: 'inherit' });

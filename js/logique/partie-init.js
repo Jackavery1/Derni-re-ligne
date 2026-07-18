@@ -8,11 +8,9 @@ import {
 } from './oracle-jeu.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { reinitialiserConditionsRuntime } from '../histoire/conditions-secrets.js';
-import { reinitialiserHistoriquePositions } from '../rendu/decorations-jeu.js';
 import { donneesPartie, reinitialiserDonneesPartie } from '../ui/profil-jeu.js';
 import { obtenirBiomeActif } from '../etat/store-jeu.js';
 import { initStatsPartie } from '../achievements.js';
-import { initParticulesAmbiance, dessinerFileNext, rendreFrameJeu } from '../rendu/rendu-jeu.js';
 import { reinitialiserMascottePartie, rafraichirStats, cacherEcrans } from '../ui/ecrans-ui.js';
 import { mettreAJourIndicateurRelique } from './piece-jeu.js';
 import { reinitialiserTimerNiveau } from './timer-niveau.js';
@@ -22,6 +20,7 @@ import {
 } from '../histoire/mecaniques-histoire.js';
 import { rafraichirHudObjectifsHistoire } from '../ui/ui-objectifs-hud.js';
 import { initialiserAudioBiome } from '../audio/audio-partie.js';
+import { emettre } from '../etat/bus-jeu.js';
 
 export function initialiserFeaturesPartie() {
     reinitialiserOraclePartie();
@@ -33,7 +32,7 @@ export function initialiserFeaturesPartie() {
     document.getElementById('oracle-bonus-go-wrap')?.classList.add('element-masque');
 
     void import('../audio/melodie.js').then(({ reinitialiserMelodie }) => reinitialiserMelodie());
-    reinitialiserHistoriquePositions();
+    emettre('partie:rendu-features');
     reinitialiserDonneesPartie();
     donneesPartie.biomeId = obtenirBiomeActif();
     initStatsPartie();
@@ -46,14 +45,12 @@ export function initialiserAudioPartie() {
 }
 
 export function initialiserUIPartie() {
-    void import('../rendu/layout-jeu.js').then(({ adapterInterface }) => adapterInterface());
     const ctxReserve = obtenirCtxReserve();
     const canvasReserve = obtenirCanvasReserve();
     if (!ctxReserve || !canvasReserve) {
         throw new Error('Canvas reserve indisponible');
     }
     ctxReserve.clearRect(0, 0, canvasReserve.width, canvasReserve.height);
-    dessinerFileNext();
     mettreAJourIndicateurRelique();
 
     rafraichirStats();
@@ -61,7 +58,6 @@ export function initialiserUIPartie() {
     const elTemps = document.getElementById('affichage-temps');
     if (elTemps) elTemps.textContent = '00:00';
     cacherEcrans();
-    initParticulesAmbiance();
     arreterMecaniquesHistoire();
     initialiserMecaniquesHistoire();
     document.body.classList.add('partie-active');
@@ -74,6 +70,6 @@ export function initialiserUIPartie() {
     }
 
     definirAccumulateur(0);
-    rendreFrameJeu();
+    emettre('partie:rendu-ui');
     declencherCalculOracle();
 }

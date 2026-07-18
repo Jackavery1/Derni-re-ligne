@@ -2,7 +2,7 @@ import {
     dessinerFondBiomeConstellationCache,
     dessinerLignesConstellation as dessinerLignesRendu,
     dessinerNoeudBiome as dessinerNoeudRendu,
-} from '../rendu/constellation-rendu.js';
+} from './constellation-rendu.js';
 import {
     constellationEtoiles,
     constellationNoeuds,
@@ -14,7 +14,12 @@ import {
     obtenirSourisCX,
     obtenirSourisCY,
     obtenirBiomeHover,
-} from './constellation-etat.js';
+} from '../logique/constellation-etat.js';
+import {
+    abonnerBoucleMenuUnifiee,
+    desabonnerBoucleMenuUnifiee,
+} from '../logique/planificateur-raf.js';
+import { ecouter } from '../etat/bus-jeu.js';
 
 export function boucleConstellation(timestamp) {
     const ctxConst = obtenirCtxConstellation();
@@ -51,4 +56,17 @@ export function boucleConstellation(timestamp) {
     }
 
     ctxConst.restore();
+}
+
+let constellationBoucleBusInitialise = false;
+
+export function initialiserConstellationBoucleBus() {
+    if (constellationBoucleBusInitialise) return;
+    constellationBoucleBusInitialise = true;
+    ecouter('constellation:demarrer', () => {
+        abonnerBoucleMenuUnifiee(boucleConstellation);
+    });
+    ecouter('constellation:arreter', () => {
+        desabonnerBoucleMenuUnifiee(boucleConstellation);
+    });
 }

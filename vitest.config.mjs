@@ -44,14 +44,23 @@ export const COVERAGE_ETENDU_EXCLUS_SEUIL_80 = [
     'js/rendu/rendu-fx.js',
     'js/ui/charger-ecrans.js',
     'js/ui/navigation-ecrans.js',
-    'js/logique/boucle-jeu.js',
+    'js/rendu/boucle-jeu.js',
     'js/logique/effets-partie.js',
 ];
+
+/** Options pool communes — évite Timeout waiting for worker (suites longues + coverage). */
+export const OPTIONS_POOL = {
+    pool: 'forks',
+    teardownTimeout: 60000,
+    hookTimeout: 30000,
+    fileParallelism: true,
+};
 
 export default defineConfig({
     test: {
         include: ['tests/**/*.test.mjs'],
         setupFiles: ['tests/setup.mjs'],
+        ...OPTIONS_POOL,
         coverage: {
             provider: 'v8',
             include: COVERAGE_LOGIC,

@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitest/config';
-import vitestConfig, { COVERAGE_ETENDU_EXCLUS_SEUIL_80 } from './vitest.config.mjs';
+import vitestConfig, { COVERAGE_ETENDU_EXCLUS_SEUIL_80, OPTIONS_POOL } from './vitest.config.mjs';
 
 const COVERAGE_LOGIC = vitestConfig.test.coverage.include;
 
@@ -7,6 +7,7 @@ export default defineConfig({
     test: {
         include: ['tests/**/*.test.mjs'],
         setupFiles: ['tests/setup.mjs'],
+        ...OPTIONS_POOL,
         coverage: {
             provider: 'v8',
             include: [...COVERAGE_LOGIC, ...COVERAGE_ETENDU_EXCLUS_SEUIL_80],

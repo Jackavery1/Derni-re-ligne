@@ -5,7 +5,7 @@ import {
     SEUIL_ERREURS_BOUCLE,
     reinitialiserErreursBoucle,
     enregistrerErreurBoucle,
-} from '../js/logique/boucle-jeu.js';
+} from '../js/rendu/boucle-jeu.js';
 import {
     definirFpsMoyen,
     definirEffetsReduits,

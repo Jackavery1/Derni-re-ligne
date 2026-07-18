@@ -4,7 +4,7 @@ import { vibrerFinPartie } from '../audio/haptique.js';
 import { jouerSfxMortPartie } from '../audio/sfx-mort-partie.js';
 import { ecouter } from '../etat/bus-jeu.js';
 import { ECRANS } from '../etat/store-jeu.js';
-import { planifierBoucle } from '../logique/boucle-jeu.js';
+import { planifierBoucle } from '../rendu/boucle-jeu.js';
 import { DELAI_GAME_OVER_MS } from '../logique/partie-fin-constantes.js';
 import { annoncer } from './annonces.js';
 import { sauvegarderSnapshotProfil } from './profil-jeu.js';

@@ -40,8 +40,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    padding: 28px 24px;
+    gap: var(--space-5);
+    padding: calc(var(--space-5) + var(--space-1)) var(--space-5);
     max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom));
     overflow-y: auto;
     scrollbar-width: none;
@@ -134,7 +134,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: calc(var(--space-1) + 2px);
     line-height: 1;
 }
 .dl-mot-1 {
@@ -159,8 +159,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
-    padding: 10px 28px;
+    gap: calc(var(--space-1) + 2px);
+    padding: calc(var(--space-2) + 2px) calc(var(--space-6) - var(--space-1));
     border: 1px solid var(--rgba-255-230-0-0-3);
     background: var(--rgba-255-230-0-0-04);
     box-shadow:

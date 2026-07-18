@@ -1,24 +1,24 @@
 {
-    "date": "2026-07-16T16:40:00.000Z",
+    "date": "2026-07-18T17:45:00.000Z",
     "version": "2.5.34",
-    "session": "optimisation-nettoyage",
+    "session": "optimisation-narration",
     "avant": {
-        "bundleJsKo": 588,
+        "bundleJsKo": 593,
         "entreePrincipaleKo": 15,
-        "chunksJs": 188,
-        "precacheProdKo": 1171.9,
-        "imagesSourceKo": 2547.7,
-        "jsSourceKo": 1772.7,
-        "totalSourceKo": 4686.6
+        "chunksJs": 191,
+        "distKo": 3669.9,
+        "metafileInDistKo": 378.5,
+        "precacheProdKo": 1176,
+        "plafondBudgetKo": 588
     },
     "apres": {
-        "bundleJsKo": 588,
-        "entreePrincipaleKo": 15,
+        "bundleJsKo": 591,
+        "entreePrincipaleKo": 34,
         "chunksJs": 187,
-        "precacheProdKo": 1171,
-        "imagesSourceKo": 2230.5,
-        "jsSourceKo": 1768.6,
-        "totalSourceKo": 4365.2
+        "distKo": 3290.3,
+        "metafileInDistKo": 0,
+        "precacheProdKo": 1174.8,
+        "plafondBudgetKo": 595
     },
-    "notes": "Nettoyage: portraits-vera write-only, accentsUi mort, TTF legacy x2, WAV boss x6. Opti: −321 Ko source (TTF+WAV), −1 chunk JS, precache −0.9 Ko. Bundle JS inchangé au plafond 588."
+    "notes": "Plafond CI 588→595 (HEAD déjà 593). metafile hors dist (−379 Ko deploy). SW prod: cutscenes.css sans partials manquants. Peel allowlist logique→rendu inchangé fonctionnellement."
 }

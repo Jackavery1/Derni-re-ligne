@@ -3,21 +3,13 @@ import { jouerSfxMortPartie, reinitialiserSfxMortPartie } from '../audio/sfx-mor
 import { CONFIG } from '../config/config-jeu.js';
 import { obtenirActions } from './actions-jeu.js';
 import { ecouter } from '../etat/bus-jeu.js';
-import { creerParticulesLigne } from '../rendu/particules-jeu.js';
-import { obtenirCtxReserve, obtenirCanvasReserve, etat } from '../etat/store-jeu.js';
+import { creerParticulesLigne } from '../etat/particules-spawn.js';
+import { etat } from '../etat/store-jeu.js';
 import {
     ajouterLignesEclipseBasse,
     ajouterLignesVide,
 } from '../achievements/achievements-histoire.js';
 import { obtenirLigneEclipse, biomeActuelMecanique } from '../histoire/mecaniques-histoire.js';
-import {
-    dessinerFileNext,
-    dessinerPreview,
-    afficherTexteFlottant,
-    obtenirYHautTas,
-    declencherSecousse,
-    declencherFlashTopout,
-} from '../rendu/rendu-jeu.js';
 import {
     reagirRoboAuxLignes,
     flashGrimaceRobo,
@@ -33,7 +25,6 @@ import { mettreAJourIndicateurRelique } from './piece-jeu.js';
 import { enregistrerProgression, suiviDifficulteActif } from './gestionnaire-difficulte.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
 import { brancherBusReactionsMascotte } from '../ui/mascotte-robo.js';
-import { notifierTetrisRobo } from '../rendu/rendu-robo.js';
 import { reinitialiserTimerNiveau } from './timer-niveau.js';
 
 let effetsInitialises = false;
@@ -75,7 +66,6 @@ export function initialiserEffetsPartie() {
     ecouter('fond-biome:demarrer', () => reinitialiserSfxMortPartie());
 
     ecouter('partie:topout', () => {
-        declencherFlashTopout();
         jouerSfxMortPartie();
     });
 
@@ -89,12 +79,7 @@ export function initialiserEffetsPartie() {
     ecouter('partie:level-up-temps', _traiterLevelUpTemps);
 
     ecouter('partie:nouvelle-piece', () => {
-        dessinerFileNext();
         mettreAJourIndicateurRelique();
-    });
-
-    ecouter('partie:reserve-preview', ({ reserve }) => {
-        dessinerPreview(obtenirCtxReserve(), obtenirCanvasReserve(), reserve);
     });
 
     ecouter('lignes:effacees', ({ nbSupprimees, lignesEffacees }) => {
@@ -104,8 +89,6 @@ export function initialiserEffetsPartie() {
         // Condition Miroir (suivi tetris consecutifs CYBER) :
         // centralisee dans mecaniques-histoire.js via le bus — pas de duplication ici.
         for (const l of lignesEffacees ?? []) creerParticulesLigne(l);
-        const intensitesSecousse = { 1: 2, 2: 3.5, 3: 5, 4: 8 };
-        declencherSecousse(intensitesSecousse[nbSupprimees] ?? 8);
         if (modeHistoireEnCours() && nbSupprimees > 0) {
             const mec = biomeActuelMecanique();
             if (mec === 'eclipse') {
@@ -143,7 +126,6 @@ export function initialiserEffetsPartie() {
 
         if (result.tSpin) {
             const label = result.tSpin === 'full' ? 'T-SPIN !' : 'T-SPIN MINI !';
-            afficherTexteFlottant(label, '#b400ff', 14);
             annoncer(label);
             AudioMoteur.son(result.tSpin === 'full' ? 'tspin' : 'tspin_mini');
         }
@@ -151,36 +133,19 @@ export function initialiserEffetsPartie() {
         if (nbLignes > 0) {
             if (result.tetris) {
                 if (bossEstActif() && !bossEstVaincu()) notifierTetrisBoss();
-                notifierTetrisRobo();
-                afficherTexteFlottant('TETRIS !', '#ffe600', 16);
                 annoncer('Tetris ! Quatre lignes effacees');
                 if (result.backToBack) {
-                    afficherTexteFlottant('BACK-TO-BACK !', '#ff006e', 13);
                     annoncer('Back-to-back Tetris');
                     AudioMoteur.son('b2b');
                 }
-            } else {
-                if (nbLignes === 3) afficherTexteFlottant('TRIPLE !', '#b400ff', 14);
-                if (nbLignes === 2) afficherTexteFlottant('DOUBLE !', '#00f5ff', 12);
             }
 
             if (result.combo >= 2) {
-                afficherTexteFlottant(`COMBO x${result.combo}`, '#00ff88', 11);
                 annoncer(`Combo ${result.combo}`);
                 AudioMoteur.son('combo');
             }
 
             if (result.points > 0) {
-                const estGros = nbLignes >= 4 || result.points >= 500;
-                afficherTexteFlottant(
-                    `+${result.points}`,
-                    estGros ? null : '#ffe600',
-                    estGros ? 12 : 10,
-                    {
-                        y: obtenirYHautTas() - 10,
-                        arcEnCiel: estGros,
-                    }
-                );
                 annoncer(
                     `${nbLignes} ligne${nbLignes > 1 ? 's' : ''} effacee${nbLignes > 1 ? 's' : ''}, plus ${result.points} points`
                 );

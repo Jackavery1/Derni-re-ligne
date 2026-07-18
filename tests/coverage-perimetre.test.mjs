@@ -27,7 +27,7 @@ describe('coverage-perimetre', () => {
             'rendu/rendu-fx.js',
             'ui/charger-ecrans.js',
             'ui/navigation-ecrans.js',
-            'logique/boucle-jeu.js',
+            'rendu/boucle-jeu.js',
             'logique/effets-partie.js',
         ];
         for (const mod of exclusEtendu) {

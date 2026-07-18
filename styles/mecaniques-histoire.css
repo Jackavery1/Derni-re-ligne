@@ -146,17 +146,16 @@ body.histoire-active #indicateur-vide-actif {
 
 #btn-cutscene-passer {
     font-size: var(--typo-hud-micro);
-    padding: 4px 12px;
-    opacity: 0.45;
-    margin-top: -8px;
+    padding: var(--space-1) var(--space-3);
+    margin-top: calc(var(--space-2) * -1);
 }
 #btn-cutscene-passer:hover {
-    opacity: 0.8;
+    color: var(--rgba-255-255-255-0-75);
 }
 
 .histoire-cs-progress {
     font-size: var(--typo-ui-compact);
-    color: var(--rgba-255-255-255-0-2);
+    color: var(--rgba-255-255-255-0-55);
     letter-spacing: 2px;
     text-align: center;
     min-height: 1em;

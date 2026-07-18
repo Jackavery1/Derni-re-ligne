@@ -58,7 +58,7 @@ vi.mock('../js/logique/timer-niveau.js', () => ({
     reinitialiserTimerNiveau: vi.fn(),
 }));
 
-vi.mock('../js/rendu/particules-jeu.js', () => ({
+vi.mock('../js/etat/particules-spawn.js', () => ({
     creerParticulesLigne: vi.fn(),
 }));
 
@@ -112,10 +112,13 @@ describe('effets-partie', () => {
 
     it('declenche flash topout et sfx mort', async () => {
         const { initialiserEffetsPartie } = await chargerEffets();
+        const { initialiserEffetsVisuelsPartie } =
+            await import('../js/rendu/effets-visuels-partie.js');
         const { declencherFlashTopout } = await import('../js/rendu/rendu-jeu.js');
         const { emettre } = await import('../js/etat/bus-jeu.js');
         const { reinitialiserSfxMortPartie } = await import('../js/audio/sfx-mort-partie.js');
         reinitialiserSfxMortPartie();
+        initialiserEffetsVisuelsPartie();
         initialiserEffetsPartie();
         emettre('partie:topout');
         expect(declencherFlashTopout).toHaveBeenCalled();

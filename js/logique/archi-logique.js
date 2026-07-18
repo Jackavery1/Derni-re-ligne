@@ -1,7 +1,7 @@
 ﻿import { CONFIG, TETROMINOS } from '../config/config-jeu.js';
 import { creerPlateau, obtenirCouleurPieceParType, obtenirForme } from './piece-jeu.js';
 import { estPositionValidePiece } from './moteur-piece.js';
-import { creerParticulesExplosion } from '../rendu/particules-jeu.js';
+import { creerParticulesExplosion } from '../etat/particules-spawn.js';
 import { emettre } from '../etat/bus-jeu.js';
 
 export const archi = {

@@ -56,8 +56,7 @@ describe('boucle-jeu — menu sans plateau', () => {
         definirBoucleActive(false);
         definirIdFrame(null);
 
-        const { planifierBoucle, suspendreBoucleSolo } =
-            await import('../js/logique/boucle-jeu.js');
+        const { planifierBoucle, suspendreBoucleSolo } = await import('../js/rendu/boucle-jeu.js');
         planifierBoucle();
         expect(callbackRaf).toBeTypeOf('function');
 

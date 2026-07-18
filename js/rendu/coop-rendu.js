@@ -18,6 +18,7 @@ import {
 import { coop, DEMI_LARGEUR, coop_estPositionValide } from '../logique/coop-logique.js';
 import { obtenirCanvas } from '../logique/dom-utils.js';
 import { dessinerMotifsAccessibilite, dessinerMotifsCoopPieces } from './rendu-accessibilite.js';
+import { ecouter } from '../etat/bus-jeu.js';
 
 function obtenirFormeCoop(piece) {
     const rotations = TETROMINOS[piece.type].rotations;
@@ -217,4 +218,20 @@ export function coop_rendreFrame() {
     dessinerFlashTopout();
     dessinerParticules();
     if (ctx && canvasPlateau) ctx.restore();
+}
+
+let coopPreviewBusInitialise = false;
+
+export function initialiserCoopPreviewBus() {
+    if (coopPreviewBusInitialise) return;
+    coopPreviewBusInitialise = true;
+    ecouter('coop:rafraichir-preview', (payload) => {
+        const joueur = payload?.joueur;
+        if (joueur === 'tous') {
+            coop_dessinerPreview('j1');
+            coop_dessinerPreview('j2');
+            return;
+        }
+        if (joueur === 'j1' || joueur === 'j2') coop_dessinerPreview(joueur);
+    });
 }

@@ -2,17 +2,13 @@ import { AudioMoteur } from '../audio/audio.js';
 import { creerPlateau, lierCouleursTetrominos } from './piece-jeu.js';
 import { particules, definirBiomeActif, ECRANS } from '../etat/store-jeu.js';
 import { lireStockage, ecrireStockage } from '../io/progression.js';
-import { planifierBoucle, suspendreBoucleSolo } from './boucle-jeu.js';
-import { mettreAJourParticules } from '../rendu/particules-jeu.js';
-import { dessinerPreview } from '../rendu/rendu-jeu.js';
-import { obtenirCanvas } from './dom-utils.js';
+import { planifierBoucle, suspendreBoucleSolo } from './boucle-controle.js';
 import {
     cacherEcrans,
     afficherEcran,
     retournerAuMenuTitre,
     appliquerThemeBiome,
 } from '../ui/ecrans-ui.js';
-import { arreterAnimationMenu } from '../rendu/menu-fond.js';
 import { basculerOracle, oracle } from './oracle-jeu.js';
 import { statsGlobales, sauvegarderStats, verifierAchievements } from '../achievements.js';
 import { obtenirTousNiveauxArchi } from './archi-generateur.js';
@@ -25,17 +21,7 @@ import {
     archi_calculerEtoiles,
     archi_reinitialiserEtatNiveau,
 } from './archi-logique.js';
-import { archi_rendreFrame } from '../rendu/archi-rendu.js';
-import { adapterInterfaceArchi } from '../rendu/layout-jeu.js';
-
-let idFrameArchi = null;
-
-function arreterBoucleArchi() {
-    if (idFrameArchi) {
-        cancelAnimationFrame(idFrameArchi);
-        idFrameArchi = null;
-    }
-}
+import { emettre } from '../etat/bus-jeu.js';
 
 function deplacerZoneJeuVersArchi() {
     const zone = document.getElementById('zone-jeu');
@@ -99,7 +85,7 @@ export async function demarrerArchi(niveauId) {
     particules.length = 0;
     suspendreBoucleSolo();
     void import('./constellation.js').then(({ arreterConstellation }) => arreterConstellation());
-    arreterAnimationMenu();
+    emettre('archi:rendu-init');
 
     definirBiomeActif(niveau.biome);
     lierCouleursTetrominos();
@@ -114,24 +100,13 @@ export async function demarrerArchi(niveauId) {
     cacherEcrans();
     deplacerZoneJeuVersArchi();
     afficherInterfaceArchi(true);
-    adapterInterfaceArchi();
+    emettre('archi:rendu-init');
 
     archi_mettreAJourInventaireUI();
     archi_mettreAJourScore();
     archi_mettreAJourInfosNiveau();
 
-    arreterBoucleArchi();
-    idFrameArchi = requestAnimationFrame(boucleArchi);
-}
-
-function boucleArchi() {
-    if (!archi.actif) return;
-
-    if (!archi.estEnPause) {
-        mettreAJourParticules(16);
-    }
-    archi_rendreFrame();
-    idFrameArchi = requestAnimationFrame(boucleArchi);
+    emettre('archi:demarrer-boucle');
 }
 
 export function archi_mettreAJourInventaireUI() {
@@ -154,10 +129,7 @@ export function archi_mettreAJourInventaireUI() {
         el.appendChild(div);
     });
 
-    if (archi.pieceActuelle) {
-        const cvs = obtenirCanvas('canvas-archi-preview');
-        if (cvs) dessinerPreview(cvs.getContext('2d'), cvs, archi.pieceActuelle);
-    }
+    emettre('archi:rafraichir-preview');
 }
 
 export function archi_mettreAJourScore() {
@@ -307,7 +279,7 @@ export function archi_reinitialiserNiveau() {
 export function quitterModeArchi() {
     archi.actif = false;
     archi.estEnCours = false;
-    arreterBoucleArchi();
+    emettre('archi:arreter-boucle');
     restaurerZoneJeu();
     afficherInterfaceArchi(false);
     document.body.classList.remove('partie-active');

@@ -82,7 +82,7 @@ body.effets-reduits .boss-portrait-cadre.flash {
 }
 
 .section-vide-titre {
-    color: var(--rgba-255-255-255-0-2);
+    color: var(--texte-dim);
 }
 
 .section-vide-msg {

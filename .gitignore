@@ -17,3 +17,4 @@ sources-bruts/
 assets/cutscenes/*.meta.json
 _audit-glyphes-output/
 scripts/_*-temp.mjs
+scripts/.cache/

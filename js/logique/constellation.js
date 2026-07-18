@@ -2,7 +2,7 @@ import { BIOMES } from '../config/biomes.js';
 import { mettreAJourVisibiliteModesDebloques } from '../ui/deblocage-ui.js';
 import { biomeEstDebloqueParHistoire } from '../io/progression.js';
 export { obtenirDecalageCentreConstellation } from './constellation-zone.js';
-import { abonnerBoucleMenuUnifiee, desabonnerBoucleMenuUnifiee } from './planificateur-raf.js';
+import { emettre } from '../etat/bus-jeu.js';
 import {
     ouvrirPanneauBiomeConstellation,
     fermerPanneauBiomeConstellation,
@@ -20,7 +20,6 @@ import {
     centrerSurNoeud,
     obtenirDecalageZoneActuel,
 } from './constellation-spirale.js';
-import { boucleConstellation } from './constellation-boucle.js';
 import {
     configurerConstellationInit,
     initConstellation,
@@ -129,11 +128,11 @@ export function demarrerConstellation() {
     void import('./mode-sprint.js').then(({ mettreAJourToggleSprint }) =>
         mettreAJourToggleSprint()
     );
-    abonnerBoucleMenuUnifiee(boucleConstellation);
+    emettre('constellation:demarrer');
 }
 
 export function arreterConstellation() {
-    desabonnerBoucleMenuUnifiee(boucleConstellation);
+    emettre('constellation:arreter');
 }
 
 export function redimensionnerConstellation() {

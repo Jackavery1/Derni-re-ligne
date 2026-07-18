@@ -87,7 +87,7 @@
     font-family: var(--font-stats);
     font-size: var(--typo-ui-mini);
     letter-spacing: 2px;
-    color: var(--rgba-255-255-255-0-25);
+    color: var(--rgba-255-255-255-0-55);
 }
 
 .cutscene-controles {

@@ -7,9 +7,10 @@ import { obtenirTousNiveauxArchi } from './archi-generateur.js';
 import { archi_calculerEtoiles } from './archi-logique.js';
 import { modeDevActif } from './mode-dev-etat.js';
 import { sansAccentsE } from './texte-jeu.js';
-import { rendreIconeSurCanvas } from '../rendu/icones-pixel.js';
-import { dessinerSilhouetteApercu } from '../rendu/archi-apercu-silhouette.js';
-import { obtenirIdIconeBiomeArchi } from '../rendu/archi-icones-map.js';
+import {
+    dessinerApercuCarteArchi,
+    dessinerIconeDetailArchi,
+} from '../ui/archi-selection-apercu.js';
 import {
     ouvrirPanneauDetail,
     fermerPanneauDetail,
@@ -25,17 +26,6 @@ import {
 import { demarrerArchi } from './archi-partie.js';
 
 let archiSelectionListenersInitialises = false;
-
-/** @param {import('../archi-donnees/assembleur-niveaux.js').NiveauArchi} niv @param {string} accent */
-function dessinerApercuCarteArchi(canvas, niv, accent) {
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    if (niv.silhouette?.length) {
-        dessinerSilhouetteApercu(canvas, ctx, niv.silhouette, accent, { tailleCelluleMax: 6 });
-        return;
-    }
-    rendreIconeSurCanvas(canvas, obtenirIdIconeBiomeArchi(niv.biome));
-}
 
 /** @param {import('../archi-donnees/assembleur-niveaux.js').NiveauArchi} niv */
 function obtenirDescriptionObjectifArchi(niv) {
@@ -84,13 +74,7 @@ export function ouvrirDetailNiveauArchi(niv) {
         id: niv.id,
         icone: {
             canvasPersonnalise: (canvas, ctx) => {
-                if (niv.silhouette?.length) {
-                    dessinerSilhouetteApercu(canvas, ctx, niv.silhouette, accent, {
-                        tailleCelluleMax: 10,
-                    });
-                } else {
-                    rendreIconeSurCanvas(canvas, obtenirIdIconeBiomeArchi(niv.biome));
-                }
+                dessinerIconeDetailArchi(canvas, ctx, niv, accent);
             },
         },
         accent,

@@ -6,9 +6,6 @@ import {
     obtenirBiomeActif,
     definirCouleurAmbRgb,
     ECRANS,
-    flashVerrou,
-    flashLignes,
-    flashTopout,
 } from '../etat/store-jeu.js';
 import { hexVersRgb, lierCouleursTetrominos } from './piece-jeu.js';
 import {
@@ -21,25 +18,19 @@ import {
 import { obtenirRecordCoopBiome, sauvegarderRecordCoopBiome } from '../io/progression.js';
 import { planifierSoumissionLeaderboard } from '../io/leaderboard-cloud.js';
 import { finaliserPartieCommune } from './partie-fin-commun.js';
-import { planifierBoucle, suspendreBoucleSolo } from './boucle-jeu.js';
+import { planifierBoucle, suspendreBoucleSolo } from './boucle-controle.js';
 import { obtenirBouton } from './dom-utils.js';
-import { mettreAJourParticules } from '../rendu/particules-jeu.js';
-import { mettreAJourSecousse } from '../rendu/rendu-jeu.js';
 import { initialiserAudioBiome } from '../audio/audio-partie.js';
 import { basculerOracle, oracle } from './oracle-jeu.js';
 import { afficherTutorielContextuel } from '../ui/tutoriel.js';
-import { adapterNotifsJeu, adapterInterfaceCoop } from '../rendu/layout-jeu.js';
 import {
     coop,
     reinitialiserEtatCoop,
-    coop_mettreAJourGravite,
     coop_rafraichirStats,
     configurerCoopLogique,
     definirCoopPartieEnCours,
 } from './coop-logique.js';
-import { coop_dessinerPreview, coop_rendreFrame } from '../rendu/coop-rendu.js';
-import { mettreAJourDasCoop } from './coop-das.js';
-import { obtenirCarteDasCoop } from './coop-carte-das.js';
+import { emettre } from '../etat/bus-jeu.js';
 
 export { coop, modeCoopActif, basculerModeCoop, utiliserPasserelle } from './coop-logique.js';
 export {
@@ -53,18 +44,9 @@ export {
     DEMI_LARGEUR,
 } from './coop-logique.js';
 
-let idFrameCoop = null;
-let dernierTimestampCoop = 0;
 let coopGameOverDeclenche = false;
 
 configurerCoopLogique({ terminerCooperatif: (j) => terminerCooperatif(j) });
-
-function arreterBoucleCoop() {
-    if (idFrameCoop) {
-        cancelAnimationFrame(idFrameCoop);
-        idFrameCoop = null;
-    }
-}
 
 function deplacerZoneJeuVersCoop() {
     const zone = document.getElementById('zone-jeu');
@@ -134,11 +116,7 @@ function demarrerCooperatifInterne() {
     cacherEcrans();
     deplacerZoneJeuVersCoop();
     afficherInterfaceCoop(true);
-    adapterInterfaceCoop();
-    requestAnimationFrame(() => adapterNotifsJeu());
-
-    coop_dessinerPreview('j1');
-    coop_dessinerPreview('j2');
+    emettre('coop:rendu-init');
     coop_rafraichirStats();
 
     for (const j of ['j1', 'j2']) {
@@ -148,9 +126,7 @@ function demarrerCooperatifInterne() {
 
     changerHumeur('neutre');
     afficherTutorielContextuel('coop');
-    dernierTimestampCoop = 0;
-    arreterBoucleCoop();
-    idFrameCoop = requestAnimationFrame(boucleCooperatif);
+    emettre('coop:demarrer-boucle');
 }
 
 async function executerDemarrageCooperatif() {
@@ -167,32 +143,6 @@ async function executerDemarrageCooperatif() {
 
 export function demarrerCooperatif() {
     void executerDemarrageCooperatif();
-}
-
-function boucleCooperatif(timestamp) {
-    if (!coop.actif) return;
-
-    const dt = Math.min(dernierTimestampCoop ? timestamp - dernierTimestampCoop : 0, 50);
-    dernierTimestampCoop = timestamp;
-
-    if (coop.estEnCours && !coop.estEnPause) {
-        mettreAJourDasCoop(dt, obtenirCarteDasCoop());
-        coop_mettreAJourGravite('j1', dt);
-        coop_mettreAJourGravite('j2', dt);
-        coop_dessinerPreview('j1');
-        coop_dessinerPreview('j2');
-
-        if (coop.flashSynchro > 0) coop.flashSynchro -= dt;
-    }
-
-    if (flashVerrou.timer > 0) flashVerrou.timer -= dt;
-    if (flashLignes.timer > 0) flashLignes.timer -= dt;
-    if (flashTopout.timer > 0) flashTopout.timer -= dt;
-    mettreAJourSecousse(dt);
-    if (particules.length > 0) mettreAJourParticules(dt);
-
-    coop_rendreFrame();
-    idFrameCoop = requestAnimationFrame(boucleCooperatif);
 }
 
 export function basculerPauseCoop() {
@@ -214,7 +164,7 @@ export function basculerPauseCoop() {
             etat.tempsPauseDebut = null;
         }
         cacherEcrans();
-        dernierTimestampCoop = performance.now();
+        emettre('coop:reprise-timestamp');
         const libellePause = '⏸ PAUSE';
         for (const id of ['btn-pause-coop', 'btn-pause-coop-mobile']) {
             const btn = document.getElementById(id);
@@ -227,7 +177,7 @@ export function terminerCooperatif(joueurFautif) {
     if (coopGameOverDeclenche) return;
     coopGameOverDeclenche = true;
     coop.estEnCours = false;
-    arreterBoucleCoop();
+    emettre('coop:arreter-boucle');
     changerHumeur('triste');
     AudioMoteur.arreterMusique(200);
     if (!AudioMoteur.muet) setTimeout(() => AudioMoteur.son('game_over'), 250);
@@ -277,7 +227,7 @@ export function terminerCooperatif(joueurFautif) {
 export function quitterModeCoop() {
     definirCoopPartieEnCours(false);
     coop.estEnCours = false;
-    arreterBoucleCoop();
+    emettre('coop:arreter-boucle');
     restaurerZoneJeu();
     afficherInterfaceCoop(false);
     etat.estEnCours = false;

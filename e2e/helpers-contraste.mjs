@@ -245,7 +245,7 @@ export async function mesurerContrasteVariable(page, nomVariable) {
 /**
  * Ratios contraste de sondes classe/id (styles globaux vs fond body).
  * @param {import('@playwright/test').Page} page
- * @returns {Promise<{ palier: number, vide: number }>}
+ * @returns {Promise<{ palier: number, vide: number, finHint: number, videTitre: number, cutsceneProgress: number, passer: number, achNomVerrouille: number }>}
  */
 export async function mesurerContrasteSondesUi(page) {
     return page.evaluate(() => {
@@ -297,6 +297,22 @@ export async function mesurerContrasteSondesUi(page) {
         return {
             palier: sonde({ classe: 'objectif-hud-palier' }),
             vide: sonde({ id: 'indicateur-vide-actif' }),
+            finHint: sonde({ classe: 'histoire-fin-hint' }),
+            videTitre: sonde({ classe: 'section-vide-titre' }),
+            cutsceneProgress: sonde({ classe: 'cutscene-progress' }),
+            passer: sonde({ classe: 'btn-cutscene-passer' }),
+            achNomVerrouille: (() => {
+                const carte = document.createElement('div');
+                carte.className = 'ach-carte verrouille';
+                const nom = document.createElement('div');
+                nom.className = 'ach-carte-nom';
+                nom.textContent = 'probe';
+                carte.appendChild(nom);
+                document.body.appendChild(carte);
+                const ratio = ratioDepuisCouleurs(getComputedStyle(nom).color, bg);
+                carte.remove();
+                return ratio;
+            })(),
         };
     });
 }

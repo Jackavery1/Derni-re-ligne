@@ -30,21 +30,7 @@ const ALLOWLIST_STORE_CORE = new Set([
 ]);
 
 /** Modules logique autorisés à importer rendu/ (couplage legacy — ne pas élargir). */
-const ALLOWLIST_LOGIQUE_VERS_RENDU = new Set([
-    'archi-logique.js',
-    'archi-partie.js',
-    'archi-selection.js',
-    'boss-combat.js',
-    'boss-jeu.js',
-    'boucle-jeu.js',
-    'boucle-jeu-tick.js',
-    'constellation-boucle.js',
-    'coop-input.js',
-    'coop-jeu.js',
-    'effets-partie.js',
-    'partie-init.js',
-    'vivant.js',
-]);
+const ALLOWLIST_LOGIQUE_VERS_RENDU = new Set([]);
 
 function listerFichiersJs(dossier) {
     /** @type {string[]} */

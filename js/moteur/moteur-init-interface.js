@@ -1,5 +1,5 @@
 import { chargerStats } from '../achievements/achievements-stats.js';
-import { planifierBoucle } from '../logique/boucle-jeu.js';
+import { planifierBoucle } from '../rendu/boucle-jeu.js';
 import { mettreAJourAffichageRecord, chargerProgression } from '../rendu/hud-jeu.js';
 import { appliquerThemeBiome } from '../rendu/themes-biome.js';
 import { afficherEcranDiffere } from '../ui/navigation-lazy.js';

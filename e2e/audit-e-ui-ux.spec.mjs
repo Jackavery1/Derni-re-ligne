@@ -81,6 +81,14 @@ test.describe('audit E — UI/UX', () => {
         const ratiosLive = await mesurerContrasteSondesUi(page);
         expect(ratiosLive.palier, '.objectif-hud-palier').toBeGreaterThanOrEqual(4.5);
         expect(ratiosLive.vide, '#indicateur-vide-actif').toBeGreaterThanOrEqual(4.5);
+        expect(ratiosLive.finHint, '.histoire-fin-hint').toBeGreaterThanOrEqual(4.5);
+        expect(ratiosLive.videTitre, '.section-vide-titre').toBeGreaterThanOrEqual(4.5);
+        expect(ratiosLive.cutsceneProgress, '.cutscene-progress').toBeGreaterThanOrEqual(4.5);
+        expect(ratiosLive.passer, '.btn-cutscene-passer').toBeGreaterThanOrEqual(4.5);
+        expect(
+            ratiosLive.achNomVerrouille,
+            '.ach-carte.verrouille .ach-carte-nom'
+        ).toBeGreaterThanOrEqual(4.5);
     });
 
     test('E3 — buttons have visible focus states', async ({ page }) => {

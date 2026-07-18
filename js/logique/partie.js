@@ -4,7 +4,7 @@
     definirDernierTimestamp,
     definirDerniereSecondeTemps,
 } from '../etat/store-jeu.js';
-import { planifierBoucle } from './boucle-jeu.js';
+import { planifierBoucle } from './boucle-controle.js';
 import { afficherEcran, cacherEcrans } from '../ui/ecrans-ui.js';
 import { ECRANS, store, demarrerTransition } from '../etat/store-jeu.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';

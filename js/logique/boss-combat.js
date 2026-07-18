@@ -5,7 +5,7 @@ import { etat } from '../etat/store-jeu.js';
 import { AudioMoteur } from '../audio/audio.js';
 import { vibrerBossAttaque } from '../audio/haptique.js';
 import { modeHistoireEnCours } from '../etat/mode-histoire.js';
-import { creerParticulesExplosion } from '../rendu/particules-jeu.js';
+import { creerParticulesExplosion } from '../etat/particules-spawn.js';
 import { enregistrerVictoireBossTimer } from '../achievements/achievements-histoire.js';
 import {
     notifierPhaseBoss,
@@ -46,7 +46,7 @@ import {
     dialogueBossActif,
 } from '../histoire/boss-dialogues.js';
 import { DUREE_VICTOIRE_BOSS_MS } from './boss-jeu-constantes.js';
-import { afficherTexteBoss, mettreAJourHPBarBoss } from '../rendu/boss-ui-hud.js';
+import { afficherTexteBoss, mettreAJourHPBarBoss } from '../ui/boss-ui-hud.js';
 import { proposerInfobulleAttaqueBoss } from '../ui/infobulles-contexte.js';
 
 /** @returns {import('./boss-attaques.js').ContexteAttaqueBoss} */

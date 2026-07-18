@@ -45,7 +45,7 @@ vi.mock('../js/logique/temps-partie.js', () => ({
     obtenirTempsEcoule: vi.fn(() => 83000),
 }));
 
-vi.mock('../js/logique/boucle-jeu.js', () => ({
+vi.mock('../js/rendu/boucle-jeu.js', () => ({
     planifierBoucle,
 }));
 

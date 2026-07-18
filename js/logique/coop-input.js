@@ -12,10 +12,15 @@ import {
     utiliserPasserelle,
     basculerPauseCoop,
 } from './coop-jeu.js';
-import { coop_dessinerPreview } from '../rendu/coop-rendu.js';
+import { emettre } from '../etat/bus-jeu.js';
 
 /** @type {readonly ('j1' | 'j2')[]} */
 const JOUEURS_COOP = ['j1', 'j2'];
+
+/** @param {'j1' | 'j2' | 'tous'} cible */
+function rafraichirPreviewCoop(cible) {
+    emettre('coop:rafraichir-preview', { joueur: cible });
+}
 
 const TOUCHES_COOP = {
     j1: {
@@ -107,13 +112,12 @@ export function initialiserInputCoop() {
             }
             if (t.hold.includes(e.code)) {
                 coop_utiliserReserve(joueur);
-                coop_dessinerPreview(joueur);
+                rafraichirPreviewCoop(joueur);
                 touchePrise = true;
             }
             if (t.passerelle.includes(e.code)) {
                 utiliserPasserelle(joueur);
-                coop_dessinerPreview('j1');
-                coop_dessinerPreview('j2');
+                rafraichirPreviewCoop('tous');
                 touchePrise = true;
             }
         }
@@ -139,12 +143,11 @@ export function initialiserInputCoop() {
     attacherCoop('ccj1-drop', () => coop_chuteRapide('j1'));
     attacherCoop('ccj1-hold', () => {
         coop_utiliserReserve('j1');
-        coop_dessinerPreview('j1');
+        rafraichirPreviewCoop('j1');
     });
     attacherCoop('ccj1-pass', () => {
         utiliserPasserelle('j1');
-        coop_dessinerPreview('j1');
-        coop_dessinerPreview('j2');
+        rafraichirPreviewCoop('tous');
     });
 
     attacherCoop('ccj2-gauche', () => coop_deplacerGauche('j2'), true);
@@ -154,11 +157,10 @@ export function initialiserInputCoop() {
     attacherCoop('ccj2-drop', () => coop_chuteRapide('j2'));
     attacherCoop('ccj2-hold', () => {
         coop_utiliserReserve('j2');
-        coop_dessinerPreview('j2');
+        rafraichirPreviewCoop('j2');
     });
     attacherCoop('ccj2-pass', () => {
         utiliserPasserelle('j2');
-        coop_dessinerPreview('j1');
-        coop_dessinerPreview('j2');
+        rafraichirPreviewCoop('tous');
     });
 }

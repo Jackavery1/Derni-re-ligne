@@ -84,8 +84,6 @@ async function _afficherEcranFin(finId, etatHist) {
 
     if (elTitre) {
         elTitre.textContent = fin.titre;
-        elTitre.style.color = _couleurFin(finId);
-        elTitre.style.textShadow = `0 0 14px ${_couleurFin(finId)}`;
     }
 
     if (elCorps) {
@@ -133,19 +131,6 @@ async function _afficherEcranFinAsync() {
     await afficherEcranDiffereAsync(ECRANS.HISTOIRE_FIN);
 }
 
-function _couleurFin(finId) {
-    switch (finId) {
-        case 'fin_normale':
-            return '#00f5ff';
-        case 'fin_vraie':
-            return '#00ff88';
-        case 'fin_secrete':
-            return '#ffe600';
-        default:
-            return '#ffffff';
-    }
-}
-
 function _obtenirItemsStats(etatHist, finId) {
     const nbMondes = etatHist.mondesCompletes.filter(
         (id) => !['monde_miroir', 'monde_trame', 'monde_paradoxe'].includes(id)
@@ -155,13 +140,13 @@ function _obtenirItemsStats(etatHist, finId) {
     const nbBoss = etatHist.bossVaincus?.length ?? 0;
 
     const items = [
-        { label: 'MONDES TRAVERSÉS', valeur: `${nbMondes} / 17`, couleur: '#00f5ff' },
-        { label: 'TRANSMISSIONS VERA', valeur: `${nbJournaux} / 9`, couleur: '#ff006e' },
-        { label: 'BOSS VAINCUS', valeur: `${nbBoss} / 5`, couleur: '#ffe600' },
+        { label: 'MONDES TRAVERSÉS', valeur: `${nbMondes} / 17`, accent: 'cyan' },
+        { label: 'TRANSMISSIONS VERA', valeur: `${nbJournaux} / 9`, accent: 'rose' },
+        { label: 'BOSS VAINCUS', valeur: `${nbBoss} / 5`, accent: 'jaune' },
         {
             label: 'CONTINUES UTILISÉS',
             valeur: String(nbContinues),
-            couleur: nbContinues === 0 ? '#00ff88' : '#ff8800',
+            accent: nbContinues === 0 ? 'vert' : 'orange',
         },
     ];
 
@@ -169,14 +154,14 @@ function _obtenirItemsStats(etatHist, finId) {
         items.push({
             label: 'MONDE MIROIR',
             valeur: etatHist.mondesCompletes.includes('monde_miroir') ? '✓ DÉCOUVERT' : '✗ MANQUÉ',
-            couleur: '#ff8800',
+            accent: 'orange',
         });
     }
     if (finId === 'fin_secrete') {
         items.push({
             label: 'TRAME PRIMORDIALE',
             valeur: etatHist.mondesCompletes.includes('monde_trame') ? '✓ DÉCOUVERTE' : '✗ MANQUÉE',
-            couleur: '#ffe600',
+            accent: 'jaune',
         });
     }
 
@@ -197,8 +182,7 @@ function _remplirStatsFinales(conteneur, etatHist, finId) {
         const valeur = document.createElement('span');
         valeur.className = 'histoire-fin-stat-valeur';
         valeur.textContent = it.valeur;
-        valeur.style.color = it.couleur;
-        valeur.style.textShadow = `0 0 6px ${it.couleur}`;
+        valeur.dataset.accent = it.accent;
 
         ligne.append(label, valeur);
         conteneur.appendChild(ligne);

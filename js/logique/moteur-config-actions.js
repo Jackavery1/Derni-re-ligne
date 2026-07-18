@@ -1,5 +1,5 @@
 import { configurerActionsJeu } from './actions-jeu.js';
-import { planifierBoucle } from './boucle-jeu.js';
+import { planifierBoucle } from './boucle-controle.js';
 import { demarrerJeu, basculerPause, confirmerRecommencer, quitterVersMenu } from './partie.js';
 import {
     deplacerGauche,

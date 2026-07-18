@@ -20,7 +20,7 @@ import {
     afficherTexteBoss,
     mettreAJourHPBarBoss,
     mettreAJourTimerUIBoss,
-} from '../rendu/boss-ui-hud.js';
+} from '../ui/boss-ui-hud.js';
 import {
     degelColonnesBoss,
     endommagerBossCombat,

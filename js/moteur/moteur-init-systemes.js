@@ -19,11 +19,18 @@ import {
     obtenirNiveauGlobal,
 } from '../etat/store-jeu.js';
 import { obtenirForme, lierCouleursTetrominos } from '../logique/piece-jeu.js';
-import { creerParticulesExplosion } from '../rendu/particules-jeu.js';
+import { creerParticulesExplosion } from '../etat/particules-spawn.js';
 import { initialiserCanvas, demarrerJeu } from '../logique/partie.js';
 import { initialiserEffetsPartie } from '../logique/effets-partie.js';
 import { initialiserPartieFinEffets } from '../ui/partie-fin-effets.js';
 import { initialiserFondBiomeBus } from '../rendu/rendu-fond-biome.js';
+import { initialiserCoopPreviewBus } from '../rendu/coop-rendu.js';
+import { initialiserPartieRenduBus } from '../rendu/partie-rendu-bus.js';
+import { initialiserEffetsVisuelsPartie } from '../rendu/effets-visuels-partie.js';
+import { initialiserConstellationBoucleBus } from '../rendu/constellation-boucle.js';
+import { initialiserBoucleTickRenduBus } from '../rendu/boucle-tick-rendu-bus.js';
+import { initialiserArchiRenduBus } from '../rendu/archi-rendu-bus.js';
+import { initialiserCoopBoucleBus } from '../rendu/coop-boucle-raf.js';
 import { mettreAJourBoutonsMute } from '../ui/options-mute-ui.js';
 import { coopEstPrefere } from '../logique/coop-preference.js';
 import { appliquerThemeBiome } from '../ui/ecrans-ui.js';
@@ -50,6 +57,13 @@ export function initialiserSystemesMoteur() {
     migrerClesLocalStorage();
     initialiserHaptique();
     initialiserFondBiomeBus();
+    initialiserCoopPreviewBus();
+    initialiserPartieRenduBus();
+    initialiserEffetsVisuelsPartie();
+    initialiserConstellationBoucleBus();
+    initialiserBoucleTickRenduBus();
+    initialiserArchiRenduBus();
+    initialiserCoopBoucleBus();
     appliquerControlesTactilesDepuisStockage();
     initialiserSyncCloudDiffere();
     initialiserEffetsPartie();

@@ -92,7 +92,7 @@
     line-height: 1.35;
 }
 .ach-carte.verrouille .ach-carte-nom {
-    color: color-mix(in srgb, var(--accent-carte) 35%, transparent);
+    color: var(--texte-dim);
 }
 .ach-carte-desc {
     font-family: 'Rajdhani', var(--font-ui);

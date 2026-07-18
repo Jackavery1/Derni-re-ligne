@@ -1,5 +1,5 @@
 // Versions du cache — bumper VERSION_SHELL a chaque livraison ; VERSION_MEDIAS si le format medias change.
-const VERSION_SHELL = 'dl-shell-v79';
+const VERSION_SHELL = 'dl-shell-v80';
 const VERSION_MEDIAS = 'dl-medias-v8';
 
 /** Precache install : splash, CSS cutscenes (+ partials DEV), scènes prologue (parcours early). */

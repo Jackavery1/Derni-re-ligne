@@ -22,14 +22,15 @@ import {
     definirDernierTimestamp,
 } from '../etat/store-jeu.js';
 import { partieSpecialiseeActive } from '../etat/registre-modes.js';
-import { mettreAJourTransition } from '../rendu/rendu-jeu.js';
-import { menuAnimActif, mettreAJourMenuFond } from '../rendu/menu-fond.js';
-import { dessinerFrameSolo } from '../rendu/tick-rendu-solo.js';
+import { mettreAJourTransition } from './rendu-jeu.js';
+import { menuAnimActif, mettreAJourMenuFond } from './menu-fond.js';
+import { dessinerFrameSolo } from './tick-rendu-solo.js';
 import {
     mettreAJourTickPartieActive,
     mettreAJourTimersEffets,
     effetsVisuelsActifs,
-} from './boucle-jeu-tick.js';
+} from '../logique/boucle-jeu-tick.js';
+import { enregistrerControleBoucle } from '../logique/boucle-controle.js';
 
 const SEUIL_ERREURS_BOUCLE = 5;
 let erreursConsecutivesBoucle = 0;
@@ -102,6 +103,8 @@ export function planifierBoucle() {
     cancelAnimationFrame(obtenirIdFrame());
     definirIdFrame(requestAnimationFrame(boucleJeu));
 }
+
+enregistrerControleBoucle({ planifierBoucle, suspendreBoucleSolo });
 
 function boucleJeu(timestamp) {
     if (partieSpecialiseeActive()) {

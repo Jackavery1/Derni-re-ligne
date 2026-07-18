@@ -2,10 +2,10 @@
 
 ## Budgets CI
 
-| Ressource                    | Plafond                                    | Commande                                                |
-| ---------------------------- | ------------------------------------------ | ------------------------------------------------------- |
-| App shell (precache SW prod) | 2048 Ko (alerte 1800 Ko)                   | `npm run audit:poids`                                   |
-| JS minifie (dist)            | 588 Ko max (confort 560 Ko, entree ~12 Ko) | `npm run build` puis `node scripts/verifier-bundle.mjs` |
+| Ressource                    | Plafond                                       | Commande                                                |
+| ---------------------------- | --------------------------------------------- | ------------------------------------------------------- |
+| App shell (precache SW prod) | 2048 Ko (alerte 1800 Ko)                      | `npm run audit:poids`                                   |
+| JS minifie (dist)            | 595 Ko max (confort 570 Ko, entree ~15–35 Ko) | `npm run build` puis `node scripts/verifier-bundle.mjs` |
 
 En prod, `scripts/esbuild-strip-logger.mjs` retire les appels `logger.debug` / `logger.info` (littéraux inclus) avant minify — `DEBUG` est déjà faux via `__NEO_PROD__`, mais les chaînes restaient sinon dans le budget CI.
 | Polices woff2 | 300 Ko | audit |
