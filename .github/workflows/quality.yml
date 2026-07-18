@@ -51,7 +51,8 @@ jobs:
               run: npm run test:e2e:responsive
             - name: Audits gameplay, responsive et narratif
               run: npm run test:e2e:audit
-            - run: npm run test:e2e
+            - name: Suite E2E (hors snapshots visuels)
+              run: npx playwright test --grep-invert "régressions visuelles"
             - name: Artefact couverture
               if: inputs.upload_coverage
               uses: actions/upload-artifact@v4

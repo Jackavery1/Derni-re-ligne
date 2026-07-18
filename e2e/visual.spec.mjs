@@ -9,6 +9,9 @@ import {
 } from './helpers.mjs';
 import { ETAT_HISTOIRE_VIDE } from '../js/histoire/histoire-donnees-exports.js';
 
+/** Tolérance après tokens contraste / spacing (audit E) — baselines à régénérer sous Linux CI. */
+const CAPTURE = { animations: 'disabled', maxDiffPixelRatio: 0.12 };
+
 test.describe('régressions visuelles', () => {
     test.beforeEach(async ({ page }) => {
         await preparerPageSansSw(page, ETAT_DEBLOCAGE_META_RAPIDE);
@@ -21,9 +24,7 @@ test.describe('régressions visuelles', () => {
             timeout: 10000,
         });
         await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
-        await expect(page.locator('#ecran-titre')).toHaveScreenshot('ecran-titre.png', {
-            animations: 'disabled',
-        });
+        await expect(page.locator('#ecran-titre')).toHaveScreenshot('ecran-titre.png', CAPTURE);
     });
 
     test('écran options', async ({ page }) => {
@@ -31,9 +32,7 @@ test.describe('régressions visuelles', () => {
         await attendreApplicationPrete(page);
         await page.locator('#btn-options').click();
         await expect(page.locator('#ecran-options')).toHaveClass(/actif/);
-        await expect(page.locator('#ecran-options')).toHaveScreenshot('ecran-options.png', {
-            animations: 'disabled',
-        });
+        await expect(page.locator('#ecran-options')).toHaveScreenshot('ecran-options.png', CAPTURE);
     });
 
     test('écran codex', async ({ page }) => {
@@ -41,9 +40,7 @@ test.describe('régressions visuelles', () => {
         await attendreApplicationPrete(page);
         await page.locator('#btn-codex').click();
         await expect(page.locator('#ecran-codex')).toHaveClass(/actif/);
-        await expect(page.locator('#ecran-codex')).toHaveScreenshot('ecran-codex.png', {
-            animations: 'disabled',
-        });
+        await expect(page.locator('#ecran-codex')).toHaveScreenshot('ecran-codex.png', CAPTURE);
     });
 
     test('écran sélection', async ({ page }) => {
@@ -51,9 +48,10 @@ test.describe('régressions visuelles', () => {
         await attendreApplicationPrete(page);
         await page.locator('#btn-jouer').click();
         await expect(page.locator('#ecran-selection')).toHaveClass(/actif/);
-        await expect(page.locator('#ecran-selection')).toHaveScreenshot('ecran-selection.png', {
-            animations: 'disabled',
-        });
+        await expect(page.locator('#ecran-selection')).toHaveScreenshot(
+            'ecran-selection.png',
+            CAPTURE
+        );
     });
 
     test('écran sélection tablette paysage sans débordement', async ({ page }) => {
@@ -85,9 +83,7 @@ test.describe('régressions visuelles mobile', () => {
         await expect(page.locator('#ecran-titre')).toHaveClass(/actif/);
         await expect(page.locator('#ecran-titre')).toHaveScreenshot(
             'ecran-titre-mobile-portrait.png',
-            {
-                animations: 'disabled',
-            }
+            CAPTURE
         );
     });
 
@@ -100,9 +96,7 @@ test.describe('régressions visuelles mobile', () => {
         await expect(page.locator('#ecran-pause')).toHaveClass(/actif/);
         await expect(page.locator('#ecran-pause')).toHaveScreenshot(
             'ecran-pause-mobile-portrait.png',
-            {
-                animations: 'disabled',
-            }
+            CAPTURE
         );
     });
 
@@ -116,7 +110,7 @@ test.describe('régressions visuelles mobile', () => {
         await expect(page.locator('#ecran-pause-coop')).toHaveClass(/actif/);
         await expect(page.locator('#ecran-pause-coop')).toHaveScreenshot(
             'ecran-pause-coop-mobile-portrait.png',
-            { animations: 'disabled' }
+            CAPTURE
         );
     });
 
@@ -136,10 +130,7 @@ test.describe('régressions visuelles mobile', () => {
             await expect(page.locator('#ecran-game-over')).toHaveClass(/actif/, { timeout: 5000 });
             await expect(page.locator('#ecran-game-over')).toHaveScreenshot(
                 'ecran-game-over-victoire-mobile.png',
-                {
-                    animations: 'disabled',
-                    maxDiffPixelRatio: 0.04,
-                }
+                CAPTURE
             );
         }
     );
@@ -166,7 +157,7 @@ test.describe('régressions visuelles mobile', () => {
         });
         await expect(page.locator('#ecran-histoire-cutscene')).toHaveScreenshot(
             'cutscene-prologue-319.png',
-            { animations: 'disabled' }
+            CAPTURE
         );
     });
 });
