@@ -109,6 +109,12 @@ export function creerHandlersHistoire(depsSync) {
         obtenirSrcSceneCutsceneActive: depsSync.obtenirSrcSceneCutsceneActive,
         typewriterEstActif: depsSync.typewriterEstActif,
         obtenirHumeurPortraitCutscene: depsSync.obtenirHumeurPortraitCutscene,
+        rejouerIntroCutscene: async () => {
+            await chargerHistoireTextes();
+            const { obtenirSequenceIntro } = await import('../histoire/histoire-intro.js');
+            const { afficherCutsceneHistoire } = await import('../histoire/histoire-manager-ui.js');
+            afficherCutsceneHistoire(obtenirSequenceIntro(), null, () => {}, { intro: true });
+        },
         simulerTopVolontairePrologue: async () => {
             activerModeHistoire();
             store.histoire.mondeActuel = 'monde_prologue';

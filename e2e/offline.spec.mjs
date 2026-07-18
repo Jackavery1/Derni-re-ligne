@@ -116,7 +116,6 @@ test('offline — cutscene intro jouable (audit C5/D3)', async ({ page, context 
     });
     await precacherShellEtScenesInstall(page, context);
     await attendrePrecacheMediasCutscene(page, './assets/cutscenes/cutscenes.css', 50);
-    await attendrePrecacheMediasCutscene(page, './assets/cutscenes/cutscenes-structure.css', 500);
 
     // Warm-up en ligne : charge modules/fragments cutscene dans le runtime.
     await expect(page.locator('#btn-nouvelle-partie')).toBeVisible({ timeout: 10000 });
@@ -130,14 +129,14 @@ test('offline — cutscene intro jouable (audit C5/D3)', async ({ page, context 
 
     await passerCutsceneHistoire(page);
 
-    // Hors-ligne sans navigation document : rejoue l'intro via l'API déjà prefetchée.
+    // Hors-ligne sans navigation document : rejoue l'intro via l'API test (chunks dist).
     await context.setOffline(true);
     await page.evaluate(async () => {
-        const { chargerHistoireTextes } = await import('/js/io/charger-histoire-textes.js');
-        const { obtenirSequenceIntro } = await import('/js/histoire/histoire-intro.js');
-        const { afficherCutsceneHistoire } = await import('/js/histoire/histoire-manager-ui.js');
-        await chargerHistoireTextes();
-        afficherCutsceneHistoire(obtenirSequenceIntro(), null, () => {}, { intro: true });
+        const api = window.__NEO_TEST__;
+        if (typeof api?.rejouerIntroCutscene !== 'function') {
+            throw new Error('rejouerIntroCutscene indisponible');
+        }
+        await api.rejouerIntroCutscene();
     });
     await expect(page.locator('#ecran-histoire-cutscene')).toHaveClass(/actif/, {
         timeout: 20000,
