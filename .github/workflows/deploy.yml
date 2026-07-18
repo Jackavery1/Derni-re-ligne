@@ -16,13 +16,31 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    test:
-        uses: ./.github/workflows/quality.yml
-        with:
-            upload_dist: false
+    # Gate léger : la suite E2E complète reste dans Tests (quality.yml) — trop flaky pour bloquer Pages.
+    gate:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+            - run: npm ci
+            - run: npm run lint
+            - run: npm run check:circular
+            - run: npm run typecheck
+            - run: npm run format:check
+            - run: npm run verify:versions
+            - run: node scripts/exporter-donnees-json.mjs
+            - run: npx vitest run --coverage
+            - run: npm run build
+            - run: node scripts/generer-precache.mjs --prod
+            - run: node scripts/verifier-bundle.mjs
+            - run: npx playwright install --with-deps chromium
+            - name: Smoke E2E dist
+              run: npm run test:e2e:smoke:dist
 
     deploy:
-        needs: test
+        needs: gate
         runs-on: ubuntu-latest
         environment:
             name: github-pages
