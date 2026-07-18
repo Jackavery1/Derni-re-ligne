@@ -28,7 +28,7 @@ jobs:
             - run: npm run verify:histoire-json
             - run: npm run verify:versions
             - run: node scripts/exporter-donnees-json.mjs
-            - run: npm run test:coverage
+            - run: npx vitest run --coverage
             - run: npm audit --audit-level=moderate
             - run: npm run build
             - run: node scripts/generer-precache.mjs --prod

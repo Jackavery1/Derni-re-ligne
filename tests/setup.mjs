@@ -3,17 +3,39 @@ import { beforeEach } from 'vitest';
 import { reinitialiserBusJeu } from '../js/etat/bus-jeu.js';
 import * as textesHistoire from '../js/histoire-textes.js';
 
+/**
+ * @param {string} chemin
+ * @param {number} [essais]
+ */
+function lireJsonRobuste(chemin, essais = 8) {
+    let dernierErreur = /** @type {unknown} */ (null);
+    for (let i = 0; i < essais; i++) {
+        try {
+            const brut = readFileSync(chemin, 'utf8');
+            if (!brut.trim()) {
+                throw new SyntaxError(`Fichier JSON vide : ${chemin}`);
+            }
+            return JSON.parse(brut);
+        } catch (err) {
+            dernierErreur = err;
+            const debut = Date.now();
+            while (Date.now() - debut < 25 * (i + 1)) {
+                /* attente courte — évite la course pretest/export vs workers Vitest */
+            }
+        }
+    }
+    throw dernierErreur;
+}
+
 const stockage = new Map();
-const codexTextes = JSON.parse(readFileSync('data/codex-textes.json', 'utf8'));
-const niveauxArchi = JSON.parse(readFileSync('data/archi-niveaux.json', 'utf8'));
-const biomesJson = JSON.parse(readFileSync('data/biomes.json', 'utf8'));
-const contenuJeuJson = JSON.parse(readFileSync('data/contenu-jeu.json', 'utf8'));
-const difficulteJson = JSON.parse(readFileSync('data/difficulte-mondes.json', 'utf8'));
-const achievementsCoreJson = JSON.parse(readFileSync('data/achievements-core.json', 'utf8'));
-const histoireDonneesJson = JSON.parse(readFileSync('data/histoire-donnees.json', 'utf8'));
-const achievementsHistoireJson = JSON.parse(
-    readFileSync('data/achievements-histoire.json', 'utf8')
-);
+const codexTextes = lireJsonRobuste('data/codex-textes.json');
+const niveauxArchi = lireJsonRobuste('data/archi-niveaux.json');
+const biomesJson = lireJsonRobuste('data/biomes.json');
+const contenuJeuJson = lireJsonRobuste('data/contenu-jeu.json');
+const difficulteJson = lireJsonRobuste('data/difficulte-mondes.json');
+const achievementsCoreJson = lireJsonRobuste('data/achievements-core.json');
+const histoireDonneesJson = lireJsonRobuste('data/histoire-donnees.json');
+const achievementsHistoireJson = lireJsonRobuste('data/achievements-histoire.json');
 
 import { chargerBiomesJeu } from '../js/config/biomes.js';
 import { chargerContenuJeu } from '../js/config/contenu-jeu.js';

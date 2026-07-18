@@ -1,4 +1,4 @@
-﻿import { mkdirSync, writeFileSync, rmSync } from 'fs';
+﻿import { mkdirSync, writeFileSync, renameSync, rmSync } from 'fs';
 import { execSync } from 'child_process';
 import { ecrireHistoireTextesJson } from './generer-histoire-json.mjs';
 
@@ -9,10 +9,17 @@ const difficulteSource = await import('../scripts/sources-difficulte-mondes-expo
 
 mkdirSync('data', { recursive: true });
 
+/** @param {string} chemin @param {string} contenu */
+function ecrireAtomique(chemin, contenu) {
+    const tmp = `${chemin}.${process.pid}.tmp`;
+    writeFileSync(tmp, contenu);
+    renameSync(tmp, chemin);
+}
+
 const fichiersExportes = ['data/histoire-textes.json'];
 await ecrireHistoireTextesJson();
 
-writeFileSync(
+ecrireAtomique(
     'data/biomes.json',
     `${JSON.stringify(
         {
@@ -28,7 +35,7 @@ writeFileSync(
 );
 fichiersExportes.push('data/biomes.json');
 
-writeFileSync(
+ecrireAtomique(
     'data/contenu-jeu.json',
     `${JSON.stringify(
         {
@@ -42,7 +49,7 @@ writeFileSync(
 );
 fichiersExportes.push('data/contenu-jeu.json');
 
-writeFileSync(
+ecrireAtomique(
     'data/difficulte-mondes.json',
     `${JSON.stringify(
         {
@@ -67,7 +74,9 @@ fichiersExportes.push(
     'data/archi-niveaux.json',
     'js/codex/codex-conditions.js'
 );
-execSync(`npx prettier --write ${fichiersExportes.join(' ')}`, { stdio: 'inherit' });
+if (!process.env.CI) {
+    execSync(`npx prettier --write ${fichiersExportes.join(' ')}`, { stdio: 'inherit' });
+}
 
 console.log(
     'Données exportées → data/histoire-textes.json, data/biomes.json, data/contenu-jeu.json'
