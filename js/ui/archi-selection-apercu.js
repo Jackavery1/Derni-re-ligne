@@ -2,7 +2,7 @@ import { rendreIconeSurCanvas } from '../rendu/icones-pixel.js';
 import { dessinerSilhouetteApercu } from '../rendu/archi-apercu-silhouette.js';
 import { obtenirIdIconeBiome } from '../config/biome-icones.js';
 
-/** @param {HTMLCanvasElement} canvas @param {{ silhouette?: unknown[], biome: string }} niv @param {string} accent */
+/** @param {HTMLCanvasElement} canvas @param {{ silhouette?: string[], biome: string }} niv @param {string} accent */
 export function dessinerApercuCarteArchi(canvas, niv, accent) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -16,7 +16,7 @@ export function dessinerApercuCarteArchi(canvas, niv, accent) {
 /**
  * @param {HTMLCanvasElement} canvas
  * @param {CanvasRenderingContext2D} ctx
- * @param {{ silhouette?: unknown[], biome: string }} niv
+ * @param {{ silhouette?: string[], biome: string }} niv
  * @param {string} accent
  */
 export function dessinerIconeDetailArchi(canvas, ctx, niv, accent) {
